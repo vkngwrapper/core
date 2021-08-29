@@ -12,19 +12,19 @@ import (
 type CullMode int32
 
 const (
-	None         CullMode = C.VK_CULL_MODE_NONE
-	Front        CullMode = C.VK_CULL_MODE_FRONT_BIT
-	Back         CullMode = C.VK_CULL_MODE_BACK_BIT
-	FrontAndBack CullMode = C.VK_CULL_MODE_FRONT_AND_BACK
+	CullNone         CullMode = C.VK_CULL_MODE_NONE
+	CullFront        CullMode = C.VK_CULL_MODE_FRONT_BIT
+	CullBack         CullMode = C.VK_CULL_MODE_BACK_BIT
+	CullFrontAndBack CullMode = C.VK_CULL_MODE_FRONT_AND_BACK
 )
 
 var cullModeToString = map[CullMode]string{
-	Front: "Front",
-	Back:  "Back",
+	CullFront: "Front",
+	CullBack:  "Back",
 }
 
 func (m CullMode) String() string {
-	if m == None {
+	if m == CullNone {
 		return "None"
 	}
 
