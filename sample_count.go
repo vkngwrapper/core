@@ -20,6 +20,10 @@ const (
 )
 
 func (c SampleCounts) String() string {
+	if c == 0 {
+		return "None"
+	}
+
 	hasOne := false
 	var sb strings.Builder
 

@@ -38,6 +38,10 @@ var imageAspectToString = map[ImageAspectFlags]string{
 }
 
 func (f ImageAspectFlags) String() string {
+	if f == 0 {
+		return "None"
+	}
+
 	var hasOne bool
 	var sb strings.Builder
 

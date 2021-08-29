@@ -46,6 +46,10 @@ var shaderStageToString = map[ShaderStages]string{
 }
 
 func (s ShaderStages) String() string {
+	if s == 0 {
+		return "None"
+	}
+
 	var hasOne bool
 	var sb strings.Builder
 

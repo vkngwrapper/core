@@ -179,6 +179,10 @@ const (
 )
 
 func (c ColorComponents) String() string {
+	if c == 0 {
+		return "None"
+	}
+
 	var sb strings.Builder
 	if (c & ComponentRed) != 0 {
 		sb.WriteRune('R')

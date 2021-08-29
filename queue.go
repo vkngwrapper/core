@@ -26,6 +26,10 @@ var queueFlagsToString = map[QueueFlags]string{
 }
 
 func (f QueueFlags) String() string {
+	if f == 0 {
+		return "None"
+	}
+
 	hasOne := false
 	var sb strings.Builder
 

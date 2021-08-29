@@ -9,21 +9,21 @@ import (
 	"strings"
 )
 
-type CullMode int32
+type CullModes int32
 
 const (
-	CullNone         CullMode = C.VK_CULL_MODE_NONE
-	CullFront        CullMode = C.VK_CULL_MODE_FRONT_BIT
-	CullBack         CullMode = C.VK_CULL_MODE_BACK_BIT
-	CullFrontAndBack CullMode = C.VK_CULL_MODE_FRONT_AND_BACK
+	CullNone         CullModes = C.VK_CULL_MODE_NONE
+	CullFront        CullModes = C.VK_CULL_MODE_FRONT_BIT
+	CullBack         CullModes = C.VK_CULL_MODE_BACK_BIT
+	CullFrontAndBack CullModes = C.VK_CULL_MODE_FRONT_AND_BACK
 )
 
-var cullModeToString = map[CullMode]string{
+var cullModeToString = map[CullModes]string{
 	CullFront: "Front",
 	CullBack:  "Back",
 }
 
-func (m CullMode) String() string {
+func (m CullModes) String() string {
 	if m == CullNone {
 		return "None"
 	}
@@ -32,7 +32,7 @@ func (m CullMode) String() string {
 	var sb strings.Builder
 
 	for i := 0; i < 32; i++ {
-		checkBit := CullMode(1 << i)
+		checkBit := CullModes(1 << i)
 		if (m & checkBit) != 0 {
 			str, hasStr := cullModeToString[checkBit]
 			if hasStr {
