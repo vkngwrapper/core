@@ -19,71 +19,62 @@ const (
 	Samples64 = C.VK_SAMPLE_COUNT_64_BIT
 )
 
+var sampleCountsToString = map[SampleCounts]string{
+	Samples1:  "1 Samples",
+	Samples2:  "2 Samples",
+	Samples4:  "4 Samples",
+	Samples8:  "8 Samples",
+	Samples16: "16 Samples",
+	Samples32: "32 Samples",
+	Samples64: "64 Samples",
+}
+
 func (c SampleCounts) String() string {
 	if c == 0 {
 		return "None"
 	}
 
-	hasOne := false
+	var hasOne bool
 	var sb strings.Builder
 
-	if c&Samples1 != 0 {
-		sb.WriteString("1 Sample")
-		hasOne = true
-	}
-
-	if c&Samples2 != 0 {
-		if hasOne {
-			sb.WriteString("|")
+	for i := 0; i < 32; i++ {
+		checkBit := SampleCounts(1 << i)
+		if (c & checkBit) != 0 {
+			str, hasStr := sampleCountsToString[checkBit]
+			if hasStr {
+				if hasOne {
+					sb.WriteRune('|')
+				}
+				sb.WriteString(str)
+				hasOne = true
+			}
 		}
-
-		sb.WriteString("2 Samples")
-		hasOne = true
-	}
-
-	if c&Samples4 != 0 {
-		if hasOne {
-			sb.WriteString("|")
-		}
-
-		sb.WriteString("4 Samples")
-		hasOne = true
-	}
-
-	if c&Samples8 != 0 {
-		if hasOne {
-			sb.WriteString("|")
-		}
-
-		sb.WriteString("8 Samples")
-		hasOne = true
-	}
-
-	if c&Samples16 != 0 {
-		if hasOne {
-			sb.WriteString("|")
-		}
-
-		sb.WriteString("16 Samples")
-		hasOne = true
-	}
-
-	if c&Samples32 != 0 {
-		if hasOne {
-			sb.WriteString("|")
-		}
-
-		sb.WriteString("32 Samples")
-		hasOne = true
-	}
-
-	if c&Samples64 != 0 {
-		if hasOne {
-			sb.WriteString("|")
-		}
-
-		sb.WriteString("64 Samples")
 	}
 
 	return sb.String()
+}
+
+var sampleCountsToCount = map[SampleCounts]int{
+	Samples1:  1,
+	Samples2:  2,
+	Samples4:  4,
+	Samples8:  8,
+	Samples16: 16,
+	Samples32: 32,
+	Samples64: 64,
+}
+
+func (c SampleCounts) Count() int {
+	var outCount int
+	for i := 0; i < 32; i++ {
+		checkBit := SampleCounts(1 << i)
+		if (c & checkBit) != 0 {
+			count, hasCount := sampleCountsToCount[checkBit]
+			if hasCount {
+				outCount = count
+			}
+		}
+	}
+
+	return outCount
 }
