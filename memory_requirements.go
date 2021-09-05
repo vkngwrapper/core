@@ -1,7 +1,7 @@
 package core
 
 type MemoryRequirements struct {
-	Size       uint64
-	Alignment  uint64
+	Size       int
+	Alignment  int
 	MemoryType uint32
 }
