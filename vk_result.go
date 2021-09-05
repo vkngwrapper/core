@@ -102,3 +102,12 @@ func (r Result) ToError() error {
 
 	return stacktrace.NewErrorWithCode(stacktrace.ErrorCode(r), "vulkan error: %s", r.String())
 }
+
+func ResultFromError(err error) Result {
+	code := stacktrace.GetCode(err)
+	if code == stacktrace.NoCode {
+		return VKErrorUnknown
+	}
+
+	return Result(code)
+}

@@ -10,32 +10,32 @@ import "strings"
 type ImageUsages int32
 
 const (
-	UsageTransferSrc                   ImageUsages = C.VK_IMAGE_USAGE_TRANSFER_SRC_BIT
-	UsageTransferDest                  ImageUsages = C.VK_IMAGE_USAGE_TRANSFER_DST_BIT
-	UsageSampled                       ImageUsages = C.VK_IMAGE_USAGE_SAMPLED_BIT
-	UsageStorage                       ImageUsages = C.VK_IMAGE_USAGE_STORAGE_BIT
-	UsageColorAttachment               ImageUsages = C.VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT
-	UsageDepthStencilAttachment        ImageUsages = C.VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT
-	UsageTransientAttachment           ImageUsages = C.VK_IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT
-	UsageInputAttachment               ImageUsages = C.VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT
-	UsageFragmentDensityMap            ImageUsages = C.VK_IMAGE_USAGE_FRAGMENT_DENSITY_MAP_BIT_EXT
-	UsageFragmentShadingRateAttachment ImageUsages = C.VK_IMAGE_USAGE_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR
-	UsageAllUsages                     ImageUsages = UsageTransferSrc | UsageTransferDest | UsageSampled | UsageStorage | UsageColorAttachment |
-		UsageDepthStencilAttachment | UsageTransientAttachment | UsageInputAttachment |
-		UsageFragmentDensityMap | UsageFragmentShadingRateAttachment
+	ImageTransferSrc                   ImageUsages = C.VK_IMAGE_USAGE_TRANSFER_SRC_BIT
+	ImageTransferDest                  ImageUsages = C.VK_IMAGE_USAGE_TRANSFER_DST_BIT
+	ImageSampled                       ImageUsages = C.VK_IMAGE_USAGE_SAMPLED_BIT
+	ImageStorage                       ImageUsages = C.VK_IMAGE_USAGE_STORAGE_BIT
+	ImageColorAttachment               ImageUsages = C.VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT
+	ImageDepthStencilAttachment        ImageUsages = C.VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT
+	ImageTransientAttachment           ImageUsages = C.VK_IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT
+	ImageInputAttachment               ImageUsages = C.VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT
+	ImageFragmentDensityMap            ImageUsages = C.VK_IMAGE_USAGE_FRAGMENT_DENSITY_MAP_BIT_EXT
+	ImageFragmentShadingRateAttachment ImageUsages = C.VK_IMAGE_USAGE_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR
+	ImageAllUsages                     ImageUsages = ImageTransferSrc | ImageTransferDest | ImageSampled | ImageStorage | ImageColorAttachment |
+		ImageDepthStencilAttachment | ImageTransientAttachment | ImageInputAttachment |
+		ImageFragmentDensityMap | ImageFragmentShadingRateAttachment
 )
 
 var imageUsageToString = map[ImageUsages]string{
-	UsageTransferSrc:                   "Transfer Source",
-	UsageTransferDest:                  "Transfer Destination",
-	UsageSampled:                       "Sampled",
-	UsageStorage:                       "Storage",
-	UsageColorAttachment:               "Color Attachment",
-	UsageDepthStencilAttachment:        "Depth Stencil Attachment",
-	UsageTransientAttachment:           "Transient Attachment",
-	UsageInputAttachment:               "Input Attachment",
-	UsageFragmentDensityMap:            "Fragment Density Map",
-	UsageFragmentShadingRateAttachment: "Fragment Shading Rate Attachment",
+	ImageTransferSrc:                   "Transfer Source",
+	ImageTransferDest:                  "Transfer Destination",
+	ImageSampled:                       "Sampled",
+	ImageStorage:                       "Storage",
+	ImageColorAttachment:               "Color Attachment",
+	ImageDepthStencilAttachment:        "Depth Stencil Attachment",
+	ImageTransientAttachment:           "Transient Attachment",
+	ImageInputAttachment:               "Input Attachment",
+	ImageFragmentDensityMap:            "Fragment Density Map",
+	ImageFragmentShadingRateAttachment: "Fragment Shading Rate Attachment",
 }
 
 func (u ImageUsages) String() string {
