@@ -25,7 +25,7 @@ func (o *BufferOptions) AllocForC(allocator *cgoalloc.ArenaAllocator) (unsafe.Po
 	createInfo := (*C.VkBufferCreateInfo)(allocator.Malloc(C.sizeof_struct_VkBufferCreateInfo))
 	createInfo.sType = C.VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO
 	createInfo.flags = 0
-	createInfo.size = C.size_t(o.BufferSize)
+	createInfo.size = C.VkDeviceSize(o.BufferSize)
 	createInfo.usage = C.VkBufferUsageFlags(o.Usages)
 	createInfo.sharingMode = C.VkSharingMode(o.SharingMode)
 
