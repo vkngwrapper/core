@@ -7,6 +7,7 @@ package resource
 import "C"
 import (
 	"github.com/CannibalVox/VKng/core"
+	"github.com/CannibalVox/VKng/core/loader"
 	"github.com/CannibalVox/cgoalloc"
 	"unsafe"
 )
@@ -57,36 +58,38 @@ func (o *BufferOptions) AllocForC(allocator *cgoalloc.ArenaAllocator) (unsafe.Po
 	return unsafe.Pointer(createInfo), nil
 }
 
-type BufferHandle C.VkBuffer
 type Buffer struct {
-	device C.VkDevice
-	handle C.VkBuffer
+	loader *loader.Loader
+	device loader.VkDevice
+	handle loader.VkBuffer
 }
 
-func (b *Buffer) Handle() BufferHandle {
-	return BufferHandle(b.handle)
+func (b *Buffer) Handle() loader.VkBuffer {
+	return b.handle
 }
 
-func (b *Buffer) Destroy() {
-	C.vkDestroyBuffer(b.device, b.handle, nil)
+func (b *Buffer) Destroy() error {
+	return b.loader.VkDestroyBuffer(b.device, b.handle, nil)
 }
 
-func (b *Buffer) MemoryRequirements(allocator cgoalloc.Allocator) *core.MemoryRequirements {
+func (b *Buffer) MemoryRequirements(allocator cgoalloc.Allocator) (*core.MemoryRequirements, error) {
 	requirementsUnsafe := allocator.Malloc(C.sizeof_struct_VkMemoryRequirements)
 	defer allocator.Free(requirementsUnsafe)
 
-	requirements := (*C.VkMemoryRequirements)(requirementsUnsafe)
+	err := b.loader.VkGetBufferMemoryRequirements(b.device, b.handle, (*loader.VkMemoryRequirements)(requirementsUnsafe))
+	if err != nil {
+		return nil, err
+	}
 
-	C.vkGetBufferMemoryRequirements(b.device, b.handle, requirements)
+	requirements := (*C.VkMemoryRequirements)(requirementsUnsafe)
 
 	return &core.MemoryRequirements{
 		Size:       int(requirements.size),
 		Alignment:  int(requirements.alignment),
 		MemoryType: uint32(requirements.memoryTypeBits),
-	}
+	}, nil
 }
 
-func (b *Buffer) BindBufferMemory(memory *DeviceMemory, offset int) (core.Result, error) {
-	res := core.Result(C.vkBindBufferMemory(b.device, b.handle, memory.handle, C.VkDeviceSize(offset)))
-	return res, res.ToError()
+func (b *Buffer) BindBufferMemory(memory *DeviceMemory, offset int) (loader.VkResult, error) {
+	return b.loader.VkBindBufferMemory(b.device, b.handle, memory.handle, loader.VkDeviceSize(offset))
 }

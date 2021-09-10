@@ -1,59 +1,72 @@
 package resource
 
 /*
-#cgo windows LDFLAGS: -lvulkan
-#cgo linux freebsd darwin openbsd pkg-config: vulkan
 #include <stdlib.h>
 #include "../vulkan/vulkan.h"
 */
 import "C"
 import (
-	"github.com/CannibalVox/VKng/core"
+	"github.com/CannibalVox/VKng/core/loader"
 	"github.com/CannibalVox/cgoalloc"
 	"unsafe"
 )
 
-func CreateInstance(allocator cgoalloc.Allocator, options *InstanceOptions) (*Instance, core.Result, error) {
+func CreateInstance(allocator cgoalloc.Allocator, load *loader.Loader, options *InstanceOptions) (*Instance, loader.VkResult, error) {
 	arena := cgoalloc.CreateArenaAllocator(allocator)
 	defer arena.FreeAll()
 
 	createInfo, err := options.AllocForC(arena)
 	if err != nil {
-		return nil, core.VKErrorUnknown, err
+		return nil, loader.VKErrorUnknown, err
 	}
 
-	var instanceHandle C.VkInstance
+	var instanceHandle loader.VkInstance
 
-	res := core.Result(C.vkCreateInstance((*C.VkInstanceCreateInfo)(createInfo), nil, &instanceHandle))
-	err = res.ToError()
+	res, err := load.VkCreateInstance((*loader.VkInstanceCreateInfo)(createInfo), nil, &instanceHandle)
 	if err != nil {
 		return nil, res, err
 	}
 
+	instanceLoader, err := load.CreateInstanceLoader((loader.VkInstance)(instanceHandle))
+	if err != nil {
+		return nil, loader.VKErrorUnknown, err
+	}
+
 	return &Instance{
+		loader: instanceLoader,
 		handle: instanceHandle,
 	}, res, nil
 }
 
 type InstanceHandle C.VkInstance
 type Instance struct {
-	handle C.VkInstance
+	loader *loader.Loader
+	handle loader.VkInstance
 }
 
-func (i *Instance) Handle() C.VkInstance {
+func (i *Instance) Loader() *loader.Loader {
+	return i.loader
+}
+
+func (i *Instance) Handle() loader.VkInstance {
 	return i.handle
 }
 
-func (i *Instance) Destroy() {
-	C.vkDestroyInstance(i.handle, nil)
+func (i *Instance) Destroy() error {
+	err := i.loader.VkDestroyInstance(i.handle, nil)
+	if err != nil {
+		return err
+	}
+
+	i.loader.Destroy()
+	return nil
 }
 
-func (i *Instance) PhysicalDevices(allocator cgoalloc.Allocator) ([]*PhysicalDevice, core.Result, error) {
-	count := (*C.uint32_t)(allocator.Malloc(int(unsafe.Sizeof(C.uint32_t(0)))))
+func (i *Instance) PhysicalDevices(allocator cgoalloc.Allocator) ([]*PhysicalDevice, loader.VkResult, error) {
+	count := (*loader.Uint32)(allocator.Malloc(int(unsafe.Sizeof(loader.Uint32(0)))))
 	defer allocator.Free(unsafe.Pointer(count))
 
-	res := core.Result(C.vkEnumeratePhysicalDevices(i.handle, count, nil))
-	err := res.ToError()
+	res, err := i.loader.VkEnumeratePhysicalDevices(i.handle, count, nil)
 	if err != nil {
 		return nil, res, err
 	}
@@ -62,20 +75,19 @@ func (i *Instance) PhysicalDevices(allocator cgoalloc.Allocator) ([]*PhysicalDev
 		return nil, res, nil
 	}
 
-	allocatedHandles := allocator.Malloc(int(uintptr(*count) * unsafe.Sizeof([1]C.VkPhysicalDevice{})))
+	allocatedHandles := allocator.Malloc(int(uintptr(*count) * unsafe.Sizeof([1]loader.VkPhysicalDevice{})))
 	defer allocator.Free(allocatedHandles)
 
-	deviceHandles := ([]C.VkPhysicalDevice)(unsafe.Slice((*C.VkPhysicalDevice)(allocatedHandles), int(*count)))
-	res = core.Result(C.vkEnumeratePhysicalDevices(i.handle, count, (*C.VkPhysicalDevice)(allocatedHandles)))
-	err = res.ToError()
+	deviceHandles := ([]loader.VkPhysicalDevice)(unsafe.Slice((*loader.VkPhysicalDevice)(allocatedHandles), int(*count)))
+	res, err = i.loader.VkEnumeratePhysicalDevices(i.handle, count, (*loader.VkPhysicalDevice)(allocatedHandles))
 	if err != nil {
 		return nil, res, err
 	}
 
 	goCount := uint32(*count)
 	var devices []*PhysicalDevice
-	for i := uint32(0); i < goCount; i++ {
-		devices = append(devices, &PhysicalDevice{handle: deviceHandles[i]})
+	for ind := uint32(0); ind < goCount; ind++ {
+		devices = append(devices, &PhysicalDevice{loader: i.loader, handle: deviceHandles[ind]})
 	}
 
 	return devices, res, nil

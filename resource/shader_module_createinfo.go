@@ -8,7 +8,7 @@ import "C"
 import (
 	"github.com/CannibalVox/VKng/core"
 	"github.com/CannibalVox/cgoalloc"
-	"github.com/palantir/stacktrace"
+	"github.com/cockroachdb/errors"
 	"unsafe"
 )
 
@@ -21,7 +21,7 @@ type ShaderModuleOptions struct {
 func (o *ShaderModuleOptions) AllocForC(allocator *cgoalloc.ArenaAllocator) (unsafe.Pointer, error) {
 	byteCodeLen := len(o.SpirVByteCode)
 	if byteCodeLen == 0 {
-		return nil, stacktrace.NewError("attempted to create a shader module with no shader bytecode")
+		return nil, errors.New("attempted to create a shader module with no shader bytecode")
 	}
 
 	createInfo := (*C.VkShaderModuleCreateInfo)(allocator.Malloc(int(unsafe.Sizeof([1]C.VkShaderModuleCreateInfo{}))))

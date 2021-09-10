@@ -35,7 +35,7 @@ func (o *PipelineLayoutOptions) AllocForC(allocator *cgoalloc.ArenaAllocator) (u
 		setLayoutSlice := ([]C.VkDescriptorSetLayout)(unsafe.Slice(setLayoutPtr, setLayoutCount))
 
 		for i := 0; i < setLayoutCount; i++ {
-			setLayoutSlice[i] = o.SetLayouts[i].handle
+			setLayoutSlice[i] = (C.VkDescriptorSetLayout)(unsafe.Pointer(o.SetLayouts[i].handle))
 		}
 		createInfo.pSetLayouts = setLayoutPtr
 	}

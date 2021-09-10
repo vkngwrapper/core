@@ -6,19 +6,22 @@ package resource
 */
 import "C"
 import (
-	"github.com/CannibalVox/VKng/core"
+	"github.com/CannibalVox/VKng/core/loader"
 )
 
-type QueueHandle C.VkQueue
 type Queue struct {
-	handle QueueHandle
+	loader *loader.Loader
+	handle loader.VkQueue
 }
 
-func (q *Queue) Handle() QueueHandle {
+func (q *Queue) Handle() loader.VkQueue {
 	return q.handle
 }
 
-func (q *Queue) WaitForIdle() (core.Result, error) {
-	res := core.Result(C.vkQueueWaitIdle(q.handle))
-	return res, res.ToError()
+func (q *Queue) Loader() *loader.Loader {
+	return q.loader
+}
+
+func (q *Queue) WaitForIdle() (loader.VkResult, error) {
+	return q.loader.VkQueueWaitIdle(q.handle)
 }

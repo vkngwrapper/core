@@ -8,7 +8,7 @@ import "C"
 import (
 	"github.com/CannibalVox/VKng/core"
 	"github.com/CannibalVox/cgoalloc"
-	"github.com/palantir/stacktrace"
+	"github.com/cockroachdb/errors"
 	"unsafe"
 )
 
@@ -28,7 +28,7 @@ type QueueFamilyOptions struct {
 
 func (o *DeviceOptions) AllocForC(allocator *cgoalloc.ArenaAllocator) (unsafe.Pointer, error) {
 	if len(o.QueueFamilies) == 0 {
-		return nil, stacktrace.NewError("building a vulkan device before adding queue families")
+		return nil, errors.New("building a vulkan device before adding queue families")
 	}
 
 	// Alloc queue families
@@ -37,7 +37,7 @@ func (o *DeviceOptions) AllocForC(allocator *cgoalloc.ArenaAllocator) (unsafe.Po
 
 	for idx, queueFamily := range o.QueueFamilies {
 		if len(queueFamily.QueuePriorities) == 0 {
-			return nil, stacktrace.NewError("building vulkan device: queue family %d had no queue priorities", queueFamily.QueueFamilyIndex)
+			return nil, errors.Newf("building vulkan device: queue family %d had no queue priorities", queueFamily.QueueFamilyIndex)
 		}
 
 		prioritiesPtr := allocator.Malloc(len(queueFamily.QueuePriorities) * int(unsafe.Sizeof(C.float(0))))

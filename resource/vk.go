@@ -1,39 +1,36 @@
 package resource
 
 /*
-#cgo windows LDFLAGS: -lvulkan
-#cgo linux freebsd darwin openbsd pkg-config: vulkan
 #include <stdlib.h>
 #include "../vulkan/vulkan.h"
 */
 import "C"
 import (
 	"github.com/CannibalVox/VKng/core"
+	"github.com/CannibalVox/VKng/core/loader"
 	"github.com/CannibalVox/cgoalloc"
 	"unsafe"
 )
 
-func AvailableExtensions(alloc cgoalloc.Allocator) (map[string]*core.ExtensionProperties, core.Result, error) {
-	extensionCount := (*C.uint32_t)(alloc.Malloc(int(unsafe.Sizeof(C.uint32_t(0)))))
+func AvailableExtensions(alloc cgoalloc.Allocator, load *loader.Loader) (map[string]*core.ExtensionProperties, loader.VkResult, error) {
+	extensionCount := (*loader.Uint32)(alloc.Malloc(int(unsafe.Sizeof(C.uint32_t(0)))))
 	defer alloc.Free(unsafe.Pointer(extensionCount))
 
-	res := core.Result(C.vkEnumerateInstanceExtensionProperties(nil, extensionCount, nil))
-	err := res.ToError()
+	res, err := load.VkEnumerateInstanceExtensionProperties(nil, extensionCount, nil)
 	if err != nil || *extensionCount == 0 {
 		return nil, res, err
 	}
 
-	extensions := (*C.VkExtensionProperties)(alloc.Malloc(int(*extensionCount) * int(unsafe.Sizeof(C.VkExtensionProperties{}))))
-	defer alloc.Free(unsafe.Pointer(extensions))
+	extensionsUnsafe := alloc.Malloc(int(*extensionCount) * int(unsafe.Sizeof(C.VkExtensionProperties{})))
+	defer alloc.Free(extensionsUnsafe)
 
-	res = core.Result(C.vkEnumerateInstanceExtensionProperties(nil, extensionCount, extensions))
-	err = res.ToError()
+	res, err = load.VkEnumerateInstanceExtensionProperties(nil, extensionCount, (*loader.VkExtensionProperties)(extensionsUnsafe))
 	if err != nil {
 		return nil, res, err
 	}
 
 	intExtensionCount := int(*extensionCount)
-	extensionArray := ([]C.VkExtensionProperties)(unsafe.Slice(extensions, intExtensionCount))
+	extensionArray := ([]C.VkExtensionProperties)(unsafe.Slice((*C.VkExtensionProperties)(extensionsUnsafe), intExtensionCount))
 	outExtensions := make(map[string]*core.ExtensionProperties)
 	for i := 0; i < intExtensionCount; i++ {
 		extension := extensionArray[i]
@@ -53,27 +50,25 @@ func AvailableExtensions(alloc cgoalloc.Allocator) (map[string]*core.ExtensionPr
 	return outExtensions, res, nil
 }
 
-func AvailableLayers(alloc cgoalloc.Allocator) (map[string]*core.LayerProperties, core.Result, error) {
-	layerCount := (*C.uint32_t)(alloc.Malloc(int(unsafe.Sizeof(C.uint32_t(0)))))
+func AvailableLayers(alloc cgoalloc.Allocator, load *loader.Loader) (map[string]*core.LayerProperties, loader.VkResult, error) {
+	layerCount := (*loader.Uint32)(alloc.Malloc(int(unsafe.Sizeof(C.uint32_t(0)))))
 	defer alloc.Free(unsafe.Pointer(layerCount))
 
-	res := core.Result(C.vkEnumerateInstanceLayerProperties(layerCount, nil))
-	err := res.ToError()
+	res, err := load.VkEnumerateInstanceLayerProperties(layerCount, nil)
 	if err != nil || *layerCount == 0 {
 		return nil, res, err
 	}
 
-	layers := (*C.VkLayerProperties)(alloc.Malloc(int(*layerCount) * int(unsafe.Sizeof(C.VkLayerProperties{}))))
-	defer alloc.Free(unsafe.Pointer(layers))
+	layersUnsafe := alloc.Malloc(int(*layerCount) * int(unsafe.Sizeof(C.VkLayerProperties{})))
+	defer alloc.Free(layersUnsafe)
 
-	res = core.Result(C.vkEnumerateInstanceLayerProperties(layerCount, layers))
-	err = res.ToError()
+	res, err = load.VkEnumerateInstanceLayerProperties(layerCount, (*loader.VkLayerProperties)(layersUnsafe))
 	if err != nil {
 		return nil, res, err
 	}
 
 	intLayerCount := int(*layerCount)
-	layerArray := ([]C.VkLayerProperties)(unsafe.Slice(layers, intLayerCount))
+	layerArray := ([]C.VkLayerProperties)(unsafe.Slice((*C.VkLayerProperties)(layersUnsafe), intLayerCount))
 	outLayers := make(map[string]*core.LayerProperties)
 	for i := 0; i < intLayerCount; i++ {
 		layer := layerArray[i]

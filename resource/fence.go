@@ -5,17 +5,18 @@ package resource
 #include "../vulkan/vulkan.h"
 */
 import "C"
+import "github.com/CannibalVox/VKng/core/loader"
 
-type FenceHandle C.VkFence
 type Fence struct {
-	device C.VkDevice
-	handle C.VkFence
+	loader *loader.Loader
+	device loader.VkDevice
+	handle loader.VkFence
 }
 
-func (f *Fence) Handle() FenceHandle {
-	return FenceHandle(f.handle)
+func (f *Fence) Handle() loader.VkFence {
+	return f.handle
 }
 
-func (f *Fence) Destroy() {
-	C.vkDestroyFence(f.device, f.handle, nil)
+func (f *Fence) Destroy() error {
+	return f.loader.VkDestroyFence(f.device, f.handle, nil)
 }

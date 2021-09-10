@@ -28,7 +28,7 @@ func (o *FramebufferOptions) AllocForC(allocator *cgoalloc.ArenaAllocator) (unsa
 	createInfo.sType = C.VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO
 	createInfo.flags = 0
 
-	createInfo.renderPass = o.RenderPass.handle
+	createInfo.renderPass = (C.VkRenderPass)(unsafe.Pointer(o.RenderPass.handle))
 
 	attachmentCount := len(o.Attachments)
 	createInfo.attachmentCount = C.uint32_t(attachmentCount)

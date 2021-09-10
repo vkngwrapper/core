@@ -5,17 +5,18 @@ package resource
 #include "../vulkan/vulkan.h"
 */
 import "C"
+import "github.com/CannibalVox/VKng/core/loader"
 
-type SemaphoreHandle C.VkSemaphore
 type Semaphore struct {
-	device C.VkDevice
-	handle C.VkSemaphore
+	loader *loader.Loader
+	device loader.VkDevice
+	handle loader.VkSemaphore
 }
 
-func (s *Semaphore) Handle() SemaphoreHandle {
-	return SemaphoreHandle(s.handle)
+func (s *Semaphore) Handle() loader.VkSemaphore {
+	return s.handle
 }
 
-func (s *Semaphore) Destroy() {
-	C.vkDestroySemaphore(s.device, s.handle, nil)
+func (s *Semaphore) Destroy() error {
+	return s.loader.VkDestroySemaphore(s.device, s.handle, nil)
 }

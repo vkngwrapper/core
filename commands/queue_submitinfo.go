@@ -7,9 +7,10 @@ package commands
 import "C"
 import (
 	"github.com/CannibalVox/VKng/core"
+	"github.com/CannibalVox/VKng/core/loader"
 	"github.com/CannibalVox/VKng/core/resource"
 	"github.com/CannibalVox/cgoalloc"
-	"github.com/palantir/stacktrace"
+	"github.com/cockroachdb/errors"
 	"unsafe"
 )
 
@@ -24,7 +25,7 @@ type SubmitOptions struct {
 
 func (o *SubmitOptions) populate(allocator *cgoalloc.ArenaAllocator, createInfo *C.VkSubmitInfo) error {
 	if len(o.WaitSemaphores) != len(o.WaitDstStages) {
-		return stacktrace.NewError("attempted to submit with %d wait semaphores but %d dst stages- these should match", len(o.WaitSemaphores), len(o.WaitDstStages))
+		return errors.Newf("attempted to submit with %d wait semaphores but %d dst stages- these should match", len(o.WaitSemaphores), len(o.WaitDstStages))
 	}
 
 	createInfo.sType = C.VK_STRUCTURE_TYPE_SUBMIT_INFO
@@ -67,14 +68,14 @@ func (o *SubmitOptions) populate(allocator *cgoalloc.ArenaAllocator, createInfo 
 	createInfo.commandBufferCount = C.uint32_t(commandBufferCount)
 	createInfo.pCommandBuffers = nil
 	if commandBufferCount > 0 {
-		commandBufferPtr := (*C.VkCommandBuffer)(allocator.Malloc(commandBufferCount * int(unsafe.Sizeof([1]C.VkCommandBuffer{}))))
-		commandBufferSlice := ([]C.VkCommandBuffer)(unsafe.Slice(commandBufferPtr, commandBufferCount))
+		commandBufferPtrUnsafe := allocator.Malloc(commandBufferCount * int(unsafe.Sizeof([1]C.VkCommandBuffer{})))
+		commandBufferSlice := ([]loader.VkCommandBuffer)(unsafe.Slice((*loader.VkCommandBuffer)(commandBufferPtrUnsafe), commandBufferCount))
 
 		for i := 0; i < commandBufferCount; i++ {
 			commandBufferSlice[i] = o.CommandBuffers[i].handle
 		}
 
-		createInfo.pCommandBuffers = commandBufferPtr
+		createInfo.pCommandBuffers = (*C.VkCommandBuffer)(commandBufferPtrUnsafe)
 	}
 
 	var err error
@@ -101,28 +102,25 @@ func (o *SubmitOptions) AllocForC(allocator *cgoalloc.ArenaAllocator) (unsafe.Po
 	return unsafe.Pointer(createInfo), nil
 }
 
-func SubmitToQueue(allocator cgoalloc.Allocator, queue *resource.Queue, fence *resource.Fence, o []*SubmitOptions) (core.Result, error) {
+func SubmitToQueue(allocator cgoalloc.Allocator, queue *resource.Queue, fence *resource.Fence, o []*SubmitOptions) (loader.VkResult, error) {
 	arena := cgoalloc.CreateArenaAllocator(allocator)
 	defer arena.FreeAll()
 
 	submitCount := len(o)
-	createInfoPtr := (*C.VkSubmitInfo)(allocator.Malloc(submitCount * C.sizeof_struct_VkSubmitInfo))
-	createInfoSlice := ([]C.VkSubmitInfo)(unsafe.Slice(createInfoPtr, submitCount))
+	createInfoPtrUnsafe := allocator.Malloc(submitCount * C.sizeof_struct_VkSubmitInfo)
+	createInfoSlice := ([]C.VkSubmitInfo)(unsafe.Slice((*C.VkSubmitInfo)(createInfoPtrUnsafe), submitCount))
 
 	for i := 0; i < submitCount; i++ {
 		err := o[i].populate(arena, &(createInfoSlice[i]))
 		if err != nil {
-			return core.VKErrorUnknown, err
+			return loader.VKErrorUnknown, err
 		}
 	}
 
-	queueHandle := C.VkQueue(unsafe.Pointer(queue.Handle()))
-
-	var fenceHandle C.VkFence = nil
+	var fenceHandle loader.VkFence = nil
 	if fence != nil {
-		fenceHandle = C.VkFence(unsafe.Pointer(fence.Handle()))
+		fenceHandle = fence.Handle()
 	}
 
-	res := core.Result(C.vkQueueSubmit(queueHandle, C.uint32_t(submitCount), createInfoPtr, fenceHandle))
-	return res, res.ToError()
+	return queue.Loader().VkQueueSubmit(queue.Handle(), loader.Uint32(submitCount), (*loader.VkSubmitInfo)(createInfoPtrUnsafe), fenceHandle)
 }

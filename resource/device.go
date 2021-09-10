@@ -7,6 +7,7 @@ package resource
 import "C"
 import (
 	"github.com/CannibalVox/VKng/core"
+	"github.com/CannibalVox/VKng/core/loader"
 	"github.com/CannibalVox/cgoalloc"
 	"time"
 	"unsafe"
@@ -14,117 +15,120 @@ import (
 
 type DeviceHandle C.VkDevice
 type Device struct {
-	handle C.VkDevice
+	loader *loader.Loader
+	handle loader.VkDevice
 }
 
-func (d *Device) Handle() DeviceHandle {
-	return DeviceHandle(d.handle)
+func (d *Device) Loader() *loader.Loader {
+	return d.loader
 }
 
-func (d *Device) Destroy() {
-	C.vkDestroyDevice(d.handle, nil)
+func (d *Device) Handle() loader.VkDevice {
+	return d.handle
+}
+
+func (d *Device) Destroy() error {
+	return d.loader.VkDestroyDevice(d.handle, nil)
 }
 
 func (d *Device) GetQueue(queueFamilyIndex int, queueIndex int) (*Queue, error) {
-	var queueHandle C.VkQueue
+	var queueHandle loader.VkQueue
 
-	C.vkGetDeviceQueue(d.handle, C.uint32_t(queueFamilyIndex), C.uint32_t(queueIndex), &queueHandle)
+	err := d.loader.VkGetDeviceQueue(d.handle, loader.Uint32(queueFamilyIndex), loader.Uint32(queueIndex), &queueHandle)
+	if err != nil {
+		return nil, err
+	}
 
-	return &Queue{handle: QueueHandle(queueHandle)}, nil
+	return &Queue{loader: d.loader, handle: queueHandle}, nil
 }
 
-func (d *Device) CreateShaderModule(allocator cgoalloc.Allocator, o *ShaderModuleOptions) (*ShaderModule, core.Result, error) {
+func (d *Device) CreateShaderModule(allocator cgoalloc.Allocator, o *ShaderModuleOptions) (*ShaderModule, loader.VkResult, error) {
 	arena := cgoalloc.CreateArenaAllocator(allocator)
 	defer arena.FreeAll()
 
 	createInfo, err := o.AllocForC(arena)
 	if err != nil {
-		return nil, core.VKErrorUnknown, err
+		return nil, loader.VKErrorUnknown, err
 	}
 
-	var shaderModule C.VkShaderModule
-	res := core.Result(C.vkCreateShaderModule(d.handle, (*C.VkShaderModuleCreateInfo)(createInfo), nil, &shaderModule))
-	err = res.ToError()
+	var shaderModule loader.VkShaderModule
+	res, err := d.loader.VkCreateShaderModule(d.handle, (*loader.VkShaderModuleCreateInfo)(createInfo), nil, &shaderModule)
 	if err != nil {
 		return nil, res, err
 	}
 
-	return &ShaderModule{handle: shaderModule, device: d.handle}, res, nil
+	return &ShaderModule{loader: d.loader, handle: shaderModule, device: d.handle}, res, nil
 }
 
-func (d *Device) CreateImageView(allocator cgoalloc.Allocator, o *ImageViewOptions) (*ImageView, core.Result, error) {
+func (d *Device) CreateImageView(allocator cgoalloc.Allocator, o *ImageViewOptions) (*ImageView, loader.VkResult, error) {
 	arena := cgoalloc.CreateArenaAllocator(allocator)
 	defer arena.FreeAll()
 
 	createInfo, err := o.AllocForC(arena)
 	if err != nil {
-		return nil, core.VKErrorUnknown, err
+		return nil, loader.VKErrorUnknown, err
 	}
 
-	var imageViewHandle C.VkImageView
+	var imageViewHandle loader.VkImageView
 
-	res := core.Result(C.vkCreateImageView(d.handle, (*C.VkImageViewCreateInfo)(createInfo), nil, &imageViewHandle))
-	err = res.ToError()
+	res, err := d.loader.VkCreateImageView(d.handle, (*loader.VkImageViewCreateInfo)(createInfo), nil, &imageViewHandle)
 	if err != nil {
 		return nil, res, err
 	}
 
-	return &ImageView{handle: imageViewHandle, device: d.handle}, res, nil
+	return &ImageView{loader: d.loader, handle: imageViewHandle, device: d.handle}, res, nil
 }
 
-func (d *Device) CreateSemaphore(allocator cgoalloc.Allocator, o *SemaphoreOptions) (*Semaphore, core.Result, error) {
+func (d *Device) CreateSemaphore(allocator cgoalloc.Allocator, o *SemaphoreOptions) (*Semaphore, loader.VkResult, error) {
 	arena := cgoalloc.CreateArenaAllocator(allocator)
 	defer arena.FreeAll()
 
 	createInfo, err := o.AllocForC(arena)
 	if err != nil {
-		return nil, core.VKErrorUnknown, err
+		return nil, loader.VKErrorUnknown, err
 	}
 
-	var semaphoreHandle C.VkSemaphore
+	var semaphoreHandle loader.VkSemaphore
 
-	res := core.Result(C.vkCreateSemaphore(d.handle, (*C.VkSemaphoreCreateInfo)(createInfo), nil, &semaphoreHandle))
-	err = res.ToError()
+	res, err := d.loader.VkCreateSemaphore(d.handle, (*loader.VkSemaphoreCreateInfo)(createInfo), nil, &semaphoreHandle)
 	if err != nil {
 		return nil, res, err
 	}
 
-	return &Semaphore{device: d.handle, handle: semaphoreHandle}, res, nil
+	return &Semaphore{loader: d.loader, device: d.handle, handle: semaphoreHandle}, res, nil
 }
 
-func (d *Device) CreateFence(allocator cgoalloc.Allocator, o *FenceOptions) (*Fence, core.Result, error) {
+func (d *Device) CreateFence(allocator cgoalloc.Allocator, o *FenceOptions) (*Fence, loader.VkResult, error) {
 	arena := cgoalloc.CreateArenaAllocator(allocator)
 	defer arena.FreeAll()
 
 	createInfo, err := o.AllocForC(arena)
 	if err != nil {
-		return nil, core.VKErrorUnknown, err
+		return nil, loader.VKErrorUnknown, err
 	}
 
-	var fenceHandle C.VkFence
+	var fenceHandle loader.VkFence
 
-	res := core.Result(C.vkCreateFence(d.handle, (*C.VkFenceCreateInfo)(createInfo), nil, &fenceHandle))
-	err = res.ToError()
+	res, err := d.loader.VkCreateFence(d.handle, (*loader.VkFenceCreateInfo)(createInfo), nil, &fenceHandle)
 	if err != nil {
 		return nil, res, err
 	}
 
-	return &Fence{device: d.handle, handle: fenceHandle}, res, nil
+	return &Fence{loader: d.loader, device: d.handle, handle: fenceHandle}, res, nil
 }
 
-func (d *Device) WaitForIdle() (core.Result, error) {
-	res := core.Result(C.vkDeviceWaitIdle(d.handle))
-	return res, res.ToError()
+func (d *Device) WaitForIdle() (loader.VkResult, error) {
+	return d.loader.VkDeviceWaitIdle(d.handle)
 }
 
-func (d *Device) WaitForFences(allocator cgoalloc.Allocator, waitForAll bool, timeout time.Duration, fences []*Fence) (core.Result, error) {
+func (d *Device) WaitForFences(allocator cgoalloc.Allocator, waitForAll bool, timeout time.Duration, fences []*Fence) (loader.VkResult, error) {
 	fenceCount := len(fences)
 	fenceUnsafePtr := allocator.Malloc(fenceCount * int(unsafe.Sizeof([1]C.VkFence{})))
 	defer allocator.Free(fenceUnsafePtr)
 
-	fencePtr := (*C.VkFence)(fenceUnsafePtr)
+	fencePtr := (*loader.VkFence)(fenceUnsafePtr)
 
-	fenceSlice := ([]C.VkFence)(unsafe.Slice(fencePtr, fenceCount))
+	fenceSlice := ([]loader.VkFence)(unsafe.Slice(fencePtr, fenceCount))
 	for i := 0; i < fenceCount; i++ {
 		fenceSlice[i] = fences[i].handle
 	}
@@ -134,63 +138,60 @@ func (d *Device) WaitForFences(allocator cgoalloc.Allocator, waitForAll bool, ti
 		waitAllConst = C.VK_TRUE
 	}
 
-	res := core.Result(C.vkWaitForFences(d.handle, C.uint32_t(fenceCount), fencePtr, C.uint(waitAllConst), C.uint64_t(core.TimeoutNanoseconds(timeout))))
-	return res, res.ToError()
+	return d.loader.VkWaitForFences(d.handle, loader.Uint32(fenceCount), fencePtr, loader.VkBool32(waitAllConst), loader.Uint64(core.TimeoutNanoseconds(timeout)))
 }
 
-func (d *Device) ResetFences(allocator cgoalloc.Allocator, fences []*Fence) (core.Result, error) {
+func (d *Device) ResetFences(allocator cgoalloc.Allocator, fences []*Fence) (loader.VkResult, error) {
 	fenceCount := len(fences)
 	fenceUnsafePtr := allocator.Malloc(fenceCount * int(unsafe.Sizeof([1]C.VkFence{})))
 	defer allocator.Free(fenceUnsafePtr)
 
-	fencePtr := (*C.VkFence)(fenceUnsafePtr)
-	fenceSlice := ([]C.VkFence)(unsafe.Slice(fencePtr, fenceCount))
+	fencePtr := (*loader.VkFence)(fenceUnsafePtr)
+	fenceSlice := ([]loader.VkFence)(unsafe.Slice(fencePtr, fenceCount))
 	for i := 0; i < fenceCount; i++ {
 		fenceSlice[i] = fences[i].handle
 	}
 
-	res := core.Result(C.vkResetFences(d.handle, C.uint32_t(fenceCount), fencePtr))
-	return res, res.ToError()
+	return d.loader.VkResetFences(d.handle, loader.Uint32(fenceCount), fencePtr)
 }
 
-func (d *Device) CreateBuffer(allocator cgoalloc.Allocator, o *BufferOptions) (*Buffer, core.Result, error) {
+func (d *Device) CreateBuffer(allocator cgoalloc.Allocator, o *BufferOptions) (*Buffer, loader.VkResult, error) {
 	arena := cgoalloc.CreateArenaAllocator(allocator)
 	defer arena.FreeAll()
 
 	createInfo, err := o.AllocForC(arena)
 	if err != nil {
-		return nil, core.VKErrorUnknown, err
+		return nil, loader.VKErrorUnknown, err
 	}
 
-	var buffer C.VkBuffer
+	var buffer loader.VkBuffer
 
-	res := core.Result(C.vkCreateBuffer(d.handle, (*C.VkBufferCreateInfo)(createInfo), nil, &buffer))
-	err = res.ToError()
+	res, err := d.loader.VkCreateBuffer(d.handle, (*loader.VkBufferCreateInfo)(createInfo), nil, &buffer)
 	if err != nil {
 		return nil, res, err
 	}
 
-	return &Buffer{handle: buffer, device: d.handle}, res, nil
+	return &Buffer{loader: d.loader, handle: buffer, device: d.handle}, res, nil
 }
 
-func (d *Device) AllocateMemory(allocator cgoalloc.Allocator, o *DeviceMemoryOptions) (*DeviceMemory, core.Result, error) {
+func (d *Device) AllocateMemory(allocator cgoalloc.Allocator, o *DeviceMemoryOptions) (*DeviceMemory, loader.VkResult, error) {
 	arena := cgoalloc.CreateArenaAllocator(allocator)
 	defer arena.FreeAll()
 
 	createInfo, err := o.AllocForC(arena)
 	if err != nil {
-		return nil, core.VKErrorUnknown, err
+		return nil, loader.VKErrorUnknown, err
 	}
 
-	var deviceMemory C.VkDeviceMemory
+	var deviceMemory loader.VkDeviceMemory
 
-	res := core.Result(C.vkAllocateMemory(d.handle, (*C.VkMemoryAllocateInfo)(createInfo), nil, &deviceMemory))
-	err = res.ToError()
+	res, err := d.loader.VkAllocateMemory(d.handle, (*loader.VkMemoryAllocateInfo)(createInfo), nil, &deviceMemory)
 	if err != nil {
 		return nil, res, err
 	}
 
 	return &DeviceMemory{
+		loader: d.loader,
 		device: d.handle,
 		handle: deviceMemory,
 	}, res, nil

@@ -5,17 +5,18 @@ package resource
 #include "../vulkan/vulkan.h"
 */
 import "C"
+import "github.com/CannibalVox/VKng/core/loader"
 
-type ShaderModuleHandle C.VkShaderModule
 type ShaderModule struct {
-	device C.VkDevice
-	handle C.VkShaderModule
+	loader *loader.Loader
+	device loader.VkDevice
+	handle loader.VkShaderModule
 }
 
-func (m *ShaderModule) Handle() ShaderModuleHandle {
-	return ShaderModuleHandle(m.handle)
+func (m *ShaderModule) Handle() loader.VkShaderModule {
+	return m.handle
 }
 
-func (m *ShaderModule) Destroy() {
-	C.vkDestroyShaderModule(m.device, m.handle, nil)
+func (m *ShaderModule) Destroy() error {
+	return m.loader.VkDestroyShaderModule(m.device, m.handle, nil)
 }

@@ -7,25 +7,29 @@ package resource
 import "C"
 import (
 	"github.com/CannibalVox/VKng/core"
+	"github.com/CannibalVox/VKng/core/loader"
 	"github.com/CannibalVox/cgoalloc"
 	"github.com/google/uuid"
 	"unsafe"
 )
 
-type PhysicalDeviceHandle C.VkPhysicalDevice
 type PhysicalDevice struct {
-	handle C.VkPhysicalDevice
+	loader *loader.Loader
+	handle loader.VkPhysicalDevice
 }
 
-func (d *PhysicalDevice) Handle() PhysicalDeviceHandle {
-	return PhysicalDeviceHandle(d.handle)
+func (d *PhysicalDevice) Handle() loader.VkPhysicalDevice {
+	return d.handle
 }
 
 func (d *PhysicalDevice) QueueFamilyProperties(allocator cgoalloc.Allocator) ([]*core.QueueFamily, error) {
-	count := (*C.uint32_t)(allocator.Malloc(int(unsafe.Sizeof(C.uint32_t(0)))))
+	count := (*loader.Uint32)(allocator.Malloc(int(unsafe.Sizeof(C.uint32_t(0)))))
 	defer allocator.Free(unsafe.Pointer(count))
 
-	C.vkGetPhysicalDeviceQueueFamilyProperties(d.handle, count, nil)
+	err := d.loader.VkGetPhysicalDeviceQueueFamilyProperties(d.handle, count, nil)
+	if err != nil {
+		return nil, err
+	}
 
 	if *count == 0 {
 		return nil, nil
@@ -37,7 +41,10 @@ func (d *PhysicalDevice) QueueFamilyProperties(allocator cgoalloc.Allocator) ([]
 	defer allocator.Free(allocatedHandles)
 	familyProperties := ([]C.VkQueueFamilyProperties)(unsafe.Slice((*C.VkQueueFamilyProperties)(allocatedHandles), int(*count)))
 
-	C.vkGetPhysicalDeviceQueueFamilyProperties(d.handle, count, (*C.VkQueueFamilyProperties)(allocatedHandles))
+	err = d.loader.VkGetPhysicalDeviceQueueFamilyProperties(d.handle, count, (*loader.VkQueueFamilyProperties)(allocatedHandles))
+	if err != nil {
+		return nil, err
+	}
 
 	var queueFamilies []*core.QueueFamily
 	for i := 0; i < goCount; i++ {
@@ -56,51 +63,60 @@ func (d *PhysicalDevice) QueueFamilyProperties(allocator cgoalloc.Allocator) ([]
 	return queueFamilies, nil
 }
 
-func (d *PhysicalDevice) CreateDevice(allocator cgoalloc.Allocator, options *DeviceOptions) (*Device, core.Result, error) {
+func (d *PhysicalDevice) CreateDevice(allocator cgoalloc.Allocator, options *DeviceOptions) (*Device, loader.VkResult, error) {
 	arena := cgoalloc.CreateArenaAllocator(allocator)
 	defer arena.FreeAll()
 
 	createInfo, err := options.AllocForC(arena)
 	if err != nil {
-		return nil, core.VKErrorUnknown, err
+		return nil, loader.VKErrorUnknown, err
 	}
 
-	var deviceHandle C.VkDevice
-	res := core.Result(C.vkCreateDevice(d.handle, (*C.VkDeviceCreateInfo)(createInfo), nil, &deviceHandle))
-	err = res.ToError()
+	var deviceHandle loader.VkDevice
+	res, err := d.loader.VkCreateDevice(d.handle, (*loader.VkDeviceCreateInfo)(createInfo), nil, &deviceHandle)
 	if err != nil {
 		return nil, res, err
 	}
 
-	return &Device{handle: deviceHandle}, res, nil
+	deviceLoader, err := d.loader.CreateDeviceLoader(deviceHandle)
+	if err != nil {
+		return nil, loader.VKErrorUnknown, err
+	}
+
+	return &Device{loader: deviceLoader, handle: deviceHandle}, res, nil
 }
 
 func (d *PhysicalDevice) Properties(allocator cgoalloc.Allocator) (*core.PhysicalDeviceProperties, error) {
-	properties := (*C.VkPhysicalDeviceProperties)(allocator.Malloc(int(unsafe.Sizeof([1]C.VkPhysicalDeviceProperties{}))))
-	defer allocator.Free(unsafe.Pointer(properties))
+	propertiesUnsafe := allocator.Malloc(int(unsafe.Sizeof([1]C.VkPhysicalDeviceProperties{})))
+	defer allocator.Free(propertiesUnsafe)
 
-	C.vkGetPhysicalDeviceProperties(d.handle, properties)
+	err := d.loader.VkGetPhysicalDeviceProperties(d.handle, (*loader.VkPhysicalDeviceProperties)(propertiesUnsafe))
+	if err != nil {
+		return nil, err
+	}
 
-	return createPhysicalDeviceProperties(properties)
+	return createPhysicalDeviceProperties((*C.VkPhysicalDeviceProperties)(propertiesUnsafe))
 }
 
 func (d *PhysicalDevice) Features(allocator cgoalloc.Allocator) (*core.PhysicalDeviceFeatures, error) {
-	features := (*C.VkPhysicalDeviceFeatures)(allocator.Malloc(int(unsafe.Sizeof([1]C.VkPhysicalDeviceFeatures{}))))
-	defer allocator.Free(unsafe.Pointer(features))
+	featuresUnsafe := allocator.Malloc(int(unsafe.Sizeof([1]C.VkPhysicalDeviceFeatures{})))
+	defer allocator.Free(featuresUnsafe)
 
-	C.vkGetPhysicalDeviceFeatures(d.handle, features)
+	err := d.loader.VkGetPhysicalDeviceFeatures(d.handle, (*loader.VkPhysicalDeviceFeatures)(featuresUnsafe))
+	if err != nil {
+		return nil, err
+	}
 
-	return createPhysicalDeviceFeatures(features), nil
+	return createPhysicalDeviceFeatures((*C.VkPhysicalDeviceFeatures)(featuresUnsafe)), nil
 }
 
-func (d *PhysicalDevice) AvailableExtensions(allocator cgoalloc.Allocator) (map[string]*core.ExtensionProperties, core.Result, error) {
+func (d *PhysicalDevice) AvailableExtensions(allocator cgoalloc.Allocator) (map[string]*core.ExtensionProperties, loader.VkResult, error) {
 	extensionCountPtr := allocator.Malloc(int(unsafe.Sizeof(C.uint32_t(0))))
 	defer allocator.Free(extensionCountPtr)
 
-	extensionCount := (*C.uint32_t)(extensionCountPtr)
+	extensionCount := (*loader.Uint32)(extensionCountPtr)
 
-	res := core.Result(C.vkEnumerateDeviceExtensionProperties(d.handle, nil, extensionCount, nil))
-	err := res.ToError()
+	res, err := d.loader.VkEnumerateDeviceExtensionProperties(d.handle, nil, extensionCount, nil)
 
 	if err != nil || *extensionCount == 0 {
 		return nil, res, err
@@ -110,15 +126,13 @@ func (d *PhysicalDevice) AvailableExtensions(allocator cgoalloc.Allocator) (map[
 	extensionsPtr := allocator.Malloc(extensionTotal * int(unsafe.Sizeof([1]C.VkExtensionProperties{})))
 	defer allocator.Free(extensionsPtr)
 
-	typedExtensionsPtr := (*C.VkExtensionProperties)(extensionsPtr)
-	res = core.Result(C.vkEnumerateDeviceExtensionProperties(d.handle, nil, extensionCount, typedExtensionsPtr))
-	err = res.ToError()
+	res, err = d.loader.VkEnumerateDeviceExtensionProperties(d.handle, nil, extensionCount, (*loader.VkExtensionProperties)(extensionsPtr))
 	if err != nil {
 		return nil, res, err
 	}
 
 	retVal := make(map[string]*core.ExtensionProperties)
-	extensionSlice := ([]C.VkExtensionProperties)(unsafe.Slice(typedExtensionsPtr, extensionTotal))
+	extensionSlice := ([]C.VkExtensionProperties)(unsafe.Slice((*C.VkExtensionProperties)(extensionsPtr), extensionTotal))
 
 	for i := 0; i < extensionTotal; i++ {
 		extension := extensionSlice[i]

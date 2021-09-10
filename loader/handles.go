@@ -1,0 +1,126 @@
+package loader
+
+/*
+#include "func_ptrs.h"
+*/
+import "C"
+
+type VkBuffer C.VkBuffer
+type VkBufferView C.VkBufferView
+type VkCommandBuffer C.VkCommandBuffer
+type VkCommandPool C.VkCommandPool
+type VkDescriptorPool C.VkDescriptorPool
+type VkDescriptorSet C.VkDescriptorSet
+type VkDescriptorSetLayout C.VkDescriptorSetLayout
+type VkDevice C.VkDevice
+type VkDeviceMemory C.VkDeviceMemory
+type VkEvent C.VkEvent
+type VkFence C.VkFence
+type VkFramebuffer C.VkFramebuffer
+type VkImage C.VkImage
+type VkImageLayout C.VkImageLayout
+type VkImageView C.VkImageView
+type VkInstance C.VkInstance
+type VkPhysicalDevice C.VkPhysicalDevice
+type VkPipeline C.VkPipeline
+type VkPipelineCache C.VkPipelineCache
+type VkPipelineLayout C.VkPipelineLayout
+type VkQueue C.VkQueue
+type VkQueryPool C.VkQueryPool
+type VkRenderPass C.VkRenderPass
+type VkSampler C.VkSampler
+type VkSemaphore C.VkSemaphore
+type VkShaderModule C.VkShaderModule
+
+type VkBufferCreateInfo C.VkBufferCreateInfo
+type VkBufferViewCreateInfo C.VkBufferViewCreateInfo
+type VkBufferMemoryBarrier C.VkBufferMemoryBarrier
+type VkCommandBufferAllocateInfo C.VkCommandBufferAllocateInfo
+type VkCommandBufferBeginInfo C.VkCommandBufferBeginInfo
+type VkCommandPoolCreateInfo C.VkCommandPoolCreateInfo
+type VkComputePipelineCreateInfo C.VkComputePipelineCreateInfo
+type VkCopyDescriptorSet C.VkCopyDescriptorSet
+type VkDescriptorPoolCreateInfo C.VkDescriptorPoolCreateInfo
+type VkDescriptorSetAllocateInfo C.VkDescriptorSetAllocateInfo
+type VkDescriptorSetLayoutCreateInfo C.VkDescriptorSetLayoutCreateInfo
+type VkDeviceCreateInfo C.VkDeviceCreateInfo
+type VkEventCreateInfo C.VkEventCreateInfo
+type VkFenceCreateInfo C.VkFenceCreateInfo
+type VkFramebufferCreateInfo C.VkFramebufferCreateInfo
+type VkGraphicsPipelineCreateInfo C.VkGraphicsPipelineCreateInfo
+type VkImageCreateInfo C.VkImageCreateInfo
+type VkImageViewCreateInfo C.VkImageViewCreateInfo
+type VkImageMemoryBarrier C.VkImageMemoryBarrier
+type VkInstanceCreateInfo C.VkInstanceCreateInfo
+type VkMemoryAllocateInfo C.VkMemoryAllocateInfo
+type VkMemoryBarrier C.VkMemoryBarrier
+type VkPipelineCacheCreateInfo C.VkPipelineCacheCreateInfo
+type VkPipelineLayoutCreateInfo C.VkPipelineLayoutCreateInfo
+type VkQueryPoolCreateInfo C.VkQueryPoolCreateInfo
+type VkRenderPassBeginInfo C.VkRenderPassBeginInfo
+type VkRenderPassCreateInfo C.VkRenderPassCreateInfo
+type VkSamplerCreateInfo C.VkSamplerCreateInfo
+type VkSemaphoreCreateInfo C.VkSemaphoreCreateInfo
+type VkShaderModuleCreateInfo C.VkShaderModuleCreateInfo
+type VkSubmitInfo C.VkSubmitInfo
+type VkWriteDescriptorSet C.VkWriteDescriptorSet
+
+type VkAllocationCallbacks C.VkAllocationCallbacks
+type VkBindSparseInfo C.VkBindSparseInfo
+type VkBufferCopy C.VkBufferCopy
+type VkBufferImageCopy C.VkBufferImageCopy
+type VkClearAttachment C.VkClearAttachment
+type VkClearColorValue C.VkClearColorValue
+type VkClearDepthStencilValue C.VkClearDepthStencilValue
+type VkClearRect C.VkClearRect
+type VkExtensionProperties C.VkExtensionProperties
+type VkExtent2D C.VkExtent2D
+type VkFormatProperties C.VkFormatProperties
+type VkImageBlit C.VkImageBlit
+type VkImageCopy C.VkImageCopy
+type VkImageFormatProperties C.VkImageFormatProperties
+type VkImageResolve C.VkImageResolve
+type VkImageSubresource C.VkImageSubresource
+type VkImageSubresourceRange C.VkImageSubresourceRange
+type VkLayerProperties C.VkLayerProperties
+type VkMappedMemoryRange C.VkMappedMemoryRange
+type VkMemoryRequirements C.VkMemoryRequirements
+type VkPhysicalDeviceFeatures C.VkPhysicalDeviceFeatures
+type VkPhysicalDeviceMemoryProperties C.VkPhysicalDeviceMemoryProperties
+type VkPhysicalDeviceProperties C.VkPhysicalDeviceProperties
+type VkQueueFamilyProperties C.VkQueueFamilyProperties
+type VkRect2D C.VkRect2D
+type VkSparseImageFormatProperties C.VkSparseImageFormatProperties
+type VkSparseImageMemoryRequirements C.VkSparseImageMemoryRequirements
+type VkSubresourceLayout C.VkSubresourceLayout
+type VkViewport C.VkViewport
+
+type VkCommandBufferResetFlags C.VkCommandBufferResetFlags
+type VkCommandPoolResetFlags C.VkCommandPoolResetFlags
+type VkDependencyFlags C.VkDependencyFlags
+type VkDescriptorPoolResetFlags C.VkDescriptorPoolResetFlags
+type VkDeviceSize C.VkDeviceSize
+type VkFilter C.VkFilter
+type VkFormat C.VkFormat
+type VkImageCreateFlags C.VkImageCreateFlags
+type VkImageTiling C.VkImageTiling
+type VkImageType C.VkImageType
+type VkImageUsageFlags C.VkImageUsageFlags
+type VkIndexType C.VkIndexType
+type VkMemoryMapFlags C.VkMemoryMapFlags
+type VkQueryControlFlags C.VkQueryControlFlags
+type VkPipelineBindPoint C.VkPipelineBindPoint
+type VkPipelineStageFlags C.VkPipelineStageFlags
+type VkPiplineStageFlagBits C.VkPipelineStageFlagBits
+type VkQueryResultFlags C.VkQueryResultFlags
+type VkSampleCountFlagBits C.VkSampleCountFlagBits
+type VkShaderStageFlags C.VkShaderStageFlags
+type VkStencilFaceFlags C.VkStencilFaceFlags
+type VkSubpassContents C.VkSubpassContents
+
+type VkBool32 C.VkBool32
+type Int32 C.int32_t
+type Uint32 C.uint32_t
+type Uint64 C.uint64_t
+type Char C.char
+type Float C.float

@@ -5,17 +5,17 @@ package resource
 #include "../vulkan/vulkan.h"
 */
 import "C"
+import "github.com/CannibalVox/VKng/core/loader"
 
-type ImageHandle C.VkImage
 type Image struct {
-	handle C.VkImage
-	device C.VkDevice
+	handle loader.VkImage
+	device loader.VkDevice
 }
 
-func CreateFromHandles(handle ImageHandle, device DeviceHandle) *Image {
-	return &Image{handle: C.VkImage(handle), device: C.VkDevice(device)}
+func CreateFromHandles(handle loader.VkImage, device loader.VkDevice) *Image {
+	return &Image{handle: handle, device: device}
 }
 
-func (i *Image) Handle() ImageHandle {
-	return ImageHandle(i.handle)
+func (i *Image) Handle() loader.VkImage {
+	return i.handle
 }

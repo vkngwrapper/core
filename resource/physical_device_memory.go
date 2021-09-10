@@ -6,6 +6,7 @@ package resource
 */
 import "C"
 import (
+	"github.com/CannibalVox/VKng/core/loader"
 	"github.com/CannibalVox/cgoalloc"
 	"strings"
 )
@@ -115,9 +116,9 @@ func (d *PhysicalDevice) MemoryProperties(allocator cgoalloc.Allocator) *Physica
 	propsUnsafe := allocator.Malloc(C.sizeof_struct_VkPhysicalDeviceMemoryProperties)
 	defer allocator.Free(propsUnsafe)
 
-	props := (*C.VkPhysicalDeviceMemoryProperties)(propsUnsafe)
+	d.loader.VkGetPhysicalDeviceMemoryProperties(d.handle, (*loader.VkPhysicalDeviceMemoryProperties)(propsUnsafe))
 
-	C.vkGetPhysicalDeviceMemoryProperties(d.handle, props)
+	props := (*C.VkPhysicalDeviceMemoryProperties)(propsUnsafe)
 
 	outProps := &PhysicalDeviceMemoryProperties{}
 	typeCount := int(props.memoryTypeCount)

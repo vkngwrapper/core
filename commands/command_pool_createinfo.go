@@ -8,7 +8,7 @@ import "C"
 import (
 	"github.com/CannibalVox/VKng/core"
 	"github.com/CannibalVox/cgoalloc"
-	"github.com/palantir/stacktrace"
+	"github.com/cockroachdb/errors"
 	"strings"
 	"unsafe"
 )
@@ -58,7 +58,7 @@ type CommandPoolOptions struct {
 
 func (o *CommandPoolOptions) AllocForC(allocator *cgoalloc.ArenaAllocator) (unsafe.Pointer, error) {
 	if o.GraphicsQueueFamily == nil {
-		return nil, stacktrace.NewError("attempted to create a command pool without setting GraphicsQueueFamilyIndex")
+		return nil, errors.New("attempted to create a command pool without setting GraphicsQueueFamilyIndex")
 	}
 
 	familyIndex := *o.GraphicsQueueFamily

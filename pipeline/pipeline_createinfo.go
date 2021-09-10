@@ -57,7 +57,7 @@ func (o *Options) populate(allocator *cgoalloc.ArenaAllocator, createInfo *C.VkG
 	createInfo.basePipelineIndex = C.int32_t(o.BasePipelineIndex)
 
 	if o.Layout != nil {
-		createInfo.layout = o.Layout.handle
+		createInfo.layout = (C.VkPipelineLayout)(unsafe.Pointer(o.Layout.handle))
 	}
 
 	if o.RenderPass != nil {
@@ -65,7 +65,7 @@ func (o *Options) populate(allocator *cgoalloc.ArenaAllocator, createInfo *C.VkG
 	}
 
 	if o.BasePipeline != nil {
-		createInfo.basePipelineHandle = o.BasePipeline.handle
+		createInfo.basePipelineHandle = (C.VkPipeline)(unsafe.Pointer(o.BasePipeline.handle))
 	}
 
 	if stageCount > 0 {

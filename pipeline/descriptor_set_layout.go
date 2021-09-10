@@ -5,12 +5,13 @@ package pipeline
 #include "vulkan/vulkan.h"
 */
 import "C"
+import "github.com/CannibalVox/VKng/core/loader"
 
-type DescriptorSetLayoutHandle C.VkDescriptorSetLayout
 type DescriptorSetLayout struct {
-	handle C.VkDescriptorSetLayout
+	loader *loader.Loader
+	handle loader.VkDescriptorSetLayout
 }
 
-func (h *DescriptorSetLayout) Handle() DescriptorSetLayoutHandle {
-	return DescriptorSetLayoutHandle(h.handle)
+func (h *DescriptorSetLayout) Handle() loader.VkDescriptorSetLayout {
+	return h.handle
 }

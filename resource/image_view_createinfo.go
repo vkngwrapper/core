@@ -27,7 +27,7 @@ func (o *ImageViewOptions) AllocForC(allocator *cgoalloc.ArenaAllocator) (unsafe
 
 	createInfo.sType = C.VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO
 	createInfo.flags = 0
-	createInfo.image = o.Image.handle
+	createInfo.image = C.VkImage(unsafe.Pointer(o.Image.Handle()))
 	createInfo.viewType = C.VkImageViewType(o.ViewType)
 	createInfo.format = C.VkFormat(o.Format)
 	createInfo.components.r = C.VkComponentSwizzle(o.Components.R)

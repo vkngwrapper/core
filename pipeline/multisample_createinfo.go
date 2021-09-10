@@ -8,7 +8,7 @@ import "C"
 import (
 	"github.com/CannibalVox/VKng/core"
 	"github.com/CannibalVox/cgoalloc"
-	"github.com/palantir/stacktrace"
+	"github.com/cockroachdb/errors"
 	"unsafe"
 )
 
@@ -57,7 +57,7 @@ func (o *MultisampleOptions) AllocForC(allocator *cgoalloc.ArenaAllocator) (unsa
 		}
 
 		if len(o.SampleMask) != maskSize {
-			return nil, stacktrace.NewError("expected a sample mask size of %d, because %d rasterization samples were specified- however, received a sample mask size of %d", maskSize, sampleCount, len(o.SampleMask))
+			return nil, errors.Newf("expected a sample mask size of %d, because %d rasterization samples were specified- however, received a sample mask size of %d", maskSize, sampleCount, len(o.SampleMask))
 		}
 
 		sampleMaskPtr := (*C.VkSampleMask)(allocator.Malloc(maskSize * int(unsafe.Sizeof(C.VkSampleMask(0)))))

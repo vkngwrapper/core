@@ -6,6 +6,7 @@ package commands
 */
 import "C"
 import (
+	"github.com/CannibalVox/VKng/core/loader"
 	"github.com/CannibalVox/VKng/core/resource"
 	"github.com/CannibalVox/cgoalloc"
 	"unsafe"
@@ -17,7 +18,7 @@ type BufferCopy struct {
 	Size      int
 }
 
-func (c *CommandBuffer) CmdCopyBuffer(allocator cgoalloc.Allocator, srcBuffer *resource.Buffer, dstBuffer *resource.Buffer, copyRegions []BufferCopy) {
+func (c *CommandBuffer) CmdCopyBuffer(allocator cgoalloc.Allocator, srcBuffer *resource.Buffer, dstBuffer *resource.Buffer, copyRegions []BufferCopy) error {
 	copyRegionCount := len(copyRegions)
 	copyRegionUnsafe := allocator.Malloc(copyRegionCount * C.sizeof_struct_VkBufferCopy)
 	defer allocator.Free(copyRegionUnsafe)
@@ -31,8 +32,5 @@ func (c *CommandBuffer) CmdCopyBuffer(allocator cgoalloc.Allocator, srcBuffer *r
 		copyRegionSlice[i].size = C.VkDeviceSize(copyRegions[i].Size)
 	}
 
-	srcBufferHandle := C.VkBuffer(unsafe.Pointer(srcBuffer.Handle()))
-	dstBufferHandle := C.VkBuffer(unsafe.Pointer(dstBuffer.Handle()))
-
-	C.vkCmdCopyBuffer(c.handle, srcBufferHandle, dstBufferHandle, C.uint32_t(copyRegionCount), copyRegionPtr)
+	return c.loader.VkCmdCopyBuffer(c.handle, srcBuffer.Handle(), dstBuffer.Handle(), loader.Uint32(copyRegionCount), (*loader.VkBufferCopy)(copyRegionUnsafe))
 }

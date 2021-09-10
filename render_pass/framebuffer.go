@@ -6,43 +6,40 @@ package render_pass
 */
 import "C"
 import (
-	"github.com/CannibalVox/VKng/core"
+	"github.com/CannibalVox/VKng/core/loader"
 	"github.com/CannibalVox/VKng/core/resource"
 	"github.com/CannibalVox/cgoalloc"
-	"unsafe"
 )
 
-type FramebufferHandle C.VkFramebuffer
 type Framebuffer struct {
-	device C.VkDevice
-	handle C.VkFramebuffer
+	loader *loader.Loader
+	device loader.VkDevice
+	handle loader.VkFramebuffer
 }
 
-func CreateFrameBuffer(allocator cgoalloc.Allocator, device *resource.Device, o *FramebufferOptions) (*Framebuffer, core.Result, error) {
+func CreateFrameBuffer(allocator cgoalloc.Allocator, device *resource.Device, o *FramebufferOptions) (*Framebuffer, loader.VkResult, error) {
 	arena := cgoalloc.CreateArenaAllocator(allocator)
 	defer arena.FreeAll()
 
 	createInfo, err := o.AllocForC(arena)
 	if err != nil {
-		return nil, core.VKErrorUnknown, err
+		return nil, loader.VKErrorUnknown, err
 	}
 
-	deviceHandle := C.VkDevice(unsafe.Pointer(device.Handle()))
-	var framebuffer C.VkFramebuffer
+	var framebuffer loader.VkFramebuffer
 
-	res := core.Result(C.vkCreateFramebuffer(deviceHandle, (*C.VkFramebufferCreateInfo)(createInfo), nil, &framebuffer))
-	err = res.ToError()
+	res, err := device.Loader().VkCreateFramebuffer(device.Handle(), (*loader.VkFramebufferCreateInfo)(createInfo), nil, &framebuffer)
 	if err != nil {
 		return nil, res, err
 	}
 
-	return &Framebuffer{device: deviceHandle, handle: framebuffer}, res, nil
+	return &Framebuffer{loader: device.Loader(), device: device.Handle(), handle: framebuffer}, res, nil
 }
 
-func (b *Framebuffer) Handle() FramebufferHandle {
-	return FramebufferHandle(b.handle)
+func (b *Framebuffer) Handle() loader.VkFramebuffer {
+	return b.handle
 }
 
-func (b *Framebuffer) Destroy() {
-	C.vkDestroyFramebuffer(b.device, b.handle, nil)
+func (b *Framebuffer) Destroy() error {
+	return b.loader.VkDestroyFramebuffer(b.device, b.handle, nil)
 }

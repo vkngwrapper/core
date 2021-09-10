@@ -9,6 +9,7 @@ import (
 	"bytes"
 	"encoding/binary"
 	"github.com/CannibalVox/VKng/core"
+	"github.com/CannibalVox/VKng/core/loader"
 	"github.com/CannibalVox/cgoalloc"
 	"unsafe"
 )
@@ -41,24 +42,23 @@ func (o *DeviceMemoryOptions) AllocForC(allocator *cgoalloc.ArenaAllocator) (uns
 	return unsafe.Pointer(createInfo), nil
 }
 
-type DeviceMemoryHandle C.VkDeviceMemory
 type DeviceMemory struct {
-	device C.VkDevice
-	handle C.VkDeviceMemory
+	loader *loader.Loader
+	device loader.VkDevice
+	handle loader.VkDeviceMemory
 }
 
-func (m *DeviceMemory) Handle() DeviceMemoryHandle {
-	return DeviceMemoryHandle(m.handle)
+func (m *DeviceMemory) Handle() loader.VkDeviceMemory {
+	return m.handle
 }
 
-func (m *DeviceMemory) Free() {
-	C.vkFreeMemory(m.device, m.handle, nil)
+func (m *DeviceMemory) Free() error {
+	return m.loader.VkFreeMemory(m.device, m.handle, nil)
 }
 
-func (m *DeviceMemory) MapMemory(offset int, size int) (unsafe.Pointer, core.Result, error) {
+func (m *DeviceMemory) MapMemory(offset int, size int) (unsafe.Pointer, loader.VkResult, error) {
 	var data unsafe.Pointer
-	res := core.Result(C.vkMapMemory(m.device, m.handle, C.VkDeviceSize(offset), C.VkDeviceSize(size), 0, &data))
-	err := res.ToError()
+	res, err := m.loader.VkMapMemory(m.device, m.handle, loader.VkDeviceSize(offset), loader.VkDeviceSize(size), 0, &data)
 	if err != nil {
 		return nil, res, err
 	}
@@ -66,11 +66,11 @@ func (m *DeviceMemory) MapMemory(offset int, size int) (unsafe.Pointer, core.Res
 	return data, res, nil
 }
 
-func (m *DeviceMemory) UnmapMemory() {
-	C.vkUnmapMemory(m.device, m.handle)
+func (m *DeviceMemory) UnmapMemory() error {
+	return m.loader.VkUnmapMemory(m.device, m.handle)
 }
 
-func (m *DeviceMemory) WriteData(offset int, data interface{}) (core.Result, error) {
+func (m *DeviceMemory) WriteData(offset int, data interface{}) (loader.VkResult, error) {
 	bufferSize := binary.Size(data)
 
 	memoryPtr, res, err := m.MapMemory(offset, bufferSize)
@@ -84,7 +84,7 @@ func (m *DeviceMemory) WriteData(offset int, data interface{}) (core.Result, err
 	buf := &bytes.Buffer{}
 	err = binary.Write(buf, core.ByteOrder, data)
 	if err != nil {
-		return core.VKErrorUnknown, err
+		return loader.VKErrorUnknown, err
 	}
 
 	copy(dataBuffer, buf.Bytes())
