@@ -12,7 +12,7 @@ import (
 )
 
 type ImageViewOptions struct {
-	Image *Image
+	Image Image
 
 	ViewType         core.ImageViewType
 	Format           core.DataFormat

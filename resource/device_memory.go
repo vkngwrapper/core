@@ -42,21 +42,21 @@ func (o *DeviceMemoryOptions) AllocForC(allocator *cgoalloc.ArenaAllocator) (uns
 	return unsafe.Pointer(createInfo), nil
 }
 
-type DeviceMemory struct {
+type VulkanDeviceMemory struct {
 	loader *loader.Loader
 	device loader.VkDevice
 	handle loader.VkDeviceMemory
 }
 
-func (m *DeviceMemory) Handle() loader.VkDeviceMemory {
+func (m *VulkanDeviceMemory) Handle() loader.VkDeviceMemory {
 	return m.handle
 }
 
-func (m *DeviceMemory) Free() error {
+func (m *VulkanDeviceMemory) Free() error {
 	return m.loader.VkFreeMemory(m.device, m.handle, nil)
 }
 
-func (m *DeviceMemory) MapMemory(offset int, size int) (unsafe.Pointer, loader.VkResult, error) {
+func (m *VulkanDeviceMemory) MapMemory(offset int, size int) (unsafe.Pointer, loader.VkResult, error) {
 	var data unsafe.Pointer
 	res, err := m.loader.VkMapMemory(m.device, m.handle, loader.VkDeviceSize(offset), loader.VkDeviceSize(size), 0, &data)
 	if err != nil {
@@ -66,11 +66,11 @@ func (m *DeviceMemory) MapMemory(offset int, size int) (unsafe.Pointer, loader.V
 	return data, res, nil
 }
 
-func (m *DeviceMemory) UnmapMemory() error {
+func (m *VulkanDeviceMemory) UnmapMemory() error {
 	return m.loader.VkUnmapMemory(m.device, m.handle)
 }
 
-func (m *DeviceMemory) WriteData(offset int, data interface{}) (loader.VkResult, error) {
+func (m *VulkanDeviceMemory) WriteData(offset int, data interface{}) (loader.VkResult, error) {
 	bufferSize := binary.Size(data)
 
 	memoryPtr, res, err := m.MapMemory(offset, bufferSize)

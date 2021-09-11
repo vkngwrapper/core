@@ -11,13 +11,13 @@ import (
 	"github.com/CannibalVox/cgoalloc"
 )
 
-type RenderPass struct {
+type VulkanRenderPass struct {
 	loader *loader.Loader
 	device loader.VkDevice
 	handle loader.VkRenderPass
 }
 
-func CreateRenderPass(allocator cgoalloc.Allocator, device *resource.Device, o *RenderPassOptions) (*RenderPass, loader.VkResult, error) {
+func CreateRenderPass(allocator cgoalloc.Allocator, device resource.Device, o *RenderPassOptions) (RenderPass, loader.VkResult, error) {
 	arena := cgoalloc.CreateArenaAllocator(allocator)
 	defer arena.FreeAll()
 
@@ -34,13 +34,13 @@ func CreateRenderPass(allocator cgoalloc.Allocator, device *resource.Device, o *
 		return nil, res, err
 	}
 
-	return &RenderPass{loader: device.Loader(), device: device.Handle(), handle: renderPass}, res, nil
+	return &VulkanRenderPass{loader: device.Loader(), device: device.Handle(), handle: renderPass}, res, nil
 }
 
-func (p *RenderPass) Handle() loader.VkRenderPass {
+func (p *VulkanRenderPass) Handle() loader.VkRenderPass {
 	return p.handle
 }
 
-func (p *RenderPass) Destroy() error {
+func (p *VulkanRenderPass) Destroy() error {
 	return p.loader.VkDestroyRenderPass(p.device, p.handle, nil)
 }

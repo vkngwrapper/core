@@ -11,7 +11,7 @@ import (
 	"unsafe"
 )
 
-func CreateInstance(allocator cgoalloc.Allocator, load *loader.Loader, options *InstanceOptions) (*Instance, loader.VkResult, error) {
+func CreateInstance(allocator cgoalloc.Allocator, load *loader.Loader, options *InstanceOptions) (Instance, loader.VkResult, error) {
 	arena := cgoalloc.CreateArenaAllocator(allocator)
 	defer arena.FreeAll()
 
@@ -32,27 +32,26 @@ func CreateInstance(allocator cgoalloc.Allocator, load *loader.Loader, options *
 		return nil, loader.VKErrorUnknown, err
 	}
 
-	return &Instance{
+	return &VulkanInstance{
 		loader: instanceLoader,
 		handle: instanceHandle,
 	}, res, nil
 }
 
-type InstanceHandle C.VkInstance
-type Instance struct {
+type VulkanInstance struct {
 	loader *loader.Loader
 	handle loader.VkInstance
 }
 
-func (i *Instance) Loader() *loader.Loader {
+func (i *VulkanInstance) Loader() *loader.Loader {
 	return i.loader
 }
 
-func (i *Instance) Handle() loader.VkInstance {
+func (i *VulkanInstance) Handle() loader.VkInstance {
 	return i.handle
 }
 
-func (i *Instance) Destroy() error {
+func (i *VulkanInstance) Destroy() error {
 	err := i.loader.VkDestroyInstance(i.handle, nil)
 	if err != nil {
 		return err
@@ -62,7 +61,7 @@ func (i *Instance) Destroy() error {
 	return nil
 }
 
-func (i *Instance) PhysicalDevices(allocator cgoalloc.Allocator) ([]*PhysicalDevice, loader.VkResult, error) {
+func (i *VulkanInstance) PhysicalDevices(allocator cgoalloc.Allocator) ([]PhysicalDevice, loader.VkResult, error) {
 	count := (*loader.Uint32)(allocator.Malloc(int(unsafe.Sizeof(loader.Uint32(0)))))
 	defer allocator.Free(unsafe.Pointer(count))
 
@@ -85,9 +84,9 @@ func (i *Instance) PhysicalDevices(allocator cgoalloc.Allocator) ([]*PhysicalDev
 	}
 
 	goCount := uint32(*count)
-	var devices []*PhysicalDevice
+	var devices []PhysicalDevice
 	for ind := uint32(0); ind < goCount; ind++ {
-		devices = append(devices, &PhysicalDevice{loader: i.loader, handle: deviceHandles[ind]})
+		devices = append(devices, &VulkanPhysicalDevice{loader: i.loader, handle: deviceHandles[ind]})
 	}
 
 	return devices, res, nil

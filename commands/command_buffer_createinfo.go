@@ -15,7 +15,7 @@ import (
 type CommandBufferOptions struct {
 	Level       core.CommandBufferLevel
 	BufferCount int
-	CommandPool *CommandPool
+	CommandPool CommandPool
 
 	Next core.Options
 }
@@ -32,7 +32,7 @@ func (o *CommandBufferOptions) AllocForC(allocator *cgoalloc.ArenaAllocator) (un
 	createInfo.sType = C.VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO
 	createInfo.level = C.VkCommandBufferLevel(o.Level)
 	createInfo.commandBufferCount = C.uint32_t(o.BufferCount)
-	createInfo.commandPool = C.VkCommandPool(unsafe.Pointer(o.CommandPool.handle))
+	createInfo.commandPool = C.VkCommandPool(unsafe.Pointer(o.CommandPool.Handle()))
 
 	var next unsafe.Pointer
 	var err error

@@ -24,11 +24,11 @@ type Options struct {
 	ColorBlend    *ColorBlendOptions
 	DynamicState  *DynamicStateOptions
 
-	Layout     *PipelineLayout
-	RenderPass *render_pass.RenderPass
+	Layout     PipelineLayout
+	RenderPass render_pass.RenderPass
 
 	SubPass           int
-	BasePipeline      *Pipeline
+	BasePipeline      Pipeline
 	BasePipelineIndex int
 
 	Next core.Options
@@ -57,7 +57,7 @@ func (o *Options) populate(allocator *cgoalloc.ArenaAllocator, createInfo *C.VkG
 	createInfo.basePipelineIndex = C.int32_t(o.BasePipelineIndex)
 
 	if o.Layout != nil {
-		createInfo.layout = (C.VkPipelineLayout)(unsafe.Pointer(o.Layout.handle))
+		createInfo.layout = (C.VkPipelineLayout)(unsafe.Pointer(o.Layout.Handle()))
 	}
 
 	if o.RenderPass != nil {
@@ -65,7 +65,7 @@ func (o *Options) populate(allocator *cgoalloc.ArenaAllocator, createInfo *C.VkG
 	}
 
 	if o.BasePipeline != nil {
-		createInfo.basePipelineHandle = (C.VkPipeline)(unsafe.Pointer(o.BasePipeline.handle))
+		createInfo.basePipelineHandle = (C.VkPipeline)(unsafe.Pointer(o.BasePipeline.Handle()))
 	}
 
 	if stageCount > 0 {

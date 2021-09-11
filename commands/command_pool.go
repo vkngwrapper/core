@@ -9,15 +9,16 @@ import (
 	"github.com/CannibalVox/VKng/core/loader"
 	"github.com/CannibalVox/VKng/core/resource"
 	"github.com/CannibalVox/cgoalloc"
+	"unsafe"
 )
 
-type CommandPool struct {
+type VulkanCommandPool struct {
 	loader *loader.Loader
 	handle loader.VkCommandPool
 	device loader.VkDevice
 }
 
-func CreateCommandPool(allocator cgoalloc.Allocator, device *resource.Device, o *CommandPoolOptions) (*CommandPool, loader.VkResult, error) {
+func CreateCommandPool(allocator cgoalloc.Allocator, device resource.Device, o *CommandPoolOptions) (CommandPool, loader.VkResult, error) {
 	arena := cgoalloc.CreateArenaAllocator(allocator)
 	defer arena.FreeAll()
 
@@ -32,13 +33,30 @@ func CreateCommandPool(allocator cgoalloc.Allocator, device *resource.Device, o 
 		return nil, res, err
 	}
 
-	return &CommandPool{loader: device.Loader(), handle: cmdPoolHandle, device: device.Handle()}, res, nil
+	return &VulkanCommandPool{loader: device.Loader(), handle: cmdPoolHandle, device: device.Handle()}, res, nil
 }
 
-func (p *CommandPool) Handle() loader.VkCommandPool {
+func (p *VulkanCommandPool) Handle() loader.VkCommandPool {
 	return p.handle
 }
 
-func (p *CommandPool) Destroy() error {
+func (p *VulkanCommandPool) Destroy() error {
 	return p.loader.VkDestroyCommandPool(p.device, p.handle, nil)
+}
+
+func (p *VulkanCommandPool) DestroyBuffers(allocator cgoalloc.Allocator, buffers []CommandBuffer) error {
+	bufferCount := len(buffers)
+	if bufferCount == 0 {
+		return nil
+	}
+
+	destroyPtr := allocator.Malloc(bufferCount * int(unsafe.Sizeof([1]C.VkCommandBuffer{})))
+	defer allocator.Free(destroyPtr)
+
+	destroySlice := ([]loader.VkCommandBuffer)(unsafe.Slice((*loader.VkCommandBuffer)(destroyPtr), bufferCount))
+	for i := 0; i < bufferCount; i++ {
+		destroySlice[i] = buffers[i].Handle()
+	}
+
+	return p.loader.VkFreeCommandBuffers(p.device, p.handle, loader.Uint32(bufferCount), (*loader.VkCommandBuffer)(destroyPtr))
 }

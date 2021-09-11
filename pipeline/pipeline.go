@@ -12,13 +12,13 @@ import (
 	"unsafe"
 )
 
-type Pipeline struct {
+type VulkanPipeline struct {
 	loader *loader.Loader
 	device loader.VkDevice
 	handle loader.VkPipeline
 }
 
-func CreateGraphicsPipelines(allocator cgoalloc.Allocator, device *resource.Device, o []*Options) ([]*Pipeline, loader.VkResult, error) {
+func CreateGraphicsPipelines(allocator cgoalloc.Allocator, device resource.Device, o []*Options) ([]Pipeline, loader.VkResult, error) {
 	arena := cgoalloc.CreateArenaAllocator(allocator)
 	defer arena.FreeAll()
 
@@ -40,19 +40,19 @@ func CreateGraphicsPipelines(allocator cgoalloc.Allocator, device *resource.Devi
 		return nil, res, err
 	}
 
-	var output []*Pipeline
+	var output []Pipeline
 	pipelineSlice := ([]loader.VkPipeline)(unsafe.Slice(pipelinePtr, pipelineCount))
 	for i := 0; i < pipelineCount; i++ {
-		output = append(output, &Pipeline{loader: device.Loader(), device: device.Handle(), handle: pipelineSlice[i]})
+		output = append(output, &VulkanPipeline{loader: device.Loader(), device: device.Handle(), handle: pipelineSlice[i]})
 	}
 
 	return output, res, nil
 }
 
-func (p *Pipeline) Handle() loader.VkPipeline {
+func (p *VulkanPipeline) Handle() loader.VkPipeline {
 	return p.handle
 }
 
-func (p *Pipeline) Destroy() error {
+func (p *VulkanPipeline) Destroy() error {
 	return p.loader.VkDestroyPipeline(p.device, p.handle, nil)
 }

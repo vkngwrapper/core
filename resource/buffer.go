@@ -58,21 +58,21 @@ func (o *BufferOptions) AllocForC(allocator *cgoalloc.ArenaAllocator) (unsafe.Po
 	return unsafe.Pointer(createInfo), nil
 }
 
-type Buffer struct {
+type VulkanBuffer struct {
 	loader *loader.Loader
 	device loader.VkDevice
 	handle loader.VkBuffer
 }
 
-func (b *Buffer) Handle() loader.VkBuffer {
+func (b *VulkanBuffer) Handle() loader.VkBuffer {
 	return b.handle
 }
 
-func (b *Buffer) Destroy() error {
+func (b *VulkanBuffer) Destroy() error {
 	return b.loader.VkDestroyBuffer(b.device, b.handle, nil)
 }
 
-func (b *Buffer) MemoryRequirements(allocator cgoalloc.Allocator) (*core.MemoryRequirements, error) {
+func (b *VulkanBuffer) MemoryRequirements(allocator cgoalloc.Allocator) (*core.MemoryRequirements, error) {
 	requirementsUnsafe := allocator.Malloc(C.sizeof_struct_VkMemoryRequirements)
 	defer allocator.Free(requirementsUnsafe)
 
@@ -90,6 +90,6 @@ func (b *Buffer) MemoryRequirements(allocator cgoalloc.Allocator) (*core.MemoryR
 	}, nil
 }
 
-func (b *Buffer) BindBufferMemory(memory *DeviceMemory, offset int) (loader.VkResult, error) {
-	return b.loader.VkBindBufferMemory(b.device, b.handle, memory.handle, loader.VkDeviceSize(offset))
+func (b *VulkanBuffer) BindBufferMemory(memory DeviceMemory, offset int) (loader.VkResult, error) {
+	return b.loader.VkBindBufferMemory(b.device, b.handle, memory.Handle(), loader.VkDeviceSize(offset))
 }

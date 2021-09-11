@@ -7,7 +7,7 @@ package commands
 import "C"
 import (
 	"github.com/CannibalVox/VKng/core"
-	render_pass2 "github.com/CannibalVox/VKng/core/render_pass"
+	render_pass "github.com/CannibalVox/VKng/core/render_pass"
 	"github.com/CannibalVox/cgoalloc"
 	"unsafe"
 )
@@ -55,8 +55,8 @@ func (s *ClearValueDepthStencil) populateUnion(c *C.VkClearValue) {
 }
 
 type RenderPassBeginOptions struct {
-	RenderPass  *render_pass2.RenderPass
-	Framebuffer *render_pass2.Framebuffer
+	RenderPass  render_pass.RenderPass
+	Framebuffer render_pass.Framebuffer
 
 	RenderArea  core.Rect2D
 	ClearValues []ClearValue

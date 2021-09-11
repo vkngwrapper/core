@@ -52,8 +52,8 @@ func (f BeginInfoFlags) String() string {
 }
 
 type CommandBufferInheritanceOptions struct {
-	Framebuffer *render_pass2.Framebuffer
-	RenderPass  *render_pass2.RenderPass
+	Framebuffer *render_pass2.VulkanFramebuffer
+	RenderPass  *render_pass2.VulkanRenderPass
 	SubPass     int
 
 	OcclusionQueryEnable bool

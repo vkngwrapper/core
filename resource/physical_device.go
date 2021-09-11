@@ -13,16 +13,16 @@ import (
 	"unsafe"
 )
 
-type PhysicalDevice struct {
+type VulkanPhysicalDevice struct {
 	loader *loader.Loader
 	handle loader.VkPhysicalDevice
 }
 
-func (d *PhysicalDevice) Handle() loader.VkPhysicalDevice {
+func (d *VulkanPhysicalDevice) Handle() loader.VkPhysicalDevice {
 	return d.handle
 }
 
-func (d *PhysicalDevice) QueueFamilyProperties(allocator cgoalloc.Allocator) ([]*core.QueueFamily, error) {
+func (d *VulkanPhysicalDevice) QueueFamilyProperties(allocator cgoalloc.Allocator) ([]*core.QueueFamily, error) {
 	count := (*loader.Uint32)(allocator.Malloc(int(unsafe.Sizeof(C.uint32_t(0)))))
 	defer allocator.Free(unsafe.Pointer(count))
 
@@ -63,7 +63,7 @@ func (d *PhysicalDevice) QueueFamilyProperties(allocator cgoalloc.Allocator) ([]
 	return queueFamilies, nil
 }
 
-func (d *PhysicalDevice) CreateDevice(allocator cgoalloc.Allocator, options *DeviceOptions) (*Device, loader.VkResult, error) {
+func (d *VulkanPhysicalDevice) CreateDevice(allocator cgoalloc.Allocator, options *DeviceOptions) (Device, loader.VkResult, error) {
 	arena := cgoalloc.CreateArenaAllocator(allocator)
 	defer arena.FreeAll()
 
@@ -83,10 +83,10 @@ func (d *PhysicalDevice) CreateDevice(allocator cgoalloc.Allocator, options *Dev
 		return nil, loader.VKErrorUnknown, err
 	}
 
-	return &Device{loader: deviceLoader, handle: deviceHandle}, res, nil
+	return &VulkanDevice{loader: deviceLoader, handle: deviceHandle}, res, nil
 }
 
-func (d *PhysicalDevice) Properties(allocator cgoalloc.Allocator) (*core.PhysicalDeviceProperties, error) {
+func (d *VulkanPhysicalDevice) Properties(allocator cgoalloc.Allocator) (*core.PhysicalDeviceProperties, error) {
 	propertiesUnsafe := allocator.Malloc(int(unsafe.Sizeof([1]C.VkPhysicalDeviceProperties{})))
 	defer allocator.Free(propertiesUnsafe)
 
@@ -98,7 +98,7 @@ func (d *PhysicalDevice) Properties(allocator cgoalloc.Allocator) (*core.Physica
 	return createPhysicalDeviceProperties((*C.VkPhysicalDeviceProperties)(propertiesUnsafe))
 }
 
-func (d *PhysicalDevice) Features(allocator cgoalloc.Allocator) (*core.PhysicalDeviceFeatures, error) {
+func (d *VulkanPhysicalDevice) Features(allocator cgoalloc.Allocator) (*core.PhysicalDeviceFeatures, error) {
 	featuresUnsafe := allocator.Malloc(int(unsafe.Sizeof([1]C.VkPhysicalDeviceFeatures{})))
 	defer allocator.Free(featuresUnsafe)
 
@@ -110,7 +110,7 @@ func (d *PhysicalDevice) Features(allocator cgoalloc.Allocator) (*core.PhysicalD
 	return createPhysicalDeviceFeatures((*C.VkPhysicalDeviceFeatures)(featuresUnsafe)), nil
 }
 
-func (d *PhysicalDevice) AvailableExtensions(allocator cgoalloc.Allocator) (map[string]*core.ExtensionProperties, loader.VkResult, error) {
+func (d *VulkanPhysicalDevice) AvailableExtensions(allocator cgoalloc.Allocator) (map[string]*core.ExtensionProperties, loader.VkResult, error) {
 	extensionCountPtr := allocator.Malloc(int(unsafe.Sizeof(C.uint32_t(0))))
 	defer allocator.Free(extensionCountPtr)
 

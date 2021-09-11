@@ -15,10 +15,10 @@ import (
 )
 
 type SubmitOptions struct {
-	CommandBuffers   []*CommandBuffer
-	WaitSemaphores   []*resource.Semaphore
+	CommandBuffers   []CommandBuffer
+	WaitSemaphores   []resource.Semaphore
 	WaitDstStages    []core.PipelineStages
-	SignalSemaphores []*resource.Semaphore
+	SignalSemaphores []resource.Semaphore
 
 	Next core.Options
 }
@@ -72,7 +72,7 @@ func (o *SubmitOptions) populate(allocator *cgoalloc.ArenaAllocator, createInfo 
 		commandBufferSlice := ([]loader.VkCommandBuffer)(unsafe.Slice((*loader.VkCommandBuffer)(commandBufferPtrUnsafe), commandBufferCount))
 
 		for i := 0; i < commandBufferCount; i++ {
-			commandBufferSlice[i] = o.CommandBuffers[i].handle
+			commandBufferSlice[i] = o.CommandBuffers[i].Handle()
 		}
 
 		createInfo.pCommandBuffers = (*C.VkCommandBuffer)(commandBufferPtrUnsafe)
@@ -102,7 +102,7 @@ func (o *SubmitOptions) AllocForC(allocator *cgoalloc.ArenaAllocator) (unsafe.Po
 	return unsafe.Pointer(createInfo), nil
 }
 
-func SubmitToQueue(allocator cgoalloc.Allocator, queue *resource.Queue, fence *resource.Fence, o []*SubmitOptions) (loader.VkResult, error) {
+func SubmitToQueue(allocator cgoalloc.Allocator, queue resource.Queue, fence resource.Fence, o []*SubmitOptions) (loader.VkResult, error) {
 	arena := cgoalloc.CreateArenaAllocator(allocator)
 	defer arena.FreeAll()
 

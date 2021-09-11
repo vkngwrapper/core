@@ -9,19 +9,19 @@ import (
 	"github.com/CannibalVox/VKng/core/loader"
 )
 
-type Queue struct {
+type VulkanQueue struct {
 	loader *loader.Loader
 	handle loader.VkQueue
 }
 
-func (q *Queue) Handle() loader.VkQueue {
+func (q *VulkanQueue) Handle() loader.VkQueue {
 	return q.handle
 }
 
-func (q *Queue) Loader() *loader.Loader {
+func (q *VulkanQueue) Loader() *loader.Loader {
 	return q.loader
 }
 
-func (q *Queue) WaitForIdle() (loader.VkResult, error) {
+func (q *VulkanQueue) WaitForIdle() (loader.VkResult, error) {
 	return q.loader.VkQueueWaitIdle(q.handle)
 }

@@ -7,16 +7,16 @@ package resource
 import "C"
 import "github.com/CannibalVox/VKng/core/loader"
 
-type ImageView struct {
+type VulkanImageView struct {
 	loader *loader.Loader
 	handle loader.VkImageView
 	device loader.VkDevice
 }
 
-func (v *ImageView) Handle() loader.VkImageView {
+func (v *VulkanImageView) Handle() loader.VkImageView {
 	return v.handle
 }
 
-func (v *ImageView) Destroy() error {
+func (v *VulkanImageView) Destroy() error {
 	return v.loader.VkDestroyImageView(v.device, v.handle, nil)
 }

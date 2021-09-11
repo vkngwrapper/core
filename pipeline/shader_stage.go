@@ -18,7 +18,7 @@ import (
 type ShaderStage struct {
 	Name               string
 	Stage              core.ShaderStages
-	Shader             *resource.ShaderModule
+	Shader             resource.ShaderModule
 	SpecializationInfo map[uint32]interface{}
 
 	Next core.Options
