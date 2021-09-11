@@ -14,24 +14,24 @@ import (
 )
 
 type DeviceHandle C.VkDevice
-type VulkanDevice struct {
+type vulkanDevice struct {
 	loader *loader.Loader
 	handle loader.VkDevice
 }
 
-func (d *VulkanDevice) Loader() *loader.Loader {
+func (d *vulkanDevice) Loader() *loader.Loader {
 	return d.loader
 }
 
-func (d *VulkanDevice) Handle() loader.VkDevice {
+func (d *vulkanDevice) Handle() loader.VkDevice {
 	return d.handle
 }
 
-func (d *VulkanDevice) Destroy() error {
+func (d *vulkanDevice) Destroy() error {
 	return d.loader.VkDestroyDevice(d.handle, nil)
 }
 
-func (d *VulkanDevice) GetQueue(queueFamilyIndex int, queueIndex int) (Queue, error) {
+func (d *vulkanDevice) GetQueue(queueFamilyIndex int, queueIndex int) (Queue, error) {
 	var queueHandle loader.VkQueue
 
 	err := d.loader.VkGetDeviceQueue(d.handle, loader.Uint32(queueFamilyIndex), loader.Uint32(queueIndex), &queueHandle)
@@ -39,10 +39,10 @@ func (d *VulkanDevice) GetQueue(queueFamilyIndex int, queueIndex int) (Queue, er
 		return nil, err
 	}
 
-	return &VulkanQueue{loader: d.loader, handle: queueHandle}, nil
+	return &vulkanQueue{loader: d.loader, handle: queueHandle}, nil
 }
 
-func (d *VulkanDevice) CreateShaderModule(allocator cgoalloc.Allocator, o *ShaderModuleOptions) (ShaderModule, loader.VkResult, error) {
+func (d *vulkanDevice) CreateShaderModule(allocator cgoalloc.Allocator, o *ShaderModuleOptions) (ShaderModule, loader.VkResult, error) {
 	arena := cgoalloc.CreateArenaAllocator(allocator)
 	defer arena.FreeAll()
 
@@ -57,10 +57,10 @@ func (d *VulkanDevice) CreateShaderModule(allocator cgoalloc.Allocator, o *Shade
 		return nil, res, err
 	}
 
-	return &VulkanShaderModule{loader: d.loader, handle: shaderModule, device: d.handle}, res, nil
+	return &vulkanShaderModule{loader: d.loader, handle: shaderModule, device: d.handle}, res, nil
 }
 
-func (d *VulkanDevice) CreateImageView(allocator cgoalloc.Allocator, o *ImageViewOptions) (ImageView, loader.VkResult, error) {
+func (d *vulkanDevice) CreateImageView(allocator cgoalloc.Allocator, o *ImageViewOptions) (ImageView, loader.VkResult, error) {
 	arena := cgoalloc.CreateArenaAllocator(allocator)
 	defer arena.FreeAll()
 
@@ -76,10 +76,10 @@ func (d *VulkanDevice) CreateImageView(allocator cgoalloc.Allocator, o *ImageVie
 		return nil, res, err
 	}
 
-	return &VulkanImageView{loader: d.loader, handle: imageViewHandle, device: d.handle}, res, nil
+	return &vulkanImageView{loader: d.loader, handle: imageViewHandle, device: d.handle}, res, nil
 }
 
-func (d *VulkanDevice) CreateSemaphore(allocator cgoalloc.Allocator, o *SemaphoreOptions) (Semaphore, loader.VkResult, error) {
+func (d *vulkanDevice) CreateSemaphore(allocator cgoalloc.Allocator, o *SemaphoreOptions) (Semaphore, loader.VkResult, error) {
 	arena := cgoalloc.CreateArenaAllocator(allocator)
 	defer arena.FreeAll()
 
@@ -95,10 +95,10 @@ func (d *VulkanDevice) CreateSemaphore(allocator cgoalloc.Allocator, o *Semaphor
 		return nil, res, err
 	}
 
-	return &VulkanSemaphore{loader: d.loader, device: d.handle, handle: semaphoreHandle}, res, nil
+	return &vulkanSemaphore{loader: d.loader, device: d.handle, handle: semaphoreHandle}, res, nil
 }
 
-func (d *VulkanDevice) CreateFence(allocator cgoalloc.Allocator, o *FenceOptions) (Fence, loader.VkResult, error) {
+func (d *vulkanDevice) CreateFence(allocator cgoalloc.Allocator, o *FenceOptions) (Fence, loader.VkResult, error) {
 	arena := cgoalloc.CreateArenaAllocator(allocator)
 	defer arena.FreeAll()
 
@@ -114,14 +114,14 @@ func (d *VulkanDevice) CreateFence(allocator cgoalloc.Allocator, o *FenceOptions
 		return nil, res, err
 	}
 
-	return &VulkanFence{loader: d.loader, device: d.handle, handle: fenceHandle}, res, nil
+	return &vulkanFence{loader: d.loader, device: d.handle, handle: fenceHandle}, res, nil
 }
 
-func (d *VulkanDevice) WaitForIdle() (loader.VkResult, error) {
+func (d *vulkanDevice) WaitForIdle() (loader.VkResult, error) {
 	return d.loader.VkDeviceWaitIdle(d.handle)
 }
 
-func (d *VulkanDevice) WaitForFences(allocator cgoalloc.Allocator, waitForAll bool, timeout time.Duration, fences []Fence) (loader.VkResult, error) {
+func (d *vulkanDevice) WaitForFences(allocator cgoalloc.Allocator, waitForAll bool, timeout time.Duration, fences []Fence) (loader.VkResult, error) {
 	fenceCount := len(fences)
 	fenceUnsafePtr := allocator.Malloc(fenceCount * int(unsafe.Sizeof([1]C.VkFence{})))
 	defer allocator.Free(fenceUnsafePtr)
@@ -141,7 +141,7 @@ func (d *VulkanDevice) WaitForFences(allocator cgoalloc.Allocator, waitForAll bo
 	return d.loader.VkWaitForFences(d.handle, loader.Uint32(fenceCount), fencePtr, loader.VkBool32(waitAllConst), loader.Uint64(core.TimeoutNanoseconds(timeout)))
 }
 
-func (d *VulkanDevice) ResetFences(allocator cgoalloc.Allocator, fences []Fence) (loader.VkResult, error) {
+func (d *vulkanDevice) ResetFences(allocator cgoalloc.Allocator, fences []Fence) (loader.VkResult, error) {
 	fenceCount := len(fences)
 	fenceUnsafePtr := allocator.Malloc(fenceCount * int(unsafe.Sizeof([1]C.VkFence{})))
 	defer allocator.Free(fenceUnsafePtr)
@@ -155,7 +155,7 @@ func (d *VulkanDevice) ResetFences(allocator cgoalloc.Allocator, fences []Fence)
 	return d.loader.VkResetFences(d.handle, loader.Uint32(fenceCount), fencePtr)
 }
 
-func (d *VulkanDevice) CreateBuffer(allocator cgoalloc.Allocator, o *BufferOptions) (Buffer, loader.VkResult, error) {
+func (d *vulkanDevice) CreateBuffer(allocator cgoalloc.Allocator, o *BufferOptions) (Buffer, loader.VkResult, error) {
 	arena := cgoalloc.CreateArenaAllocator(allocator)
 	defer arena.FreeAll()
 
@@ -171,10 +171,10 @@ func (d *VulkanDevice) CreateBuffer(allocator cgoalloc.Allocator, o *BufferOptio
 		return nil, res, err
 	}
 
-	return &VulkanBuffer{loader: d.loader, handle: buffer, device: d.handle}, res, nil
+	return &vulkanBuffer{loader: d.loader, handle: buffer, device: d.handle}, res, nil
 }
 
-func (d *VulkanDevice) AllocateMemory(allocator cgoalloc.Allocator, o *DeviceMemoryOptions) (DeviceMemory, loader.VkResult, error) {
+func (d *vulkanDevice) AllocateMemory(allocator cgoalloc.Allocator, o *DeviceMemoryOptions) (DeviceMemory, loader.VkResult, error) {
 	arena := cgoalloc.CreateArenaAllocator(allocator)
 	defer arena.FreeAll()
 
@@ -190,7 +190,7 @@ func (d *VulkanDevice) AllocateMemory(allocator cgoalloc.Allocator, o *DeviceMem
 		return nil, res, err
 	}
 
-	return &VulkanDeviceMemory{
+	return &vulkanDeviceMemory{
 		loader: d.loader,
 		device: d.handle,
 		handle: deviceMemory,

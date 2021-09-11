@@ -18,7 +18,7 @@ type BufferCopy struct {
 	Size      int
 }
 
-func (c *VulkanCommandBuffer) CmdCopyBuffer(allocator cgoalloc.Allocator, srcBuffer resource.Buffer, dstBuffer resource.Buffer, copyRegions []BufferCopy) error {
+func (c *vulkanCommandBuffer) CmdCopyBuffer(allocator cgoalloc.Allocator, srcBuffer resource.Buffer, dstBuffer resource.Buffer, copyRegions []BufferCopy) error {
 	copyRegionCount := len(copyRegions)
 	copyRegionUnsafe := allocator.Malloc(copyRegionCount * C.sizeof_struct_VkBufferCopy)
 	defer allocator.Free(copyRegionUnsafe)

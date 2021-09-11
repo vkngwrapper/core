@@ -7,7 +7,7 @@ package commands
 import "C"
 import (
 	"github.com/CannibalVox/VKng/core"
-	render_pass2 "github.com/CannibalVox/VKng/core/render_pass"
+	"github.com/CannibalVox/VKng/core/render_pass"
 	"github.com/CannibalVox/cgoalloc"
 	"strings"
 	"unsafe"
@@ -52,8 +52,8 @@ func (f BeginInfoFlags) String() string {
 }
 
 type CommandBufferInheritanceOptions struct {
-	Framebuffer *render_pass2.VulkanFramebuffer
-	RenderPass  *render_pass2.VulkanRenderPass
+	Framebuffer render_pass.Framebuffer
+	RenderPass  render_pass.RenderPass
 	SubPass     int
 
 	OcclusionQueryEnable bool

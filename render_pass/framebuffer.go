@@ -11,7 +11,7 @@ import (
 	"github.com/CannibalVox/cgoalloc"
 )
 
-type VulkanFramebuffer struct {
+type vulkanFramebuffer struct {
 	loader *loader.Loader
 	device loader.VkDevice
 	handle loader.VkFramebuffer
@@ -33,13 +33,13 @@ func CreateFrameBuffer(allocator cgoalloc.Allocator, device resource.Device, o *
 		return nil, res, err
 	}
 
-	return &VulkanFramebuffer{loader: device.Loader(), device: device.Handle(), handle: framebuffer}, res, nil
+	return &vulkanFramebuffer{loader: device.Loader(), device: device.Handle(), handle: framebuffer}, res, nil
 }
 
-func (b *VulkanFramebuffer) Handle() loader.VkFramebuffer {
+func (b *vulkanFramebuffer) Handle() loader.VkFramebuffer {
 	return b.handle
 }
 
-func (b *VulkanFramebuffer) Destroy() error {
+func (b *vulkanFramebuffer) Destroy() error {
 	return b.loader.VkDestroyFramebuffer(b.device, b.handle, nil)
 }

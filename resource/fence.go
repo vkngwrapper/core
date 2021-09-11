@@ -7,16 +7,16 @@ package resource
 import "C"
 import "github.com/CannibalVox/VKng/core/loader"
 
-type VulkanFence struct {
+type vulkanFence struct {
 	loader *loader.Loader
 	device loader.VkDevice
 	handle loader.VkFence
 }
 
-func (f *VulkanFence) Handle() loader.VkFence {
+func (f *vulkanFence) Handle() loader.VkFence {
 	return f.handle
 }
 
-func (f *VulkanFence) Destroy() error {
+func (f *vulkanFence) Destroy() error {
 	return f.loader.VkDestroyFence(f.device, f.handle, nil)
 }

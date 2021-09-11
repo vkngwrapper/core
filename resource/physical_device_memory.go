@@ -112,7 +112,7 @@ type PhysicalDeviceMemoryProperties struct {
 	MemoryHeaps []MemoryHeap
 }
 
-func (d *VulkanPhysicalDevice) MemoryProperties(allocator cgoalloc.Allocator) *PhysicalDeviceMemoryProperties {
+func (d *vulkanPhysicalDevice) MemoryProperties(allocator cgoalloc.Allocator) *PhysicalDeviceMemoryProperties {
 	propsUnsafe := allocator.Malloc(C.sizeof_struct_VkPhysicalDeviceMemoryProperties)
 	defer allocator.Free(propsUnsafe)
 

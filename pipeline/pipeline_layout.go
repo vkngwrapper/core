@@ -11,17 +11,17 @@ import (
 	"github.com/CannibalVox/cgoalloc"
 )
 
-type VulkanPipelineLayout struct {
+type vulkanPipelineLayout struct {
 	loader *loader.Loader
 	device loader.VkDevice
 	handle loader.VkPipelineLayout
 }
 
-func (l *VulkanPipelineLayout) Handle() loader.VkPipelineLayout {
+func (l *vulkanPipelineLayout) Handle() loader.VkPipelineLayout {
 	return l.handle
 }
 
-func (l *VulkanPipelineLayout) Destroy() error {
+func (l *vulkanPipelineLayout) Destroy() error {
 	return l.loader.VkDestroyPipelineLayout(l.device, l.handle, nil)
 }
 
@@ -40,5 +40,5 @@ func CreatePipelineLayout(allocator cgoalloc.Allocator, device resource.Device, 
 		return nil, res, err
 	}
 
-	return &VulkanPipelineLayout{loader: device.Loader(), handle: pipelineLayout, device: device.Handle()}, res, nil
+	return &vulkanPipelineLayout{loader: device.Loader(), handle: pipelineLayout, device: device.Handle()}, res, nil
 }

@@ -12,7 +12,7 @@ import (
 	"unsafe"
 )
 
-type VulkanPipeline struct {
+type vulkanPipeline struct {
 	loader *loader.Loader
 	device loader.VkDevice
 	handle loader.VkPipeline
@@ -43,16 +43,16 @@ func CreateGraphicsPipelines(allocator cgoalloc.Allocator, device resource.Devic
 	var output []Pipeline
 	pipelineSlice := ([]loader.VkPipeline)(unsafe.Slice(pipelinePtr, pipelineCount))
 	for i := 0; i < pipelineCount; i++ {
-		output = append(output, &VulkanPipeline{loader: device.Loader(), device: device.Handle(), handle: pipelineSlice[i]})
+		output = append(output, &vulkanPipeline{loader: device.Loader(), device: device.Handle(), handle: pipelineSlice[i]})
 	}
 
 	return output, res, nil
 }
 
-func (p *VulkanPipeline) Handle() loader.VkPipeline {
+func (p *vulkanPipeline) Handle() loader.VkPipeline {
 	return p.handle
 }
 
-func (p *VulkanPipeline) Destroy() error {
+func (p *vulkanPipeline) Destroy() error {
 	return p.loader.VkDestroyPipeline(p.device, p.handle, nil)
 }

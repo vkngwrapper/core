@@ -32,26 +32,26 @@ func CreateInstance(allocator cgoalloc.Allocator, load *loader.Loader, options *
 		return nil, loader.VKErrorUnknown, err
 	}
 
-	return &VulkanInstance{
+	return &vulkanInstance{
 		loader: instanceLoader,
 		handle: instanceHandle,
 	}, res, nil
 }
 
-type VulkanInstance struct {
+type vulkanInstance struct {
 	loader *loader.Loader
 	handle loader.VkInstance
 }
 
-func (i *VulkanInstance) Loader() *loader.Loader {
+func (i *vulkanInstance) Loader() *loader.Loader {
 	return i.loader
 }
 
-func (i *VulkanInstance) Handle() loader.VkInstance {
+func (i *vulkanInstance) Handle() loader.VkInstance {
 	return i.handle
 }
 
-func (i *VulkanInstance) Destroy() error {
+func (i *vulkanInstance) Destroy() error {
 	err := i.loader.VkDestroyInstance(i.handle, nil)
 	if err != nil {
 		return err
@@ -61,7 +61,7 @@ func (i *VulkanInstance) Destroy() error {
 	return nil
 }
 
-func (i *VulkanInstance) PhysicalDevices(allocator cgoalloc.Allocator) ([]PhysicalDevice, loader.VkResult, error) {
+func (i *vulkanInstance) PhysicalDevices(allocator cgoalloc.Allocator) ([]PhysicalDevice, loader.VkResult, error) {
 	count := (*loader.Uint32)(allocator.Malloc(int(unsafe.Sizeof(loader.Uint32(0)))))
 	defer allocator.Free(unsafe.Pointer(count))
 
@@ -86,7 +86,7 @@ func (i *VulkanInstance) PhysicalDevices(allocator cgoalloc.Allocator) ([]Physic
 	goCount := uint32(*count)
 	var devices []PhysicalDevice
 	for ind := uint32(0); ind < goCount; ind++ {
-		devices = append(devices, &VulkanPhysicalDevice{loader: i.loader, handle: deviceHandles[ind]})
+		devices = append(devices, &vulkanPhysicalDevice{loader: i.loader, handle: deviceHandles[ind]})
 	}
 
 	return devices, res, nil

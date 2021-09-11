@@ -14,7 +14,7 @@ import (
 	"unsafe"
 )
 
-type VulkanCommandBuffer struct {
+type vulkanCommandBuffer struct {
 	loader *loader.Loader
 	device loader.VkDevice
 	pool   loader.VkCommandPool
@@ -41,24 +41,24 @@ func CreateCommandBuffers(allocator cgoalloc.Allocator, device resource.Device, 
 	commandBufferArray := ([]loader.VkCommandBuffer)(unsafe.Slice(commandBufferPtr, o.BufferCount))
 	var result []CommandBuffer
 	for i := 0; i < o.BufferCount; i++ {
-		result = append(result, &VulkanCommandBuffer{loader: device.Loader(), pool: o.CommandPool.Handle(), device: device.Handle(), handle: commandBufferArray[i]})
+		result = append(result, &vulkanCommandBuffer{loader: device.Loader(), pool: o.CommandPool.Handle(), device: device.Handle(), handle: commandBufferArray[i]})
 	}
 
 	return result, res, nil
 }
 
-func (c *VulkanCommandBuffer) Handle() loader.VkCommandBuffer {
+func (c *vulkanCommandBuffer) Handle() loader.VkCommandBuffer {
 	return c.handle
 }
 
-func (c *VulkanCommandBuffer) Destroy() error {
+func (c *vulkanCommandBuffer) Destroy() error {
 	// cgocheckpointer considers &(c.handle) to be a go pointer containing a go pointer, probably
 	// because loader is a go pointer?  Weird but passing a pointer just to the handle works
 	handle := c.handle
 	return c.loader.VkFreeCommandBuffers(c.device, c.pool, 1, &handle)
 }
 
-func (c *VulkanCommandBuffer) Begin(allocator cgoalloc.Allocator, o *BeginOptions) (loader.VkResult, error) {
+func (c *vulkanCommandBuffer) Begin(allocator cgoalloc.Allocator, o *BeginOptions) (loader.VkResult, error) {
 	arena := cgoalloc.CreateArenaAllocator(allocator)
 	defer arena.FreeAll()
 
@@ -70,11 +70,11 @@ func (c *VulkanCommandBuffer) Begin(allocator cgoalloc.Allocator, o *BeginOption
 	return c.loader.VkBeginCommandBuffer(c.handle, (*loader.VkCommandBufferBeginInfo)(createInfo))
 }
 
-func (c *VulkanCommandBuffer) End() (loader.VkResult, error) {
+func (c *vulkanCommandBuffer) End() (loader.VkResult, error) {
 	return c.loader.VkEndCommandBuffer(c.handle)
 }
 
-func (c *VulkanCommandBuffer) CmdBeginRenderPass(allocator cgoalloc.Allocator, contents SubpassContents, o *RenderPassBeginOptions) error {
+func (c *vulkanCommandBuffer) CmdBeginRenderPass(allocator cgoalloc.Allocator, contents SubpassContents, o *RenderPassBeginOptions) error {
 	arena := cgoalloc.CreateArenaAllocator(allocator)
 	defer arena.FreeAll()
 
@@ -86,23 +86,23 @@ func (c *VulkanCommandBuffer) CmdBeginRenderPass(allocator cgoalloc.Allocator, c
 	return c.loader.VkCmdBeginRenderPass(c.handle, (*loader.VkRenderPassBeginInfo)(createInfo), loader.VkSubpassContents(contents))
 }
 
-func (c *VulkanCommandBuffer) CmdEndRenderPass() error {
+func (c *vulkanCommandBuffer) CmdEndRenderPass() error {
 	return c.loader.VkCmdEndRenderPass(c.handle)
 }
 
-func (c *VulkanCommandBuffer) CmdBindPipeline(bindPoint core.PipelineBindPoint, pipeline pipeline.Pipeline) error {
+func (c *vulkanCommandBuffer) CmdBindPipeline(bindPoint core.PipelineBindPoint, pipeline pipeline.Pipeline) error {
 	return c.loader.VkCmdBindPipeline(c.handle, loader.VkPipelineBindPoint(bindPoint), pipeline.Handle())
 }
 
-func (c *VulkanCommandBuffer) CmdDraw(vertexCount, instanceCount int, firstVertex, firstInstance uint32) error {
+func (c *vulkanCommandBuffer) CmdDraw(vertexCount, instanceCount int, firstVertex, firstInstance uint32) error {
 	return c.loader.VkCmdDraw(c.handle, loader.Uint32(vertexCount), loader.Uint32(instanceCount), loader.Uint32(firstVertex), loader.Uint32(firstInstance))
 }
 
-func (c *VulkanCommandBuffer) CmdDrawIndexed(indexCount, instanceCount int, firstIndex uint32, vertexOffset int, firstInstance uint32) error {
+func (c *vulkanCommandBuffer) CmdDrawIndexed(indexCount, instanceCount int, firstIndex uint32, vertexOffset int, firstInstance uint32) error {
 	return c.loader.VkCmdDrawIndexed(c.handle, loader.Uint32(indexCount), loader.Uint32(instanceCount), loader.Uint32(firstIndex), loader.Int32(vertexOffset), loader.Uint32(firstInstance))
 }
 
-func (c *VulkanCommandBuffer) CmdBindVertexBuffers(allocator cgoalloc.Allocator, firstBinding uint32, buffers []resource.Buffer, bufferOffsets []int) error {
+func (c *vulkanCommandBuffer) CmdBindVertexBuffers(allocator cgoalloc.Allocator, firstBinding uint32, buffers []resource.Buffer, bufferOffsets []int) error {
 	bufferCount := len(buffers)
 
 	bufferArrayUnsafe := allocator.Malloc(bufferCount * int(unsafe.Sizeof([1]C.VkBuffer{})))
@@ -125,6 +125,6 @@ func (c *VulkanCommandBuffer) CmdBindVertexBuffers(allocator cgoalloc.Allocator,
 	return c.loader.VkCmdBindVertexBuffers(c.handle, loader.Uint32(firstBinding), loader.Uint32(bufferCount), bufferArrayPtr, offsetArrayPtr)
 }
 
-func (c *VulkanCommandBuffer) CmdBindIndexBuffer(buffer resource.Buffer, offset int, indexType core.IndexType) error {
+func (c *vulkanCommandBuffer) CmdBindIndexBuffer(buffer resource.Buffer, offset int, indexType core.IndexType) error {
 	return c.loader.VkCmdBindIndexBuffer(c.handle, buffer.Handle(), loader.VkDeviceSize(offset), loader.VkIndexType(indexType))
 }
