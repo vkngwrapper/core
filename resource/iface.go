@@ -8,6 +8,8 @@ import (
 	"unsafe"
 )
 
+//go:generate mockgen -source iface.go -destination ../mocks/resource.go -package=mocks
+
 type Buffer interface {
 	Handle() loader.VkBuffer
 	Destroy() error

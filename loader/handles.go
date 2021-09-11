@@ -124,3 +124,4 @@ type Uint32 C.uint32_t
 type Uint64 C.uint64_t
 type Char C.char
 type Float C.float
+type Size C.size_t

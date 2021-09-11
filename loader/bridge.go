@@ -587,7 +587,7 @@ func (l *vulkanLoader) VkDestroyQueryPool(device VkDevice, queryPool VkQueryPool
 	return nil
 }
 
-func (l *vulkanLoader) VkGetQueryPoolResults(device VkDevice, queryPool VkQueryPool, firstQuery Uint32, queryCount Uint32, dataSize C.size_t, pData unsafe.Pointer, stride VkDeviceSize, flags VkQueryResultFlags) (VkResult, error) {
+func (l *vulkanLoader) VkGetQueryPoolResults(device VkDevice, queryPool VkQueryPool, firstQuery Uint32, queryCount Uint32, dataSize Size, pData unsafe.Pointer, stride VkDeviceSize, flags VkQueryResultFlags) (VkResult, error) {
 	if l.device == nil {
 		return VKErrorUnknown, errors.New("attempted device loader function on a non-device loader")
 	}
@@ -597,7 +597,7 @@ func (l *vulkanLoader) VkGetQueryPoolResults(device VkDevice, queryPool VkQueryP
 		(C.VkQueryPool)(queryPool),
 		(C.uint32_t)(firstQuery),
 		(C.uint32_t)(queryCount),
-		dataSize,
+		(C.size_t)(dataSize),
 		pData,
 		(C.VkDeviceSize)(stride),
 		(C.VkQueryResultFlags)(flags)))
@@ -774,7 +774,7 @@ func (l *vulkanLoader) VkDestroyPipelineCache(device VkDevice, pipelineCache VkP
 	return nil
 }
 
-func (l *vulkanLoader) VkGetPipelineCacheData(device VkDevice, pipelineCache VkPipelineCache, pDataSize *C.size_t, pData unsafe.Pointer) (VkResult, error) {
+func (l *vulkanLoader) VkGetPipelineCacheData(device VkDevice, pipelineCache VkPipelineCache, pDataSize *Size, pData unsafe.Pointer) (VkResult, error) {
 	if l.device == nil {
 		return VKErrorUnknown, errors.New("attempted device loader function on a non-device loader")
 	}
@@ -782,7 +782,7 @@ func (l *vulkanLoader) VkGetPipelineCacheData(device VkDevice, pipelineCache VkP
 	res := VkResult(C.cgoGetPipelineCacheData(l.funcPtrs.vkGetPipelineCacheData,
 		(C.VkDevice)(device),
 		(C.VkPipelineCache)(pipelineCache),
-		pDataSize,
+		(*C.size_t)(pDataSize),
 		pData))
 	return res, res.ToError()
 }

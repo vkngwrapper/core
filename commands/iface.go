@@ -8,6 +8,8 @@ import (
 	"github.com/CannibalVox/cgoalloc"
 )
 
+//go:generate mockgen -source iface.go -destination ../mocks/commands.go -package=mocks
+
 type CommandBuffer interface {
 	Handle() loader.VkCommandBuffer
 	Destroy() error
