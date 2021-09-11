@@ -63,7 +63,7 @@ func (s *ShaderStage) populate(allocator *cgoalloc.ArenaAllocator, createInfo *C
 			mapIndex++
 		}
 		specInfo.pMapEntries = mapEntryPtr
-		specInfo.dataSize = C.ulonglong(dataBytes.Len())
+		specInfo.dataSize = C.size_t(dataBytes.Len())
 		specInfo.pData = cgoalloc.CBytes(allocator, dataBytes.Bytes())
 		panic("AAA")
 	}
