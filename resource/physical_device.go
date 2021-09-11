@@ -14,7 +14,7 @@ import (
 )
 
 type vulkanPhysicalDevice struct {
-	loader *loader.Loader
+	loader loader.Loader
 	handle loader.VkPhysicalDevice
 }
 

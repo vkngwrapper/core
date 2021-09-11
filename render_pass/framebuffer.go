@@ -12,7 +12,7 @@ import (
 )
 
 type vulkanFramebuffer struct {
-	loader *loader.Loader
+	loader loader.Loader
 	device loader.VkDevice
 	handle loader.VkFramebuffer
 }

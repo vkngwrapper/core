@@ -15,11 +15,11 @@ import (
 
 type DeviceHandle C.VkDevice
 type vulkanDevice struct {
-	loader *loader.Loader
+	loader loader.Loader
 	handle loader.VkDevice
 }
 
-func (d *vulkanDevice) Loader() *loader.Loader {
+func (d *vulkanDevice) Loader() loader.Loader {
 	return d.loader
 }
 

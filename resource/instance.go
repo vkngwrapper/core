@@ -11,7 +11,7 @@ import (
 	"unsafe"
 )
 
-func CreateInstance(allocator cgoalloc.Allocator, load *loader.Loader, options *InstanceOptions) (Instance, loader.VkResult, error) {
+func CreateInstance(allocator cgoalloc.Allocator, load loader.Loader, options *InstanceOptions) (Instance, loader.VkResult, error) {
 	arena := cgoalloc.CreateArenaAllocator(allocator)
 	defer arena.FreeAll()
 
@@ -39,11 +39,11 @@ func CreateInstance(allocator cgoalloc.Allocator, load *loader.Loader, options *
 }
 
 type vulkanInstance struct {
-	loader *loader.Loader
+	loader loader.Loader
 	handle loader.VkInstance
 }
 
-func (i *vulkanInstance) Loader() *loader.Loader {
+func (i *vulkanInstance) Loader() loader.Loader {
 	return i.loader
 }
 

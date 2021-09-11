@@ -59,7 +59,7 @@ func (o *BufferOptions) AllocForC(allocator *cgoalloc.ArenaAllocator) (unsafe.Po
 }
 
 type vulkanBuffer struct {
-	loader *loader.Loader
+	loader loader.Loader
 	device loader.VkDevice
 	handle loader.VkBuffer
 }

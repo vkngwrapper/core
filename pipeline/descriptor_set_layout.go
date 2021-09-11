@@ -8,7 +8,7 @@ import "C"
 import "github.com/CannibalVox/VKng/core/loader"
 
 type DescriptorSetLayout struct {
-	loader *loader.Loader
+	loader loader.Loader
 	handle loader.VkDescriptorSetLayout
 }
 

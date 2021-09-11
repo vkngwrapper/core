@@ -8,7 +8,7 @@ import "C"
 import "github.com/CannibalVox/VKng/core/loader"
 
 type vulkanSemaphore struct {
-	loader *loader.Loader
+	loader loader.Loader
 	device loader.VkDevice
 	handle loader.VkSemaphore
 }

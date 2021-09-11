@@ -13,7 +13,7 @@ import (
 )
 
 type vulkanCommandPool struct {
-	loader *loader.Loader
+	loader loader.Loader
 	handle loader.VkCommandPool
 	device loader.VkDevice
 }

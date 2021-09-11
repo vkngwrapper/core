@@ -8,7 +8,7 @@ import "C"
 import "github.com/CannibalVox/VKng/core/loader"
 
 type vulkanImageView struct {
-	loader *loader.Loader
+	loader loader.Loader
 	handle loader.VkImageView
 	device loader.VkDevice
 }

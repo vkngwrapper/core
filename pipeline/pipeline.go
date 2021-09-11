@@ -13,7 +13,7 @@ import (
 )
 
 type vulkanPipeline struct {
-	loader *loader.Loader
+	loader loader.Loader
 	device loader.VkDevice
 	handle loader.VkPipeline
 }

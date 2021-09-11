@@ -12,7 +12,7 @@ import (
 	"unsafe"
 )
 
-func AvailableExtensions(alloc cgoalloc.Allocator, load *loader.Loader) (map[string]*core.ExtensionProperties, loader.VkResult, error) {
+func AvailableExtensions(alloc cgoalloc.Allocator, load loader.Loader) (map[string]*core.ExtensionProperties, loader.VkResult, error) {
 	extensionCount := (*loader.Uint32)(alloc.Malloc(int(unsafe.Sizeof(C.uint32_t(0)))))
 	defer alloc.Free(unsafe.Pointer(extensionCount))
 
@@ -50,7 +50,7 @@ func AvailableExtensions(alloc cgoalloc.Allocator, load *loader.Loader) (map[str
 	return outExtensions, res, nil
 }
 
-func AvailableLayers(alloc cgoalloc.Allocator, load *loader.Loader) (map[string]*core.LayerProperties, loader.VkResult, error) {
+func AvailableLayers(alloc cgoalloc.Allocator, load loader.Loader) (map[string]*core.LayerProperties, loader.VkResult, error) {
 	layerCount := (*loader.Uint32)(alloc.Malloc(int(unsafe.Sizeof(C.uint32_t(0)))))
 	defer alloc.Free(unsafe.Pointer(layerCount))
 

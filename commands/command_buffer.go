@@ -15,7 +15,7 @@ import (
 )
 
 type vulkanCommandBuffer struct {
-	loader *loader.Loader
+	loader loader.Loader
 	device loader.VkDevice
 	pool   loader.VkCommandPool
 	handle loader.VkCommandBuffer

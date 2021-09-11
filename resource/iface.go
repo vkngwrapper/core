@@ -26,7 +26,7 @@ type DeviceMemory interface {
 type Device interface {
 	Handle() loader.VkDevice
 	Destroy() error
-	Loader() *loader.Loader
+	Loader() loader.Loader
 	GetQueue(queueFamilyIndex int, queueIndex int) (Queue, error)
 	CreateShaderModule(allocator cgoalloc.Allocator, o *ShaderModuleOptions) (ShaderModule, loader.VkResult, error)
 	CreateImageView(allocator cgoalloc.Allocator, o *ImageViewOptions) (ImageView, loader.VkResult, error)
@@ -56,7 +56,7 @@ type ImageView interface {
 type Instance interface {
 	Handle() loader.VkInstance
 	Destroy() error
-	Loader() *loader.Loader
+	Loader() loader.Loader
 	PhysicalDevices(allocator cgoalloc.Allocator) ([]PhysicalDevice, loader.VkResult, error)
 }
 
@@ -72,7 +72,7 @@ type PhysicalDevice interface {
 
 type Queue interface {
 	Handle() loader.VkQueue
-	Loader() *loader.Loader
+	Loader() loader.Loader
 	WaitForIdle() (loader.VkResult, error)
 }
 

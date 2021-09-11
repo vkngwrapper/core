@@ -10,7 +10,7 @@ import (
 )
 
 type vulkanQueue struct {
-	loader *loader.Loader
+	loader loader.Loader
 	handle loader.VkQueue
 }
 
@@ -18,7 +18,7 @@ func (q *vulkanQueue) Handle() loader.VkQueue {
 	return q.handle
 }
 
-func (q *vulkanQueue) Loader() *loader.Loader {
+func (q *vulkanQueue) Loader() loader.Loader {
 	return q.loader
 }
 
