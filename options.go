@@ -1,10 +1,10 @@
 package core
 
 import (
-	"github.com/CannibalVox/cgoalloc"
+	"github.com/CannibalVox/cgoparam"
 	"unsafe"
 )
 
 type Options interface {
-	AllocForC(allocator *cgoalloc.ArenaAllocator) (unsafe.Pointer, error)
+	AllocForC(allocator *cgoparam.Allocator) (unsafe.Pointer, error)
 }

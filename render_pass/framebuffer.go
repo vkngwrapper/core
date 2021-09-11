@@ -8,7 +8,7 @@ import "C"
 import (
 	"github.com/CannibalVox/VKng/core/loader"
 	"github.com/CannibalVox/VKng/core/resources"
-	"github.com/CannibalVox/cgoalloc"
+	"github.com/CannibalVox/cgoparam"
 )
 
 type vulkanFramebuffer struct {
@@ -17,9 +17,9 @@ type vulkanFramebuffer struct {
 	handle loader.VkFramebuffer
 }
 
-func CreateFrameBuffer(allocator cgoalloc.Allocator, device resources.Device, o *FramebufferOptions) (Framebuffer, loader.VkResult, error) {
-	arena := cgoalloc.CreateArenaAllocator(allocator)
-	defer arena.FreeAll()
+func CreateFrameBuffer(device resources.Device, o *FramebufferOptions) (Framebuffer, loader.VkResult, error) {
+	arena := cgoparam.GetAlloc()
+	defer cgoparam.ReturnAlloc(arena)
 
 	createInfo, err := o.AllocForC(arena)
 	if err != nil {

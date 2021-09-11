@@ -7,7 +7,7 @@ package commands
 import "C"
 import (
 	"github.com/CannibalVox/VKng/core"
-	"github.com/CannibalVox/cgoalloc"
+	"github.com/CannibalVox/cgoparam"
 	"github.com/cockroachdb/errors"
 	"unsafe"
 )
@@ -20,7 +20,7 @@ type CommandBufferOptions struct {
 	Next core.Options
 }
 
-func (o *CommandBufferOptions) AllocForC(allocator *cgoalloc.ArenaAllocator) (unsafe.Pointer, error) {
+func (o *CommandBufferOptions) AllocForC(allocator *cgoparam.Allocator) (unsafe.Pointer, error) {
 	if o.Level == core.LevelUnset {
 		return nil, errors.New("attempted to create command buffers without setting Level")
 	}

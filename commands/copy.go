@@ -8,7 +8,7 @@ import "C"
 import (
 	"github.com/CannibalVox/VKng/core/loader"
 	"github.com/CannibalVox/VKng/core/resources"
-	"github.com/CannibalVox/cgoalloc"
+	"github.com/CannibalVox/cgoparam"
 	"unsafe"
 )
 
@@ -18,11 +18,12 @@ type BufferCopy struct {
 	Size      int
 }
 
-func (c *vulkanCommandBuffer) CmdCopyBuffer(allocator cgoalloc.Allocator, srcBuffer resources.Buffer, dstBuffer resources.Buffer, copyRegions []BufferCopy) error {
+func (c *vulkanCommandBuffer) CmdCopyBuffer(srcBuffer resources.Buffer, dstBuffer resources.Buffer, copyRegions []BufferCopy) error {
+	allocator := cgoparam.GetAlloc()
+	defer cgoparam.ReturnAlloc(allocator)
+
 	copyRegionCount := len(copyRegions)
 	copyRegionUnsafe := allocator.Malloc(copyRegionCount * C.sizeof_struct_VkBufferCopy)
-	defer allocator.Free(copyRegionUnsafe)
-
 	copyRegionPtr := (*C.VkBufferCopy)(copyRegionUnsafe)
 	copyRegionSlice := ([]C.VkBufferCopy)(unsafe.Slice(copyRegionPtr, copyRegionCount))
 

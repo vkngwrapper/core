@@ -8,7 +8,7 @@ import "C"
 import (
 	"github.com/CannibalVox/VKng/core/loader"
 	"github.com/CannibalVox/VKng/core/resources"
-	"github.com/CannibalVox/cgoalloc"
+	"github.com/CannibalVox/cgoparam"
 )
 
 type vulkanPipelineLayout struct {
@@ -25,9 +25,9 @@ func (l *vulkanPipelineLayout) Destroy() error {
 	return l.loader.VkDestroyPipelineLayout(l.device, l.handle, nil)
 }
 
-func CreatePipelineLayout(allocator cgoalloc.Allocator, device resources.Device, o *PipelineLayoutOptions) (PipelineLayout, loader.VkResult, error) {
-	arena := cgoalloc.CreateArenaAllocator(allocator)
-	defer arena.FreeAll()
+func CreatePipelineLayout(device resources.Device, o *PipelineLayoutOptions) (PipelineLayout, loader.VkResult, error) {
+	arena := cgoparam.GetAlloc()
+	defer cgoparam.ReturnAlloc(arena)
 
 	createInfo, err := o.AllocForC(arena)
 	if err != nil {

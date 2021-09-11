@@ -10,7 +10,7 @@ import (
 	"encoding/binary"
 	"github.com/CannibalVox/VKng/core"
 	"github.com/CannibalVox/VKng/core/loader"
-	"github.com/CannibalVox/cgoalloc"
+	"github.com/CannibalVox/cgoparam"
 	"unsafe"
 )
 
@@ -21,7 +21,7 @@ type DeviceMemoryOptions struct {
 	Next core.Options
 }
 
-func (o *DeviceMemoryOptions) AllocForC(allocator *cgoalloc.ArenaAllocator) (unsafe.Pointer, error) {
+func (o *DeviceMemoryOptions) AllocForC(allocator *cgoparam.Allocator) (unsafe.Pointer, error) {
 	createInfo := (*C.VkMemoryAllocateInfo)(allocator.Malloc(C.sizeof_struct_VkMemoryAllocateInfo))
 
 	createInfo.sType = C.VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO

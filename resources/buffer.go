@@ -8,7 +8,7 @@ import "C"
 import (
 	"github.com/CannibalVox/VKng/core"
 	"github.com/CannibalVox/VKng/core/loader"
-	"github.com/CannibalVox/cgoalloc"
+	"github.com/CannibalVox/cgoparam"
 	"unsafe"
 )
 
@@ -21,7 +21,7 @@ type BufferOptions struct {
 	Next core.Options
 }
 
-func (o *BufferOptions) AllocForC(allocator *cgoalloc.ArenaAllocator) (unsafe.Pointer, error) {
+func (o *BufferOptions) AllocForC(allocator *cgoparam.Allocator) (unsafe.Pointer, error) {
 	createInfo := (*C.VkBufferCreateInfo)(allocator.Malloc(C.sizeof_struct_VkBufferCreateInfo))
 	createInfo.sType = C.VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO
 	createInfo.flags = 0
@@ -72,9 +72,11 @@ func (b *vulkanBuffer) Destroy() error {
 	return b.loader.VkDestroyBuffer(b.device, b.handle, nil)
 }
 
-func (b *vulkanBuffer) MemoryRequirements(allocator cgoalloc.Allocator) (*core.MemoryRequirements, error) {
+func (b *vulkanBuffer) MemoryRequirements() (*core.MemoryRequirements, error) {
+	allocator := cgoparam.GetAlloc()
+	defer cgoparam.ReturnAlloc(allocator)
+
 	requirementsUnsafe := allocator.Malloc(C.sizeof_struct_VkMemoryRequirements)
-	defer allocator.Free(requirementsUnsafe)
 
 	err := b.loader.VkGetBufferMemoryRequirements(b.device, b.handle, (*loader.VkMemoryRequirements)(requirementsUnsafe))
 	if err != nil {

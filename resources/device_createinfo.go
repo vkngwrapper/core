@@ -7,7 +7,7 @@ package resources
 import "C"
 import (
 	"github.com/CannibalVox/VKng/core"
-	"github.com/CannibalVox/cgoalloc"
+	"github.com/CannibalVox/cgoparam"
 	"github.com/cockroachdb/errors"
 	"unsafe"
 )
@@ -26,7 +26,7 @@ type QueueFamilyOptions struct {
 	QueuePriorities  []float32
 }
 
-func (o *DeviceOptions) AllocForC(allocator *cgoalloc.ArenaAllocator) (unsafe.Pointer, error) {
+func (o *DeviceOptions) AllocForC(allocator *cgoparam.Allocator) (unsafe.Pointer, error) {
 	if len(o.QueueFamilies) == 0 {
 		return nil, errors.New("building a vulkan device before adding queue families")
 	}
@@ -59,7 +59,7 @@ func (o *DeviceOptions) AllocForC(allocator *cgoalloc.ArenaAllocator) (unsafe.Po
 	extNamePtr := allocator.Malloc(numExtensions * int(unsafe.Sizeof(uintptr(0))))
 	extNames := ([]*C.char)(unsafe.Slice((**C.char)(extNamePtr), numExtensions))
 	for i := 0; i < numExtensions; i++ {
-		extNames[i] = (*C.char)(cgoalloc.CString(allocator, o.ExtensionNames[i]))
+		extNames[i] = (*C.char)(allocator.CString(o.ExtensionNames[i]))
 	}
 
 	// Alloc array of layer names
@@ -67,7 +67,7 @@ func (o *DeviceOptions) AllocForC(allocator *cgoalloc.ArenaAllocator) (unsafe.Po
 	layerNamePtr := allocator.Malloc(numLayers * int(unsafe.Sizeof(uintptr(0))))
 	layerNames := ([]*C.char)(unsafe.Slice((**C.char)(layerNamePtr), numLayers))
 	for i := 0; i < numLayers; i++ {
-		layerNames[i] = (*C.char)(cgoalloc.CString(allocator, o.LayerNames[i]))
+		layerNames[i] = (*C.char)(allocator.CString(o.LayerNames[i]))
 	}
 
 	createInfo := (*C.VkDeviceCreateInfo)(allocator.Malloc(int(unsafe.Sizeof(C.VkDeviceCreateInfo{}))))

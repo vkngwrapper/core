@@ -7,7 +7,7 @@ package resources
 import "C"
 import (
 	"github.com/CannibalVox/VKng/core"
-	"github.com/CannibalVox/cgoalloc"
+	"github.com/CannibalVox/cgoparam"
 	"unsafe"
 )
 
@@ -22,7 +22,7 @@ type ImageViewOptions struct {
 	Next core.Options
 }
 
-func (o *ImageViewOptions) AllocForC(allocator *cgoalloc.ArenaAllocator) (unsafe.Pointer, error) {
+func (o *ImageViewOptions) AllocForC(allocator *cgoparam.Allocator) (unsafe.Pointer, error) {
 	createInfo := (*C.VkImageViewCreateInfo)(allocator.Malloc(int(unsafe.Sizeof([1]C.VkImageViewCreateInfo{}))))
 
 	createInfo.sType = C.VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO

@@ -10,7 +10,7 @@ import (
 	"encoding/binary"
 	"github.com/CannibalVox/VKng/core"
 	"github.com/CannibalVox/VKng/core/resources"
-	"github.com/CannibalVox/cgoalloc"
+	"github.com/CannibalVox/cgoparam"
 	"github.com/palantir/stacktrace"
 	"unsafe"
 )
@@ -24,12 +24,12 @@ type ShaderStage struct {
 	Next core.Options
 }
 
-func (s *ShaderStage) populate(allocator *cgoalloc.ArenaAllocator, createInfo *C.VkPipelineShaderStageCreateInfo) error {
+func (s *ShaderStage) populate(allocator *cgoparam.Allocator, createInfo *C.VkPipelineShaderStageCreateInfo) error {
 	createInfo.sType = C.VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO
 	createInfo.flags = 0
 	createInfo.stage = C.VkShaderStageFlagBits(s.Stage)
 	createInfo.module = C.VkShaderModule(unsafe.Pointer(s.Shader.Handle()))
-	createInfo.pName = (*C.char)(cgoalloc.CString(allocator, s.Name))
+	createInfo.pName = (*C.char)(allocator.CString(s.Name))
 	createInfo.pSpecializationInfo = nil
 
 	if s.SpecializationInfo != nil && len(s.SpecializationInfo) > 0 {
@@ -64,7 +64,7 @@ func (s *ShaderStage) populate(allocator *cgoalloc.ArenaAllocator, createInfo *C
 		}
 		specInfo.pMapEntries = mapEntryPtr
 		specInfo.dataSize = C.size_t(dataBytes.Len())
-		specInfo.pData = cgoalloc.CBytes(allocator, dataBytes.Bytes())
+		specInfo.pData = allocator.CBytes(dataBytes.Bytes())
 		panic("AAA")
 	}
 
@@ -82,7 +82,7 @@ func (s *ShaderStage) populate(allocator *cgoalloc.ArenaAllocator, createInfo *C
 	return nil
 }
 
-func (s *ShaderStage) AllocForC(allocator *cgoalloc.ArenaAllocator) (unsafe.Pointer, error) {
+func (s *ShaderStage) AllocForC(allocator *cgoparam.Allocator) (unsafe.Pointer, error) {
 	createInfo := (*C.VkPipelineShaderStageCreateInfo)(allocator.Malloc(C.sizeof_struct_VkPipelineShaderStageCreateInfo))
 	err := s.populate(allocator, createInfo)
 	return unsafe.Pointer(createInfo), err

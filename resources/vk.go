@@ -8,13 +8,15 @@ import "C"
 import (
 	"github.com/CannibalVox/VKng/core"
 	"github.com/CannibalVox/VKng/core/loader"
-	"github.com/CannibalVox/cgoalloc"
+	"github.com/CannibalVox/cgoparam"
 	"unsafe"
 )
 
-func AvailableExtensions(alloc cgoalloc.Allocator, load loader.Loader) (map[string]*core.ExtensionProperties, loader.VkResult, error) {
+func AvailableExtensions(load loader.Loader) (map[string]*core.ExtensionProperties, loader.VkResult, error) {
+	alloc := cgoparam.GetAlloc()
+	defer cgoparam.ReturnAlloc(alloc)
+
 	extensionCount := (*loader.Uint32)(alloc.Malloc(int(unsafe.Sizeof(C.uint32_t(0)))))
-	defer alloc.Free(unsafe.Pointer(extensionCount))
 
 	res, err := load.VkEnumerateInstanceExtensionProperties(nil, extensionCount, nil)
 	if err != nil || *extensionCount == 0 {
@@ -22,7 +24,6 @@ func AvailableExtensions(alloc cgoalloc.Allocator, load loader.Loader) (map[stri
 	}
 
 	extensionsUnsafe := alloc.Malloc(int(*extensionCount) * int(unsafe.Sizeof(C.VkExtensionProperties{})))
-	defer alloc.Free(extensionsUnsafe)
 
 	res, err = load.VkEnumerateInstanceExtensionProperties(nil, extensionCount, (*loader.VkExtensionProperties)(extensionsUnsafe))
 	if err != nil {
@@ -50,9 +51,11 @@ func AvailableExtensions(alloc cgoalloc.Allocator, load loader.Loader) (map[stri
 	return outExtensions, res, nil
 }
 
-func AvailableLayers(alloc cgoalloc.Allocator, load loader.Loader) (map[string]*core.LayerProperties, loader.VkResult, error) {
+func AvailableLayers(load loader.Loader) (map[string]*core.LayerProperties, loader.VkResult, error) {
+	alloc := cgoparam.GetAlloc()
+	defer cgoparam.ReturnAlloc(alloc)
+
 	layerCount := (*loader.Uint32)(alloc.Malloc(int(unsafe.Sizeof(C.uint32_t(0)))))
-	defer alloc.Free(unsafe.Pointer(layerCount))
 
 	res, err := load.VkEnumerateInstanceLayerProperties(layerCount, nil)
 	if err != nil || *layerCount == 0 {
@@ -60,7 +63,6 @@ func AvailableLayers(alloc cgoalloc.Allocator, load loader.Loader) (map[string]*
 	}
 
 	layersUnsafe := alloc.Malloc(int(*layerCount) * int(unsafe.Sizeof(C.VkLayerProperties{})))
-	defer alloc.Free(layersUnsafe)
 
 	res, err = load.VkEnumerateInstanceLayerProperties(layerCount, (*loader.VkLayerProperties)(layersUnsafe))
 	if err != nil {

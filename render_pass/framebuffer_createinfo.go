@@ -8,7 +8,7 @@ import "C"
 import (
 	"github.com/CannibalVox/VKng/core"
 	"github.com/CannibalVox/VKng/core/resources"
-	"github.com/CannibalVox/cgoalloc"
+	"github.com/CannibalVox/cgoparam"
 	"unsafe"
 )
 
@@ -23,7 +23,7 @@ type FramebufferOptions struct {
 	Next core.Options
 }
 
-func (o *FramebufferOptions) AllocForC(allocator *cgoalloc.ArenaAllocator) (unsafe.Pointer, error) {
+func (o *FramebufferOptions) AllocForC(allocator *cgoparam.Allocator) (unsafe.Pointer, error) {
 	createInfo := (*C.VkFramebufferCreateInfo)(allocator.Malloc(C.sizeof_struct_VkFramebufferCreateInfo))
 	createInfo.sType = C.VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO
 	createInfo.flags = 0

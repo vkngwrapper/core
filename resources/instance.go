@@ -7,13 +7,13 @@ package resources
 import "C"
 import (
 	"github.com/CannibalVox/VKng/core/loader"
-	"github.com/CannibalVox/cgoalloc"
+	"github.com/CannibalVox/cgoparam"
 	"unsafe"
 )
 
-func CreateInstance(allocator cgoalloc.Allocator, load loader.Loader, options *InstanceOptions) (Instance, loader.VkResult, error) {
-	arena := cgoalloc.CreateArenaAllocator(allocator)
-	defer arena.FreeAll()
+func CreateInstance(load loader.Loader, options *InstanceOptions) (Instance, loader.VkResult, error) {
+	arena := cgoparam.GetAlloc()
+	defer cgoparam.ReturnAlloc(arena)
 
 	createInfo, err := options.AllocForC(arena)
 	if err != nil {
@@ -61,9 +61,11 @@ func (i *vulkanInstance) Destroy() error {
 	return nil
 }
 
-func (i *vulkanInstance) PhysicalDevices(allocator cgoalloc.Allocator) ([]PhysicalDevice, loader.VkResult, error) {
+func (i *vulkanInstance) PhysicalDevices() ([]PhysicalDevice, loader.VkResult, error) {
+	allocator := cgoparam.GetAlloc()
+	defer cgoparam.ReturnAlloc(allocator)
+
 	count := (*loader.Uint32)(allocator.Malloc(int(unsafe.Sizeof(loader.Uint32(0)))))
-	defer allocator.Free(unsafe.Pointer(count))
 
 	res, err := i.loader.VkEnumeratePhysicalDevices(i.handle, count, nil)
 	if err != nil {
@@ -75,7 +77,6 @@ func (i *vulkanInstance) PhysicalDevices(allocator cgoalloc.Allocator) ([]Physic
 	}
 
 	allocatedHandles := allocator.Malloc(int(uintptr(*count) * unsafe.Sizeof([1]loader.VkPhysicalDevice{})))
-	defer allocator.Free(allocatedHandles)
 
 	deviceHandles := ([]loader.VkPhysicalDevice)(unsafe.Slice((*loader.VkPhysicalDevice)(allocatedHandles), int(*count)))
 	res, err = i.loader.VkEnumeratePhysicalDevices(i.handle, count, (*loader.VkPhysicalDevice)(allocatedHandles))

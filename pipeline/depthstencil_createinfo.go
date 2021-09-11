@@ -8,7 +8,7 @@ import "C"
 
 import (
 	"github.com/CannibalVox/VKng/core"
-	"github.com/CannibalVox/cgoalloc"
+	"github.com/CannibalVox/cgoparam"
 	"unsafe"
 )
 
@@ -29,7 +29,7 @@ type DepthStencilOptions struct {
 	Next core.Options
 }
 
-func (o *DepthStencilOptions) AllocForC(allocator *cgoalloc.ArenaAllocator) (unsafe.Pointer, error) {
+func (o *DepthStencilOptions) AllocForC(allocator *cgoparam.Allocator) (unsafe.Pointer, error) {
 	createInfo := (*C.VkPipelineDepthStencilStateCreateInfo)(allocator.Malloc(C.sizeof_struct_VkPipelineDepthStencilStateCreateInfo))
 	createInfo.sType = C.VK_STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO
 	createInfo.flags = 0

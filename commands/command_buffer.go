@@ -10,7 +10,7 @@ import (
 	"github.com/CannibalVox/VKng/core/loader"
 	"github.com/CannibalVox/VKng/core/pipeline"
 	"github.com/CannibalVox/VKng/core/resources"
-	"github.com/CannibalVox/cgoalloc"
+	"github.com/CannibalVox/cgoparam"
 	"unsafe"
 )
 
@@ -21,9 +21,9 @@ type vulkanCommandBuffer struct {
 	handle loader.VkCommandBuffer
 }
 
-func CreateCommandBuffers(allocator cgoalloc.Allocator, device resources.Device, o *CommandBufferOptions) ([]CommandBuffer, loader.VkResult, error) {
-	arena := cgoalloc.CreateArenaAllocator(allocator)
-	defer arena.FreeAll()
+func CreateCommandBuffers(device resources.Device, o *CommandBufferOptions) ([]CommandBuffer, loader.VkResult, error) {
+	arena := cgoparam.GetAlloc()
+	defer cgoparam.ReturnAlloc(arena)
 
 	createInfo, err := o.AllocForC(arena)
 	if err != nil {
@@ -58,9 +58,9 @@ func (c *vulkanCommandBuffer) Destroy() error {
 	return c.loader.VkFreeCommandBuffers(c.device, c.pool, 1, &handle)
 }
 
-func (c *vulkanCommandBuffer) Begin(allocator cgoalloc.Allocator, o *BeginOptions) (loader.VkResult, error) {
-	arena := cgoalloc.CreateArenaAllocator(allocator)
-	defer arena.FreeAll()
+func (c *vulkanCommandBuffer) Begin(o *BeginOptions) (loader.VkResult, error) {
+	arena := cgoparam.GetAlloc()
+	defer cgoparam.ReturnAlloc(arena)
 
 	createInfo, err := o.AllocForC(arena)
 	if err != nil {
@@ -74,9 +74,9 @@ func (c *vulkanCommandBuffer) End() (loader.VkResult, error) {
 	return c.loader.VkEndCommandBuffer(c.handle)
 }
 
-func (c *vulkanCommandBuffer) CmdBeginRenderPass(allocator cgoalloc.Allocator, contents SubpassContents, o *RenderPassBeginOptions) error {
-	arena := cgoalloc.CreateArenaAllocator(allocator)
-	defer arena.FreeAll()
+func (c *vulkanCommandBuffer) CmdBeginRenderPass(contents SubpassContents, o *RenderPassBeginOptions) error {
+	arena := cgoparam.GetAlloc()
+	defer cgoparam.ReturnAlloc(arena)
 
 	createInfo, err := o.AllocForC(arena)
 	if err != nil {
@@ -102,14 +102,14 @@ func (c *vulkanCommandBuffer) CmdDrawIndexed(indexCount, instanceCount int, firs
 	return c.loader.VkCmdDrawIndexed(c.handle, loader.Uint32(indexCount), loader.Uint32(instanceCount), loader.Uint32(firstIndex), loader.Int32(vertexOffset), loader.Uint32(firstInstance))
 }
 
-func (c *vulkanCommandBuffer) CmdBindVertexBuffers(allocator cgoalloc.Allocator, firstBinding uint32, buffers []resources.Buffer, bufferOffsets []int) error {
+func (c *vulkanCommandBuffer) CmdBindVertexBuffers(firstBinding uint32, buffers []resources.Buffer, bufferOffsets []int) error {
+	allocator := cgoparam.GetAlloc()
+	defer cgoparam.ReturnAlloc(allocator)
+
 	bufferCount := len(buffers)
 
 	bufferArrayUnsafe := allocator.Malloc(bufferCount * int(unsafe.Sizeof([1]C.VkBuffer{})))
-	defer allocator.Free(bufferArrayUnsafe)
-
 	offsetArrayUnsafe := allocator.Malloc(bufferCount * int(unsafe.Sizeof(C.VkDeviceSize(0))))
-	defer allocator.Free(offsetArrayUnsafe)
 
 	bufferArrayPtr := (*loader.VkBuffer)(bufferArrayUnsafe)
 	offsetArrayPtr := (*loader.VkDeviceSize)(offsetArrayUnsafe)

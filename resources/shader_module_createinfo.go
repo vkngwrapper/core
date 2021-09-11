@@ -7,7 +7,7 @@ package resources
 import "C"
 import (
 	"github.com/CannibalVox/VKng/core"
-	"github.com/CannibalVox/cgoalloc"
+	"github.com/CannibalVox/cgoparam"
 	"github.com/cockroachdb/errors"
 	"unsafe"
 )
@@ -18,7 +18,7 @@ type ShaderModuleOptions struct {
 	Next core.Options
 }
 
-func (o *ShaderModuleOptions) AllocForC(allocator *cgoalloc.ArenaAllocator) (unsafe.Pointer, error) {
+func (o *ShaderModuleOptions) AllocForC(allocator *cgoparam.Allocator) (unsafe.Pointer, error) {
 	byteCodeLen := len(o.SpirVByteCode)
 	if byteCodeLen == 0 {
 		return nil, errors.New("attempted to create a shader module with no shader bytecode")

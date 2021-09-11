@@ -8,7 +8,7 @@ import "C"
 
 import (
 	"github.com/CannibalVox/VKng/core"
-	"github.com/CannibalVox/cgoalloc"
+	"github.com/CannibalVox/cgoparam"
 	"unsafe"
 )
 
@@ -19,7 +19,7 @@ type InputAssemblyOptions struct {
 	Next core.Options
 }
 
-func (o *InputAssemblyOptions) AllocForC(allocator *cgoalloc.ArenaAllocator) (unsafe.Pointer, error) {
+func (o *InputAssemblyOptions) AllocForC(allocator *cgoparam.Allocator) (unsafe.Pointer, error) {
 	createInfo := (*C.VkPipelineInputAssemblyStateCreateInfo)(allocator.Malloc(C.sizeof_struct_VkPipelineInputAssemblyStateCreateInfo))
 	createInfo.sType = C.VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO
 	createInfo.flags = 0

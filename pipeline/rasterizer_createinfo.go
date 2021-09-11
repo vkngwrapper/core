@@ -7,7 +7,7 @@ package pipeline
 import "C"
 import (
 	"github.com/CannibalVox/VKng/core"
-	"github.com/CannibalVox/cgoalloc"
+	"github.com/CannibalVox/cgoparam"
 	"unsafe"
 )
 
@@ -49,7 +49,7 @@ type RasterizationOptions struct {
 	Next core.Options
 }
 
-func (o *RasterizationOptions) AllocForC(allocator *cgoalloc.ArenaAllocator) (unsafe.Pointer, error) {
+func (o *RasterizationOptions) AllocForC(allocator *cgoparam.Allocator) (unsafe.Pointer, error) {
 	createInfo := (*C.VkPipelineRasterizationStateCreateInfo)(allocator.Malloc(C.sizeof_struct_VkPipelineRasterizationStateCreateInfo))
 	createInfo.sType = C.VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO
 	createInfo.flags = 0

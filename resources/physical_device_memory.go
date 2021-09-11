@@ -7,7 +7,7 @@ package resources
 import "C"
 import (
 	"github.com/CannibalVox/VKng/core/loader"
-	"github.com/CannibalVox/cgoalloc"
+	"github.com/CannibalVox/cgoparam"
 	"strings"
 )
 
@@ -112,9 +112,11 @@ type PhysicalDeviceMemoryProperties struct {
 	MemoryHeaps []MemoryHeap
 }
 
-func (d *vulkanPhysicalDevice) MemoryProperties(allocator cgoalloc.Allocator) *PhysicalDeviceMemoryProperties {
+func (d *vulkanPhysicalDevice) MemoryProperties() *PhysicalDeviceMemoryProperties {
+	allocator := cgoparam.GetAlloc()
+	defer cgoparam.ReturnAlloc(allocator)
+
 	propsUnsafe := allocator.Malloc(C.sizeof_struct_VkPhysicalDeviceMemoryProperties)
-	defer allocator.Free(propsUnsafe)
 
 	d.loader.VkGetPhysicalDeviceMemoryProperties(d.handle, (*loader.VkPhysicalDeviceMemoryProperties)(propsUnsafe))
 

@@ -7,7 +7,7 @@ package commands
 import "C"
 import (
 	"github.com/CannibalVox/VKng/core"
-	"github.com/CannibalVox/cgoalloc"
+	"github.com/CannibalVox/cgoparam"
 	"github.com/cockroachdb/errors"
 	"strings"
 	"unsafe"
@@ -56,7 +56,7 @@ type CommandPoolOptions struct {
 	Next core.Options
 }
 
-func (o *CommandPoolOptions) AllocForC(allocator *cgoalloc.ArenaAllocator) (unsafe.Pointer, error) {
+func (o *CommandPoolOptions) AllocForC(allocator *cgoparam.Allocator) (unsafe.Pointer, error) {
 	if o.GraphicsQueueFamily == nil {
 		return nil, errors.New("attempted to create a command pool without setting GraphicsQueueFamilyIndex")
 	}

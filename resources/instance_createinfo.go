@@ -7,7 +7,7 @@ package resources
 import "C"
 import (
 	"github.com/CannibalVox/VKng/core"
-	"github.com/CannibalVox/cgoalloc"
+	"github.com/CannibalVox/cgoparam"
 	"unsafe"
 )
 
@@ -24,9 +24,9 @@ type InstanceOptions struct {
 	Next core.Options
 }
 
-func (o *InstanceOptions) AllocForC(allocator *cgoalloc.ArenaAllocator) (unsafe.Pointer, error) {
-	cApplication := cgoalloc.CString(allocator, o.ApplicationName)
-	cEngine := cgoalloc.CString(allocator, o.EngineName)
+func (o *InstanceOptions) AllocForC(allocator *cgoparam.Allocator) (unsafe.Pointer, error) {
+	cApplication := allocator.CString(o.ApplicationName)
+	cEngine := allocator.CString(o.EngineName)
 
 	appInfo := (*C.VkApplicationInfo)(allocator.Malloc(int(unsafe.Sizeof(C.VkApplicationInfo{}))))
 
@@ -44,7 +44,7 @@ func (o *InstanceOptions) AllocForC(allocator *cgoalloc.ArenaAllocator) (unsafe.
 	extNamePtr := allocator.Malloc(numExtensions * int(unsafe.Sizeof(uintptr(0))))
 	extNames := ([]*C.char)(unsafe.Slice((**C.char)(extNamePtr), numExtensions))
 	for i := 0; i < numExtensions; i++ {
-		extNames[i] = (*C.char)(cgoalloc.CString(allocator, o.ExtensionNames[i]))
+		extNames[i] = (*C.char)(allocator.CString(o.ExtensionNames[i]))
 	}
 
 	// Alloc array of layer names
@@ -52,7 +52,7 @@ func (o *InstanceOptions) AllocForC(allocator *cgoalloc.ArenaAllocator) (unsafe.
 	layerNamePtr := allocator.Malloc(numLayers * int(unsafe.Sizeof(uintptr(0))))
 	layerNames := ([]*C.char)(unsafe.Slice((**C.char)(layerNamePtr), numLayers))
 	for i := 0; i < numLayers; i++ {
-		layerNames[i] = (*C.char)(cgoalloc.CString(allocator, o.LayerNames[i]))
+		layerNames[i] = (*C.char)(allocator.CString(o.LayerNames[i]))
 	}
 
 	createInfo.sType = C.VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO

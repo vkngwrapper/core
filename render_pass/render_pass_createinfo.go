@@ -7,7 +7,7 @@ package render_pass
 import "C"
 import (
 	"github.com/CannibalVox/VKng/core"
-	"github.com/CannibalVox/cgoalloc"
+	"github.com/CannibalVox/cgoparam"
 	"github.com/palantir/stacktrace"
 	"unsafe"
 )
@@ -20,7 +20,7 @@ type RenderPassOptions struct {
 	Next core.Options
 }
 
-func (o *RenderPassOptions) AllocForC(allocator *cgoalloc.ArenaAllocator) (unsafe.Pointer, error) {
+func (o *RenderPassOptions) AllocForC(allocator *cgoparam.Allocator) (unsafe.Pointer, error) {
 	createInfo := (*C.VkRenderPassCreateInfo)(allocator.Malloc(int(unsafe.Sizeof(C.VkRenderPassCreateInfo{}))))
 	createInfo.sType = C.VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO
 	createInfo.flags = 0
@@ -130,7 +130,7 @@ func (o *RenderPassOptions) AllocForC(allocator *cgoalloc.ArenaAllocator) (unsaf
 	return unsafe.Pointer(createInfo), nil
 }
 
-func createAttachmentReferences(allocator *cgoalloc.ArenaAllocator, references []core.AttachmentReference) *C.VkAttachmentReference {
+func createAttachmentReferences(allocator *cgoparam.Allocator, references []core.AttachmentReference) *C.VkAttachmentReference {
 	count := len(references)
 	if count == 0 {
 		return nil

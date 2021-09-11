@@ -11,8 +11,7 @@ import (
 	commands "github.com/CannibalVox/VKng/core/commands"
 	loader "github.com/CannibalVox/VKng/core/loader"
 	pipeline "github.com/CannibalVox/VKng/core/pipeline"
-	resource "github.com/CannibalVox/VKng/core/resources"
-	cgoalloc "github.com/CannibalVox/cgoalloc"
+	resources "github.com/CannibalVox/VKng/core/resources"
 	gomock "github.com/golang/mock/gomock"
 )
 
@@ -40,36 +39,36 @@ func (m *MockCommandBuffer) EXPECT() *MockCommandBufferMockRecorder {
 }
 
 // Begin mocks base method.
-func (m *MockCommandBuffer) Begin(allocator cgoalloc.Allocator, o *commands.BeginOptions) (loader.VkResult, error) {
+func (m *MockCommandBuffer) Begin(o *commands.BeginOptions) (loader.VkResult, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Begin", allocator, o)
+	ret := m.ctrl.Call(m, "Begin", o)
 	ret0, _ := ret[0].(loader.VkResult)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // Begin indicates an expected call of Begin.
-func (mr *MockCommandBufferMockRecorder) Begin(allocator, o interface{}) *gomock.Call {
+func (mr *MockCommandBufferMockRecorder) Begin(o interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Begin", reflect.TypeOf((*MockCommandBuffer)(nil).Begin), allocator, o)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Begin", reflect.TypeOf((*MockCommandBuffer)(nil).Begin), o)
 }
 
 // CmdBeginRenderPass mocks base method.
-func (m *MockCommandBuffer) CmdBeginRenderPass(allocator cgoalloc.Allocator, contents commands.SubpassContents, o *commands.RenderPassBeginOptions) error {
+func (m *MockCommandBuffer) CmdBeginRenderPass(contents commands.SubpassContents, o *commands.RenderPassBeginOptions) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CmdBeginRenderPass", allocator, contents, o)
+	ret := m.ctrl.Call(m, "CmdBeginRenderPass", contents, o)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // CmdBeginRenderPass indicates an expected call of CmdBeginRenderPass.
-func (mr *MockCommandBufferMockRecorder) CmdBeginRenderPass(allocator, contents, o interface{}) *gomock.Call {
+func (mr *MockCommandBufferMockRecorder) CmdBeginRenderPass(contents, o interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CmdBeginRenderPass", reflect.TypeOf((*MockCommandBuffer)(nil).CmdBeginRenderPass), allocator, contents, o)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CmdBeginRenderPass", reflect.TypeOf((*MockCommandBuffer)(nil).CmdBeginRenderPass), contents, o)
 }
 
 // CmdBindIndexBuffer mocks base method.
-func (m *MockCommandBuffer) CmdBindIndexBuffer(buffer resource.Buffer, offset int, indexType core.IndexType) error {
+func (m *MockCommandBuffer) CmdBindIndexBuffer(buffer resources.Buffer, offset int, indexType core.IndexType) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CmdBindIndexBuffer", buffer, offset, indexType)
 	ret0, _ := ret[0].(error)
@@ -97,31 +96,31 @@ func (mr *MockCommandBufferMockRecorder) CmdBindPipeline(bindPoint, pipeline int
 }
 
 // CmdBindVertexBuffers mocks base method.
-func (m *MockCommandBuffer) CmdBindVertexBuffers(allocator cgoalloc.Allocator, firstBinding uint32, buffers []resource.Buffer, bufferOffsets []int) error {
+func (m *MockCommandBuffer) CmdBindVertexBuffers(firstBinding uint32, buffers []resources.Buffer, bufferOffsets []int) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CmdBindVertexBuffers", allocator, firstBinding, buffers, bufferOffsets)
+	ret := m.ctrl.Call(m, "CmdBindVertexBuffers", firstBinding, buffers, bufferOffsets)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // CmdBindVertexBuffers indicates an expected call of CmdBindVertexBuffers.
-func (mr *MockCommandBufferMockRecorder) CmdBindVertexBuffers(allocator, firstBinding, buffers, bufferOffsets interface{}) *gomock.Call {
+func (mr *MockCommandBufferMockRecorder) CmdBindVertexBuffers(firstBinding, buffers, bufferOffsets interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CmdBindVertexBuffers", reflect.TypeOf((*MockCommandBuffer)(nil).CmdBindVertexBuffers), allocator, firstBinding, buffers, bufferOffsets)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CmdBindVertexBuffers", reflect.TypeOf((*MockCommandBuffer)(nil).CmdBindVertexBuffers), firstBinding, buffers, bufferOffsets)
 }
 
 // CmdCopyBuffer mocks base method.
-func (m *MockCommandBuffer) CmdCopyBuffer(allocator cgoalloc.Allocator, srcBuffer, dstBuffer resource.Buffer, copyRegions []commands.BufferCopy) error {
+func (m *MockCommandBuffer) CmdCopyBuffer(srcBuffer, dstBuffer resources.Buffer, copyRegions []commands.BufferCopy) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CmdCopyBuffer", allocator, srcBuffer, dstBuffer, copyRegions)
+	ret := m.ctrl.Call(m, "CmdCopyBuffer", srcBuffer, dstBuffer, copyRegions)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // CmdCopyBuffer indicates an expected call of CmdCopyBuffer.
-func (mr *MockCommandBufferMockRecorder) CmdCopyBuffer(allocator, srcBuffer, dstBuffer, copyRegions interface{}) *gomock.Call {
+func (mr *MockCommandBufferMockRecorder) CmdCopyBuffer(srcBuffer, dstBuffer, copyRegions interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CmdCopyBuffer", reflect.TypeOf((*MockCommandBuffer)(nil).CmdCopyBuffer), allocator, srcBuffer, dstBuffer, copyRegions)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CmdCopyBuffer", reflect.TypeOf((*MockCommandBuffer)(nil).CmdCopyBuffer), srcBuffer, dstBuffer, copyRegions)
 }
 
 // CmdDraw mocks base method.
@@ -247,17 +246,17 @@ func (mr *MockCommandPoolMockRecorder) Destroy() *gomock.Call {
 }
 
 // DestroyBuffers mocks base method.
-func (m *MockCommandPool) DestroyBuffers(allocator cgoalloc.Allocator, buffers []commands.CommandBuffer) error {
+func (m *MockCommandPool) DestroyBuffers(buffers []commands.CommandBuffer) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "DestroyBuffers", allocator, buffers)
+	ret := m.ctrl.Call(m, "DestroyBuffers", buffers)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // DestroyBuffers indicates an expected call of DestroyBuffers.
-func (mr *MockCommandPoolMockRecorder) DestroyBuffers(allocator, buffers interface{}) *gomock.Call {
+func (mr *MockCommandPoolMockRecorder) DestroyBuffers(buffers interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DestroyBuffers", reflect.TypeOf((*MockCommandPool)(nil).DestroyBuffers), allocator, buffers)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DestroyBuffers", reflect.TypeOf((*MockCommandPool)(nil).DestroyBuffers), buffers)
 }
 
 // Handle mocks base method.

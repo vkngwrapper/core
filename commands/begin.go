@@ -8,7 +8,7 @@ import "C"
 import (
 	"github.com/CannibalVox/VKng/core"
 	"github.com/CannibalVox/VKng/core/render_pass"
-	"github.com/CannibalVox/cgoalloc"
+	"github.com/CannibalVox/cgoparam"
 	"strings"
 	"unsafe"
 )
@@ -63,7 +63,7 @@ type CommandBufferInheritanceOptions struct {
 	Next core.Options
 }
 
-func (o *CommandBufferInheritanceOptions) AllocForC(allocator *cgoalloc.ArenaAllocator) (unsafe.Pointer, error) {
+func (o *CommandBufferInheritanceOptions) AllocForC(allocator *cgoparam.Allocator) (unsafe.Pointer, error) {
 	createInfo := (*C.VkCommandBufferInheritanceInfo)(allocator.Malloc(C.sizeof_struct_VkCommandBufferInheritanceInfo))
 
 	createInfo.sType = C.VK_STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_INFO
@@ -109,7 +109,7 @@ type BeginOptions struct {
 	Next core.Options
 }
 
-func (o *BeginOptions) AllocForC(allocator *cgoalloc.ArenaAllocator) (unsafe.Pointer, error) {
+func (o *BeginOptions) AllocForC(allocator *cgoparam.Allocator) (unsafe.Pointer, error) {
 	createInfo := (*C.VkCommandBufferBeginInfo)(allocator.Malloc(C.sizeof_struct_VkCommandBufferBeginInfo))
 
 	createInfo.sType = C.VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO

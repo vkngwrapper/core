@@ -7,7 +7,7 @@ package pipeline
 import "C"
 import (
 	"github.com/CannibalVox/VKng/core"
-	"github.com/CannibalVox/cgoalloc"
+	"github.com/CannibalVox/cgoparam"
 	"unsafe"
 )
 
@@ -18,7 +18,7 @@ type ViewportOptions struct {
 	Next core.Options
 }
 
-func (o *ViewportOptions) AllocForC(allocator *cgoalloc.ArenaAllocator) (unsafe.Pointer, error) {
+func (o *ViewportOptions) AllocForC(allocator *cgoparam.Allocator) (unsafe.Pointer, error) {
 	createInfo := (*C.VkPipelineViewportStateCreateInfo)(allocator.Malloc(C.sizeof_struct_VkPipelineViewportStateCreateInfo))
 	createInfo.sType = C.VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO
 	createInfo.flags = 0

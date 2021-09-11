@@ -11,8 +11,7 @@ import (
 
 	core "github.com/CannibalVox/VKng/core"
 	loader "github.com/CannibalVox/VKng/core/loader"
-	resource "github.com/CannibalVox/VKng/core/resources"
-	cgoalloc "github.com/CannibalVox/cgoalloc"
+	resources "github.com/CannibalVox/VKng/core/resources"
 	gomock "github.com/golang/mock/gomock"
 )
 
@@ -40,7 +39,7 @@ func (m *MockBuffer) EXPECT() *MockBufferMockRecorder {
 }
 
 // BindBufferMemory mocks base method.
-func (m *MockBuffer) BindBufferMemory(memory resource.DeviceMemory, offset int) (loader.VkResult, error) {
+func (m *MockBuffer) BindBufferMemory(memory resources.DeviceMemory, offset int) (loader.VkResult, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "BindBufferMemory", memory, offset)
 	ret0, _ := ret[0].(loader.VkResult)
@@ -83,18 +82,18 @@ func (mr *MockBufferMockRecorder) Handle() *gomock.Call {
 }
 
 // MemoryRequirements mocks base method.
-func (m *MockBuffer) MemoryRequirements(allocator cgoalloc.Allocator) (*core.MemoryRequirements, error) {
+func (m *MockBuffer) MemoryRequirements() (*core.MemoryRequirements, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "MemoryRequirements", allocator)
+	ret := m.ctrl.Call(m, "MemoryRequirements")
 	ret0, _ := ret[0].(*core.MemoryRequirements)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // MemoryRequirements indicates an expected call of MemoryRequirements.
-func (mr *MockBufferMockRecorder) MemoryRequirements(allocator interface{}) *gomock.Call {
+func (mr *MockBufferMockRecorder) MemoryRequirements() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "MemoryRequirements", reflect.TypeOf((*MockBuffer)(nil).MemoryRequirements), allocator)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "MemoryRequirements", reflect.TypeOf((*MockBuffer)(nil).MemoryRequirements))
 }
 
 // MockDeviceMemory is a mock of DeviceMemory interface.
@@ -217,99 +216,99 @@ func (m *MockDevice) EXPECT() *MockDeviceMockRecorder {
 }
 
 // AllocateMemory mocks base method.
-func (m *MockDevice) AllocateMemory(allocator cgoalloc.Allocator, o *resource.DeviceMemoryOptions) (resource.DeviceMemory, loader.VkResult, error) {
+func (m *MockDevice) AllocateMemory(o *resources.DeviceMemoryOptions) (resources.DeviceMemory, loader.VkResult, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "AllocateMemory", allocator, o)
-	ret0, _ := ret[0].(resource.DeviceMemory)
+	ret := m.ctrl.Call(m, "AllocateMemory", o)
+	ret0, _ := ret[0].(resources.DeviceMemory)
 	ret1, _ := ret[1].(loader.VkResult)
 	ret2, _ := ret[2].(error)
 	return ret0, ret1, ret2
 }
 
 // AllocateMemory indicates an expected call of AllocateMemory.
-func (mr *MockDeviceMockRecorder) AllocateMemory(allocator, o interface{}) *gomock.Call {
+func (mr *MockDeviceMockRecorder) AllocateMemory(o interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AllocateMemory", reflect.TypeOf((*MockDevice)(nil).AllocateMemory), allocator, o)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AllocateMemory", reflect.TypeOf((*MockDevice)(nil).AllocateMemory), o)
 }
 
 // CreateBuffer mocks base method.
-func (m *MockDevice) CreateBuffer(allocator cgoalloc.Allocator, o *resource.BufferOptions) (resource.Buffer, loader.VkResult, error) {
+func (m *MockDevice) CreateBuffer(o *resources.BufferOptions) (resources.Buffer, loader.VkResult, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreateBuffer", allocator, o)
-	ret0, _ := ret[0].(resource.Buffer)
+	ret := m.ctrl.Call(m, "CreateBuffer", o)
+	ret0, _ := ret[0].(resources.Buffer)
 	ret1, _ := ret[1].(loader.VkResult)
 	ret2, _ := ret[2].(error)
 	return ret0, ret1, ret2
 }
 
 // CreateBuffer indicates an expected call of CreateBuffer.
-func (mr *MockDeviceMockRecorder) CreateBuffer(allocator, o interface{}) *gomock.Call {
+func (mr *MockDeviceMockRecorder) CreateBuffer(o interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateBuffer", reflect.TypeOf((*MockDevice)(nil).CreateBuffer), allocator, o)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateBuffer", reflect.TypeOf((*MockDevice)(nil).CreateBuffer), o)
 }
 
 // CreateFence mocks base method.
-func (m *MockDevice) CreateFence(allocator cgoalloc.Allocator, o *resource.FenceOptions) (resource.Fence, loader.VkResult, error) {
+func (m *MockDevice) CreateFence(o *resources.FenceOptions) (resources.Fence, loader.VkResult, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreateFence", allocator, o)
-	ret0, _ := ret[0].(resource.Fence)
+	ret := m.ctrl.Call(m, "CreateFence", o)
+	ret0, _ := ret[0].(resources.Fence)
 	ret1, _ := ret[1].(loader.VkResult)
 	ret2, _ := ret[2].(error)
 	return ret0, ret1, ret2
 }
 
 // CreateFence indicates an expected call of CreateFence.
-func (mr *MockDeviceMockRecorder) CreateFence(allocator, o interface{}) *gomock.Call {
+func (mr *MockDeviceMockRecorder) CreateFence(o interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateFence", reflect.TypeOf((*MockDevice)(nil).CreateFence), allocator, o)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateFence", reflect.TypeOf((*MockDevice)(nil).CreateFence), o)
 }
 
 // CreateImageView mocks base method.
-func (m *MockDevice) CreateImageView(allocator cgoalloc.Allocator, o *resource.ImageViewOptions) (resource.ImageView, loader.VkResult, error) {
+func (m *MockDevice) CreateImageView(o *resources.ImageViewOptions) (resources.ImageView, loader.VkResult, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreateImageView", allocator, o)
-	ret0, _ := ret[0].(resource.ImageView)
+	ret := m.ctrl.Call(m, "CreateImageView", o)
+	ret0, _ := ret[0].(resources.ImageView)
 	ret1, _ := ret[1].(loader.VkResult)
 	ret2, _ := ret[2].(error)
 	return ret0, ret1, ret2
 }
 
 // CreateImageView indicates an expected call of CreateImageView.
-func (mr *MockDeviceMockRecorder) CreateImageView(allocator, o interface{}) *gomock.Call {
+func (mr *MockDeviceMockRecorder) CreateImageView(o interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateImageView", reflect.TypeOf((*MockDevice)(nil).CreateImageView), allocator, o)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateImageView", reflect.TypeOf((*MockDevice)(nil).CreateImageView), o)
 }
 
 // CreateSemaphore mocks base method.
-func (m *MockDevice) CreateSemaphore(allocator cgoalloc.Allocator, o *resource.SemaphoreOptions) (resource.Semaphore, loader.VkResult, error) {
+func (m *MockDevice) CreateSemaphore(o *resources.SemaphoreOptions) (resources.Semaphore, loader.VkResult, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreateSemaphore", allocator, o)
-	ret0, _ := ret[0].(resource.Semaphore)
+	ret := m.ctrl.Call(m, "CreateSemaphore", o)
+	ret0, _ := ret[0].(resources.Semaphore)
 	ret1, _ := ret[1].(loader.VkResult)
 	ret2, _ := ret[2].(error)
 	return ret0, ret1, ret2
 }
 
 // CreateSemaphore indicates an expected call of CreateSemaphore.
-func (mr *MockDeviceMockRecorder) CreateSemaphore(allocator, o interface{}) *gomock.Call {
+func (mr *MockDeviceMockRecorder) CreateSemaphore(o interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateSemaphore", reflect.TypeOf((*MockDevice)(nil).CreateSemaphore), allocator, o)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateSemaphore", reflect.TypeOf((*MockDevice)(nil).CreateSemaphore), o)
 }
 
 // CreateShaderModule mocks base method.
-func (m *MockDevice) CreateShaderModule(allocator cgoalloc.Allocator, o *resource.ShaderModuleOptions) (resource.ShaderModule, loader.VkResult, error) {
+func (m *MockDevice) CreateShaderModule(o *resources.ShaderModuleOptions) (resources.ShaderModule, loader.VkResult, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreateShaderModule", allocator, o)
-	ret0, _ := ret[0].(resource.ShaderModule)
+	ret := m.ctrl.Call(m, "CreateShaderModule", o)
+	ret0, _ := ret[0].(resources.ShaderModule)
 	ret1, _ := ret[1].(loader.VkResult)
 	ret2, _ := ret[2].(error)
 	return ret0, ret1, ret2
 }
 
 // CreateShaderModule indicates an expected call of CreateShaderModule.
-func (mr *MockDeviceMockRecorder) CreateShaderModule(allocator, o interface{}) *gomock.Call {
+func (mr *MockDeviceMockRecorder) CreateShaderModule(o interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateShaderModule", reflect.TypeOf((*MockDevice)(nil).CreateShaderModule), allocator, o)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateShaderModule", reflect.TypeOf((*MockDevice)(nil).CreateShaderModule), o)
 }
 
 // Destroy mocks base method.
@@ -327,10 +326,10 @@ func (mr *MockDeviceMockRecorder) Destroy() *gomock.Call {
 }
 
 // GetQueue mocks base method.
-func (m *MockDevice) GetQueue(queueFamilyIndex, queueIndex int) (resource.Queue, error) {
+func (m *MockDevice) GetQueue(queueFamilyIndex, queueIndex int) (resources.Queue, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetQueue", queueFamilyIndex, queueIndex)
-	ret0, _ := ret[0].(resource.Queue)
+	ret0, _ := ret[0].(resources.Queue)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -370,33 +369,33 @@ func (mr *MockDeviceMockRecorder) Loader() *gomock.Call {
 }
 
 // ResetFences mocks base method.
-func (m *MockDevice) ResetFences(allocator cgoalloc.Allocator, fences []resource.Fence) (loader.VkResult, error) {
+func (m *MockDevice) ResetFences(fences []resources.Fence) (loader.VkResult, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "ResetFences", allocator, fences)
+	ret := m.ctrl.Call(m, "ResetFences", fences)
 	ret0, _ := ret[0].(loader.VkResult)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // ResetFences indicates an expected call of ResetFences.
-func (mr *MockDeviceMockRecorder) ResetFences(allocator, fences interface{}) *gomock.Call {
+func (mr *MockDeviceMockRecorder) ResetFences(fences interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ResetFences", reflect.TypeOf((*MockDevice)(nil).ResetFences), allocator, fences)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ResetFences", reflect.TypeOf((*MockDevice)(nil).ResetFences), fences)
 }
 
 // WaitForFences mocks base method.
-func (m *MockDevice) WaitForFences(allocator cgoalloc.Allocator, waitForAll bool, timeout time.Duration, fences []resource.Fence) (loader.VkResult, error) {
+func (m *MockDevice) WaitForFences(waitForAll bool, timeout time.Duration, fences []resources.Fence) (loader.VkResult, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "WaitForFences", allocator, waitForAll, timeout, fences)
+	ret := m.ctrl.Call(m, "WaitForFences", waitForAll, timeout, fences)
 	ret0, _ := ret[0].(loader.VkResult)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // WaitForFences indicates an expected call of WaitForFences.
-func (mr *MockDeviceMockRecorder) WaitForFences(allocator, waitForAll, timeout, fences interface{}) *gomock.Call {
+func (mr *MockDeviceMockRecorder) WaitForFences(waitForAll, timeout, fences interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "WaitForFences", reflect.TypeOf((*MockDevice)(nil).WaitForFences), allocator, waitForAll, timeout, fences)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "WaitForFences", reflect.TypeOf((*MockDevice)(nil).WaitForFences), waitForAll, timeout, fences)
 }
 
 // WaitForIdle mocks base method.
@@ -619,19 +618,19 @@ func (mr *MockInstanceMockRecorder) Loader() *gomock.Call {
 }
 
 // PhysicalDevices mocks base method.
-func (m *MockInstance) PhysicalDevices(allocator cgoalloc.Allocator) ([]resource.PhysicalDevice, loader.VkResult, error) {
+func (m *MockInstance) PhysicalDevices() ([]resources.PhysicalDevice, loader.VkResult, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "PhysicalDevices", allocator)
-	ret0, _ := ret[0].([]resource.PhysicalDevice)
+	ret := m.ctrl.Call(m, "PhysicalDevices")
+	ret0, _ := ret[0].([]resources.PhysicalDevice)
 	ret1, _ := ret[1].(loader.VkResult)
 	ret2, _ := ret[2].(error)
 	return ret0, ret1, ret2
 }
 
 // PhysicalDevices indicates an expected call of PhysicalDevices.
-func (mr *MockInstanceMockRecorder) PhysicalDevices(allocator interface{}) *gomock.Call {
+func (mr *MockInstanceMockRecorder) PhysicalDevices() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "PhysicalDevices", reflect.TypeOf((*MockInstance)(nil).PhysicalDevices), allocator)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "PhysicalDevices", reflect.TypeOf((*MockInstance)(nil).PhysicalDevices))
 }
 
 // MockPhysicalDevice is a mock of PhysicalDevice interface.
@@ -658,9 +657,9 @@ func (m *MockPhysicalDevice) EXPECT() *MockPhysicalDeviceMockRecorder {
 }
 
 // AvailableExtensions mocks base method.
-func (m *MockPhysicalDevice) AvailableExtensions(allocator cgoalloc.Allocator) (map[string]*core.ExtensionProperties, loader.VkResult, error) {
+func (m *MockPhysicalDevice) AvailableExtensions() (map[string]*core.ExtensionProperties, loader.VkResult, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "AvailableExtensions", allocator)
+	ret := m.ctrl.Call(m, "AvailableExtensions")
 	ret0, _ := ret[0].(map[string]*core.ExtensionProperties)
 	ret1, _ := ret[1].(loader.VkResult)
 	ret2, _ := ret[2].(error)
@@ -668,40 +667,40 @@ func (m *MockPhysicalDevice) AvailableExtensions(allocator cgoalloc.Allocator) (
 }
 
 // AvailableExtensions indicates an expected call of AvailableExtensions.
-func (mr *MockPhysicalDeviceMockRecorder) AvailableExtensions(allocator interface{}) *gomock.Call {
+func (mr *MockPhysicalDeviceMockRecorder) AvailableExtensions() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AvailableExtensions", reflect.TypeOf((*MockPhysicalDevice)(nil).AvailableExtensions), allocator)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AvailableExtensions", reflect.TypeOf((*MockPhysicalDevice)(nil).AvailableExtensions))
 }
 
 // CreateDevice mocks base method.
-func (m *MockPhysicalDevice) CreateDevice(allocator cgoalloc.Allocator, options *resource.DeviceOptions) (resource.Device, loader.VkResult, error) {
+func (m *MockPhysicalDevice) CreateDevice(options *resources.DeviceOptions) (resources.Device, loader.VkResult, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreateDevice", allocator, options)
-	ret0, _ := ret[0].(resource.Device)
+	ret := m.ctrl.Call(m, "CreateDevice", options)
+	ret0, _ := ret[0].(resources.Device)
 	ret1, _ := ret[1].(loader.VkResult)
 	ret2, _ := ret[2].(error)
 	return ret0, ret1, ret2
 }
 
 // CreateDevice indicates an expected call of CreateDevice.
-func (mr *MockPhysicalDeviceMockRecorder) CreateDevice(allocator, options interface{}) *gomock.Call {
+func (mr *MockPhysicalDeviceMockRecorder) CreateDevice(options interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateDevice", reflect.TypeOf((*MockPhysicalDevice)(nil).CreateDevice), allocator, options)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateDevice", reflect.TypeOf((*MockPhysicalDevice)(nil).CreateDevice), options)
 }
 
 // Features mocks base method.
-func (m *MockPhysicalDevice) Features(allocator cgoalloc.Allocator) (*core.PhysicalDeviceFeatures, error) {
+func (m *MockPhysicalDevice) Features() (*core.PhysicalDeviceFeatures, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Features", allocator)
+	ret := m.ctrl.Call(m, "Features")
 	ret0, _ := ret[0].(*core.PhysicalDeviceFeatures)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // Features indicates an expected call of Features.
-func (mr *MockPhysicalDeviceMockRecorder) Features(allocator interface{}) *gomock.Call {
+func (mr *MockPhysicalDeviceMockRecorder) Features() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Features", reflect.TypeOf((*MockPhysicalDevice)(nil).Features), allocator)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Features", reflect.TypeOf((*MockPhysicalDevice)(nil).Features))
 }
 
 // Handle mocks base method.
@@ -719,47 +718,47 @@ func (mr *MockPhysicalDeviceMockRecorder) Handle() *gomock.Call {
 }
 
 // MemoryProperties mocks base method.
-func (m *MockPhysicalDevice) MemoryProperties(allocator cgoalloc.Allocator) *resource.PhysicalDeviceMemoryProperties {
+func (m *MockPhysicalDevice) MemoryProperties() *resources.PhysicalDeviceMemoryProperties {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "MemoryProperties", allocator)
-	ret0, _ := ret[0].(*resource.PhysicalDeviceMemoryProperties)
+	ret := m.ctrl.Call(m, "MemoryProperties")
+	ret0, _ := ret[0].(*resources.PhysicalDeviceMemoryProperties)
 	return ret0
 }
 
 // MemoryProperties indicates an expected call of MemoryProperties.
-func (mr *MockPhysicalDeviceMockRecorder) MemoryProperties(allocator interface{}) *gomock.Call {
+func (mr *MockPhysicalDeviceMockRecorder) MemoryProperties() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "MemoryProperties", reflect.TypeOf((*MockPhysicalDevice)(nil).MemoryProperties), allocator)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "MemoryProperties", reflect.TypeOf((*MockPhysicalDevice)(nil).MemoryProperties))
 }
 
 // Properties mocks base method.
-func (m *MockPhysicalDevice) Properties(allocator cgoalloc.Allocator) (*core.PhysicalDeviceProperties, error) {
+func (m *MockPhysicalDevice) Properties() (*core.PhysicalDeviceProperties, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Properties", allocator)
+	ret := m.ctrl.Call(m, "Properties")
 	ret0, _ := ret[0].(*core.PhysicalDeviceProperties)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // Properties indicates an expected call of Properties.
-func (mr *MockPhysicalDeviceMockRecorder) Properties(allocator interface{}) *gomock.Call {
+func (mr *MockPhysicalDeviceMockRecorder) Properties() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Properties", reflect.TypeOf((*MockPhysicalDevice)(nil).Properties), allocator)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Properties", reflect.TypeOf((*MockPhysicalDevice)(nil).Properties))
 }
 
 // QueueFamilyProperties mocks base method.
-func (m *MockPhysicalDevice) QueueFamilyProperties(allocator cgoalloc.Allocator) ([]*core.QueueFamily, error) {
+func (m *MockPhysicalDevice) QueueFamilyProperties() ([]*core.QueueFamily, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "QueueFamilyProperties", allocator)
+	ret := m.ctrl.Call(m, "QueueFamilyProperties")
 	ret0, _ := ret[0].([]*core.QueueFamily)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // QueueFamilyProperties indicates an expected call of QueueFamilyProperties.
-func (mr *MockPhysicalDeviceMockRecorder) QueueFamilyProperties(allocator interface{}) *gomock.Call {
+func (mr *MockPhysicalDeviceMockRecorder) QueueFamilyProperties() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "QueueFamilyProperties", reflect.TypeOf((*MockPhysicalDevice)(nil).QueueFamilyProperties), allocator)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "QueueFamilyProperties", reflect.TypeOf((*MockPhysicalDevice)(nil).QueueFamilyProperties))
 }
 
 // MockQueue is a mock of Queue interface.

@@ -8,7 +8,7 @@ import "C"
 import (
 	"github.com/CannibalVox/VKng/core"
 	"github.com/CannibalVox/VKng/core/render_pass"
-	"github.com/CannibalVox/cgoalloc"
+	"github.com/CannibalVox/cgoparam"
 	"unsafe"
 )
 
@@ -34,7 +34,7 @@ type Options struct {
 	Next core.Options
 }
 
-func (o *Options) populate(allocator *cgoalloc.ArenaAllocator, createInfo *C.VkGraphicsPipelineCreateInfo) error {
+func (o *Options) populate(allocator *cgoparam.Allocator, createInfo *C.VkGraphicsPipelineCreateInfo) error {
 	createInfo.sType = C.VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO
 	createInfo.flags = 0
 
@@ -175,7 +175,7 @@ func (o *Options) populate(allocator *cgoalloc.ArenaAllocator, createInfo *C.VkG
 	return nil
 }
 
-func (o *Options) AllocForC(allocator *cgoalloc.ArenaAllocator) (unsafe.Pointer, error) {
+func (o *Options) AllocForC(allocator *cgoparam.Allocator) (unsafe.Pointer, error) {
 	createInfo := (*C.VkGraphicsPipelineCreateInfo)(allocator.Malloc(C.sizeof_struct_VkGraphicsPipelineCreateInfo))
 
 	err := o.populate(allocator, createInfo)

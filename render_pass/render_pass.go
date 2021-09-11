@@ -8,7 +8,7 @@ import "C"
 import (
 	"github.com/CannibalVox/VKng/core/loader"
 	"github.com/CannibalVox/VKng/core/resources"
-	"github.com/CannibalVox/cgoalloc"
+	"github.com/CannibalVox/cgoparam"
 )
 
 type vulkanRenderPass struct {
@@ -17,9 +17,9 @@ type vulkanRenderPass struct {
 	handle loader.VkRenderPass
 }
 
-func CreateRenderPass(allocator cgoalloc.Allocator, device resources.Device, o *RenderPassOptions) (RenderPass, loader.VkResult, error) {
-	arena := cgoalloc.CreateArenaAllocator(allocator)
-	defer arena.FreeAll()
+func CreateRenderPass(device resources.Device, o *RenderPassOptions) (RenderPass, loader.VkResult, error) {
+	arena := cgoparam.GetAlloc()
+	defer cgoparam.ReturnAlloc(arena)
 
 	createInfo, err := o.AllocForC(arena)
 	if err != nil {

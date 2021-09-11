@@ -7,7 +7,7 @@ package pipeline
 import "C"
 import (
 	"github.com/CannibalVox/VKng/core"
-	"github.com/CannibalVox/cgoalloc"
+	"github.com/CannibalVox/cgoparam"
 	"unsafe"
 )
 
@@ -18,7 +18,7 @@ type PipelineLayoutOptions struct {
 	Next core.Options
 }
 
-func (o *PipelineLayoutOptions) AllocForC(allocator *cgoalloc.ArenaAllocator) (unsafe.Pointer, error) {
+func (o *PipelineLayoutOptions) AllocForC(allocator *cgoparam.Allocator) (unsafe.Pointer, error) {
 	createInfo := (*C.VkPipelineLayoutCreateInfo)(allocator.Malloc(C.sizeof_struct_VkPipelineLayoutCreateInfo))
 
 	setLayoutCount := len(o.SetLayouts)

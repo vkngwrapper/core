@@ -8,7 +8,7 @@ import "C"
 import (
 	"github.com/CannibalVox/VKng/core"
 	"github.com/CannibalVox/VKng/core/loader"
-	"github.com/CannibalVox/cgoalloc"
+	"github.com/CannibalVox/cgoparam"
 	"github.com/google/uuid"
 	"unsafe"
 )
@@ -22,10 +22,11 @@ func (d *vulkanPhysicalDevice) Handle() loader.VkPhysicalDevice {
 	return d.handle
 }
 
-func (d *vulkanPhysicalDevice) QueueFamilyProperties(allocator cgoalloc.Allocator) ([]*core.QueueFamily, error) {
-	count := (*loader.Uint32)(allocator.Malloc(int(unsafe.Sizeof(C.uint32_t(0)))))
-	defer allocator.Free(unsafe.Pointer(count))
+func (d *vulkanPhysicalDevice) QueueFamilyProperties() ([]*core.QueueFamily, error) {
+	allocator := cgoparam.GetAlloc()
+	defer cgoparam.ReturnAlloc(allocator)
 
+	count := (*loader.Uint32)(allocator.Malloc(int(unsafe.Sizeof(C.uint32_t(0)))))
 	err := d.loader.VkGetPhysicalDeviceQueueFamilyProperties(d.handle, count, nil)
 	if err != nil {
 		return nil, err
@@ -38,7 +39,6 @@ func (d *vulkanPhysicalDevice) QueueFamilyProperties(allocator cgoalloc.Allocato
 	goCount := int(*count)
 
 	allocatedHandles := allocator.Malloc(goCount * int(unsafe.Sizeof(C.VkQueueFamilyProperties{})))
-	defer allocator.Free(allocatedHandles)
 	familyProperties := ([]C.VkQueueFamilyProperties)(unsafe.Slice((*C.VkQueueFamilyProperties)(allocatedHandles), int(*count)))
 
 	err = d.loader.VkGetPhysicalDeviceQueueFamilyProperties(d.handle, count, (*loader.VkQueueFamilyProperties)(allocatedHandles))
@@ -63,9 +63,9 @@ func (d *vulkanPhysicalDevice) QueueFamilyProperties(allocator cgoalloc.Allocato
 	return queueFamilies, nil
 }
 
-func (d *vulkanPhysicalDevice) CreateDevice(allocator cgoalloc.Allocator, options *DeviceOptions) (Device, loader.VkResult, error) {
-	arena := cgoalloc.CreateArenaAllocator(allocator)
-	defer arena.FreeAll()
+func (d *vulkanPhysicalDevice) CreateDevice(options *DeviceOptions) (Device, loader.VkResult, error) {
+	arena := cgoparam.GetAlloc()
+	defer cgoparam.ReturnAlloc(arena)
 
 	createInfo, err := options.AllocForC(arena)
 	if err != nil {
@@ -86,9 +86,11 @@ func (d *vulkanPhysicalDevice) CreateDevice(allocator cgoalloc.Allocator, option
 	return &vulkanDevice{loader: deviceLoader, handle: deviceHandle}, res, nil
 }
 
-func (d *vulkanPhysicalDevice) Properties(allocator cgoalloc.Allocator) (*core.PhysicalDeviceProperties, error) {
+func (d *vulkanPhysicalDevice) Properties() (*core.PhysicalDeviceProperties, error) {
+	allocator := cgoparam.GetAlloc()
+	defer cgoparam.ReturnAlloc(allocator)
+
 	propertiesUnsafe := allocator.Malloc(int(unsafe.Sizeof([1]C.VkPhysicalDeviceProperties{})))
-	defer allocator.Free(propertiesUnsafe)
 
 	err := d.loader.VkGetPhysicalDeviceProperties(d.handle, (*loader.VkPhysicalDeviceProperties)(propertiesUnsafe))
 	if err != nil {
@@ -98,9 +100,11 @@ func (d *vulkanPhysicalDevice) Properties(allocator cgoalloc.Allocator) (*core.P
 	return createPhysicalDeviceProperties((*C.VkPhysicalDeviceProperties)(propertiesUnsafe))
 }
 
-func (d *vulkanPhysicalDevice) Features(allocator cgoalloc.Allocator) (*core.PhysicalDeviceFeatures, error) {
+func (d *vulkanPhysicalDevice) Features() (*core.PhysicalDeviceFeatures, error) {
+	allocator := cgoparam.GetAlloc()
+	defer cgoparam.ReturnAlloc(allocator)
+
 	featuresUnsafe := allocator.Malloc(int(unsafe.Sizeof([1]C.VkPhysicalDeviceFeatures{})))
-	defer allocator.Free(featuresUnsafe)
 
 	err := d.loader.VkGetPhysicalDeviceFeatures(d.handle, (*loader.VkPhysicalDeviceFeatures)(featuresUnsafe))
 	if err != nil {
@@ -110,10 +114,11 @@ func (d *vulkanPhysicalDevice) Features(allocator cgoalloc.Allocator) (*core.Phy
 	return createPhysicalDeviceFeatures((*C.VkPhysicalDeviceFeatures)(featuresUnsafe)), nil
 }
 
-func (d *vulkanPhysicalDevice) AvailableExtensions(allocator cgoalloc.Allocator) (map[string]*core.ExtensionProperties, loader.VkResult, error) {
-	extensionCountPtr := allocator.Malloc(int(unsafe.Sizeof(C.uint32_t(0))))
-	defer allocator.Free(extensionCountPtr)
+func (d *vulkanPhysicalDevice) AvailableExtensions() (map[string]*core.ExtensionProperties, loader.VkResult, error) {
+	allocator := cgoparam.GetAlloc()
+	defer cgoparam.ReturnAlloc(allocator)
 
+	extensionCountPtr := allocator.Malloc(int(unsafe.Sizeof(C.uint32_t(0))))
 	extensionCount := (*loader.Uint32)(extensionCountPtr)
 
 	res, err := d.loader.VkEnumerateDeviceExtensionProperties(d.handle, nil, extensionCount, nil)
@@ -124,7 +129,6 @@ func (d *vulkanPhysicalDevice) AvailableExtensions(allocator cgoalloc.Allocator)
 
 	extensionTotal := int(*extensionCount)
 	extensionsPtr := allocator.Malloc(extensionTotal * int(unsafe.Sizeof([1]C.VkExtensionProperties{})))
-	defer allocator.Free(extensionsPtr)
 
 	res, err = d.loader.VkEnumerateDeviceExtensionProperties(d.handle, nil, extensionCount, (*loader.VkExtensionProperties)(extensionsPtr))
 	if err != nil {

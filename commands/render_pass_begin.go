@@ -7,8 +7,8 @@ package commands
 import "C"
 import (
 	"github.com/CannibalVox/VKng/core"
-	render_pass "github.com/CannibalVox/VKng/core/render_pass"
-	"github.com/CannibalVox/cgoalloc"
+	"github.com/CannibalVox/VKng/core/render_pass"
+	"github.com/CannibalVox/cgoparam"
 	"unsafe"
 )
 
@@ -64,7 +64,7 @@ type RenderPassBeginOptions struct {
 	Next core.Options
 }
 
-func (o *RenderPassBeginOptions) AllocForC(allocator *cgoalloc.ArenaAllocator) (unsafe.Pointer, error) {
+func (o *RenderPassBeginOptions) AllocForC(allocator *cgoparam.Allocator) (unsafe.Pointer, error) {
 	createInfo := (*C.VkRenderPassBeginInfo)(allocator.Malloc(C.sizeof_struct_VkRenderPassBeginInfo))
 	createInfo.sType = C.VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO
 	createInfo.renderPass = nil

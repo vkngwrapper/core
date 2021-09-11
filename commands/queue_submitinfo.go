@@ -9,7 +9,7 @@ import (
 	"github.com/CannibalVox/VKng/core"
 	"github.com/CannibalVox/VKng/core/loader"
 	"github.com/CannibalVox/VKng/core/resources"
-	"github.com/CannibalVox/cgoalloc"
+	"github.com/CannibalVox/cgoparam"
 	"github.com/cockroachdb/errors"
 	"unsafe"
 )
@@ -23,7 +23,7 @@ type SubmitOptions struct {
 	Next core.Options
 }
 
-func (o *SubmitOptions) populate(allocator *cgoalloc.ArenaAllocator, createInfo *C.VkSubmitInfo) error {
+func (o *SubmitOptions) populate(allocator *cgoparam.Allocator, createInfo *C.VkSubmitInfo) error {
 	if len(o.WaitSemaphores) != len(o.WaitDstStages) {
 		return errors.Newf("attempted to submit with %d wait semaphores but %d dst stages- these should match", len(o.WaitSemaphores), len(o.WaitDstStages))
 	}
@@ -92,7 +92,7 @@ func (o *SubmitOptions) populate(allocator *cgoalloc.ArenaAllocator, createInfo 
 	return nil
 }
 
-func (o *SubmitOptions) AllocForC(allocator *cgoalloc.ArenaAllocator) (unsafe.Pointer, error) {
+func (o *SubmitOptions) AllocForC(allocator *cgoparam.Allocator) (unsafe.Pointer, error) {
 	createInfo := (*C.VkSubmitInfo)(allocator.Malloc(C.sizeof_struct_VkSubmitInfo))
 	err := o.populate(allocator, createInfo)
 	if err != nil {
@@ -102,12 +102,12 @@ func (o *SubmitOptions) AllocForC(allocator *cgoalloc.ArenaAllocator) (unsafe.Po
 	return unsafe.Pointer(createInfo), nil
 }
 
-func SubmitToQueue(allocator cgoalloc.Allocator, queue resources.Queue, fence resources.Fence, o []*SubmitOptions) (loader.VkResult, error) {
-	arena := cgoalloc.CreateArenaAllocator(allocator)
-	defer arena.FreeAll()
+func SubmitToQueue(queue resources.Queue, fence resources.Fence, o []*SubmitOptions) (loader.VkResult, error) {
+	arena := cgoparam.GetAlloc()
+	defer cgoparam.ReturnAlloc(arena)
 
 	submitCount := len(o)
-	createInfoPtrUnsafe := allocator.Malloc(submitCount * C.sizeof_struct_VkSubmitInfo)
+	createInfoPtrUnsafe := arena.Malloc(submitCount * C.sizeof_struct_VkSubmitInfo)
 	createInfoSlice := ([]C.VkSubmitInfo)(unsafe.Slice((*C.VkSubmitInfo)(createInfoPtrUnsafe), submitCount))
 
 	for i := 0; i < submitCount; i++ {
