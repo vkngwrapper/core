@@ -7,7 +7,7 @@ package pipeline
 import "C"
 import (
 	"github.com/CannibalVox/VKng/core/loader"
-	"github.com/CannibalVox/VKng/core/resource"
+	"github.com/CannibalVox/VKng/core/resources"
 	"github.com/CannibalVox/cgoalloc"
 )
 
@@ -25,7 +25,7 @@ func (l *vulkanPipelineLayout) Destroy() error {
 	return l.loader.VkDestroyPipelineLayout(l.device, l.handle, nil)
 }
 
-func CreatePipelineLayout(allocator cgoalloc.Allocator, device resource.Device, o *PipelineLayoutOptions) (PipelineLayout, loader.VkResult, error) {
+func CreatePipelineLayout(allocator cgoalloc.Allocator, device resources.Device, o *PipelineLayoutOptions) (PipelineLayout, loader.VkResult, error) {
 	arena := cgoalloc.CreateArenaAllocator(allocator)
 	defer arena.FreeAll()
 

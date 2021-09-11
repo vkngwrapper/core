@@ -8,7 +8,7 @@ import "C"
 import (
 	"github.com/CannibalVox/VKng/core"
 	"github.com/CannibalVox/VKng/core/loader"
-	"github.com/CannibalVox/VKng/core/resource"
+	"github.com/CannibalVox/VKng/core/resources"
 	"github.com/CannibalVox/cgoalloc"
 	"github.com/cockroachdb/errors"
 	"unsafe"
@@ -16,9 +16,9 @@ import (
 
 type SubmitOptions struct {
 	CommandBuffers   []CommandBuffer
-	WaitSemaphores   []resource.Semaphore
+	WaitSemaphores   []resources.Semaphore
 	WaitDstStages    []core.PipelineStages
-	SignalSemaphores []resource.Semaphore
+	SignalSemaphores []resources.Semaphore
 
 	Next core.Options
 }
@@ -102,7 +102,7 @@ func (o *SubmitOptions) AllocForC(allocator *cgoalloc.ArenaAllocator) (unsafe.Po
 	return unsafe.Pointer(createInfo), nil
 }
 
-func SubmitToQueue(allocator cgoalloc.Allocator, queue resource.Queue, fence resource.Fence, o []*SubmitOptions) (loader.VkResult, error) {
+func SubmitToQueue(allocator cgoalloc.Allocator, queue resources.Queue, fence resources.Fence, o []*SubmitOptions) (loader.VkResult, error) {
 	arena := cgoalloc.CreateArenaAllocator(allocator)
 	defer arena.FreeAll()
 

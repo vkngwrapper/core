@@ -7,7 +7,7 @@ package commands
 import "C"
 import (
 	"github.com/CannibalVox/VKng/core/loader"
-	"github.com/CannibalVox/VKng/core/resource"
+	"github.com/CannibalVox/VKng/core/resources"
 	"github.com/CannibalVox/cgoalloc"
 	"unsafe"
 )
@@ -18,7 +18,7 @@ type BufferCopy struct {
 	Size      int
 }
 
-func (c *vulkanCommandBuffer) CmdCopyBuffer(allocator cgoalloc.Allocator, srcBuffer resource.Buffer, dstBuffer resource.Buffer, copyRegions []BufferCopy) error {
+func (c *vulkanCommandBuffer) CmdCopyBuffer(allocator cgoalloc.Allocator, srcBuffer resources.Buffer, dstBuffer resources.Buffer, copyRegions []BufferCopy) error {
 	copyRegionCount := len(copyRegions)
 	copyRegionUnsafe := allocator.Malloc(copyRegionCount * C.sizeof_struct_VkBufferCopy)
 	defer allocator.Free(copyRegionUnsafe)

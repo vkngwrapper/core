@@ -7,7 +7,7 @@ package pipeline
 import "C"
 import (
 	"github.com/CannibalVox/VKng/core/loader"
-	"github.com/CannibalVox/VKng/core/resource"
+	"github.com/CannibalVox/VKng/core/resources"
 	"github.com/CannibalVox/cgoalloc"
 	"unsafe"
 )
@@ -18,7 +18,7 @@ type vulkanPipeline struct {
 	handle loader.VkPipeline
 }
 
-func CreateGraphicsPipelines(allocator cgoalloc.Allocator, device resource.Device, o []*Options) ([]Pipeline, loader.VkResult, error) {
+func CreateGraphicsPipelines(allocator cgoalloc.Allocator, device resources.Device, o []*Options) ([]Pipeline, loader.VkResult, error) {
 	arena := cgoalloc.CreateArenaAllocator(allocator)
 	defer arena.FreeAll()
 

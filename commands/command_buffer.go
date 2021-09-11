@@ -9,7 +9,7 @@ import (
 	"github.com/CannibalVox/VKng/core"
 	"github.com/CannibalVox/VKng/core/loader"
 	"github.com/CannibalVox/VKng/core/pipeline"
-	"github.com/CannibalVox/VKng/core/resource"
+	"github.com/CannibalVox/VKng/core/resources"
 	"github.com/CannibalVox/cgoalloc"
 	"unsafe"
 )
@@ -21,7 +21,7 @@ type vulkanCommandBuffer struct {
 	handle loader.VkCommandBuffer
 }
 
-func CreateCommandBuffers(allocator cgoalloc.Allocator, device resource.Device, o *CommandBufferOptions) ([]CommandBuffer, loader.VkResult, error) {
+func CreateCommandBuffers(allocator cgoalloc.Allocator, device resources.Device, o *CommandBufferOptions) ([]CommandBuffer, loader.VkResult, error) {
 	arena := cgoalloc.CreateArenaAllocator(allocator)
 	defer arena.FreeAll()
 
@@ -102,7 +102,7 @@ func (c *vulkanCommandBuffer) CmdDrawIndexed(indexCount, instanceCount int, firs
 	return c.loader.VkCmdDrawIndexed(c.handle, loader.Uint32(indexCount), loader.Uint32(instanceCount), loader.Uint32(firstIndex), loader.Int32(vertexOffset), loader.Uint32(firstInstance))
 }
 
-func (c *vulkanCommandBuffer) CmdBindVertexBuffers(allocator cgoalloc.Allocator, firstBinding uint32, buffers []resource.Buffer, bufferOffsets []int) error {
+func (c *vulkanCommandBuffer) CmdBindVertexBuffers(allocator cgoalloc.Allocator, firstBinding uint32, buffers []resources.Buffer, bufferOffsets []int) error {
 	bufferCount := len(buffers)
 
 	bufferArrayUnsafe := allocator.Malloc(bufferCount * int(unsafe.Sizeof([1]C.VkBuffer{})))
@@ -125,6 +125,6 @@ func (c *vulkanCommandBuffer) CmdBindVertexBuffers(allocator cgoalloc.Allocator,
 	return c.loader.VkCmdBindVertexBuffers(c.handle, loader.Uint32(firstBinding), loader.Uint32(bufferCount), bufferArrayPtr, offsetArrayPtr)
 }
 
-func (c *vulkanCommandBuffer) CmdBindIndexBuffer(buffer resource.Buffer, offset int, indexType core.IndexType) error {
+func (c *vulkanCommandBuffer) CmdBindIndexBuffer(buffer resources.Buffer, offset int, indexType core.IndexType) error {
 	return c.loader.VkCmdBindIndexBuffer(c.handle, buffer.Handle(), loader.VkDeviceSize(offset), loader.VkIndexType(indexType))
 }

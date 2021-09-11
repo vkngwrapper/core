@@ -1,4 +1,4 @@
-package resource
+package resources
 
 /*
 #include <stdlib.h>

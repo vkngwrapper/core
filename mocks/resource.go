@@ -11,7 +11,7 @@ import (
 
 	core "github.com/CannibalVox/VKng/core"
 	loader "github.com/CannibalVox/VKng/core/loader"
-	resource "github.com/CannibalVox/VKng/core/resource"
+	resource "github.com/CannibalVox/VKng/core/resources"
 	cgoalloc "github.com/CannibalVox/cgoalloc"
 	gomock "github.com/golang/mock/gomock"
 )

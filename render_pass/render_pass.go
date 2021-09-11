@@ -7,7 +7,7 @@ package render_pass
 import "C"
 import (
 	"github.com/CannibalVox/VKng/core/loader"
-	"github.com/CannibalVox/VKng/core/resource"
+	"github.com/CannibalVox/VKng/core/resources"
 	"github.com/CannibalVox/cgoalloc"
 )
 
@@ -17,7 +17,7 @@ type vulkanRenderPass struct {
 	handle loader.VkRenderPass
 }
 
-func CreateRenderPass(allocator cgoalloc.Allocator, device resource.Device, o *RenderPassOptions) (RenderPass, loader.VkResult, error) {
+func CreateRenderPass(allocator cgoalloc.Allocator, device resources.Device, o *RenderPassOptions) (RenderPass, loader.VkResult, error) {
 	arena := cgoalloc.CreateArenaAllocator(allocator)
 	defer arena.FreeAll()
 

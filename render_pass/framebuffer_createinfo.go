@@ -7,13 +7,13 @@ package render_pass
 import "C"
 import (
 	"github.com/CannibalVox/VKng/core"
-	"github.com/CannibalVox/VKng/core/resource"
+	"github.com/CannibalVox/VKng/core/resources"
 	"github.com/CannibalVox/cgoalloc"
 	"unsafe"
 )
 
 type FramebufferOptions struct {
-	Attachments []resource.ImageView
+	Attachments []resources.ImageView
 	RenderPass  RenderPass
 
 	Width  uint32

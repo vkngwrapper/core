@@ -7,7 +7,7 @@ package render_pass
 import "C"
 import (
 	"github.com/CannibalVox/VKng/core/loader"
-	"github.com/CannibalVox/VKng/core/resource"
+	"github.com/CannibalVox/VKng/core/resources"
 	"github.com/CannibalVox/cgoalloc"
 )
 
@@ -17,7 +17,7 @@ type vulkanFramebuffer struct {
 	handle loader.VkFramebuffer
 }
 
-func CreateFrameBuffer(allocator cgoalloc.Allocator, device resource.Device, o *FramebufferOptions) (Framebuffer, loader.VkResult, error) {
+func CreateFrameBuffer(allocator cgoalloc.Allocator, device resources.Device, o *FramebufferOptions) (Framebuffer, loader.VkResult, error) {
 	arena := cgoalloc.CreateArenaAllocator(allocator)
 	defer arena.FreeAll()
 

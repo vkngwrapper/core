@@ -7,7 +7,7 @@ package commands
 import "C"
 import (
 	"github.com/CannibalVox/VKng/core/loader"
-	"github.com/CannibalVox/VKng/core/resource"
+	"github.com/CannibalVox/VKng/core/resources"
 	"github.com/CannibalVox/cgoalloc"
 	"unsafe"
 )
@@ -18,7 +18,7 @@ type vulkanCommandPool struct {
 	device loader.VkDevice
 }
 
-func CreateCommandPool(allocator cgoalloc.Allocator, device resource.Device, o *CommandPoolOptions) (CommandPool, loader.VkResult, error) {
+func CreateCommandPool(allocator cgoalloc.Allocator, device resources.Device, o *CommandPoolOptions) (CommandPool, loader.VkResult, error) {
 	arena := cgoalloc.CreateArenaAllocator(allocator)
 	defer arena.FreeAll()
 

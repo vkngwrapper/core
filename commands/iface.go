@@ -4,7 +4,7 @@ import (
 	"github.com/CannibalVox/VKng/core"
 	"github.com/CannibalVox/VKng/core/loader"
 	"github.com/CannibalVox/VKng/core/pipeline"
-	"github.com/CannibalVox/VKng/core/resource"
+	"github.com/CannibalVox/VKng/core/resources"
 	"github.com/CannibalVox/cgoalloc"
 )
 
@@ -22,9 +22,9 @@ type CommandBuffer interface {
 	CmdBindPipeline(bindPoint core.PipelineBindPoint, pipeline pipeline.Pipeline) error
 	CmdDraw(vertexCount, instanceCount int, firstVertex, firstInstance uint32) error
 	CmdDrawIndexed(indexCount, instanceCount int, firstIndex uint32, vertexOffset int, firstInstance uint32) error
-	CmdBindVertexBuffers(allocator cgoalloc.Allocator, firstBinding uint32, buffers []resource.Buffer, bufferOffsets []int) error
-	CmdBindIndexBuffer(buffer resource.Buffer, offset int, indexType core.IndexType) error
-	CmdCopyBuffer(allocator cgoalloc.Allocator, srcBuffer resource.Buffer, dstBuffer resource.Buffer, copyRegions []BufferCopy) error
+	CmdBindVertexBuffers(allocator cgoalloc.Allocator, firstBinding uint32, buffers []resources.Buffer, bufferOffsets []int) error
+	CmdBindIndexBuffer(buffer resources.Buffer, offset int, indexType core.IndexType) error
+	CmdCopyBuffer(allocator cgoalloc.Allocator, srcBuffer resources.Buffer, dstBuffer resources.Buffer, copyRegions []BufferCopy) error
 }
 
 type CommandPool interface {
