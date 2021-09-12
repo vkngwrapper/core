@@ -17,13 +17,14 @@ type RenderPassOptions struct {
 	SubPasses           []SubPass
 	SubPassDependencies []SubPassDependency
 
-	Next core.Options
+	core.HaveNext
 }
 
-func (o *RenderPassOptions) AllocForC(allocator *cgoparam.Allocator) (unsafe.Pointer, error) {
+func (o *RenderPassOptions) AllocForC(allocator *cgoparam.Allocator, next unsafe.Pointer) (unsafe.Pointer, error) {
 	createInfo := (*C.VkRenderPassCreateInfo)(allocator.Malloc(int(unsafe.Sizeof(C.VkRenderPassCreateInfo{}))))
 	createInfo.sType = C.VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO
 	createInfo.flags = 0
+	createInfo.pNext = next
 
 	attachmentCount := len(o.Attachments)
 	createInfo.attachmentCount = C.uint32_t(attachmentCount)
@@ -115,17 +116,6 @@ func (o *RenderPassOptions) AllocForC(allocator *cgoparam.Allocator) (unsafe.Poi
 			dependencySlice[i].dependencyFlags = C.VkDependencyFlags(o.SubPassDependencies[i].Flags)
 		}
 	}
-
-	var err error
-	var next unsafe.Pointer
-	if o.Next != nil {
-		next, err = o.Next.AllocForC(allocator)
-	}
-
-	if err != nil {
-		return nil, err
-	}
-	createInfo.pNext = next
 
 	return unsafe.Pointer(createInfo), nil
 }

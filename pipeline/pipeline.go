@@ -6,6 +6,7 @@ package pipeline
 */
 import "C"
 import (
+	"github.com/CannibalVox/VKng/core"
 	"github.com/CannibalVox/VKng/core/loader"
 	"github.com/CannibalVox/VKng/core/resources"
 	"github.com/CannibalVox/cgoparam"
@@ -27,7 +28,12 @@ func CreateGraphicsPipelines(device resources.Device, o []*Options) ([]Pipeline,
 	pipelineCreateInfosPtrUnsafe := arena.Malloc(pipelineCount * C.sizeof_struct_VkGraphicsPipelineCreateInfo)
 	pipelineCreateInfosSlice := ([]C.VkGraphicsPipelineCreateInfo)(unsafe.Slice((*C.VkGraphicsPipelineCreateInfo)(pipelineCreateInfosPtrUnsafe), pipelineCount))
 	for i := 0; i < pipelineCount; i++ {
-		err := o[i].populate(arena, &pipelineCreateInfosSlice[i])
+		next, err := core.AllocNext(arena, o[i])
+		if err != nil {
+			return nil, loader.VKErrorUnknown, err
+		}
+
+		err = o[i].populate(arena, &pipelineCreateInfosSlice[i], next)
 		if err != nil {
 			return nil, loader.VKErrorUnknown, err
 		}

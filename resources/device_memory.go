@@ -18,25 +18,15 @@ type DeviceMemoryOptions struct {
 	AllocationSize  int
 	MemoryTypeIndex int
 
-	Next core.Options
+	core.HaveNext
 }
 
-func (o *DeviceMemoryOptions) AllocForC(allocator *cgoparam.Allocator) (unsafe.Pointer, error) {
+func (o *DeviceMemoryOptions) AllocForC(allocator *cgoparam.Allocator, next unsafe.Pointer) (unsafe.Pointer, error) {
 	createInfo := (*C.VkMemoryAllocateInfo)(allocator.Malloc(C.sizeof_struct_VkMemoryAllocateInfo))
 
 	createInfo.sType = C.VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO
 	createInfo.allocationSize = C.VkDeviceSize(o.AllocationSize)
 	createInfo.memoryTypeIndex = C.uint32_t(o.MemoryTypeIndex)
-
-	var next unsafe.Pointer
-	var err error
-
-	if o.Next != nil {
-		next, err = o.Next.AllocForC(allocator)
-	}
-	if err != nil {
-		return nil, err
-	}
 	createInfo.pNext = next
 
 	return unsafe.Pointer(createInfo), nil

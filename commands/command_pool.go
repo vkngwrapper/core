@@ -6,6 +6,7 @@ package commands
 */
 import "C"
 import (
+	"github.com/CannibalVox/VKng/core"
 	"github.com/CannibalVox/VKng/core/loader"
 	"github.com/CannibalVox/VKng/core/resources"
 	"github.com/CannibalVox/cgoparam"
@@ -22,7 +23,7 @@ func CreateCommandPool(device resources.Device, o *CommandPoolOptions) (CommandP
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
-	createInfo, err := o.AllocForC(arena)
+	createInfo, err := core.AllocOptions(arena, o)
 	if err != nil {
 		return nil, loader.VKErrorUnknown, err
 	}

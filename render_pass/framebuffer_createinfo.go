@@ -20,13 +20,14 @@ type FramebufferOptions struct {
 	Height uint32
 	Layers uint32
 
-	Next core.Options
+	core.HaveNext
 }
 
-func (o *FramebufferOptions) AllocForC(allocator *cgoparam.Allocator) (unsafe.Pointer, error) {
+func (o *FramebufferOptions) AllocForC(allocator *cgoparam.Allocator, next unsafe.Pointer) (unsafe.Pointer, error) {
 	createInfo := (*C.VkFramebufferCreateInfo)(allocator.Malloc(C.sizeof_struct_VkFramebufferCreateInfo))
 	createInfo.sType = C.VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO
 	createInfo.flags = 0
+	createInfo.pNext = next
 
 	createInfo.renderPass = (C.VkRenderPass)(unsafe.Pointer(o.RenderPass.Handle()))
 
@@ -46,17 +47,6 @@ func (o *FramebufferOptions) AllocForC(allocator *cgoparam.Allocator) (unsafe.Po
 	createInfo.width = C.uint32_t(o.Width)
 	createInfo.height = C.uint32_t(o.Height)
 	createInfo.layers = C.uint32_t(o.Layers)
-
-	var err error
-	var next unsafe.Pointer
-	if o.Next != nil {
-		next, err = o.Next.AllocForC(allocator)
-	}
-
-	if err != nil {
-		return nil, err
-	}
-	createInfo.pNext = next
 
 	return unsafe.Pointer(createInfo), nil
 }

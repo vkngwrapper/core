@@ -15,13 +15,14 @@ type ViewportOptions struct {
 	Viewports []core.Viewport
 	Scissors  []core.Rect2D
 
-	Next core.Options
+	core.HaveNext
 }
 
-func (o *ViewportOptions) AllocForC(allocator *cgoparam.Allocator) (unsafe.Pointer, error) {
+func (o *ViewportOptions) AllocForC(allocator *cgoparam.Allocator, next unsafe.Pointer) (unsafe.Pointer, error) {
 	createInfo := (*C.VkPipelineViewportStateCreateInfo)(allocator.Malloc(C.sizeof_struct_VkPipelineViewportStateCreateInfo))
 	createInfo.sType = C.VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO
 	createInfo.flags = 0
+	createInfo.pNext = next
 
 	viewportCount := len(o.Viewports)
 	scissorsCount := len(o.Scissors)
@@ -53,17 +54,6 @@ func (o *ViewportOptions) AllocForC(allocator *cgoparam.Allocator) (unsafe.Point
 		}
 		createInfo.pScissors = scissorPtr
 	}
-
-	var err error
-	var next unsafe.Pointer
-	if o.Next != nil {
-		next, err = o.Next.AllocForC(allocator)
-	}
-
-	if err != nil {
-		return nil, err
-	}
-	createInfo.pNext = next
 
 	return unsafe.Pointer(createInfo), nil
 }

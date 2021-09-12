@@ -26,13 +26,14 @@ type DepthStencilOptions struct {
 	MinDepthBounds float32
 	MaxDepthBounds float32
 
-	Next core.Options
+	core.HaveNext
 }
 
-func (o *DepthStencilOptions) AllocForC(allocator *cgoparam.Allocator) (unsafe.Pointer, error) {
+func (o *DepthStencilOptions) AllocForC(allocator *cgoparam.Allocator, next unsafe.Pointer) (unsafe.Pointer, error) {
 	createInfo := (*C.VkPipelineDepthStencilStateCreateInfo)(allocator.Malloc(C.sizeof_struct_VkPipelineDepthStencilStateCreateInfo))
 	createInfo.sType = C.VK_STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO
 	createInfo.flags = 0
+	createInfo.pNext = next
 	createInfo.depthTestEnable = C.VK_FALSE
 	createInfo.depthWriteEnable = C.VK_FALSE
 	createInfo.depthBoundsTestEnable = C.VK_FALSE
@@ -70,17 +71,6 @@ func (o *DepthStencilOptions) AllocForC(allocator *cgoparam.Allocator) (unsafe.P
 	createInfo.back.compareMask = C.uint32_t(o.BackStencilState.CompareMask)
 	createInfo.back.writeMask = C.uint32_t(o.BackStencilState.WriteMask)
 	createInfo.back.reference = C.uint32_t(o.BackStencilState.Reference)
-
-	var err error
-	var next unsafe.Pointer
-	if o.Next != nil {
-		next, err = o.Next.AllocForC(allocator)
-	}
-
-	if err != nil {
-		return nil, err
-	}
-	createInfo.pNext = next
 
 	return unsafe.Pointer(createInfo), nil
 }

@@ -44,14 +44,15 @@ type VertexInputOptions struct {
 	VertexBindingDescriptions   []VertexBindingDescription
 	VertexAttributeDescriptions []VertexAttributeDescription
 
-	Next core.Options
+	core.HaveNext
 }
 
-func (o *VertexInputOptions) AllocForC(allocator *cgoparam.Allocator) (unsafe.Pointer, error) {
+func (o *VertexInputOptions) AllocForC(allocator *cgoparam.Allocator, next unsafe.Pointer) (unsafe.Pointer, error) {
 	createInfo := (*C.VkPipelineVertexInputStateCreateInfo)(allocator.Malloc(C.sizeof_struct_VkPipelineVertexInputStateCreateInfo))
 
 	createInfo.sType = C.VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO
 	createInfo.flags = 0
+	createInfo.pNext = next
 
 	bindingCount := len(o.VertexBindingDescriptions)
 	attributeCount := len(o.VertexAttributeDescriptions)
@@ -84,17 +85,6 @@ func (o *VertexInputOptions) AllocForC(allocator *cgoparam.Allocator) (unsafe.Po
 		}
 		createInfo.pVertexAttributeDescriptions = attributePtr
 	}
-
-	var err error
-	var next unsafe.Pointer
-	if o.Next != nil {
-		next, err = o.Next.AllocForC(allocator)
-	}
-
-	if err != nil {
-		return nil, err
-	}
-	createInfo.pNext = next
 
 	return unsafe.Pointer(createInfo), nil
 }

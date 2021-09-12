@@ -15,10 +15,10 @@ import (
 type ShaderModuleOptions struct {
 	SpirVByteCode []uint32
 
-	Next core.Options
+	core.HaveNext
 }
 
-func (o *ShaderModuleOptions) AllocForC(allocator *cgoparam.Allocator) (unsafe.Pointer, error) {
+func (o *ShaderModuleOptions) AllocForC(allocator *cgoparam.Allocator, next unsafe.Pointer) (unsafe.Pointer, error) {
 	byteCodeLen := len(o.SpirVByteCode)
 	if byteCodeLen == 0 {
 		return nil, errors.New("attempted to create a shader module with no shader bytecode")
@@ -31,23 +31,13 @@ func (o *ShaderModuleOptions) AllocForC(allocator *cgoparam.Allocator) (unsafe.P
 
 	createInfo.sType = C.VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO
 	createInfo.flags = 0
+	createInfo.pNext = next
 	createInfo.codeSize = C.size_t(byteCodeLen * 4)
 	createInfo.pCode = bytecodePtr
 
 	for i := 0; i < byteCodeLen; i++ {
 		byteCodeArray[i] = C.uint32_t(o.SpirVByteCode[i])
 	}
-
-	var err error
-	var next unsafe.Pointer
-	if o.Next != nil {
-		next, err = o.Next.AllocForC(allocator)
-	}
-
-	if err != nil {
-		return nil, err
-	}
-	createInfo.pNext = next
 
 	return unsafe.Pointer(createInfo), nil
 }

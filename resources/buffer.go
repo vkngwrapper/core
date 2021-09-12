@@ -18,13 +18,14 @@ type BufferOptions struct {
 	SharingMode        core.SharingMode
 	QueueFamilyIndices []int
 
-	Next core.Options
+	core.HaveNext
 }
 
-func (o *BufferOptions) AllocForC(allocator *cgoparam.Allocator) (unsafe.Pointer, error) {
+func (o *BufferOptions) AllocForC(allocator *cgoparam.Allocator, next unsafe.Pointer) (unsafe.Pointer, error) {
 	createInfo := (*C.VkBufferCreateInfo)(allocator.Malloc(C.sizeof_struct_VkBufferCreateInfo))
 	createInfo.sType = C.VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO
 	createInfo.flags = 0
+	createInfo.pNext = next
 	createInfo.size = C.VkDeviceSize(o.BufferSize)
 	createInfo.usage = C.VkBufferUsageFlags(o.Usages)
 	createInfo.sharingMode = C.VkSharingMode(o.SharingMode)
@@ -43,17 +44,6 @@ func (o *BufferOptions) AllocForC(allocator *cgoparam.Allocator) (unsafe.Pointer
 
 		createInfo.pQueueFamilyIndices = indicesPtr
 	}
-
-	var next unsafe.Pointer
-	var err error
-
-	if o.Next != nil {
-		next, err = o.Next.AllocForC(allocator)
-	}
-	if err != nil {
-		return nil, err
-	}
-	createInfo.pNext = next
 
 	return unsafe.Pointer(createInfo), nil
 }

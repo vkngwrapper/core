@@ -46,7 +46,7 @@ func (d *vulkanDevice) CreateShaderModule(o *ShaderModuleOptions) (ShaderModule,
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
-	createInfo, err := o.AllocForC(arena)
+	createInfo, err := core.AllocOptions(arena, o)
 	if err != nil {
 		return nil, loader.VKErrorUnknown, err
 	}
@@ -64,7 +64,7 @@ func (d *vulkanDevice) CreateImageView(o *ImageViewOptions) (ImageView, loader.V
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
-	createInfo, err := o.AllocForC(arena)
+	createInfo, err := core.AllocOptions(arena, o)
 	if err != nil {
 		return nil, loader.VKErrorUnknown, err
 	}
@@ -83,7 +83,7 @@ func (d *vulkanDevice) CreateSemaphore(o *SemaphoreOptions) (Semaphore, loader.V
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
-	createInfo, err := o.AllocForC(arena)
+	createInfo, err := core.AllocOptions(arena, o)
 	if err != nil {
 		return nil, loader.VKErrorUnknown, err
 	}
@@ -102,7 +102,7 @@ func (d *vulkanDevice) CreateFence(o *FenceOptions) (Fence, loader.VkResult, err
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
-	createInfo, err := o.AllocForC(arena)
+	createInfo, err := core.AllocOptions(arena, o)
 	if err != nil {
 		return nil, loader.VKErrorUnknown, err
 	}
@@ -163,7 +163,7 @@ func (d *vulkanDevice) CreateBuffer(o *BufferOptions) (Buffer, loader.VkResult, 
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
-	createInfo, err := o.AllocForC(arena)
+	createInfo, err := core.AllocOptions(arena, o)
 	if err != nil {
 		return nil, loader.VKErrorUnknown, err
 	}
@@ -182,7 +182,7 @@ func (d *vulkanDevice) AllocateMemory(o *DeviceMemoryOptions) (DeviceMemory, loa
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
-	createInfo, err := o.AllocForC(arena)
+	createInfo, err := core.AllocOptions(arena, o)
 	if err != nil {
 		return nil, loader.VKErrorUnknown, err
 	}

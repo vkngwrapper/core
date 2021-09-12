@@ -67,7 +67,7 @@ func (d *vulkanPhysicalDevice) CreateDevice(options *DeviceOptions) (Device, loa
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
-	createInfo, err := options.AllocForC(arena)
+	createInfo, err := core.AllocOptions(arena, options)
 	if err != nil {
 		return nil, loader.VKErrorUnknown, err
 	}

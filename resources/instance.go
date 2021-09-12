@@ -6,6 +6,7 @@ package resources
 */
 import "C"
 import (
+	"github.com/CannibalVox/VKng/core"
 	"github.com/CannibalVox/VKng/core/loader"
 	"github.com/CannibalVox/cgoparam"
 	"unsafe"
@@ -15,7 +16,7 @@ func CreateInstance(load loader.Loader, options *InstanceOptions) (Instance, loa
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
-	createInfo, err := options.AllocForC(arena)
+	createInfo, err := core.AllocOptions(arena, options)
 	if err != nil {
 		return nil, loader.VKErrorUnknown, err
 	}

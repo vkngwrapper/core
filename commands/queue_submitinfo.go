@@ -20,15 +20,16 @@ type SubmitOptions struct {
 	WaitDstStages    []core.PipelineStages
 	SignalSemaphores []resources.Semaphore
 
-	Next core.Options
+	core.HaveNext
 }
 
-func (o *SubmitOptions) populate(allocator *cgoparam.Allocator, createInfo *C.VkSubmitInfo) error {
+func (o *SubmitOptions) populate(allocator *cgoparam.Allocator, createInfo *C.VkSubmitInfo, next unsafe.Pointer) error {
 	if len(o.WaitSemaphores) != len(o.WaitDstStages) {
 		return errors.Newf("attempted to submit with %d wait semaphores but %d dst stages- these should match", len(o.WaitSemaphores), len(o.WaitDstStages))
 	}
 
 	createInfo.sType = C.VK_STRUCTURE_TYPE_SUBMIT_INFO
+	createInfo.pNext = next
 
 	waitSemaphoreCount := len(o.WaitSemaphores)
 	createInfo.waitSemaphoreCount = C.uint32_t(waitSemaphoreCount)
@@ -78,23 +79,12 @@ func (o *SubmitOptions) populate(allocator *cgoparam.Allocator, createInfo *C.Vk
 		createInfo.pCommandBuffers = (*C.VkCommandBuffer)(commandBufferPtrUnsafe)
 	}
 
-	var err error
-	var next unsafe.Pointer
-	if o.Next != nil {
-		next, err = o.Next.AllocForC(allocator)
-	}
-
-	if err != nil {
-		return err
-	}
-	createInfo.pNext = next
-
 	return nil
 }
 
-func (o *SubmitOptions) AllocForC(allocator *cgoparam.Allocator) (unsafe.Pointer, error) {
+func (o *SubmitOptions) AllocForC(allocator *cgoparam.Allocator, next unsafe.Pointer) (unsafe.Pointer, error) {
 	createInfo := (*C.VkSubmitInfo)(allocator.Malloc(C.sizeof_struct_VkSubmitInfo))
-	err := o.populate(allocator, createInfo)
+	err := o.populate(allocator, createInfo, next)
 	if err != nil {
 		return nil, err
 	}
@@ -111,7 +101,12 @@ func SubmitToQueue(queue resources.Queue, fence resources.Fence, o []*SubmitOpti
 	createInfoSlice := ([]C.VkSubmitInfo)(unsafe.Slice((*C.VkSubmitInfo)(createInfoPtrUnsafe), submitCount))
 
 	for i := 0; i < submitCount; i++ {
-		err := o[i].populate(arena, &(createInfoSlice[i]))
+		next, err := core.AllocNext(arena, o[i])
+		if err != nil {
+			return loader.VKErrorUnknown, err
+		}
+
+		err = o[i].populate(arena, &(createInfoSlice[i]), next)
 		if err != nil {
 			return loader.VKErrorUnknown, err
 		}

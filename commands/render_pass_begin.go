@@ -61,12 +61,13 @@ type RenderPassBeginOptions struct {
 	RenderArea  core.Rect2D
 	ClearValues []ClearValue
 
-	Next core.Options
+	core.HaveNext
 }
 
-func (o *RenderPassBeginOptions) AllocForC(allocator *cgoparam.Allocator) (unsafe.Pointer, error) {
+func (o *RenderPassBeginOptions) AllocForC(allocator *cgoparam.Allocator, next unsafe.Pointer) (unsafe.Pointer, error) {
 	createInfo := (*C.VkRenderPassBeginInfo)(allocator.Malloc(C.sizeof_struct_VkRenderPassBeginInfo))
 	createInfo.sType = C.VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO
+	createInfo.pNext = next
 	createInfo.renderPass = nil
 	createInfo.framebuffer = nil
 
@@ -97,17 +98,6 @@ func (o *RenderPassBeginOptions) AllocForC(allocator *cgoparam.Allocator) (unsaf
 
 		createInfo.pClearValues = valuePtr
 	}
-
-	var err error
-	var next unsafe.Pointer
-	if o.Next != nil {
-		next, err = o.Next.AllocForC(allocator)
-	}
-
-	if err != nil {
-		return nil, err
-	}
-	createInfo.pNext = next
 
 	return unsafe.Pointer(createInfo), nil
 }

@@ -32,13 +32,14 @@ type ColorBlendOptions struct {
 	BlendConstants [4]float32
 	Attachments    []ColorBlendAttachment
 
-	Next core.Options
+	core.HaveNext
 }
 
-func (o *ColorBlendOptions) AllocForC(allocator *cgoparam.Allocator) (unsafe.Pointer, error) {
+func (o *ColorBlendOptions) AllocForC(allocator *cgoparam.Allocator, next unsafe.Pointer) (unsafe.Pointer, error) {
 	createInfo := (*C.VkPipelineColorBlendStateCreateInfo)(allocator.Malloc(C.sizeof_struct_VkPipelineColorBlendStateCreateInfo))
 	createInfo.sType = C.VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO
 	createInfo.flags = 0
+	createInfo.pNext = next
 	createInfo.logicOpEnable = C.VK_FALSE
 
 	if o.LogicOpEnabled {
@@ -76,17 +77,6 @@ func (o *ColorBlendOptions) AllocForC(allocator *cgoparam.Allocator) (unsafe.Poi
 
 		createInfo.pAttachments = attachmentsPtr
 	}
-
-	var err error
-	var next unsafe.Pointer
-	if o.Next != nil {
-		next, err = o.Next.AllocForC(allocator)
-	}
-
-	if err != nil {
-		return nil, err
-	}
-	createInfo.pNext = next
 
 	return unsafe.Pointer(createInfo), nil
 }

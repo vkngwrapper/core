@@ -6,6 +6,7 @@ package render_pass
 */
 import "C"
 import (
+	"github.com/CannibalVox/VKng/core"
 	"github.com/CannibalVox/VKng/core/loader"
 	"github.com/CannibalVox/VKng/core/resources"
 	"github.com/CannibalVox/cgoparam"
@@ -21,7 +22,7 @@ func CreateRenderPass(device resources.Device, o *RenderPassOptions) (RenderPass
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
-	createInfo, err := o.AllocForC(arena)
+	createInfo, err := core.AllocOptions(arena, o)
 	if err != nil {
 		return nil, loader.VKErrorUnknown, err
 	}

@@ -21,12 +21,13 @@ type ShaderStage struct {
 	Shader             resources.ShaderModule
 	SpecializationInfo map[uint32]interface{}
 
-	Next core.Options
+	core.HaveNext
 }
 
-func (s *ShaderStage) populate(allocator *cgoparam.Allocator, createInfo *C.VkPipelineShaderStageCreateInfo) error {
+func (s *ShaderStage) populate(allocator *cgoparam.Allocator, createInfo *C.VkPipelineShaderStageCreateInfo, next unsafe.Pointer) error {
 	createInfo.sType = C.VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO
 	createInfo.flags = 0
+	createInfo.pNext = next
 	createInfo.stage = C.VkShaderStageFlagBits(s.Stage)
 	createInfo.module = C.VkShaderModule(unsafe.Pointer(s.Shader.Handle()))
 	createInfo.pName = (*C.char)(allocator.CString(s.Name))
@@ -68,22 +69,11 @@ func (s *ShaderStage) populate(allocator *cgoparam.Allocator, createInfo *C.VkPi
 		panic("AAA")
 	}
 
-	var err error
-	var next unsafe.Pointer
-	if s.Next != nil {
-		next, err = s.Next.AllocForC(allocator)
-	}
-
-	if err != nil {
-		return err
-	}
-	createInfo.pNext = next
-
 	return nil
 }
 
-func (s *ShaderStage) AllocForC(allocator *cgoparam.Allocator) (unsafe.Pointer, error) {
+func (s *ShaderStage) AllocForC(allocator *cgoparam.Allocator, next unsafe.Pointer) (unsafe.Pointer, error) {
 	createInfo := (*C.VkPipelineShaderStageCreateInfo)(allocator.Malloc(C.sizeof_struct_VkPipelineShaderStageCreateInfo))
-	err := s.populate(allocator, createInfo)
+	err := s.populate(allocator, createInfo, next)
 	return unsafe.Pointer(createInfo), err
 }

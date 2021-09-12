@@ -100,13 +100,14 @@ func (s DynamicState) String() string {
 type DynamicStateOptions struct {
 	DynamicStates []DynamicState
 
-	Next core.Options
+	core.HaveNext
 }
 
-func (o *DynamicStateOptions) AllocForC(allocator *cgoparam.Allocator) (unsafe.Pointer, error) {
+func (o *DynamicStateOptions) AllocForC(allocator *cgoparam.Allocator, next unsafe.Pointer) (unsafe.Pointer, error) {
 	createInfo := (*C.VkPipelineDynamicStateCreateInfo)(allocator.Malloc(C.sizeof_struct_VkPipelineDynamicStateCreateInfo))
 	createInfo.sType = C.VK_STRUCTURE_TYPE_PIPELINE_DYNAMIC_STATE_CREATE_INFO
 	createInfo.flags = 0
+	createInfo.pNext = next
 
 	stateCount := len(o.DynamicStates)
 	createInfo.dynamicStateCount = C.uint32_t(stateCount)
@@ -121,17 +122,6 @@ func (o *DynamicStateOptions) AllocForC(allocator *cgoparam.Allocator) (unsafe.P
 
 		createInfo.pDynamicStates = statesPtr
 	}
-
-	var err error
-	var next unsafe.Pointer
-	if o.Next != nil {
-		next, err = o.Next.AllocForC(allocator)
-	}
-
-	if err != nil {
-		return nil, err
-	}
-	createInfo.pNext = next
 
 	return unsafe.Pointer(createInfo), nil
 }

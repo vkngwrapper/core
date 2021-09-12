@@ -31,12 +31,13 @@ type Options struct {
 	BasePipeline      Pipeline
 	BasePipelineIndex int
 
-	Next core.Options
+	core.HaveNext
 }
 
-func (o *Options) populate(allocator *cgoparam.Allocator, createInfo *C.VkGraphicsPipelineCreateInfo) error {
+func (o *Options) populate(allocator *cgoparam.Allocator, createInfo *C.VkGraphicsPipelineCreateInfo, next unsafe.Pointer) error {
 	createInfo.sType = C.VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO
 	createInfo.flags = 0
+	createInfo.pNext = next
 
 	stageCount := len(o.ShaderStages)
 	createInfo.stageCount = C.uint32_t(stageCount)
@@ -72,7 +73,12 @@ func (o *Options) populate(allocator *cgoparam.Allocator, createInfo *C.VkGraphi
 		stagesPtr := (*C.VkPipelineShaderStageCreateInfo)(allocator.Malloc(stageCount * C.sizeof_struct_VkPipelineShaderStageCreateInfo))
 		stagesSlice := ([]C.VkPipelineShaderStageCreateInfo)(unsafe.Slice(stagesPtr, stageCount))
 		for i := 0; i < stageCount; i++ {
-			err := o.ShaderStages[i].populate(allocator, &stagesSlice[i])
+			stageNext, err := core.AllocNext(allocator, o.ShaderStages[i])
+			if err != nil {
+				return err
+			}
+
+			err = o.ShaderStages[i].populate(allocator, &stagesSlice[i], stageNext)
 			if err != nil {
 				return err
 			}
@@ -81,7 +87,7 @@ func (o *Options) populate(allocator *cgoparam.Allocator, createInfo *C.VkGraphi
 	}
 
 	if o.VertexInput != nil {
-		vertInput, err := o.VertexInput.AllocForC(allocator)
+		vertInput, err := core.AllocOptions(allocator, o.VertexInput)
 		if err != nil {
 			return err
 		}
@@ -90,7 +96,7 @@ func (o *Options) populate(allocator *cgoparam.Allocator, createInfo *C.VkGraphi
 	}
 
 	if o.InputAssembly != nil {
-		inputAss, err := o.InputAssembly.AllocForC(allocator)
+		inputAss, err := core.AllocOptions(allocator, o.InputAssembly)
 		if err != nil {
 			return err
 		}
@@ -99,7 +105,7 @@ func (o *Options) populate(allocator *cgoparam.Allocator, createInfo *C.VkGraphi
 	}
 
 	if o.Tessellation != nil {
-		tessellation, err := o.Tessellation.AllocForC(allocator)
+		tessellation, err := core.AllocOptions(allocator, o.Tessellation)
 		if err != nil {
 			return err
 		}
@@ -108,7 +114,7 @@ func (o *Options) populate(allocator *cgoparam.Allocator, createInfo *C.VkGraphi
 	}
 
 	if o.Viewport != nil {
-		viewport, err := o.Viewport.AllocForC(allocator)
+		viewport, err := core.AllocOptions(allocator, o.Viewport)
 		if err != nil {
 			return err
 		}
@@ -117,7 +123,7 @@ func (o *Options) populate(allocator *cgoparam.Allocator, createInfo *C.VkGraphi
 	}
 
 	if o.Rasterization != nil {
-		rasterization, err := o.Rasterization.AllocForC(allocator)
+		rasterization, err := core.AllocOptions(allocator, o.Rasterization)
 		if err != nil {
 			return err
 		}
@@ -126,7 +132,7 @@ func (o *Options) populate(allocator *cgoparam.Allocator, createInfo *C.VkGraphi
 	}
 
 	if o.Multisample != nil {
-		multisample, err := o.Multisample.AllocForC(allocator)
+		multisample, err := core.AllocOptions(allocator, o.Multisample)
 		if err != nil {
 			return err
 		}
@@ -135,7 +141,7 @@ func (o *Options) populate(allocator *cgoparam.Allocator, createInfo *C.VkGraphi
 	}
 
 	if o.DepthStencil != nil {
-		depthStencil, err := o.DepthStencil.AllocForC(allocator)
+		depthStencil, err := core.AllocOptions(allocator, o.DepthStencil)
 		if err != nil {
 			return err
 		}
@@ -144,7 +150,7 @@ func (o *Options) populate(allocator *cgoparam.Allocator, createInfo *C.VkGraphi
 	}
 
 	if o.ColorBlend != nil {
-		colorBlend, err := o.ColorBlend.AllocForC(allocator)
+		colorBlend, err := core.AllocOptions(allocator, o.ColorBlend)
 		if err != nil {
 			return err
 		}
@@ -153,7 +159,7 @@ func (o *Options) populate(allocator *cgoparam.Allocator, createInfo *C.VkGraphi
 	}
 
 	if o.DynamicState != nil {
-		dynamicState, err := o.DynamicState.AllocForC(allocator)
+		dynamicState, err := core.AllocOptions(allocator, o.DynamicState)
 		if err != nil {
 			return err
 		}
@@ -161,23 +167,12 @@ func (o *Options) populate(allocator *cgoparam.Allocator, createInfo *C.VkGraphi
 		createInfo.pDynamicState = (*C.VkPipelineDynamicStateCreateInfo)(dynamicState)
 	}
 
-	var next unsafe.Pointer
-	var err error
-
-	if o.Next != nil {
-		next, err = o.Next.AllocForC(allocator)
-	}
-	if err != nil {
-		return err
-	}
-	createInfo.pNext = next
-
 	return nil
 }
 
-func (o *Options) AllocForC(allocator *cgoparam.Allocator) (unsafe.Pointer, error) {
+func (o *Options) AllocForC(allocator *cgoparam.Allocator, next unsafe.Pointer) (unsafe.Pointer, error) {
 	createInfo := (*C.VkGraphicsPipelineCreateInfo)(allocator.Malloc(C.sizeof_struct_VkGraphicsPipelineCreateInfo))
 
-	err := o.populate(allocator, createInfo)
+	err := o.populate(allocator, createInfo, next)
 	return unsafe.Pointer(createInfo), err
 }

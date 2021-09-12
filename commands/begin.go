@@ -60,13 +60,15 @@ type CommandBufferInheritanceOptions struct {
 	QueryFlags           core.QueryControlFlags
 	PipelineStatistics   core.QueryPipelineStatisticFlags
 
-	Next core.Options
+	core.HaveNext
 }
 
-func (o *CommandBufferInheritanceOptions) AllocForC(allocator *cgoparam.Allocator) (unsafe.Pointer, error) {
+func (o *CommandBufferInheritanceOptions) AllocForC(allocator *cgoparam.Allocator, next unsafe.Pointer) (unsafe.Pointer, error) {
 	createInfo := (*C.VkCommandBufferInheritanceInfo)(allocator.Malloc(C.sizeof_struct_VkCommandBufferInheritanceInfo))
 
 	createInfo.sType = C.VK_STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_INFO
+	createInfo.pNext = next
+
 	createInfo.renderPass = nil
 	createInfo.framebuffer = nil
 
@@ -88,17 +90,6 @@ func (o *CommandBufferInheritanceOptions) AllocForC(allocator *cgoparam.Allocato
 	createInfo.queryFlags = (C.VkQueryControlFlags)(o.QueryFlags)
 	createInfo.pipelineStatistics = (C.VkQueryPipelineStatisticFlags)(o.PipelineStatistics)
 
-	var err error
-	var next unsafe.Pointer
-	if o.Next != nil {
-		next, err = o.Next.AllocForC(allocator)
-	}
-
-	if err != nil {
-		return nil, err
-	}
-	createInfo.pNext = next
-
 	return unsafe.Pointer(createInfo), nil
 }
 
@@ -106,34 +97,25 @@ type BeginOptions struct {
 	Flags           BeginInfoFlags
 	InheritanceInfo *CommandBufferInheritanceOptions
 
-	Next core.Options
+	core.HaveNext
 }
 
-func (o *BeginOptions) AllocForC(allocator *cgoparam.Allocator) (unsafe.Pointer, error) {
+func (o *BeginOptions) AllocForC(allocator *cgoparam.Allocator, next unsafe.Pointer) (unsafe.Pointer, error) {
 	createInfo := (*C.VkCommandBufferBeginInfo)(allocator.Malloc(C.sizeof_struct_VkCommandBufferBeginInfo))
 
 	createInfo.sType = C.VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO
 	createInfo.flags = C.VkCommandBufferUsageFlags(o.Flags)
+	createInfo.pNext = next
+
 	createInfo.pInheritanceInfo = nil
 
 	if o.InheritanceInfo != nil {
-		info, err := o.InheritanceInfo.AllocForC(allocator)
+		info, err := core.AllocOptions(allocator, o.InheritanceInfo)
 		if err != nil {
 			return nil, err
 		}
 		createInfo.pInheritanceInfo = (*C.VkCommandBufferInheritanceInfo)(info)
 	}
-
-	var err error
-	var next unsafe.Pointer
-	if o.Next != nil {
-		next, err = o.Next.AllocForC(allocator)
-	}
-
-	if err != nil {
-		return nil, err
-	}
-	createInfo.pNext = next
 
 	return unsafe.Pointer(createInfo), nil
 }

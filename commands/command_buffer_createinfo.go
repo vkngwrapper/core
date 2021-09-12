@@ -17,10 +17,10 @@ type CommandBufferOptions struct {
 	BufferCount int
 	CommandPool CommandPool
 
-	Next core.Options
+	core.HaveNext
 }
 
-func (o *CommandBufferOptions) AllocForC(allocator *cgoparam.Allocator) (unsafe.Pointer, error) {
+func (o *CommandBufferOptions) AllocForC(allocator *cgoparam.Allocator, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if o.Level == core.LevelUnset {
 		return nil, errors.New("attempted to create command buffers without setting Level")
 	}
@@ -30,19 +30,11 @@ func (o *CommandBufferOptions) AllocForC(allocator *cgoparam.Allocator) (unsafe.
 
 	createInfo := (*C.VkCommandBufferAllocateInfo)(allocator.Malloc(int(unsafe.Sizeof([1]C.VkCommandBufferAllocateInfo{}))))
 	createInfo.sType = C.VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO
+	createInfo.pNext = next
+
 	createInfo.level = C.VkCommandBufferLevel(o.Level)
 	createInfo.commandBufferCount = C.uint32_t(o.BufferCount)
 	createInfo.commandPool = C.VkCommandPool(unsafe.Pointer(o.CommandPool.Handle()))
-
-	var next unsafe.Pointer
-	var err error
-	if o.Next != nil {
-		next, err = o.Next.AllocForC(allocator)
-	}
-	if err != nil {
-		return nil, err
-	}
-	createInfo.pNext = next
 
 	return unsafe.Pointer(createInfo), nil
 }

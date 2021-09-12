@@ -46,13 +46,14 @@ type RasterizationOptions struct {
 
 	LineWidth float32
 
-	Next core.Options
+	core.HaveNext
 }
 
-func (o *RasterizationOptions) AllocForC(allocator *cgoparam.Allocator) (unsafe.Pointer, error) {
+func (o *RasterizationOptions) AllocForC(allocator *cgoparam.Allocator, next unsafe.Pointer) (unsafe.Pointer, error) {
 	createInfo := (*C.VkPipelineRasterizationStateCreateInfo)(allocator.Malloc(C.sizeof_struct_VkPipelineRasterizationStateCreateInfo))
 	createInfo.sType = C.VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO
 	createInfo.flags = 0
+	createInfo.pNext = next
 	createInfo.depthClampEnable = C.VK_FALSE
 	createInfo.rasterizerDiscardEnable = C.VK_FALSE
 	createInfo.depthBiasEnable = C.VK_FALSE
@@ -78,17 +79,6 @@ func (o *RasterizationOptions) AllocForC(allocator *cgoparam.Allocator) (unsafe.
 	createInfo.depthBiasSlopeFactor = C.float(o.DepthBiasSlopeFactor)
 
 	createInfo.lineWidth = C.float(o.LineWidth)
-
-	var err error
-	var next unsafe.Pointer
-	if o.Next != nil {
-		next, err = o.Next.AllocForC(allocator)
-	}
-
-	if err != nil {
-		return nil, err
-	}
-	createInfo.pNext = next
 
 	return unsafe.Pointer(createInfo), nil
 }

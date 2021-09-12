@@ -21,10 +21,10 @@ type InstanceOptions struct {
 	ExtensionNames []string
 	LayerNames     []string
 
-	Next core.Options
+	core.HaveNext
 }
 
-func (o *InstanceOptions) AllocForC(allocator *cgoparam.Allocator) (unsafe.Pointer, error) {
+func (o *InstanceOptions) AllocForC(allocator *cgoparam.Allocator, next unsafe.Pointer) (unsafe.Pointer, error) {
 	cApplication := allocator.CString(o.ApplicationName)
 	cEngine := allocator.CString(o.EngineName)
 
@@ -57,22 +57,12 @@ func (o *InstanceOptions) AllocForC(allocator *cgoparam.Allocator) (unsafe.Point
 
 	createInfo.sType = C.VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO
 	createInfo.flags = 0
+	createInfo.pNext = next
 	createInfo.pApplicationInfo = appInfo
 	createInfo.enabledExtensionCount = C.uint32_t(numExtensions)
 	createInfo.ppEnabledExtensionNames = (**C.char)(extNamePtr)
 	createInfo.enabledLayerCount = C.uint32_t(numLayers)
 	createInfo.ppEnabledLayerNames = (**C.char)(layerNamePtr)
-
-	var err error
-	var next unsafe.Pointer
-	if o.Next != nil {
-		next, err = o.Next.AllocForC(allocator)
-	}
-
-	if err != nil {
-		return nil, err
-	}
-	createInfo.pNext = next
 
 	return unsafe.Pointer(createInfo), nil
 }

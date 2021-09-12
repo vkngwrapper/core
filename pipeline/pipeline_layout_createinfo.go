@@ -15,10 +15,10 @@ type PipelineLayoutOptions struct {
 	SetLayouts         []*DescriptorSetLayout
 	PushConstantRanges []*core.PushConstantRange
 
-	Next core.Options
+	core.HaveNext
 }
 
-func (o *PipelineLayoutOptions) AllocForC(allocator *cgoparam.Allocator) (unsafe.Pointer, error) {
+func (o *PipelineLayoutOptions) AllocForC(allocator *cgoparam.Allocator, next unsafe.Pointer) (unsafe.Pointer, error) {
 	createInfo := (*C.VkPipelineLayoutCreateInfo)(allocator.Malloc(C.sizeof_struct_VkPipelineLayoutCreateInfo))
 
 	setLayoutCount := len(o.SetLayouts)
@@ -26,6 +26,7 @@ func (o *PipelineLayoutOptions) AllocForC(allocator *cgoparam.Allocator) (unsafe
 
 	createInfo.sType = C.VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO
 	createInfo.flags = 0
+	createInfo.pNext = next
 	createInfo.setLayoutCount = C.uint32_t(setLayoutCount)
 	createInfo.pushConstantRangeCount = C.uint32_t(constantRangesCount)
 
@@ -51,17 +52,6 @@ func (o *PipelineLayoutOptions) AllocForC(allocator *cgoparam.Allocator) (unsafe
 			constantRangesSlice[i].size = C.uint32_t(o.PushConstantRanges[i].Size)
 		}
 	}
-
-	var err error
-	var next unsafe.Pointer
-	if o.Next != nil {
-		next, err = o.Next.AllocForC(allocator)
-	}
-
-	if err != nil {
-		return nil, err
-	}
-	createInfo.pNext = next
 
 	return unsafe.Pointer(createInfo), nil
 }

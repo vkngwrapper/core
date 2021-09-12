@@ -19,14 +19,15 @@ type ImageViewOptions struct {
 	Components       core.ComponentMapping
 	SubresourceRange core.ImageSubresourceRange
 
-	Next core.Options
+	core.HaveNext
 }
 
-func (o *ImageViewOptions) AllocForC(allocator *cgoparam.Allocator) (unsafe.Pointer, error) {
+func (o *ImageViewOptions) AllocForC(allocator *cgoparam.Allocator, next unsafe.Pointer) (unsafe.Pointer, error) {
 	createInfo := (*C.VkImageViewCreateInfo)(allocator.Malloc(int(unsafe.Sizeof([1]C.VkImageViewCreateInfo{}))))
 
 	createInfo.sType = C.VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO
 	createInfo.flags = 0
+	createInfo.pNext = next
 	createInfo.image = C.VkImage(unsafe.Pointer(o.Image.Handle()))
 	createInfo.viewType = C.VkImageViewType(o.ViewType)
 	createInfo.format = C.VkFormat(o.Format)
@@ -39,17 +40,6 @@ func (o *ImageViewOptions) AllocForC(allocator *cgoparam.Allocator) (unsafe.Poin
 	createInfo.subresourceRange.levelCount = C.uint32_t(o.SubresourceRange.LevelCount)
 	createInfo.subresourceRange.baseArrayLayer = C.uint32_t(o.SubresourceRange.BaseArrayLayer)
 	createInfo.subresourceRange.layerCount = C.uint32_t(o.SubresourceRange.LayerCount)
-
-	var next unsafe.Pointer
-	var err error
-
-	if o.Next != nil {
-		next, err = o.Next.AllocForC(allocator)
-	}
-	if err != nil {
-		return nil, err
-	}
-	createInfo.pNext = next
 
 	return unsafe.Pointer(createInfo), nil
 }

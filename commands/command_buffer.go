@@ -25,7 +25,7 @@ func CreateCommandBuffers(device resources.Device, o *CommandBufferOptions) ([]C
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
-	createInfo, err := o.AllocForC(arena)
+	createInfo, err := core.AllocOptions(arena, o)
 	if err != nil {
 		return nil, loader.VKErrorUnknown, err
 	}
@@ -62,7 +62,7 @@ func (c *vulkanCommandBuffer) Begin(o *BeginOptions) (loader.VkResult, error) {
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
-	createInfo, err := o.AllocForC(arena)
+	createInfo, err := core.AllocOptions(arena, o)
 	if err != nil {
 		return loader.VKErrorUnknown, err
 	}
@@ -78,7 +78,7 @@ func (c *vulkanCommandBuffer) CmdBeginRenderPass(contents SubpassContents, o *Re
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
-	createInfo, err := o.AllocForC(arena)
+	createInfo, err := core.AllocOptions(arena, o)
 	if err != nil {
 		return err
 	}

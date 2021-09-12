@@ -18,7 +18,7 @@ type DeviceOptions struct {
 	ExtensionNames  []string
 	LayerNames      []string
 
-	Next core.Options
+	core.HaveNext
 }
 
 type QueueFamilyOptions struct {
@@ -26,7 +26,7 @@ type QueueFamilyOptions struct {
 	QueuePriorities  []float32
 }
 
-func (o *DeviceOptions) AllocForC(allocator *cgoparam.Allocator) (unsafe.Pointer, error) {
+func (o *DeviceOptions) AllocForC(allocator *cgoparam.Allocator, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if len(o.QueueFamilies) == 0 {
 		return nil, errors.New("building a vulkan device before adding queue families")
 	}
@@ -73,6 +73,7 @@ func (o *DeviceOptions) AllocForC(allocator *cgoparam.Allocator) (unsafe.Pointer
 	createInfo := (*C.VkDeviceCreateInfo)(allocator.Malloc(int(unsafe.Sizeof(C.VkDeviceCreateInfo{}))))
 	createInfo.sType = C.VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO
 	createInfo.flags = 0
+	createInfo.pNext = next
 	createInfo.queueCreateInfoCount = C.uint32_t(len(o.QueueFamilies))
 	createInfo.pQueueCreateInfos = (*C.VkDeviceQueueCreateInfo)(queueFamilyPtr)
 	createInfo.enabledLayerCount = C.uint(numLayers)
@@ -88,17 +89,6 @@ func (o *DeviceOptions) AllocForC(allocator *cgoparam.Allocator) (unsafe.Pointer
 	} else {
 		createInfo.pEnabledFeatures = nil
 	}
-
-	var next unsafe.Pointer
-	var err error
-
-	if o.Next != nil {
-		next, err = o.Next.AllocForC(allocator)
-	}
-	if err != nil {
-		return nil, err
-	}
-	createInfo.pNext = next
 
 	return unsafe.Pointer(createInfo), nil
 }

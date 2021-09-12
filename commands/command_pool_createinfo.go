@@ -53,10 +53,10 @@ type CommandPoolOptions struct {
 	GraphicsQueueFamily *int
 	Flags               CommandPoolFlags
 
-	Next core.Options
+	core.HaveNext
 }
 
-func (o *CommandPoolOptions) AllocForC(allocator *cgoparam.Allocator) (unsafe.Pointer, error) {
+func (o *CommandPoolOptions) AllocForC(allocator *cgoparam.Allocator, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if o.GraphicsQueueFamily == nil {
 		return nil, errors.New("attempted to create a command pool without setting GraphicsQueueFamilyIndex")
 	}
@@ -66,19 +66,9 @@ func (o *CommandPoolOptions) AllocForC(allocator *cgoparam.Allocator) (unsafe.Po
 	cmdPoolCreate := (*C.VkCommandPoolCreateInfo)(allocator.Malloc(C.sizeof_struct_VkCommandPoolCreateInfo))
 	cmdPoolCreate.sType = C.VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO
 	cmdPoolCreate.flags = C.VkCommandPoolCreateFlags(o.Flags)
-	cmdPoolCreate.queueFamilyIndex = C.uint32_t(familyIndex)
-
-	var next unsafe.Pointer
-	var err error
-
-	if o.Next != nil {
-		next, err = o.Next.AllocForC(allocator)
-	}
-	if err != nil {
-		return nil, err
-	}
-
 	cmdPoolCreate.pNext = next
+
+	cmdPoolCreate.queueFamilyIndex = C.uint32_t(familyIndex)
 
 	return unsafe.Pointer(cmdPoolCreate), nil
 }
