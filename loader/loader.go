@@ -18,16 +18,19 @@ PFN_vkVoidFunction device_proc_addr(LoaderFuncPtrs *funcPtrs, VkDevice device, c
 */
 import "C"
 import (
+	"github.com/CannibalVox/VKng/core"
 	"github.com/cockroachdb/errors"
 	"unsafe"
 )
 
 //go:generate mockgen -source loader.go -destination ../mocks/loader.go -package=mocks
 
-type vulkanLoader struct {
+type VulkanLoader struct {
 	instance VkInstance
 	device   VkDevice
 	funcPtrs *C.LoaderFuncPtrs
+
+	version core.APIVersion
 }
 
 type Loader interface {
@@ -35,6 +38,7 @@ type Loader interface {
 	CreateInstanceLoader(instance VkInstance) (Loader, error)
 	CreateDeviceLoader(device VkDevice) (Loader, error)
 	LoadProcAddr(name *Char) unsafe.Pointer
+	Version() core.APIVersion
 
 	VkEnumerateInstanceVersion(pApiVersion *Uint32) (VkResult, error)
 
@@ -221,30 +225,48 @@ type Loader interface {
 	VkGetDeviceMemoryOpaqueCaptureAddress(device VkDevice, pInfo *VkDeviceMemoryOpaqueCaptureAddressInfo) (Uint64, error)
 }
 
-func CreateStaticLinkedLoader() (Loader, error) {
+func createVulkanLoader(funcPtrs *C.LoaderFuncPtrs, instance VkInstance, device VkDevice) (*VulkanLoader, error) {
+	version := core.Vulkan1_0
+	loader := &VulkanLoader{funcPtrs: funcPtrs, instance: instance, device: device}
+
+	if funcPtrs.vkEnumerateInstanceVersion != nil {
+		var versionBits Uint32
+		_, err := loader.VkEnumerateInstanceVersion(&versionBits)
+		if err != nil {
+			return nil, err
+		}
+
+		version = core.APIVersion(versionBits)
+	}
+
+	loader.version = version
+	return loader, nil
+}
+
+func CreateStaticLinkedLoader() (*VulkanLoader, error) {
 	return CreateLoaderFromProcAddr(unsafe.Pointer(C.vkGetInstanceProcAddr))
 }
 
-func CreateLoaderFromProcAddr(procAddr unsafe.Pointer) (Loader, error) {
+func CreateLoaderFromProcAddr(procAddr unsafe.Pointer) (*VulkanLoader, error) {
 	baseFuncPtr := (C.PFN_vkGetInstanceProcAddr)(procAddr)
 	funcPtrs := (*C.LoaderFuncPtrs)(C.malloc(C.sizeof_struct_LoaderFuncPtrs))
 	C.loaderFuncPtrs_populate(baseFuncPtr, funcPtrs)
 
-	return &vulkanLoader{funcPtrs: funcPtrs}, nil
+	return createVulkanLoader(funcPtrs, nil, nil)
 }
 
-func (l *vulkanLoader) Destroy() {
+func (l *VulkanLoader) Destroy() {
 	C.free(unsafe.Pointer(l.funcPtrs))
 }
 
-func (l *vulkanLoader) CreateInstanceLoader(instance VkInstance) (Loader, error) {
+func (l *VulkanLoader) CreateInstanceLoader(instance VkInstance) (Loader, error) {
 	instanceFuncPtrs := (*C.LoaderFuncPtrs)(C.malloc(C.sizeof_struct_LoaderFuncPtrs))
 	C.instanceFuncPtrs_populate((C.VkInstance)(instance), l.funcPtrs, instanceFuncPtrs)
 
-	return &vulkanLoader{instance: instance, funcPtrs: instanceFuncPtrs}, nil
+	return createVulkanLoader(instanceFuncPtrs, instance, nil)
 }
 
-func (l *vulkanLoader) CreateDeviceLoader(device VkDevice) (Loader, error) {
+func (l *VulkanLoader) CreateDeviceLoader(device VkDevice) (Loader, error) {
 	if l.instance == nil {
 		return nil, errors.New("attempted to call instance loader function on a basic loader")
 	}
@@ -252,13 +274,17 @@ func (l *vulkanLoader) CreateDeviceLoader(device VkDevice) (Loader, error) {
 	deviceFuncPtrs := (*C.LoaderFuncPtrs)(C.malloc(C.sizeof_struct_LoaderFuncPtrs))
 	C.deviceFuncPtrs_populate((C.VkDevice)(device), l.funcPtrs, deviceFuncPtrs)
 
-	return &vulkanLoader{instance: l.instance, device: device, funcPtrs: deviceFuncPtrs}, nil
+	return createVulkanLoader(deviceFuncPtrs, l.instance, device)
 }
 
-func (l *vulkanLoader) LoadProcAddr(name *Char) unsafe.Pointer {
+func (l *VulkanLoader) LoadProcAddr(name *Char) unsafe.Pointer {
 	if l.device != nil {
 		return unsafe.Pointer(C.device_proc_addr(l.funcPtrs, l.device, (*C.char)(name)))
 	} else {
 		return unsafe.Pointer(C.instance_proc_addr(l.funcPtrs, l.instance, (*C.char)(name)))
 	}
+}
+
+func (l *VulkanLoader) Version() core.APIVersion {
+	return l.version
 }

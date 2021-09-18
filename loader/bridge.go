@@ -11,7 +11,7 @@ import (
 	"unsafe"
 )
 
-func (l *vulkanLoader) VkEnumerateInstanceExtensionProperties(pLayerName *Char, pPropertyCount *Uint32, pProperties *VkExtensionProperties) (VkResult, error) {
+func (l *VulkanLoader) VkEnumerateInstanceExtensionProperties(pLayerName *Char, pPropertyCount *Uint32, pProperties *VkExtensionProperties) (VkResult, error) {
 	res := VkResult(C.cgoEnumerateInstanceExtensionProperties(l.funcPtrs.vkEnumerateInstanceExtensionProperties,
 		(*C.char)(pLayerName),
 		(*C.uint32_t)(pPropertyCount),
@@ -19,14 +19,14 @@ func (l *vulkanLoader) VkEnumerateInstanceExtensionProperties(pLayerName *Char, 
 	return res, res.ToError()
 }
 
-func (l *vulkanLoader) VkEnumerateInstanceLayerProperties(pPropertyCount *Uint32, pProperties *VkLayerProperties) (VkResult, error) {
+func (l *VulkanLoader) VkEnumerateInstanceLayerProperties(pPropertyCount *Uint32, pProperties *VkLayerProperties) (VkResult, error) {
 	res := VkResult(C.cgoEnumerateInstanceLayerProperties(l.funcPtrs.vkEnumerateInstanceLayerProperties,
 		(*C.uint32_t)(pPropertyCount),
 		(*C.VkLayerProperties)(pProperties)))
 	return res, res.ToError()
 }
 
-func (l *vulkanLoader) VkCreateInstance(pCreateInfo *VkInstanceCreateInfo, pAllocator *VkAllocationCallbacks, pInstance *VkInstance) (VkResult, error) {
+func (l *VulkanLoader) VkCreateInstance(pCreateInfo *VkInstanceCreateInfo, pAllocator *VkAllocationCallbacks, pInstance *VkInstance) (VkResult, error) {
 	res := VkResult(C.cgoCreateInstance(l.funcPtrs.vkCreateInstance,
 		(*C.VkInstanceCreateInfo)(pCreateInfo),
 		(*C.VkAllocationCallbacks)(pAllocator),
@@ -34,7 +34,7 @@ func (l *vulkanLoader) VkCreateInstance(pCreateInfo *VkInstanceCreateInfo, pAllo
 	return res, res.ToError()
 }
 
-func (l *vulkanLoader) VkEnumeratePhysicalDevices(instance VkInstance, pPhysicalDeviceCount *Uint32, pPhysicalDevices *VkPhysicalDevice) (VkResult, error) {
+func (l *VulkanLoader) VkEnumeratePhysicalDevices(instance VkInstance, pPhysicalDeviceCount *Uint32, pPhysicalDevices *VkPhysicalDevice) (VkResult, error) {
 	if l.instance == nil {
 		return VKErrorUnknown, errors.New("attempted to call instance loader function on a basic loader")
 	}
@@ -46,7 +46,7 @@ func (l *vulkanLoader) VkEnumeratePhysicalDevices(instance VkInstance, pPhysical
 	return res, res.ToError()
 }
 
-func (l *vulkanLoader) VkDestroyInstance(instance VkInstance, pAllocator *VkAllocationCallbacks) error {
+func (l *VulkanLoader) VkDestroyInstance(instance VkInstance, pAllocator *VkAllocationCallbacks) error {
 	if l.instance == nil {
 		return errors.New("attempted to call instance loader function on a basic loader")
 	}
@@ -57,7 +57,7 @@ func (l *vulkanLoader) VkDestroyInstance(instance VkInstance, pAllocator *VkAllo
 	return nil
 }
 
-func (l *vulkanLoader) VkGetPhysicalDeviceFeatures(physicalDevice VkPhysicalDevice, pFeatures *VkPhysicalDeviceFeatures) error {
+func (l *VulkanLoader) VkGetPhysicalDeviceFeatures(physicalDevice VkPhysicalDevice, pFeatures *VkPhysicalDeviceFeatures) error {
 	if l.instance == nil {
 		return errors.New("attempted to call instance loader function on a basic loader")
 	}
@@ -68,7 +68,7 @@ func (l *vulkanLoader) VkGetPhysicalDeviceFeatures(physicalDevice VkPhysicalDevi
 	return nil
 }
 
-func (l *vulkanLoader) VkGetPhysicalDeviceFormatProperties(physicalDevice VkPhysicalDevice, format VkFormat, pFormatProperties *VkFormatProperties) error {
+func (l *VulkanLoader) VkGetPhysicalDeviceFormatProperties(physicalDevice VkPhysicalDevice, format VkFormat, pFormatProperties *VkFormatProperties) error {
 	if l.instance == nil {
 		return errors.New("attempted to call instance loader function on a basic loader")
 	}
@@ -80,7 +80,7 @@ func (l *vulkanLoader) VkGetPhysicalDeviceFormatProperties(physicalDevice VkPhys
 	return nil
 }
 
-func (l *vulkanLoader) VkGetPhysicalDeviceImageFormatProperties(physicalDevice VkPhysicalDevice, format VkFormat, t VkImageType, tiling VkImageTiling, usage VkImageUsageFlags, flags VkImageCreateFlags, pImageFormatProperties *VkImageFormatProperties) (VkResult, error) {
+func (l *VulkanLoader) VkGetPhysicalDeviceImageFormatProperties(physicalDevice VkPhysicalDevice, format VkFormat, t VkImageType, tiling VkImageTiling, usage VkImageUsageFlags, flags VkImageCreateFlags, pImageFormatProperties *VkImageFormatProperties) (VkResult, error) {
 	if l.instance == nil {
 		return VKErrorUnknown, errors.New("attempted to call instance loader function on a basic loader")
 	}
@@ -96,7 +96,7 @@ func (l *vulkanLoader) VkGetPhysicalDeviceImageFormatProperties(physicalDevice V
 	return res, res.ToError()
 }
 
-func (l *vulkanLoader) VkGetPhysicalDeviceProperties(physicalDevice VkPhysicalDevice, pProperties *VkPhysicalDeviceProperties) error {
+func (l *VulkanLoader) VkGetPhysicalDeviceProperties(physicalDevice VkPhysicalDevice, pProperties *VkPhysicalDeviceProperties) error {
 	if l.instance == nil {
 		return errors.New("attempted to call instance loader function on a basic loader")
 	}
@@ -107,7 +107,7 @@ func (l *vulkanLoader) VkGetPhysicalDeviceProperties(physicalDevice VkPhysicalDe
 	return nil
 }
 
-func (l *vulkanLoader) VkGetPhysicalDeviceQueueFamilyProperties(physicalDevice VkPhysicalDevice, pQueueFamilyPropertyCount *Uint32, pQueueFamilyProperties *VkQueueFamilyProperties) error {
+func (l *VulkanLoader) VkGetPhysicalDeviceQueueFamilyProperties(physicalDevice VkPhysicalDevice, pQueueFamilyPropertyCount *Uint32, pQueueFamilyProperties *VkQueueFamilyProperties) error {
 	if l.instance == nil {
 		return errors.New("attempted to call instance loader function on a basic loader")
 	}
@@ -119,7 +119,7 @@ func (l *vulkanLoader) VkGetPhysicalDeviceQueueFamilyProperties(physicalDevice V
 	return nil
 }
 
-func (l *vulkanLoader) VkGetPhysicalDeviceMemoryProperties(physicalDevice VkPhysicalDevice, pMemoryProperties *VkPhysicalDeviceMemoryProperties) error {
+func (l *VulkanLoader) VkGetPhysicalDeviceMemoryProperties(physicalDevice VkPhysicalDevice, pMemoryProperties *VkPhysicalDeviceMemoryProperties) error {
 	if l.instance == nil {
 		return errors.New("attempted to call instance loader function on a basic loader")
 	}
@@ -130,7 +130,7 @@ func (l *vulkanLoader) VkGetPhysicalDeviceMemoryProperties(physicalDevice VkPhys
 	return nil
 }
 
-func (l *vulkanLoader) VkEnumerateDeviceExtensionProperties(physicalDevice VkPhysicalDevice, pLayerName *Char, pPropertyCount *Uint32, pProperties *VkExtensionProperties) (VkResult, error) {
+func (l *VulkanLoader) VkEnumerateDeviceExtensionProperties(physicalDevice VkPhysicalDevice, pLayerName *Char, pPropertyCount *Uint32, pProperties *VkExtensionProperties) (VkResult, error) {
 	if l.instance == nil {
 		return VKErrorUnknown, errors.New("attempted to call instance loader function on a basic loader")
 	}
@@ -143,7 +143,7 @@ func (l *vulkanLoader) VkEnumerateDeviceExtensionProperties(physicalDevice VkPhy
 	return res, res.ToError()
 }
 
-func (l *vulkanLoader) VkEnumerateDeviceLayerProperties(physicalDevice VkPhysicalDevice, pPropertyCount *Uint32, pProperties *VkLayerProperties) (VkResult, error) {
+func (l *VulkanLoader) VkEnumerateDeviceLayerProperties(physicalDevice VkPhysicalDevice, pPropertyCount *Uint32, pProperties *VkLayerProperties) (VkResult, error) {
 	if l.instance == nil {
 		return VKErrorUnknown, errors.New("attempted to call instance loader function on a basic loader")
 	}
@@ -155,7 +155,7 @@ func (l *vulkanLoader) VkEnumerateDeviceLayerProperties(physicalDevice VkPhysica
 	return res, res.ToError()
 }
 
-func (l *vulkanLoader) VkGetPhysicalDeviceSparseImageFormatProperties(physicalDevice VkPhysicalDevice, format VkFormat, t VkImageType, samples VkSampleCountFlagBits, usage VkImageUsageFlags, tiling VkImageTiling, pPropertyCount *Uint32, pProperties *VkSparseImageFormatProperties) error {
+func (l *VulkanLoader) VkGetPhysicalDeviceSparseImageFormatProperties(physicalDevice VkPhysicalDevice, format VkFormat, t VkImageType, samples VkSampleCountFlagBits, usage VkImageUsageFlags, tiling VkImageTiling, pPropertyCount *Uint32, pProperties *VkSparseImageFormatProperties) error {
 	if l.instance == nil {
 		return errors.New("attempted to call instance loader function on a basic loader")
 	}
@@ -172,7 +172,7 @@ func (l *vulkanLoader) VkGetPhysicalDeviceSparseImageFormatProperties(physicalDe
 	return nil
 }
 
-func (l *vulkanLoader) VkCreateDevice(physicalDevice VkPhysicalDevice, pCreateInfo *VkDeviceCreateInfo, pAllocator *VkAllocationCallbacks, pDevice *VkDevice) (VkResult, error) {
+func (l *VulkanLoader) VkCreateDevice(physicalDevice VkPhysicalDevice, pCreateInfo *VkDeviceCreateInfo, pAllocator *VkAllocationCallbacks, pDevice *VkDevice) (VkResult, error) {
 	if l.instance == nil {
 		return VKErrorUnknown, errors.New("attempted to call instance loader function on a basic loader")
 	}
@@ -185,7 +185,7 @@ func (l *vulkanLoader) VkCreateDevice(physicalDevice VkPhysicalDevice, pCreateIn
 	return res, res.ToError()
 }
 
-func (l *vulkanLoader) VkDestroyDevice(device VkDevice, pAllocator *VkAllocationCallbacks) error {
+func (l *VulkanLoader) VkDestroyDevice(device VkDevice, pAllocator *VkAllocationCallbacks) error {
 	if l.device == nil {
 		return errors.New("attempted device loader function on a non-device loader")
 	}
@@ -197,7 +197,7 @@ func (l *vulkanLoader) VkDestroyDevice(device VkDevice, pAllocator *VkAllocation
 	return nil
 }
 
-func (l *vulkanLoader) VkGetDeviceQueue(device VkDevice, queueFamilyIndex Uint32, queueIndex Uint32, pQueue *VkQueue) error {
+func (l *VulkanLoader) VkGetDeviceQueue(device VkDevice, queueFamilyIndex Uint32, queueIndex Uint32, pQueue *VkQueue) error {
 	if l.device == nil {
 		return errors.New("attempted device loader function on a non-device loader")
 	}
@@ -211,7 +211,7 @@ func (l *vulkanLoader) VkGetDeviceQueue(device VkDevice, queueFamilyIndex Uint32
 	return nil
 }
 
-func (l *vulkanLoader) VkQueueSubmit(queue VkQueue, submitCount Uint32, pSubmits *VkSubmitInfo, fence VkFence) (VkResult, error) {
+func (l *VulkanLoader) VkQueueSubmit(queue VkQueue, submitCount Uint32, pSubmits *VkSubmitInfo, fence VkFence) (VkResult, error) {
 	if l.device == nil {
 		return VKErrorUnknown, errors.New("attempted device loader function on a non-device loader")
 	}
@@ -224,7 +224,7 @@ func (l *vulkanLoader) VkQueueSubmit(queue VkQueue, submitCount Uint32, pSubmits
 	return res, res.ToError()
 }
 
-func (l *vulkanLoader) VkQueueWaitIdle(queue VkQueue) (VkResult, error) {
+func (l *VulkanLoader) VkQueueWaitIdle(queue VkQueue) (VkResult, error) {
 	if l.device == nil {
 		return VKErrorUnknown, errors.New("attempted device loader function on a non-device loader")
 	}
@@ -234,7 +234,7 @@ func (l *vulkanLoader) VkQueueWaitIdle(queue VkQueue) (VkResult, error) {
 	return res, res.ToError()
 }
 
-func (l *vulkanLoader) VkDeviceWaitIdle(device VkDevice) (VkResult, error) {
+func (l *VulkanLoader) VkDeviceWaitIdle(device VkDevice) (VkResult, error) {
 	if l.device == nil {
 		return VKErrorUnknown, errors.New("attempted device loader function on a non-device loader")
 	}
@@ -244,7 +244,7 @@ func (l *vulkanLoader) VkDeviceWaitIdle(device VkDevice) (VkResult, error) {
 	return res, res.ToError()
 }
 
-func (l *vulkanLoader) VkAllocateMemory(device VkDevice, pAllocateInfo *VkMemoryAllocateInfo, pAllocator *VkAllocationCallbacks, pMemory *VkDeviceMemory) (VkResult, error) {
+func (l *VulkanLoader) VkAllocateMemory(device VkDevice, pAllocateInfo *VkMemoryAllocateInfo, pAllocator *VkAllocationCallbacks, pMemory *VkDeviceMemory) (VkResult, error) {
 	if l.device == nil {
 		return VKErrorUnknown, errors.New("attempted device loader function on a non-device loader")
 	}
@@ -257,7 +257,7 @@ func (l *vulkanLoader) VkAllocateMemory(device VkDevice, pAllocateInfo *VkMemory
 	return res, res.ToError()
 }
 
-func (l *vulkanLoader) VkFreeMemory(device VkDevice, memory VkDeviceMemory, pAllocator *VkAllocationCallbacks) error {
+func (l *VulkanLoader) VkFreeMemory(device VkDevice, memory VkDeviceMemory, pAllocator *VkAllocationCallbacks) error {
 	if l.device == nil {
 		return errors.New("attempted device loader function on a non-device loader")
 	}
@@ -270,7 +270,7 @@ func (l *vulkanLoader) VkFreeMemory(device VkDevice, memory VkDeviceMemory, pAll
 	return nil
 }
 
-func (l *vulkanLoader) VkMapMemory(device VkDevice, memory VkDeviceMemory, offset VkDeviceSize, size VkDeviceSize, flags VkMemoryMapFlags, ppData *unsafe.Pointer) (VkResult, error) {
+func (l *VulkanLoader) VkMapMemory(device VkDevice, memory VkDeviceMemory, offset VkDeviceSize, size VkDeviceSize, flags VkMemoryMapFlags, ppData *unsafe.Pointer) (VkResult, error) {
 	if l.device == nil {
 		return VKErrorUnknown, errors.New("attempted device loader function on a non-device loader")
 	}
@@ -285,7 +285,7 @@ func (l *vulkanLoader) VkMapMemory(device VkDevice, memory VkDeviceMemory, offse
 	return res, res.ToError()
 }
 
-func (l *vulkanLoader) VkUnmapMemory(device VkDevice, memory VkDeviceMemory) error {
+func (l *VulkanLoader) VkUnmapMemory(device VkDevice, memory VkDeviceMemory) error {
 	if l.device == nil {
 		return errors.New("attempted device loader function on a non-device loader")
 	}
@@ -297,7 +297,7 @@ func (l *vulkanLoader) VkUnmapMemory(device VkDevice, memory VkDeviceMemory) err
 	return nil
 }
 
-func (l *vulkanLoader) VkFlushMappedMemoryRanges(device VkDevice, memoryRangeCount Uint32, pMemoryRanges *VkMappedMemoryRange) (VkResult, error) {
+func (l *VulkanLoader) VkFlushMappedMemoryRanges(device VkDevice, memoryRangeCount Uint32, pMemoryRanges *VkMappedMemoryRange) (VkResult, error) {
 	if l.device == nil {
 		return VKErrorUnknown, errors.New("attempted device loader function on a non-device loader")
 	}
@@ -309,7 +309,7 @@ func (l *vulkanLoader) VkFlushMappedMemoryRanges(device VkDevice, memoryRangeCou
 	return res, res.ToError()
 }
 
-func (l *vulkanLoader) VkInvalidateMappedMemoryRanges(device VkDevice, memoryRangeCount Uint32, pMemoryRanges *VkMappedMemoryRange) (VkResult, error) {
+func (l *VulkanLoader) VkInvalidateMappedMemoryRanges(device VkDevice, memoryRangeCount Uint32, pMemoryRanges *VkMappedMemoryRange) (VkResult, error) {
 	if l.device == nil {
 		return VKErrorUnknown, errors.New("attempted device loader function on a non-device loader")
 	}
@@ -321,7 +321,7 @@ func (l *vulkanLoader) VkInvalidateMappedMemoryRanges(device VkDevice, memoryRan
 	return res, res.ToError()
 }
 
-func (l *vulkanLoader) VkGetDeviceMemoryCommitment(device VkDevice, memory VkDeviceMemory, pCommittedMemoryInBytes *VkDeviceSize) error {
+func (l *VulkanLoader) VkGetDeviceMemoryCommitment(device VkDevice, memory VkDeviceMemory, pCommittedMemoryInBytes *VkDeviceSize) error {
 	if l.device == nil {
 		return errors.New("attempted device loader function on a non-device loader")
 	}
@@ -334,7 +334,7 @@ func (l *vulkanLoader) VkGetDeviceMemoryCommitment(device VkDevice, memory VkDev
 	return nil
 }
 
-func (l *vulkanLoader) VkBindBufferMemory(device VkDevice, buffer VkBuffer, memory VkDeviceMemory, memoryOffset VkDeviceSize) (VkResult, error) {
+func (l *VulkanLoader) VkBindBufferMemory(device VkDevice, buffer VkBuffer, memory VkDeviceMemory, memoryOffset VkDeviceSize) (VkResult, error) {
 	if l.device == nil {
 		return VKErrorUnknown, errors.New("attempted device loader function on a non-device loader")
 	}
@@ -347,7 +347,7 @@ func (l *vulkanLoader) VkBindBufferMemory(device VkDevice, buffer VkBuffer, memo
 	return res, res.ToError()
 }
 
-func (l *vulkanLoader) VkBindImageMemory(device VkDevice, image VkImage, memory VkDeviceMemory, memoryOffset VkDeviceSize) (VkResult, error) {
+func (l *VulkanLoader) VkBindImageMemory(device VkDevice, image VkImage, memory VkDeviceMemory, memoryOffset VkDeviceSize) (VkResult, error) {
 	if l.device == nil {
 		return VKErrorUnknown, errors.New("attempted device loader function on a non-device loader")
 	}
@@ -360,7 +360,7 @@ func (l *vulkanLoader) VkBindImageMemory(device VkDevice, image VkImage, memory 
 	return res, res.ToError()
 }
 
-func (l *vulkanLoader) VkGetBufferMemoryRequirements(device VkDevice, buffer VkBuffer, pMemoryRequirements *VkMemoryRequirements) error {
+func (l *VulkanLoader) VkGetBufferMemoryRequirements(device VkDevice, buffer VkBuffer, pMemoryRequirements *VkMemoryRequirements) error {
 	if l.device == nil {
 		return errors.New("attempted device loader function on a non-device loader")
 	}
@@ -373,7 +373,7 @@ func (l *vulkanLoader) VkGetBufferMemoryRequirements(device VkDevice, buffer VkB
 	return nil
 }
 
-func (l *vulkanLoader) VkGetImageMemoryRequirements(device VkDevice, image VkImage, pMemoryRequirements *VkMemoryRequirements) error {
+func (l *VulkanLoader) VkGetImageMemoryRequirements(device VkDevice, image VkImage, pMemoryRequirements *VkMemoryRequirements) error {
 	if l.device == nil {
 		return errors.New("attempted device loader function on a non-device loader")
 	}
@@ -386,7 +386,7 @@ func (l *vulkanLoader) VkGetImageMemoryRequirements(device VkDevice, image VkIma
 	return nil
 }
 
-func (l *vulkanLoader) VkGetImageSparseMemoryRequirements(device VkDevice, image VkImage, pSparseMemoryRequirementCount *Uint32, pSparseMemoryRequirements *VkSparseImageMemoryRequirements) error {
+func (l *VulkanLoader) VkGetImageSparseMemoryRequirements(device VkDevice, image VkImage, pSparseMemoryRequirementCount *Uint32, pSparseMemoryRequirements *VkSparseImageMemoryRequirements) error {
 	if l.device == nil {
 		return errors.New("attempted device loader function on a non-device loader")
 	}
@@ -400,7 +400,7 @@ func (l *vulkanLoader) VkGetImageSparseMemoryRequirements(device VkDevice, image
 	return nil
 }
 
-func (l *vulkanLoader) VkQueueBindSparse(queue VkQueue, bindInfoCount Uint32, pBindInfo *VkBindSparseInfo, fence VkFence) (VkResult, error) {
+func (l *VulkanLoader) VkQueueBindSparse(queue VkQueue, bindInfoCount Uint32, pBindInfo *VkBindSparseInfo, fence VkFence) (VkResult, error) {
 	if l.device == nil {
 		return VKErrorUnknown, errors.New("attempted device loader function on a non-device loader")
 	}
@@ -413,7 +413,7 @@ func (l *vulkanLoader) VkQueueBindSparse(queue VkQueue, bindInfoCount Uint32, pB
 	return res, res.ToError()
 }
 
-func (l *vulkanLoader) VkCreateFence(device VkDevice, pCreateInfo *VkFenceCreateInfo, pAllocator *VkAllocationCallbacks, pFence *VkFence) (VkResult, error) {
+func (l *VulkanLoader) VkCreateFence(device VkDevice, pCreateInfo *VkFenceCreateInfo, pAllocator *VkAllocationCallbacks, pFence *VkFence) (VkResult, error) {
 	if l.device == nil {
 		return VKErrorUnknown, errors.New("attempted device loader function on a non-device loader")
 	}
@@ -426,7 +426,7 @@ func (l *vulkanLoader) VkCreateFence(device VkDevice, pCreateInfo *VkFenceCreate
 	return res, res.ToError()
 }
 
-func (l *vulkanLoader) VkDestroyFence(device VkDevice, fence VkFence, pAllocator *VkAllocationCallbacks) error {
+func (l *VulkanLoader) VkDestroyFence(device VkDevice, fence VkFence, pAllocator *VkAllocationCallbacks) error {
 	if l.device == nil {
 		return errors.New("attempted device loader function on a non-device loader")
 	}
@@ -439,7 +439,7 @@ func (l *vulkanLoader) VkDestroyFence(device VkDevice, fence VkFence, pAllocator
 	return nil
 }
 
-func (l *vulkanLoader) VkResetFences(device VkDevice, fenceCount Uint32, pFences *VkFence) (VkResult, error) {
+func (l *VulkanLoader) VkResetFences(device VkDevice, fenceCount Uint32, pFences *VkFence) (VkResult, error) {
 	if l.device == nil {
 		return VKErrorUnknown, errors.New("attempted device loader function on a non-device loader")
 	}
@@ -451,7 +451,7 @@ func (l *vulkanLoader) VkResetFences(device VkDevice, fenceCount Uint32, pFences
 	return res, res.ToError()
 }
 
-func (l *vulkanLoader) VkGetFenceStatus(device VkDevice, fence VkFence) (VkResult, error) {
+func (l *VulkanLoader) VkGetFenceStatus(device VkDevice, fence VkFence) (VkResult, error) {
 	if l.device == nil {
 		return VKErrorUnknown, errors.New("attempted device loader function on a non-device loader")
 	}
@@ -462,7 +462,7 @@ func (l *vulkanLoader) VkGetFenceStatus(device VkDevice, fence VkFence) (VkResul
 	return res, res.ToError()
 }
 
-func (l *vulkanLoader) VkWaitForFences(device VkDevice, fenceCount Uint32, pFences *VkFence, waitAll VkBool32, timeout Uint64) (VkResult, error) {
+func (l *VulkanLoader) VkWaitForFences(device VkDevice, fenceCount Uint32, pFences *VkFence, waitAll VkBool32, timeout Uint64) (VkResult, error) {
 	if l.device == nil {
 		return VKErrorUnknown, errors.New("attempted device loader function on a non-device loader")
 	}
@@ -476,7 +476,7 @@ func (l *vulkanLoader) VkWaitForFences(device VkDevice, fenceCount Uint32, pFenc
 	return res, res.ToError()
 }
 
-func (l *vulkanLoader) VkCreateSemaphore(device VkDevice, pCreateInfo *VkSemaphoreCreateInfo, pAllocator *VkAllocationCallbacks, pSemaphore *VkSemaphore) (VkResult, error) {
+func (l *VulkanLoader) VkCreateSemaphore(device VkDevice, pCreateInfo *VkSemaphoreCreateInfo, pAllocator *VkAllocationCallbacks, pSemaphore *VkSemaphore) (VkResult, error) {
 	if l.device == nil {
 		return VKErrorUnknown, errors.New("attempted device loader function on a non-device loader")
 	}
@@ -489,7 +489,7 @@ func (l *vulkanLoader) VkCreateSemaphore(device VkDevice, pCreateInfo *VkSemapho
 	return res, res.ToError()
 }
 
-func (l *vulkanLoader) VkDestroySemaphore(device VkDevice, semaphore VkSemaphore, pAllocator *VkAllocationCallbacks) error {
+func (l *VulkanLoader) VkDestroySemaphore(device VkDevice, semaphore VkSemaphore, pAllocator *VkAllocationCallbacks) error {
 	if l.device == nil {
 		return errors.New("attempted device loader function on a non-device loader")
 	}
@@ -502,7 +502,7 @@ func (l *vulkanLoader) VkDestroySemaphore(device VkDevice, semaphore VkSemaphore
 	return nil
 }
 
-func (l *vulkanLoader) VkCreateEvent(device VkDevice, pCreateInfo *VkEventCreateInfo, pAllocator *VkAllocationCallbacks, pEvent *VkEvent) (VkResult, error) {
+func (l *VulkanLoader) VkCreateEvent(device VkDevice, pCreateInfo *VkEventCreateInfo, pAllocator *VkAllocationCallbacks, pEvent *VkEvent) (VkResult, error) {
 	if l.device == nil {
 		return VKErrorUnknown, errors.New("attempted device loader function on a non-device loader")
 	}
@@ -515,7 +515,7 @@ func (l *vulkanLoader) VkCreateEvent(device VkDevice, pCreateInfo *VkEventCreate
 	return res, res.ToError()
 }
 
-func (l *vulkanLoader) VkDestroyEvent(device VkDevice, event VkEvent, pAllocator *VkAllocationCallbacks) error {
+func (l *VulkanLoader) VkDestroyEvent(device VkDevice, event VkEvent, pAllocator *VkAllocationCallbacks) error {
 	if l.device == nil {
 		return errors.New("attempted device loader function on a non-device loader")
 	}
@@ -528,7 +528,7 @@ func (l *vulkanLoader) VkDestroyEvent(device VkDevice, event VkEvent, pAllocator
 	return nil
 }
 
-func (l *vulkanLoader) VkGetEventStatus(device VkDevice, event VkEvent) (VkResult, error) {
+func (l *VulkanLoader) VkGetEventStatus(device VkDevice, event VkEvent) (VkResult, error) {
 	if l.device == nil {
 		return VKErrorUnknown, errors.New("attempted device loader function on a non-device loader")
 	}
@@ -539,7 +539,7 @@ func (l *vulkanLoader) VkGetEventStatus(device VkDevice, event VkEvent) (VkResul
 	return res, res.ToError()
 }
 
-func (l *vulkanLoader) VkSetEvent(device VkDevice, event VkEvent) (VkResult, error) {
+func (l *VulkanLoader) VkSetEvent(device VkDevice, event VkEvent) (VkResult, error) {
 	if l.device == nil {
 		return VKErrorUnknown, errors.New("attempted device loader function on a non-device loader")
 	}
@@ -550,7 +550,7 @@ func (l *vulkanLoader) VkSetEvent(device VkDevice, event VkEvent) (VkResult, err
 	return res, res.ToError()
 }
 
-func (l *vulkanLoader) VkResetEvent(device VkDevice, event VkEvent) (VkResult, error) {
+func (l *VulkanLoader) VkResetEvent(device VkDevice, event VkEvent) (VkResult, error) {
 	if l.device == nil {
 		return VKErrorUnknown, errors.New("attempted device loader function on a non-device loader")
 	}
@@ -561,7 +561,7 @@ func (l *vulkanLoader) VkResetEvent(device VkDevice, event VkEvent) (VkResult, e
 	return res, res.ToError()
 }
 
-func (l *vulkanLoader) VkCreateQueryPool(device VkDevice, pCreateInfo *VkQueryPoolCreateInfo, pAllocator *VkAllocationCallbacks, pQueryPool *VkQueryPool) (VkResult, error) {
+func (l *VulkanLoader) VkCreateQueryPool(device VkDevice, pCreateInfo *VkQueryPoolCreateInfo, pAllocator *VkAllocationCallbacks, pQueryPool *VkQueryPool) (VkResult, error) {
 	if l.device == nil {
 		return VKErrorUnknown, errors.New("attempted device loader function on a non-device loader")
 	}
@@ -574,7 +574,7 @@ func (l *vulkanLoader) VkCreateQueryPool(device VkDevice, pCreateInfo *VkQueryPo
 	return res, res.ToError()
 }
 
-func (l *vulkanLoader) VkDestroyQueryPool(device VkDevice, queryPool VkQueryPool, pAllocator *VkAllocationCallbacks) error {
+func (l *VulkanLoader) VkDestroyQueryPool(device VkDevice, queryPool VkQueryPool, pAllocator *VkAllocationCallbacks) error {
 	if l.device == nil {
 		return errors.New("attempted device loader function on a non-device loader")
 	}
@@ -587,7 +587,7 @@ func (l *vulkanLoader) VkDestroyQueryPool(device VkDevice, queryPool VkQueryPool
 	return nil
 }
 
-func (l *vulkanLoader) VkGetQueryPoolResults(device VkDevice, queryPool VkQueryPool, firstQuery Uint32, queryCount Uint32, dataSize Size, pData unsafe.Pointer, stride VkDeviceSize, flags VkQueryResultFlags) (VkResult, error) {
+func (l *VulkanLoader) VkGetQueryPoolResults(device VkDevice, queryPool VkQueryPool, firstQuery Uint32, queryCount Uint32, dataSize Size, pData unsafe.Pointer, stride VkDeviceSize, flags VkQueryResultFlags) (VkResult, error) {
 	if l.device == nil {
 		return VKErrorUnknown, errors.New("attempted device loader function on a non-device loader")
 	}
@@ -604,7 +604,7 @@ func (l *vulkanLoader) VkGetQueryPoolResults(device VkDevice, queryPool VkQueryP
 	return res, res.ToError()
 }
 
-func (l *vulkanLoader) VkCreateBuffer(device VkDevice, pCreateInfo *VkBufferCreateInfo, pAllocator *VkAllocationCallbacks, pBuffer *VkBuffer) (VkResult, error) {
+func (l *VulkanLoader) VkCreateBuffer(device VkDevice, pCreateInfo *VkBufferCreateInfo, pAllocator *VkAllocationCallbacks, pBuffer *VkBuffer) (VkResult, error) {
 	if l.device == nil {
 		return VKErrorUnknown, errors.New("attempted device loader function on a non-device loader")
 	}
@@ -617,7 +617,7 @@ func (l *vulkanLoader) VkCreateBuffer(device VkDevice, pCreateInfo *VkBufferCrea
 	return res, res.ToError()
 }
 
-func (l *vulkanLoader) VkDestroyBuffer(device VkDevice, buffer VkBuffer, pAllocator *VkAllocationCallbacks) error {
+func (l *VulkanLoader) VkDestroyBuffer(device VkDevice, buffer VkBuffer, pAllocator *VkAllocationCallbacks) error {
 	if l.device == nil {
 		return errors.New("attempted device loader function on a non-device loader")
 	}
@@ -630,7 +630,7 @@ func (l *vulkanLoader) VkDestroyBuffer(device VkDevice, buffer VkBuffer, pAlloca
 	return nil
 }
 
-func (l *vulkanLoader) VkCreateBufferView(device VkDevice, pCreateInfo *VkBufferViewCreateInfo, pAllocator *VkAllocationCallbacks, pView *VkBufferView) (VkResult, error) {
+func (l *VulkanLoader) VkCreateBufferView(device VkDevice, pCreateInfo *VkBufferViewCreateInfo, pAllocator *VkAllocationCallbacks, pView *VkBufferView) (VkResult, error) {
 	if l.device == nil {
 		return VKErrorUnknown, errors.New("attempted device loader function on a non-device loader")
 	}
@@ -643,7 +643,7 @@ func (l *vulkanLoader) VkCreateBufferView(device VkDevice, pCreateInfo *VkBuffer
 	return res, res.ToError()
 }
 
-func (l *vulkanLoader) VkDestroyBufferView(device VkDevice, bufferView VkBufferView, pAllocator *VkAllocationCallbacks) error {
+func (l *VulkanLoader) VkDestroyBufferView(device VkDevice, bufferView VkBufferView, pAllocator *VkAllocationCallbacks) error {
 	if l.device == nil {
 		return errors.New("attempted device loader function on a non-device loader")
 	}
@@ -656,7 +656,7 @@ func (l *vulkanLoader) VkDestroyBufferView(device VkDevice, bufferView VkBufferV
 	return nil
 }
 
-func (l *vulkanLoader) VkCreateImage(device VkDevice, pCreateInfo *VkImageCreateInfo, pAllocator *VkAllocationCallbacks, pImage *VkImage) (VkResult, error) {
+func (l *VulkanLoader) VkCreateImage(device VkDevice, pCreateInfo *VkImageCreateInfo, pAllocator *VkAllocationCallbacks, pImage *VkImage) (VkResult, error) {
 	if l.device == nil {
 		return VKErrorUnknown, errors.New("attempted device loader function on a non-device loader")
 	}
@@ -669,7 +669,7 @@ func (l *vulkanLoader) VkCreateImage(device VkDevice, pCreateInfo *VkImageCreate
 	return res, res.ToError()
 }
 
-func (l *vulkanLoader) VkDestroyImage(device VkDevice, image VkImage, pAllocator *VkAllocationCallbacks) error {
+func (l *VulkanLoader) VkDestroyImage(device VkDevice, image VkImage, pAllocator *VkAllocationCallbacks) error {
 	if l.device == nil {
 		return errors.New("attempted device loader function on a non-device loader")
 	}
@@ -682,7 +682,7 @@ func (l *vulkanLoader) VkDestroyImage(device VkDevice, image VkImage, pAllocator
 	return nil
 }
 
-func (l *vulkanLoader) VkGetImageSubresourceLayout(device VkDevice, image VkImage, pSubresource *VkImageSubresource, pLayout *VkSubresourceLayout) error {
+func (l *VulkanLoader) VkGetImageSubresourceLayout(device VkDevice, image VkImage, pSubresource *VkImageSubresource, pLayout *VkSubresourceLayout) error {
 	if l.device == nil {
 		return errors.New("attempted device loader function on a non-device loader")
 	}
@@ -696,7 +696,7 @@ func (l *vulkanLoader) VkGetImageSubresourceLayout(device VkDevice, image VkImag
 	return nil
 }
 
-func (l *vulkanLoader) VkCreateImageView(device VkDevice, pCreateInfo *VkImageViewCreateInfo, pAllocator *VkAllocationCallbacks, pView *VkImageView) (VkResult, error) {
+func (l *VulkanLoader) VkCreateImageView(device VkDevice, pCreateInfo *VkImageViewCreateInfo, pAllocator *VkAllocationCallbacks, pView *VkImageView) (VkResult, error) {
 	if l.device == nil {
 		return VKErrorUnknown, errors.New("attempted device loader function on a non-device loader")
 	}
@@ -709,7 +709,7 @@ func (l *vulkanLoader) VkCreateImageView(device VkDevice, pCreateInfo *VkImageVi
 	return res, res.ToError()
 }
 
-func (l *vulkanLoader) VkDestroyImageView(device VkDevice, imageView VkImageView, pAllocator *VkAllocationCallbacks) error {
+func (l *VulkanLoader) VkDestroyImageView(device VkDevice, imageView VkImageView, pAllocator *VkAllocationCallbacks) error {
 	if l.device == nil {
 		return errors.New("attempted device loader function on a non-device loader")
 	}
@@ -722,7 +722,7 @@ func (l *vulkanLoader) VkDestroyImageView(device VkDevice, imageView VkImageView
 	return nil
 }
 
-func (l *vulkanLoader) VkCreateShaderModule(device VkDevice, pCreateInfo *VkShaderModuleCreateInfo, pAllocator *VkAllocationCallbacks, pShaderModule *VkShaderModule) (VkResult, error) {
+func (l *VulkanLoader) VkCreateShaderModule(device VkDevice, pCreateInfo *VkShaderModuleCreateInfo, pAllocator *VkAllocationCallbacks, pShaderModule *VkShaderModule) (VkResult, error) {
 	if l.device == nil {
 		return VKErrorUnknown, errors.New("attempted device loader function on a non-device loader")
 	}
@@ -735,7 +735,7 @@ func (l *vulkanLoader) VkCreateShaderModule(device VkDevice, pCreateInfo *VkShad
 	return res, res.ToError()
 }
 
-func (l *vulkanLoader) VkDestroyShaderModule(device VkDevice, shaderModule VkShaderModule, pAllocator *VkAllocationCallbacks) error {
+func (l *VulkanLoader) VkDestroyShaderModule(device VkDevice, shaderModule VkShaderModule, pAllocator *VkAllocationCallbacks) error {
 	if l.device == nil {
 		return errors.New("attempted device loader function on a non-device loader")
 	}
@@ -748,7 +748,7 @@ func (l *vulkanLoader) VkDestroyShaderModule(device VkDevice, shaderModule VkSha
 	return nil
 }
 
-func (l *vulkanLoader) VkCreatePipelineCache(device VkDevice, pCreateInfo *VkPipelineCacheCreateInfo, pAllocator *VkAllocationCallbacks, pPipelineCache *VkPipelineCache) (VkResult, error) {
+func (l *VulkanLoader) VkCreatePipelineCache(device VkDevice, pCreateInfo *VkPipelineCacheCreateInfo, pAllocator *VkAllocationCallbacks, pPipelineCache *VkPipelineCache) (VkResult, error) {
 	if l.device == nil {
 		return VKErrorUnknown, errors.New("attempted device loader function on a non-device loader")
 	}
@@ -761,7 +761,7 @@ func (l *vulkanLoader) VkCreatePipelineCache(device VkDevice, pCreateInfo *VkPip
 	return res, res.ToError()
 }
 
-func (l *vulkanLoader) VkDestroyPipelineCache(device VkDevice, pipelineCache VkPipelineCache, pAllocator *VkAllocationCallbacks) error {
+func (l *VulkanLoader) VkDestroyPipelineCache(device VkDevice, pipelineCache VkPipelineCache, pAllocator *VkAllocationCallbacks) error {
 	if l.device == nil {
 		return errors.New("attempted device loader function on a non-device loader")
 	}
@@ -774,7 +774,7 @@ func (l *vulkanLoader) VkDestroyPipelineCache(device VkDevice, pipelineCache VkP
 	return nil
 }
 
-func (l *vulkanLoader) VkGetPipelineCacheData(device VkDevice, pipelineCache VkPipelineCache, pDataSize *Size, pData unsafe.Pointer) (VkResult, error) {
+func (l *VulkanLoader) VkGetPipelineCacheData(device VkDevice, pipelineCache VkPipelineCache, pDataSize *Size, pData unsafe.Pointer) (VkResult, error) {
 	if l.device == nil {
 		return VKErrorUnknown, errors.New("attempted device loader function on a non-device loader")
 	}
@@ -787,7 +787,7 @@ func (l *vulkanLoader) VkGetPipelineCacheData(device VkDevice, pipelineCache VkP
 	return res, res.ToError()
 }
 
-func (l *vulkanLoader) VkMergePipelineCaches(device VkDevice, dstCache VkPipelineCache, srcCacheCount Uint32, pSrcCaches *VkPipelineCache) (VkResult, error) {
+func (l *VulkanLoader) VkMergePipelineCaches(device VkDevice, dstCache VkPipelineCache, srcCacheCount Uint32, pSrcCaches *VkPipelineCache) (VkResult, error) {
 	if l.device == nil {
 		return VKErrorUnknown, errors.New("attempted device loader function on a non-device loader")
 	}
@@ -800,7 +800,7 @@ func (l *vulkanLoader) VkMergePipelineCaches(device VkDevice, dstCache VkPipelin
 	return res, res.ToError()
 }
 
-func (l *vulkanLoader) VkCreateGraphicsPipelines(device VkDevice, pipelineCache VkPipelineCache, createInfoCount Uint32, pCreateInfos *VkGraphicsPipelineCreateInfo, pAllocator *VkAllocationCallbacks, pPipelines *VkPipeline) (VkResult, error) {
+func (l *VulkanLoader) VkCreateGraphicsPipelines(device VkDevice, pipelineCache VkPipelineCache, createInfoCount Uint32, pCreateInfos *VkGraphicsPipelineCreateInfo, pAllocator *VkAllocationCallbacks, pPipelines *VkPipeline) (VkResult, error) {
 	if l.device == nil {
 		return VKErrorUnknown, errors.New("attempted device loader function on a non-device loader")
 	}
@@ -815,7 +815,7 @@ func (l *vulkanLoader) VkCreateGraphicsPipelines(device VkDevice, pipelineCache 
 	return res, res.ToError()
 }
 
-func (l *vulkanLoader) VkCreateComputePipelines(device VkDevice, pipelineCache VkPipelineCache, createInfoCount Uint32, pCreateInfos *VkComputePipelineCreateInfo, pAllocator *VkAllocationCallbacks, pPipelines *VkPipeline) (VkResult, error) {
+func (l *VulkanLoader) VkCreateComputePipelines(device VkDevice, pipelineCache VkPipelineCache, createInfoCount Uint32, pCreateInfos *VkComputePipelineCreateInfo, pAllocator *VkAllocationCallbacks, pPipelines *VkPipeline) (VkResult, error) {
 	if l.device == nil {
 		return VKErrorUnknown, errors.New("attempted device loader function on a non-device loader")
 	}
@@ -830,7 +830,7 @@ func (l *vulkanLoader) VkCreateComputePipelines(device VkDevice, pipelineCache V
 	return res, res.ToError()
 }
 
-func (l *vulkanLoader) VkDestroyPipeline(device VkDevice, pipeline VkPipeline, pAllocator *VkAllocationCallbacks) error {
+func (l *VulkanLoader) VkDestroyPipeline(device VkDevice, pipeline VkPipeline, pAllocator *VkAllocationCallbacks) error {
 	if l.device == nil {
 		return errors.New("attempted device loader function on a non-device loader")
 	}
@@ -843,7 +843,7 @@ func (l *vulkanLoader) VkDestroyPipeline(device VkDevice, pipeline VkPipeline, p
 	return nil
 }
 
-func (l *vulkanLoader) VkCreatePipelineLayout(device VkDevice, pCreateInfo *VkPipelineLayoutCreateInfo, pAllocator *VkAllocationCallbacks, pPipelineLayout *VkPipelineLayout) (VkResult, error) {
+func (l *VulkanLoader) VkCreatePipelineLayout(device VkDevice, pCreateInfo *VkPipelineLayoutCreateInfo, pAllocator *VkAllocationCallbacks, pPipelineLayout *VkPipelineLayout) (VkResult, error) {
 	if l.device == nil {
 		return VKErrorUnknown, errors.New("attempted device loader function on a non-device loader")
 	}
@@ -856,7 +856,7 @@ func (l *vulkanLoader) VkCreatePipelineLayout(device VkDevice, pCreateInfo *VkPi
 	return res, res.ToError()
 }
 
-func (l *vulkanLoader) VkDestroyPipelineLayout(device VkDevice, pipelineLayout VkPipelineLayout, pAllocator *VkAllocationCallbacks) error {
+func (l *VulkanLoader) VkDestroyPipelineLayout(device VkDevice, pipelineLayout VkPipelineLayout, pAllocator *VkAllocationCallbacks) error {
 	if l.device == nil {
 		return errors.New("attempted device loader function on a non-device loader")
 	}
@@ -869,7 +869,7 @@ func (l *vulkanLoader) VkDestroyPipelineLayout(device VkDevice, pipelineLayout V
 	return nil
 }
 
-func (l *vulkanLoader) VkCreateSampler(device VkDevice, pCreateInfo *VkSamplerCreateInfo, pAllocator *VkAllocationCallbacks, pSampler *VkSampler) (VkResult, error) {
+func (l *VulkanLoader) VkCreateSampler(device VkDevice, pCreateInfo *VkSamplerCreateInfo, pAllocator *VkAllocationCallbacks, pSampler *VkSampler) (VkResult, error) {
 	if l.device == nil {
 		return VKErrorUnknown, errors.New("attempted device loader function on a non-device loader")
 	}
@@ -882,7 +882,7 @@ func (l *vulkanLoader) VkCreateSampler(device VkDevice, pCreateInfo *VkSamplerCr
 	return res, res.ToError()
 }
 
-func (l *vulkanLoader) VkDestroySampler(device VkDevice, sampler VkSampler, pAllocator *VkAllocationCallbacks) error {
+func (l *VulkanLoader) VkDestroySampler(device VkDevice, sampler VkSampler, pAllocator *VkAllocationCallbacks) error {
 	if l.device == nil {
 		return errors.New("attempted device loader function on a non-device loader")
 	}
@@ -895,7 +895,7 @@ func (l *vulkanLoader) VkDestroySampler(device VkDevice, sampler VkSampler, pAll
 	return nil
 }
 
-func (l *vulkanLoader) VkCreateDescriptorSetLayout(device VkDevice, pCreateInfo *VkDescriptorSetLayoutCreateInfo, pAllocator *VkAllocationCallbacks, pSetLayout *VkDescriptorSetLayout) (VkResult, error) {
+func (l *VulkanLoader) VkCreateDescriptorSetLayout(device VkDevice, pCreateInfo *VkDescriptorSetLayoutCreateInfo, pAllocator *VkAllocationCallbacks, pSetLayout *VkDescriptorSetLayout) (VkResult, error) {
 	if l.device == nil {
 		return VKErrorUnknown, errors.New("attempted device loader function on a non-device loader")
 	}
@@ -908,7 +908,7 @@ func (l *vulkanLoader) VkCreateDescriptorSetLayout(device VkDevice, pCreateInfo 
 	return res, res.ToError()
 }
 
-func (l *vulkanLoader) VkDestroyDescriptorSetLayout(device VkDevice, descriptorSetLayout VkDescriptorSetLayout, pAllocator *VkAllocationCallbacks) error {
+func (l *VulkanLoader) VkDestroyDescriptorSetLayout(device VkDevice, descriptorSetLayout VkDescriptorSetLayout, pAllocator *VkAllocationCallbacks) error {
 	if l.device == nil {
 		return errors.New("attempted device loader function on a non-device loader")
 	}
@@ -921,7 +921,7 @@ func (l *vulkanLoader) VkDestroyDescriptorSetLayout(device VkDevice, descriptorS
 	return nil
 }
 
-func (l *vulkanLoader) VkCreateDescriptorPool(device VkDevice, pCreateInfo *VkDescriptorPoolCreateInfo, pAllocator *VkAllocationCallbacks, pDescriptorPool *VkDescriptorPool) (VkResult, error) {
+func (l *VulkanLoader) VkCreateDescriptorPool(device VkDevice, pCreateInfo *VkDescriptorPoolCreateInfo, pAllocator *VkAllocationCallbacks, pDescriptorPool *VkDescriptorPool) (VkResult, error) {
 	if l.device == nil {
 		return VKErrorUnknown, errors.New("attempted device loader function on a non-device loader")
 	}
@@ -934,7 +934,7 @@ func (l *vulkanLoader) VkCreateDescriptorPool(device VkDevice, pCreateInfo *VkDe
 	return res, res.ToError()
 }
 
-func (l *vulkanLoader) VkDestroyDescriptorPool(device VkDevice, descriptorPool VkDescriptorPool, pAllocator *VkAllocationCallbacks) error {
+func (l *VulkanLoader) VkDestroyDescriptorPool(device VkDevice, descriptorPool VkDescriptorPool, pAllocator *VkAllocationCallbacks) error {
 	if l.device == nil {
 		return errors.New("attempted device loader function on a non-device loader")
 	}
@@ -947,7 +947,7 @@ func (l *vulkanLoader) VkDestroyDescriptorPool(device VkDevice, descriptorPool V
 	return nil
 }
 
-func (l *vulkanLoader) VkResetDescriptorPool(device VkDevice, descriptorPool VkDescriptorPool, flags VkDescriptorPoolResetFlags) (VkResult, error) {
+func (l *VulkanLoader) VkResetDescriptorPool(device VkDevice, descriptorPool VkDescriptorPool, flags VkDescriptorPoolResetFlags) (VkResult, error) {
 	if l.device == nil {
 		return VKErrorUnknown, errors.New("attempted device loader function on a non-device loader")
 	}
@@ -959,7 +959,7 @@ func (l *vulkanLoader) VkResetDescriptorPool(device VkDevice, descriptorPool VkD
 	return res, res.ToError()
 }
 
-func (l *vulkanLoader) VkAllocateDescriptorSets(device VkDevice, pAllocateInfo *VkDescriptorSetAllocateInfo, pDescriptorSets *VkDescriptorSet) (VkResult, error) {
+func (l *VulkanLoader) VkAllocateDescriptorSets(device VkDevice, pAllocateInfo *VkDescriptorSetAllocateInfo, pDescriptorSets *VkDescriptorSet) (VkResult, error) {
 	if l.device == nil {
 		return VKErrorUnknown, errors.New("attempted device loader function on a non-device loader")
 	}
@@ -971,7 +971,7 @@ func (l *vulkanLoader) VkAllocateDescriptorSets(device VkDevice, pAllocateInfo *
 	return res, res.ToError()
 }
 
-func (l *vulkanLoader) VkFreeDescriptorSets(device VkDevice, descriptorPool VkDescriptorPool, descriptorSetCount Uint32, pDescriptorSets *VkDescriptorSet) (VkResult, error) {
+func (l *VulkanLoader) VkFreeDescriptorSets(device VkDevice, descriptorPool VkDescriptorPool, descriptorSetCount Uint32, pDescriptorSets *VkDescriptorSet) (VkResult, error) {
 	if l.device == nil {
 		return VKErrorUnknown, errors.New("attempted device loader function on a non-device loader")
 	}
@@ -984,7 +984,7 @@ func (l *vulkanLoader) VkFreeDescriptorSets(device VkDevice, descriptorPool VkDe
 	return res, res.ToError()
 }
 
-func (l *vulkanLoader) VkUpdateDescriptorSets(device VkDevice, descriptorWriteCount Uint32, pDescriptorWrites *VkWriteDescriptorSet, descriptorCopyCount Uint32, pDescriptorCopies *VkCopyDescriptorSet) error {
+func (l *VulkanLoader) VkUpdateDescriptorSets(device VkDevice, descriptorWriteCount Uint32, pDescriptorWrites *VkWriteDescriptorSet, descriptorCopyCount Uint32, pDescriptorCopies *VkCopyDescriptorSet) error {
 	if l.device == nil {
 		return errors.New("attempted device loader function on a non-device loader")
 	}
@@ -999,7 +999,7 @@ func (l *vulkanLoader) VkUpdateDescriptorSets(device VkDevice, descriptorWriteCo
 	return nil
 }
 
-func (l *vulkanLoader) VkCreateFramebuffer(device VkDevice, pCreateInfo *VkFramebufferCreateInfo, pAllocator *VkAllocationCallbacks, pFramebuffer *VkFramebuffer) (VkResult, error) {
+func (l *VulkanLoader) VkCreateFramebuffer(device VkDevice, pCreateInfo *VkFramebufferCreateInfo, pAllocator *VkAllocationCallbacks, pFramebuffer *VkFramebuffer) (VkResult, error) {
 	if l.device == nil {
 		return VKErrorUnknown, errors.New("attempted device loader function on a non-device loader")
 	}
@@ -1012,7 +1012,7 @@ func (l *vulkanLoader) VkCreateFramebuffer(device VkDevice, pCreateInfo *VkFrame
 	return res, res.ToError()
 }
 
-func (l *vulkanLoader) VkDestroyFramebuffer(device VkDevice, framebuffer VkFramebuffer, pAllocator *VkAllocationCallbacks) error {
+func (l *VulkanLoader) VkDestroyFramebuffer(device VkDevice, framebuffer VkFramebuffer, pAllocator *VkAllocationCallbacks) error {
 	if l.device == nil {
 		return errors.New("attempted device loader function on a non-device loader")
 	}
@@ -1025,7 +1025,7 @@ func (l *vulkanLoader) VkDestroyFramebuffer(device VkDevice, framebuffer VkFrame
 	return nil
 }
 
-func (l *vulkanLoader) VkCreateRenderPass(device VkDevice, pCreateInfo *VkRenderPassCreateInfo, pAllocator *VkAllocationCallbacks, pRenderPass *VkRenderPass) (VkResult, error) {
+func (l *VulkanLoader) VkCreateRenderPass(device VkDevice, pCreateInfo *VkRenderPassCreateInfo, pAllocator *VkAllocationCallbacks, pRenderPass *VkRenderPass) (VkResult, error) {
 	if l.device == nil {
 		return VKErrorUnknown, errors.New("attempted device loader function on a non-device loader")
 	}
@@ -1038,7 +1038,7 @@ func (l *vulkanLoader) VkCreateRenderPass(device VkDevice, pCreateInfo *VkRender
 	return res, res.ToError()
 }
 
-func (l *vulkanLoader) VkDestroyRenderPass(device VkDevice, renderPass VkRenderPass, pAllocator *VkAllocationCallbacks) error {
+func (l *VulkanLoader) VkDestroyRenderPass(device VkDevice, renderPass VkRenderPass, pAllocator *VkAllocationCallbacks) error {
 	if l.device == nil {
 		return errors.New("attempted device loader function on a non-device loader")
 	}
@@ -1051,7 +1051,7 @@ func (l *vulkanLoader) VkDestroyRenderPass(device VkDevice, renderPass VkRenderP
 	return nil
 }
 
-func (l *vulkanLoader) VkGetRenderAreaGranularity(device VkDevice, renderPass VkRenderPass, pGranularity *VkExtent2D) error {
+func (l *VulkanLoader) VkGetRenderAreaGranularity(device VkDevice, renderPass VkRenderPass, pGranularity *VkExtent2D) error {
 	if l.device == nil {
 		return errors.New("attempted device loader function on a non-device loader")
 	}
@@ -1064,7 +1064,7 @@ func (l *vulkanLoader) VkGetRenderAreaGranularity(device VkDevice, renderPass Vk
 	return nil
 }
 
-func (l *vulkanLoader) VkCreateCommandPool(device VkDevice, pCreateInfo *VkCommandPoolCreateInfo, pAllocator *VkAllocationCallbacks, pCommandPool *VkCommandPool) (VkResult, error) {
+func (l *VulkanLoader) VkCreateCommandPool(device VkDevice, pCreateInfo *VkCommandPoolCreateInfo, pAllocator *VkAllocationCallbacks, pCommandPool *VkCommandPool) (VkResult, error) {
 	if l.device == nil {
 		return VKErrorUnknown, errors.New("attempted device loader function on a non-device loader")
 	}
@@ -1077,7 +1077,7 @@ func (l *vulkanLoader) VkCreateCommandPool(device VkDevice, pCreateInfo *VkComma
 	return res, res.ToError()
 }
 
-func (l *vulkanLoader) VkDestroyCommandPool(device VkDevice, commandPool VkCommandPool, pAllocator *VkAllocationCallbacks) error {
+func (l *VulkanLoader) VkDestroyCommandPool(device VkDevice, commandPool VkCommandPool, pAllocator *VkAllocationCallbacks) error {
 	if l.device == nil {
 		return errors.New("attempted device loader function on a non-device loader")
 	}
@@ -1090,7 +1090,7 @@ func (l *vulkanLoader) VkDestroyCommandPool(device VkDevice, commandPool VkComma
 	return nil
 }
 
-func (l *vulkanLoader) VkResetCommandPool(device VkDevice, commandPool VkCommandPool, flags VkCommandPoolResetFlags) (VkResult, error) {
+func (l *VulkanLoader) VkResetCommandPool(device VkDevice, commandPool VkCommandPool, flags VkCommandPoolResetFlags) (VkResult, error) {
 	if l.device == nil {
 		return VKErrorUnknown, errors.New("attempted device loader function on a non-device loader")
 	}
@@ -1102,7 +1102,7 @@ func (l *vulkanLoader) VkResetCommandPool(device VkDevice, commandPool VkCommand
 	return res, res.ToError()
 }
 
-func (l *vulkanLoader) VkAllocateCommandBuffers(device VkDevice, pAllocateInfo *VkCommandBufferAllocateInfo, pCommandBuffers *VkCommandBuffer) (VkResult, error) {
+func (l *VulkanLoader) VkAllocateCommandBuffers(device VkDevice, pAllocateInfo *VkCommandBufferAllocateInfo, pCommandBuffers *VkCommandBuffer) (VkResult, error) {
 	if l.device == nil {
 		return VKErrorUnknown, errors.New("attempted device loader function on a non-device loader")
 	}
@@ -1114,7 +1114,7 @@ func (l *vulkanLoader) VkAllocateCommandBuffers(device VkDevice, pAllocateInfo *
 	return res, res.ToError()
 }
 
-func (l *vulkanLoader) VkFreeCommandBuffers(device VkDevice, commandPool VkCommandPool, commandBufferCount Uint32, pCommandBuffers *VkCommandBuffer) error {
+func (l *VulkanLoader) VkFreeCommandBuffers(device VkDevice, commandPool VkCommandPool, commandBufferCount Uint32, pCommandBuffers *VkCommandBuffer) error {
 	if l.device == nil {
 		return errors.New("attempted device loader function on a non-device loader")
 	}
@@ -1128,7 +1128,7 @@ func (l *vulkanLoader) VkFreeCommandBuffers(device VkDevice, commandPool VkComma
 	return nil
 }
 
-func (l *vulkanLoader) VkBeginCommandBuffer(commandBuffer VkCommandBuffer, pBeginInfo *VkCommandBufferBeginInfo) (VkResult, error) {
+func (l *VulkanLoader) VkBeginCommandBuffer(commandBuffer VkCommandBuffer, pBeginInfo *VkCommandBufferBeginInfo) (VkResult, error) {
 	if l.device == nil {
 		return VKErrorUnknown, errors.New("attempted device loader function on a non-device loader")
 	}
@@ -1139,7 +1139,7 @@ func (l *vulkanLoader) VkBeginCommandBuffer(commandBuffer VkCommandBuffer, pBegi
 	return res, res.ToError()
 }
 
-func (l *vulkanLoader) VkEndCommandBuffer(commandBuffer VkCommandBuffer) (VkResult, error) {
+func (l *VulkanLoader) VkEndCommandBuffer(commandBuffer VkCommandBuffer) (VkResult, error) {
 	if l.device == nil {
 		return VKErrorUnknown, errors.New("attempted device loader function on a non-device loader")
 	}
@@ -1149,7 +1149,7 @@ func (l *vulkanLoader) VkEndCommandBuffer(commandBuffer VkCommandBuffer) (VkResu
 	return res, res.ToError()
 }
 
-func (l *vulkanLoader) VkResetCommandBuffer(commandBuffer VkCommandBuffer, flags VkCommandBufferResetFlags) (VkResult, error) {
+func (l *VulkanLoader) VkResetCommandBuffer(commandBuffer VkCommandBuffer, flags VkCommandBufferResetFlags) (VkResult, error) {
 	if l.device == nil {
 		return VKErrorUnknown, errors.New("attempted device loader function on a non-device loader")
 	}
@@ -1160,7 +1160,7 @@ func (l *vulkanLoader) VkResetCommandBuffer(commandBuffer VkCommandBuffer, flags
 	return res, res.ToError()
 }
 
-func (l *vulkanLoader) VkCmdBindPipeline(commandBuffer VkCommandBuffer, pipelineBindPoint VkPipelineBindPoint, pipeline VkPipeline) error {
+func (l *VulkanLoader) VkCmdBindPipeline(commandBuffer VkCommandBuffer, pipelineBindPoint VkPipelineBindPoint, pipeline VkPipeline) error {
 	if l.device == nil {
 		return errors.New("attempted device loader function on a non-device loader")
 	}
@@ -1173,7 +1173,7 @@ func (l *vulkanLoader) VkCmdBindPipeline(commandBuffer VkCommandBuffer, pipeline
 	return nil
 }
 
-func (l *vulkanLoader) VkCmdSetViewport(commandBuffer VkCommandBuffer, firstViewport Uint32, viewportCount Uint32, pViewports *VkViewport) error {
+func (l *VulkanLoader) VkCmdSetViewport(commandBuffer VkCommandBuffer, firstViewport Uint32, viewportCount Uint32, pViewports *VkViewport) error {
 	if l.device == nil {
 		return errors.New("attempted device loader function on a non-device loader")
 	}
@@ -1187,7 +1187,7 @@ func (l *vulkanLoader) VkCmdSetViewport(commandBuffer VkCommandBuffer, firstView
 	return nil
 }
 
-func (l *vulkanLoader) VkCmdSetScissor(commandBuffer VkCommandBuffer, firstScissor Uint32, scissorCount Uint32, pScissors *VkRect2D) error {
+func (l *VulkanLoader) VkCmdSetScissor(commandBuffer VkCommandBuffer, firstScissor Uint32, scissorCount Uint32, pScissors *VkRect2D) error {
 	if l.device == nil {
 		return errors.New("attempted device loader function on a non-device loader")
 	}
@@ -1201,7 +1201,7 @@ func (l *vulkanLoader) VkCmdSetScissor(commandBuffer VkCommandBuffer, firstSciss
 	return nil
 }
 
-func (l *vulkanLoader) VkCmdSetLineWidth(commandBuffer VkCommandBuffer, lineWidth Float) error {
+func (l *VulkanLoader) VkCmdSetLineWidth(commandBuffer VkCommandBuffer, lineWidth Float) error {
 	if l.device == nil {
 		return errors.New("attempted device loader function on a non-device loader")
 	}
@@ -1212,7 +1212,7 @@ func (l *vulkanLoader) VkCmdSetLineWidth(commandBuffer VkCommandBuffer, lineWidt
 	return nil
 }
 
-func (l *vulkanLoader) VkCmdSetDepthBias(commandBuffer VkCommandBuffer, depthBiasConstantFactor Float, depthBiasClamp Float, depthBiasSlopeFactor Float) error {
+func (l *VulkanLoader) VkCmdSetDepthBias(commandBuffer VkCommandBuffer, depthBiasConstantFactor Float, depthBiasClamp Float, depthBiasSlopeFactor Float) error {
 	if l.device == nil {
 		return errors.New("attempted device loader function on a non-device loader")
 	}
@@ -1226,7 +1226,7 @@ func (l *vulkanLoader) VkCmdSetDepthBias(commandBuffer VkCommandBuffer, depthBia
 	return nil
 }
 
-func (l *vulkanLoader) VkCmdSetBlendConstants(commandBuffer VkCommandBuffer, blendConstants *Float) error {
+func (l *VulkanLoader) VkCmdSetBlendConstants(commandBuffer VkCommandBuffer, blendConstants *Float) error {
 	if l.device == nil {
 		return errors.New("attempted device loader function on a non-device loader")
 	}
@@ -1239,7 +1239,7 @@ func (l *vulkanLoader) VkCmdSetBlendConstants(commandBuffer VkCommandBuffer, ble
 	return nil
 }
 
-func (l *vulkanLoader) VkCmdSetDepthBounds(commandBuffer VkCommandBuffer, minDepthBounds Float, maxDepthBounds Float) error {
+func (l *VulkanLoader) VkCmdSetDepthBounds(commandBuffer VkCommandBuffer, minDepthBounds Float, maxDepthBounds Float) error {
 	if l.device == nil {
 		return errors.New("attempted device loader function on a non-device loader")
 	}
@@ -1252,7 +1252,7 @@ func (l *vulkanLoader) VkCmdSetDepthBounds(commandBuffer VkCommandBuffer, minDep
 	return nil
 }
 
-func (l *vulkanLoader) VkCmdSetStencilCompareMask(commandBuffer VkCommandBuffer, faceMask VkStencilFaceFlags, compareMask Uint32) error {
+func (l *VulkanLoader) VkCmdSetStencilCompareMask(commandBuffer VkCommandBuffer, faceMask VkStencilFaceFlags, compareMask Uint32) error {
 	if l.device == nil {
 		return errors.New("attempted device loader function on a non-device loader")
 	}
@@ -1265,7 +1265,7 @@ func (l *vulkanLoader) VkCmdSetStencilCompareMask(commandBuffer VkCommandBuffer,
 	return nil
 }
 
-func (l *vulkanLoader) VkCmdSetStencilWriteMask(commandBuffer VkCommandBuffer, faceMask VkStencilFaceFlags, writeMask Uint32) error {
+func (l *VulkanLoader) VkCmdSetStencilWriteMask(commandBuffer VkCommandBuffer, faceMask VkStencilFaceFlags, writeMask Uint32) error {
 	if l.device == nil {
 		return errors.New("attempted device loader function on a non-device loader")
 	}
@@ -1278,7 +1278,7 @@ func (l *vulkanLoader) VkCmdSetStencilWriteMask(commandBuffer VkCommandBuffer, f
 	return nil
 }
 
-func (l *vulkanLoader) VkCmdSetStencilReference(commandBuffer VkCommandBuffer, faceMask VkStencilFaceFlags, reference Uint32) error {
+func (l *VulkanLoader) VkCmdSetStencilReference(commandBuffer VkCommandBuffer, faceMask VkStencilFaceFlags, reference Uint32) error {
 	if l.device == nil {
 		return errors.New("attempted device loader function on a non-device loader")
 	}
@@ -1291,7 +1291,7 @@ func (l *vulkanLoader) VkCmdSetStencilReference(commandBuffer VkCommandBuffer, f
 	return nil
 }
 
-func (l *vulkanLoader) VkCmdBindDescriptorSets(commandBuffer VkCommandBuffer, pipelineBindPoint VkPipelineBindPoint, layout VkPipelineLayout, firstSet Uint32, descriptorSetCount Uint32, pDescriptorSets *VkDescriptorSet, dynamicOffsetCount Uint32, pDynamicOffsets *Uint32) error {
+func (l *VulkanLoader) VkCmdBindDescriptorSets(commandBuffer VkCommandBuffer, pipelineBindPoint VkPipelineBindPoint, layout VkPipelineLayout, firstSet Uint32, descriptorSetCount Uint32, pDescriptorSets *VkDescriptorSet, dynamicOffsetCount Uint32, pDynamicOffsets *Uint32) error {
 	if l.device == nil {
 		return errors.New("attempted device loader function on a non-device loader")
 	}
@@ -1309,7 +1309,7 @@ func (l *vulkanLoader) VkCmdBindDescriptorSets(commandBuffer VkCommandBuffer, pi
 	return nil
 }
 
-func (l *vulkanLoader) VkCmdBindIndexBuffer(commandBuffer VkCommandBuffer, buffer VkBuffer, offset VkDeviceSize, indexType VkIndexType) error {
+func (l *VulkanLoader) VkCmdBindIndexBuffer(commandBuffer VkCommandBuffer, buffer VkBuffer, offset VkDeviceSize, indexType VkIndexType) error {
 	if l.device == nil {
 		return errors.New("attempted device loader function on a non-device loader")
 	}
@@ -1323,7 +1323,7 @@ func (l *vulkanLoader) VkCmdBindIndexBuffer(commandBuffer VkCommandBuffer, buffe
 	return nil
 }
 
-func (l *vulkanLoader) VkCmdBindVertexBuffers(commandBuffer VkCommandBuffer, firstBinding Uint32, bindingCount Uint32, pBuffers *VkBuffer, pOffsets *VkDeviceSize) error {
+func (l *VulkanLoader) VkCmdBindVertexBuffers(commandBuffer VkCommandBuffer, firstBinding Uint32, bindingCount Uint32, pBuffers *VkBuffer, pOffsets *VkDeviceSize) error {
 	if l.device == nil {
 		return errors.New("attempted device loader function on a non-device loader")
 	}
@@ -1338,7 +1338,7 @@ func (l *vulkanLoader) VkCmdBindVertexBuffers(commandBuffer VkCommandBuffer, fir
 	return nil
 }
 
-func (l *vulkanLoader) VkCmdDraw(commandBuffer VkCommandBuffer, vertexCount Uint32, instanceCount Uint32, firstVertex Uint32, firstInstance Uint32) error {
+func (l *VulkanLoader) VkCmdDraw(commandBuffer VkCommandBuffer, vertexCount Uint32, instanceCount Uint32, firstVertex Uint32, firstInstance Uint32) error {
 	if l.device == nil {
 		return errors.New("attempted device loader function on a non-device loader")
 	}
@@ -1353,7 +1353,7 @@ func (l *vulkanLoader) VkCmdDraw(commandBuffer VkCommandBuffer, vertexCount Uint
 	return nil
 }
 
-func (l *vulkanLoader) VkCmdDrawIndexed(commandBuffer VkCommandBuffer, indexCount Uint32, instanceCount Uint32, firstIndex Uint32, vertexOffset Int32, firstInstance Uint32) error {
+func (l *VulkanLoader) VkCmdDrawIndexed(commandBuffer VkCommandBuffer, indexCount Uint32, instanceCount Uint32, firstIndex Uint32, vertexOffset Int32, firstInstance Uint32) error {
 	if l.device == nil {
 		return errors.New("attempted device loader function on a non-device loader")
 	}
@@ -1369,7 +1369,7 @@ func (l *vulkanLoader) VkCmdDrawIndexed(commandBuffer VkCommandBuffer, indexCoun
 	return nil
 }
 
-func (l *vulkanLoader) VkCmdDrawIndirect(commandBuffer VkCommandBuffer, buffer VkBuffer, offset VkDeviceSize, drawCount Uint32, stride Uint32) error {
+func (l *VulkanLoader) VkCmdDrawIndirect(commandBuffer VkCommandBuffer, buffer VkBuffer, offset VkDeviceSize, drawCount Uint32, stride Uint32) error {
 	if l.device == nil {
 		return errors.New("attempted device loader function on a non-device loader")
 	}
@@ -1384,7 +1384,7 @@ func (l *vulkanLoader) VkCmdDrawIndirect(commandBuffer VkCommandBuffer, buffer V
 	return nil
 }
 
-func (l *vulkanLoader) VkCmdDrawIndexedIndirect(commandBuffer VkCommandBuffer, buffer VkBuffer, offset VkDeviceSize, drawCount Uint32, stride Uint32) error {
+func (l *VulkanLoader) VkCmdDrawIndexedIndirect(commandBuffer VkCommandBuffer, buffer VkBuffer, offset VkDeviceSize, drawCount Uint32, stride Uint32) error {
 	if l.device == nil {
 		return errors.New("attempted device loader function on a non-device loader")
 	}
@@ -1399,7 +1399,7 @@ func (l *vulkanLoader) VkCmdDrawIndexedIndirect(commandBuffer VkCommandBuffer, b
 	return nil
 }
 
-func (l *vulkanLoader) VkCmdDispatch(commandBuffer VkCommandBuffer, groupCountX Uint32, groupCountY Uint32, groupCountZ Uint32) error {
+func (l *VulkanLoader) VkCmdDispatch(commandBuffer VkCommandBuffer, groupCountX Uint32, groupCountY Uint32, groupCountZ Uint32) error {
 	if l.device == nil {
 		return errors.New("attempted device loader function on a non-device loader")
 	}
@@ -1413,7 +1413,7 @@ func (l *vulkanLoader) VkCmdDispatch(commandBuffer VkCommandBuffer, groupCountX 
 	return nil
 }
 
-func (l *vulkanLoader) VkCmdDispatchIndirect(commandBuffer VkCommandBuffer, buffer VkBuffer, offset VkDeviceSize) error {
+func (l *VulkanLoader) VkCmdDispatchIndirect(commandBuffer VkCommandBuffer, buffer VkBuffer, offset VkDeviceSize) error {
 	if l.device == nil {
 		return errors.New("attempted device loader function on a non-device loader")
 	}
@@ -1426,7 +1426,7 @@ func (l *vulkanLoader) VkCmdDispatchIndirect(commandBuffer VkCommandBuffer, buff
 	return nil
 }
 
-func (l *vulkanLoader) VkCmdCopyBuffer(commandBuffer VkCommandBuffer, srcBuffer VkBuffer, dstBuffer VkBuffer, regionCount Uint32, pRegions *VkBufferCopy) error {
+func (l *VulkanLoader) VkCmdCopyBuffer(commandBuffer VkCommandBuffer, srcBuffer VkBuffer, dstBuffer VkBuffer, regionCount Uint32, pRegions *VkBufferCopy) error {
 	if l.device == nil {
 		return errors.New("attempted device loader function on a non-device loader")
 	}
@@ -1441,7 +1441,7 @@ func (l *vulkanLoader) VkCmdCopyBuffer(commandBuffer VkCommandBuffer, srcBuffer 
 	return nil
 }
 
-func (l *vulkanLoader) VkCmdCopyImage(commandBuffer VkCommandBuffer, srcImage VkImage, srcImageLayout VkImageLayout, dstImage VkImage, dstImageLayout VkImageLayout, regionCount Uint32, pRegions *VkImageCopy) error {
+func (l *VulkanLoader) VkCmdCopyImage(commandBuffer VkCommandBuffer, srcImage VkImage, srcImageLayout VkImageLayout, dstImage VkImage, dstImageLayout VkImageLayout, regionCount Uint32, pRegions *VkImageCopy) error {
 	if l.device == nil {
 		return errors.New("attempted device loader function on a non-device loader")
 	}
@@ -1458,7 +1458,7 @@ func (l *vulkanLoader) VkCmdCopyImage(commandBuffer VkCommandBuffer, srcImage Vk
 	return nil
 }
 
-func (l *vulkanLoader) VkCmdBlitImage(commandBuffer VkCommandBuffer, srcImage VkImage, srcImageLayout VkImageLayout, dstImage VkImage, dstImageLayout VkImageLayout, regionCount Uint32, pRegions *VkImageBlit, filter VkFilter) error {
+func (l *VulkanLoader) VkCmdBlitImage(commandBuffer VkCommandBuffer, srcImage VkImage, srcImageLayout VkImageLayout, dstImage VkImage, dstImageLayout VkImageLayout, regionCount Uint32, pRegions *VkImageBlit, filter VkFilter) error {
 	if l.device == nil {
 		return errors.New("attempted device loader function on a non-device loader")
 	}
@@ -1477,7 +1477,7 @@ func (l *vulkanLoader) VkCmdBlitImage(commandBuffer VkCommandBuffer, srcImage Vk
 	return nil
 }
 
-func (l *vulkanLoader) VkCmdCopyBufferToImage(commandBuffer VkCommandBuffer, srcBuffer VkBuffer, dstImage VkImage, dstImageLayout VkImageLayout, regionCount Uint32, pRegions *VkBufferImageCopy) error {
+func (l *VulkanLoader) VkCmdCopyBufferToImage(commandBuffer VkCommandBuffer, srcBuffer VkBuffer, dstImage VkImage, dstImageLayout VkImageLayout, regionCount Uint32, pRegions *VkBufferImageCopy) error {
 	if l.device == nil {
 		return errors.New("attempted device loader function on a non-device loader")
 	}
@@ -1493,7 +1493,7 @@ func (l *vulkanLoader) VkCmdCopyBufferToImage(commandBuffer VkCommandBuffer, src
 	return nil
 }
 
-func (l *vulkanLoader) VkCmdCopyImageToBuffer(commandBuffer VkCommandBuffer, srcImage VkImage, srcImageLayout VkImageLayout, dstBuffer VkBuffer, regionCount Uint32, pRegions *VkBufferImageCopy) error {
+func (l *VulkanLoader) VkCmdCopyImageToBuffer(commandBuffer VkCommandBuffer, srcImage VkImage, srcImageLayout VkImageLayout, dstBuffer VkBuffer, regionCount Uint32, pRegions *VkBufferImageCopy) error {
 	if l.device == nil {
 		return errors.New("attempted device loader function on a non-device loader")
 	}
@@ -1509,7 +1509,7 @@ func (l *vulkanLoader) VkCmdCopyImageToBuffer(commandBuffer VkCommandBuffer, src
 	return nil
 }
 
-func (l *vulkanLoader) VkCmdUpdateBuffer(commandBuffer VkCommandBuffer, dstBuffer VkBuffer, dstOffset VkDeviceSize, dataSize VkDeviceSize, pData unsafe.Pointer) error {
+func (l *VulkanLoader) VkCmdUpdateBuffer(commandBuffer VkCommandBuffer, dstBuffer VkBuffer, dstOffset VkDeviceSize, dataSize VkDeviceSize, pData unsafe.Pointer) error {
 	if l.device == nil {
 		return errors.New("attempted device loader function on a non-device loader")
 	}
@@ -1524,7 +1524,7 @@ func (l *vulkanLoader) VkCmdUpdateBuffer(commandBuffer VkCommandBuffer, dstBuffe
 	return nil
 }
 
-func (l *vulkanLoader) VkCmdFillBuffer(commandBuffer VkCommandBuffer, dstBuffer VkBuffer, dstOffset VkDeviceSize, size VkDeviceSize, data Uint32) error {
+func (l *VulkanLoader) VkCmdFillBuffer(commandBuffer VkCommandBuffer, dstBuffer VkBuffer, dstOffset VkDeviceSize, size VkDeviceSize, data Uint32) error {
 	if l.device == nil {
 		return errors.New("attempted device loader function on a non-device loader")
 	}
@@ -1539,7 +1539,7 @@ func (l *vulkanLoader) VkCmdFillBuffer(commandBuffer VkCommandBuffer, dstBuffer 
 	return nil
 }
 
-func (l *vulkanLoader) VkCmdClearColorImage(commandBuffer VkCommandBuffer, image VkImage, imageLayout VkImageLayout, pColor *VkClearColorValue, rangeCount Uint32, pRanges *VkImageSubresourceRange) error {
+func (l *VulkanLoader) VkCmdClearColorImage(commandBuffer VkCommandBuffer, image VkImage, imageLayout VkImageLayout, pColor *VkClearColorValue, rangeCount Uint32, pRanges *VkImageSubresourceRange) error {
 	if l.device == nil {
 		return errors.New("attempted device loader function on a non-device loader")
 	}
@@ -1555,7 +1555,7 @@ func (l *vulkanLoader) VkCmdClearColorImage(commandBuffer VkCommandBuffer, image
 	return nil
 }
 
-func (l *vulkanLoader) VkCmdClearDepthStencilImage(commandBuffer VkCommandBuffer, image VkImage, imageLayout VkImageLayout, pDepthStencil *VkClearDepthStencilValue, rangeCount Uint32, pRanges *VkImageSubresourceRange) error {
+func (l *VulkanLoader) VkCmdClearDepthStencilImage(commandBuffer VkCommandBuffer, image VkImage, imageLayout VkImageLayout, pDepthStencil *VkClearDepthStencilValue, rangeCount Uint32, pRanges *VkImageSubresourceRange) error {
 	if l.device == nil {
 		return errors.New("attempted device loader function on a non-device loader")
 	}
@@ -1571,7 +1571,7 @@ func (l *vulkanLoader) VkCmdClearDepthStencilImage(commandBuffer VkCommandBuffer
 	return nil
 }
 
-func (l *vulkanLoader) VkCmdClearAttachments(commandBuffer VkCommandBuffer, attachmentCount Uint32, pAttachments *VkClearAttachment, rectCount Uint32, pRects *VkClearRect) error {
+func (l *VulkanLoader) VkCmdClearAttachments(commandBuffer VkCommandBuffer, attachmentCount Uint32, pAttachments *VkClearAttachment, rectCount Uint32, pRects *VkClearRect) error {
 	if l.device == nil {
 		return errors.New("attempted device loader function on a non-device loader")
 	}
@@ -1586,7 +1586,7 @@ func (l *vulkanLoader) VkCmdClearAttachments(commandBuffer VkCommandBuffer, atta
 	return nil
 }
 
-func (l *vulkanLoader) VkCmdResolveImage(commandBuffer VkCommandBuffer, srcImage VkImage, srcImageLayout VkImageLayout, dstImage VkImage, dstImageLayout VkImageLayout, regionCount Uint32, pRegions *VkImageResolve) error {
+func (l *VulkanLoader) VkCmdResolveImage(commandBuffer VkCommandBuffer, srcImage VkImage, srcImageLayout VkImageLayout, dstImage VkImage, dstImageLayout VkImageLayout, regionCount Uint32, pRegions *VkImageResolve) error {
 	if l.device == nil {
 		return errors.New("attempted device loader function on a non-device loader")
 	}
@@ -1603,7 +1603,7 @@ func (l *vulkanLoader) VkCmdResolveImage(commandBuffer VkCommandBuffer, srcImage
 	return nil
 }
 
-func (l *vulkanLoader) VkCmdSetEvent(commandBuffer VkCommandBuffer, event VkEvent, stageMask VkPipelineStageFlags) error {
+func (l *VulkanLoader) VkCmdSetEvent(commandBuffer VkCommandBuffer, event VkEvent, stageMask VkPipelineStageFlags) error {
 	if l.device == nil {
 		return errors.New("attempted device loader function on a non-device loader")
 	}
@@ -1616,7 +1616,7 @@ func (l *vulkanLoader) VkCmdSetEvent(commandBuffer VkCommandBuffer, event VkEven
 	return nil
 }
 
-func (l *vulkanLoader) VkCmdResetEvent(commandBuffer VkCommandBuffer, event VkEvent, stageMask VkPipelineStageFlags) error {
+func (l *VulkanLoader) VkCmdResetEvent(commandBuffer VkCommandBuffer, event VkEvent, stageMask VkPipelineStageFlags) error {
 	if l.device == nil {
 		return errors.New("attempted device loader function on a non-device loader")
 	}
@@ -1629,7 +1629,7 @@ func (l *vulkanLoader) VkCmdResetEvent(commandBuffer VkCommandBuffer, event VkEv
 	return nil
 }
 
-func (l *vulkanLoader) VkCmdWaitEvents(commandBuffer VkCommandBuffer, eventCount Uint32, pEvents *VkEvent, srcStageMask VkPipelineStageFlags, dstStageMask VkPipelineStageFlags, memoryBarrierCount Uint32, pMemoryBarriers *VkMemoryBarrier, bufferMemoryBarrierCount Uint32, pBufferMemoryBarriers *VkBufferMemoryBarrier, imageMemoryBarrierCount Uint32, pImageMemoryBarriers *VkImageMemoryBarrier) error {
+func (l *VulkanLoader) VkCmdWaitEvents(commandBuffer VkCommandBuffer, eventCount Uint32, pEvents *VkEvent, srcStageMask VkPipelineStageFlags, dstStageMask VkPipelineStageFlags, memoryBarrierCount Uint32, pMemoryBarriers *VkMemoryBarrier, bufferMemoryBarrierCount Uint32, pBufferMemoryBarriers *VkBufferMemoryBarrier, imageMemoryBarrierCount Uint32, pImageMemoryBarriers *VkImageMemoryBarrier) error {
 	if l.device == nil {
 		return errors.New("attempted device loader function on a non-device loader")
 	}
@@ -1650,7 +1650,7 @@ func (l *vulkanLoader) VkCmdWaitEvents(commandBuffer VkCommandBuffer, eventCount
 	return nil
 }
 
-func (l *vulkanLoader) VkCmdPipelineBarrier(commandBuffer VkCommandBuffer, srcStageMask VkPipelineStageFlags, dstStageMask VkPipelineStageFlags, dependencyFlags VkDependencyFlags, memoryBarrierCount Uint32, pMemoryBarriers *VkMemoryBarrier, bufferMemoryBarrierCount Uint32, pBufferMemoryBarriers *VkBufferMemoryBarrier, imageMemoryBarrierCount Uint32, pImageMemoryBarriers *VkImageMemoryBarrier) error {
+func (l *VulkanLoader) VkCmdPipelineBarrier(commandBuffer VkCommandBuffer, srcStageMask VkPipelineStageFlags, dstStageMask VkPipelineStageFlags, dependencyFlags VkDependencyFlags, memoryBarrierCount Uint32, pMemoryBarriers *VkMemoryBarrier, bufferMemoryBarrierCount Uint32, pBufferMemoryBarriers *VkBufferMemoryBarrier, imageMemoryBarrierCount Uint32, pImageMemoryBarriers *VkImageMemoryBarrier) error {
 	if l.device == nil {
 		return errors.New("attempted device loader function on a non-device loader")
 	}
@@ -1670,7 +1670,7 @@ func (l *vulkanLoader) VkCmdPipelineBarrier(commandBuffer VkCommandBuffer, srcSt
 	return nil
 }
 
-func (l *vulkanLoader) VkCmdBeginQuery(commandBuffer VkCommandBuffer, queryPool VkQueryPool, query Uint32, flags VkQueryControlFlags) error {
+func (l *VulkanLoader) VkCmdBeginQuery(commandBuffer VkCommandBuffer, queryPool VkQueryPool, query Uint32, flags VkQueryControlFlags) error {
 	if l.device == nil {
 		return errors.New("attempted device loader function on a non-device loader")
 	}
@@ -1684,7 +1684,7 @@ func (l *vulkanLoader) VkCmdBeginQuery(commandBuffer VkCommandBuffer, queryPool 
 	return nil
 }
 
-func (l *vulkanLoader) VkCmdEndQuery(commandBuffer VkCommandBuffer, queryPool VkQueryPool, query Uint32) error {
+func (l *VulkanLoader) VkCmdEndQuery(commandBuffer VkCommandBuffer, queryPool VkQueryPool, query Uint32) error {
 	if l.device == nil {
 		return errors.New("attempted device loader function on a non-device loader")
 	}
@@ -1697,7 +1697,7 @@ func (l *vulkanLoader) VkCmdEndQuery(commandBuffer VkCommandBuffer, queryPool Vk
 	return nil
 }
 
-func (l *vulkanLoader) VkCmdResetQueryPool(commandBuffer VkCommandBuffer, queryPool VkQueryPool, firstQuery Uint32, queryCount Uint32) error {
+func (l *VulkanLoader) VkCmdResetQueryPool(commandBuffer VkCommandBuffer, queryPool VkQueryPool, firstQuery Uint32, queryCount Uint32) error {
 	if l.device == nil {
 		return errors.New("attempted device loader function on a non-device loader")
 	}
@@ -1711,7 +1711,7 @@ func (l *vulkanLoader) VkCmdResetQueryPool(commandBuffer VkCommandBuffer, queryP
 	return nil
 }
 
-func (l *vulkanLoader) VkCmdWriteTimestamp(commandBuffer VkCommandBuffer, pipelineStage VkPipelineStageFlags, queryPool VkQueryPool, query Uint32) error {
+func (l *VulkanLoader) VkCmdWriteTimestamp(commandBuffer VkCommandBuffer, pipelineStage VkPipelineStageFlags, queryPool VkQueryPool, query Uint32) error {
 	if l.device == nil {
 		return errors.New("attempted device loader function on a non-device loader")
 	}
@@ -1725,7 +1725,7 @@ func (l *vulkanLoader) VkCmdWriteTimestamp(commandBuffer VkCommandBuffer, pipeli
 	return nil
 }
 
-func (l *vulkanLoader) VkCmdCopyQueryPoolResults(commandBuffer VkCommandBuffer, queryPool VkQueryPool, firstQuery Uint32, queryCount Uint32, dstBuffer VkBuffer, dstOffset VkDeviceSize, stride VkDeviceSize, flags VkQueryResultFlags) error {
+func (l *VulkanLoader) VkCmdCopyQueryPoolResults(commandBuffer VkCommandBuffer, queryPool VkQueryPool, firstQuery Uint32, queryCount Uint32, dstBuffer VkBuffer, dstOffset VkDeviceSize, stride VkDeviceSize, flags VkQueryResultFlags) error {
 	if l.device == nil {
 		return errors.New("attempted device loader function on a non-device loader")
 	}
@@ -1743,7 +1743,7 @@ func (l *vulkanLoader) VkCmdCopyQueryPoolResults(commandBuffer VkCommandBuffer, 
 	return nil
 }
 
-func (l *vulkanLoader) VkCmdPushConstants(commandBuffer VkCommandBuffer, layout VkPipelineLayout, stageFlags VkShaderStageFlags, offset Uint32, size Uint32, pValues unsafe.Pointer) error {
+func (l *VulkanLoader) VkCmdPushConstants(commandBuffer VkCommandBuffer, layout VkPipelineLayout, stageFlags VkShaderStageFlags, offset Uint32, size Uint32, pValues unsafe.Pointer) error {
 	if l.device == nil {
 		return errors.New("attempted device loader function on a non-device loader")
 	}
@@ -1759,7 +1759,7 @@ func (l *vulkanLoader) VkCmdPushConstants(commandBuffer VkCommandBuffer, layout 
 	return nil
 }
 
-func (l *vulkanLoader) VkCmdBeginRenderPass(commandBuffer VkCommandBuffer, pRenderPassBegin *VkRenderPassBeginInfo, contents VkSubpassContents) error {
+func (l *VulkanLoader) VkCmdBeginRenderPass(commandBuffer VkCommandBuffer, pRenderPassBegin *VkRenderPassBeginInfo, contents VkSubpassContents) error {
 	if l.device == nil {
 		return errors.New("attempted device loader function on a non-device loader")
 	}
@@ -1772,7 +1772,7 @@ func (l *vulkanLoader) VkCmdBeginRenderPass(commandBuffer VkCommandBuffer, pRend
 	return nil
 }
 
-func (l *vulkanLoader) VkCmdNextSubpass(commandBuffer VkCommandBuffer, contents VkSubpassContents) error {
+func (l *VulkanLoader) VkCmdNextSubpass(commandBuffer VkCommandBuffer, contents VkSubpassContents) error {
 	if l.device == nil {
 		return errors.New("attempted device loader function on a non-device loader")
 	}
@@ -1784,7 +1784,7 @@ func (l *vulkanLoader) VkCmdNextSubpass(commandBuffer VkCommandBuffer, contents 
 	return nil
 }
 
-func (l *vulkanLoader) VkCmdEndRenderPass(commandBuffer VkCommandBuffer) error {
+func (l *VulkanLoader) VkCmdEndRenderPass(commandBuffer VkCommandBuffer) error {
 	if l.device == nil {
 		return errors.New("attempted device loader function on a non-device loader")
 	}
@@ -1795,7 +1795,7 @@ func (l *vulkanLoader) VkCmdEndRenderPass(commandBuffer VkCommandBuffer) error {
 	return nil
 }
 
-func (l *vulkanLoader) VkCmdExecuteCommands(commandBuffer VkCommandBuffer, commandBufferCount Uint32, pCommandBuffers *VkCommandBuffer) error {
+func (l *VulkanLoader) VkCmdExecuteCommands(commandBuffer VkCommandBuffer, commandBufferCount Uint32, pCommandBuffers *VkCommandBuffer) error {
 	if l.device == nil {
 		return errors.New("attempted device loader function on a non-device loader")
 	}
@@ -1808,7 +1808,7 @@ func (l *vulkanLoader) VkCmdExecuteCommands(commandBuffer VkCommandBuffer, comma
 	return nil
 }
 
-func (l *vulkanLoader) VkEnumerateInstanceVersion(pApiVersion *Uint32) (VkResult, error) {
+func (l *VulkanLoader) VkEnumerateInstanceVersion(pApiVersion *Uint32) (VkResult, error) {
 	if l.funcPtrs.vkEnumerateInstanceVersion == nil {
 		return VKErrorUnknown, errors.New("attempted to call method 'vkEnumerateInstanceVersion' which is not present on this loader")
 	}
@@ -1819,7 +1819,7 @@ func (l *vulkanLoader) VkEnumerateInstanceVersion(pApiVersion *Uint32) (VkResult
 	return res, res.ToError()
 }
 
-func (l *vulkanLoader) VkEnumeratePhysicalDeviceGroups(instance VkInstance, pPhysicalDeviceGroupCount *Uint32, pPhysicalDeviceGroupProperties *VkPhysicalDeviceGroupProperties) (VkResult, error) {
+func (l *VulkanLoader) VkEnumeratePhysicalDeviceGroups(instance VkInstance, pPhysicalDeviceGroupCount *Uint32, pPhysicalDeviceGroupProperties *VkPhysicalDeviceGroupProperties) (VkResult, error) {
 	if l.funcPtrs.vkEnumeratePhysicalDeviceGroups == nil {
 		return VKErrorUnknown, errors.New("attempted to call method 'vkEnumeratePhysicalDeviceGroups' which is not present on this loader")
 	}
@@ -1832,7 +1832,7 @@ func (l *vulkanLoader) VkEnumeratePhysicalDeviceGroups(instance VkInstance, pPhy
 	return res, res.ToError()
 }
 
-func (l *vulkanLoader) VkGetPhysicalDeviceFeatures2(physicalDevice VkPhysicalDevice, pFeatures *VkPhysicalDeviceFeatures2) error {
+func (l *VulkanLoader) VkGetPhysicalDeviceFeatures2(physicalDevice VkPhysicalDevice, pFeatures *VkPhysicalDeviceFeatures2) error {
 	if l.funcPtrs.vkGetPhysicalDeviceFeatures2 == nil {
 		return errors.New("attempted to call method 'vkGetPhysicalDeviceFeatures2' which is not present on this loader")
 	}
@@ -1844,7 +1844,7 @@ func (l *vulkanLoader) VkGetPhysicalDeviceFeatures2(physicalDevice VkPhysicalDev
 	return nil
 }
 
-func (l *vulkanLoader) VkGetPhysicalDeviceProperties2(physicalDevice VkPhysicalDevice, pProperties *VkPhysicalDeviceProperties2) error {
+func (l *VulkanLoader) VkGetPhysicalDeviceProperties2(physicalDevice VkPhysicalDevice, pProperties *VkPhysicalDeviceProperties2) error {
 	if l.funcPtrs.vkGetPhysicalDeviceProperties2 == nil {
 		return errors.New("attempted to call method 'vkGetPhysicalDeviceProperties2' which is not present on this loader")
 	}
@@ -1856,7 +1856,7 @@ func (l *vulkanLoader) VkGetPhysicalDeviceProperties2(physicalDevice VkPhysicalD
 	return nil
 }
 
-func (l *vulkanLoader) VkGetPhysicalDeviceFormatProperties2(physicalDevice VkPhysicalDevice, format VkFormat, pFormatProperties *VkFormatProperties2) error {
+func (l *VulkanLoader) VkGetPhysicalDeviceFormatProperties2(physicalDevice VkPhysicalDevice, format VkFormat, pFormatProperties *VkFormatProperties2) error {
 	if l.funcPtrs.vkGetPhysicalDeviceFormatProperties2 == nil {
 		return errors.New("attempted to call method 'vkGetPhysicalDeviceFormatProperties2' which is not present on this loader")
 	}
@@ -1869,7 +1869,7 @@ func (l *vulkanLoader) VkGetPhysicalDeviceFormatProperties2(physicalDevice VkPhy
 	return nil
 }
 
-func (l *vulkanLoader) VkGetPhysicalDeviceImageFormatProperties2(physicalDevice VkPhysicalDevice, pImageFormatInfo *VkPhysicalDeviceImageFormatInfo2, pImageFormatProperties *VkImageFormatProperties2) (VkResult, error) {
+func (l *VulkanLoader) VkGetPhysicalDeviceImageFormatProperties2(physicalDevice VkPhysicalDevice, pImageFormatInfo *VkPhysicalDeviceImageFormatInfo2, pImageFormatProperties *VkImageFormatProperties2) (VkResult, error) {
 	if l.funcPtrs.vkGetPhysicalDeviceImageFormatProperties2 == nil {
 		return VKErrorUnknown, errors.New("attempted to call method 'vkGetPhysicalDeviceImageFormatProperties2' which is not present on this loader")
 	}
@@ -1882,7 +1882,7 @@ func (l *vulkanLoader) VkGetPhysicalDeviceImageFormatProperties2(physicalDevice 
 	return res, res.ToError()
 }
 
-func (l *vulkanLoader) VkGetPhysicalDeviceQueueFamilyProperties2(physicalDevice VkPhysicalDevice, pQueueFamilyPropertyCount *Uint32, pQueueFamilyProperties *VkQueueFamilyProperties2) error {
+func (l *VulkanLoader) VkGetPhysicalDeviceQueueFamilyProperties2(physicalDevice VkPhysicalDevice, pQueueFamilyPropertyCount *Uint32, pQueueFamilyProperties *VkQueueFamilyProperties2) error {
 	if l.funcPtrs.vkGetPhysicalDeviceQueueFamilyProperties2 == nil {
 		return errors.New("attempted to call method 'vkGetPhysicalDeviceQueueFamilyProperties2' which is not present on this loader")
 	}
@@ -1895,7 +1895,7 @@ func (l *vulkanLoader) VkGetPhysicalDeviceQueueFamilyProperties2(physicalDevice 
 	return nil
 }
 
-func (l *vulkanLoader) VkGetPhysicalDeviceMemoryProperties2(physicalDevice VkPhysicalDevice, pMemoryProperties *VkPhysicalDeviceMemoryProperties2) error {
+func (l *VulkanLoader) VkGetPhysicalDeviceMemoryProperties2(physicalDevice VkPhysicalDevice, pMemoryProperties *VkPhysicalDeviceMemoryProperties2) error {
 	if l.funcPtrs.vkGetPhysicalDeviceMemoryProperties2 == nil {
 		return errors.New("attempted to call method 'vkGetPhysicalDeviceMemoryProperties2' which is not present on this loader")
 	}
@@ -1907,7 +1907,7 @@ func (l *vulkanLoader) VkGetPhysicalDeviceMemoryProperties2(physicalDevice VkPhy
 	return nil
 }
 
-func (l *vulkanLoader) VkGetPhysicalDeviceSparseImageFormatProperties2(physicalDevice VkPhysicalDevice, pFormatInfo *VkPhysicalDeviceSparseImageFormatInfo2, pPropertyCount *Uint32, pProperties *VkSparseImageFormatProperties2) error {
+func (l *VulkanLoader) VkGetPhysicalDeviceSparseImageFormatProperties2(physicalDevice VkPhysicalDevice, pFormatInfo *VkPhysicalDeviceSparseImageFormatInfo2, pPropertyCount *Uint32, pProperties *VkSparseImageFormatProperties2) error {
 	if l.funcPtrs.vkGetPhysicalDeviceSparseImageFormatProperties2 == nil {
 		return errors.New("attempted to call method 'vkGetPhysicalDeviceSparseImageFormatProperties2' which is not present on this loader")
 	}
@@ -1921,7 +1921,7 @@ func (l *vulkanLoader) VkGetPhysicalDeviceSparseImageFormatProperties2(physicalD
 	return nil
 }
 
-func (l *vulkanLoader) VkGetPhysicalDeviceExternalBufferProperties(physicalDevice VkPhysicalDevice, pExternalBufferInfo *VkPhysicalDeviceExternalBufferInfo, pExternalBufferProperties *VkExternalBufferProperties) error {
+func (l *VulkanLoader) VkGetPhysicalDeviceExternalBufferProperties(physicalDevice VkPhysicalDevice, pExternalBufferInfo *VkPhysicalDeviceExternalBufferInfo, pExternalBufferProperties *VkExternalBufferProperties) error {
 	if l.funcPtrs.vkGetPhysicalDeviceExternalBufferProperties == nil {
 		return errors.New("attempted to call method 'vkGetPhysicalDeviceExternalBufferProperties' which is not present on this loader")
 	}
@@ -1934,7 +1934,7 @@ func (l *vulkanLoader) VkGetPhysicalDeviceExternalBufferProperties(physicalDevic
 	return nil
 }
 
-func (l *vulkanLoader) VkGetPhysicalDeviceExternalFenceProperties(physicalDevice VkPhysicalDevice, pExternalFenceInfo *VkPhysicalDeviceExternalFenceInfo, pExternalFenceProperties *VkExternalFenceProperties) error {
+func (l *VulkanLoader) VkGetPhysicalDeviceExternalFenceProperties(physicalDevice VkPhysicalDevice, pExternalFenceInfo *VkPhysicalDeviceExternalFenceInfo, pExternalFenceProperties *VkExternalFenceProperties) error {
 	if l.funcPtrs.vkGetPhysicalDeviceExternalFenceProperties == nil {
 		return errors.New("attempted to call method 'vkGetPhysicalDeviceExternalFenceProperties' which is not present on this loader")
 	}
@@ -1947,7 +1947,7 @@ func (l *vulkanLoader) VkGetPhysicalDeviceExternalFenceProperties(physicalDevice
 	return nil
 }
 
-func (l *vulkanLoader) VkGetPhysicalDeviceExternalSemaphoreProperties(physicalDevice VkPhysicalDevice, pExternalSemaphoreInfo *VkPhysicalDeviceExternalSemaphoreInfo, pExternalSemaphoreProperties *VkExternalSemaphoreProperties) error {
+func (l *VulkanLoader) VkGetPhysicalDeviceExternalSemaphoreProperties(physicalDevice VkPhysicalDevice, pExternalSemaphoreInfo *VkPhysicalDeviceExternalSemaphoreInfo, pExternalSemaphoreProperties *VkExternalSemaphoreProperties) error {
 	if l.funcPtrs.vkGetPhysicalDeviceExternalSemaphoreProperties == nil {
 		return errors.New("attempted to call method 'vkGetPhysicalDeviceExternalSemaphoreProperties' which is not present on this loader")
 	}
@@ -1960,7 +1960,7 @@ func (l *vulkanLoader) VkGetPhysicalDeviceExternalSemaphoreProperties(physicalDe
 	return nil
 }
 
-func (l *vulkanLoader) VkBindBufferMemory2(device VkDevice, bindInfoCount Uint32, pBindInfos *VkBindBufferMemoryInfo) (VkResult, error) {
+func (l *VulkanLoader) VkBindBufferMemory2(device VkDevice, bindInfoCount Uint32, pBindInfos *VkBindBufferMemoryInfo) (VkResult, error) {
 	if l.funcPtrs.vkBindBufferMemory2 == nil {
 		return VKErrorUnknown, errors.New("attempted to call method 'vkBindBufferMemory2' which is not present on this loader")
 	}
@@ -1973,7 +1973,7 @@ func (l *vulkanLoader) VkBindBufferMemory2(device VkDevice, bindInfoCount Uint32
 	return res, res.ToError()
 }
 
-func (l *vulkanLoader) VkBindImageMemory2(device VkDevice, bindInfoCount Uint32, pBindInfos *VkBindImageMemoryInfo) (VkResult, error) {
+func (l *VulkanLoader) VkBindImageMemory2(device VkDevice, bindInfoCount Uint32, pBindInfos *VkBindImageMemoryInfo) (VkResult, error) {
 	if l.funcPtrs.vkBindImageMemory2 == nil {
 		return VKErrorUnknown, errors.New("attempted to call method 'vkBindImageMemory2' which is not present on this loader")
 	}
@@ -1986,7 +1986,7 @@ func (l *vulkanLoader) VkBindImageMemory2(device VkDevice, bindInfoCount Uint32,
 	return res, res.ToError()
 }
 
-func (l *vulkanLoader) VkGetDeviceGroupPeerMemoryFeatures(device VkDevice, heapIndex Uint32, localDeviceIndex Uint32, remoteDeviceIndex Uint32, pPeerMemoryFeatures *VkPeerMemoryFeatureFlags) error {
+func (l *VulkanLoader) VkGetDeviceGroupPeerMemoryFeatures(device VkDevice, heapIndex Uint32, localDeviceIndex Uint32, remoteDeviceIndex Uint32, pPeerMemoryFeatures *VkPeerMemoryFeatureFlags) error {
 	if l.funcPtrs.vkGetDeviceGroupPeerMemoryFeatures == nil {
 		return errors.New("attempted to call method 'vkGetDeviceGroupPeerMemoryFeatures' which is not present on this loader")
 	}
@@ -2001,7 +2001,7 @@ func (l *vulkanLoader) VkGetDeviceGroupPeerMemoryFeatures(device VkDevice, heapI
 	return nil
 }
 
-func (l *vulkanLoader) VkCmdSetDeviceMask(commandBuffer VkCommandBuffer, deviceMask Uint32) error {
+func (l *VulkanLoader) VkCmdSetDeviceMask(commandBuffer VkCommandBuffer, deviceMask Uint32) error {
 	if l.funcPtrs.vkCmdSetDeviceMask == nil {
 		return errors.New("attempted to call method 'vkCmdSetDeviceMask' which is not present on this loader")
 	}
@@ -2013,7 +2013,7 @@ func (l *vulkanLoader) VkCmdSetDeviceMask(commandBuffer VkCommandBuffer, deviceM
 	return nil
 }
 
-func (l *vulkanLoader) VkCmdDispatchBase(commandBuffer VkCommandBuffer, baseGroupX Uint32, baseGroupY Uint32, baseGroupZ Uint32, groupCountX Uint32, groupCountY Uint32, groupCountZ Uint32) error {
+func (l *VulkanLoader) VkCmdDispatchBase(commandBuffer VkCommandBuffer, baseGroupX Uint32, baseGroupY Uint32, baseGroupZ Uint32, groupCountX Uint32, groupCountY Uint32, groupCountZ Uint32) error {
 	if l.funcPtrs.vkCmdDispatchBase == nil {
 		return errors.New("attempted to call method 'vkCmdDispatchBase' which is not present on this loader")
 	}
@@ -2030,7 +2030,7 @@ func (l *vulkanLoader) VkCmdDispatchBase(commandBuffer VkCommandBuffer, baseGrou
 	return nil
 }
 
-func (l *vulkanLoader) VkGetImageMemoryRequirements2(device VkDevice, pInfo *VkImageMemoryRequirementsInfo2, pMemoryRequirements *VkMemoryRequirements2) error {
+func (l *VulkanLoader) VkGetImageMemoryRequirements2(device VkDevice, pInfo *VkImageMemoryRequirementsInfo2, pMemoryRequirements *VkMemoryRequirements2) error {
 	if l.funcPtrs.vkGetImageMemoryRequirements2 == nil {
 		return errors.New("attempted to call method 'vkGetImageMemoryRequirements2' which is not present on this loader")
 	}
@@ -2043,7 +2043,7 @@ func (l *vulkanLoader) VkGetImageMemoryRequirements2(device VkDevice, pInfo *VkI
 	return nil
 }
 
-func (l *vulkanLoader) VkGetBufferMemoryRequirements2(device VkDevice, pInfo *VkBufferMemoryRequirementsInfo2, pMemoryRequirements *VkMemoryRequirements2) error {
+func (l *VulkanLoader) VkGetBufferMemoryRequirements2(device VkDevice, pInfo *VkBufferMemoryRequirementsInfo2, pMemoryRequirements *VkMemoryRequirements2) error {
 	if l.funcPtrs.vkGetBufferMemoryRequirements2 == nil {
 		return errors.New("attempted to call method 'vkGetBufferMemoryRequirements2' which is not present on this loader")
 	}
@@ -2056,7 +2056,7 @@ func (l *vulkanLoader) VkGetBufferMemoryRequirements2(device VkDevice, pInfo *Vk
 	return nil
 }
 
-func (l *vulkanLoader) VkGetImageSparseMemoryRequirements2(device VkDevice, pInfo *VkImageSparseMemoryRequirementsInfo2, pSparseMemoryRequirementCount *Uint32, pSparseMemoryRequirements *VkSparseImageMemoryRequirements2) error {
+func (l *VulkanLoader) VkGetImageSparseMemoryRequirements2(device VkDevice, pInfo *VkImageSparseMemoryRequirementsInfo2, pSparseMemoryRequirementCount *Uint32, pSparseMemoryRequirements *VkSparseImageMemoryRequirements2) error {
 	if l.funcPtrs.vkGetImageSparseMemoryRequirements2 == nil {
 		return errors.New("attempted to call method 'vkGetImageSparseMemoryRequirements2' which is not present on this loader")
 	}
@@ -2070,7 +2070,7 @@ func (l *vulkanLoader) VkGetImageSparseMemoryRequirements2(device VkDevice, pInf
 	return nil
 }
 
-func (l *vulkanLoader) VkTrimCommandPool(device VkDevice, commandPool VkCommandPool, flags VkCommandPoolTrimFlags) error {
+func (l *VulkanLoader) VkTrimCommandPool(device VkDevice, commandPool VkCommandPool, flags VkCommandPoolTrimFlags) error {
 	if l.funcPtrs.vkTrimCommandPool == nil {
 		return errors.New("attempted to call method 'vkTrimCommandPool' which is not present on this loader")
 	}
@@ -2083,7 +2083,7 @@ func (l *vulkanLoader) VkTrimCommandPool(device VkDevice, commandPool VkCommandP
 	return nil
 }
 
-func (l *vulkanLoader) VkGetDeviceQueue2(device VkDevice, pQueueInfo *VkDeviceQueueInfo2, pQueue *VkQueue) error {
+func (l *VulkanLoader) VkGetDeviceQueue2(device VkDevice, pQueueInfo *VkDeviceQueueInfo2, pQueue *VkQueue) error {
 	if l.funcPtrs.vkGetDeviceQueue2 == nil {
 		return errors.New("attempted to call method 'vkGetDeviceQueue2' which is not present on this loader")
 	}
@@ -2096,7 +2096,7 @@ func (l *vulkanLoader) VkGetDeviceQueue2(device VkDevice, pQueueInfo *VkDeviceQu
 	return nil
 }
 
-func (l *vulkanLoader) VkCreateSamplerYcbcrConversion(device VkDevice, pCreateInfo *VkSamplerYcbcrConversionCreateInfo, pAllocator *VkAllocationCallbacks, pYcbcrConversion *VkSamplerYcbcrConversion) (VkResult, error) {
+func (l *VulkanLoader) VkCreateSamplerYcbcrConversion(device VkDevice, pCreateInfo *VkSamplerYcbcrConversionCreateInfo, pAllocator *VkAllocationCallbacks, pYcbcrConversion *VkSamplerYcbcrConversion) (VkResult, error) {
 	if l.funcPtrs.vkCreateSamplerYcbcrConversion == nil {
 		return VKErrorUnknown, errors.New("attempted to call method 'vkCreateSamplerYcbcrConversion' which is not present on this loader")
 	}
@@ -2110,7 +2110,7 @@ func (l *vulkanLoader) VkCreateSamplerYcbcrConversion(device VkDevice, pCreateIn
 	return res, res.ToError()
 }
 
-func (l *vulkanLoader) VkDestroySamplerYcbcrConversion(device VkDevice, ycbcrConversion VkSamplerYcbcrConversion, pAllocator *VkAllocationCallbacks) error {
+func (l *VulkanLoader) VkDestroySamplerYcbcrConversion(device VkDevice, ycbcrConversion VkSamplerYcbcrConversion, pAllocator *VkAllocationCallbacks) error {
 	if l.funcPtrs.vkDestroySamplerYcbcrConversion == nil {
 		return errors.New("attempted to call method 'vkDestroySamplerYcbcrConversion' which is not present on this loader")
 	}
@@ -2123,7 +2123,7 @@ func (l *vulkanLoader) VkDestroySamplerYcbcrConversion(device VkDevice, ycbcrCon
 	return nil
 }
 
-func (l *vulkanLoader) VkCreateDescriptorUpdateTemplate(device VkDevice, pCreateInfo *VkDescriptorUpdateTemplateCreateInfo, pAllocator *VkAllocationCallbacks, pDescriptorUpdateTemplate *VkDescriptorUpdateTemplate) (VkResult, error) {
+func (l *VulkanLoader) VkCreateDescriptorUpdateTemplate(device VkDevice, pCreateInfo *VkDescriptorUpdateTemplateCreateInfo, pAllocator *VkAllocationCallbacks, pDescriptorUpdateTemplate *VkDescriptorUpdateTemplate) (VkResult, error) {
 	if l.funcPtrs.vkCreateDescriptorUpdateTemplate == nil {
 		return VKErrorUnknown, errors.New("attempted to call method 'vkCreateDescriptorUpdateTemplate' which is not present on this loader")
 	}
@@ -2136,7 +2136,7 @@ func (l *vulkanLoader) VkCreateDescriptorUpdateTemplate(device VkDevice, pCreate
 
 	return res, res.ToError()
 }
-func (l *vulkanLoader) VkDestroyDescriptorUpdateTemplate(device VkDevice, descriptorUpdateTemplate VkDescriptorUpdateTemplate, pAllocator *VkAllocationCallbacks) error {
+func (l *VulkanLoader) VkDestroyDescriptorUpdateTemplate(device VkDevice, descriptorUpdateTemplate VkDescriptorUpdateTemplate, pAllocator *VkAllocationCallbacks) error {
 	if l.funcPtrs.vkDestroyDescriptorUpdateTemplate == nil {
 		return errors.New("attempted to call method 'vkDestroyDescriptorUpdateTemplate' which is not present on this loader")
 	}
@@ -2149,7 +2149,7 @@ func (l *vulkanLoader) VkDestroyDescriptorUpdateTemplate(device VkDevice, descri
 	return nil
 }
 
-func (l *vulkanLoader) VkUpdateDescriptorSetWithTemplate(device VkDevice, descriptorSet VkDescriptorSet, descriptorUpdateTemplate VkDescriptorUpdateTemplate, pData unsafe.Pointer) error {
+func (l *VulkanLoader) VkUpdateDescriptorSetWithTemplate(device VkDevice, descriptorSet VkDescriptorSet, descriptorUpdateTemplate VkDescriptorUpdateTemplate, pData unsafe.Pointer) error {
 	if l.funcPtrs.vkUpdateDescriptorSetWithTemplate == nil {
 		return errors.New("attempted to call method 'vkUpdateDescriptorSetWithTemplate' which is not present on this loader")
 	}
@@ -2163,7 +2163,7 @@ func (l *vulkanLoader) VkUpdateDescriptorSetWithTemplate(device VkDevice, descri
 	return nil
 }
 
-func (l *vulkanLoader) VkGetDescriptorSetLayoutSupport(device VkDevice, pCreateInfo *VkDescriptorSetLayoutCreateInfo, pSupport *VkDescriptorSetLayoutSupport) error {
+func (l *VulkanLoader) VkGetDescriptorSetLayoutSupport(device VkDevice, pCreateInfo *VkDescriptorSetLayoutCreateInfo, pSupport *VkDescriptorSetLayoutSupport) error {
 	if l.funcPtrs.vkGetDescriptorSetLayoutSupport == nil {
 		return errors.New("attempted to call method 'vkGetDescriptorSetLayoutSupport' which is not present on this loader")
 	}
@@ -2176,7 +2176,7 @@ func (l *vulkanLoader) VkGetDescriptorSetLayoutSupport(device VkDevice, pCreateI
 	return nil
 }
 
-func (l *vulkanLoader) VkCmdDrawIndirectCount(commandBuffer VkCommandBuffer, buffer VkBuffer, offset VkDeviceSize, countBuffer VkBuffer, countBufferOffset VkDeviceSize, maxDrawCount Uint32, stride Uint32) error {
+func (l *VulkanLoader) VkCmdDrawIndirectCount(commandBuffer VkCommandBuffer, buffer VkBuffer, offset VkDeviceSize, countBuffer VkBuffer, countBufferOffset VkDeviceSize, maxDrawCount Uint32, stride Uint32) error {
 	if l.funcPtrs.vkCmdDrawIndirectCount == nil {
 		return errors.New("attempted to call method 'vkCmdDrawIndirectCount' which is not present on this loader")
 	}
@@ -2193,7 +2193,7 @@ func (l *vulkanLoader) VkCmdDrawIndirectCount(commandBuffer VkCommandBuffer, buf
 	return nil
 }
 
-func (l *vulkanLoader) VkCmdDrawIndexedIndirectCount(commandBuffer VkCommandBuffer, buffer VkBuffer, offset VkDeviceSize, countBuffer VkBuffer, countBufferOffset VkDeviceSize, maxDrawCount Uint32, stride Uint32) error {
+func (l *VulkanLoader) VkCmdDrawIndexedIndirectCount(commandBuffer VkCommandBuffer, buffer VkBuffer, offset VkDeviceSize, countBuffer VkBuffer, countBufferOffset VkDeviceSize, maxDrawCount Uint32, stride Uint32) error {
 	if l.funcPtrs.vkCmdDrawIndexedIndirectCount == nil {
 		return errors.New("attempted to call method 'vkCmdDrawIndexedIndirectCount' which is not present on this loader")
 	}
@@ -2210,7 +2210,7 @@ func (l *vulkanLoader) VkCmdDrawIndexedIndirectCount(commandBuffer VkCommandBuff
 	return nil
 }
 
-func (l *vulkanLoader) VkCreateRenderPass2(device VkDevice, pCreateInfo *VkRenderPassCreateInfo2, pAllocator *VkAllocationCallbacks, pRenderPass *VkRenderPass) (VkResult, error) {
+func (l *VulkanLoader) VkCreateRenderPass2(device VkDevice, pCreateInfo *VkRenderPassCreateInfo2, pAllocator *VkAllocationCallbacks, pRenderPass *VkRenderPass) (VkResult, error) {
 	if l.funcPtrs.vkCreateRenderPass2 == nil {
 		return VKErrorUnknown, errors.New("attempted to call method 'vkCreateRenderPass2' which is not present on this loader")
 	}
@@ -2224,7 +2224,7 @@ func (l *vulkanLoader) VkCreateRenderPass2(device VkDevice, pCreateInfo *VkRende
 	return res, res.ToError()
 }
 
-func (l *vulkanLoader) VkCmdBeginRenderPass2(commandBuffer VkCommandBuffer, pRenderPassBegin *VkRenderPassBeginInfo, pSubpassBeginInfo *VkSubpassBeginInfo) error {
+func (l *VulkanLoader) VkCmdBeginRenderPass2(commandBuffer VkCommandBuffer, pRenderPassBegin *VkRenderPassBeginInfo, pSubpassBeginInfo *VkSubpassBeginInfo) error {
 	if l.funcPtrs.vkCmdBeginRenderPass2 == nil {
 		return errors.New("attempted to call method 'vkCmdBeginRenderPass2' which is not present on this loader")
 	}
@@ -2237,7 +2237,7 @@ func (l *vulkanLoader) VkCmdBeginRenderPass2(commandBuffer VkCommandBuffer, pRen
 	return nil
 }
 
-func (l *vulkanLoader) VkCmdNextSubpass2(commandBuffer VkCommandBuffer, pSubpassBeginInfo *VkSubpassBeginInfo, pSubpassEndInfo *VkSubpassEndInfo) error {
+func (l *VulkanLoader) VkCmdNextSubpass2(commandBuffer VkCommandBuffer, pSubpassBeginInfo *VkSubpassBeginInfo, pSubpassEndInfo *VkSubpassEndInfo) error {
 	if l.funcPtrs.vkCmdNextSubpass2 == nil {
 		return errors.New("attempted to call method 'vkCmdNextSubpass2' which is not present on this loader")
 	}
@@ -2250,7 +2250,7 @@ func (l *vulkanLoader) VkCmdNextSubpass2(commandBuffer VkCommandBuffer, pSubpass
 	return nil
 }
 
-func (l *vulkanLoader) VkCmdEndRenderPass2(commandBuffer VkCommandBuffer, pSubpassEndInfo *VkSubpassEndInfo) error {
+func (l *VulkanLoader) VkCmdEndRenderPass2(commandBuffer VkCommandBuffer, pSubpassEndInfo *VkSubpassEndInfo) error {
 	if l.funcPtrs.vkCmdEndRenderPass2 == nil {
 		return errors.New("attempted to call method 'vkCmdEndRenderPass2' which is not present on this loader")
 	}
@@ -2262,7 +2262,7 @@ func (l *vulkanLoader) VkCmdEndRenderPass2(commandBuffer VkCommandBuffer, pSubpa
 	return nil
 }
 
-func (l *vulkanLoader) VkResetQueryPool(device VkDevice, queryPool VkQueryPool, firstQuery Uint32, queryCount Uint32) error {
+func (l *VulkanLoader) VkResetQueryPool(device VkDevice, queryPool VkQueryPool, firstQuery Uint32, queryCount Uint32) error {
 	if l.funcPtrs.vkResetQueryPool == nil {
 		return errors.New("attempted to call method 'vkResetQueryPool' which is not present on this loader")
 	}
@@ -2276,7 +2276,7 @@ func (l *vulkanLoader) VkResetQueryPool(device VkDevice, queryPool VkQueryPool, 
 	return nil
 }
 
-func (l *vulkanLoader) VkGetSemaphoreCounterValue(device VkDevice, semaphore VkSemaphore, pValue *Uint64) (VkResult, error) {
+func (l *VulkanLoader) VkGetSemaphoreCounterValue(device VkDevice, semaphore VkSemaphore, pValue *Uint64) (VkResult, error) {
 	if l.funcPtrs.vkGetSemaphoreCounterValue == nil {
 		return VKErrorUnknown, errors.New("attempted to call method 'vkGetSemaphoreCounterValue' which is not present on this loader")
 	}
@@ -2289,7 +2289,7 @@ func (l *vulkanLoader) VkGetSemaphoreCounterValue(device VkDevice, semaphore VkS
 	return res, res.ToError()
 }
 
-func (l *vulkanLoader) VkWaitSemaphores(device VkDevice, pWaitInfo *VkSemaphoreWaitInfo, timeout Uint64) (VkResult, error) {
+func (l *VulkanLoader) VkWaitSemaphores(device VkDevice, pWaitInfo *VkSemaphoreWaitInfo, timeout Uint64) (VkResult, error) {
 	if l.funcPtrs.vkWaitSemaphores == nil {
 		return VKErrorUnknown, errors.New("attempted to call method 'vkWaitSemaphores' which is not present on this loader")
 	}
@@ -2302,7 +2302,7 @@ func (l *vulkanLoader) VkWaitSemaphores(device VkDevice, pWaitInfo *VkSemaphoreW
 	return res, res.ToError()
 }
 
-func (l *vulkanLoader) VkSignalSemaphore(device VkDevice, pSignalInfo *VkSemaphoreSignalInfo) (VkResult, error) {
+func (l *VulkanLoader) VkSignalSemaphore(device VkDevice, pSignalInfo *VkSemaphoreSignalInfo) (VkResult, error) {
 	if l.funcPtrs.vkSignalSemaphore == nil {
 		return VKErrorUnknown, errors.New("attempted to call method 'vkSignalSemaphore' which is not present on this loader")
 	}
@@ -2314,7 +2314,7 @@ func (l *vulkanLoader) VkSignalSemaphore(device VkDevice, pSignalInfo *VkSemapho
 	return res, res.ToError()
 }
 
-func (l *vulkanLoader) VkGetBufferDeviceAddress(device VkDevice, pInfo *VkBufferDeviceAddressInfo) (VkDeviceAddress, error) {
+func (l *VulkanLoader) VkGetBufferDeviceAddress(device VkDevice, pInfo *VkBufferDeviceAddressInfo) (VkDeviceAddress, error) {
 	if l.funcPtrs.vkGetBufferDeviceAddress == nil {
 		return VkDeviceAddress(0), errors.New("attempted to call method 'vkGetBufferDeviceAddress' which is not present on this loader")
 	}
@@ -2326,7 +2326,7 @@ func (l *vulkanLoader) VkGetBufferDeviceAddress(device VkDevice, pInfo *VkBuffer
 	return address, nil
 }
 
-func (l *vulkanLoader) VkGetBufferOpaqueCaptureAddress(device VkDevice, pInfo *VkBufferDeviceAddressInfo) (Uint64, error) {
+func (l *VulkanLoader) VkGetBufferOpaqueCaptureAddress(device VkDevice, pInfo *VkBufferDeviceAddressInfo) (Uint64, error) {
 	if l.funcPtrs.vkGetBufferOpaqueCaptureAddress == nil {
 		return 0, errors.New("attempted to call method 'vkGetBufferOpaqueCaptureAddress' which is not present on this loader")
 	}
@@ -2338,7 +2338,7 @@ func (l *vulkanLoader) VkGetBufferOpaqueCaptureAddress(device VkDevice, pInfo *V
 	return address, nil
 }
 
-func (l *vulkanLoader) VkGetDeviceMemoryOpaqueCaptureAddress(device VkDevice, pInfo *VkDeviceMemoryOpaqueCaptureAddressInfo) (Uint64, error) {
+func (l *VulkanLoader) VkGetDeviceMemoryOpaqueCaptureAddress(device VkDevice, pInfo *VkDeviceMemoryOpaqueCaptureAddressInfo) (Uint64, error) {
 	if l.funcPtrs.vkGetDeviceMemoryOpaqueCaptureAddress == nil {
 		return 0, errors.New("attempted to call method 'vkGetDeviceMemoryOpaqueCaptureAddress' which is not present on this loader")
 	}
