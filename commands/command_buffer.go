@@ -128,3 +128,40 @@ func (c *vulkanCommandBuffer) CmdBindVertexBuffers(firstBinding uint32, buffers 
 func (c *vulkanCommandBuffer) CmdBindIndexBuffer(buffer resources.Buffer, offset int, indexType core.IndexType) error {
 	return c.loader.VkCmdBindIndexBuffer(c.handle, buffer.Handle(), loader.VkDeviceSize(offset), loader.VkIndexType(indexType))
 }
+
+func (c *vulkanCommandBuffer) CmdBindDescriptorSets(bindPoint core.PipelineBindPoint, layout pipeline.PipelineLayout, firstSet int, sets []resources.DescriptorSet, dynamicOffsets []int) error {
+	arena := cgoparam.GetAlloc()
+	defer cgoparam.ReturnAlloc(arena)
+
+	setCount := len(sets)
+	dynamicOffsetCount := len(dynamicOffsets)
+
+	var setPtr unsafe.Pointer
+	var dynamicOffsetPtr unsafe.Pointer
+
+	if setCount > 0 {
+		setPtr = arena.Malloc(setCount * int(unsafe.Sizeof([1]C.VkDescriptorSet{})))
+		setSlice := ([]C.VkDescriptorSet)(unsafe.Slice((*C.VkDescriptorSet)(setPtr), setCount))
+		for i := 0; i < setCount; i++ {
+			setSlice[i] = (C.VkDescriptorSet)(unsafe.Pointer(sets[i].Handle()))
+		}
+	}
+
+	if dynamicOffsetCount > 0 {
+		dynamicOffsetPtr = arena.Malloc(dynamicOffsetCount * int(unsafe.Sizeof(C.uint32_t(0))))
+		dynamicOffsetSlice := ([]C.uint32_t)(unsafe.Slice((*C.uint32_t)(dynamicOffsetPtr), dynamicOffsetCount))
+
+		for i := 0; i < dynamicOffsetCount; i++ {
+			dynamicOffsetSlice[i] = (C.uint32_t)(dynamicOffsets[i])
+		}
+	}
+
+	return c.loader.VkCmdBindDescriptorSets(c.handle,
+		loader.VkPipelineBindPoint(bindPoint),
+		layout.Handle(),
+		loader.Uint32(firstSet),
+		loader.Uint32(setCount),
+		(*loader.VkDescriptorSet)(setPtr),
+		loader.Uint32(dynamicOffsetCount),
+		(*loader.Uint32)(dynamicOffsetPtr))
+}

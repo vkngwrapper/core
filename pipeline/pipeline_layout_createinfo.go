@@ -7,12 +7,13 @@ package pipeline
 import "C"
 import (
 	"github.com/CannibalVox/VKng/core"
+	"github.com/CannibalVox/VKng/core/resources"
 	"github.com/CannibalVox/cgoparam"
 	"unsafe"
 )
 
 type PipelineLayoutOptions struct {
-	SetLayouts         []*DescriptorSetLayout
+	SetLayouts         []resources.DescriptorSetLayout
 	PushConstantRanges []*core.PushConstantRange
 
 	core.HaveNext
@@ -36,7 +37,7 @@ func (o *PipelineLayoutOptions) AllocForC(allocator *cgoparam.Allocator, next un
 		setLayoutSlice := ([]C.VkDescriptorSetLayout)(unsafe.Slice(setLayoutPtr, setLayoutCount))
 
 		for i := 0; i < setLayoutCount; i++ {
-			setLayoutSlice[i] = (C.VkDescriptorSetLayout)(unsafe.Pointer(o.SetLayouts[i].handle))
+			setLayoutSlice[i] = (C.VkDescriptorSetLayout)(unsafe.Pointer(o.SetLayouts[i].Handle()))
 		}
 		createInfo.pSetLayouts = setLayoutPtr
 	}

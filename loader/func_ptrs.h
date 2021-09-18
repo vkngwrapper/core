@@ -31,14 +31,14 @@ typedef struct LoaderFuncPtrs {
 
     //Device
     PFN_vkAllocateCommandBuffers vkAllocateCommandBuffers;
-    PFN_vkAllocateDescriptorSets vkAllocateDescriptorSets; //Todo
+    PFN_vkAllocateDescriptorSets vkAllocateDescriptorSets;
     PFN_vkAllocateMemory vkAllocateMemory;
     PFN_vkBeginCommandBuffer vkBeginCommandBuffer;
     PFN_vkBindBufferMemory vkBindBufferMemory;
     PFN_vkBindImageMemory vkBindImageMemory;   //Todo
     PFN_vkCmdBeginQuery vkCmdBeginQuery; //Todo
     PFN_vkCmdBeginRenderPass vkCmdBeginRenderPass;
-    PFN_vkCmdBindDescriptorSets vkCmdBindDescriptorSets; //Todo
+    PFN_vkCmdBindDescriptorSets vkCmdBindDescriptorSets; 
     PFN_vkCmdBindIndexBuffer vkCmdBindIndexBuffer;
     PFN_vkCmdBindPipeline vkCmdBindPipeline;
     PFN_vkCmdBindVertexBuffers vkCmdBindVertexBuffers;
@@ -122,7 +122,7 @@ typedef struct LoaderFuncPtrs {
     PFN_vkEndCommandBuffer vkEndCommandBuffer;
     PFN_vkFlushMappedMemoryRanges vkFlushMappedMemoryRanges; //Todo
     PFN_vkFreeCommandBuffers vkFreeCommandBuffers;
-    PFN_vkFreeDescriptorSets vkFreeDescriptorSets; //Todo
+    PFN_vkFreeDescriptorSets vkFreeDescriptorSets;
     PFN_vkFreeMemory vkFreeMemory;
     PFN_vkGetBufferMemoryRequirements vkGetBufferMemoryRequirements;
     PFN_vkGetDeviceMemoryCommitment vkGetDeviceMemoryCommitment; //Todo
@@ -148,7 +148,7 @@ typedef struct LoaderFuncPtrs {
     PFN_vkResetFences vkResetFences;
     PFN_vkSetEvent vkSetEvent; //Todo
     PFN_vkUnmapMemory vkUnmapMemory;
-    PFN_vkUpdateDescriptorSets vkUpdateDescriptorSets; //Todo
+    PFN_vkUpdateDescriptorSets vkUpdateDescriptorSets;
     PFN_vkWaitForFences vkWaitForFences;
     
     // VK 1.1

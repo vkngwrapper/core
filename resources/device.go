@@ -200,3 +200,114 @@ func (d *vulkanDevice) AllocateMemory(o *DeviceMemoryOptions) (DeviceMemory, loa
 		handle: deviceMemory,
 	}, res, nil
 }
+
+func (d *vulkanDevice) CreateDescriptorSetLayout(o *DescriptorSetLayoutOptions) (DescriptorSetLayout, loader.VkResult, error) {
+	arena := cgoparam.GetAlloc()
+	defer cgoparam.ReturnAlloc(arena)
+
+	createInfo, err := core.AllocOptions(arena, o)
+	if err != nil {
+		return nil, loader.VKErrorUnknown, err
+	}
+
+	var descriptorSetLayout loader.VkDescriptorSetLayout
+
+	res, err := d.loader.VkCreateDescriptorSetLayout(d.handle, (*loader.VkDescriptorSetLayoutCreateInfo)(createInfo), nil, &descriptorSetLayout)
+	if err != nil {
+		return nil, res, err
+	}
+
+	return &vulkanDescriptorSetLayout{
+		loader: d.loader,
+		device: d.handle,
+		handle: descriptorSetLayout,
+	}, res, nil
+}
+
+func (d *vulkanDevice) CreateDescriptorPool(o *DescriptorPoolOptions) (DescriptorPool, loader.VkResult, error) {
+	arena := cgoparam.GetAlloc()
+	defer cgoparam.ReturnAlloc(arena)
+
+	createInfo, err := core.AllocOptions(arena, o)
+	if err != nil {
+		return nil, loader.VKErrorUnknown, err
+	}
+
+	var descriptorPool loader.VkDescriptorPool
+
+	res, err := d.loader.VkCreateDescriptorPool(d.handle, (*loader.VkDescriptorPoolCreateInfo)(createInfo), nil, &descriptorPool)
+	if err != nil {
+		return nil, res, err
+	}
+
+	return &vulkanDescriptorPool{
+		loader: d.loader,
+		handle: descriptorPool,
+		device: d.handle,
+	}, res, nil
+}
+
+func (d *vulkanDevice) AllocateDescriptorSet(o *DescriptorSetOptions) ([]DescriptorSet, loader.VkResult, error) {
+	arena := cgoparam.GetAlloc()
+	defer cgoparam.ReturnAlloc(arena)
+
+	createInfo, err := core.AllocOptions(arena, o)
+	if err != nil {
+		return nil, loader.VKErrorUnknown, err
+	}
+
+	setCount := len(o.AllocationLayouts)
+	descriptorSets := (*loader.VkDescriptorSet)(arena.Malloc(setCount * int(unsafe.Sizeof([1]C.VkDescriptorSet{}))))
+
+	res, err := d.loader.VkAllocateDescriptorSets(d.handle, (*loader.VkDescriptorSetAllocateInfo)(createInfo), descriptorSets)
+	if err != nil {
+		return nil, res, err
+	}
+
+	var sets []DescriptorSet
+	descriptorSetSlice := ([]loader.VkDescriptorSet)(unsafe.Slice(descriptorSets, setCount))
+	for i := 0; i < setCount; i++ {
+		sets = append(sets, &vulkanDescriptorSet{handle: descriptorSetSlice[i]})
+	}
+
+	return sets, res, nil
+}
+
+func (d *vulkanDevice) UpdateDescriptorSets(writes []*WriteDescriptorSetOptions, copies []*CopyDescriptorSetOptions) error {
+	arena := cgoparam.GetAlloc()
+	defer cgoparam.ReturnAlloc(arena)
+
+	writeCount := len(writes)
+	copyCount := len(copies)
+
+	var writePtr unsafe.Pointer
+	var copyPtr unsafe.Pointer
+
+	if writeCount > 0 {
+		writePtr = arena.Malloc(writeCount * C.sizeof_struct_VkWriteDescriptorSet)
+		writeSlice := ([]C.VkWriteDescriptorSet)(unsafe.Slice((*C.VkWriteDescriptorSet)(writePtr), writeCount))
+		for i := 0; i < writeCount; i++ {
+			next, err := core.AllocNext(arena, writes[i])
+			if err != nil {
+				return err
+			}
+
+			writes[i].populate(arena, &(writeSlice[i]), next)
+		}
+	}
+
+	if copyCount > 0 {
+		copyPtr = arena.Malloc(copyCount * C.sizeof_struct_VkCopyDescriptorSet)
+		copySlice := ([]C.VkCopyDescriptorSet)(unsafe.Slice((*C.VkCopyDescriptorSet)(copyPtr), copyCount))
+		for i := 0; i < copyCount; i++ {
+			next, err := core.AllocNext(arena, copies[i])
+			if err != nil {
+				return err
+			}
+
+			copies[i].populate(arena, &(copySlice[i]), next)
+		}
+	}
+
+	return d.loader.VkUpdateDescriptorSets(d.handle, loader.Uint32(writeCount), (*loader.VkWriteDescriptorSet)(writePtr), loader.Uint32(copyCount), (*loader.VkCopyDescriptorSet)(copyPtr))
+}

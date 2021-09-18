@@ -16,6 +16,24 @@ type Buffer interface {
 	BindBufferMemory(memory DeviceMemory, offset int) (loader.VkResult, error)
 }
 
+type BufferView interface {
+	Handle() loader.VkBufferView
+}
+
+type DescriptorPool interface {
+	Handle() loader.VkDescriptorPool
+	Destroy() error
+}
+
+type DescriptorSet interface {
+	Handle() loader.VkDescriptorSet
+}
+
+type DescriptorSetLayout interface {
+	Handle() loader.VkDescriptorSetLayout
+	Destroy() error
+}
+
 type DeviceMemory interface {
 	Handle() loader.VkDeviceMemory
 	Free() error
@@ -38,6 +56,10 @@ type Device interface {
 	ResetFences(fences []Fence) (loader.VkResult, error)
 	CreateBuffer(o *BufferOptions) (Buffer, loader.VkResult, error)
 	AllocateMemory(o *DeviceMemoryOptions) (DeviceMemory, loader.VkResult, error)
+	CreateDescriptorSetLayout(o *DescriptorSetLayoutOptions) (DescriptorSetLayout, loader.VkResult, error)
+	CreateDescriptorPool(o *DescriptorPoolOptions) (DescriptorPool, loader.VkResult, error)
+	AllocateDescriptorSet(o *DescriptorSetOptions) ([]DescriptorSet, loader.VkResult, error)
+	UpdateDescriptorSets(writes []*WriteDescriptorSetOptions, copies []*CopyDescriptorSetOptions) error
 }
 
 type Fence interface {
@@ -85,4 +107,8 @@ type Semaphore interface {
 type ShaderModule interface {
 	Handle() loader.VkShaderModule
 	Destroy() error
+}
+
+type Sampler interface {
+	Handle() loader.VkSampler
 }

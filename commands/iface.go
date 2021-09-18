@@ -24,6 +24,7 @@ type CommandBuffer interface {
 	CmdBindVertexBuffers(firstBinding uint32, buffers []resources.Buffer, bufferOffsets []int) error
 	CmdBindIndexBuffer(buffer resources.Buffer, offset int, indexType core.IndexType) error
 	CmdCopyBuffer(srcBuffer resources.Buffer, dstBuffer resources.Buffer, copyRegions []BufferCopy) error
+	CmdBindDescriptorSets(bindPoint core.PipelineBindPoint, layout pipeline.PipelineLayout, firstSet int, sets []resources.DescriptorSet, dynamicOffsets []int) error
 }
 
 type CommandPool interface {
