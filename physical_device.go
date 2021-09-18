@@ -21,6 +21,10 @@ func (d *vulkanPhysicalDevice) Handle() VkPhysicalDevice {
 	return d.handle
 }
 
+func (d *vulkanPhysicalDevice) Driver() Driver {
+	return d.driver
+}
+
 func (d *vulkanPhysicalDevice) QueueFamilyProperties() ([]*common.QueueFamily, error) {
 	allocator := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(allocator)
@@ -60,29 +64,6 @@ func (d *vulkanPhysicalDevice) QueueFamilyProperties() ([]*common.QueueFamily, e
 	}
 
 	return queueFamilies, nil
-}
-
-func (d *vulkanPhysicalDevice) CreateDevice(options *DeviceOptions) (Device, VkResult, error) {
-	arena := cgoparam.GetAlloc()
-	defer cgoparam.ReturnAlloc(arena)
-
-	createInfo, err := common.AllocOptions(arena, options)
-	if err != nil {
-		return nil, VKErrorUnknown, err
-	}
-
-	var deviceHandle VkDevice
-	res, err := d.driver.VkCreateDevice(d.handle, (*VkDeviceCreateInfo)(createInfo), nil, &deviceHandle)
-	if err != nil {
-		return nil, res, err
-	}
-
-	deviceDriver, err := d.driver.CreateDeviceDriver(deviceHandle)
-	if err != nil {
-		return nil, VKErrorUnknown, err
-	}
-
-	return &vulkanDevice{driver: deviceDriver, handle: deviceHandle}, res, nil
 }
 
 func (d *vulkanPhysicalDevice) Properties() (*common.PhysicalDeviceProperties, error) {

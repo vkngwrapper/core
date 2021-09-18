@@ -1,0 +1,307 @@
+package core
+
+/*
+#include <stdlib.h>
+#include "vulkan/vulkan.h"
+*/
+import "C"
+import (
+	"github.com/CannibalVox/VKng/core/common"
+	"github.com/CannibalVox/cgoparam"
+	"unsafe"
+)
+
+type VulkanLoader1_0 struct {
+	driver Driver
+}
+
+func CreateStaticLinkedLoader() (*VulkanLoader1_0, error) {
+	return CreateLoaderFromProcAddr(unsafe.Pointer(C.vkGetInstanceProcAddr))
+}
+
+func CreateLoaderFromProcAddr(addr unsafe.Pointer) (*VulkanLoader1_0, error) {
+	driver, err := createDriverFromProcAddr(addr)
+	if err != nil {
+		return nil, err
+	}
+
+	return CreateLoaderFromDriver(driver)
+}
+
+func CreateLoaderFromDriver(driver Driver) (*VulkanLoader1_0, error) {
+	return &VulkanLoader1_0{driver: driver}, nil
+}
+
+func (l *VulkanLoader1_0) Version() common.APIVersion {
+	return l.driver.Version()
+}
+
+func (l *VulkanLoader1_0) AvailableExtensions() (map[string]*common.ExtensionProperties, VkResult, error) {
+	alloc := cgoparam.GetAlloc()
+	defer cgoparam.ReturnAlloc(alloc)
+
+	extensionCount := (*Uint32)(alloc.Malloc(int(unsafe.Sizeof(C.uint32_t(0)))))
+
+	res, err := l.driver.VkEnumerateInstanceExtensionProperties(nil, extensionCount, nil)
+	if err != nil || *extensionCount == 0 {
+		return nil, res, err
+	}
+
+	extensionsUnsafe := alloc.Malloc(int(*extensionCount) * int(unsafe.Sizeof(C.VkExtensionProperties{})))
+
+	res, err = l.driver.VkEnumerateInstanceExtensionProperties(nil, extensionCount, (*VkExtensionProperties)(extensionsUnsafe))
+	if err != nil {
+		return nil, res, err
+	}
+
+	intExtensionCount := int(*extensionCount)
+	extensionArray := ([]C.VkExtensionProperties)(unsafe.Slice((*C.VkExtensionProperties)(extensionsUnsafe), intExtensionCount))
+	outExtensions := make(map[string]*common.ExtensionProperties)
+	for i := 0; i < intExtensionCount; i++ {
+		extension := extensionArray[i]
+
+		outExtension := &common.ExtensionProperties{
+			ExtensionName: C.GoString((*C.char)(&extension.extensionName[0])),
+			SpecVersion:   common.Version(extension.specVersion),
+		}
+
+		existingExtension, ok := outExtensions[outExtension.ExtensionName]
+		if ok && existingExtension.SpecVersion >= outExtension.SpecVersion {
+			continue
+		}
+		outExtensions[outExtension.ExtensionName] = outExtension
+	}
+
+	return outExtensions, res, nil
+}
+
+func (l *VulkanLoader1_0) AvailableLayers() (map[string]*common.LayerProperties, VkResult, error) {
+	alloc := cgoparam.GetAlloc()
+	defer cgoparam.ReturnAlloc(alloc)
+
+	layerCount := (*Uint32)(alloc.Malloc(int(unsafe.Sizeof(C.uint32_t(0)))))
+
+	res, err := l.driver.VkEnumerateInstanceLayerProperties(layerCount, nil)
+	if err != nil || *layerCount == 0 {
+		return nil, res, err
+	}
+
+	layersUnsafe := alloc.Malloc(int(*layerCount) * int(unsafe.Sizeof(C.VkLayerProperties{})))
+
+	res, err = l.driver.VkEnumerateInstanceLayerProperties(layerCount, (*VkLayerProperties)(layersUnsafe))
+	if err != nil {
+		return nil, res, err
+	}
+
+	intLayerCount := int(*layerCount)
+	layerArray := ([]C.VkLayerProperties)(unsafe.Slice((*C.VkLayerProperties)(layersUnsafe), intLayerCount))
+	outLayers := make(map[string]*common.LayerProperties)
+	for i := 0; i < intLayerCount; i++ {
+		layer := layerArray[i]
+
+		outLayer := &common.LayerProperties{
+			LayerName:             C.GoString((*C.char)(&layer.layerName[0])),
+			SpecVersion:           common.Version(layer.specVersion),
+			ImplementationVersion: common.Version(layer.implementationVersion),
+			Description:           C.GoString((*C.char)(&layer.description[0])),
+		}
+
+		existingLayer, ok := outLayers[outLayer.LayerName]
+		if ok && existingLayer.SpecVersion >= outLayer.SpecVersion {
+			continue
+		}
+		outLayers[outLayer.LayerName] = outLayer
+	}
+
+	return outLayers, res, nil
+}
+
+func (l *VulkanLoader1_0) CreateInstance(options *InstanceOptions) (Instance, VkResult, error) {
+	arena := cgoparam.GetAlloc()
+	defer cgoparam.ReturnAlloc(arena)
+
+	createInfo, err := common.AllocOptions(arena, options)
+	if err != nil {
+		return nil, VKErrorUnknown, err
+	}
+
+	var instanceHandle VkInstance
+
+	res, err := l.driver.VkCreateInstance((*VkInstanceCreateInfo)(createInfo), nil, &instanceHandle)
+	if err != nil {
+		return nil, res, err
+	}
+
+	instanceDriver, err := l.driver.CreateInstanceDriver((VkInstance)(instanceHandle))
+	if err != nil {
+		return nil, VKErrorUnknown, err
+	}
+
+	return &vulkanInstance{
+		driver: instanceDriver,
+		handle: instanceHandle,
+	}, res, nil
+}
+
+func (l *VulkanLoader1_0) CreateDevice(physicalDevice PhysicalDevice, options *DeviceOptions) (Device, VkResult, error) {
+	arena := cgoparam.GetAlloc()
+	defer cgoparam.ReturnAlloc(arena)
+
+	createInfo, err := common.AllocOptions(arena, options)
+	if err != nil {
+		return nil, VKErrorUnknown, err
+	}
+
+	var deviceHandle VkDevice
+	res, err := physicalDevice.Driver().VkCreateDevice(physicalDevice.Handle(), (*VkDeviceCreateInfo)(createInfo), nil, &deviceHandle)
+	if err != nil {
+		return nil, res, err
+	}
+
+	deviceDriver, err := physicalDevice.Driver().CreateDeviceDriver(deviceHandle)
+	if err != nil {
+		return nil, VKErrorUnknown, err
+	}
+
+	return &vulkanDevice{driver: deviceDriver, handle: deviceHandle}, res, nil
+}
+
+func (l *VulkanLoader1_0) CreateShaderModule(device Device, o *ShaderModuleOptions) (ShaderModule, VkResult, error) {
+	arena := cgoparam.GetAlloc()
+	defer cgoparam.ReturnAlloc(arena)
+
+	createInfo, err := common.AllocOptions(arena, o)
+	if err != nil {
+		return nil, VKErrorUnknown, err
+	}
+
+	var shaderModule VkShaderModule
+	res, err := device.Driver().VkCreateShaderModule(device.Handle(), (*VkShaderModuleCreateInfo)(createInfo), nil, &shaderModule)
+	if err != nil {
+		return nil, res, err
+	}
+
+	return &vulkanShaderModule{driver: device.Driver(), handle: shaderModule, device: device.Handle()}, res, nil
+}
+
+func (l *VulkanLoader1_0) CreateImageView(device Device, o *ImageViewOptions) (ImageView, VkResult, error) {
+	arena := cgoparam.GetAlloc()
+	defer cgoparam.ReturnAlloc(arena)
+
+	createInfo, err := common.AllocOptions(arena, o)
+	if err != nil {
+		return nil, VKErrorUnknown, err
+	}
+
+	var imageViewHandle VkImageView
+
+	res, err := device.Driver().VkCreateImageView(device.Handle(), (*VkImageViewCreateInfo)(createInfo), nil, &imageViewHandle)
+	if err != nil {
+		return nil, res, err
+	}
+
+	return &vulkanImageView{driver: device.Driver(), handle: imageViewHandle, device: device.Handle()}, res, nil
+}
+
+func (l *VulkanLoader1_0) CreateSemaphore(device Device, o *SemaphoreOptions) (Semaphore, VkResult, error) {
+	arena := cgoparam.GetAlloc()
+	defer cgoparam.ReturnAlloc(arena)
+
+	createInfo, err := common.AllocOptions(arena, o)
+	if err != nil {
+		return nil, VKErrorUnknown, err
+	}
+
+	var semaphoreHandle VkSemaphore
+
+	res, err := device.Driver().VkCreateSemaphore(device.Handle(), (*VkSemaphoreCreateInfo)(createInfo), nil, &semaphoreHandle)
+	if err != nil {
+		return nil, res, err
+	}
+
+	return &vulkanSemaphore{driver: device.Driver(), device: device.Handle(), handle: semaphoreHandle}, res, nil
+}
+
+func (l *VulkanLoader1_0) CreateFence(device Device, o *FenceOptions) (Fence, VkResult, error) {
+	arena := cgoparam.GetAlloc()
+	defer cgoparam.ReturnAlloc(arena)
+
+	createInfo, err := common.AllocOptions(arena, o)
+	if err != nil {
+		return nil, VKErrorUnknown, err
+	}
+
+	var fenceHandle VkFence
+
+	res, err := device.Driver().VkCreateFence(device.Handle(), (*VkFenceCreateInfo)(createInfo), nil, &fenceHandle)
+	if err != nil {
+		return nil, res, err
+	}
+
+	return &vulkanFence{driver: device.Driver(), device: device.Handle(), handle: fenceHandle}, res, nil
+}
+
+func (l *VulkanLoader1_0) CreateBuffer(device Device, o *BufferOptions) (Buffer, VkResult, error) {
+	arena := cgoparam.GetAlloc()
+	defer cgoparam.ReturnAlloc(arena)
+
+	createInfo, err := common.AllocOptions(arena, o)
+	if err != nil {
+		return nil, VKErrorUnknown, err
+	}
+
+	var buffer VkBuffer
+
+	res, err := device.Driver().VkCreateBuffer(device.Handle(), (*VkBufferCreateInfo)(createInfo), nil, &buffer)
+	if err != nil {
+		return nil, res, err
+	}
+
+	return &vulkanBuffer{driver: device.Driver(), handle: buffer, device: device.Handle()}, res, nil
+}
+
+func (l *VulkanLoader1_0) CreateDescriptorSetLayout(device Device, o *DescriptorSetLayoutOptions) (DescriptorSetLayout, VkResult, error) {
+	arena := cgoparam.GetAlloc()
+	defer cgoparam.ReturnAlloc(arena)
+
+	createInfo, err := common.AllocOptions(arena, o)
+	if err != nil {
+		return nil, VKErrorUnknown, err
+	}
+
+	var descriptorSetLayout VkDescriptorSetLayout
+
+	res, err := device.Driver().VkCreateDescriptorSetLayout(device.Handle(), (*VkDescriptorSetLayoutCreateInfo)(createInfo), nil, &descriptorSetLayout)
+	if err != nil {
+		return nil, res, err
+	}
+
+	return &vulkanDescriptorSetLayout{
+		driver: device.Driver(),
+		device: device.Handle(),
+		handle: descriptorSetLayout,
+	}, res, nil
+}
+
+func (l *VulkanLoader1_0) CreateDescriptorPool(device Device, o *DescriptorPoolOptions) (DescriptorPool, VkResult, error) {
+	arena := cgoparam.GetAlloc()
+	defer cgoparam.ReturnAlloc(arena)
+
+	createInfo, err := common.AllocOptions(arena, o)
+	if err != nil {
+		return nil, VKErrorUnknown, err
+	}
+
+	var descriptorPool VkDescriptorPool
+
+	res, err := device.Driver().VkCreateDescriptorPool(device.Handle(), (*VkDescriptorPoolCreateInfo)(createInfo), nil, &descriptorPool)
+	if err != nil {
+		return nil, res, err
+	}
+
+	return &vulkanDescriptorPool{
+		driver: device.Driver(),
+		handle: descriptorPool,
+		device: device.Handle(),
+	}, res, nil
+}

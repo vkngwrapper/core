@@ -23,9 +23,9 @@ import (
 	"unsafe"
 )
 
-//go:generate mockgen -source driver.go -destination ../mocks/driver.go -package=mocks
+//go:generate mockgen -source driver.go -destination ./mocks/driver.go -package=mocks
 
-type VulkanDriver struct {
+type vulkanDriver struct {
 	instance VkInstance
 	device   VkDevice
 	funcPtrs *C.DriverFuncPtrs
@@ -225,9 +225,9 @@ type Driver interface {
 	VkGetDeviceMemoryOpaqueCaptureAddress(device VkDevice, pInfo *VkDeviceMemoryOpaqueCaptureAddressInfo) (Uint64, error)
 }
 
-func createVulkanDriver(funcPtrs *C.DriverFuncPtrs, instance VkInstance, device VkDevice) (*VulkanDriver, error) {
+func createVulkanDriver(funcPtrs *C.DriverFuncPtrs, instance VkInstance, device VkDevice) (*vulkanDriver, error) {
 	version := common.Vulkan1_0
-	driver := &VulkanDriver{funcPtrs: funcPtrs, instance: instance, device: device}
+	driver := &vulkanDriver{funcPtrs: funcPtrs, instance: instance, device: device}
 
 	if funcPtrs.vkEnumerateInstanceVersion != nil {
 		var versionBits Uint32
@@ -243,11 +243,7 @@ func createVulkanDriver(funcPtrs *C.DriverFuncPtrs, instance VkInstance, device 
 	return driver, nil
 }
 
-func CreateStaticLinkedLoader() (*VulkanDriver, error) {
-	return CreateLoaderFromProcAddr(unsafe.Pointer(C.vkGetInstanceProcAddr))
-}
-
-func CreateLoaderFromProcAddr(procAddr unsafe.Pointer) (*VulkanDriver, error) {
+func createDriverFromProcAddr(procAddr unsafe.Pointer) (*vulkanDriver, error) {
 	baseFuncPtr := (C.PFN_vkGetInstanceProcAddr)(procAddr)
 	funcPtrs := (*C.DriverFuncPtrs)(C.malloc(C.sizeof_struct_DriverFuncPtrs))
 	C.driverFuncPtrs_populate(baseFuncPtr, funcPtrs)
@@ -255,18 +251,18 @@ func CreateLoaderFromProcAddr(procAddr unsafe.Pointer) (*VulkanDriver, error) {
 	return createVulkanDriver(funcPtrs, nil, nil)
 }
 
-func (l *VulkanDriver) Destroy() {
+func (l *vulkanDriver) Destroy() {
 	C.free(unsafe.Pointer(l.funcPtrs))
 }
 
-func (l *VulkanDriver) CreateInstanceDriver(instance VkInstance) (Driver, error) {
+func (l *vulkanDriver) CreateInstanceDriver(instance VkInstance) (Driver, error) {
 	instanceFuncPtrs := (*C.DriverFuncPtrs)(C.malloc(C.sizeof_struct_DriverFuncPtrs))
 	C.instanceFuncPtrs_populate((C.VkInstance)(instance), l.funcPtrs, instanceFuncPtrs)
 
 	return createVulkanDriver(instanceFuncPtrs, instance, nil)
 }
 
-func (l *VulkanDriver) CreateDeviceDriver(device VkDevice) (Driver, error) {
+func (l *vulkanDriver) CreateDeviceDriver(device VkDevice) (Driver, error) {
 	if l.instance == nil {
 		return nil, errors.New("attempted to call instance driver function on a basic driver")
 	}
@@ -277,7 +273,7 @@ func (l *VulkanDriver) CreateDeviceDriver(device VkDevice) (Driver, error) {
 	return createVulkanDriver(deviceFuncPtrs, l.instance, device)
 }
 
-func (l *VulkanDriver) LoadProcAddr(name *Char) unsafe.Pointer {
+func (l *vulkanDriver) LoadProcAddr(name *Char) unsafe.Pointer {
 	if l.device != nil {
 		return unsafe.Pointer(C.device_proc_addr(l.funcPtrs, l.device, (*C.char)(name)))
 	} else {
@@ -285,6 +281,6 @@ func (l *VulkanDriver) LoadProcAddr(name *Char) unsafe.Pointer {
 	}
 }
 
-func (l *VulkanDriver) Version() common.APIVersion {
+func (l *vulkanDriver) Version() common.APIVersion {
 	return l.version
 }

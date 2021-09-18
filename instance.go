@@ -6,37 +6,9 @@ package core
 */
 import "C"
 import (
-	"github.com/CannibalVox/VKng/core/common"
 	"github.com/CannibalVox/cgoparam"
 	"unsafe"
 )
-
-func CreateInstance(load Driver, options *InstanceOptions) (Instance, VkResult, error) {
-	arena := cgoparam.GetAlloc()
-	defer cgoparam.ReturnAlloc(arena)
-
-	createInfo, err := common.AllocOptions(arena, options)
-	if err != nil {
-		return nil, VKErrorUnknown, err
-	}
-
-	var instanceHandle VkInstance
-
-	res, err := load.VkCreateInstance((*VkInstanceCreateInfo)(createInfo), nil, &instanceHandle)
-	if err != nil {
-		return nil, res, err
-	}
-
-	instanceDriver, err := load.CreateInstanceDriver((VkInstance)(instanceHandle))
-	if err != nil {
-		return nil, VKErrorUnknown, err
-	}
-
-	return &vulkanInstance{
-		driver: instanceDriver,
-		handle: instanceHandle,
-	}, res, nil
-}
 
 type vulkanInstance struct {
 	driver Driver

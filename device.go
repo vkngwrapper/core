@@ -41,81 +41,6 @@ func (d *vulkanDevice) GetQueue(queueFamilyIndex int, queueIndex int) (Queue, er
 	return &vulkanQueue{driver: d.driver, handle: queueHandle}, nil
 }
 
-func (d *vulkanDevice) CreateShaderModule(o *ShaderModuleOptions) (ShaderModule, VkResult, error) {
-	arena := cgoparam.GetAlloc()
-	defer cgoparam.ReturnAlloc(arena)
-
-	createInfo, err := common.AllocOptions(arena, o)
-	if err != nil {
-		return nil, VKErrorUnknown, err
-	}
-
-	var shaderModule VkShaderModule
-	res, err := d.driver.VkCreateShaderModule(d.handle, (*VkShaderModuleCreateInfo)(createInfo), nil, &shaderModule)
-	if err != nil {
-		return nil, res, err
-	}
-
-	return &vulkanShaderModule{driver: d.driver, handle: shaderModule, device: d.handle}, res, nil
-}
-
-func (d *vulkanDevice) CreateImageView(o *ImageViewOptions) (ImageView, VkResult, error) {
-	arena := cgoparam.GetAlloc()
-	defer cgoparam.ReturnAlloc(arena)
-
-	createInfo, err := common.AllocOptions(arena, o)
-	if err != nil {
-		return nil, VKErrorUnknown, err
-	}
-
-	var imageViewHandle VkImageView
-
-	res, err := d.driver.VkCreateImageView(d.handle, (*VkImageViewCreateInfo)(createInfo), nil, &imageViewHandle)
-	if err != nil {
-		return nil, res, err
-	}
-
-	return &vulkanImageView{driver: d.driver, handle: imageViewHandle, device: d.handle}, res, nil
-}
-
-func (d *vulkanDevice) CreateSemaphore(o *SemaphoreOptions) (Semaphore, VkResult, error) {
-	arena := cgoparam.GetAlloc()
-	defer cgoparam.ReturnAlloc(arena)
-
-	createInfo, err := common.AllocOptions(arena, o)
-	if err != nil {
-		return nil, VKErrorUnknown, err
-	}
-
-	var semaphoreHandle VkSemaphore
-
-	res, err := d.driver.VkCreateSemaphore(d.handle, (*VkSemaphoreCreateInfo)(createInfo), nil, &semaphoreHandle)
-	if err != nil {
-		return nil, res, err
-	}
-
-	return &vulkanSemaphore{driver: d.driver, device: d.handle, handle: semaphoreHandle}, res, nil
-}
-
-func (d *vulkanDevice) CreateFence(o *FenceOptions) (Fence, VkResult, error) {
-	arena := cgoparam.GetAlloc()
-	defer cgoparam.ReturnAlloc(arena)
-
-	createInfo, err := common.AllocOptions(arena, o)
-	if err != nil {
-		return nil, VKErrorUnknown, err
-	}
-
-	var fenceHandle VkFence
-
-	res, err := d.driver.VkCreateFence(d.handle, (*VkFenceCreateInfo)(createInfo), nil, &fenceHandle)
-	if err != nil {
-		return nil, res, err
-	}
-
-	return &vulkanFence{driver: d.driver, device: d.handle, handle: fenceHandle}, res, nil
-}
-
 func (d *vulkanDevice) WaitForIdle() (VkResult, error) {
 	return d.driver.VkDeviceWaitIdle(d.handle)
 }
@@ -158,25 +83,6 @@ func (d *vulkanDevice) ResetFences(fences []Fence) (VkResult, error) {
 	return d.driver.VkResetFences(d.handle, Uint32(fenceCount), fencePtr)
 }
 
-func (d *vulkanDevice) CreateBuffer(o *BufferOptions) (Buffer, VkResult, error) {
-	arena := cgoparam.GetAlloc()
-	defer cgoparam.ReturnAlloc(arena)
-
-	createInfo, err := common.AllocOptions(arena, o)
-	if err != nil {
-		return nil, VKErrorUnknown, err
-	}
-
-	var buffer VkBuffer
-
-	res, err := d.driver.VkCreateBuffer(d.handle, (*VkBufferCreateInfo)(createInfo), nil, &buffer)
-	if err != nil {
-		return nil, res, err
-	}
-
-	return &vulkanBuffer{driver: d.driver, handle: buffer, device: d.handle}, res, nil
-}
-
 func (d *vulkanDevice) AllocateMemory(o *DeviceMemoryOptions) (DeviceMemory, VkResult, error) {
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
@@ -197,52 +103,6 @@ func (d *vulkanDevice) AllocateMemory(o *DeviceMemoryOptions) (DeviceMemory, VkR
 		driver: d.driver,
 		device: d.handle,
 		handle: deviceMemory,
-	}, res, nil
-}
-
-func (d *vulkanDevice) CreateDescriptorSetLayout(o *DescriptorSetLayoutOptions) (DescriptorSetLayout, VkResult, error) {
-	arena := cgoparam.GetAlloc()
-	defer cgoparam.ReturnAlloc(arena)
-
-	createInfo, err := common.AllocOptions(arena, o)
-	if err != nil {
-		return nil, VKErrorUnknown, err
-	}
-
-	var descriptorSetLayout VkDescriptorSetLayout
-
-	res, err := d.driver.VkCreateDescriptorSetLayout(d.handle, (*VkDescriptorSetLayoutCreateInfo)(createInfo), nil, &descriptorSetLayout)
-	if err != nil {
-		return nil, res, err
-	}
-
-	return &vulkanDescriptorSetLayout{
-		driver: d.driver,
-		device: d.handle,
-		handle: descriptorSetLayout,
-	}, res, nil
-}
-
-func (d *vulkanDevice) CreateDescriptorPool(o *DescriptorPoolOptions) (DescriptorPool, VkResult, error) {
-	arena := cgoparam.GetAlloc()
-	defer cgoparam.ReturnAlloc(arena)
-
-	createInfo, err := common.AllocOptions(arena, o)
-	if err != nil {
-		return nil, VKErrorUnknown, err
-	}
-
-	var descriptorPool VkDescriptorPool
-
-	res, err := d.driver.VkCreateDescriptorPool(d.handle, (*VkDescriptorPoolCreateInfo)(createInfo), nil, &descriptorPool)
-	if err != nil {
-		return nil, res, err
-	}
-
-	return &vulkanDescriptorPool{
-		driver: d.driver,
-		handle: descriptorPool,
-		device: d.handle,
 	}, res, nil
 }
 

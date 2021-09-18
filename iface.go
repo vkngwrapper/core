@@ -6,7 +6,7 @@ import (
 	"unsafe"
 )
 
-//go:generate mockgen -source iface.go -destination ../mocks/core.go -package=mocks
+//go:generate mockgen -source iface.go -destination ./mocks/core.go -package=mocks
 
 type Buffer interface {
 	Handle() VkBuffer
@@ -70,17 +70,10 @@ type Device interface {
 	Destroy() error
 	Driver() Driver
 	GetQueue(queueFamilyIndex int, queueIndex int) (Queue, error)
-	CreateShaderModule(o *ShaderModuleOptions) (ShaderModule, VkResult, error)
-	CreateImageView(o *ImageViewOptions) (ImageView, VkResult, error)
-	CreateSemaphore(o *SemaphoreOptions) (Semaphore, VkResult, error)
-	CreateFence(o *FenceOptions) (Fence, VkResult, error)
 	WaitForIdle() (VkResult, error)
 	WaitForFences(waitForAll bool, timeout time.Duration, fences []Fence) (VkResult, error)
 	ResetFences(fences []Fence) (VkResult, error)
-	CreateBuffer(o *BufferOptions) (Buffer, VkResult, error)
 	AllocateMemory(o *DeviceMemoryOptions) (DeviceMemory, VkResult, error)
-	CreateDescriptorSetLayout(o *DescriptorSetLayoutOptions) (DescriptorSetLayout, VkResult, error)
-	CreateDescriptorPool(o *DescriptorPoolOptions) (DescriptorPool, VkResult, error)
 	AllocateDescriptorSet(o *DescriptorSetOptions) ([]DescriptorSet, VkResult, error)
 	UpdateDescriptorSets(writes []*WriteDescriptorSetOptions, copies []*CopyDescriptorSetOptions) error
 }
@@ -111,10 +104,27 @@ type Instance interface {
 	PhysicalDevices() ([]PhysicalDevice, VkResult, error)
 }
 
+type Loader1_0 interface {
+	Version() common.APIVersion
+
+	AvailableExtensions() (map[string]*common.ExtensionProperties, VkResult, error)
+	AvailableLayers() (map[string]*common.LayerProperties, VkResult, error)
+
+	CreateInstance(options *InstanceOptions) (Instance, VkResult, error)
+	CreateDevice(physicalDevice PhysicalDevice, options *DeviceOptions) (Device, VkResult, error)
+	CreateShaderModule(device Device, o *ShaderModuleOptions) (ShaderModule, VkResult, error)
+	CreateImageView(device Device, o *ImageViewOptions) (ImageView, VkResult, error)
+	CreateSemaphore(device Device, o *SemaphoreOptions) (Semaphore, VkResult, error)
+	CreateFence(device Device, o *FenceOptions) (Fence, VkResult, error)
+	CreateBuffer(device Device, o *BufferOptions) (Buffer, VkResult, error)
+	CreateDescriptorSetLayout(device Device, o *DescriptorSetLayoutOptions) (DescriptorSetLayout, VkResult, error)
+	CreateDescriptorPool(device Device, o *DescriptorPoolOptions) (DescriptorPool, VkResult, error)
+}
+
 type PhysicalDevice interface {
 	Handle() VkPhysicalDevice
+	Driver() Driver
 	QueueFamilyProperties() ([]*common.QueueFamily, error)
-	CreateDevice(options *DeviceOptions) (Device, VkResult, error)
 	Properties() (*common.PhysicalDeviceProperties, error)
 	Features() (*common.PhysicalDeviceFeatures, error)
 	AvailableExtensions() (map[string]*common.ExtensionProperties, VkResult, error)
