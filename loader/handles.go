@@ -31,6 +31,8 @@ type VkRenderPass C.VkRenderPass
 type VkSampler C.VkSampler
 type VkSemaphore C.VkSemaphore
 type VkShaderModule C.VkShaderModule
+type VkSamplerYcbcrConversion C.VkSamplerYcbcrConversion
+type VkDescriptorUpdateTemplate C.VkDescriptorUpdateTemplate
 
 type VkBufferCreateInfo C.VkBufferCreateInfo
 type VkBufferViewCreateInfo C.VkBufferViewCreateInfo
@@ -64,6 +66,26 @@ type VkSemaphoreCreateInfo C.VkSemaphoreCreateInfo
 type VkShaderModuleCreateInfo C.VkShaderModuleCreateInfo
 type VkSubmitInfo C.VkSubmitInfo
 type VkWriteDescriptorSet C.VkWriteDescriptorSet
+type VkBindBufferMemoryInfo C.VkBindBufferMemoryInfo
+type VkBindImageMemoryInfo C.VkBindImageMemoryInfo
+type VkImageMemoryRequirementsInfo2 C.VkImageMemoryRequirementsInfo2
+type VkBufferMemoryRequirementsInfo2 C.VkBufferMemoryRequirementsInfo2
+type VkImageSparseMemoryRequirementsInfo2 C.VkImageSparseMemoryRequirementsInfo2
+type VkPhysicalDeviceImageFormatInfo2 C.VkPhysicalDeviceImageFormatInfo2
+type VkDeviceQueueInfo2 C.VkDeviceQueueInfo2
+type VkSamplerYcbcrConversionCreateInfo C.VkSamplerYcbcrConversionCreateInfo
+type VkDescriptorUpdateTemplateCreateInfo C.VkDescriptorUpdateTemplateCreateInfo
+type VkPhysicalDeviceSparseImageFormatInfo2 C.VkPhysicalDeviceSparseImageFormatInfo2
+type VkPhysicalDeviceExternalBufferInfo C.VkPhysicalDeviceExternalBufferInfo
+type VkPhysicalDeviceExternalFenceInfo C.VkPhysicalDeviceExternalFenceInfo
+type VkPhysicalDeviceExternalSemaphoreInfo C.VkPhysicalDeviceExternalSemaphoreInfo
+type VkRenderPassCreateInfo2 C.VkRenderPassCreateInfo2
+type VkSubpassBeginInfo C.VkSubpassBeginInfo
+type VkSubpassEndInfo C.VkSubpassEndInfo
+type VkSemaphoreWaitInfo C.VkSemaphoreWaitInfo
+type VkSemaphoreSignalInfo C.VkSemaphoreSignalInfo
+type VkBufferDeviceAddressInfo C.VkBufferDeviceAddressInfo
+type VkDeviceMemoryOpaqueCaptureAddressInfo C.VkDeviceMemoryOpaqueCaptureAddressInfo
 
 type VkAllocationCallbacks C.VkAllocationCallbacks
 type VkBindSparseInfo C.VkBindSparseInfo
@@ -94,6 +116,20 @@ type VkSparseImageFormatProperties C.VkSparseImageFormatProperties
 type VkSparseImageMemoryRequirements C.VkSparseImageMemoryRequirements
 type VkSubresourceLayout C.VkSubresourceLayout
 type VkViewport C.VkViewport
+type VkPhysicalDeviceGroupProperties C.VkPhysicalDeviceGroupProperties
+type VkPhysicalDeviceFeatures2 C.VkPhysicalDeviceFeatures2
+type VkPhysicalDeviceProperties2 C.VkPhysicalDeviceProperties2
+type VkFormatProperties2 C.VkFormatProperties2
+type VkMemoryRequirements2 C.VkMemoryRequirements2
+type VkSparseImageMemoryRequirements2 C.VkSparseImageMemoryRequirements2
+type VkImageFormatProperties2 C.VkImageFormatProperties2
+type VkQueueFamilyProperties2 C.VkQueueFamilyProperties2
+type VkPhysicalDeviceMemoryProperties2 C.VkPhysicalDeviceMemoryProperties2
+type VkSparseImageFormatProperties2 C.VkSparseImageFormatProperties2
+type VkExternalBufferProperties C.VkExternalBufferProperties
+type VkExternalFenceProperties C.VkExternalFenceProperties
+type VkExternalSemaphoreProperties C.VkExternalSemaphoreProperties
+type VkDescriptorSetLayoutSupport C.VkDescriptorSetLayoutSupport
 
 type VkCommandBufferResetFlags C.VkCommandBufferResetFlags
 type VkCommandPoolResetFlags C.VkCommandPoolResetFlags
@@ -117,6 +153,9 @@ type VkSampleCountFlagBits C.VkSampleCountFlagBits
 type VkShaderStageFlags C.VkShaderStageFlags
 type VkStencilFaceFlags C.VkStencilFaceFlags
 type VkSubpassContents C.VkSubpassContents
+type VkPeerMemoryFeatureFlags C.VkPeerMemoryFeatureFlags
+type VkCommandPoolTrimFlags C.VkCommandPoolTrimFlags
+type VkDeviceAddress C.VkDeviceAddress
 
 type VkBool32 C.VkBool32
 type Int32 C.int32_t

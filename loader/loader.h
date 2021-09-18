@@ -539,3 +539,169 @@ void cgoCmdEndRenderPass(PFN_vkCmdEndRenderPass fn, VkCommandBuffer commandBuffe
 void cgoCmdExecuteCommands(PFN_vkCmdExecuteCommands fn, VkCommandBuffer commandBuffer, uint32_t commandBufferCount, VkCommandBuffer* pCommandBuffers) {
     fn(commandBuffer, commandBufferCount, pCommandBuffers);
 }
+
+VkResult cgoEnumerateInstanceVersion(PFN_vkEnumerateInstanceVersion fn, uint32_t* pApiVersion) {
+    return fn(pApiVersion);
+}
+
+VkResult cgoBindBufferMemory2(PFN_vkBindBufferMemory2 fn, VkDevice device, uint32_t bindInfoCount, VkBindBufferMemoryInfo* pBindInfos) {
+    return fn(device, bindInfoCount, pBindInfos);
+}
+
+VkResult cgoBindImageMemory2(PFN_vkBindImageMemory2 fn, VkDevice device, uint32_t bindInfoCount, VkBindImageMemoryInfo* pBindInfos) {
+    return fn(device, bindInfoCount, pBindInfos);
+}
+
+void cgoGetDeviceGroupPeerMemoryFeatures(PFN_vkGetDeviceGroupPeerMemoryFeatures fn, VkDevice device, uint32_t heapIndex, uint32_t localDeviceIndex, uint32_t remoteDeviceIndex, VkPeerMemoryFeatureFlags* pPeerMemoryFeatures) {
+    fn(device, heapIndex, localDeviceIndex, remoteDeviceIndex, pPeerMemoryFeatures);
+}
+
+void cgoCmdSetDeviceMask(PFN_vkCmdSetDeviceMask fn, VkCommandBuffer commandBuffer, uint32_t deviceMask) {
+    fn(commandBuffer, deviceMask);
+}
+
+void cgoCmdDispatchBase(PFN_vkCmdDispatchBase fn, VkCommandBuffer commandBuffer, uint32_t baseGroupX, uint32_t baseGroupY, uint32_t baseGroupZ, uint32_t groupCountX, uint32_t groupCountY, uint32_t groupCountZ) {
+    fn(commandBuffer, baseGroupX, baseGroupY, baseGroupZ, groupCountX, groupCountY, groupCountZ);
+}
+
+VkResult cgoEnumeratePhysicalDeviceGroups(PFN_vkEnumeratePhysicalDeviceGroups fn, VkInstance instance, uint32_t* pPhysicalDeviceGroupCount, VkPhysicalDeviceGroupProperties* pPhysicalDeviceGroupProperties) {
+    return fn(instance, pPhysicalDeviceGroupCount, pPhysicalDeviceGroupProperties);
+}
+
+void cgoGetImageMemoryRequirements2(PFN_vkGetImageMemoryRequirements2 fn, VkDevice device, VkImageMemoryRequirementsInfo2* pInfo, VkMemoryRequirements2* pMemoryRequirements) {
+    fn(device, pInfo, pMemoryRequirements);
+}
+
+void cgoGetBufferMemoryRequirements2(PFN_vkGetBufferMemoryRequirements2 fn, VkDevice device, VkBufferMemoryRequirementsInfo2* pInfo, VkMemoryRequirements2* pMemoryRequirements) {
+    fn(device, pInfo, pMemoryRequirements);
+}
+
+void cgoGetImageSparseMemoryRequirements2(PFN_vkGetImageSparseMemoryRequirements2 fn, VkDevice device, VkImageSparseMemoryRequirementsInfo2* pInfo, uint32_t* pSparseMemoryRequirementCount, VkSparseImageMemoryRequirements2* pSparseMemoryRequirements) {
+    fn(device, pInfo, pSparseMemoryRequirementCount, pSparseMemoryRequirements);
+}
+
+void cgoGetPhysicalDeviceFeatures2(PFN_vkGetPhysicalDeviceFeatures2 fn, VkPhysicalDevice physicalDevice, VkPhysicalDeviceFeatures2* pFeatures) {
+    fn(physicalDevice, pFeatures);
+}
+
+void cgoGetPhysicalDeviceProperties2(PFN_vkGetPhysicalDeviceProperties2 fn, VkPhysicalDevice physicalDevice, VkPhysicalDeviceProperties2* pProperties) {
+    fn(physicalDevice, pProperties);
+}
+
+void cgoGetPhysicalDeviceFormatProperties2(PFN_vkGetPhysicalDeviceFormatProperties2 fn, VkPhysicalDevice physicalDevice, VkFormat format, VkFormatProperties2* pFormatProperties) {
+    fn(physicalDevice, format, pFormatProperties);
+}
+
+VkResult cgoGetPhysicalDeviceImageFormatProperties2(PFN_vkGetPhysicalDeviceImageFormatProperties2 fn, VkPhysicalDevice physicalDevice, VkPhysicalDeviceImageFormatInfo2* pImageFormatInfo, VkImageFormatProperties2* pImageFormatProperties) {
+    return fn(physicalDevice, pImageFormatInfo, pImageFormatProperties);
+}
+
+void cgoGetPhysicalDeviceQueueFamilyProperties2(PFN_vkGetPhysicalDeviceQueueFamilyProperties2 fn, VkPhysicalDevice physicalDevice, uint32_t* pQueueFamilyPropertyCount, VkQueueFamilyProperties2* pQueueFamilyProperties) {
+    fn(physicalDevice, pQueueFamilyPropertyCount, pQueueFamilyProperties);
+}
+
+void cgoGetPhysicalDeviceMemoryProperties2(PFN_vkGetPhysicalDeviceMemoryProperties2 fn, VkPhysicalDevice physicalDevice, VkPhysicalDeviceMemoryProperties2* pMemoryProperties) {
+    fn(physicalDevice, pMemoryProperties);
+}
+
+void cgoGetPhysicalDeviceSparseImageFormatProperties2(PFN_vkGetPhysicalDeviceSparseImageFormatProperties2 fn, VkPhysicalDevice physicalDevice, VkPhysicalDeviceSparseImageFormatInfo2* pFormatInfo, uint32_t* pPropertyCount, VkSparseImageFormatProperties2* pProperties) {
+    fn(physicalDevice, pFormatInfo, pPropertyCount, pProperties);
+}
+
+void cgoTrimCommandPool(PFN_vkTrimCommandPool fn, VkDevice device, VkCommandPool commandPool, VkCommandPoolTrimFlags flags) {
+    fn(device, commandPool, flags);
+}
+
+void cgoGetDeviceQueue2(PFN_vkGetDeviceQueue2 fn, VkDevice device, VkDeviceQueueInfo2* pQueueInfo, VkQueue* pQueue) {
+    fn(device, pQueueInfo, pQueue);
+}
+
+VkResult cgoCreateSamplerYcbcrConversion(PFN_vkCreateSamplerYcbcrConversion fn, VkDevice device, VkSamplerYcbcrConversionCreateInfo* pCreateInfo, VkAllocationCallbacks* pAllocator, VkSamplerYcbcrConversion* pYcbcrConversion) {
+    return fn(device, pCreateInfo, pAllocator, pYcbcrConversion);
+}
+
+void cgoDestroySamplerYcbcrConversion(PFN_vkDestroySamplerYcbcrConversion fn, VkDevice device, VkSamplerYcbcrConversion ycbcrConversion, VkAllocationCallbacks* pAllocator) {
+    fn(device, ycbcrConversion, pAllocator);
+}
+
+VkResult cgoCreateDescriptorUpdateTemplate(PFN_vkCreateDescriptorUpdateTemplate fn, VkDevice device, VkDescriptorUpdateTemplateCreateInfo* pCreateInfo, VkAllocationCallbacks* pAllocator, VkDescriptorUpdateTemplate* pDescriptorUpdateTemplate) {
+    return fn(device, pCreateInfo, pAllocator, pDescriptorUpdateTemplate);
+}
+
+void cgoDestroyDescriptorUpdateTemplate(PFN_vkDestroyDescriptorUpdateTemplate fn, VkDevice device, VkDescriptorUpdateTemplate descriptorUpdateTemplate, VkAllocationCallbacks* pAllocator) {
+    fn(device, descriptorUpdateTemplate, pAllocator);
+}
+
+void cgoUpdateDescriptorSetWithTemplate(PFN_vkUpdateDescriptorSetWithTemplate fn, VkDevice device, VkDescriptorSet descriptorSet, VkDescriptorUpdateTemplate descriptorUpdateTemplate, void* pData) {
+    fn(device, descriptorSet, descriptorUpdateTemplate, pData);
+}
+
+void cgoGetPhysicalDeviceExternalBufferProperties(PFN_vkGetPhysicalDeviceExternalBufferProperties fn, VkPhysicalDevice physicalDevice, VkPhysicalDeviceExternalBufferInfo* pExternalBufferInfo, VkExternalBufferProperties* pExternalBufferProperties) {
+    fn(physicalDevice, pExternalBufferInfo, pExternalBufferProperties);
+}
+
+void cgoGetPhysicalDeviceExternalFenceProperties(PFN_vkGetPhysicalDeviceExternalFenceProperties fn, VkPhysicalDevice physicalDevice, VkPhysicalDeviceExternalFenceInfo* pExternalFenceInfo, VkExternalFenceProperties* pExternalFenceProperties) {
+    fn(physicalDevice, pExternalFenceInfo, pExternalFenceProperties);
+}
+
+void cgoGetPhysicalDeviceExternalSemaphoreProperties(PFN_vkGetPhysicalDeviceExternalSemaphoreProperties fn, VkPhysicalDevice physicalDevice, VkPhysicalDeviceExternalSemaphoreInfo* pExternalSemaphoreInfo, VkExternalSemaphoreProperties* pExternalSemaphoreProperties) {
+    fn(physicalDevice, pExternalSemaphoreInfo, pExternalSemaphoreProperties);
+}
+
+void cgoGetDescriptorSetLayoutSupport(PFN_vkGetDescriptorSetLayoutSupport fn, VkDevice device, VkDescriptorSetLayoutCreateInfo* pCreateInfo, VkDescriptorSetLayoutSupport* pSupport) {
+    fn(device, pCreateInfo, pSupport);
+}
+
+void cgoCmdDrawIndirectCount(PFN_vkCmdDrawIndirectCount fn, VkCommandBuffer commandBuffer, VkBuffer buffer, VkDeviceSize offset, VkBuffer countBuffer, VkDeviceSize countBufferOffset, uint32_t maxDrawCount, uint32_t stride) {
+    fn(commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride);
+}
+
+void cgoCmdDrawIndexedIndirectCount(PFN_vkCmdDrawIndexedIndirectCount fn, VkCommandBuffer commandBuffer, VkBuffer buffer, VkDeviceSize offset, VkBuffer countBuffer, VkDeviceSize countBufferOffset, uint32_t maxDrawCount, uint32_t stride) {
+    fn(commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride);
+}
+
+VkResult cgoCreateRenderPass2(PFN_vkCreateRenderPass2 fn, VkDevice device, VkRenderPassCreateInfo2* pCreateInfo, VkAllocationCallbacks* pAllocator, VkRenderPass* pRenderPass) {
+    return fn(device, pCreateInfo, pAllocator, pRenderPass);
+}
+
+void cgoCmdBeginRenderPass2(PFN_vkCmdBeginRenderPass2 fn, VkCommandBuffer commandBuffer, VkRenderPassBeginInfo*      pRenderPassBegin, VkSubpassBeginInfo*      pSubpassBeginInfo) {
+    fn(commandBuffer, pRenderPassBegin, pSubpassBeginInfo);
+}
+
+void cgoCmdNextSubpass2(PFN_vkCmdNextSubpass2 fn, VkCommandBuffer commandBuffer, VkSubpassBeginInfo*      pSubpassBeginInfo, VkSubpassEndInfo*        pSubpassEndInfo) {
+    fn(commandBuffer, pSubpassBeginInfo, pSubpassEndInfo);
+}
+
+void cgoCmdEndRenderPass2(PFN_vkCmdEndRenderPass2 fn, VkCommandBuffer commandBuffer, VkSubpassEndInfo*        pSubpassEndInfo) {
+    fn(commandBuffer, pSubpassEndInfo);
+}
+
+void cgoResetQueryPool(PFN_vkResetQueryPool fn, VkDevice device, VkQueryPool queryPool, uint32_t firstQuery, uint32_t queryCount) {
+    fn(device, queryPool, firstQuery, queryCount);
+}
+
+VkResult cgoGetSemaphoreCounterValue(PFN_vkGetSemaphoreCounterValue fn, VkDevice device, VkSemaphore semaphore, uint64_t* pValue) {
+    return fn(device, semaphore, pValue);
+}
+
+VkResult cgoWaitSemaphores(PFN_vkWaitSemaphores fn, VkDevice device, VkSemaphoreWaitInfo* pWaitInfo, uint64_t timeout) {
+    return fn(device, pWaitInfo, timeout);
+}
+
+VkResult cgoSignalSemaphore(PFN_vkSignalSemaphore fn, VkDevice device, VkSemaphoreSignalInfo* pSignalInfo) {
+    return fn(device, pSignalInfo);
+}
+
+VkDeviceAddress cgoGetBufferDeviceAddress(PFN_vkGetBufferDeviceAddress fn, VkDevice device, VkBufferDeviceAddressInfo* pInfo) {
+    return fn(device, pInfo);
+}
+
+uint64_t cgoGetBufferOpaqueCaptureAddress(PFN_vkGetBufferOpaqueCaptureAddress fn, VkDevice device, VkBufferDeviceAddressInfo* pInfo) {
+    return fn(device, pInfo);
+}
+
+uint64_t cgoGetDeviceMemoryOpaqueCaptureAddress(PFN_vkGetDeviceMemoryOpaqueCaptureAddress fn, VkDevice device, VkDeviceMemoryOpaqueCaptureAddressInfo* pInfo) {
+    return fn(device, pInfo);
+}
+
+

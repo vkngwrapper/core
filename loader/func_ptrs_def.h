@@ -5,6 +5,9 @@ void loaderFuncPtrs_populate(PFN_vkGetInstanceProcAddr instanceProcAddr, LoaderF
     funcPtrs->vkEnumerateInstanceLayerProperties = (PFN_vkEnumerateInstanceLayerProperties)instanceProcAddr(NULL, "vkEnumerateInstanceLayerProperties");
     funcPtrs->vkCreateInstance = (PFN_vkCreateInstance)instanceProcAddr(NULL, "vkCreateInstance");
 
+    funcPtrs->vkEnumerateInstanceVersion = (PFN_vkEnumerateInstanceVersion)instanceProcAddr(NULL, "vkEnumerateInstanceVersion");
+
+    //Instance
     funcPtrs->vkCreateDevice = NULL;
     funcPtrs->vkDestroyInstance = NULL;
     funcPtrs->vkEnumerateDeviceExtensionProperties = NULL;
@@ -18,6 +21,19 @@ void loaderFuncPtrs_populate(PFN_vkGetInstanceProcAddr instanceProcAddr, LoaderF
     funcPtrs->vkGetPhysicalDeviceQueueFamilyProperties = NULL;
     funcPtrs->vkGetPhysicalDeviceSparseImageFormatProperties = NULL;
 
+    funcPtrs->vkEnumeratePhysicalDeviceGroups = NULL;
+    funcPtrs->vkGetPhysicalDeviceFeatures2 = NULL;
+    funcPtrs->vkGetPhysicalDeviceProperties2 = NULL;
+    funcPtrs->vkGetPhysicalDeviceFormatProperties2 = NULL;
+    funcPtrs->vkGetPhysicalDeviceImageFormatProperties2 = NULL;
+    funcPtrs->vkGetPhysicalDeviceQueueFamilyProperties2 = NULL;
+    funcPtrs->vkGetPhysicalDeviceMemoryProperties2 = NULL;
+    funcPtrs->vkGetPhysicalDeviceSparseImageFormatProperties2 = NULL;
+    funcPtrs->vkGetPhysicalDeviceExternalBufferProperties = NULL;
+    funcPtrs->vkGetPhysicalDeviceExternalFenceProperties = NULL;
+    funcPtrs->vkGetPhysicalDeviceExternalSemaphoreProperties = NULL;
+
+    //Device
     funcPtrs->vkGetDeviceProcAddr = NULL;
     funcPtrs->vkAllocateCommandBuffers = NULL;
     funcPtrs->vkAllocateDescriptorSets = NULL;
@@ -139,6 +155,37 @@ void loaderFuncPtrs_populate(PFN_vkGetInstanceProcAddr instanceProcAddr, LoaderF
     funcPtrs->vkUnmapMemory = NULL;
     funcPtrs->vkUpdateDescriptorSets = NULL;
     funcPtrs->vkWaitForFences = NULL;
+
+    funcPtrs->vkBindBufferMemory2 = NULL;
+    funcPtrs->vkBindImageMemory2 = NULL;
+    funcPtrs->vkGetDeviceGroupPeerMemoryFeatures = NULL;
+    funcPtrs->vkCmdSetDeviceMask = NULL;
+    funcPtrs->vkCmdDispatchBase = NULL;
+    funcPtrs->vkGetImageMemoryRequirements2 = NULL;
+    funcPtrs->vkGetBufferMemoryRequirements2 = NULL;
+    funcPtrs->vkGetImageSparseMemoryRequirements2 = NULL;
+    funcPtrs->vkTrimCommandPool = NULL;
+    funcPtrs->vkGetDeviceQueue2 = NULL;
+    funcPtrs->vkCreateSamplerYcbcrConversion = NULL;
+    funcPtrs->vkDestroySamplerYcbcrConversion = NULL;
+    funcPtrs->vkCreateDescriptorUpdateTemplate = NULL;
+    funcPtrs->vkDestroyDescriptorUpdateTemplate = NULL;
+    funcPtrs->vkUpdateDescriptorSetWithTemplate = NULL;
+    funcPtrs->vkGetDescriptorSetLayoutSupport = NULL;
+
+    funcPtrs->vkCmdDrawIndirectCount = NULL;
+    funcPtrs->vkCmdDrawIndexedIndirectCount = NULL;
+    funcPtrs->vkCreateRenderPass2 = NULL;
+    funcPtrs->vkCmdBeginRenderPass2 = NULL;
+    funcPtrs->vkCmdNextSubpass2 = NULL;
+    funcPtrs->vkCmdEndRenderPass2 = NULL;
+    funcPtrs->vkResetQueryPool = NULL;
+    funcPtrs->vkGetSemaphoreCounterValue = NULL;
+    funcPtrs->vkWaitSemaphores = NULL;
+    funcPtrs->vkSignalSemaphore = NULL;
+    funcPtrs->vkGetBufferDeviceAddress = NULL;
+    funcPtrs->vkGetBufferOpaqueCaptureAddress = NULL;
+    funcPtrs->vkGetDeviceMemoryOpaqueCaptureAddress = NULL;
 }
 
 void instanceFuncPtrs_populate(VkInstance instance, LoaderFuncPtrs *src, LoaderFuncPtrs *dest) {
@@ -147,6 +194,9 @@ void instanceFuncPtrs_populate(VkInstance instance, LoaderFuncPtrs *src, LoaderF
     dest->vkEnumerateInstanceLayerProperties = src->vkEnumerateInstanceLayerProperties;
     dest->vkCreateInstance = src->vkCreateInstance;
 
+    dest->vkEnumerateInstanceVersion = src->vkEnumerateInstanceVersion;
+
+    //Instance
     PFN_vkGetInstanceProcAddr instanceProcAddr = src->vkGetInstanceProcAddr;
     dest->vkCreateDevice = (PFN_vkCreateDevice)instanceProcAddr(instance, "vkCreateDevice");
     dest->vkDestroyInstance = (PFN_vkDestroyInstance)instanceProcAddr(instance, "vkDestroyInstance");
@@ -161,8 +211,21 @@ void instanceFuncPtrs_populate(VkInstance instance, LoaderFuncPtrs *src, LoaderF
     dest->vkGetPhysicalDeviceQueueFamilyProperties = (PFN_vkGetPhysicalDeviceQueueFamilyProperties)instanceProcAddr(instance, "vkGetPhysicalDeviceQueueFamilyProperties");
     dest->vkGetPhysicalDeviceSparseImageFormatProperties = (PFN_vkGetPhysicalDeviceSparseImageFormatProperties)instanceProcAddr(instance, "vkGetPhysicalDeviceSparseImageFormatProperties");
 
+    dest->vkEnumeratePhysicalDeviceGroups = (PFN_vkEnumeratePhysicalDeviceGroups)instanceProcAddr(NULL, "vkEnumeratePhysicalDeviceGroups");
+    dest->vkGetPhysicalDeviceFeatures2 = (PFN_vkGetPhysicalDeviceFeatures2)instanceProcAddr(NULL, "vkGetPhysicalDeviceFeatures2");
+    dest->vkGetPhysicalDeviceProperties2 = (PFN_vkGetPhysicalDeviceProperties2)instanceProcAddr(NULL, "vkGetPhysicalDeviceProperties2");
+    dest->vkGetPhysicalDeviceFormatProperties2 = (PFN_vkGetPhysicalDeviceFormatProperties2)instanceProcAddr(NULL, "vkGetPhysicalDeviceFormatProperties2");
+    dest->vkGetPhysicalDeviceImageFormatProperties2 = (PFN_vkGetPhysicalDeviceImageFormatProperties2)instanceProcAddr(NULL, "vkGetPhysicalDeviceImageFormatProperties2");
+    dest->vkGetPhysicalDeviceQueueFamilyProperties2 = (PFN_vkGetPhysicalDeviceQueueFamilyProperties2)instanceProcAddr(NULL, "vkGetPhysicalDeviceQueueFamilyProperties2");
+    dest->vkGetPhysicalDeviceMemoryProperties2 = (PFN_vkGetPhysicalDeviceMemoryProperties2)instanceProcAddr(NULL, "vkGetPhysicalDeviceMemoryProperties2");
+    dest->vkGetPhysicalDeviceSparseImageFormatProperties2 = (PFN_vkGetPhysicalDeviceSparseImageFormatProperties2)instanceProcAddr(NULL, "vkGetPhysicalDeviceSparseImageFormatProperties2");
+    dest->vkGetPhysicalDeviceExternalBufferProperties = (PFN_vkGetPhysicalDeviceExternalBufferProperties)instanceProcAddr(NULL, "vkGetPhysicalDeviceExternalBufferProperties");
+    dest->vkGetPhysicalDeviceExternalFenceProperties = (PFN_vkGetPhysicalDeviceExternalFenceProperties)instanceProcAddr(NULL, "vkGetPhysicalDeviceExternalFenceProperties");
+    dest->vkGetPhysicalDeviceExternalSemaphoreProperties = (PFN_vkGetPhysicalDeviceExternalSemaphoreProperties)instanceProcAddr(NULL, "vkGetPhysicalDeviceExternalSemaphoreProperties");
+
     dest->vkGetDeviceProcAddr = (PFN_vkGetDeviceProcAddr)instanceProcAddr(instance, "vkGetDeviceProcAddr");
 
+    //Device
     dest->vkAllocateCommandBuffers = NULL;
     dest->vkAllocateDescriptorSets = NULL;
     dest->vkAllocateMemory = NULL;
@@ -283,6 +346,37 @@ void instanceFuncPtrs_populate(VkInstance instance, LoaderFuncPtrs *src, LoaderF
     dest->vkUnmapMemory = NULL;
     dest->vkUpdateDescriptorSets = NULL;
     dest->vkWaitForFences = NULL;
+
+    dest->vkBindBufferMemory2 = NULL;
+    dest->vkBindImageMemory2 = NULL;
+    dest->vkGetDeviceGroupPeerMemoryFeatures = NULL;
+    dest->vkCmdSetDeviceMask = NULL;
+    dest->vkCmdDispatchBase = NULL;
+    dest->vkGetImageMemoryRequirements2 = NULL;
+    dest->vkGetBufferMemoryRequirements2 = NULL;
+    dest->vkGetImageSparseMemoryRequirements2 = NULL;
+    dest->vkTrimCommandPool = NULL;
+    dest->vkGetDeviceQueue2 = NULL;
+    dest->vkCreateSamplerYcbcrConversion = NULL;
+    dest->vkDestroySamplerYcbcrConversion = NULL;
+    dest->vkCreateDescriptorUpdateTemplate = NULL;
+    dest->vkDestroyDescriptorUpdateTemplate = NULL;
+    dest->vkUpdateDescriptorSetWithTemplate = NULL;
+    dest->vkGetDescriptorSetLayoutSupport = NULL;
+
+    dest->vkCmdDrawIndirectCount = NULL;
+    dest->vkCmdDrawIndexedIndirectCount = NULL;
+    dest->vkCreateRenderPass2 = NULL;
+    dest->vkCmdBeginRenderPass2 = NULL;
+    dest->vkCmdNextSubpass2 = NULL;
+    dest->vkCmdEndRenderPass2 = NULL;
+    dest->vkResetQueryPool = NULL;
+    dest->vkGetSemaphoreCounterValue = NULL;
+    dest->vkWaitSemaphores = NULL;
+    dest->vkSignalSemaphore = NULL;
+    dest->vkGetBufferDeviceAddress = NULL;
+    dest->vkGetBufferOpaqueCaptureAddress = NULL;
+    dest->vkGetDeviceMemoryOpaqueCaptureAddress = NULL;
 }
 
 void deviceFuncPtrs_populate(VkDevice device, LoaderFuncPtrs *src, LoaderFuncPtrs *dest) {
@@ -290,6 +384,10 @@ void deviceFuncPtrs_populate(VkDevice device, LoaderFuncPtrs *src, LoaderFuncPtr
     dest->vkEnumerateInstanceExtensionProperties = src->vkEnumerateInstanceExtensionProperties;
     dest->vkEnumerateInstanceLayerProperties = src->vkEnumerateInstanceLayerProperties;
     dest->vkCreateInstance = src->vkCreateInstance;
+
+    dest->vkEnumerateInstanceVersion = src->vkEnumerateInstanceVersion;
+
+    //Instance
     dest->vkCreateDevice = src->vkCreateDevice;
     dest->vkDestroyInstance = src->vkDestroyInstance;
     dest->vkEnumeratePhysicalDevices = src->vkEnumeratePhysicalDevices;
@@ -304,6 +402,19 @@ void deviceFuncPtrs_populate(VkDevice device, LoaderFuncPtrs *src, LoaderFuncPtr
     dest->vkGetPhysicalDeviceSparseImageFormatProperties = src->vkGetPhysicalDeviceSparseImageFormatProperties;
     dest->vkGetDeviceProcAddr = src->vkGetDeviceProcAddr;
 
+    dest->vkEnumeratePhysicalDeviceGroups = src->vkEnumeratePhysicalDeviceGroups;
+    dest->vkGetPhysicalDeviceFeatures2 = src->vkGetPhysicalDeviceFeatures2;
+    dest->vkGetPhysicalDeviceProperties2 = src->vkGetPhysicalDeviceProperties2;
+    dest->vkGetPhysicalDeviceFormatProperties2 = src->vkGetPhysicalDeviceFormatProperties2;
+    dest->vkGetPhysicalDeviceImageFormatProperties2 = src->vkGetPhysicalDeviceImageFormatProperties2;
+    dest->vkGetPhysicalDeviceQueueFamilyProperties2 = src->vkGetPhysicalDeviceQueueFamilyProperties2;
+    dest->vkGetPhysicalDeviceMemoryProperties2 = src->vkGetPhysicalDeviceMemoryProperties2;
+    dest->vkGetPhysicalDeviceSparseImageFormatProperties2 = src->vkGetPhysicalDeviceSparseImageFormatProperties2;
+    dest->vkGetPhysicalDeviceExternalBufferProperties = src->vkGetPhysicalDeviceExternalBufferProperties;
+    dest->vkGetPhysicalDeviceExternalFenceProperties = src->vkGetPhysicalDeviceExternalFenceProperties;
+    dest->vkGetPhysicalDeviceExternalSemaphoreProperties = src->vkGetPhysicalDeviceExternalSemaphoreProperties;
+
+    //Device
     PFN_vkGetDeviceProcAddr deviceProcAddr = src->vkGetDeviceProcAddr;
 
     dest->vkAllocateCommandBuffers = (PFN_vkAllocateCommandBuffers)deviceProcAddr(device, "vkAllocateCommandBuffers");
@@ -426,5 +537,36 @@ void deviceFuncPtrs_populate(VkDevice device, LoaderFuncPtrs *src, LoaderFuncPtr
     dest->vkUnmapMemory = (PFN_vkUnmapMemory)deviceProcAddr(device, "vkUnmapMemory");
     dest->vkUpdateDescriptorSets = (PFN_vkUpdateDescriptorSets)deviceProcAddr(device, "vkUpdateDescriptorSets");
     dest->vkWaitForFences = (PFN_vkWaitForFences)deviceProcAddr(device, "vkWaitForFences");
+
+    dest->vkBindBufferMemory2 = (PFN_vkBindBufferMemory2)deviceProcAddr(device, "vkBindBufferMemory2");
+    dest->vkBindImageMemory2 = (PFN_vkBindImageMemory2)deviceProcAddr(device, "vkBindImageMemory2");
+    dest->vkGetDeviceGroupPeerMemoryFeatures = (PFN_vkGetDeviceGroupPeerMemoryFeatures)deviceProcAddr(device, "vkGetDeviceGroupPeerMemoryFeatures");
+    dest->vkCmdSetDeviceMask = (PFN_vkCmdSetDeviceMask)deviceProcAddr(device, "vkCmdSetDeviceMask");
+    dest->vkCmdDispatchBase = (PFN_vkCmdDispatchBase)deviceProcAddr(device, "vkCmdDispatchBase");
+    dest->vkGetImageMemoryRequirements2 = (PFN_vkGetImageMemoryRequirements2)deviceProcAddr(device, "vkGetImageMemoryRequirements2");
+    dest->vkGetBufferMemoryRequirements2 = (PFN_vkGetBufferMemoryRequirements2)deviceProcAddr(device, "vkGetBufferMemoryRequirements2");
+    dest->vkGetImageSparseMemoryRequirements2 = (PFN_vkGetImageSparseMemoryRequirements2)deviceProcAddr(device, "vkGetImageSparseMemoryRequirements2");
+    dest->vkTrimCommandPool = (PFN_vkTrimCommandPool)deviceProcAddr(device, "vkTrimCommandPool");
+    dest->vkGetDeviceQueue2 = (PFN_vkGetDeviceQueue2)deviceProcAddr(device, "vkGetDeviceQueue2");
+    dest->vkCreateSamplerYcbcrConversion = (PFN_vkCreateSamplerYcbcrConversion)deviceProcAddr(device, "vkCreateSamplerYcbcrConversion");
+    dest->vkDestroySamplerYcbcrConversion = (PFN_vkDestroySamplerYcbcrConversion)deviceProcAddr(device, "vkDestroySamplerYcbcrConversion");
+    dest->vkCreateDescriptorUpdateTemplate = (PFN_vkCreateDescriptorUpdateTemplate)deviceProcAddr(device, "vkCreateDescriptorUpdateTemplate");
+    dest->vkDestroyDescriptorUpdateTemplate = (PFN_vkDestroyDescriptorUpdateTemplate)deviceProcAddr(device, "vkDestroyDescriptorUpdateTemplate");
+    dest->vkUpdateDescriptorSetWithTemplate = (PFN_vkUpdateDescriptorSetWithTemplate)deviceProcAddr(device, "vkUpdateDescriptorSetWithTemplate");
+    dest->vkGetDescriptorSetLayoutSupport = (PFN_vkGetDescriptorSetLayoutSupport)deviceProcAddr(device, "vkGetDescriptorSetLayoutSupport");
+    
+    dest->vkCmdDrawIndirectCount = (PFN_vkCmdDrawIndirectCount)deviceProcAddr(device, "vkCmdDrawIndirectCount");
+    dest->vkCmdDrawIndexedIndirectCount = (PFN_vkCmdDrawIndexedIndirectCount)deviceProcAddr(device, "vkCmdDrawIndexedIndirectCount");
+    dest->vkCreateRenderPass2 = (PFN_vkCreateRenderPass2)deviceProcAddr(device, "vkCreateRenderPass2");
+    dest->vkCmdBeginRenderPass2 = (PFN_vkCmdBeginRenderPass2)deviceProcAddr(device, "vkCmdBeginRenderPass2");
+    dest->vkCmdNextSubpass2 = (PFN_vkCmdNextSubpass2)deviceProcAddr(device, "vkCmdNextSubpass2");
+    dest->vkCmdEndRenderPass2 = (PFN_vkCmdEndRenderPass2)deviceProcAddr(device, "vkCmdEndRenderPass2");
+    dest->vkResetQueryPool = (PFN_vkResetQueryPool)deviceProcAddr(device, "vkResetQueryPool");
+    dest->vkGetSemaphoreCounterValue = (PFN_vkGetSemaphoreCounterValue)deviceProcAddr(device, "vkGetSemaphoreCounterValue");
+    dest->vkWaitSemaphores = (PFN_vkWaitSemaphores)deviceProcAddr(device, "vkWaitSemaphores");
+    dest->vkSignalSemaphore = (PFN_vkSignalSemaphore)deviceProcAddr(device, "vkSignalSemaphore");
+    dest->vkGetBufferDeviceAddress = (PFN_vkGetBufferDeviceAddress)deviceProcAddr(device, "vkGetBufferDeviceAddress");
+    dest->vkGetBufferOpaqueCaptureAddress = (PFN_vkGetBufferOpaqueCaptureAddress)deviceProcAddr(device, "vkGetBufferOpaqueCaptureAddress");
+    dest->vkGetDeviceMemoryOpaqueCaptureAddress = (PFN_vkGetDeviceMemoryOpaqueCaptureAddress)deviceProcAddr(device, "vkGetDeviceMemoryOpaqueCaptureAddress");
 }
 

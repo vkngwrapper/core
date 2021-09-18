@@ -1807,3 +1807,545 @@ func (l *vulkanLoader) VkCmdExecuteCommands(commandBuffer VkCommandBuffer, comma
 
 	return nil
 }
+
+func (l *vulkanLoader) VkEnumerateInstanceVersion(pApiVersion *Uint32) (VkResult, error) {
+	if l.funcPtrs.vkEnumerateInstanceVersion == nil {
+		return VKErrorUnknown, errors.New("attempted to call method 'vkEnumerateInstanceVersion' which is not present on this loader")
+	}
+
+	res := VkResult(C.cgoEnumerateInstanceVersion(l.funcPtrs.vkEnumerateInstanceVersion,
+		(*C.uint32_t)(pApiVersion)))
+
+	return res, res.ToError()
+}
+
+func (l *vulkanLoader) VkEnumeratePhysicalDeviceGroups(instance VkInstance, pPhysicalDeviceGroupCount *Uint32, pPhysicalDeviceGroupProperties *VkPhysicalDeviceGroupProperties) (VkResult, error) {
+	if l.funcPtrs.vkEnumeratePhysicalDeviceGroups == nil {
+		return VKErrorUnknown, errors.New("attempted to call method 'vkEnumeratePhysicalDeviceGroups' which is not present on this loader")
+	}
+
+	res := VkResult(C.cgoEnumeratePhysicalDeviceGroups(l.funcPtrs.vkEnumeratePhysicalDeviceGroups,
+		C.VkInstance(instance),
+		(*C.uint32_t)(pPhysicalDeviceGroupCount),
+		(*C.VkPhysicalDeviceGroupProperties)(pPhysicalDeviceGroupProperties)))
+
+	return res, res.ToError()
+}
+
+func (l *vulkanLoader) VkGetPhysicalDeviceFeatures2(physicalDevice VkPhysicalDevice, pFeatures *VkPhysicalDeviceFeatures2) error {
+	if l.funcPtrs.vkGetPhysicalDeviceFeatures2 == nil {
+		return errors.New("attempted to call method 'vkGetPhysicalDeviceFeatures2' which is not present on this loader")
+	}
+
+	C.cgoGetPhysicalDeviceFeatures2(l.funcPtrs.vkGetPhysicalDeviceFeatures2,
+		C.VkPhysicalDevice(physicalDevice),
+		(*C.VkPhysicalDeviceFeatures2)(pFeatures))
+
+	return nil
+}
+
+func (l *vulkanLoader) VkGetPhysicalDeviceProperties2(physicalDevice VkPhysicalDevice, pProperties *VkPhysicalDeviceProperties2) error {
+	if l.funcPtrs.vkGetPhysicalDeviceProperties2 == nil {
+		return errors.New("attempted to call method 'vkGetPhysicalDeviceProperties2' which is not present on this loader")
+	}
+
+	C.cgoGetPhysicalDeviceProperties2(l.funcPtrs.vkGetPhysicalDeviceProperties2,
+		C.VkPhysicalDevice(physicalDevice),
+		(*C.VkPhysicalDeviceProperties2)(pProperties))
+
+	return nil
+}
+
+func (l *vulkanLoader) VkGetPhysicalDeviceFormatProperties2(physicalDevice VkPhysicalDevice, format VkFormat, pFormatProperties *VkFormatProperties2) error {
+	if l.funcPtrs.vkGetPhysicalDeviceFormatProperties2 == nil {
+		return errors.New("attempted to call method 'vkGetPhysicalDeviceFormatProperties2' which is not present on this loader")
+	}
+
+	C.cgoGetPhysicalDeviceFormatProperties2(l.funcPtrs.vkGetPhysicalDeviceFormatProperties2,
+		C.VkPhysicalDevice(physicalDevice),
+		C.VkFormat(format),
+		(*C.VkFormatProperties2)(pFormatProperties))
+
+	return nil
+}
+
+func (l *vulkanLoader) VkGetPhysicalDeviceImageFormatProperties2(physicalDevice VkPhysicalDevice, pImageFormatInfo *VkPhysicalDeviceImageFormatInfo2, pImageFormatProperties *VkImageFormatProperties2) (VkResult, error) {
+	if l.funcPtrs.vkGetPhysicalDeviceImageFormatProperties2 == nil {
+		return VKErrorUnknown, errors.New("attempted to call method 'vkGetPhysicalDeviceImageFormatProperties2' which is not present on this loader")
+	}
+
+	res := VkResult(C.cgoGetPhysicalDeviceImageFormatProperties2(l.funcPtrs.vkGetPhysicalDeviceImageFormatProperties2,
+		C.VkPhysicalDevice(physicalDevice),
+		(*C.VkPhysicalDeviceImageFormatInfo2)(pImageFormatInfo),
+		(*C.VkImageFormatProperties2)(pImageFormatProperties)))
+
+	return res, res.ToError()
+}
+
+func (l *vulkanLoader) VkGetPhysicalDeviceQueueFamilyProperties2(physicalDevice VkPhysicalDevice, pQueueFamilyPropertyCount *Uint32, pQueueFamilyProperties *VkQueueFamilyProperties2) error {
+	if l.funcPtrs.vkGetPhysicalDeviceQueueFamilyProperties2 == nil {
+		return errors.New("attempted to call method 'vkGetPhysicalDeviceQueueFamilyProperties2' which is not present on this loader")
+	}
+
+	C.cgoGetPhysicalDeviceQueueFamilyProperties2(l.funcPtrs.vkGetPhysicalDeviceQueueFamilyProperties2,
+		C.VkPhysicalDevice(physicalDevice),
+		(*C.uint32_t)(pQueueFamilyPropertyCount),
+		(*C.VkQueueFamilyProperties2)(pQueueFamilyProperties))
+
+	return nil
+}
+
+func (l *vulkanLoader) VkGetPhysicalDeviceMemoryProperties2(physicalDevice VkPhysicalDevice, pMemoryProperties *VkPhysicalDeviceMemoryProperties2) error {
+	if l.funcPtrs.vkGetPhysicalDeviceMemoryProperties2 == nil {
+		return errors.New("attempted to call method 'vkGetPhysicalDeviceMemoryProperties2' which is not present on this loader")
+	}
+
+	C.cgoGetPhysicalDeviceMemoryProperties2(l.funcPtrs.vkGetPhysicalDeviceMemoryProperties2,
+		C.VkPhysicalDevice(physicalDevice),
+		(*C.VkPhysicalDeviceMemoryProperties2)(pMemoryProperties))
+
+	return nil
+}
+
+func (l *vulkanLoader) VkGetPhysicalDeviceSparseImageFormatProperties2(physicalDevice VkPhysicalDevice, pFormatInfo *VkPhysicalDeviceSparseImageFormatInfo2, pPropertyCount *Uint32, pProperties *VkSparseImageFormatProperties2) error {
+	if l.funcPtrs.vkGetPhysicalDeviceSparseImageFormatProperties2 == nil {
+		return errors.New("attempted to call method 'vkGetPhysicalDeviceSparseImageFormatProperties2' which is not present on this loader")
+	}
+
+	C.cgoGetPhysicalDeviceSparseImageFormatProperties2(l.funcPtrs.vkGetPhysicalDeviceSparseImageFormatProperties2,
+		C.VkPhysicalDevice(physicalDevice),
+		(*C.VkPhysicalDeviceSparseImageFormatInfo2)(pFormatInfo),
+		(*C.uint32_t)(pPropertyCount),
+		(*C.VkSparseImageFormatProperties2)(pProperties))
+
+	return nil
+}
+
+func (l *vulkanLoader) VkGetPhysicalDeviceExternalBufferProperties(physicalDevice VkPhysicalDevice, pExternalBufferInfo *VkPhysicalDeviceExternalBufferInfo, pExternalBufferProperties *VkExternalBufferProperties) error {
+	if l.funcPtrs.vkGetPhysicalDeviceExternalBufferProperties == nil {
+		return errors.New("attempted to call method 'vkGetPhysicalDeviceExternalBufferProperties' which is not present on this loader")
+	}
+
+	C.cgoGetPhysicalDeviceExternalBufferProperties(l.funcPtrs.vkGetPhysicalDeviceExternalBufferProperties,
+		C.VkPhysicalDevice(physicalDevice),
+		(*C.VkPhysicalDeviceExternalBufferInfo)(pExternalBufferInfo),
+		(*C.VkExternalBufferProperties)(pExternalBufferProperties))
+
+	return nil
+}
+
+func (l *vulkanLoader) VkGetPhysicalDeviceExternalFenceProperties(physicalDevice VkPhysicalDevice, pExternalFenceInfo *VkPhysicalDeviceExternalFenceInfo, pExternalFenceProperties *VkExternalFenceProperties) error {
+	if l.funcPtrs.vkGetPhysicalDeviceExternalFenceProperties == nil {
+		return errors.New("attempted to call method 'vkGetPhysicalDeviceExternalFenceProperties' which is not present on this loader")
+	}
+
+	C.cgoGetPhysicalDeviceExternalFenceProperties(l.funcPtrs.vkGetPhysicalDeviceExternalFenceProperties,
+		C.VkPhysicalDevice(physicalDevice),
+		(*C.VkPhysicalDeviceExternalFenceInfo)(pExternalFenceInfo),
+		(*C.VkExternalFenceProperties)(pExternalFenceProperties))
+
+	return nil
+}
+
+func (l *vulkanLoader) VkGetPhysicalDeviceExternalSemaphoreProperties(physicalDevice VkPhysicalDevice, pExternalSemaphoreInfo *VkPhysicalDeviceExternalSemaphoreInfo, pExternalSemaphoreProperties *VkExternalSemaphoreProperties) error {
+	if l.funcPtrs.vkGetPhysicalDeviceExternalSemaphoreProperties == nil {
+		return errors.New("attempted to call method 'vkGetPhysicalDeviceExternalSemaphoreProperties' which is not present on this loader")
+	}
+
+	C.cgoGetPhysicalDeviceExternalSemaphoreProperties(l.funcPtrs.vkGetPhysicalDeviceExternalSemaphoreProperties,
+		C.VkPhysicalDevice(physicalDevice),
+		(*C.VkPhysicalDeviceExternalSemaphoreInfo)(pExternalSemaphoreInfo),
+		(*C.VkExternalSemaphoreProperties)(pExternalSemaphoreProperties))
+
+	return nil
+}
+
+func (l *vulkanLoader) VkBindBufferMemory2(device VkDevice, bindInfoCount Uint32, pBindInfos *VkBindBufferMemoryInfo) (VkResult, error) {
+	if l.funcPtrs.vkBindBufferMemory2 == nil {
+		return VKErrorUnknown, errors.New("attempted to call method 'vkBindBufferMemory2' which is not present on this loader")
+	}
+
+	res := VkResult(C.cgoBindBufferMemory2(l.funcPtrs.vkBindBufferMemory2,
+		C.VkDevice(device),
+		C.uint32_t(bindInfoCount),
+		(*C.VkBindBufferMemoryInfo)(pBindInfos)))
+
+	return res, res.ToError()
+}
+
+func (l *vulkanLoader) VkBindImageMemory2(device VkDevice, bindInfoCount Uint32, pBindInfos *VkBindImageMemoryInfo) (VkResult, error) {
+	if l.funcPtrs.vkBindImageMemory2 == nil {
+		return VKErrorUnknown, errors.New("attempted to call method 'vkBindImageMemory2' which is not present on this loader")
+	}
+
+	res := VkResult(C.cgoBindImageMemory2(l.funcPtrs.vkBindImageMemory2,
+		C.VkDevice(device),
+		C.uint32_t(bindInfoCount),
+		(*C.VkBindImageMemoryInfo)(pBindInfos)))
+
+	return res, res.ToError()
+}
+
+func (l *vulkanLoader) VkGetDeviceGroupPeerMemoryFeatures(device VkDevice, heapIndex Uint32, localDeviceIndex Uint32, remoteDeviceIndex Uint32, pPeerMemoryFeatures *VkPeerMemoryFeatureFlags) error {
+	if l.funcPtrs.vkGetDeviceGroupPeerMemoryFeatures == nil {
+		return errors.New("attempted to call method 'vkGetDeviceGroupPeerMemoryFeatures' which is not present on this loader")
+	}
+
+	C.cgoGetDeviceGroupPeerMemoryFeatures(l.funcPtrs.vkGetDeviceGroupPeerMemoryFeatures,
+		C.VkDevice(device),
+		C.uint32_t(heapIndex),
+		C.uint32_t(localDeviceIndex),
+		C.uint32_t(remoteDeviceIndex),
+		(*C.VkPeerMemoryFeatureFlags)(pPeerMemoryFeatures))
+
+	return nil
+}
+
+func (l *vulkanLoader) VkCmdSetDeviceMask(commandBuffer VkCommandBuffer, deviceMask Uint32) error {
+	if l.funcPtrs.vkCmdSetDeviceMask == nil {
+		return errors.New("attempted to call method 'vkCmdSetDeviceMask' which is not present on this loader")
+	}
+
+	C.cgoCmdSetDeviceMask(l.funcPtrs.vkCmdSetDeviceMask,
+		C.VkCommandBuffer(commandBuffer),
+		C.uint32_t(deviceMask))
+
+	return nil
+}
+
+func (l *vulkanLoader) VkCmdDispatchBase(commandBuffer VkCommandBuffer, baseGroupX Uint32, baseGroupY Uint32, baseGroupZ Uint32, groupCountX Uint32, groupCountY Uint32, groupCountZ Uint32) error {
+	if l.funcPtrs.vkCmdDispatchBase == nil {
+		return errors.New("attempted to call method 'vkCmdDispatchBase' which is not present on this loader")
+	}
+
+	C.cgoCmdDispatchBase(l.funcPtrs.vkCmdDispatchBase,
+		C.VkCommandBuffer(commandBuffer),
+		C.uint32_t(baseGroupX),
+		C.uint32_t(baseGroupY),
+		C.uint32_t(baseGroupZ),
+		C.uint32_t(groupCountX),
+		C.uint32_t(groupCountY),
+		C.uint32_t(groupCountZ))
+
+	return nil
+}
+
+func (l *vulkanLoader) VkGetImageMemoryRequirements2(device VkDevice, pInfo *VkImageMemoryRequirementsInfo2, pMemoryRequirements *VkMemoryRequirements2) error {
+	if l.funcPtrs.vkGetImageMemoryRequirements2 == nil {
+		return errors.New("attempted to call method 'vkGetImageMemoryRequirements2' which is not present on this loader")
+	}
+
+	C.cgoGetImageMemoryRequirements2(l.funcPtrs.vkGetImageMemoryRequirements2,
+		C.VkDevice(device),
+		(*C.VkImageMemoryRequirementsInfo2)(pInfo),
+		(*C.VkMemoryRequirements2)(pMemoryRequirements))
+
+	return nil
+}
+
+func (l *vulkanLoader) VkGetBufferMemoryRequirements2(device VkDevice, pInfo *VkBufferMemoryRequirementsInfo2, pMemoryRequirements *VkMemoryRequirements2) error {
+	if l.funcPtrs.vkGetBufferMemoryRequirements2 == nil {
+		return errors.New("attempted to call method 'vkGetBufferMemoryRequirements2' which is not present on this loader")
+	}
+
+	C.cgoGetBufferMemoryRequirements2(l.funcPtrs.vkGetBufferMemoryRequirements2,
+		C.VkDevice(device),
+		(*C.VkBufferMemoryRequirementsInfo2)(pInfo),
+		(*C.VkMemoryRequirements2)(pMemoryRequirements))
+
+	return nil
+}
+
+func (l *vulkanLoader) VkGetImageSparseMemoryRequirements2(device VkDevice, pInfo *VkImageSparseMemoryRequirementsInfo2, pSparseMemoryRequirementCount *Uint32, pSparseMemoryRequirements *VkSparseImageMemoryRequirements2) error {
+	if l.funcPtrs.vkGetImageSparseMemoryRequirements2 == nil {
+		return errors.New("attempted to call method 'vkGetImageSparseMemoryRequirements2' which is not present on this loader")
+	}
+
+	C.cgoGetImageSparseMemoryRequirements2(l.funcPtrs.vkGetImageSparseMemoryRequirements2,
+		C.VkDevice(device),
+		(*C.VkImageSparseMemoryRequirementsInfo2)(pInfo),
+		(*C.uint32_t)(pSparseMemoryRequirementCount),
+		(*C.VkSparseImageMemoryRequirements2)(pSparseMemoryRequirements))
+
+	return nil
+}
+
+func (l *vulkanLoader) VkTrimCommandPool(device VkDevice, commandPool VkCommandPool, flags VkCommandPoolTrimFlags) error {
+	if l.funcPtrs.vkTrimCommandPool == nil {
+		return errors.New("attempted to call method 'vkTrimCommandPool' which is not present on this loader")
+	}
+
+	C.cgoTrimCommandPool(l.funcPtrs.vkTrimCommandPool,
+		C.VkDevice(device),
+		C.VkCommandPool(commandPool),
+		C.VkCommandPoolTrimFlags(flags))
+
+	return nil
+}
+
+func (l *vulkanLoader) VkGetDeviceQueue2(device VkDevice, pQueueInfo *VkDeviceQueueInfo2, pQueue *VkQueue) error {
+	if l.funcPtrs.vkGetDeviceQueue2 == nil {
+		return errors.New("attempted to call method 'vkGetDeviceQueue2' which is not present on this loader")
+	}
+
+	C.cgoGetDeviceQueue2(l.funcPtrs.vkGetDeviceQueue2,
+		C.VkDevice(device),
+		(*C.VkDeviceQueueInfo2)(pQueueInfo),
+		(*C.VkQueue)(pQueue))
+
+	return nil
+}
+
+func (l *vulkanLoader) VkCreateSamplerYcbcrConversion(device VkDevice, pCreateInfo *VkSamplerYcbcrConversionCreateInfo, pAllocator *VkAllocationCallbacks, pYcbcrConversion *VkSamplerYcbcrConversion) (VkResult, error) {
+	if l.funcPtrs.vkCreateSamplerYcbcrConversion == nil {
+		return VKErrorUnknown, errors.New("attempted to call method 'vkCreateSamplerYcbcrConversion' which is not present on this loader")
+	}
+
+	res := VkResult(C.cgoCreateSamplerYcbcrConversion(l.funcPtrs.vkCreateSamplerYcbcrConversion,
+		C.VkDevice(device),
+		(*C.VkSamplerYcbcrConversionCreateInfo)(pCreateInfo),
+		(*C.VkAllocationCallbacks)(pAllocator),
+		(*C.VkSamplerYcbcrConversion)(pYcbcrConversion)))
+
+	return res, res.ToError()
+}
+
+func (l *vulkanLoader) VkDestroySamplerYcbcrConversion(device VkDevice, ycbcrConversion VkSamplerYcbcrConversion, pAllocator *VkAllocationCallbacks) error {
+	if l.funcPtrs.vkDestroySamplerYcbcrConversion == nil {
+		return errors.New("attempted to call method 'vkDestroySamplerYcbcrConversion' which is not present on this loader")
+	}
+
+	C.cgoDestroySamplerYcbcrConversion(l.funcPtrs.vkDestroySamplerYcbcrConversion,
+		C.VkDevice(device),
+		C.VkSamplerYcbcrConversion(ycbcrConversion),
+		(*C.VkAllocationCallbacks)(pAllocator))
+
+	return nil
+}
+
+func (l *vulkanLoader) VkCreateDescriptorUpdateTemplate(device VkDevice, pCreateInfo *VkDescriptorUpdateTemplateCreateInfo, pAllocator *VkAllocationCallbacks, pDescriptorUpdateTemplate *VkDescriptorUpdateTemplate) (VkResult, error) {
+	if l.funcPtrs.vkCreateDescriptorUpdateTemplate == nil {
+		return VKErrorUnknown, errors.New("attempted to call method 'vkCreateDescriptorUpdateTemplate' which is not present on this loader")
+	}
+
+	res := VkResult(C.cgoCreateDescriptorUpdateTemplate(l.funcPtrs.vkCreateDescriptorUpdateTemplate,
+		C.VkDevice(device),
+		(*C.VkDescriptorUpdateTemplateCreateInfo)(pCreateInfo),
+		(*C.VkAllocationCallbacks)(pAllocator),
+		(*C.VkDescriptorUpdateTemplate)(pDescriptorUpdateTemplate)))
+
+	return res, res.ToError()
+}
+func (l *vulkanLoader) VkDestroyDescriptorUpdateTemplate(device VkDevice, descriptorUpdateTemplate VkDescriptorUpdateTemplate, pAllocator *VkAllocationCallbacks) error {
+	if l.funcPtrs.vkDestroyDescriptorUpdateTemplate == nil {
+		return errors.New("attempted to call method 'vkDestroyDescriptorUpdateTemplate' which is not present on this loader")
+	}
+
+	C.cgoDestroyDescriptorUpdateTemplate(l.funcPtrs.vkDestroyDescriptorUpdateTemplate,
+		C.VkDevice(device),
+		C.VkDescriptorUpdateTemplate(descriptorUpdateTemplate),
+		(*C.VkAllocationCallbacks)(pAllocator))
+
+	return nil
+}
+
+func (l *vulkanLoader) VkUpdateDescriptorSetWithTemplate(device VkDevice, descriptorSet VkDescriptorSet, descriptorUpdateTemplate VkDescriptorUpdateTemplate, pData unsafe.Pointer) error {
+	if l.funcPtrs.vkUpdateDescriptorSetWithTemplate == nil {
+		return errors.New("attempted to call method 'vkUpdateDescriptorSetWithTemplate' which is not present on this loader")
+	}
+
+	C.cgoUpdateDescriptorSetWithTemplate(l.funcPtrs.vkUpdateDescriptorSetWithTemplate,
+		C.VkDevice(device),
+		C.VkDescriptorSet(descriptorSet),
+		C.VkDescriptorUpdateTemplate(descriptorUpdateTemplate),
+		pData)
+
+	return nil
+}
+
+func (l *vulkanLoader) VkGetDescriptorSetLayoutSupport(device VkDevice, pCreateInfo *VkDescriptorSetLayoutCreateInfo, pSupport *VkDescriptorSetLayoutSupport) error {
+	if l.funcPtrs.vkGetDescriptorSetLayoutSupport == nil {
+		return errors.New("attempted to call method 'vkGetDescriptorSetLayoutSupport' which is not present on this loader")
+	}
+
+	C.cgoGetDescriptorSetLayoutSupport(l.funcPtrs.vkGetDescriptorSetLayoutSupport,
+		C.VkDevice(device),
+		(*C.VkDescriptorSetLayoutCreateInfo)(pCreateInfo),
+		(*C.VkDescriptorSetLayoutSupport)(pSupport))
+
+	return nil
+}
+
+func (l *vulkanLoader) VkCmdDrawIndirectCount(commandBuffer VkCommandBuffer, buffer VkBuffer, offset VkDeviceSize, countBuffer VkBuffer, countBufferOffset VkDeviceSize, maxDrawCount Uint32, stride Uint32) error {
+	if l.funcPtrs.vkCmdDrawIndirectCount == nil {
+		return errors.New("attempted to call method 'vkCmdDrawIndirectCount' which is not present on this loader")
+	}
+
+	C.cgoCmdDrawIndirectCount(l.funcPtrs.vkCmdDrawIndirectCount,
+		C.VkCommandBuffer(commandBuffer),
+		C.VkBuffer(buffer),
+		C.VkDeviceSize(offset),
+		C.VkBuffer(countBuffer),
+		C.VkDeviceSize(countBufferOffset),
+		C.uint32_t(maxDrawCount),
+		C.uint32_t(stride))
+
+	return nil
+}
+
+func (l *vulkanLoader) VkCmdDrawIndexedIndirectCount(commandBuffer VkCommandBuffer, buffer VkBuffer, offset VkDeviceSize, countBuffer VkBuffer, countBufferOffset VkDeviceSize, maxDrawCount Uint32, stride Uint32) error {
+	if l.funcPtrs.vkCmdDrawIndexedIndirectCount == nil {
+		return errors.New("attempted to call method 'vkCmdDrawIndexedIndirectCount' which is not present on this loader")
+	}
+
+	C.cgoCmdDrawIndexedIndirectCount(l.funcPtrs.vkCmdDrawIndexedIndirectCount,
+		C.VkCommandBuffer(commandBuffer),
+		C.VkBuffer(buffer),
+		C.VkDeviceSize(offset),
+		C.VkBuffer(countBuffer),
+		C.VkDeviceSize(countBufferOffset),
+		C.uint32_t(maxDrawCount),
+		C.uint32_t(stride))
+
+	return nil
+}
+
+func (l *vulkanLoader) VkCreateRenderPass2(device VkDevice, pCreateInfo *VkRenderPassCreateInfo2, pAllocator *VkAllocationCallbacks, pRenderPass *VkRenderPass) (VkResult, error) {
+	if l.funcPtrs.vkCreateRenderPass2 == nil {
+		return VKErrorUnknown, errors.New("attempted to call method 'vkCreateRenderPass2' which is not present on this loader")
+	}
+
+	res := VkResult(C.cgoCreateRenderPass2(l.funcPtrs.vkCreateRenderPass2,
+		C.VkDevice(device),
+		(*C.VkRenderPassCreateInfo2)(pCreateInfo),
+		(*C.VkAllocationCallbacks)(pAllocator),
+		(*C.VkRenderPass)(pRenderPass)))
+
+	return res, res.ToError()
+}
+
+func (l *vulkanLoader) VkCmdBeginRenderPass2(commandBuffer VkCommandBuffer, pRenderPassBegin *VkRenderPassBeginInfo, pSubpassBeginInfo *VkSubpassBeginInfo) error {
+	if l.funcPtrs.vkCmdBeginRenderPass2 == nil {
+		return errors.New("attempted to call method 'vkCmdBeginRenderPass2' which is not present on this loader")
+	}
+
+	C.cgoCmdBeginRenderPass2(l.funcPtrs.vkCmdBeginRenderPass2,
+		C.VkCommandBuffer(commandBuffer),
+		(*C.VkRenderPassBeginInfo)(pRenderPassBegin),
+		(*C.VkSubpassBeginInfo)(pSubpassBeginInfo))
+
+	return nil
+}
+
+func (l *vulkanLoader) VkCmdNextSubpass2(commandBuffer VkCommandBuffer, pSubpassBeginInfo *VkSubpassBeginInfo, pSubpassEndInfo *VkSubpassEndInfo) error {
+	if l.funcPtrs.vkCmdNextSubpass2 == nil {
+		return errors.New("attempted to call method 'vkCmdNextSubpass2' which is not present on this loader")
+	}
+
+	C.cgoCmdNextSubpass2(l.funcPtrs.vkCmdNextSubpass2,
+		C.VkCommandBuffer(commandBuffer),
+		(*C.VkSubpassBeginInfo)(pSubpassBeginInfo),
+		(*C.VkSubpassEndInfo)(pSubpassEndInfo))
+
+	return nil
+}
+
+func (l *vulkanLoader) VkCmdEndRenderPass2(commandBuffer VkCommandBuffer, pSubpassEndInfo *VkSubpassEndInfo) error {
+	if l.funcPtrs.vkCmdEndRenderPass2 == nil {
+		return errors.New("attempted to call method 'vkCmdEndRenderPass2' which is not present on this loader")
+	}
+
+	C.cgoCmdEndRenderPass2(l.funcPtrs.vkCmdEndRenderPass2,
+		C.VkCommandBuffer(commandBuffer),
+		(*C.VkSubpassEndInfo)(pSubpassEndInfo))
+
+	return nil
+}
+
+func (l *vulkanLoader) VkResetQueryPool(device VkDevice, queryPool VkQueryPool, firstQuery Uint32, queryCount Uint32) error {
+	if l.funcPtrs.vkResetQueryPool == nil {
+		return errors.New("attempted to call method 'vkResetQueryPool' which is not present on this loader")
+	}
+
+	C.cgoResetQueryPool(l.funcPtrs.vkResetQueryPool,
+		C.VkDevice(device),
+		C.VkQueryPool(queryPool),
+		C.uint32_t(firstQuery),
+		C.uint32_t(queryCount))
+
+	return nil
+}
+
+func (l *vulkanLoader) VkGetSemaphoreCounterValue(device VkDevice, semaphore VkSemaphore, pValue *Uint64) (VkResult, error) {
+	if l.funcPtrs.vkGetSemaphoreCounterValue == nil {
+		return VKErrorUnknown, errors.New("attempted to call method 'vkGetSemaphoreCounterValue' which is not present on this loader")
+	}
+
+	res := VkResult(C.cgoGetSemaphoreCounterValue(l.funcPtrs.vkGetSemaphoreCounterValue,
+		C.VkDevice(device),
+		C.VkSemaphore(semaphore),
+		(*C.uint64_t)(pValue)))
+
+	return res, res.ToError()
+}
+
+func (l *vulkanLoader) VkWaitSemaphores(device VkDevice, pWaitInfo *VkSemaphoreWaitInfo, timeout Uint64) (VkResult, error) {
+	if l.funcPtrs.vkWaitSemaphores == nil {
+		return VKErrorUnknown, errors.New("attempted to call method 'vkWaitSemaphores' which is not present on this loader")
+	}
+
+	res := VkResult(C.cgoWaitSemaphores(l.funcPtrs.vkWaitSemaphores,
+		C.VkDevice(device),
+		(*C.VkSemaphoreWaitInfo)(pWaitInfo),
+		C.uint64_t(timeout)))
+
+	return res, res.ToError()
+}
+
+func (l *vulkanLoader) VkSignalSemaphore(device VkDevice, pSignalInfo *VkSemaphoreSignalInfo) (VkResult, error) {
+	if l.funcPtrs.vkSignalSemaphore == nil {
+		return VKErrorUnknown, errors.New("attempted to call method 'vkSignalSemaphore' which is not present on this loader")
+	}
+
+	res := VkResult(C.cgoSignalSemaphore(l.funcPtrs.vkSignalSemaphore,
+		C.VkDevice(device),
+		(*C.VkSemaphoreSignalInfo)(pSignalInfo)))
+
+	return res, res.ToError()
+}
+
+func (l *vulkanLoader) VkGetBufferDeviceAddress(device VkDevice, pInfo *VkBufferDeviceAddressInfo) (VkDeviceAddress, error) {
+	if l.funcPtrs.vkGetBufferDeviceAddress == nil {
+		return VkDeviceAddress(0), errors.New("attempted to call method 'vkGetBufferDeviceAddress' which is not present on this loader")
+	}
+
+	address := VkDeviceAddress(C.cgoGetBufferDeviceAddress(l.funcPtrs.vkGetBufferDeviceAddress,
+		C.VkDevice(device),
+		(*C.VkBufferDeviceAddressInfo)(pInfo)))
+
+	return address, nil
+}
+
+func (l *vulkanLoader) VkGetBufferOpaqueCaptureAddress(device VkDevice, pInfo *VkBufferDeviceAddressInfo) (Uint64, error) {
+	if l.funcPtrs.vkGetBufferOpaqueCaptureAddress == nil {
+		return 0, errors.New("attempted to call method 'vkGetBufferOpaqueCaptureAddress' which is not present on this loader")
+	}
+
+	address := Uint64(C.cgoGetBufferOpaqueCaptureAddress(l.funcPtrs.vkGetBufferOpaqueCaptureAddress,
+		C.VkDevice(device),
+		(*C.VkBufferDeviceAddressInfo)(pInfo)))
+
+	return address, nil
+}
+
+func (l *vulkanLoader) VkGetDeviceMemoryOpaqueCaptureAddress(device VkDevice, pInfo *VkDeviceMemoryOpaqueCaptureAddressInfo) (Uint64, error) {
+	if l.funcPtrs.vkGetDeviceMemoryOpaqueCaptureAddress == nil {
+		return 0, errors.New("attempted to call method 'vkGetDeviceMemoryOpaqueCaptureAddress' which is not present on this loader")
+	}
+
+	address := Uint64(C.cgoGetDeviceMemoryOpaqueCaptureAddress(l.funcPtrs.vkGetDeviceMemoryOpaqueCaptureAddress,
+		C.VkDevice(device),
+		(*C.VkDeviceMemoryOpaqueCaptureAddressInfo)(pInfo)))
+
+	return address, nil
+}

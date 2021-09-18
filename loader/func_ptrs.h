@@ -2,6 +2,8 @@
 #include "../vulkan/vulkan.h"
 
 typedef struct LoaderFuncPtrs {
+    //VK 1.0
+    
     //Platform
     PFN_vkGetInstanceProcAddr vkGetInstanceProcAddr;
 
@@ -82,7 +84,7 @@ typedef struct LoaderFuncPtrs {
     PFN_vkCreateBufferView vkCreateBufferView; //Todo
     PFN_vkCreateCommandPool vkCreateCommandPool;
     PFN_vkCreateComputePipelines vkCreateComputePipelines; //Todo
-    PFN_vkCreateDescriptorPool vkCreateDescriptorPool; //Todo
+    PFN_vkCreateDescriptorPool vkCreateDescriptorPool;
     PFN_vkCreateDescriptorSetLayout vkCreateDescriptorSetLayout;
     PFN_vkCreateEvent vkCreateEvent; //Todo
     PFN_vkCreateFence vkCreateFence;
@@ -100,8 +102,8 @@ typedef struct LoaderFuncPtrs {
     PFN_vkDestroyBuffer vkDestroyBuffer;
     PFN_vkDestroyBufferView vkDestroyBufferView; //Todo
     PFN_vkDestroyCommandPool vkDestroyCommandPool;
-    PFN_vkDestroyDescriptorPool vkDestroyDescriptorPool; //Todo
-    PFN_vkDestroyDescriptorSetLayout vkDestroyDescriptorSetLayout; //Todo
+    PFN_vkDestroyDescriptorPool vkDestroyDescriptorPool;
+    PFN_vkDestroyDescriptorSetLayout vkDestroyDescriptorSetLayout;
     PFN_vkDestroyDevice vkDestroyDevice;
     PFN_vkDestroyEvent vkDestroyEvent; //Todo
     PFN_vkDestroyFence vkDestroyFence;
@@ -148,4 +150,57 @@ typedef struct LoaderFuncPtrs {
     PFN_vkUnmapMemory vkUnmapMemory;
     PFN_vkUpdateDescriptorSets vkUpdateDescriptorSets; //Todo
     PFN_vkWaitForFences vkWaitForFences;
+    
+    // VK 1.1
+
+    //Platform
+    PFN_vkEnumerateInstanceVersion vkEnumerateInstanceVersion; //Todo
+
+    //Instance
+    PFN_vkEnumeratePhysicalDeviceGroups vkEnumeratePhysicalDeviceGroups; //Todo
+    PFN_vkGetPhysicalDeviceFeatures2 vkGetPhysicalDeviceFeatures2; //Todo
+    PFN_vkGetPhysicalDeviceProperties2 vkGetPhysicalDeviceProperties2; //Todo
+    PFN_vkGetPhysicalDeviceFormatProperties2 vkGetPhysicalDeviceFormatProperties2; //Todo
+    PFN_vkGetPhysicalDeviceImageFormatProperties2 vkGetPhysicalDeviceImageFormatProperties2; //Todo
+    PFN_vkGetPhysicalDeviceQueueFamilyProperties2 vkGetPhysicalDeviceQueueFamilyProperties2; //Todo
+    PFN_vkGetPhysicalDeviceMemoryProperties2 vkGetPhysicalDeviceMemoryProperties2; //Todo
+    PFN_vkGetPhysicalDeviceSparseImageFormatProperties2 vkGetPhysicalDeviceSparseImageFormatProperties2; //Todo
+    PFN_vkGetPhysicalDeviceExternalBufferProperties vkGetPhysicalDeviceExternalBufferProperties; //Todo
+    PFN_vkGetPhysicalDeviceExternalFenceProperties vkGetPhysicalDeviceExternalFenceProperties; //Todo
+    PFN_vkGetPhysicalDeviceExternalSemaphoreProperties vkGetPhysicalDeviceExternalSemaphoreProperties; //Todo
+
+    //Device
+    PFN_vkBindBufferMemory2 vkBindBufferMemory2; //Todo
+    PFN_vkBindImageMemory2 vkBindImageMemory2; //Todo
+    PFN_vkGetDeviceGroupPeerMemoryFeatures vkGetDeviceGroupPeerMemoryFeatures; //Todo
+    PFN_vkCmdSetDeviceMask vkCmdSetDeviceMask; //Todo
+    PFN_vkCmdDispatchBase vkCmdDispatchBase; //Todo
+    PFN_vkGetImageMemoryRequirements2 vkGetImageMemoryRequirements2; //Todo
+    PFN_vkGetBufferMemoryRequirements2 vkGetBufferMemoryRequirements2; //Todo
+    PFN_vkGetImageSparseMemoryRequirements2 vkGetImageSparseMemoryRequirements2; //Todo
+    PFN_vkTrimCommandPool vkTrimCommandPool; //Todo
+    PFN_vkGetDeviceQueue2 vkGetDeviceQueue2; //Todo
+    PFN_vkCreateSamplerYcbcrConversion vkCreateSamplerYcbcrConversion; //Todo
+    PFN_vkDestroySamplerYcbcrConversion vkDestroySamplerYcbcrConversion; //Todo
+    PFN_vkCreateDescriptorUpdateTemplate vkCreateDescriptorUpdateTemplate; //Todo
+    PFN_vkDestroyDescriptorUpdateTemplate vkDestroyDescriptorUpdateTemplate; //Todo
+    PFN_vkUpdateDescriptorSetWithTemplate vkUpdateDescriptorSetWithTemplate; //Todo
+    PFN_vkGetDescriptorSetLayoutSupport vkGetDescriptorSetLayoutSupport; //Todo
+    
+    // VK 1.2
+    
+    //Device
+    PFN_vkCmdDrawIndirectCount vkCmdDrawIndirectCount; //Todo
+    PFN_vkCmdDrawIndexedIndirectCount vkCmdDrawIndexedIndirectCount; //Todo
+    PFN_vkCreateRenderPass2 vkCreateRenderPass2; //Todo
+    PFN_vkCmdBeginRenderPass2 vkCmdBeginRenderPass2; //Todo
+    PFN_vkCmdNextSubpass2 vkCmdNextSubpass2; //Todo
+    PFN_vkCmdEndRenderPass2 vkCmdEndRenderPass2; //Todo
+    PFN_vkResetQueryPool vkResetQueryPool; //Todo
+    PFN_vkGetSemaphoreCounterValue vkGetSemaphoreCounterValue; //Todo
+    PFN_vkWaitSemaphores vkWaitSemaphores; //Todo
+    PFN_vkSignalSemaphore vkSignalSemaphore; //Todo
+    PFN_vkGetBufferDeviceAddress vkGetBufferDeviceAddress; //Todo
+    PFN_vkGetBufferOpaqueCaptureAddress vkGetBufferOpaqueCaptureAddress; //Todo
+    PFN_vkGetDeviceMemoryOpaqueCaptureAddress vkGetDeviceMemoryOpaqueCaptureAddress; //Todo
 } LoaderFuncPtrs;
