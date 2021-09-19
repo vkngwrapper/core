@@ -13,7 +13,7 @@ import (
 )
 
 type DescriptorSetOptions struct {
-	DescriptorPool DescriptorPool
+	descriptorPool DescriptorPool
 
 	AllocationLayouts []DescriptorSetLayout
 
@@ -24,7 +24,7 @@ func (o *DescriptorSetOptions) AllocForC(allocator *cgoparam.Allocator, next uns
 	createInfo := (*C.VkDescriptorSetAllocateInfo)(allocator.Malloc(C.sizeof_struct_VkDescriptorSetAllocateInfo))
 	createInfo.sType = C.VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO
 	createInfo.pNext = next
-	createInfo.descriptorPool = C.VkDescriptorPool(unsafe.Pointer(o.DescriptorPool.Handle()))
+	createInfo.descriptorPool = C.VkDescriptorPool(unsafe.Pointer(o.descriptorPool.Handle()))
 
 	setCount := len(o.AllocationLayouts)
 	createInfo.descriptorSetCount = C.uint32_t(setCount)
@@ -42,6 +42,10 @@ func (o *DescriptorSetOptions) AllocForC(allocator *cgoparam.Allocator, next uns
 	}
 
 	return unsafe.Pointer(createInfo), nil
+}
+
+func (o *DescriptorSetOptions) MustBeRootOptions() bool {
+	return true
 }
 
 type vulkanDescriptorSet struct {
@@ -75,14 +79,14 @@ type WriteDescriptorSetOptions struct {
 	BufferInfo      []DescriptorBufferInfo
 	TexelBufferView []BufferView
 
-	common.HaveNext
+	Next common.Options
 }
 
 type WriteDescriptorSetExtensionSource interface {
 	WriteDescriptorSetCount() int
 }
 
-func (o *WriteDescriptorSetOptions) populate(allocator *cgoparam.Allocator, createInfo *C.VkWriteDescriptorSet, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o WriteDescriptorSetOptions) populate(allocator *cgoparam.Allocator, createInfo *C.VkWriteDescriptorSet, next unsafe.Pointer) (unsafe.Pointer, error) {
 	imageInfoCount := len(o.ImageInfo)
 	bufferInfoCount := len(o.BufferInfo)
 	texelBufferCount := len(o.TexelBufferView)
@@ -170,9 +174,13 @@ func (o *WriteDescriptorSetOptions) populate(allocator *cgoparam.Allocator, crea
 	return unsafe.Pointer(createInfo), nil
 }
 
-func (o *WriteDescriptorSetOptions) AllocForC(allocator *cgoparam.Allocator, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o WriteDescriptorSetOptions) AllocForC(allocator *cgoparam.Allocator, next unsafe.Pointer) (unsafe.Pointer, error) {
 	createInfo := (*C.VkWriteDescriptorSet)(allocator.Malloc(C.sizeof_struct_VkWriteDescriptorSet))
 	return o.populate(allocator, createInfo, next)
+}
+
+func (o WriteDescriptorSetOptions) NextInChain() common.Options {
+	return o.Next
 }
 
 type CopyDescriptorSetOptions struct {
@@ -186,10 +194,10 @@ type CopyDescriptorSetOptions struct {
 
 	Count int
 
-	common.HaveNext
+	Next common.Options
 }
 
-func (o *CopyDescriptorSetOptions) populate(allocator *cgoparam.Allocator, createInfo *C.VkCopyDescriptorSet, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o CopyDescriptorSetOptions) populate(allocator *cgoparam.Allocator, createInfo *C.VkCopyDescriptorSet, next unsafe.Pointer) (unsafe.Pointer, error) {
 	createInfo.sType = C.VK_STRUCTURE_TYPE_COPY_DESCRIPTOR_SET
 	createInfo.pNext = next
 
@@ -206,7 +214,11 @@ func (o *CopyDescriptorSetOptions) populate(allocator *cgoparam.Allocator, creat
 	return unsafe.Pointer(createInfo), nil
 }
 
-func (o *CopyDescriptorSetOptions) AllocForC(allocator *cgoparam.Allocator, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o CopyDescriptorSetOptions) AllocForC(allocator *cgoparam.Allocator, next unsafe.Pointer) (unsafe.Pointer, error) {
 	createInfo := (*C.VkCopyDescriptorSet)(allocator.Malloc(C.sizeof_struct_VkCopyDescriptorSet))
 	return o.populate(allocator, createInfo, next)
+}
+
+func (o CopyDescriptorSetOptions) NextInChain() common.Options {
+	return o.Next
 }

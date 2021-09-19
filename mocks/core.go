@@ -296,20 +296,6 @@ func (mr *MockCommandBufferMockRecorder) CmdEndRenderPass() *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CmdEndRenderPass", reflect.TypeOf((*MockCommandBuffer)(nil).CmdEndRenderPass))
 }
 
-// Destroy mocks base method.
-func (m *MockCommandBuffer) Destroy() error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Destroy")
-	ret0, _ := ret[0].(error)
-	return ret0
-}
-
-// Destroy indicates an expected call of Destroy.
-func (mr *MockCommandBufferMockRecorder) Destroy() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Destroy", reflect.TypeOf((*MockCommandBuffer)(nil).Destroy))
-}
-
 // End mocks base method.
 func (m *MockCommandBuffer) End() (core.VkResult, error) {
 	m.ctrl.T.Helper()
@@ -362,6 +348,22 @@ func (m *MockCommandPool) EXPECT() *MockCommandPoolMockRecorder {
 	return m.recorder
 }
 
+// AllocateCommandBuffers mocks base method.
+func (m *MockCommandPool) AllocateCommandBuffers(o *core.CommandBufferOptions) ([]core.CommandBuffer, core.VkResult, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "AllocateCommandBuffers", o)
+	ret0, _ := ret[0].([]core.CommandBuffer)
+	ret1, _ := ret[1].(core.VkResult)
+	ret2, _ := ret[2].(error)
+	return ret0, ret1, ret2
+}
+
+// AllocateCommandBuffers indicates an expected call of AllocateCommandBuffers.
+func (mr *MockCommandPoolMockRecorder) AllocateCommandBuffers(o interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AllocateCommandBuffers", reflect.TypeOf((*MockCommandPool)(nil).AllocateCommandBuffers), o)
+}
+
 // Destroy mocks base method.
 func (m *MockCommandPool) Destroy() error {
 	m.ctrl.T.Helper()
@@ -376,18 +378,18 @@ func (mr *MockCommandPoolMockRecorder) Destroy() *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Destroy", reflect.TypeOf((*MockCommandPool)(nil).Destroy))
 }
 
-// DestroyBuffers mocks base method.
-func (m *MockCommandPool) DestroyBuffers(buffers []core.CommandBuffer) error {
+// FreeCommandBuffers mocks base method.
+func (m *MockCommandPool) FreeCommandBuffers(buffers []core.CommandBuffer) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "DestroyBuffers", buffers)
+	ret := m.ctrl.Call(m, "FreeCommandBuffers", buffers)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
-// DestroyBuffers indicates an expected call of DestroyBuffers.
-func (mr *MockCommandPoolMockRecorder) DestroyBuffers(buffers interface{}) *gomock.Call {
+// FreeCommandBuffers indicates an expected call of FreeCommandBuffers.
+func (mr *MockCommandPoolMockRecorder) FreeCommandBuffers(buffers interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DestroyBuffers", reflect.TypeOf((*MockCommandPool)(nil).DestroyBuffers), buffers)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FreeCommandBuffers", reflect.TypeOf((*MockCommandPool)(nil).FreeCommandBuffers), buffers)
 }
 
 // Handle mocks base method.
@@ -427,6 +429,22 @@ func (m *MockDescriptorPool) EXPECT() *MockDescriptorPoolMockRecorder {
 	return m.recorder
 }
 
+// AllocateDescriptorSets mocks base method.
+func (m *MockDescriptorPool) AllocateDescriptorSets(o *core.DescriptorSetOptions) ([]core.DescriptorSet, core.VkResult, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "AllocateDescriptorSets", o)
+	ret0, _ := ret[0].([]core.DescriptorSet)
+	ret1, _ := ret[1].(core.VkResult)
+	ret2, _ := ret[2].(error)
+	return ret0, ret1, ret2
+}
+
+// AllocateDescriptorSets indicates an expected call of AllocateDescriptorSets.
+func (mr *MockDescriptorPoolMockRecorder) AllocateDescriptorSets(o interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AllocateDescriptorSets", reflect.TypeOf((*MockDescriptorPool)(nil).AllocateDescriptorSets), o)
+}
+
 // Destroy mocks base method.
 func (m *MockDescriptorPool) Destroy() error {
 	m.ctrl.T.Helper()
@@ -439,6 +457,21 @@ func (m *MockDescriptorPool) Destroy() error {
 func (mr *MockDescriptorPoolMockRecorder) Destroy() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Destroy", reflect.TypeOf((*MockDescriptorPool)(nil).Destroy))
+}
+
+// FreeDescriptorSets mocks base method.
+func (m *MockDescriptorPool) FreeDescriptorSets(sets []core.DescriptorSet) (core.VkResult, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "FreeDescriptorSets", sets)
+	ret0, _ := ret[0].(core.VkResult)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// FreeDescriptorSets indicates an expected call of FreeDescriptorSets.
+func (mr *MockDescriptorPoolMockRecorder) FreeDescriptorSets(sets interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FreeDescriptorSets", reflect.TypeOf((*MockDescriptorPool)(nil).FreeDescriptorSets), sets)
 }
 
 // Handle mocks base method.
@@ -662,22 +695,6 @@ func (m *MockDevice) EXPECT() *MockDeviceMockRecorder {
 	return m.recorder
 }
 
-// AllocateDescriptorSet mocks base method.
-func (m *MockDevice) AllocateDescriptorSet(o *core.DescriptorSetOptions) ([]core.DescriptorSet, core.VkResult, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "AllocateDescriptorSet", o)
-	ret0, _ := ret[0].([]core.DescriptorSet)
-	ret1, _ := ret[1].(core.VkResult)
-	ret2, _ := ret[2].(error)
-	return ret0, ret1, ret2
-}
-
-// AllocateDescriptorSet indicates an expected call of AllocateDescriptorSet.
-func (mr *MockDeviceMockRecorder) AllocateDescriptorSet(o interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AllocateDescriptorSet", reflect.TypeOf((*MockDevice)(nil).AllocateDescriptorSet), o)
-}
-
 // AllocateMemory mocks base method.
 func (m *MockDevice) AllocateMemory(o *core.DeviceMemoryOptions) (core.DeviceMemory, core.VkResult, error) {
 	m.ctrl.T.Helper()
@@ -767,7 +784,7 @@ func (mr *MockDeviceMockRecorder) ResetFences(fences interface{}) *gomock.Call {
 }
 
 // UpdateDescriptorSets mocks base method.
-func (m *MockDevice) UpdateDescriptorSets(writes []*core.WriteDescriptorSetOptions, copies []*core.CopyDescriptorSetOptions) error {
+func (m *MockDevice) UpdateDescriptorSets(writes []core.WriteDescriptorSetOptions, copies []core.CopyDescriptorSetOptions) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "UpdateDescriptorSets", writes, copies)
 	ret0, _ := ret[0].(error)
@@ -1152,6 +1169,22 @@ func (mr *MockLoader1_0MockRecorder) CreateBuffer(device, o interface{}) *gomock
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateBuffer", reflect.TypeOf((*MockLoader1_0)(nil).CreateBuffer), device, o)
 }
 
+// CreateCommandPool mocks base method.
+func (m *MockLoader1_0) CreateCommandPool(device core.Device, o *core.CommandPoolOptions) (core.CommandPool, core.VkResult, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreateCommandPool", device, o)
+	ret0, _ := ret[0].(core.CommandPool)
+	ret1, _ := ret[1].(core.VkResult)
+	ret2, _ := ret[2].(error)
+	return ret0, ret1, ret2
+}
+
+// CreateCommandPool indicates an expected call of CreateCommandPool.
+func (mr *MockLoader1_0MockRecorder) CreateCommandPool(device, o interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateCommandPool", reflect.TypeOf((*MockLoader1_0)(nil).CreateCommandPool), device, o)
+}
+
 // CreateDescriptorPool mocks base method.
 func (m *MockLoader1_0) CreateDescriptorPool(device core.Device, o *core.DescriptorPoolOptions) (core.DescriptorPool, core.VkResult, error) {
 	m.ctrl.T.Helper()
@@ -1216,6 +1249,38 @@ func (mr *MockLoader1_0MockRecorder) CreateFence(device, o interface{}) *gomock.
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateFence", reflect.TypeOf((*MockLoader1_0)(nil).CreateFence), device, o)
 }
 
+// CreateFrameBuffer mocks base method.
+func (m *MockLoader1_0) CreateFrameBuffer(device core.Device, o *core.FramebufferOptions) (core.Framebuffer, core.VkResult, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreateFrameBuffer", device, o)
+	ret0, _ := ret[0].(core.Framebuffer)
+	ret1, _ := ret[1].(core.VkResult)
+	ret2, _ := ret[2].(error)
+	return ret0, ret1, ret2
+}
+
+// CreateFrameBuffer indicates an expected call of CreateFrameBuffer.
+func (mr *MockLoader1_0MockRecorder) CreateFrameBuffer(device, o interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateFrameBuffer", reflect.TypeOf((*MockLoader1_0)(nil).CreateFrameBuffer), device, o)
+}
+
+// CreateGraphicsPipelines mocks base method.
+func (m *MockLoader1_0) CreateGraphicsPipelines(device core.Device, o []*core.Options) ([]core.Pipeline, core.VkResult, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreateGraphicsPipelines", device, o)
+	ret0, _ := ret[0].([]core.Pipeline)
+	ret1, _ := ret[1].(core.VkResult)
+	ret2, _ := ret[2].(error)
+	return ret0, ret1, ret2
+}
+
+// CreateGraphicsPipelines indicates an expected call of CreateGraphicsPipelines.
+func (mr *MockLoader1_0MockRecorder) CreateGraphicsPipelines(device, o interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateGraphicsPipelines", reflect.TypeOf((*MockLoader1_0)(nil).CreateGraphicsPipelines), device, o)
+}
+
 // CreateImageView mocks base method.
 func (m *MockLoader1_0) CreateImageView(device core.Device, o *core.ImageViewOptions) (core.ImageView, core.VkResult, error) {
 	m.ctrl.T.Helper()
@@ -1246,6 +1311,38 @@ func (m *MockLoader1_0) CreateInstance(options *core.InstanceOptions) (core.Inst
 func (mr *MockLoader1_0MockRecorder) CreateInstance(options interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateInstance", reflect.TypeOf((*MockLoader1_0)(nil).CreateInstance), options)
+}
+
+// CreatePipelineLayout mocks base method.
+func (m *MockLoader1_0) CreatePipelineLayout(device core.Device, o *core.PipelineLayoutOptions) (core.PipelineLayout, core.VkResult, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreatePipelineLayout", device, o)
+	ret0, _ := ret[0].(core.PipelineLayout)
+	ret1, _ := ret[1].(core.VkResult)
+	ret2, _ := ret[2].(error)
+	return ret0, ret1, ret2
+}
+
+// CreatePipelineLayout indicates an expected call of CreatePipelineLayout.
+func (mr *MockLoader1_0MockRecorder) CreatePipelineLayout(device, o interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreatePipelineLayout", reflect.TypeOf((*MockLoader1_0)(nil).CreatePipelineLayout), device, o)
+}
+
+// CreateRenderPass mocks base method.
+func (m *MockLoader1_0) CreateRenderPass(device core.Device, o *core.RenderPassOptions) (core.RenderPass, core.VkResult, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreateRenderPass", device, o)
+	ret0, _ := ret[0].(core.RenderPass)
+	ret1, _ := ret[1].(core.VkResult)
+	ret2, _ := ret[2].(error)
+	return ret0, ret1, ret2
+}
+
+// CreateRenderPass indicates an expected call of CreateRenderPass.
+func (mr *MockLoader1_0MockRecorder) CreateRenderPass(device, o interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateRenderPass", reflect.TypeOf((*MockLoader1_0)(nil).CreateRenderPass), device, o)
 }
 
 // CreateSemaphore mocks base method.

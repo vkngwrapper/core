@@ -21,7 +21,6 @@ type BufferView interface {
 
 type CommandBuffer interface {
 	Handle() VkCommandBuffer
-	Destroy() error
 
 	Begin(o *BeginOptions) (VkResult, error)
 	End() (VkResult, error)
@@ -40,12 +39,15 @@ type CommandBuffer interface {
 type CommandPool interface {
 	Handle() VkCommandPool
 	Destroy() error
-	DestroyBuffers(buffers []CommandBuffer) error
+	AllocateCommandBuffers(o *CommandBufferOptions) ([]CommandBuffer, VkResult, error)
+	FreeCommandBuffers(buffers []CommandBuffer) error
 }
 
 type DescriptorPool interface {
 	Handle() VkDescriptorPool
 	Destroy() error
+	AllocateDescriptorSets(o *DescriptorSetOptions) ([]DescriptorSet, VkResult, error)
+	FreeDescriptorSets(sets []DescriptorSet) (VkResult, error)
 }
 
 type DescriptorSet interface {
@@ -74,8 +76,7 @@ type Device interface {
 	WaitForFences(waitForAll bool, timeout time.Duration, fences []Fence) (VkResult, error)
 	ResetFences(fences []Fence) (VkResult, error)
 	AllocateMemory(o *DeviceMemoryOptions) (DeviceMemory, VkResult, error)
-	AllocateDescriptorSet(o *DescriptorSetOptions) ([]DescriptorSet, VkResult, error)
-	UpdateDescriptorSets(writes []*WriteDescriptorSetOptions, copies []*CopyDescriptorSetOptions) error
+	UpdateDescriptorSets(writes []WriteDescriptorSetOptions, copies []CopyDescriptorSetOptions) error
 }
 
 type Fence interface {
@@ -119,6 +120,11 @@ type Loader1_0 interface {
 	CreateBuffer(device Device, o *BufferOptions) (Buffer, VkResult, error)
 	CreateDescriptorSetLayout(device Device, o *DescriptorSetLayoutOptions) (DescriptorSetLayout, VkResult, error)
 	CreateDescriptorPool(device Device, o *DescriptorPoolOptions) (DescriptorPool, VkResult, error)
+	CreateCommandPool(device Device, o *CommandPoolOptions) (CommandPool, VkResult, error)
+	CreateGraphicsPipelines(device Device, o []*Options) ([]Pipeline, VkResult, error)
+	CreateFrameBuffer(device Device, o *FramebufferOptions) (Framebuffer, VkResult, error)
+	CreatePipelineLayout(device Device, o *PipelineLayoutOptions) (PipelineLayout, VkResult, error)
+	CreateRenderPass(device Device, o *RenderPassOptions) (RenderPass, VkResult, error)
 }
 
 type PhysicalDevice interface {

@@ -305,3 +305,114 @@ func (l *VulkanLoader1_0) CreateDescriptorPool(device Device, o *DescriptorPoolO
 		device: device.Handle(),
 	}, res, nil
 }
+
+func (l *VulkanLoader1_0) CreateCommandPool(device Device, o *CommandPoolOptions) (CommandPool, VkResult, error) {
+	arena := cgoparam.GetAlloc()
+	defer cgoparam.ReturnAlloc(arena)
+
+	createInfo, err := common.AllocOptions(arena, o)
+	if err != nil {
+		return nil, VKErrorUnknown, err
+	}
+
+	var cmdPoolHandle VkCommandPool
+	res, err := device.Driver().VkCreateCommandPool(device.Handle(), (*VkCommandPoolCreateInfo)(createInfo), nil, &cmdPoolHandle)
+	if err != nil {
+		return nil, res, err
+	}
+
+	return &vulkanCommandPool{driver: device.Driver(), handle: cmdPoolHandle, device: device.Handle()}, res, nil
+}
+
+func (l *VulkanLoader1_0) CreateFrameBuffer(device Device, o *FramebufferOptions) (Framebuffer, VkResult, error) {
+	arena := cgoparam.GetAlloc()
+	defer cgoparam.ReturnAlloc(arena)
+
+	createInfo, err := common.AllocOptions(arena, o)
+	if err != nil {
+		return nil, VKErrorUnknown, err
+	}
+
+	var framebuffer VkFramebuffer
+
+	res, err := device.Driver().VkCreateFramebuffer(device.Handle(), (*VkFramebufferCreateInfo)(createInfo), nil, &framebuffer)
+	if err != nil {
+		return nil, res, err
+	}
+
+	return &vulkanFramebuffer{driver: device.Driver(), device: device.Handle(), handle: framebuffer}, res, nil
+}
+
+func (l *VulkanLoader1_0) CreateGraphicsPipelines(device Device, o []*Options) ([]Pipeline, VkResult, error) {
+	arena := cgoparam.GetAlloc()
+	defer cgoparam.ReturnAlloc(arena)
+
+	pipelineCount := len(o)
+
+	pipelineCreateInfosPtrUnsafe := arena.Malloc(pipelineCount * C.sizeof_struct_VkGraphicsPipelineCreateInfo)
+	pipelineCreateInfosSlice := ([]C.VkGraphicsPipelineCreateInfo)(unsafe.Slice((*C.VkGraphicsPipelineCreateInfo)(pipelineCreateInfosPtrUnsafe), pipelineCount))
+	for i := 0; i < pipelineCount; i++ {
+		next, err := common.AllocNext(arena, o[i])
+		if err != nil {
+			return nil, VKErrorUnknown, err
+		}
+
+		err = o[i].populate(arena, &pipelineCreateInfosSlice[i], next)
+		if err != nil {
+			return nil, VKErrorUnknown, err
+		}
+	}
+
+	pipelinePtr := (*VkPipeline)(arena.Malloc(pipelineCount * int(unsafe.Sizeof([1]VkPipeline{}))))
+
+	res, err := device.Driver().VkCreateGraphicsPipelines(device.Handle(), nil, Uint32(pipelineCount), (*VkGraphicsPipelineCreateInfo)(pipelineCreateInfosPtrUnsafe), nil, pipelinePtr)
+	if err != nil {
+		return nil, res, err
+	}
+
+	var output []Pipeline
+	pipelineSlice := ([]VkPipeline)(unsafe.Slice(pipelinePtr, pipelineCount))
+	for i := 0; i < pipelineCount; i++ {
+		output = append(output, &vulkanPipeline{driver: device.Driver(), device: device.Handle(), handle: pipelineSlice[i]})
+	}
+
+	return output, res, nil
+}
+
+func (l *VulkanLoader1_0) CreatePipelineLayout(device Device, o *PipelineLayoutOptions) (PipelineLayout, VkResult, error) {
+	arena := cgoparam.GetAlloc()
+	defer cgoparam.ReturnAlloc(arena)
+
+	createInfo, err := common.AllocOptions(arena, o)
+	if err != nil {
+		return nil, VKErrorUnknown, err
+	}
+
+	var pipelineLayout VkPipelineLayout
+	res, err := device.Driver().VkCreatePipelineLayout(device.Handle(), (*VkPipelineLayoutCreateInfo)(createInfo), nil, &pipelineLayout)
+	if err != nil {
+		return nil, res, err
+	}
+
+	return &vulkanPipelineLayout{driver: device.Driver(), handle: pipelineLayout, device: device.Handle()}, res, nil
+}
+
+func (l *VulkanLoader1_0) CreateRenderPass(device Device, o *RenderPassOptions) (RenderPass, VkResult, error) {
+	arena := cgoparam.GetAlloc()
+	defer cgoparam.ReturnAlloc(arena)
+
+	createInfo, err := common.AllocOptions(arena, o)
+	if err != nil {
+		return nil, VKErrorUnknown, err
+	}
+
+	var renderPass VkRenderPass
+
+	res, err := device.Driver().VkCreateRenderPass(device.Handle(), (*VkRenderPassCreateInfo)(createInfo), nil, &renderPass)
+	err = res.ToError()
+	if err != nil {
+		return nil, res, err
+	}
+
+	return &vulkanRenderPass{driver: device.Driver(), device: device.Handle(), handle: renderPass}, res, nil
+}

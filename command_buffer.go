@@ -8,6 +8,7 @@ import "C"
 import (
 	"github.com/CannibalVox/VKng/core/common"
 	"github.com/CannibalVox/cgoparam"
+	"github.com/cockroachdb/errors"
 	"unsafe"
 )
 
@@ -18,41 +19,8 @@ type vulkanCommandBuffer struct {
 	handle VkCommandBuffer
 }
 
-func CreateCommandBuffers(device Device, o *CommandBufferOptions) ([]CommandBuffer, VkResult, error) {
-	arena := cgoparam.GetAlloc()
-	defer cgoparam.ReturnAlloc(arena)
-
-	createInfo, err := common.AllocOptions(arena, o)
-	if err != nil {
-		return nil, VKErrorUnknown, err
-	}
-
-	commandBufferPtr := (*VkCommandBuffer)(arena.Malloc(o.BufferCount * int(unsafe.Sizeof([1]VkCommandBuffer{}))))
-
-	res, err := device.Driver().VkAllocateCommandBuffers(device.Handle(), (*VkCommandBufferAllocateInfo)(createInfo), commandBufferPtr)
-	err = res.ToError()
-	if err != nil {
-		return nil, res, err
-	}
-
-	commandBufferArray := ([]VkCommandBuffer)(unsafe.Slice(commandBufferPtr, o.BufferCount))
-	var result []CommandBuffer
-	for i := 0; i < o.BufferCount; i++ {
-		result = append(result, &vulkanCommandBuffer{driver: device.Driver(), pool: o.CommandPool.Handle(), device: device.Handle(), handle: commandBufferArray[i]})
-	}
-
-	return result, res, nil
-}
-
 func (c *vulkanCommandBuffer) Handle() VkCommandBuffer {
 	return c.handle
-}
-
-func (c *vulkanCommandBuffer) Destroy() error {
-	// cgocheckpointer considers &(c.handle) to be a go pointer containing a go pointer, probably
-	// because driver is a go pointer?  Weird but passing a pointer just to the handle works
-	handle := c.handle
-	return c.driver.VkFreeCommandBuffers(c.device, c.pool, 1, &handle)
 }
 
 func (c *vulkanCommandBuffer) Begin(o *BeginOptions) (VkResult, error) {
@@ -161,4 +129,35 @@ func (c *vulkanCommandBuffer) CmdBindDescriptorSets(bindPoint common.PipelineBin
 		(*VkDescriptorSet)(setPtr),
 		Uint32(dynamicOffsetCount),
 		(*Uint32)(dynamicOffsetPtr))
+}
+
+type CommandBufferOptions struct {
+	Level       common.CommandBufferLevel
+	BufferCount int
+	commandPool CommandPool
+
+	common.HaveNext
+}
+
+func (o *CommandBufferOptions) AllocForC(allocator *cgoparam.Allocator, next unsafe.Pointer) (unsafe.Pointer, error) {
+	if o.Level == common.LevelUnset {
+		return nil, errors.New("attempted to create command buffers without setting Level")
+	}
+	if o.BufferCount == 0 {
+		return nil, errors.New("attempted to create 0 command buffers")
+	}
+
+	createInfo := (*C.VkCommandBufferAllocateInfo)(allocator.Malloc(int(unsafe.Sizeof([1]C.VkCommandBufferAllocateInfo{}))))
+	createInfo.sType = C.VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO
+	createInfo.pNext = next
+
+	createInfo.level = C.VkCommandBufferLevel(o.Level)
+	createInfo.commandBufferCount = C.uint32_t(o.BufferCount)
+	createInfo.commandPool = C.VkCommandPool(unsafe.Pointer(o.commandPool.Handle()))
+
+	return unsafe.Pointer(createInfo), nil
+}
+
+func (o *CommandBufferOptions) MustBeRootOptions() bool {
+	return true
 }

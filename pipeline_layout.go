@@ -69,21 +69,3 @@ func (l *vulkanPipelineLayout) Handle() VkPipelineLayout {
 func (l *vulkanPipelineLayout) Destroy() error {
 	return l.driver.VkDestroyPipelineLayout(l.device, l.handle, nil)
 }
-
-func CreatePipelineLayout(device Device, o *PipelineLayoutOptions) (PipelineLayout, VkResult, error) {
-	arena := cgoparam.GetAlloc()
-	defer cgoparam.ReturnAlloc(arena)
-
-	createInfo, err := common.AllocOptions(arena, o)
-	if err != nil {
-		return nil, VKErrorUnknown, err
-	}
-
-	var pipelineLayout VkPipelineLayout
-	res, err := device.Driver().VkCreatePipelineLayout(device.Handle(), (*VkPipelineLayoutCreateInfo)(createInfo), nil, &pipelineLayout)
-	if err != nil {
-		return nil, res, err
-	}
-
-	return &vulkanPipelineLayout{driver: device.Driver(), handle: pipelineLayout, device: device.Handle()}, res, nil
-}

@@ -13,11 +13,12 @@ import (
 
 type FramebufferOptions struct {
 	Attachments []ImageView
-	RenderPass  RenderPass
 
 	Width  uint32
 	Height uint32
 	Layers uint32
+
+	RenderPass RenderPass
 
 	common.HaveNext
 }
@@ -54,25 +55,6 @@ type vulkanFramebuffer struct {
 	driver Driver
 	device VkDevice
 	handle VkFramebuffer
-}
-
-func CreateFrameBuffer(device Device, o *FramebufferOptions) (Framebuffer, VkResult, error) {
-	arena := cgoparam.GetAlloc()
-	defer cgoparam.ReturnAlloc(arena)
-
-	createInfo, err := common.AllocOptions(arena, o)
-	if err != nil {
-		return nil, VKErrorUnknown, err
-	}
-
-	var framebuffer VkFramebuffer
-
-	res, err := device.Driver().VkCreateFramebuffer(device.Handle(), (*VkFramebufferCreateInfo)(createInfo), nil, &framebuffer)
-	if err != nil {
-		return nil, res, err
-	}
-
-	return &vulkanFramebuffer{driver: device.Driver(), device: device.Handle(), handle: framebuffer}, res, nil
 }
 
 func (b *vulkanFramebuffer) Handle() VkFramebuffer {

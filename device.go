@@ -106,33 +106,7 @@ func (d *vulkanDevice) AllocateMemory(o *DeviceMemoryOptions) (DeviceMemory, VkR
 	}, res, nil
 }
 
-func (d *vulkanDevice) AllocateDescriptorSet(o *DescriptorSetOptions) ([]DescriptorSet, VkResult, error) {
-	arena := cgoparam.GetAlloc()
-	defer cgoparam.ReturnAlloc(arena)
-
-	createInfo, err := common.AllocOptions(arena, o)
-	if err != nil {
-		return nil, VKErrorUnknown, err
-	}
-
-	setCount := len(o.AllocationLayouts)
-	descriptorSets := (*VkDescriptorSet)(arena.Malloc(setCount * int(unsafe.Sizeof([1]C.VkDescriptorSet{}))))
-
-	res, err := d.driver.VkAllocateDescriptorSets(d.handle, (*VkDescriptorSetAllocateInfo)(createInfo), descriptorSets)
-	if err != nil {
-		return nil, res, err
-	}
-
-	var sets []DescriptorSet
-	descriptorSetSlice := ([]VkDescriptorSet)(unsafe.Slice(descriptorSets, setCount))
-	for i := 0; i < setCount; i++ {
-		sets = append(sets, &vulkanDescriptorSet{handle: descriptorSetSlice[i]})
-	}
-
-	return sets, res, nil
-}
-
-func (d *vulkanDevice) UpdateDescriptorSets(writes []*WriteDescriptorSetOptions, copies []*CopyDescriptorSetOptions) error {
+func (d *vulkanDevice) UpdateDescriptorSets(writes []WriteDescriptorSetOptions, copies []CopyDescriptorSetOptions) error {
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 

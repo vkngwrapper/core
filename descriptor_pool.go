@@ -105,6 +105,34 @@ func (p *vulkanDescriptorPool) Destroy() error {
 	return p.driver.VkDestroyDescriptorPool(p.device, p.handle, nil)
 }
 
+func (p *vulkanDescriptorPool) AllocateDescriptorSets(o *DescriptorSetOptions) ([]DescriptorSet, VkResult, error) {
+	arena := cgoparam.GetAlloc()
+	defer cgoparam.ReturnAlloc(arena)
+
+	o.descriptorPool = p
+
+	createInfo, err := common.AllocOptions(arena, o)
+	if err != nil {
+		return nil, VKErrorUnknown, err
+	}
+
+	setCount := len(o.AllocationLayouts)
+	descriptorSets := (*VkDescriptorSet)(arena.Malloc(setCount * int(unsafe.Sizeof([1]C.VkDescriptorSet{}))))
+
+	res, err := p.driver.VkAllocateDescriptorSets(p.device, (*VkDescriptorSetAllocateInfo)(createInfo), descriptorSets)
+	if err != nil {
+		return nil, res, err
+	}
+
+	var sets []DescriptorSet
+	descriptorSetSlice := ([]VkDescriptorSet)(unsafe.Slice(descriptorSets, setCount))
+	for i := 0; i < setCount; i++ {
+		sets = append(sets, &vulkanDescriptorSet{handle: descriptorSetSlice[i]})
+	}
+
+	return sets, res, nil
+}
+
 func (p *vulkanDescriptorPool) FreeDescriptorSets(sets []DescriptorSet) (VkResult, error) {
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
