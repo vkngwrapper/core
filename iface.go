@@ -107,6 +107,7 @@ type Instance interface {
 
 type Loader1_0 interface {
 	Version() common.APIVersion
+	Driver() Driver
 
 	AvailableExtensions() (map[string]*common.ExtensionProperties, VkResult, error)
 	AvailableLayers() (map[string]*common.LayerProperties, VkResult, error)

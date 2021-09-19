@@ -36,6 +36,10 @@ func (l *VulkanLoader1_0) Version() common.APIVersion {
 	return l.driver.Version()
 }
 
+func (l *VulkanLoader1_0) Driver() Driver {
+	return l.driver
+}
+
 func (l *VulkanLoader1_0) AvailableExtensions() (map[string]*common.ExtensionProperties, VkResult, error) {
 	alloc := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(alloc)

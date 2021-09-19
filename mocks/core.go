@@ -1377,6 +1377,20 @@ func (mr *MockLoader1_0MockRecorder) CreateShaderModule(device, o interface{}) *
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateShaderModule", reflect.TypeOf((*MockLoader1_0)(nil).CreateShaderModule), device, o)
 }
 
+// Driver mocks base method.
+func (m *MockLoader1_0) Driver() core.Driver {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Driver")
+	ret0, _ := ret[0].(core.Driver)
+	return ret0
+}
+
+// Driver indicates an expected call of Driver.
+func (mr *MockLoader1_0MockRecorder) Driver() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Driver", reflect.TypeOf((*MockLoader1_0)(nil).Driver))
+}
+
 // Version mocks base method.
 func (m *MockLoader1_0) Version() common.APIVersion {
 	m.ctrl.T.Helper()

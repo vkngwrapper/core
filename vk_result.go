@@ -76,7 +76,7 @@ var vkResultToString = map[VkResult]string{
 	VKErrorInvalidExternalHandle:               "invalid external handle",
 	VKErrorFragmentation:                       "fragmentation",
 	VKErrorInvalidDeviceAddress:                "invalid device address",
-	VKErrorSurfaceLost:                         "surface lost",
+	VKErrorSurfaceLost:                         "khr_surface lost",
 	VKErrorNativeWindowInUse:                   "native window in use",
 	VKSuboptimal:                               "Suboptimal",
 	VKErrorOutOfDate:                           "out of date",
