@@ -1266,7 +1266,7 @@ func (mr *MockLoader1_0MockRecorder) CreateFrameBuffer(device, o interface{}) *g
 }
 
 // CreateGraphicsPipelines mocks base method.
-func (m *MockLoader1_0) CreateGraphicsPipelines(device core.Device, o []*core.Options) ([]core.Pipeline, core.VkResult, error) {
+func (m *MockLoader1_0) CreateGraphicsPipelines(device core.Device, o []*core.GraphicsPipelineOptions) ([]core.Pipeline, core.VkResult, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateGraphicsPipelines", device, o)
 	ret0, _ := ret[0].([]core.Pipeline)

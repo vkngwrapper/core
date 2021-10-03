@@ -11,7 +11,7 @@ import (
 	"unsafe"
 )
 
-type Options struct {
+type GraphicsPipelineOptions struct {
 	ShaderStages  []*ShaderStage
 	VertexInput   *VertexInputOptions
 	InputAssembly *InputAssemblyOptions
@@ -33,7 +33,7 @@ type Options struct {
 	common.HaveNext
 }
 
-func (o *Options) populate(allocator *cgoparam.Allocator, createInfo *C.VkGraphicsPipelineCreateInfo, next unsafe.Pointer) error {
+func (o *GraphicsPipelineOptions) populate(allocator *cgoparam.Allocator, createInfo *C.VkGraphicsPipelineCreateInfo, next unsafe.Pointer) error {
 	createInfo.sType = C.VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO
 	createInfo.flags = 0
 	createInfo.pNext = next
@@ -169,7 +169,7 @@ func (o *Options) populate(allocator *cgoparam.Allocator, createInfo *C.VkGraphi
 	return nil
 }
 
-func (o *Options) AllocForC(allocator *cgoparam.Allocator, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o *GraphicsPipelineOptions) AllocForC(allocator *cgoparam.Allocator, next unsafe.Pointer) (unsafe.Pointer, error) {
 	createInfo := (*C.VkGraphicsPipelineCreateInfo)(allocator.Malloc(C.sizeof_struct_VkGraphicsPipelineCreateInfo))
 
 	err := o.populate(allocator, createInfo, next)

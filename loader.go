@@ -347,7 +347,7 @@ func (l *VulkanLoader1_0) CreateFrameBuffer(device Device, o *FramebufferOptions
 	return &vulkanFramebuffer{driver: device.Driver(), device: device.Handle(), handle: framebuffer}, res, nil
 }
 
-func (l *VulkanLoader1_0) CreateGraphicsPipelines(device Device, o []*Options) ([]Pipeline, VkResult, error) {
+func (l *VulkanLoader1_0) CreateGraphicsPipelines(device Device, o []*GraphicsPipelineOptions) ([]Pipeline, VkResult, error) {
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 

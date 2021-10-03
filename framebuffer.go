@@ -29,7 +29,9 @@ func (o *FramebufferOptions) AllocForC(allocator *cgoparam.Allocator, next unsaf
 	createInfo.flags = 0
 	createInfo.pNext = next
 
-	createInfo.renderPass = (C.VkRenderPass)(unsafe.Pointer(o.RenderPass.Handle()))
+	if o.RenderPass != nil {
+		createInfo.renderPass = (C.VkRenderPass)(unsafe.Pointer(o.RenderPass.Handle()))
+	}
 
 	attachmentCount := len(o.Attachments)
 	createInfo.attachmentCount = C.uint32_t(attachmentCount)

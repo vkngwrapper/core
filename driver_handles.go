@@ -86,6 +86,7 @@ type VkSemaphoreWaitInfo C.VkSemaphoreWaitInfo
 type VkSemaphoreSignalInfo C.VkSemaphoreSignalInfo
 type VkBufferDeviceAddressInfo C.VkBufferDeviceAddressInfo
 type VkDeviceMemoryOpaqueCaptureAddressInfo C.VkDeviceMemoryOpaqueCaptureAddressInfo
+type VkDeviceQueueCreateInfo C.VkDeviceQueueCreateInfo
 
 type VkAllocationCallbacks C.VkAllocationCallbacks
 type VkBindSparseInfo C.VkBindSparseInfo
@@ -95,6 +96,7 @@ type VkClearAttachment C.VkClearAttachment
 type VkClearColorValue C.VkClearColorValue
 type VkClearDepthStencilValue C.VkClearDepthStencilValue
 type VkClearRect C.VkClearRect
+type VkDescriptorPoolSize C.VkDescriptorPoolSize
 type VkExtensionProperties C.VkExtensionProperties
 type VkExtent2D C.VkExtent2D
 type VkFormatProperties C.VkFormatProperties
@@ -130,6 +132,7 @@ type VkExternalBufferProperties C.VkExternalBufferProperties
 type VkExternalFenceProperties C.VkExternalFenceProperties
 type VkExternalSemaphoreProperties C.VkExternalSemaphoreProperties
 type VkDescriptorSetLayoutSupport C.VkDescriptorSetLayoutSupport
+type VkDescriptorSetLayoutBinding C.VkDescriptorSetLayoutBinding
 
 type VkCommandBufferResetFlags C.VkCommandBufferResetFlags
 type VkCommandPoolResetFlags C.VkCommandPoolResetFlags

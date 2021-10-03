@@ -28,7 +28,7 @@ type QueueFamilyOptions struct {
 
 func (o *DeviceOptions) AllocForC(allocator *cgoparam.Allocator, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if len(o.QueueFamilies) == 0 {
-		return nil, errors.New("building a vulkan device before adding queue families")
+		return nil, errors.New("alloc DeviceOptions: no queue families added")
 	}
 
 	// Alloc queue families
@@ -37,7 +37,7 @@ func (o *DeviceOptions) AllocForC(allocator *cgoparam.Allocator, next unsafe.Poi
 
 	for idx, queueFamily := range o.QueueFamilies {
 		if len(queueFamily.QueuePriorities) == 0 {
-			return nil, errors.Newf("building vulkan device: queue family %d had no queue priorities", queueFamily.QueueFamilyIndex)
+			return nil, errors.Newf("alloc DeviceOptions: queue family %d had no queue priorities", queueFamily.QueueFamilyIndex)
 		}
 
 		prioritiesPtr := allocator.Malloc(len(queueFamily.QueuePriorities) * int(unsafe.Sizeof(C.float(0))))

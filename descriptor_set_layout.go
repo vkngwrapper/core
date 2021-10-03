@@ -8,6 +8,7 @@ import "C"
 import (
 	"github.com/CannibalVox/VKng/core/common"
 	"github.com/CannibalVox/cgoparam"
+	"github.com/cockroachdb/errors"
 	"strings"
 	"unsafe"
 )
@@ -57,7 +58,7 @@ type DescriptorLayoutBinding struct {
 	Count        int
 	ShaderStages common.ShaderStages
 
-	ImmutableSamplers []*Sampler
+	ImmutableSamplers []Sampler
 }
 
 type DescriptorSetLayoutOptions struct {
@@ -82,12 +83,27 @@ func (o *DescriptorSetLayoutOptions) AllocForC(allocator *cgoparam.Allocator, ne
 		bindingsSlice := ([]C.VkDescriptorSetLayoutBinding)(unsafe.Slice(bindingsPtr, bindingCount))
 
 		for i := 0; i < bindingCount; i++ {
+			samplerCount := len(o.Bindings[i].ImmutableSamplers)
+			if samplerCount != 0 && samplerCount != o.Bindings[i].Count {
+				return nil, errors.Newf("allocate descriptor set layout bindings: binding %d has %d descriptors, but %d immutable samplers. if immutable samplers are provided, they must match the descriptor count", i, o.Bindings[i].Count, len(o.Bindings[i].ImmutableSamplers))
+			}
+
 			bindingsSlice[i].binding = C.uint32_t(o.Bindings[i].Binding)
 			bindingsSlice[i].descriptorType = C.VkDescriptorType(o.Bindings[i].Type)
 			bindingsSlice[i].descriptorCount = C.uint32_t(o.Bindings[i].Count)
 			bindingsSlice[i].stageFlags = C.VkShaderStageFlags(o.Bindings[i].ShaderStages)
 
-			//TODO: pImmutablesamplers
+			bindingsSlice[i].pImmutableSamplers = nil
+			if samplerCount > 0 {
+				immutableSamplerPtr := (*C.VkSampler)(allocator.Malloc(samplerCount * int(unsafe.Sizeof([1]C.VkSampler{}))))
+				immutableSamplerSlice := ([]C.VkSampler)(unsafe.Slice(immutableSamplerPtr, samplerCount))
+
+				for samplerIndex := 0; samplerIndex < samplerCount; samplerIndex++ {
+					immutableSamplerSlice[samplerIndex] = C.VkSampler(o.Bindings[i].ImmutableSamplers[samplerIndex].Handle())
+				}
+
+				bindingsSlice[i].pImmutableSamplers = immutableSamplerPtr
+			}
 		}
 
 		createInfo.pBindings = bindingsPtr

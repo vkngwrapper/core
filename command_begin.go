@@ -15,15 +15,15 @@ import (
 type BeginInfoFlags int32
 
 const (
-	OneTimeSubmit      BeginInfoFlags = C.VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT
-	RenderPassContinue BeginInfoFlags = C.VK_COMMAND_BUFFER_USAGE_RENDER_PASS_CONTINUE_BIT
-	SimultaneousUse    BeginInfoFlags = C.VK_COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT
+	BeginInfoOneTimeSubmit      BeginInfoFlags = C.VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT
+	BeginInfoRenderPassContinue BeginInfoFlags = C.VK_COMMAND_BUFFER_USAGE_RENDER_PASS_CONTINUE_BIT
+	BeginInfoSimultaneousUse    BeginInfoFlags = C.VK_COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT
 )
 
 var beginInfoFlagsToString = map[BeginInfoFlags]string{
-	OneTimeSubmit:      "One Time Submit",
-	RenderPassContinue: "Render Pass Continue",
-	SimultaneousUse:    "Simultaneous Use",
+	BeginInfoOneTimeSubmit:      "One Time Submit",
+	BeginInfoRenderPassContinue: "Render Pass Continue",
+	BeginInfoSimultaneousUse:    "Simultaneous Use",
 }
 
 func (f BeginInfoFlags) String() string {

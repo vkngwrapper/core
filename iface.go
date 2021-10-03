@@ -122,7 +122,7 @@ type Loader1_0 interface {
 	CreateDescriptorSetLayout(device Device, o *DescriptorSetLayoutOptions) (DescriptorSetLayout, VkResult, error)
 	CreateDescriptorPool(device Device, o *DescriptorPoolOptions) (DescriptorPool, VkResult, error)
 	CreateCommandPool(device Device, o *CommandPoolOptions) (CommandPool, VkResult, error)
-	CreateGraphicsPipelines(device Device, o []*Options) ([]Pipeline, VkResult, error)
+	CreateGraphicsPipelines(device Device, o []*GraphicsPipelineOptions) ([]Pipeline, VkResult, error)
 	CreateFrameBuffer(device Device, o *FramebufferOptions) (Framebuffer, VkResult, error)
 	CreatePipelineLayout(device Device, o *PipelineLayoutOptions) (PipelineLayout, VkResult, error)
 	CreateRenderPass(device Device, o *RenderPassOptions) (RenderPass, VkResult, error)
