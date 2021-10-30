@@ -133,6 +133,8 @@ type VkExternalFenceProperties C.VkExternalFenceProperties
 type VkExternalSemaphoreProperties C.VkExternalSemaphoreProperties
 type VkDescriptorSetLayoutSupport C.VkDescriptorSetLayoutSupport
 type VkDescriptorSetLayoutBinding C.VkDescriptorSetLayoutBinding
+type VkDescriptorImageInfo C.VkDescriptorImageInfo
+type VkDescriptorBufferInfo C.VkDescriptorBufferInfo
 
 type VkCommandBufferResetFlags C.VkCommandBufferResetFlags
 type VkCommandPoolResetFlags C.VkCommandPoolResetFlags

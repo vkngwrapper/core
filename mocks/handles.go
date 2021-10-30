@@ -10,6 +10,11 @@ func NewFakeBufferHandle() core.VkBuffer {
 	return core.VkBuffer(unsafe.Pointer(&val))
 }
 
+func NewFakeBufferViewHandle() core.VkBufferView {
+	val := 0
+	return core.VkBufferView(unsafe.Pointer(&val))
+}
+
 func NewFakeCommandBufferHandle() core.VkCommandBuffer {
 	val := 0
 	return core.VkCommandBuffer(unsafe.Pointer(&val))
@@ -40,6 +45,11 @@ func NewFakeDeviceHandle() core.VkDevice {
 	return core.VkDevice(unsafe.Pointer(&val))
 }
 
+func NewFakeDeviceMemoryHandle() core.VkDeviceMemory {
+	val := 0
+	return core.VkDeviceMemory(unsafe.Pointer(&val))
+}
+
 func NewFakeFence() core.VkFence {
 	val := 0
 	return core.VkFence(unsafe.Pointer(&val))
@@ -48,6 +58,11 @@ func NewFakeFence() core.VkFence {
 func NewFakeFramebufferHandle() core.VkFramebuffer {
 	val := 0
 	return core.VkFramebuffer(unsafe.Pointer(&val))
+}
+
+func NewFakeImageViewHandle() core.VkImageView {
+	val := 0
+	return core.VkImageView(unsafe.Pointer(&val))
 }
 
 func NewFakePhysicalDeviceHandle() core.VkPhysicalDevice {

@@ -61,8 +61,7 @@ type DescriptorSetLayout interface {
 
 type DeviceMemory interface {
 	Handle() VkDeviceMemory
-	Free() error
-	MapMemory(offset int, size int) (unsafe.Pointer, VkResult, error)
+	MapMemory(offset int, size int, flags MemoryMapFlags) (unsafe.Pointer, VkResult, error)
 	UnmapMemory() error
 	WriteData(offset int, data interface{}) (VkResult, error)
 }
@@ -76,6 +75,7 @@ type Device interface {
 	WaitForFences(waitForAll bool, timeout time.Duration, fences []Fence) (VkResult, error)
 	ResetFences(fences []Fence) (VkResult, error)
 	AllocateMemory(o *DeviceMemoryOptions) (DeviceMemory, VkResult, error)
+	FreeMemory(memory DeviceMemory) error
 	UpdateDescriptorSets(writes []WriteDescriptorSetOptions, copies []CopyDescriptorSetOptions) error
 }
 

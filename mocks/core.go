@@ -599,20 +599,6 @@ func (m *MockDeviceMemory) EXPECT() *MockDeviceMemoryMockRecorder {
 	return m.recorder
 }
 
-// Free mocks base method.
-func (m *MockDeviceMemory) Free() error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Free")
-	ret0, _ := ret[0].(error)
-	return ret0
-}
-
-// Free indicates an expected call of Free.
-func (mr *MockDeviceMemoryMockRecorder) Free() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Free", reflect.TypeOf((*MockDeviceMemory)(nil).Free))
-}
-
 // Handle mocks base method.
 func (m *MockDeviceMemory) Handle() core.VkDeviceMemory {
 	m.ctrl.T.Helper()
@@ -628,9 +614,9 @@ func (mr *MockDeviceMemoryMockRecorder) Handle() *gomock.Call {
 }
 
 // MapMemory mocks base method.
-func (m *MockDeviceMemory) MapMemory(offset, size int) (unsafe.Pointer, core.VkResult, error) {
+func (m *MockDeviceMemory) MapMemory(offset, size int, flags core.MemoryMapFlags) (unsafe.Pointer, core.VkResult, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "MapMemory", offset, size)
+	ret := m.ctrl.Call(m, "MapMemory", offset, size, flags)
 	ret0, _ := ret[0].(unsafe.Pointer)
 	ret1, _ := ret[1].(core.VkResult)
 	ret2, _ := ret[2].(error)
@@ -638,9 +624,9 @@ func (m *MockDeviceMemory) MapMemory(offset, size int) (unsafe.Pointer, core.VkR
 }
 
 // MapMemory indicates an expected call of MapMemory.
-func (mr *MockDeviceMemoryMockRecorder) MapMemory(offset, size interface{}) *gomock.Call {
+func (mr *MockDeviceMemoryMockRecorder) MapMemory(offset, size, flags interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "MapMemory", reflect.TypeOf((*MockDeviceMemory)(nil).MapMemory), offset, size)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "MapMemory", reflect.TypeOf((*MockDeviceMemory)(nil).MapMemory), offset, size, flags)
 }
 
 // UnmapMemory mocks base method.
@@ -737,6 +723,20 @@ func (m *MockDevice) Driver() core.Driver {
 func (mr *MockDeviceMockRecorder) Driver() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Driver", reflect.TypeOf((*MockDevice)(nil).Driver))
+}
+
+// FreeMemory mocks base method.
+func (m *MockDevice) FreeMemory(memory core.DeviceMemory) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "FreeMemory", memory)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// FreeMemory indicates an expected call of FreeMemory.
+func (mr *MockDeviceMockRecorder) FreeMemory(memory interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FreeMemory", reflect.TypeOf((*MockDevice)(nil).FreeMemory), memory)
 }
 
 // GetQueue mocks base method.

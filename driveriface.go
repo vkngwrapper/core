@@ -5,6 +5,8 @@ import (
 	"unsafe"
 )
 
+//go:generate mockgen -source driveriface.go -destination ./mocks/driver.go -package=mocks
+
 type Driver interface {
 	Destroy()
 	CreateInstanceDriver(instance VkInstance) (Driver, error)

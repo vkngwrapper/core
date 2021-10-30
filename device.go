@@ -106,6 +106,10 @@ func (d *vulkanDevice) AllocateMemory(o *DeviceMemoryOptions) (DeviceMemory, VkR
 	}, res, nil
 }
 
+func (d *vulkanDevice) FreeMemory(memory DeviceMemory) error {
+	return d.driver.VkFreeMemory(d.handle, memory.Handle(), nil)
+}
+
 func (d *vulkanDevice) UpdateDescriptorSets(writes []WriteDescriptorSetOptions, copies []CopyDescriptorSetOptions) error {
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
@@ -125,7 +129,10 @@ func (d *vulkanDevice) UpdateDescriptorSets(writes []WriteDescriptorSetOptions, 
 				return err
 			}
 
-			writes[i].populate(arena, &(writeSlice[i]), next)
+			_, err = writes[i].populate(arena, &(writeSlice[i]), next)
+			if err != nil {
+				return err
+			}
 		}
 	}
 
@@ -138,7 +145,10 @@ func (d *vulkanDevice) UpdateDescriptorSets(writes []WriteDescriptorSetOptions, 
 				return err
 			}
 
-			copies[i].populate(arena, &(copySlice[i]), next)
+			_, err = copies[i].populate(arena, &(copySlice[i]), next)
+			if err != nil {
+				return err
+			}
 		}
 	}
 

@@ -8,6 +8,7 @@ import "C"
 import (
 	"github.com/CannibalVox/VKng/core/common"
 	"github.com/CannibalVox/cgoparam"
+	"github.com/cockroachdb/errors"
 	"unsafe"
 )
 
@@ -82,5 +83,9 @@ func (b *vulkanBuffer) MemoryRequirements() (*common.MemoryRequirements, error) 
 }
 
 func (b *vulkanBuffer) BindBufferMemory(memory DeviceMemory, offset int) (VkResult, error) {
+	if memory == nil {
+		return VKErrorUnknown, errors.New("received nil DeviceMemory")
+	}
+
 	return b.driver.VkBindBufferMemory(b.device, b.handle, memory.Handle(), VkDeviceSize(offset))
 }

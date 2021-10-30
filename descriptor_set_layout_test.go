@@ -72,10 +72,10 @@ func TestDescriptorSetLayout_Create_SingleBindingImmutableSamplers(t *testing.T)
 	mockDevice := mocks.EasyMockDevice(ctrl, mockDriver)
 	layoutHandle := mocks.NewFakeDescriptorSetLayout()
 
-	sampler1 := mocks.EasyMockSampler(ctrl, mockDriver)
-	sampler2 := mocks.EasyMockSampler(ctrl, mockDriver)
-	sampler3 := mocks.EasyMockSampler(ctrl, mockDriver)
-	sampler4 := mocks.EasyMockSampler(ctrl, mockDriver)
+	sampler1 := mocks.EasyMockSampler(ctrl)
+	sampler2 := mocks.EasyMockSampler(ctrl)
+	sampler3 := mocks.EasyMockSampler(ctrl)
+	sampler4 := mocks.EasyMockSampler(ctrl)
 
 	mockDriver.EXPECT().VkCreateDescriptorSetLayout(mockDevice.Handle(), gomock.Not(nil), nil, gomock.Not(nil)).DoAndReturn(
 		func(device core.VkDevice, pCreateInfo *core.VkDescriptorSetLayoutCreateInfo, pAllocator *core.VkAllocationCallbacks, pDescriptorSetLayout *core.VkDescriptorSetLayout) (core.VkResult, error) {

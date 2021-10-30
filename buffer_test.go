@@ -4,6 +4,7 @@ import (
 	"github.com/CannibalVox/VKng/core"
 	"github.com/CannibalVox/VKng/core/common"
 	"github.com/CannibalVox/VKng/core/mocks"
+	"github.com/cockroachdb/errors"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/require"
 	"reflect"
@@ -11,7 +12,7 @@ import (
 	"unsafe"
 )
 
-func TestBufferCreateNilIndices(t *testing.T) {
+func TestBuffer_Create_NilIndices(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
@@ -54,7 +55,7 @@ func TestBufferCreateNilIndices(t *testing.T) {
 
 }
 
-func TestBasicBufferCreateWithReqs(t *testing.T) {
+func TestBasicBuffer_Create_QueueFamilyIndices(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
@@ -99,7 +100,20 @@ func TestBasicBufferCreateWithReqs(t *testing.T) {
 	require.NoError(t, err)
 	require.Equal(t, expectedBuffer, buffer.Handle())
 
-	mockDriver.EXPECT().VkGetBufferMemoryRequirements(device.Handle(), expectedBuffer, gomock.Not(nil)).DoAndReturn(
+}
+
+func TestBuffer_MemoryRequirements(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	mockDriver := mocks.NewMockDriver(ctrl)
+	loader, err := core.CreateLoaderFromDriver(mockDriver)
+	require.NoError(t, err)
+
+	device := mocks.EasyMockDevice(ctrl, mockDriver)
+	buffer := mocks.EasyDummyBuffer(t, loader, device)
+
+	mockDriver.EXPECT().VkGetBufferMemoryRequirements(device.Handle(), buffer.Handle(), gomock.Not(nil)).DoAndReturn(
 		func(device core.VkDevice, buffer core.VkBuffer, requirements *core.VkMemoryRequirements) error {
 			v := reflect.ValueOf(requirements).Elem()
 			*(*uint64)(unsafe.Pointer(v.FieldByName("size").UnsafeAddr())) = 5
@@ -114,5 +128,36 @@ func TestBasicBufferCreateWithReqs(t *testing.T) {
 	require.Equal(t, 8, reqs.Alignment)
 	require.Equal(t, uint32(0xFF), reqs.MemoryType)
 	require.NoError(t, err)
+}
 
+func TestBuffer_BindBufferMemory_Success(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	mockDriver := mocks.NewMockDriver(ctrl)
+	loader, err := core.CreateLoaderFromDriver(mockDriver)
+	require.NoError(t, err)
+
+	device := mocks.EasyMockDevice(ctrl, mockDriver)
+	buffer := mocks.EasyDummyBuffer(t, loader, device)
+	memory := mocks.EasyMockDeviceMemory(ctrl)
+
+	mockDriver.EXPECT().VkBindBufferMemory(device.Handle(), buffer.Handle(), memory.Handle(), core.VkDeviceSize(3)).Return(core.VKSuccess, nil)
+	_, err = buffer.BindBufferMemory(memory, 3)
+	require.NoError(t, err)
+}
+
+func TestBuffer_BindBufferMemory_FailNilMemory(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	mockDriver := mocks.NewMockDriver(ctrl)
+	loader, err := core.CreateLoaderFromDriver(mockDriver)
+	require.NoError(t, err)
+
+	device := mocks.EasyMockDevice(ctrl, mockDriver)
+	buffer := mocks.EasyDummyBuffer(t, loader, device)
+
+	_, err = buffer.BindBufferMemory(nil, 3)
+	require.Error(t, errors.New("received nil DeviceMemory"))
 }

@@ -13,6 +13,12 @@ import (
 	"unsafe"
 )
 
+type MemoryMapFlags int32
+
+func (f MemoryMapFlags) String() string {
+	return "None"
+}
+
 type DeviceMemoryOptions struct {
 	AllocationSize  int
 	MemoryTypeIndex int
@@ -41,13 +47,9 @@ func (m *vulkanDeviceMemory) Handle() VkDeviceMemory {
 	return m.handle
 }
 
-func (m *vulkanDeviceMemory) Free() error {
-	return m.driver.VkFreeMemory(m.device, m.handle, nil)
-}
-
-func (m *vulkanDeviceMemory) MapMemory(offset int, size int) (unsafe.Pointer, VkResult, error) {
+func (m *vulkanDeviceMemory) MapMemory(offset int, size int, flags MemoryMapFlags) (unsafe.Pointer, VkResult, error) {
 	var data unsafe.Pointer
-	res, err := m.driver.VkMapMemory(m.device, m.handle, VkDeviceSize(offset), VkDeviceSize(size), 0, &data)
+	res, err := m.driver.VkMapMemory(m.device, m.handle, VkDeviceSize(offset), VkDeviceSize(size), VkMemoryMapFlags(flags), &data)
 	if err != nil {
 		return nil, res, err
 	}
@@ -62,7 +64,7 @@ func (m *vulkanDeviceMemory) UnmapMemory() error {
 func (m *vulkanDeviceMemory) WriteData(offset int, data interface{}) (VkResult, error) {
 	bufferSize := binary.Size(data)
 
-	memoryPtr, res, err := m.MapMemory(offset, bufferSize)
+	memoryPtr, res, err := m.MapMemory(offset, bufferSize, 0)
 	if err != nil {
 		return res, err
 	}

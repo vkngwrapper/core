@@ -290,3 +290,43 @@ func TestVulkanCommandBuffer_CmdBindDescriptorSets(t *testing.T) {
 	}, []int{4, 5, 6})
 	require.NoError(t, err)
 }
+
+func TestVulkanCommandBuffer_CmdCopyBuffer(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	mockDriver, buffer := setup(t, ctrl)
+	src := mocks.EasyMockBuffer(ctrl)
+	dest := mocks.EasyMockBuffer(ctrl)
+
+	mockDriver.EXPECT().VkCmdCopyBuffer(buffer.Handle(), src.Handle(), dest.Handle(), core.Uint32(2), gomock.Not(nil)).DoAndReturn(
+		func(buffer core.VkCommandBuffer, src core.VkBuffer, dest core.VkBuffer, regionCount core.Uint32, pRegions *core.VkBufferCopy) error {
+			regionSlice := ([]core.VkBufferCopy)(unsafe.Slice(pRegions, 2))
+
+			regionVal := reflect.ValueOf(regionSlice[0])
+			require.Equal(t, uint64(3), regionVal.FieldByName("srcOffset").Uint())
+			require.Equal(t, uint64(5), regionVal.FieldByName("dstOffset").Uint())
+			require.Equal(t, uint64(7), regionVal.FieldByName("size").Uint())
+
+			regionVal = reflect.ValueOf(regionSlice[1])
+			require.Equal(t, uint64(11), regionVal.FieldByName("srcOffset").Uint())
+			require.Equal(t, uint64(13), regionVal.FieldByName("dstOffset").Uint())
+			require.Equal(t, uint64(17), regionVal.FieldByName("size").Uint())
+
+			return nil
+		})
+
+	err := buffer.CmdCopyBuffer(src, dest, []core.BufferCopy{
+		{
+			SrcOffset: 3,
+			DstOffset: 5,
+			Size:      7,
+		},
+		{
+			SrcOffset: 11,
+			DstOffset: 13,
+			Size:      17,
+		},
+	})
+	require.NoError(t, err)
+}

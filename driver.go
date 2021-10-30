@@ -23,8 +23,6 @@ import (
 	"unsafe"
 )
 
-//go:generate mockgen -source driver.go -destination ./mocks/driver.go -package=mocks
-
 type vulkanDriver struct {
 	instance VkInstance
 	device   VkDevice

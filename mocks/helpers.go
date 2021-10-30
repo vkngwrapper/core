@@ -7,12 +7,47 @@ import (
 	"testing"
 )
 
+func EasyMockBuffer(ctrl *gomock.Controller) *MockBuffer {
+	buffer := NewMockBuffer(ctrl)
+	buffer.EXPECT().Handle().Return(NewFakeBufferHandle()).AnyTimes()
+
+	return buffer
+}
+
+func EasyMockBufferView(ctrl *gomock.Controller) *MockBufferView {
+	bufferView := NewMockBufferView(ctrl)
+	bufferView.EXPECT().Handle().Return(NewFakeBufferViewHandle()).AnyTimes()
+
+	return bufferView
+}
+
+func EasyMockDescriptorSet(ctrl *gomock.Controller) *MockDescriptorSet {
+	set := NewMockDescriptorSet(ctrl)
+	set.EXPECT().Handle().Return(NewFakeDescriptorSet()).AnyTimes()
+
+	return set
+}
+
 func EasyMockDevice(ctrl *gomock.Controller, driver core.Driver) *MockDevice {
 	device := NewMockDevice(ctrl)
 	device.EXPECT().Handle().Return(NewFakeDeviceHandle()).AnyTimes()
 	device.EXPECT().Driver().Return(driver).AnyTimes()
 
 	return device
+}
+
+func EasyMockDeviceMemory(ctrl *gomock.Controller) *MockDeviceMemory {
+	deviceMemory := NewMockDeviceMemory(ctrl)
+	deviceMemory.EXPECT().Handle().Return(NewFakeDeviceMemoryHandle()).AnyTimes()
+
+	return deviceMemory
+}
+
+func EasyMockImageView(ctrl *gomock.Controller) *MockImageView {
+	imageView := NewMockImageView(ctrl)
+	imageView.EXPECT().Handle().Return(NewFakeImageViewHandle()).AnyTimes()
+
+	return imageView
 }
 
 func EasyMockPhysicalDevice(ctrl *gomock.Controller, driver core.Driver) *MockPhysicalDevice {
@@ -23,11 +58,27 @@ func EasyMockPhysicalDevice(ctrl *gomock.Controller, driver core.Driver) *MockPh
 	return physicalDevice
 }
 
-func EasyMockSampler(ctrl *gomock.Controller, driver core.Driver) *MockSampler {
+func EasyMockSampler(ctrl *gomock.Controller) *MockSampler {
 	sampler := NewMockSampler(ctrl)
 	sampler.EXPECT().Handle().Return(NewFakeSampler()).AnyTimes()
 
 	return sampler
+}
+
+func EasyDummyBuffer(t *testing.T, loader core.Loader1_0, device core.Device) core.Buffer {
+	handle := NewFakeBufferHandle()
+	driver := device.Driver().(*MockDriver)
+	driver.EXPECT().VkCreateBuffer(gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any()).DoAndReturn(
+		func(device core.VkDevice, pCreateInfo *core.VkBufferCreateInfo, pAllocator *core.VkAllocationCallbacks, pBuffer *core.VkBuffer) (core.VkResult, error) {
+			*pBuffer = handle
+			return core.VKSuccess, nil
+		})
+
+	buffer, _, err := loader.CreateBuffer(device, &core.BufferOptions{})
+	require.NoError(t, err)
+	require.NotNil(t, buffer)
+
+	return buffer
 }
 
 func EasyDummyCommandPool(t *testing.T, loader core.Loader1_0, device core.Device) core.CommandPool {
@@ -116,6 +167,21 @@ func EasyDummyDevice(t *testing.T, ctrl *gomock.Controller, loader core.Loader1_
 	require.NoError(t, err)
 
 	return device
+}
+
+func EasyDummyDeviceMemory(t *testing.T, device core.Device) core.DeviceMemory {
+	mockDriver := device.Driver().(*MockDriver)
+
+	mockDriver.EXPECT().VkAllocateMemory(device.Handle(), gomock.Not(nil), nil, gomock.Not(nil)).DoAndReturn(
+		func(device core.VkDevice, pCreateInfo *core.VkMemoryAllocateInfo, pAllocator *core.VkAllocationCallbacks, pDeviceMemory *core.VkDeviceMemory) (core.VkResult, error) {
+			*pDeviceMemory = NewFakeDeviceMemoryHandle()
+			return core.VKSuccess, nil
+		})
+
+	memory, _, err := device.AllocateMemory(&core.DeviceMemoryOptions{})
+	require.NoError(t, err)
+
+	return memory
 }
 
 func EasyDummyFence(t *testing.T, loader core.Loader1_0, device core.Device) core.Fence {
