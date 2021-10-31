@@ -65,6 +65,11 @@ func NewFakeImageViewHandle() core.VkImageView {
 	return core.VkImageView(unsafe.Pointer(&val))
 }
 
+func NewFakeInstanceHandle() core.VkInstance {
+	val := 0
+	return core.VkInstance(unsafe.Pointer(&val))
+}
+
 func NewFakePhysicalDeviceHandle() core.VkPhysicalDevice {
 	val := 0
 	return core.VkPhysicalDevice(unsafe.Pointer(&val))

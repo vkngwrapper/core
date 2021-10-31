@@ -31,6 +31,7 @@ func (o *InstanceOptions) AllocForC(allocator *cgoparam.Allocator, next unsafe.P
 	appInfo := (*C.VkApplicationInfo)(allocator.Malloc(int(unsafe.Sizeof(C.VkApplicationInfo{}))))
 
 	appInfo.sType = C.VK_STRUCTURE_TYPE_APPLICATION_INFO
+	appInfo.pNext = nil
 	appInfo.pApplicationName = (*C.char)(cApplication)
 	appInfo.pEngineName = (*C.char)(cEngine)
 	appInfo.applicationVersion = C.uint32_t(o.ApplicationVersion)
