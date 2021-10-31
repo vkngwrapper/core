@@ -8,12 +8,50 @@ import "C"
 import (
 	"github.com/CannibalVox/VKng/core/common"
 	"github.com/CannibalVox/cgoparam"
+	"strings"
 	"unsafe"
 )
+
+type ImageViewFlags int32
+
+const (
+	ImageViewCreateFragmentDensityMapDynamic  ImageViewFlags = C.VK_IMAGE_VIEW_CREATE_FRAGMENT_DENSITY_MAP_DYNAMIC_BIT_EXT
+	ImageViewCreateFragmentDensityMapDeferred ImageViewFlags = C.VK_IMAGE_VIEW_CREATE_FRAGMENT_DENSITY_MAP_DEFERRED_BIT_EXT
+)
+
+var imageViewFlagsToString = map[ImageViewFlags]string{
+	ImageViewCreateFragmentDensityMapDynamic:  "Create Fragment Density Map - Dynamic",
+	ImageViewCreateFragmentDensityMapDeferred: "Create Fragment Density Map - Deferred",
+}
+
+func (f ImageViewFlags) String() string {
+	if f == 0 {
+		return "None"
+	}
+
+	var hasOne bool
+	var sb strings.Builder
+	for i := 0; i < 32; i++ {
+		checkBit := ImageViewFlags(1 << i)
+		if (f & checkBit) != 0 {
+			str, hasStr := imageViewFlagsToString[checkBit]
+			if hasStr {
+				if hasOne {
+					sb.WriteRune('|')
+				}
+				sb.WriteString(str)
+				hasOne = true
+			}
+		}
+	}
+
+	return sb.String()
+}
 
 type ImageViewOptions struct {
 	Image Image
 
+	Flags            ImageViewFlags
 	ViewType         common.ImageViewType
 	Format           common.DataFormat
 	Components       common.ComponentMapping
@@ -26,7 +64,7 @@ func (o *ImageViewOptions) AllocForC(allocator *cgoparam.Allocator, next unsafe.
 	createInfo := (*C.VkImageViewCreateInfo)(allocator.Malloc(int(unsafe.Sizeof([1]C.VkImageViewCreateInfo{}))))
 
 	createInfo.sType = C.VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO
-	createInfo.flags = 0
+	createInfo.flags = C.VkImageViewCreateFlags(o.Flags)
 	createInfo.pNext = next
 	createInfo.image = C.VkImage(unsafe.Pointer(o.Image.Handle()))
 	createInfo.viewType = C.VkImageViewType(o.ViewType)

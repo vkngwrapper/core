@@ -8,11 +8,47 @@ import "C"
 import (
 	"github.com/CannibalVox/VKng/core/common"
 	"github.com/CannibalVox/cgoparam"
+	"strings"
 	"unsafe"
 )
 
+type FramebufferFlags int32
+
+const (
+	FramebufferCreateImageless FramebufferFlags = C.VK_FRAMEBUFFER_CREATE_IMAGELESS_BIT
+)
+
+var framebufferFlagsToString = map[FramebufferFlags]string{
+	FramebufferCreateImageless: "Create Imageless",
+}
+
+func (f FramebufferFlags) String() string {
+	if f == 0 {
+		return "None"
+	}
+
+	var hasOne bool
+	var sb strings.Builder
+	for i := 0; i < 32; i++ {
+		checkBit := FramebufferFlags(1 << i)
+		if (f & checkBit) != 0 {
+			str, hasStr := framebufferFlagsToString[checkBit]
+			if hasStr {
+				if hasOne {
+					sb.WriteRune('|')
+				}
+				sb.WriteString(str)
+				hasOne = true
+			}
+		}
+	}
+
+	return sb.String()
+}
+
 type FramebufferOptions struct {
 	Attachments []ImageView
+	Flags       FramebufferFlags
 
 	Width  uint32
 	Height uint32
@@ -49,6 +85,7 @@ func (o *FramebufferOptions) AllocForC(allocator *cgoparam.Allocator, next unsaf
 	createInfo.width = C.uint32_t(o.Width)
 	createInfo.height = C.uint32_t(o.Height)
 	createInfo.layers = C.uint32_t(o.Layers)
+	createInfo.flags = C.VkFramebufferCreateFlags(o.Flags)
 
 	return unsafe.Pointer(createInfo), nil
 }

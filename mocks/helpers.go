@@ -43,6 +43,13 @@ func EasyMockDeviceMemory(ctrl *gomock.Controller) *MockDeviceMemory {
 	return deviceMemory
 }
 
+func EasyMockImage(ctrl *gomock.Controller) *MockImage {
+	image := NewMockImage(ctrl)
+	image.EXPECT().Handle().Return(NewFakeImageHandle()).AnyTimes()
+
+	return image
+}
+
 func EasyMockImageView(ctrl *gomock.Controller) *MockImageView {
 	imageView := NewMockImageView(ctrl)
 	imageView.EXPECT().Handle().Return(NewFakeImageViewHandle()).AnyTimes()
@@ -58,9 +65,16 @@ func EasyMockPhysicalDevice(ctrl *gomock.Controller, driver core.Driver) *MockPh
 	return physicalDevice
 }
 
+func EasyMockRenderPass(ctrl *gomock.Controller) *MockRenderPass {
+	renderPass := NewMockRenderPass(ctrl)
+	renderPass.EXPECT().Handle().Return(NewFakeRenderPassHandle()).AnyTimes()
+
+	return renderPass
+}
+
 func EasyMockSampler(ctrl *gomock.Controller) *MockSampler {
 	sampler := NewMockSampler(ctrl)
-	sampler.EXPECT().Handle().Return(NewFakeSampler()).AnyTimes()
+	sampler.EXPECT().Handle().Return(NewFakeSamplerHandle()).AnyTimes()
 
 	return sampler
 }
@@ -189,7 +203,7 @@ func EasyDummyFence(t *testing.T, loader core.Loader1_0, device core.Device) cor
 
 	driver.EXPECT().VkCreateFence(gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any()).DoAndReturn(
 		func(device core.VkDevice, pCreateInfo *core.VkFenceCreateInfo, pAllocator *core.VkAllocationCallbacks, pFence *core.VkFence) (core.VkResult, error) {
-			*pFence = NewFakeFence()
+			*pFence = NewFakeFenceHandle()
 			return core.VKSuccess, nil
 		})
 
@@ -227,6 +241,22 @@ func EasyDummyGraphicsPipeline(t *testing.T, loader core.Loader1_0, device core.
 	require.NoError(t, err)
 
 	return pipelines[0]
+}
+
+func EasyDummyInstance(t *testing.T, loader core.Loader1_0) core.Instance {
+	driver := loader.Driver().(*MockDriver)
+
+	driver.EXPECT().CreateInstanceDriver(gomock.Any()).Return(driver, nil).AnyTimes()
+	driver.EXPECT().VkCreateInstance(gomock.Any(), gomock.Any(), gomock.Any()).DoAndReturn(
+		func(pCreateInfo *core.VkInstanceCreateInfo, pAllocator *core.VkAllocationCallbacks, pInstance *core.VkInstance) (core.VkResult, error) {
+			*pInstance = NewFakeInstanceHandle()
+			return core.VKSuccess, nil
+		})
+
+	instance, _, err := loader.CreateInstance(&core.InstanceOptions{})
+	require.NoError(t, err)
+
+	return instance
 }
 
 func EasyDummyQueue(t *testing.T, device core.Device) core.Queue {
