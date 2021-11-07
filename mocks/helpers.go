@@ -5,6 +5,7 @@ import (
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/require"
 	"testing"
+	"unsafe"
 )
 
 func EasyMockBuffer(ctrl *gomock.Controller) *MockBuffer {
@@ -257,6 +258,29 @@ func EasyDummyInstance(t *testing.T, loader core.Loader1_0) core.Instance {
 	require.NoError(t, err)
 
 	return instance
+}
+
+func EasyDummyPhysicalDevice(t *testing.T, loader core.Loader1_0) core.PhysicalDevice {
+	driver := loader.Driver().(*MockDriver)
+	instance := EasyDummyInstance(t, loader)
+
+	driver.EXPECT().VkEnumeratePhysicalDevices(instance.Handle(), gomock.Not(nil), nil).DoAndReturn(
+		func(instance core.VkInstance, pPhysicalDeviceCount *core.Uint32, pPhysicalDevices *core.VkPhysicalDevice) (core.VkResult, error) {
+			*pPhysicalDeviceCount = core.Uint32(1)
+			return core.VKSuccess, nil
+		})
+	driver.EXPECT().VkEnumeratePhysicalDevices(instance.Handle(), gomock.Not(nil), gomock.Not(nil)).DoAndReturn(
+		func(instance core.VkInstance, pPhysicalDeviceCount *core.Uint32, pPhysicalDevices *core.VkPhysicalDevice) (core.VkResult, error) {
+			*pPhysicalDeviceCount = core.Uint32(1)
+			devices := ([]core.VkPhysicalDevice)(unsafe.Slice(pPhysicalDevices, 1))
+			devices[0] = NewFakePhysicalDeviceHandle()
+
+			return core.VKSuccess, nil
+		})
+	devices, _, err := instance.PhysicalDevices()
+	require.NoError(t, err)
+
+	return devices[0]
 }
 
 func EasyDummyQueue(t *testing.T, device core.Device) core.Queue {

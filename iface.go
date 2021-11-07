@@ -135,7 +135,7 @@ type PhysicalDevice interface {
 	Properties() (*common.PhysicalDeviceProperties, error)
 	Features() (*common.PhysicalDeviceFeatures, error)
 	AvailableExtensions() (map[string]*common.ExtensionProperties, VkResult, error)
-	MemoryProperties() *PhysicalDeviceMemoryProperties
+	MemoryProperties() (*PhysicalDeviceMemoryProperties, error)
 }
 
 type Pipeline interface {

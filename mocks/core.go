@@ -1488,11 +1488,12 @@ func (mr *MockPhysicalDeviceMockRecorder) Handle() *gomock.Call {
 }
 
 // MemoryProperties mocks base method.
-func (m *MockPhysicalDevice) MemoryProperties() *core.PhysicalDeviceMemoryProperties {
+func (m *MockPhysicalDevice) MemoryProperties() (*core.PhysicalDeviceMemoryProperties, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "MemoryProperties")
 	ret0, _ := ret[0].(*core.PhysicalDeviceMemoryProperties)
-	return ret0
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
 }
 
 // MemoryProperties indicates an expected call of MemoryProperties.

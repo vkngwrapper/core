@@ -161,6 +161,7 @@ type VkSubpassContents C.VkSubpassContents
 type VkPeerMemoryFeatureFlags C.VkPeerMemoryFeatureFlags
 type VkCommandPoolTrimFlags C.VkCommandPoolTrimFlags
 type VkDeviceAddress C.VkDeviceAddress
+type VkQueueFlags C.VkQueueFlags
 
 type VkBool32 C.VkBool32
 type Int32 C.int32_t
