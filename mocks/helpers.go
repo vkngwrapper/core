@@ -29,6 +29,13 @@ func EasyMockDescriptorSet(ctrl *gomock.Controller) *MockDescriptorSet {
 	return set
 }
 
+func EasyMockDescriptorSetLayout(ctrl *gomock.Controller) *MockDescriptorSetLayout {
+	layout := NewMockDescriptorSetLayout(ctrl)
+	layout.EXPECT().Handle().Return(NewFakeDescriptorSetLayout()).AnyTimes()
+
+	return layout
+}
+
 func EasyMockDevice(ctrl *gomock.Controller, driver core.Driver) *MockDevice {
 	device := NewMockDevice(ctrl)
 	device.EXPECT().Handle().Return(NewFakeDeviceHandle()).AnyTimes()

@@ -135,6 +135,11 @@ type VkDescriptorSetLayoutSupport C.VkDescriptorSetLayoutSupport
 type VkDescriptorSetLayoutBinding C.VkDescriptorSetLayoutBinding
 type VkDescriptorImageInfo C.VkDescriptorImageInfo
 type VkDescriptorBufferInfo C.VkDescriptorBufferInfo
+type VkAttachmentDescription C.VkAttachmentDescription
+type VkSubpassDescription C.VkSubpassDescription
+type VkSubpassDependency C.VkSubpassDependency
+type VkAttachmentReference C.VkAttachmentReference
+type VkPushConstantRange C.VkPushConstantRange
 
 type VkCommandBufferResetFlags C.VkCommandBufferResetFlags
 type VkCommandPoolResetFlags C.VkCommandPoolResetFlags

@@ -13,7 +13,7 @@ import (
 
 type PipelineLayoutOptions struct {
 	SetLayouts         []DescriptorSetLayout
-	PushConstantRanges []*common.PushConstantRange
+	PushConstantRanges []common.PushConstantRange
 
 	common.HaveNext
 }
@@ -51,6 +51,7 @@ func (o *PipelineLayoutOptions) AllocForC(allocator *cgoparam.Allocator, next un
 			constantRangesSlice[i].offset = C.uint32_t(o.PushConstantRanges[i].Offset)
 			constantRangesSlice[i].size = C.uint32_t(o.PushConstantRanges[i].Size)
 		}
+		createInfo.pPushConstantRanges = constantRangesPtr
 	}
 
 	return unsafe.Pointer(createInfo), nil

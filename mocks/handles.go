@@ -109,3 +109,8 @@ func NewFakeSemaphore() core.VkSemaphore {
 	val := 0
 	return core.VkSemaphore(unsafe.Pointer(&val))
 }
+
+func NewFakeShaderModule() core.VkShaderModule {
+	val := 0
+	return core.VkShaderModule(unsafe.Pointer(&val))
+}

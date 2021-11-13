@@ -9,8 +9,83 @@ import (
 	"github.com/CannibalVox/VKng/core/common"
 	"github.com/CannibalVox/cgoparam"
 	"github.com/palantir/stacktrace"
+	"strings"
 	"unsafe"
 )
+
+type RenderPassFlags int32
+
+const (
+	RenderPassCreateTransformBitQCOM RenderPassFlags = C.VK_RENDER_PASS_CREATE_TRANSFORM_BIT_QCOM
+)
+
+var renderPassFlagsToString = map[RenderPassFlags]string{
+	RenderPassCreateTransformBitQCOM: "Create Transform Bit (Qualcomm)",
+}
+
+func (f RenderPassFlags) String() string {
+	if f == 0 {
+		return "None"
+	}
+
+	var hasOne bool
+	var sb strings.Builder
+	for i := 0; i < 32; i++ {
+		checkBit := RenderPassFlags(1 << i)
+		if (f & checkBit) != 0 {
+			str, hasStr := renderPassFlagsToString[checkBit]
+			if hasStr {
+				if hasOne {
+					sb.WriteString("|")
+				}
+				sb.WriteString(str)
+				hasOne = true
+			}
+		}
+	}
+
+	return sb.String()
+}
+
+type SubPassFlags int32
+
+const (
+	SubPassPerViewAttributesNVX    = C.VK_SUBPASS_DESCRIPTION_PER_VIEW_ATTRIBUTES_BIT_NVX
+	SubPassPerViewPositionXOnlyNVX = C.VK_SUBPASS_DESCRIPTION_PER_VIEW_POSITION_X_ONLY_BIT_NVX
+	SubPassFragmentRegionQCOM      = C.VK_SUBPASS_DESCRIPTION_FRAGMENT_REGION_BIT_QCOM
+	SubPassShaderResolveQCOM       = C.VK_SUBPASS_DESCRIPTION_SHADER_RESOLVE_BIT_QCOM
+)
+
+var subPassFlagsToString = map[SubPassFlags]string{
+	SubPassPerViewAttributesNVX:    "Per-View Attributes (NVidia Experimental)",
+	SubPassPerViewPositionXOnlyNVX: "Per-View Position X Only (NVidia Experimental)",
+	SubPassFragmentRegionQCOM:      "Fragment Region (Qualcomm)",
+	SubPassShaderResolveQCOM:       "Shader Resolve (Qualcomm)",
+}
+
+func (f SubPassFlags) String() string {
+	if f == 0 {
+		return "None"
+	}
+
+	var hasOne bool
+	var sb strings.Builder
+	for i := 0; i < 32; i++ {
+		checkBit := SubPassFlags(1 << i)
+		if (f & checkBit) != 0 {
+			str, hasStr := subPassFlagsToString[checkBit]
+			if hasStr {
+				if hasOne {
+					sb.WriteString("|")
+				}
+				sb.WriteString(str)
+				hasOne = true
+			}
+		}
+	}
+
+	return sb.String()
+}
 
 type AttachmentDescription struct {
 	Flags   common.AttachmentDescriptionFlags
@@ -42,6 +117,7 @@ type SubPassDependency struct {
 }
 
 type SubPass struct {
+	Flags     SubPassFlags
 	BindPoint common.PipelineBindPoint
 
 	InputAttachments           []common.AttachmentReference
@@ -52,6 +128,7 @@ type SubPass struct {
 }
 
 type RenderPassOptions struct {
+	Flags               RenderPassFlags
 	Attachments         []AttachmentDescription
 	SubPasses           []SubPass
 	SubPassDependencies []SubPassDependency
@@ -62,7 +139,7 @@ type RenderPassOptions struct {
 func (o *RenderPassOptions) AllocForC(allocator *cgoparam.Allocator, next unsafe.Pointer) (unsafe.Pointer, error) {
 	createInfo := (*C.VkRenderPassCreateInfo)(allocator.Malloc(int(unsafe.Sizeof(C.VkRenderPassCreateInfo{}))))
 	createInfo.sType = C.VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO
-	createInfo.flags = 0
+	createInfo.flags = C.VkRenderPassCreateFlags(o.Flags)
 	createInfo.pNext = next
 
 	attachmentCount := len(o.Attachments)
@@ -110,7 +187,7 @@ func (o *RenderPassOptions) AllocForC(allocator *cgoparam.Allocator, next unsafe
 				return nil, stacktrace.NewError("in subpass %d, %d color attachments are defined, but %d depth stencil attachments", i, colorAttachmentCount, depthStencilAttachmentCount)
 			}
 
-			subPassSlice[i].flags = 0
+			subPassSlice[i].flags = C.VkSubpassDescriptionFlags(o.SubPasses[i].Flags)
 			subPassSlice[i].pipelineBindPoint = C.VkPipelineBindPoint(o.SubPasses[i].BindPoint)
 			subPassSlice[i].inputAttachmentCount = C.uint32_t(len(o.SubPasses[i].InputAttachments))
 			subPassSlice[i].pInputAttachments = createAttachmentReferences(allocator, o.SubPasses[i].InputAttachments)
