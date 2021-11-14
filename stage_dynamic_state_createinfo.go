@@ -14,83 +14,83 @@ import (
 type DynamicState int32
 
 const (
-	StateViewport                     DynamicState = C.VK_DYNAMIC_STATE_VIEWPORT
-	StateScissor                      DynamicState = C.VK_DYNAMIC_STATE_SCISSOR
-	StateLineWidth                    DynamicState = C.VK_DYNAMIC_STATE_LINE_WIDTH
-	StateDepthBias                    DynamicState = C.VK_DYNAMIC_STATE_DEPTH_BIAS
-	StateBlendConstants               DynamicState = C.VK_DYNAMIC_STATE_BLEND_CONSTANTS
-	StateDepthBounds                  DynamicState = C.VK_DYNAMIC_STATE_DEPTH_BOUNDS
-	StateStencilCompareMask           DynamicState = C.VK_DYNAMIC_STATE_STENCIL_COMPARE_MASK
-	StateStencilWriteMask             DynamicState = C.VK_DYNAMIC_STATE_STENCIL_WRITE_MASK
-	StateStencilReference             DynamicState = C.VK_DYNAMIC_STATE_STENCIL_REFERENCE
-	StateViewportWithScalingNV        DynamicState = C.VK_DYNAMIC_STATE_VIEWPORT_W_SCALING_NV
-	StateDiscardRectangle             DynamicState = C.VK_DYNAMIC_STATE_DISCARD_RECTANGLE_EXT
-	StateSampleLocations              DynamicState = C.VK_DYNAMIC_STATE_SAMPLE_LOCATIONS_EXT
-	StateRayTracingPipelineStackSize  DynamicState = C.VK_DYNAMIC_STATE_RAY_TRACING_PIPELINE_STACK_SIZE_KHR
-	StateViewportShadingRatePaletteNV DynamicState = C.VK_DYNAMIC_STATE_VIEWPORT_SHADING_RATE_PALETTE_NV
-	StateViewportCoarseSampleOrderNV  DynamicState = C.VK_DYNAMIC_STATE_VIEWPORT_COARSE_SAMPLE_ORDER_NV
-	StateExclusiveScissorNV           DynamicState = C.VK_DYNAMIC_STATE_EXCLUSIVE_SCISSOR_NV
-	StateFragmentShadingRate          DynamicState = C.VK_DYNAMIC_STATE_FRAGMENT_SHADING_RATE_KHR
-	StateLineStipple                  DynamicState = C.VK_DYNAMIC_STATE_LINE_STIPPLE_EXT
-	StateCullMode                     DynamicState = C.VK_DYNAMIC_STATE_CULL_MODE_EXT
-	StateFrontFace                    DynamicState = C.VK_DYNAMIC_STATE_FRONT_FACE_EXT
-	StatePrimitiveTopology            DynamicState = C.VK_DYNAMIC_STATE_PRIMITIVE_TOPOLOGY_EXT
-	StateViewportWithCount            DynamicState = C.VK_DYNAMIC_STATE_VIEWPORT_WITH_COUNT_EXT
-	StateScissorWithCount             DynamicState = C.VK_DYNAMIC_STATE_SCISSOR_WITH_COUNT_EXT
-	StateVertexInputBindingStride     DynamicState = C.VK_DYNAMIC_STATE_VERTEX_INPUT_BINDING_STRIDE_EXT
-	StateDepthTestEnable              DynamicState = C.VK_DYNAMIC_STATE_DEPTH_TEST_ENABLE_EXT
-	StateDepthWriteEnable             DynamicState = C.VK_DYNAMIC_STATE_DEPTH_WRITE_ENABLE_EXT
-	StateDepthCompareOp               DynamicState = C.VK_DYNAMIC_STATE_DEPTH_COMPARE_OP_EXT
-	StateDepthBoundsTestEnable        DynamicState = C.VK_DYNAMIC_STATE_DEPTH_BOUNDS_TEST_ENABLE_EXT
-	StateStencilTestEnable            DynamicState = C.VK_DYNAMIC_STATE_STENCIL_TEST_ENABLE_EXT
-	StateStencilOp                    DynamicState = C.VK_DYNAMIC_STATE_STENCIL_OP_EXT
-	StateVertexInput                  DynamicState = C.VK_DYNAMIC_STATE_VERTEX_INPUT_EXT
-	StatePatchControlPoints           DynamicState = C.VK_DYNAMIC_STATE_PATCH_CONTROL_POINTS_EXT
-	StateRasterizerDiscardEnable      DynamicState = C.VK_DYNAMIC_STATE_RASTERIZER_DISCARD_ENABLE_EXT
-	StateDepthBiasEnable              DynamicState = C.VK_DYNAMIC_STATE_DEPTH_BIAS_ENABLE_EXT
-	StateLogicOp                      DynamicState = C.VK_DYNAMIC_STATE_LOGIC_OP_EXT
-	StatePrimitiveRestartEnable       DynamicState = C.VK_DYNAMIC_STATE_PRIMITIVE_RESTART_ENABLE_EXT
-	StateColorWriteEnable             DynamicState = C.VK_DYNAMIC_STATE_COLOR_WRITE_ENABLE_EXT
+	StateViewport                       DynamicState = C.VK_DYNAMIC_STATE_VIEWPORT
+	StateScissor                        DynamicState = C.VK_DYNAMIC_STATE_SCISSOR
+	StateLineWidth                      DynamicState = C.VK_DYNAMIC_STATE_LINE_WIDTH
+	StateDepthBias                      DynamicState = C.VK_DYNAMIC_STATE_DEPTH_BIAS
+	StateBlendConstants                 DynamicState = C.VK_DYNAMIC_STATE_BLEND_CONSTANTS
+	StateDepthBounds                    DynamicState = C.VK_DYNAMIC_STATE_DEPTH_BOUNDS
+	StateStencilCompareMask             DynamicState = C.VK_DYNAMIC_STATE_STENCIL_COMPARE_MASK
+	StateStencilWriteMask               DynamicState = C.VK_DYNAMIC_STATE_STENCIL_WRITE_MASK
+	StateStencilReference               DynamicState = C.VK_DYNAMIC_STATE_STENCIL_REFERENCE
+	StateViewportWithScalingNV          DynamicState = C.VK_DYNAMIC_STATE_VIEWPORT_W_SCALING_NV
+	StateDiscardRectangleEXT            DynamicState = C.VK_DYNAMIC_STATE_DISCARD_RECTANGLE_EXT
+	StateSampleLocationsEXT             DynamicState = C.VK_DYNAMIC_STATE_SAMPLE_LOCATIONS_EXT
+	StateRayTracingPipelineStackSizeKHR DynamicState = C.VK_DYNAMIC_STATE_RAY_TRACING_PIPELINE_STACK_SIZE_KHR
+	StateViewportShadingRatePaletteNV   DynamicState = C.VK_DYNAMIC_STATE_VIEWPORT_SHADING_RATE_PALETTE_NV
+	StateViewportCoarseSampleOrderNV    DynamicState = C.VK_DYNAMIC_STATE_VIEWPORT_COARSE_SAMPLE_ORDER_NV
+	StateExclusiveScissorNV             DynamicState = C.VK_DYNAMIC_STATE_EXCLUSIVE_SCISSOR_NV
+	StateFragmentShadingRateKHR         DynamicState = C.VK_DYNAMIC_STATE_FRAGMENT_SHADING_RATE_KHR
+	StateLineStippleEXT                 DynamicState = C.VK_DYNAMIC_STATE_LINE_STIPPLE_EXT
+	StateCullModeEXT                    DynamicState = C.VK_DYNAMIC_STATE_CULL_MODE_EXT
+	StateFrontFaceEXT                   DynamicState = C.VK_DYNAMIC_STATE_FRONT_FACE_EXT
+	StatePrimitiveTopologyEXT           DynamicState = C.VK_DYNAMIC_STATE_PRIMITIVE_TOPOLOGY_EXT
+	StateViewportWithCountEXT           DynamicState = C.VK_DYNAMIC_STATE_VIEWPORT_WITH_COUNT_EXT
+	StateScissorWithCountEXT            DynamicState = C.VK_DYNAMIC_STATE_SCISSOR_WITH_COUNT_EXT
+	StateVertexInputBindingStrideEXT    DynamicState = C.VK_DYNAMIC_STATE_VERTEX_INPUT_BINDING_STRIDE_EXT
+	StateDepthTestEnableEXT             DynamicState = C.VK_DYNAMIC_STATE_DEPTH_TEST_ENABLE_EXT
+	StateDepthWriteEnableEXT            DynamicState = C.VK_DYNAMIC_STATE_DEPTH_WRITE_ENABLE_EXT
+	StateDepthCompareOpEXT              DynamicState = C.VK_DYNAMIC_STATE_DEPTH_COMPARE_OP_EXT
+	StateDepthBoundsTestEnableEXT       DynamicState = C.VK_DYNAMIC_STATE_DEPTH_BOUNDS_TEST_ENABLE_EXT
+	StateStencilTestEnableEXT           DynamicState = C.VK_DYNAMIC_STATE_STENCIL_TEST_ENABLE_EXT
+	StateStencilOpEXT                   DynamicState = C.VK_DYNAMIC_STATE_STENCIL_OP_EXT
+	StateVertexInputEXT                 DynamicState = C.VK_DYNAMIC_STATE_VERTEX_INPUT_EXT
+	StatePatchControlPointsEXT          DynamicState = C.VK_DYNAMIC_STATE_PATCH_CONTROL_POINTS_EXT
+	StateRasterizerDiscardEnableEXT     DynamicState = C.VK_DYNAMIC_STATE_RASTERIZER_DISCARD_ENABLE_EXT
+	StateDepthBiasEnableEXT             DynamicState = C.VK_DYNAMIC_STATE_DEPTH_BIAS_ENABLE_EXT
+	StateLogicOpEXT                     DynamicState = C.VK_DYNAMIC_STATE_LOGIC_OP_EXT
+	StatePrimitiveRestartEnableEXT      DynamicState = C.VK_DYNAMIC_STATE_PRIMITIVE_RESTART_ENABLE_EXT
+	StateColorWriteEnableEXT            DynamicState = C.VK_DYNAMIC_STATE_COLOR_WRITE_ENABLE_EXT
 )
 
 var dynamicStateToString = map[DynamicState]string{
-	StateViewport:                     "Viewport",
-	StateScissor:                      "Scissor",
-	StateLineWidth:                    "Line Width",
-	StateDepthBias:                    "Depth Bias",
-	StateBlendConstants:               "Blend Constants",
-	StateDepthBounds:                  "Depth Bounds",
-	StateStencilCompareMask:           "Stencil Compare Mask",
-	StateStencilWriteMask:             "Stencil Write Mask",
-	StateStencilReference:             "Stencil Reference",
-	StateViewportWithScalingNV:        "Viewport With Scaling (Nvidia)",
-	StateDiscardRectangle:             "Discard Rectangle",
-	StateSampleLocations:              "Sample Locations",
-	StateRayTracingPipelineStackSize:  "Ray Tracing Pipeline Stack Size",
-	StateViewportShadingRatePaletteNV: "Viewport Shading Rate Palette (Nvidia)",
-	StateViewportCoarseSampleOrderNV:  "Viewport Coarse Sample Order (Nvidia)",
-	StateExclusiveScissorNV:           "Exclusive Scissor (Nvidia)",
-	StateFragmentShadingRate:          "Fragment Shading Rate",
-	StateLineStipple:                  "Line Stipple",
-	StateCullMode:                     "Cull Mode",
-	StateFrontFace:                    "Front Face",
-	StatePrimitiveTopology:            "Primitive Topology",
-	StateViewportWithCount:            "Viewport With Count",
-	StateScissorWithCount:             "Scissor With Count",
-	StateVertexInputBindingStride:     "Vertex Input Binding State",
-	StateDepthTestEnable:              "Depth Test Enable",
-	StateDepthWriteEnable:             "Depth Write Enable",
-	StateDepthCompareOp:               "Depth Compare Op",
-	StateDepthBoundsTestEnable:        "Depth Bounds Test Enable",
-	StateStencilTestEnable:            "Stencil Test Enable",
-	StateStencilOp:                    "Stencil Op",
-	StateVertexInput:                  "Vertex Input",
-	StatePatchControlPoints:           "Patch Control Points",
-	StateRasterizerDiscardEnable:      "Rasterizer Discard Enable",
-	StateDepthBiasEnable:              "Depth Bias Enable",
-	StateLogicOp:                      "Logic Op",
-	StatePrimitiveRestartEnable:       "Primitive Restart Enable",
-	StateColorWriteEnable:             "Color Write Enable",
+	StateViewport:                       "Viewport",
+	StateScissor:                        "Scissor",
+	StateLineWidth:                      "Line Width",
+	StateDepthBias:                      "Depth Bias",
+	StateBlendConstants:                 "Blend Constants",
+	StateDepthBounds:                    "Depth Bounds",
+	StateStencilCompareMask:             "Stencil Compare Mask",
+	StateStencilWriteMask:               "Stencil Write Mask",
+	StateStencilReference:               "Stencil Reference",
+	StateViewportWithScalingNV:          "Viewport With Scaling (Nvidia Extension)",
+	StateDiscardRectangleEXT:            "Discard Rectangle (Extension)",
+	StateSampleLocationsEXT:             "Sample Locations (Extension)",
+	StateRayTracingPipelineStackSizeKHR: "Ray Tracing Pipeline Stack Size (Khronos Extension)",
+	StateViewportShadingRatePaletteNV:   "Viewport Shading Rate Palette (Nvidia Extension)",
+	StateViewportCoarseSampleOrderNV:    "Viewport Coarse Sample Order (Nvidia Extension)",
+	StateExclusiveScissorNV:             "Exclusive Scissor (Nvidia Extension)",
+	StateFragmentShadingRateKHR:         "Fragment Shading Rate (Khronos Extension)",
+	StateLineStippleEXT:                 "Line Stipple (Extension)",
+	StateCullModeEXT:                    "Cull Mode (Extension)",
+	StateFrontFaceEXT:                   "Front Face (Extension)",
+	StatePrimitiveTopologyEXT:           "Primitive Topology (Extension)",
+	StateViewportWithCountEXT:           "Viewport With Count (Extension)",
+	StateScissorWithCountEXT:            "Scissor With Count (Extension)",
+	StateVertexInputBindingStrideEXT:    "Vertex Input Binding State (Extension)",
+	StateDepthTestEnableEXT:             "Depth Test Enable (Extension)",
+	StateDepthWriteEnableEXT:            "Depth Write Enable (Extension)",
+	StateDepthCompareOpEXT:              "Depth Compare Op (Extension)",
+	StateDepthBoundsTestEnableEXT:       "Depth Bounds Test Enable (Extension)",
+	StateStencilTestEnableEXT:           "Stencil Test Enable (Extension)",
+	StateStencilOpEXT:                   "Stencil Op (Extension)",
+	StateVertexInputEXT:                 "Vertex Input (Extension)",
+	StatePatchControlPointsEXT:          "Patch Control Points (Extension)",
+	StateRasterizerDiscardEnableEXT:     "Rasterizer Discard Enable (Extension)",
+	StateDepthBiasEnableEXT:             "Depth Bias Enable (Extension)",
+	StateLogicOpEXT:                     "Logic Op (Extension)",
+	StatePrimitiveRestartEnableEXT:      "Primitive Restart Enable (Extension)",
+	StateColorWriteEnableEXT:            "Color Write Enable (Extension)",
 }
 
 func (s DynamicState) String() string {

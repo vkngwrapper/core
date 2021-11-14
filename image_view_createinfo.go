@@ -15,13 +15,13 @@ import (
 type ImageViewFlags int32
 
 const (
-	ImageViewCreateFragmentDensityMapDynamic  ImageViewFlags = C.VK_IMAGE_VIEW_CREATE_FRAGMENT_DENSITY_MAP_DYNAMIC_BIT_EXT
-	ImageViewCreateFragmentDensityMapDeferred ImageViewFlags = C.VK_IMAGE_VIEW_CREATE_FRAGMENT_DENSITY_MAP_DEFERRED_BIT_EXT
+	ImageViewCreateFragmentDensityMapDynamicEXT  ImageViewFlags = C.VK_IMAGE_VIEW_CREATE_FRAGMENT_DENSITY_MAP_DYNAMIC_BIT_EXT
+	ImageViewCreateFragmentDensityMapDeferredEXT ImageViewFlags = C.VK_IMAGE_VIEW_CREATE_FRAGMENT_DENSITY_MAP_DEFERRED_BIT_EXT
 )
 
 var imageViewFlagsToString = map[ImageViewFlags]string{
-	ImageViewCreateFragmentDensityMapDynamic:  "Create Fragment Density Map - Dynamic",
-	ImageViewCreateFragmentDensityMapDeferred: "Create Fragment Density Map - Deferred",
+	ImageViewCreateFragmentDensityMapDynamicEXT:  "Create Fragment Density Map - Dynamic (Extension)",
+	ImageViewCreateFragmentDensityMapDeferredEXT: "Create Fragment Density Map - Deferred (Extension)",
 }
 
 func (f ImageViewFlags) String() string {

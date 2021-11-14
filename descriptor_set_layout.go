@@ -17,14 +17,14 @@ type DescriptorSetLayoutFlags int32
 
 const (
 	DescriptorSetLayoutUpdateAfterBindPool DescriptorSetLayoutFlags = C.VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT
-	DescriptorSetLayoutPushDescriptor      DescriptorSetLayoutFlags = C.VK_DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR
+	DescriptorSetLayoutPushDescriptorKHR   DescriptorSetLayoutFlags = C.VK_DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR
 	DescriptorSetLayoutHostOnlyPoolValve   DescriptorSetLayoutFlags = C.VK_DESCRIPTOR_SET_LAYOUT_CREATE_HOST_ONLY_POOL_BIT_VALVE
 )
 
 var descriptorSetLayoutFlagsToString = map[DescriptorSetLayoutFlags]string{
 	DescriptorSetLayoutUpdateAfterBindPool: "Update After Bind Pool",
-	DescriptorSetLayoutPushDescriptor:      "Push Descriptor",
-	DescriptorSetLayoutHostOnlyPoolValve:   "Host-Only Pool (Valve)",
+	DescriptorSetLayoutPushDescriptorKHR:   "Push Descriptor (Khronos Extension)",
+	DescriptorSetLayoutHostOnlyPoolValve:   "Host-Only Pool (Valve Extension)",
 }
 
 func (f DescriptorSetLayoutFlags) String() string {

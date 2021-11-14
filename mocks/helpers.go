@@ -65,6 +65,20 @@ func EasyMockImageView(ctrl *gomock.Controller) *MockImageView {
 	return imageView
 }
 
+func EasyMockPipeline(ctrl *gomock.Controller) *MockPipeline {
+	pipeline := NewMockPipeline(ctrl)
+	pipeline.EXPECT().Handle().Return(NewFakePipeline()).AnyTimes()
+
+	return pipeline
+}
+
+func EasyMockPipelineLayout(ctrl *gomock.Controller) *MockPipelineLayout {
+	pipelineLayout := NewMockPipelineLayout(ctrl)
+	pipelineLayout.EXPECT().Handle().Return(NewFakePipelineLayout()).AnyTimes()
+
+	return pipelineLayout
+}
+
 func EasyMockPhysicalDevice(ctrl *gomock.Controller, driver core.Driver) *MockPhysicalDevice {
 	physicalDevice := NewMockPhysicalDevice(ctrl)
 	physicalDevice.EXPECT().Handle().Return(NewFakePhysicalDeviceHandle()).AnyTimes()

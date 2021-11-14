@@ -9,15 +9,15 @@ import "C"
 type PipelineBindPoint int32
 
 const (
-	BindGraphics   = C.VK_PIPELINE_BIND_POINT_GRAPHICS
-	BindCompute    = C.VK_PIPELINE_BIND_POINT_COMPUTE
-	BindRayTracing = C.VK_PIPELINE_BIND_POINT_RAY_TRACING_KHR
+	BindGraphics      = C.VK_PIPELINE_BIND_POINT_GRAPHICS
+	BindCompute       = C.VK_PIPELINE_BIND_POINT_COMPUTE
+	BindRayTracingKHR = C.VK_PIPELINE_BIND_POINT_RAY_TRACING_KHR
 )
 
 var pipelineBindPointToString = map[PipelineBindPoint]string{
-	BindGraphics:   "Graphics",
-	BindCompute:    "Compute",
-	BindRayTracing: "Ray Tracing",
+	BindGraphics:      "Graphics",
+	BindCompute:       "Compute",
+	BindRayTracingKHR: "Ray Tracing (Khronos Extension)",
 }
 
 func (p PipelineBindPoint) String() string {

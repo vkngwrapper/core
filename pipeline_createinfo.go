@@ -8,8 +8,82 @@ import "C"
 import (
 	"github.com/CannibalVox/VKng/core/common"
 	"github.com/CannibalVox/cgoparam"
+	"strings"
 	"unsafe"
 )
+
+type PipelineFlags int32
+
+const (
+	PipelineDisableOptimization                         = C.VK_PIPELINE_CREATE_DISABLE_OPTIMIZATION_BIT
+	PipelineAllowDerivatives                            = C.VK_PIPELINE_CREATE_ALLOW_DERIVATIVES_BIT
+	PipelineDerivative                                  = C.VK_PIPELINE_CREATE_DERIVATIVE_BIT
+	PipelineViewIndexFromDeviceIndex                    = C.VK_PIPELINE_CREATE_VIEW_INDEX_FROM_DEVICE_INDEX_BIT
+	PipelineDispatchBase                                = C.VK_PIPELINE_CREATE_DISPATCH_BASE_BIT
+	PipelineRayTracingNoNullAnyHitShadersKHR            = C.VK_PIPELINE_CREATE_RAY_TRACING_NO_NULL_ANY_HIT_SHADERS_BIT_KHR
+	PipelineRayTracingNoNullClosestHitShadersKHR        = C.VK_PIPELINE_CREATE_RAY_TRACING_NO_NULL_CLOSEST_HIT_SHADERS_BIT_KHR
+	PipelineRayTracingNoNullMissShadersKHR              = C.VK_PIPELINE_CREATE_RAY_TRACING_NO_NULL_MISS_SHADERS_BIT_KHR
+	PipelineRayTracingNoNullIntersectionShadersKHR      = C.VK_PIPELINE_CREATE_RAY_TRACING_NO_NULL_INTERSECTION_SHADERS_BIT_KHR
+	PipelineRayTracingSkipTrianglesKHR                  = C.VK_PIPELINE_CREATE_RAY_TRACING_SKIP_TRIANGLES_BIT_KHR
+	PipelineRayTracingSkipAABBsKHR                      = C.VK_PIPELINE_CREATE_RAY_TRACING_SKIP_AABBS_BIT_KHR
+	PipelineRayTracingShaderGroupHandleCaptureReplayKHR = C.VK_PIPELINE_CREATE_RAY_TRACING_SHADER_GROUP_HANDLE_CAPTURE_REPLAY_BIT_KHR
+	PipelineDeferCompileNV                              = C.VK_PIPELINE_CREATE_DEFER_COMPILE_BIT_NV
+	PipelineCaptureStatisticsKHR                        = C.VK_PIPELINE_CREATE_CAPTURE_STATISTICS_BIT_KHR
+	PipelineCaptureInternalRepresentationsKHR           = C.VK_PIPELINE_CREATE_CAPTURE_INTERNAL_REPRESENTATIONS_BIT_KHR
+	PipelineIndirectBindableNV                          = C.VK_PIPELINE_CREATE_INDIRECT_BINDABLE_BIT_NV
+	PipelineLibraryKHR                                  = C.VK_PIPELINE_CREATE_LIBRARY_BIT_KHR
+	PipelineFailOnPipelineRequiredEXT                   = C.VK_PIPELINE_CREATE_FAIL_ON_PIPELINE_COMPILE_REQUIRED_BIT_EXT
+	PipelineEarlyReturnOnFailureEXT                     = C.VK_PIPELINE_CREATE_EARLY_RETURN_ON_FAILURE_BIT_EXT
+	PipelineRayTracingAllowMotionNV                     = C.VK_PIPELINE_CREATE_RAY_TRACING_ALLOW_MOTION_BIT_NV
+)
+
+var pipelineFlagsToString = map[PipelineFlags]string{
+	PipelineDisableOptimization:                         "Disable Optimization",
+	PipelineAllowDerivatives:                            "Allow Derivatives",
+	PipelineDerivative:                                  "Derivative",
+	PipelineViewIndexFromDeviceIndex:                    "View Index From Device Index",
+	PipelineDispatchBase:                                "Dispatch Base",
+	PipelineRayTracingNoNullAnyHitShadersKHR:            "Ray Tracing: No Null, Any Hit Shaders (Khronos Extension)",
+	PipelineRayTracingNoNullClosestHitShadersKHR:        "Ray Tracing: No Null, Closest Hit Shaders (Khronos Extension)",
+	PipelineRayTracingNoNullMissShadersKHR:              "Ray Tracing: No Null, Miss Shaders (Khronos Extension)",
+	PipelineRayTracingNoNullIntersectionShadersKHR:      "Ray Tracing: No Null, Intersection Shaders (Khronos Extension)",
+	PipelineRayTracingSkipTrianglesKHR:                  "Ray Tracing: Skip Triangles (Khronos Extension)",
+	PipelineRayTracingSkipAABBsKHR:                      "Ray Tracing: Skip AABBs (Khronos Extension)",
+	PipelineRayTracingShaderGroupHandleCaptureReplayKHR: "Ray Tracing: Shader Group Handle Capture/Replay (Khronos Extension)",
+	PipelineDeferCompileNV:                              "Defer Compile (Nvidia Extension)",
+	PipelineCaptureStatisticsKHR:                        "Capture Statistics (Khronos Extension)",
+	PipelineCaptureInternalRepresentationsKHR:           "Capture Internal Representations (Khronos Extension)",
+	PipelineIndirectBindableNV:                          "Indirect Bindable (Nvidia Extension)",
+	PipelineLibraryKHR:                                  "Library (Khronos Extension)",
+	PipelineFailOnPipelineRequiredEXT:                   "Fail On Pipeline Required (Extension)",
+	PipelineEarlyReturnOnFailureEXT:                     "Early Return On Failure (Extension)",
+	PipelineRayTracingAllowMotionNV:                     "Ray Tracing: Allow Motion (Nvidia Extension)",
+}
+
+func (f PipelineFlags) String() string {
+	if f == 0 {
+		return "None"
+	}
+
+	var hasOne bool
+	var sb strings.Builder
+
+	for i := 0; i < 32; i++ {
+		checkBit := PipelineFlags(1 << i)
+		if (f & checkBit) != 0 {
+			str, hasStr := pipelineFlagsToString[checkBit]
+			if hasStr {
+				if hasOne {
+					sb.WriteRune('|')
+				}
+				sb.WriteString(str)
+				hasOne = true
+			}
+		}
+	}
+
+	return sb.String()
+}
 
 type GraphicsPipelineOptions struct {
 	ShaderStages  []*ShaderStage

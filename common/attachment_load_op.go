@@ -12,14 +12,14 @@ const (
 	LoadOpLoad     AttachmentLoadOp = C.VK_ATTACHMENT_LOAD_OP_LOAD
 	LoadOpClear    AttachmentLoadOp = C.VK_ATTACHMENT_LOAD_OP_CLEAR
 	LoadOpDontCare AttachmentLoadOp = C.VK_ATTACHMENT_LOAD_OP_DONT_CARE
-	LoadOpNone     AttachmentLoadOp = C.VK_ATTACHMENT_LOAD_OP_NONE_EXT
+	LoadOpNoneEXT  AttachmentLoadOp = C.VK_ATTACHMENT_LOAD_OP_NONE_EXT
 )
 
 var attachmentLoadOpToString = map[AttachmentLoadOp]string{
 	LoadOpLoad:     "Load",
 	LoadOpClear:    "Clear",
 	LoadOpDontCare: "Don't Care",
-	LoadOpNone:     "None",
+	LoadOpNoneEXT:  "None (Extension)",
 }
 
 func (o AttachmentLoadOp) String() string {

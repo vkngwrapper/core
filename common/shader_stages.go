@@ -18,12 +18,12 @@ const (
 	StageCompute                ShaderStages = C.VK_SHADER_STAGE_COMPUTE_BIT
 	StageAllGraphics            ShaderStages = C.VK_SHADER_STAGE_ALL_GRAPHICS
 	StageAll                    ShaderStages = C.VK_SHADER_STAGE_ALL
-	StageRayGen                 ShaderStages = C.VK_SHADER_STAGE_RAYGEN_BIT_KHR
-	StageAnyHit                 ShaderStages = C.VK_SHADER_STAGE_ANY_HIT_BIT_KHR
-	StageClosestHit             ShaderStages = C.VK_SHADER_STAGE_CLOSEST_HIT_BIT_KHR
-	StageMiss                   ShaderStages = C.VK_SHADER_STAGE_MISS_BIT_KHR
-	StageIntersection           ShaderStages = C.VK_SHADER_STAGE_INTERSECTION_BIT_KHR
-	StageCallable               ShaderStages = C.VK_SHADER_STAGE_CALLABLE_BIT_KHR
+	StageRayGenKHR              ShaderStages = C.VK_SHADER_STAGE_RAYGEN_BIT_KHR
+	StageAnyHitKHR              ShaderStages = C.VK_SHADER_STAGE_ANY_HIT_BIT_KHR
+	StageClosestHitKHR          ShaderStages = C.VK_SHADER_STAGE_CLOSEST_HIT_BIT_KHR
+	StageMissKHR                ShaderStages = C.VK_SHADER_STAGE_MISS_BIT_KHR
+	StageIntersectionKHR        ShaderStages = C.VK_SHADER_STAGE_INTERSECTION_BIT_KHR
+	StageCallableKHR            ShaderStages = C.VK_SHADER_STAGE_CALLABLE_BIT_KHR
 	StageTaskNV                 ShaderStages = C.VK_SHADER_STAGE_TASK_BIT_NV
 	StageMeshNV                 ShaderStages = C.VK_SHADER_STAGE_MESH_BIT_NV
 )
@@ -35,14 +35,14 @@ var shaderStageToString = map[ShaderStages]string{
 	StageGeometry:               "Geometry",
 	StageFragment:               "Fragment",
 	StageCompute:                "Compute",
-	StageRayGen:                 "Ray Gen",
-	StageAnyHit:                 "Any Hit",
-	StageClosestHit:             "Closest Hit",
-	StageMiss:                   "Miss",
-	StageIntersection:           "Intersection",
-	StageCallable:               "Callable",
-	StageTaskNV:                 "Task (Nvidia)",
-	StageMeshNV:                 "Mesh (Nvidia)",
+	StageRayGenKHR:              "Ray Gen (Khronos Extension)",
+	StageAnyHitKHR:              "Any Hit (Khronos Extension)",
+	StageClosestHitKHR:          "Closest Hit (Khronos Extension)",
+	StageMissKHR:                "Miss (Khronos Extension)",
+	StageIntersectionKHR:        "Intersection (Khronos Extension)",
+	StageCallableKHR:            "Callable (Khronos Extension)",
+	StageTaskNV:                 "Task (Nvidia Extension)",
+	StageMeshNV:                 "Mesh (Nvidia Extension)",
 }
 
 func (s ShaderStages) String() string {

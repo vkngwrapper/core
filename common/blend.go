@@ -60,109 +60,109 @@ func (f BlendFactor) String() string {
 type BlendOp int32
 
 const (
-	BlendOpAdd              BlendOp = C.VK_BLEND_OP_ADD
-	BlendOpSubtract         BlendOp = C.VK_BLEND_OP_SUBTRACT
-	BlendOpMin              BlendOp = C.VK_BLEND_OP_MIN
-	BlendOpMax              BlendOp = C.VK_BLEND_OP_MAX
-	BlendOpZero             BlendOp = C.VK_BLEND_OP_ZERO_EXT
-	BlendOpSrc              BlendOp = C.VK_BLEND_OP_SRC_EXT
-	BlendOpDst              BlendOp = C.VK_BLEND_OP_DST_EXT
-	BlendOpSrcOver          BlendOp = C.VK_BLEND_OP_SRC_OVER_EXT
-	BlendOpDstOver          BlendOp = C.VK_BLEND_OP_DST_OVER_EXT
-	BlendOpSrcIn            BlendOp = C.VK_BLEND_OP_SRC_IN_EXT
-	BlendOpDstIn            BlendOp = C.VK_BLEND_OP_DST_IN_EXT
-	BlendOpSrcOut           BlendOp = C.VK_BLEND_OP_SRC_OUT_EXT
-	BlendOpDstOut           BlendOp = C.VK_BLEND_OP_DST_OUT_EXT
-	BlendOpSrcAtop          BlendOp = C.VK_BLEND_OP_SRC_ATOP_EXT
-	BlendOpDstAtop          BlendOp = C.VK_BLEND_OP_DST_ATOP_EXT
-	BlendOpXor              BlendOp = C.VK_BLEND_OP_XOR_EXT
-	BlendOpMultiply         BlendOp = C.VK_BLEND_OP_MULTIPLY_EXT
-	BlendOpScreen           BlendOp = C.VK_BLEND_OP_SCREEN_EXT
-	BlendOpOverlay          BlendOp = C.VK_BLEND_OP_OVERLAY_EXT
-	BlendOpDarken           BlendOp = C.VK_BLEND_OP_DARKEN_EXT
-	BlendOpLighten          BlendOp = C.VK_BLEND_OP_LIGHTEN_EXT
-	BlendOpColorDodge       BlendOp = C.VK_BLEND_OP_COLORDODGE_EXT
-	BlendOpColorBurn        BlendOp = C.VK_BLEND_OP_COLORBURN_EXT
-	BlendOpHardLight        BlendOp = C.VK_BLEND_OP_HARDLIGHT_EXT
-	BlendOpSoftLight        BlendOp = C.VK_BLEND_OP_SOFTLIGHT_EXT
-	BlendOpDifference       BlendOp = C.VK_BLEND_OP_DIFFERENCE_EXT
-	BlendOpExclusion        BlendOp = C.VK_BLEND_OP_EXCLUSION_EXT
-	BlendOpInvert           BlendOp = C.VK_BLEND_OP_INVERT_EXT
-	BlendOpInvertRGB        BlendOp = C.VK_BLEND_OP_INVERT_RGB_EXT
-	BlendOpLinearDodge      BlendOp = C.VK_BLEND_OP_LINEARDODGE_EXT
-	BlendOpLinearBurn       BlendOp = C.VK_BLEND_OP_LINEARBURN_EXT
-	BlendOpVividLight       BlendOp = C.VK_BLEND_OP_VIVIDLIGHT_EXT
-	BlendOpLinearLight      BlendOp = C.VK_BLEND_OP_LINEARLIGHT_EXT
-	BlendOpPinLight         BlendOp = C.VK_BLEND_OP_PINLIGHT_EXT
-	BlendOpHardMix          BlendOp = C.VK_BLEND_OP_HARDMIX_EXT
-	BlendOpHSLHue           BlendOp = C.VK_BLEND_OP_HSL_HUE_EXT
-	BlendOpHSLSaturation    BlendOp = C.VK_BLEND_OP_HSL_SATURATION_EXT
-	BlendOpHSLColor         BlendOp = C.VK_BLEND_OP_HSL_COLOR_EXT
-	BlendOpHSLLuminosity    BlendOp = C.VK_BLEND_OP_HSL_LUMINOSITY_EXT
-	BlendOpPlus             BlendOp = C.VK_BLEND_OP_PLUS_EXT
-	BlendOpPlusClamped      BlendOp = C.VK_BLEND_OP_PLUS_CLAMPED_EXT
-	BlendOpPlusClampedAlpha BlendOp = C.VK_BLEND_OP_PLUS_CLAMPED_ALPHA_EXT
-	BlendOpPlusDarker       BlendOp = C.VK_BLEND_OP_PLUS_DARKER_EXT
-	BlendOpMinus            BlendOp = C.VK_BLEND_OP_MINUS_EXT
-	BlendOpMinusClamped     BlendOp = C.VK_BLEND_OP_MINUS_CLAMPED_EXT
-	BlendOpContrast         BlendOp = C.VK_BLEND_OP_CONTRAST_EXT
-	BlendOpInvertOVG        BlendOp = C.VK_BLEND_OP_INVERT_OVG_EXT
-	BlendOpRed              BlendOp = C.VK_BLEND_OP_RED_EXT
-	BlendOpGreen            BlendOp = C.VK_BLEND_OP_GREEN_EXT
-	BlendOpBlue             BlendOp = C.VK_BLEND_OP_BLUE_EXT
+	BlendOpAdd                 BlendOp = C.VK_BLEND_OP_ADD
+	BlendOpSubtract            BlendOp = C.VK_BLEND_OP_SUBTRACT
+	BlendOpMin                 BlendOp = C.VK_BLEND_OP_MIN
+	BlendOpMax                 BlendOp = C.VK_BLEND_OP_MAX
+	BlendOpZeroEXT             BlendOp = C.VK_BLEND_OP_ZERO_EXT
+	BlendOpSrcEXT              BlendOp = C.VK_BLEND_OP_SRC_EXT
+	BlendOpDstEXT              BlendOp = C.VK_BLEND_OP_DST_EXT
+	BlendOpSrcOverEXT          BlendOp = C.VK_BLEND_OP_SRC_OVER_EXT
+	BlendOpDstOverEXT          BlendOp = C.VK_BLEND_OP_DST_OVER_EXT
+	BlendOpSrcInEXT            BlendOp = C.VK_BLEND_OP_SRC_IN_EXT
+	BlendOpDstInEXT            BlendOp = C.VK_BLEND_OP_DST_IN_EXT
+	BlendOpSrcOutEXT           BlendOp = C.VK_BLEND_OP_SRC_OUT_EXT
+	BlendOpDstOutEXT           BlendOp = C.VK_BLEND_OP_DST_OUT_EXT
+	BlendOpSrcAtopEXT          BlendOp = C.VK_BLEND_OP_SRC_ATOP_EXT
+	BlendOpDstAtopEXT          BlendOp = C.VK_BLEND_OP_DST_ATOP_EXT
+	BlendOpXorEXT              BlendOp = C.VK_BLEND_OP_XOR_EXT
+	BlendOpMultiplyEXT         BlendOp = C.VK_BLEND_OP_MULTIPLY_EXT
+	BlendOpScreenEXT           BlendOp = C.VK_BLEND_OP_SCREEN_EXT
+	BlendOpOverlayEXT          BlendOp = C.VK_BLEND_OP_OVERLAY_EXT
+	BlendOpDarkenEXT           BlendOp = C.VK_BLEND_OP_DARKEN_EXT
+	BlendOpLightenEXT          BlendOp = C.VK_BLEND_OP_LIGHTEN_EXT
+	BlendOpColorDodgeEXT       BlendOp = C.VK_BLEND_OP_COLORDODGE_EXT
+	BlendOpColorBurnEXT        BlendOp = C.VK_BLEND_OP_COLORBURN_EXT
+	BlendOpHardLightEXT        BlendOp = C.VK_BLEND_OP_HARDLIGHT_EXT
+	BlendOpSoftLightEXT        BlendOp = C.VK_BLEND_OP_SOFTLIGHT_EXT
+	BlendOpDifferenceEXT       BlendOp = C.VK_BLEND_OP_DIFFERENCE_EXT
+	BlendOpExclusionEXT        BlendOp = C.VK_BLEND_OP_EXCLUSION_EXT
+	BlendOpInvertEXT           BlendOp = C.VK_BLEND_OP_INVERT_EXT
+	BlendOpInvertRGBEXT        BlendOp = C.VK_BLEND_OP_INVERT_RGB_EXT
+	BlendOpLinearDodgeEXT      BlendOp = C.VK_BLEND_OP_LINEARDODGE_EXT
+	BlendOpLinearBurnEXT       BlendOp = C.VK_BLEND_OP_LINEARBURN_EXT
+	BlendOpVividLightEXT       BlendOp = C.VK_BLEND_OP_VIVIDLIGHT_EXT
+	BlendOpLinearLightEXT      BlendOp = C.VK_BLEND_OP_LINEARLIGHT_EXT
+	BlendOpPinLightEXT         BlendOp = C.VK_BLEND_OP_PINLIGHT_EXT
+	BlendOpHardMixEXT          BlendOp = C.VK_BLEND_OP_HARDMIX_EXT
+	BlendOpHSLHueEXT           BlendOp = C.VK_BLEND_OP_HSL_HUE_EXT
+	BlendOpHSLSaturationEXT    BlendOp = C.VK_BLEND_OP_HSL_SATURATION_EXT
+	BlendOpHSLColorEXT         BlendOp = C.VK_BLEND_OP_HSL_COLOR_EXT
+	BlendOpHSLLuminosityEXT    BlendOp = C.VK_BLEND_OP_HSL_LUMINOSITY_EXT
+	BlendOpPlusEXT             BlendOp = C.VK_BLEND_OP_PLUS_EXT
+	BlendOpPlusClampedEXT      BlendOp = C.VK_BLEND_OP_PLUS_CLAMPED_EXT
+	BlendOpPlusClampedAlphaEXT BlendOp = C.VK_BLEND_OP_PLUS_CLAMPED_ALPHA_EXT
+	BlendOpPlusDarkerEXT       BlendOp = C.VK_BLEND_OP_PLUS_DARKER_EXT
+	BlendOpMinusEXT            BlendOp = C.VK_BLEND_OP_MINUS_EXT
+	BlendOpMinusClampedEXT     BlendOp = C.VK_BLEND_OP_MINUS_CLAMPED_EXT
+	BlendOpContrastEXT         BlendOp = C.VK_BLEND_OP_CONTRAST_EXT
+	BlendOpInvertOVGEXT        BlendOp = C.VK_BLEND_OP_INVERT_OVG_EXT
+	BlendOpRedEXT              BlendOp = C.VK_BLEND_OP_RED_EXT
+	BlendOpGreenEXT            BlendOp = C.VK_BLEND_OP_GREEN_EXT
+	BlendOpBlueEXT             BlendOp = C.VK_BLEND_OP_BLUE_EXT
 )
 
 var blendOpToString = map[BlendOp]string{
-	BlendOpAdd:              "Add",
-	BlendOpSubtract:         "Subtract",
-	BlendOpMin:              "Min",
-	BlendOpMax:              "Max",
-	BlendOpZero:             "Zero",
-	BlendOpSrc:              "Src",
-	BlendOpDst:              "Dst",
-	BlendOpSrcOver:          "Src Over",
-	BlendOpDstOver:          "Dst Over",
-	BlendOpSrcIn:            "Src In",
-	BlendOpDstIn:            "Dst In",
-	BlendOpSrcOut:           "Src Out",
-	BlendOpDstOut:           "Dst Out",
-	BlendOpSrcAtop:          "Src Atop",
-	BlendOpDstAtop:          "Dst Atop",
-	BlendOpXor:              "Xor",
-	BlendOpMultiply:         "Multiply",
-	BlendOpScreen:           "Screen",
-	BlendOpOverlay:          "Overlay",
-	BlendOpDarken:           "Darken",
-	BlendOpLighten:          "Lighten",
-	BlendOpColorDodge:       "Color Dodge",
-	BlendOpColorBurn:        "Color Burn",
-	BlendOpHardLight:        "Hard Light",
-	BlendOpSoftLight:        "Soft Light",
-	BlendOpDifference:       "Difference",
-	BlendOpExclusion:        "Exclusion",
-	BlendOpInvert:           "Invert",
-	BlendOpInvertRGB:        "Invert RGB",
-	BlendOpLinearDodge:      "Linear Dodge",
-	BlendOpLinearBurn:       "Linear Burn",
-	BlendOpVividLight:       "Vivid Light",
-	BlendOpLinearLight:      "Linear Light",
-	BlendOpPinLight:         "Pin Light",
-	BlendOpHardMix:          "Hard Mix",
-	BlendOpHSLHue:           "Hue (HSL)",
-	BlendOpHSLSaturation:    "Saturation (HSL)",
-	BlendOpHSLColor:         "Color (HSL)",
-	BlendOpHSLLuminosity:    "Luminosity (HSL)",
-	BlendOpPlus:             "Plus",
-	BlendOpPlusClamped:      "Plus Clamped",
-	BlendOpPlusClampedAlpha: "Plus Clamped Alpha",
-	BlendOpPlusDarker:       "Plus Darker",
-	BlendOpMinus:            "Minus",
-	BlendOpMinusClamped:     "Minus Clamped",
-	BlendOpContrast:         "Contrast",
-	BlendOpInvertOVG:        "Invert OVG",
-	BlendOpRed:              "Red",
-	BlendOpGreen:            "Green",
-	BlendOpBlue:             "Blue",
+	BlendOpAdd:                 "Add",
+	BlendOpSubtract:            "Subtract",
+	BlendOpMin:                 "Min",
+	BlendOpMax:                 "Max",
+	BlendOpZeroEXT:             "Zero (Extension)",
+	BlendOpSrcEXT:              "Src (Extension)",
+	BlendOpDstEXT:              "Dst (Extension)",
+	BlendOpSrcOverEXT:          "Src Over (Extension)",
+	BlendOpDstOverEXT:          "Dst Over (Extension)",
+	BlendOpSrcInEXT:            "Src In (Extension)",
+	BlendOpDstInEXT:            "Dst In (Extension)",
+	BlendOpSrcOutEXT:           "Src Out (Extension)",
+	BlendOpDstOutEXT:           "Dst Out (Extension)",
+	BlendOpSrcAtopEXT:          "Src Atop (Extension)",
+	BlendOpDstAtopEXT:          "Dst Atop (Extension)",
+	BlendOpXorEXT:              "Xor (Extension)",
+	BlendOpMultiplyEXT:         "Multiply (Extension)",
+	BlendOpScreenEXT:           "Screen (Extension)",
+	BlendOpOverlayEXT:          "Overlay (Extension)",
+	BlendOpDarkenEXT:           "Darken (Extension)",
+	BlendOpLightenEXT:          "Lighten (Extension)",
+	BlendOpColorDodgeEXT:       "Color Dodge (Extension)",
+	BlendOpColorBurnEXT:        "Color Burn (Extension)",
+	BlendOpHardLightEXT:        "Hard Light (Extension)",
+	BlendOpSoftLightEXT:        "Soft Light (Extension)",
+	BlendOpDifferenceEXT:       "Difference (Extension)",
+	BlendOpExclusionEXT:        "Exclusion (Extension)",
+	BlendOpInvertEXT:           "Invert (Extension)",
+	BlendOpInvertRGBEXT:        "Invert RGB (Extension)",
+	BlendOpLinearDodgeEXT:      "Linear Dodge (Extension)",
+	BlendOpLinearBurnEXT:       "Linear Burn (Extension)",
+	BlendOpVividLightEXT:       "Vivid Light (Extension)",
+	BlendOpLinearLightEXT:      "Linear Light (Extension)",
+	BlendOpPinLightEXT:         "Pin Light (Extension)",
+	BlendOpHardMixEXT:          "Hard Mix (Extension)",
+	BlendOpHSLHueEXT:           "Hue (HSL) (Extension)",
+	BlendOpHSLSaturationEXT:    "Saturation (HSL) (Extension)",
+	BlendOpHSLColorEXT:         "Color (HSL) (Extension)",
+	BlendOpHSLLuminosityEXT:    "Luminosity (HSL) (Extension)",
+	BlendOpPlusEXT:             "Plus (Extension)",
+	BlendOpPlusClampedEXT:      "Plus Clamped (Extension)",
+	BlendOpPlusClampedAlphaEXT: "Plus Clamped Alpha (Extension)",
+	BlendOpPlusDarkerEXT:       "Plus Darker (Extension)",
+	BlendOpMinusEXT:            "Minus (Extension)",
+	BlendOpMinusClampedEXT:     "Minus Clamped (Extension)",
+	BlendOpContrastEXT:         "Contrast (Extension)",
+	BlendOpInvertOVGEXT:        "Invert OVG (Extension)",
+	BlendOpRedEXT:              "Red (Extension)",
+	BlendOpGreenEXT:            "Green (Extension)",
+	BlendOpBlueEXT:             "Blue (Extension)",
 }
 
 func (o BlendOp) String() string {

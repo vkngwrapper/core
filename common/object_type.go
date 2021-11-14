@@ -37,21 +37,21 @@ const (
 	UsageCommandPool                   ObjectType = C.VK_OBJECT_TYPE_COMMAND_POOL
 	UsageSamplerYCbCrConversion        ObjectType = C.VK_OBJECT_TYPE_SAMPLER_YCBCR_CONVERSION
 	UsageDescriptorUpdateTemplate      ObjectType = C.VK_OBJECT_TYPE_DESCRIPTOR_UPDATE_TEMPLATE
-	UsageSurface                       ObjectType = C.VK_OBJECT_TYPE_SURFACE_KHR
-	UsageSwapchain                     ObjectType = C.VK_OBJECT_TYPE_SWAPCHAIN_KHR
-	UsageDisplay                       ObjectType = C.VK_OBJECT_TYPE_DISPLAY_KHR
-	UsageDisplayMode                   ObjectType = C.VK_OBJECT_TYPE_DISPLAY_MODE_KHR
-	UsageDebugReportCallback           ObjectType = C.VK_OBJECT_TYPE_DEBUG_REPORT_CALLBACK_EXT
+	UsageSurfaceKHR                    ObjectType = C.VK_OBJECT_TYPE_SURFACE_KHR
+	UsageSwapchainKHR                  ObjectType = C.VK_OBJECT_TYPE_SWAPCHAIN_KHR
+	UsageDisplayKHR                    ObjectType = C.VK_OBJECT_TYPE_DISPLAY_KHR
+	UsageDisplayModeKHR                ObjectType = C.VK_OBJECT_TYPE_DISPLAY_MODE_KHR
+	UsageDebugReportCallbackEXT        ObjectType = C.VK_OBJECT_TYPE_DEBUG_REPORT_CALLBACK_EXT
 	UsageCUModuleNVX                   ObjectType = C.VK_OBJECT_TYPE_CU_MODULE_NVX
 	UsageCUFunctionNVX                 ObjectType = C.VK_OBJECT_TYPE_CU_FUNCTION_NVX
-	UsageDebugUtilsMessenger           ObjectType = C.VK_OBJECT_TYPE_DEBUG_UTILS_MESSENGER_EXT
-	UsageAccelerationStructure         ObjectType = C.VK_OBJECT_TYPE_ACCELERATION_STRUCTURE_KHR
-	UsageValidationCache               ObjectType = C.VK_OBJECT_TYPE_VALIDATION_CACHE_EXT
+	UsageDebugUtilsMessengerEXT        ObjectType = C.VK_OBJECT_TYPE_DEBUG_UTILS_MESSENGER_EXT
+	UsageAccelerationStructureKHR      ObjectType = C.VK_OBJECT_TYPE_ACCELERATION_STRUCTURE_KHR
+	UsageValidationCacheEXT            ObjectType = C.VK_OBJECT_TYPE_VALIDATION_CACHE_EXT
 	UsageAccelerationStructureNV       ObjectType = C.VK_OBJECT_TYPE_ACCELERATION_STRUCTURE_NV
 	UsagePerformanceConfigurationIntel ObjectType = C.VK_OBJECT_TYPE_PERFORMANCE_CONFIGURATION_INTEL
-	UsageDeferredOperation             ObjectType = C.VK_OBJECT_TYPE_DEFERRED_OPERATION_KHR
+	UsageDeferredOperationKHR          ObjectType = C.VK_OBJECT_TYPE_DEFERRED_OPERATION_KHR
 	UsageIndirectCommandsLayoutNV      ObjectType = C.VK_OBJECT_TYPE_INDIRECT_COMMANDS_LAYOUT_NV
-	UsagePrivateDataSlot               ObjectType = C.VK_OBJECT_TYPE_PRIVATE_DATA_SLOT_EXT
+	UsagePrivateDataSlotEXT            ObjectType = C.VK_OBJECT_TYPE_PRIVATE_DATA_SLOT_EXT
 )
 
 var vkObjectTypeToString = map[ObjectType]string{
@@ -83,21 +83,21 @@ var vkObjectTypeToString = map[ObjectType]string{
 	UsageCommandPool:                   "Command Pool",
 	UsageSamplerYCbCrConversion:        "Sampler YCbCr Conversion",
 	UsageDescriptorUpdateTemplate:      "Descriptor Update Template",
-	UsageSurface:                       "Surface",
-	UsageSwapchain:                     "Swapchain",
-	UsageDisplay:                       "Display",
-	UsageDisplayMode:                   "Display Mode",
-	UsageDebugReportCallback:           "Debug Report Callback",
-	UsageCUModuleNVX:                   "CU Module (Nvidia VX)",
-	UsageCUFunctionNVX:                 "CU Function (Nvidia VX)",
-	UsageDebugUtilsMessenger:           "Debug Utils Messenger",
-	UsageAccelerationStructure:         "Acceleration Structure",
-	UsageValidationCache:               "Validation Cache",
-	UsageAccelerationStructureNV:       "Acceleration Structure (Nvidia)",
-	UsagePerformanceConfigurationIntel: "Performance Configuration (Intel)",
-	UsageDeferredOperation:             "Deferred Operation",
-	UsageIndirectCommandsLayoutNV:      "Indirect Commands Layout (Nvidia)",
-	UsagePrivateDataSlot:               "Private Data Slot",
+	UsageSurfaceKHR:                    "Surface (Khronos Extension)",
+	UsageSwapchainKHR:                  "Swapchain (Khronos Extension)",
+	UsageDisplayKHR:                    "Display (Khronos Extension)",
+	UsageDisplayModeKHR:                "Display Mode (Khronos Extension)",
+	UsageDebugReportCallbackEXT:        "Debug Report Callback (Extension)",
+	UsageCUModuleNVX:                   "CU Module (Nvidia Experimental Extension)",
+	UsageCUFunctionNVX:                 "CU Function (Nvidia Experimental Extension)",
+	UsageDebugUtilsMessengerEXT:        "Debug Utils Messenger (Extension)",
+	UsageAccelerationStructureKHR:      "Acceleration Structure (Khronos Extension)",
+	UsageValidationCacheEXT:            "Validation Cache (Extension)",
+	UsageAccelerationStructureNV:       "Acceleration Structure (Nvidia Extension)",
+	UsagePerformanceConfigurationIntel: "Performance Configuration (Intel Extension)",
+	UsageDeferredOperationKHR:          "Deferred Operation (Khronos Extension)",
+	UsageIndirectCommandsLayoutNV:      "Indirect Commands Layout (Nvidia Extension)",
+	UsagePrivateDataSlotEXT:            "Private Data Slot (Extension)",
 }
 
 func (t ObjectType) String() string {
