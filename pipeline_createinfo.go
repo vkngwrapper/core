@@ -86,6 +86,8 @@ func (f PipelineFlags) String() string {
 }
 
 type GraphicsPipelineOptions struct {
+	Flags PipelineFlags
+
 	ShaderStages  []*ShaderStage
 	VertexInput   *VertexInputOptions
 	InputAssembly *InputAssemblyOptions
@@ -109,7 +111,7 @@ type GraphicsPipelineOptions struct {
 
 func (o *GraphicsPipelineOptions) populate(allocator *cgoparam.Allocator, createInfo *C.VkGraphicsPipelineCreateInfo, next unsafe.Pointer) error {
 	createInfo.sType = C.VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO
-	createInfo.flags = 0
+	createInfo.flags = C.VkPipelineCreateFlags(o.Flags)
 	createInfo.pNext = next
 
 	stageCount := len(o.ShaderStages)

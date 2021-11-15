@@ -4,7 +4,6 @@ import (
 	"github.com/CannibalVox/VKng/core"
 	"github.com/CannibalVox/VKng/core/common"
 	"github.com/CannibalVox/VKng/core/mocks"
-	"github.com/cockroachdb/errors"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/require"
 	"reflect"
@@ -167,7 +166,7 @@ func TestVulkanLoader1_0_CreateRenderPass_Success(t *testing.T) {
 				Format:         common.FormatA2R10G10B10SignedInt,
 				Samples:        common.Samples64,
 				LoadOp:         common.LoadOpLoad,
-				StoreOp:        common.StoreOpNone,
+				StoreOp:        common.StoreOpNoneEXT,
 				StencilLoadOp:  common.LoadOpClear,
 				StencilStoreOp: common.StoreOpStore,
 				InitialLayout:  common.LayoutGeneral,
@@ -223,18 +222,18 @@ func TestVulkanLoader1_0_CreateRenderPass_Success(t *testing.T) {
 				SrcSubPassIndex: 17,
 				DstSubPassIndex: 19,
 				SrcStageMask:    common.PipelineStageVertexShader,
-				DstStageMask:    common.PipelineStageAccelerationStructureBuild,
-				SrcAccess:       common.AccessColorAttachmentReadNonCoherent,
-				DstAccess:       common.AccessConditionalRenderingRead,
+				DstStageMask:    common.PipelineStageAccelerationStructureBuildKHR,
+				SrcAccess:       common.AccessColorAttachmentReadNonCoherentEXT,
+				DstAccess:       common.AccessConditionalRenderingReadEXT,
 			},
 			{
 				Flags:           common.DependencyViewLocal,
 				SrcSubPassIndex: 23,
 				DstSubPassIndex: 29,
-				SrcStageMask:    common.PipelineStageConditionalRendering,
+				SrcStageMask:    common.PipelineStageConditionalRenderingEXT,
 				DstStageMask:    common.PipelineStageBottomOfPipe,
 				SrcAccess:       common.AccessColorAttachmentRead,
-				DstAccess:       common.AccessFragmentDensityMapRead,
+				DstAccess:       common.AccessFragmentDensityMapReadEXT,
 			},
 			{
 				Flags:           0,
@@ -388,7 +387,7 @@ func TestVulkanLoader1_0_CreateRenderPass_SuccessNoNonColorAttachments(t *testin
 				Format:         common.FormatA2R10G10B10SignedInt,
 				Samples:        common.Samples64,
 				LoadOp:         common.LoadOpLoad,
-				StoreOp:        common.StoreOpNone,
+				StoreOp:        common.StoreOpNoneEXT,
 				StencilLoadOp:  common.LoadOpClear,
 				StencilStoreOp: common.StoreOpStore,
 				InitialLayout:  common.LayoutGeneral,
@@ -426,18 +425,18 @@ func TestVulkanLoader1_0_CreateRenderPass_SuccessNoNonColorAttachments(t *testin
 				SrcSubPassIndex: 17,
 				DstSubPassIndex: 19,
 				SrcStageMask:    common.PipelineStageVertexShader,
-				DstStageMask:    common.PipelineStageAccelerationStructureBuild,
-				SrcAccess:       common.AccessColorAttachmentReadNonCoherent,
-				DstAccess:       common.AccessConditionalRenderingRead,
+				DstStageMask:    common.PipelineStageAccelerationStructureBuildKHR,
+				SrcAccess:       common.AccessColorAttachmentReadNonCoherentEXT,
+				DstAccess:       common.AccessConditionalRenderingReadEXT,
 			},
 			{
 				Flags:           common.DependencyViewLocal,
 				SrcSubPassIndex: 23,
 				DstSubPassIndex: 29,
-				SrcStageMask:    common.PipelineStageConditionalRendering,
+				SrcStageMask:    common.PipelineStageConditionalRenderingEXT,
 				DstStageMask:    common.PipelineStageBottomOfPipe,
 				SrcAccess:       common.AccessColorAttachmentRead,
-				DstAccess:       common.AccessFragmentDensityMapRead,
+				DstAccess:       common.AccessFragmentDensityMapReadEXT,
 			},
 			{
 				Flags:           0,
@@ -484,7 +483,7 @@ func TestVulkanLoader1_0_CreateRenderPass_MismatchDepthStencil(t *testing.T) {
 				Format:         common.FormatA2R10G10B10SignedInt,
 				Samples:        common.Samples64,
 				LoadOp:         common.LoadOpLoad,
-				StoreOp:        common.StoreOpNone,
+				StoreOp:        common.StoreOpNoneEXT,
 				StencilLoadOp:  common.LoadOpClear,
 				StencilStoreOp: common.StoreOpStore,
 				InitialLayout:  common.LayoutGeneral,
@@ -544,18 +543,18 @@ func TestVulkanLoader1_0_CreateRenderPass_MismatchDepthStencil(t *testing.T) {
 				SrcSubPassIndex: 17,
 				DstSubPassIndex: 19,
 				SrcStageMask:    common.PipelineStageVertexShader,
-				DstStageMask:    common.PipelineStageAccelerationStructureBuild,
-				SrcAccess:       common.AccessColorAttachmentReadNonCoherent,
-				DstAccess:       common.AccessConditionalRenderingRead,
+				DstStageMask:    common.PipelineStageAccelerationStructureBuildKHR,
+				SrcAccess:       common.AccessColorAttachmentReadNonCoherentEXT,
+				DstAccess:       common.AccessConditionalRenderingReadEXT,
 			},
 			{
 				Flags:           common.DependencyViewLocal,
 				SrcSubPassIndex: 23,
 				DstSubPassIndex: 29,
-				SrcStageMask:    common.PipelineStageConditionalRendering,
+				SrcStageMask:    common.PipelineStageConditionalRenderingEXT,
 				DstStageMask:    common.PipelineStageBottomOfPipe,
 				SrcAccess:       common.AccessColorAttachmentRead,
-				DstAccess:       common.AccessFragmentDensityMapRead,
+				DstAccess:       common.AccessFragmentDensityMapReadEXT,
 			},
 			{
 				Flags:           0,
@@ -568,7 +567,7 @@ func TestVulkanLoader1_0_CreateRenderPass_MismatchDepthStencil(t *testing.T) {
 			},
 		},
 	})
-	require.Error(t, errors.New("in subpass 0, 2 color attachments are defined, but 3 depth stencil attachments"))
+	require.EqualError(t, err, "in subpass 0, 2 color attachments are defined, but 3 depth stencil attachments are defined")
 }
 
 func TestVulkanLoader1_0_CreateRenderPass_MismatchResolve(t *testing.T) {
@@ -600,7 +599,7 @@ func TestVulkanLoader1_0_CreateRenderPass_MismatchResolve(t *testing.T) {
 				Format:         common.FormatA2R10G10B10SignedInt,
 				Samples:        common.Samples64,
 				LoadOp:         common.LoadOpLoad,
-				StoreOp:        common.StoreOpNone,
+				StoreOp:        common.StoreOpNoneEXT,
 				StencilLoadOp:  common.LoadOpClear,
 				StencilStoreOp: common.StoreOpStore,
 				InitialLayout:  common.LayoutGeneral,
@@ -660,18 +659,18 @@ func TestVulkanLoader1_0_CreateRenderPass_MismatchResolve(t *testing.T) {
 				SrcSubPassIndex: 17,
 				DstSubPassIndex: 19,
 				SrcStageMask:    common.PipelineStageVertexShader,
-				DstStageMask:    common.PipelineStageAccelerationStructureBuild,
-				SrcAccess:       common.AccessColorAttachmentReadNonCoherent,
-				DstAccess:       common.AccessConditionalRenderingRead,
+				DstStageMask:    common.PipelineStageAccelerationStructureBuildKHR,
+				SrcAccess:       common.AccessColorAttachmentReadNonCoherentEXT,
+				DstAccess:       common.AccessConditionalRenderingReadEXT,
 			},
 			{
 				Flags:           common.DependencyViewLocal,
 				SrcSubPassIndex: 23,
 				DstSubPassIndex: 29,
-				SrcStageMask:    common.PipelineStageConditionalRendering,
+				SrcStageMask:    common.PipelineStageConditionalRenderingEXT,
 				DstStageMask:    common.PipelineStageBottomOfPipe,
 				SrcAccess:       common.AccessColorAttachmentRead,
-				DstAccess:       common.AccessFragmentDensityMapRead,
+				DstAccess:       common.AccessFragmentDensityMapReadEXT,
 			},
 			{
 				Flags:           0,
@@ -684,5 +683,5 @@ func TestVulkanLoader1_0_CreateRenderPass_MismatchResolve(t *testing.T) {
 			},
 		},
 	})
-	require.Error(t, errors.New("in subpass 0, 2 color attachments are defined, but 3 resolve attachments"))
+	require.EqualError(t, err, "in subpass 0, 2 color attachments are defined, but 3 resolve attachments are defined")
 }

@@ -4,7 +4,6 @@ import (
 	"github.com/CannibalVox/VKng/core"
 	"github.com/CannibalVox/VKng/core/common"
 	"github.com/CannibalVox/VKng/core/mocks"
-	"github.com/cockroachdb/errors"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/require"
 	"reflect"
@@ -159,5 +158,5 @@ func TestBuffer_BindBufferMemory_FailNilMemory(t *testing.T) {
 	buffer := mocks.EasyDummyBuffer(t, loader, device)
 
 	_, err = buffer.BindBufferMemory(nil, 3)
-	require.Error(t, errors.New("received nil DeviceMemory"))
+	require.EqualError(t, err, "received nil DeviceMemory")
 }

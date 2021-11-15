@@ -87,6 +87,7 @@ type VkSemaphoreSignalInfo C.VkSemaphoreSignalInfo
 type VkBufferDeviceAddressInfo C.VkBufferDeviceAddressInfo
 type VkDeviceMemoryOpaqueCaptureAddressInfo C.VkDeviceMemoryOpaqueCaptureAddressInfo
 type VkDeviceQueueCreateInfo C.VkDeviceQueueCreateInfo
+type VkPipelineShaderStageCreateInfo C.VkPipelineShaderStageCreateInfo
 
 type VkAllocationCallbacks C.VkAllocationCallbacks
 type VkBindSparseInfo C.VkBindSparseInfo
@@ -140,6 +141,11 @@ type VkSubpassDescription C.VkSubpassDescription
 type VkSubpassDependency C.VkSubpassDependency
 type VkAttachmentReference C.VkAttachmentReference
 type VkPushConstantRange C.VkPushConstantRange
+type VkSpecializationMapEntry C.VkSpecializationMapEntry
+type VkVertexInputBindingDescription C.VkVertexInputBindingDescription
+type VkVertexInputAttributeDescription C.VkVertexInputAttributeDescription
+type VkPipelineColorBlendAttachmentState C.VkPipelineColorBlendAttachmentState
+type VkDynamicState C.VkDynamicState
 
 type VkCommandBufferResetFlags C.VkCommandBufferResetFlags
 type VkCommandPoolResetFlags C.VkCommandPoolResetFlags
@@ -167,6 +173,7 @@ type VkPeerMemoryFeatureFlags C.VkPeerMemoryFeatureFlags
 type VkCommandPoolTrimFlags C.VkCommandPoolTrimFlags
 type VkDeviceAddress C.VkDeviceAddress
 type VkQueueFlags C.VkQueueFlags
+type VkSampleMask C.VkSampleMask
 
 type VkBool32 C.VkBool32
 type Int32 C.int32_t

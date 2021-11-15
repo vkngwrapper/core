@@ -10,11 +10,50 @@ import (
 	"encoding/binary"
 	"github.com/CannibalVox/VKng/core/common"
 	"github.com/CannibalVox/cgoparam"
-	"github.com/palantir/stacktrace"
+	"github.com/cockroachdb/errors"
+	"strings"
 	"unsafe"
 )
 
+type ShaderStageFlags int32
+
+const (
+	ShaderStageAllowVaryingSubgroupSizeEXT = C.VK_PIPELINE_SHADER_STAGE_CREATE_ALLOW_VARYING_SUBGROUP_SIZE_BIT_EXT
+	ShaderStageRequireFullSubgroupsEXT     = C.VK_PIPELINE_SHADER_STAGE_CREATE_REQUIRE_FULL_SUBGROUPS_BIT_EXT
+)
+
+var shaderStageFlagsToString = map[ShaderStageFlags]string{
+	ShaderStageAllowVaryingSubgroupSizeEXT: "Allow Varying Subgroup Size (Extension)",
+	ShaderStageRequireFullSubgroupsEXT:     "Require Full Subgroups (Extension)",
+}
+
+func (f ShaderStageFlags) String() string {
+	if f == 0 {
+		return "None"
+	}
+
+	var hasOne bool
+	var sb strings.Builder
+
+	for i := 0; i < 32; i++ {
+		checkBit := ShaderStageFlags(1 << i)
+		if (f & checkBit) != 0 {
+			str, hasStr := shaderStageFlagsToString[checkBit]
+			if hasStr {
+				if hasOne {
+					sb.WriteRune('|')
+				}
+				sb.WriteString(str)
+				hasOne = true
+			}
+		}
+	}
+
+	return sb.String()
+}
+
 type ShaderStage struct {
+	Flags              ShaderStageFlags
 	Name               string
 	Stage              common.ShaderStages
 	Shader             ShaderModule
@@ -25,7 +64,7 @@ type ShaderStage struct {
 
 func (s *ShaderStage) populate(allocator *cgoparam.Allocator, createInfo *C.VkPipelineShaderStageCreateInfo, next unsafe.Pointer) error {
 	createInfo.sType = C.VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO
-	createInfo.flags = 0
+	createInfo.flags = C.VkPipelineShaderStageCreateFlags(s.Flags)
 	createInfo.pNext = next
 	createInfo.stage = C.VkShaderStageFlagBits(s.Stage)
 	createInfo.module = C.VkShaderModule(unsafe.Pointer(s.Shader.Handle()))
@@ -48,15 +87,15 @@ func (s *ShaderStage) populate(allocator *cgoparam.Allocator, createInfo *C.VkPi
 
 			boolVal, isBool := val.(bool)
 			if isBool {
-				val = C.VK_FALSE
+				val = uint32(C.VK_FALSE)
 				if boolVal {
-					val = C.VK_TRUE
+					val = uint32(C.VK_TRUE)
 				}
 			}
 
 			err := binary.Write(dataBytes, common.ByteOrder, val)
 			if err != nil {
-				return stacktrace.Propagate(err, "failed to populate shader stage with specialization values: %d -> %v", constantID, val)
+				return errors.Wrapf(err, "failed to populate shader stage with specialization values: %d -> %v", constantID, val)
 			}
 			mapEntrySlice[mapIndex].size = C.size_t(binary.Size(val))
 
@@ -65,7 +104,7 @@ func (s *ShaderStage) populate(allocator *cgoparam.Allocator, createInfo *C.VkPi
 		specInfo.pMapEntries = mapEntryPtr
 		specInfo.dataSize = C.size_t(dataBytes.Len())
 		specInfo.pData = allocator.CBytes(dataBytes.Bytes())
-		panic("AAA")
+		createInfo.pSpecializationInfo = specInfo
 	}
 
 	return nil

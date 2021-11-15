@@ -4,7 +4,6 @@ import (
 	"github.com/CannibalVox/VKng/core"
 	"github.com/CannibalVox/VKng/core/common"
 	"github.com/CannibalVox/VKng/core/mocks"
-	"github.com/cockroachdb/errors"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/require"
 	"reflect"
@@ -154,7 +153,7 @@ func TestVulkanLoader1_0_CreateDevice_FailNoQueueFamilies(t *testing.T) {
 			TessellationShader:    true,
 		},
 	})
-	require.Error(t, err, errors.New("alloc DeviceOptions: no queue families added"))
+	require.EqualError(t, err, "alloc DeviceOptions: no queue families added")
 }
 
 func TestVulkanLoader1_0_CreateDevice_FailFamilyWithoutPriorities(t *testing.T) {
@@ -185,7 +184,7 @@ func TestVulkanLoader1_0_CreateDevice_FailFamilyWithoutPriorities(t *testing.T) 
 			TessellationShader:    true,
 		},
 	})
-	require.Error(t, errors.New("alloc DeviceOptions: queue family 1 had no queue priorities"))
+	require.EqualError(t, err, "alloc DeviceOptions: queue family 3 had no queue priorities")
 }
 
 func TestDevice_GetQueue(t *testing.T) {
@@ -628,7 +627,7 @@ func TestVulkanDevice_UpdateDescriptorSets_FailureImageInfoAndBufferInfo(t *test
 		},
 	}, nil)
 
-	require.Error(t, errors.New("a WriteDescriptorSetOptions may have one or more ImageInfo sources OR one or more BufferInfo sources, but not both"), err)
+	require.EqualError(t, err, "a WriteDescriptorSetOptions may have one or more ImageInfo sources OR one or more BufferInfo sources, but not both")
 }
 
 func TestVulkanDevice_UpdateDescriptorSets_FailureImageInfoAndBufferView(t *testing.T) {
@@ -672,7 +671,7 @@ func TestVulkanDevice_UpdateDescriptorSets_FailureImageInfoAndBufferView(t *test
 		},
 	}, nil)
 
-	require.Error(t, errors.New("a WriteDescriptorSetOptions may have one or more ImageInfo sources OR one or more TexelBufferView sources, but not both"), err)
+	require.EqualError(t, err, "a WriteDescriptorSetOptions may have one or more ImageInfo sources OR one or more TexelBufferView sources, but not both")
 }
 
 func TestVulkanDevice_UpdateDescriptorSets_FailureBufferInfoAndBufferView(t *testing.T) {
@@ -714,7 +713,7 @@ func TestVulkanDevice_UpdateDescriptorSets_FailureBufferInfoAndBufferView(t *tes
 		},
 	}, nil)
 
-	require.Error(t, errors.New("a WriteDescriptorSetOptions may have one or more BufferInfo sources OR one or more TexelBufferView sources, but not both"), err)
+	require.EqualError(t, err, "a WriteDescriptorSetOptions may have one or more BufferInfo sources OR one or more TexelBufferView sources, but not both")
 }
 
 func TestVulkanDevice_UpdateDescriptorSets_FailureNoSource(t *testing.T) {
@@ -737,5 +736,5 @@ func TestVulkanDevice_UpdateDescriptorSets_FailureNoSource(t *testing.T) {
 		},
 	}, nil)
 
-	require.Error(t, errors.New("a WriteDescriptorSetOptions must have a source to write the descriptor from: ImageInfo, BufferInfo, TexelBufferView, or an extension source"), err)
+	require.EqualError(t, err, "a WriteDescriptorSetOptions must have a source to write the descriptor from: ImageInfo, BufferInfo, TexelBufferView, or an extension source")
 }

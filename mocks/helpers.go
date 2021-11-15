@@ -101,6 +101,13 @@ func EasyMockSampler(ctrl *gomock.Controller) *MockSampler {
 	return sampler
 }
 
+func EasyMockShaderModule(ctrl *gomock.Controller) *MockShaderModule {
+	shader := NewMockShaderModule(ctrl)
+	shader.EXPECT().Handle().Return(NewFakeShaderModule()).AnyTimes()
+
+	return shader
+}
+
 func EasyDummyBuffer(t *testing.T, loader core.Loader1_0, device core.Device) core.Buffer {
 	handle := NewFakeBufferHandle()
 	driver := device.Driver().(*MockDriver)
@@ -302,6 +309,25 @@ func EasyDummyPhysicalDevice(t *testing.T, loader core.Loader1_0) core.PhysicalD
 	require.NoError(t, err)
 
 	return devices[0]
+}
+
+func EasyDummyPipeline(t *testing.T, ctrl *gomock.Controller, loader core.Loader1_0) core.Pipeline {
+	driver := loader.Driver().(*MockDriver)
+	device := EasyMockDevice(ctrl, driver)
+
+	driver.EXPECT().VkCreateGraphicsPipelines(device.Handle(), nil, core.Uint32(1), gomock.Not(nil), nil, gomock.Not(nil)).DoAndReturn(
+		func(device core.VkDevice, cache core.VkPipelineCache, createInfoCount core.Uint32, pCreateInfos *core.VkGraphicsPipelineCreateInfo, pAllocator *core.VkAllocationCallbacks, pPipelines *core.VkPipeline) (core.VkResult, error) {
+			pipelines := ([]core.VkPipeline)(unsafe.Slice(pPipelines, 1))
+			pipelines[0] = NewFakePipeline()
+
+			return core.VKSuccess, nil
+		})
+
+	pipelines, _, err := loader.CreateGraphicsPipelines(device, []*core.GraphicsPipelineOptions{
+		{},
+	})
+	require.NoError(t, err)
+	return pipelines[0]
 }
 
 func EasyDummyQueue(t *testing.T, device core.Device) core.Queue {

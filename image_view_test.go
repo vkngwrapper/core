@@ -54,7 +54,7 @@ func TestVulkanLoader1_0_CreateImageView(t *testing.T) {
 		Image:    image,
 		ViewType: common.View2D,
 		Format:   common.FormatA2B10G10R10SignedScaled,
-		Flags:    core.ImageViewCreateFragmentDensityMapDeferred,
+		Flags:    core.ImageViewCreateFragmentDensityMapDeferredEXT,
 		Components: common.ComponentMapping{
 			A: common.SwizzleAlpha,
 			R: common.SwizzleRed,

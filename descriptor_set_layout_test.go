@@ -129,6 +129,39 @@ func TestDescriptorSetLayout_Create_SingleBindingImmutableSamplers(t *testing.T)
 	require.Equal(t, layoutHandle, layout.Handle())
 }
 
+func TestDescriptorSetLayout_Create_FailBindingSamplerMismatch(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	mockDriver := mocks.NewMockDriver(ctrl)
+	loader, err := core.CreateLoaderFromDriver(mockDriver)
+	require.NoError(t, err)
+
+	mockDevice := mocks.EasyMockDevice(ctrl, mockDriver)
+
+	sampler1 := mocks.EasyMockSampler(ctrl)
+	sampler2 := mocks.EasyMockSampler(ctrl)
+	sampler3 := mocks.EasyMockSampler(ctrl)
+	sampler4 := mocks.EasyMockSampler(ctrl)
+
+	_, _, err = loader.CreateDescriptorSetLayout(mockDevice, &core.DescriptorSetLayoutOptions{
+		Flags: core.DescriptorSetLayoutHostOnlyPoolValve,
+		Bindings: []*core.DescriptorLayoutBinding{
+			{
+				Binding:      3,
+				Type:         common.DescriptorCombinedImageSampler,
+				Count:        3,
+				ShaderStages: common.StageGeometry,
+				ImmutableSamplers: []core.Sampler{
+					sampler1, sampler2, sampler3, sampler4,
+				},
+			},
+		},
+	})
+
+	require.EqualError(t, err, "allocate descriptor set layout bindings: binding 0 has 3 descriptors, but 4 immutable samplers. if immutable samplers are provided, they must match the descriptor count")
+}
+
 func TestDescriptorSetLayout_Create_MultiBinding(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()

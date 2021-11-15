@@ -8,7 +8,7 @@ import "C"
 import (
 	"github.com/CannibalVox/VKng/core/common"
 	"github.com/CannibalVox/cgoparam"
-	"github.com/palantir/stacktrace"
+	"github.com/cockroachdb/errors"
 	"strings"
 	"unsafe"
 )
@@ -181,10 +181,10 @@ func (o *RenderPassOptions) AllocForC(allocator *cgoparam.Allocator, next unsafe
 			depthStencilAttachmentCount := len(o.SubPasses[i].DepthStencilAttachments)
 
 			if resolveAttachmentCount > 0 && resolveAttachmentCount != colorAttachmentCount {
-				return nil, stacktrace.NewError("in subpass %d, %d color attachments are defined but %d resolve attachments are defined", i, colorAttachmentCount, resolveAttachmentCount)
+				return nil, errors.Newf("in subpass %d, %d color attachments are defined, but %d resolve attachments are defined", i, colorAttachmentCount, resolveAttachmentCount)
 			}
 			if depthStencilAttachmentCount > 0 && depthStencilAttachmentCount != colorAttachmentCount {
-				return nil, stacktrace.NewError("in subpass %d, %d color attachments are defined, but %d depth stencil attachments", i, colorAttachmentCount, depthStencilAttachmentCount)
+				return nil, errors.Newf("in subpass %d, %d color attachments are defined, but %d depth stencil attachments are defined", i, colorAttachmentCount, depthStencilAttachmentCount)
 			}
 
 			subPassSlice[i].flags = C.VkSubpassDescriptionFlags(o.SubPasses[i].Flags)

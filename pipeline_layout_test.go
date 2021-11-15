@@ -77,7 +77,7 @@ func TestVulkanLoader1_0_CreatePipelineLayout(t *testing.T) {
 				Size:   7,
 			},
 			{
-				Stages: common.StageAnyHit,
+				Stages: common.StageAnyHitKHR,
 				Offset: 11,
 				Size:   13,
 			},

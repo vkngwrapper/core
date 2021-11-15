@@ -4,7 +4,6 @@ import (
 	"github.com/CannibalVox/VKng/core"
 	"github.com/CannibalVox/VKng/core/common"
 	"github.com/CannibalVox/VKng/core/mocks"
-	"github.com/cockroachdb/errors"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/require"
 	"reflect"
@@ -157,5 +156,5 @@ func TestSubmitToQueue_MismatchWaitSemaphores(t *testing.T) {
 			SignalSemaphores: []core.Semaphore{},
 		},
 	})
-	require.Error(t, errors.New("attempted to submit with 2 wait semaphores but 1 dst stages- these should match"))
+	require.EqualError(t, err, "attempted to submit with 2 wait semaphores but 1 dst stages- these should match")
 }
