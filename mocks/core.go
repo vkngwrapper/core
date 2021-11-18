@@ -643,21 +643,6 @@ func (mr *MockDeviceMemoryMockRecorder) UnmapMemory() *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UnmapMemory", reflect.TypeOf((*MockDeviceMemory)(nil).UnmapMemory))
 }
 
-// WriteData mocks base method.
-func (m *MockDeviceMemory) WriteData(offset int, data interface{}) (core.VkResult, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "WriteData", offset, data)
-	ret0, _ := ret[0].(core.VkResult)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// WriteData indicates an expected call of WriteData.
-func (mr *MockDeviceMemoryMockRecorder) WriteData(offset, data interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "WriteData", reflect.TypeOf((*MockDeviceMemory)(nil).WriteData), offset, data)
-}
-
 // MockDevice is a mock of Device interface.
 type MockDevice struct {
 	ctrl     *gomock.Controller
@@ -952,6 +937,21 @@ func (m *MockImage) EXPECT() *MockImageMockRecorder {
 	return m.recorder
 }
 
+// BindImageMemory mocks base method.
+func (m *MockImage) BindImageMemory(memory core.DeviceMemory, offset int) (core.VkResult, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "BindImageMemory", memory, offset)
+	ret0, _ := ret[0].(core.VkResult)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// BindImageMemory indicates an expected call of BindImageMemory.
+func (mr *MockImageMockRecorder) BindImageMemory(memory, offset interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "BindImageMemory", reflect.TypeOf((*MockImage)(nil).BindImageMemory), memory, offset)
+}
+
 // Handle mocks base method.
 func (m *MockImage) Handle() core.VkImage {
 	m.ctrl.T.Helper()
@@ -964,6 +964,21 @@ func (m *MockImage) Handle() core.VkImage {
 func (mr *MockImageMockRecorder) Handle() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Handle", reflect.TypeOf((*MockImage)(nil).Handle))
+}
+
+// MemoryRequirements mocks base method.
+func (m *MockImage) MemoryRequirements() (*common.MemoryRequirements, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "MemoryRequirements")
+	ret0, _ := ret[0].(*common.MemoryRequirements)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// MemoryRequirements indicates an expected call of MemoryRequirements.
+func (mr *MockImageMockRecorder) MemoryRequirements() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "MemoryRequirements", reflect.TypeOf((*MockImage)(nil).MemoryRequirements))
 }
 
 // MockImageView is a mock of ImageView interface.
@@ -1279,6 +1294,22 @@ func (m *MockLoader1_0) CreateGraphicsPipelines(device core.Device, o []*core.Gr
 func (mr *MockLoader1_0MockRecorder) CreateGraphicsPipelines(device, o interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateGraphicsPipelines", reflect.TypeOf((*MockLoader1_0)(nil).CreateGraphicsPipelines), device, o)
+}
+
+// CreateImage mocks base method.
+func (m *MockLoader1_0) CreateImage(device core.Device, options *core.ImageOptions) (core.Image, core.VkResult, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreateImage", device, options)
+	ret0, _ := ret[0].(core.Image)
+	ret1, _ := ret[1].(core.VkResult)
+	ret2, _ := ret[2].(error)
+	return ret0, ret1, ret2
+}
+
+// CreateImage indicates an expected call of CreateImage.
+func (mr *MockLoader1_0MockRecorder) CreateImage(device, options interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateImage", reflect.TypeOf((*MockLoader1_0)(nil).CreateImage), device, options)
 }
 
 // CreateImageView mocks base method.

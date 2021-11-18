@@ -20,7 +20,7 @@ func TestSubmitToQueue_SignalSuccess(t *testing.T) {
 	require.NoError(t, err)
 
 	mockDevice := mocks.EasyDummyDevice(t, ctrl, loader)
-	mockQueue := mocks.EasyDummyQueue(t, mockDevice)
+	queue := mocks.EasyDummyQueue(t, mockDevice)
 
 	fence := mocks.EasyDummyFence(t, loader, mockDevice)
 
@@ -34,7 +34,7 @@ func TestSubmitToQueue_SignalSuccess(t *testing.T) {
 	signalSemaphore2 := mocks.EasyDummySemaphore(t, loader, mockDevice)
 	signalSemaphore3 := mocks.EasyDummySemaphore(t, loader, mockDevice)
 
-	mockDriver.EXPECT().VkQueueSubmit(mockQueue.Handle(), core.Uint32(1), gomock.Not(nil), fence.Handle()).DoAndReturn(
+	mockDriver.EXPECT().VkQueueSubmit(queue.Handle(), core.Uint32(1), gomock.Not(nil), fence.Handle()).DoAndReturn(
 		func(queue core.VkQueue, submitCount core.Uint32, pSubmits *core.VkSubmitInfo, fence core.VkFence) (core.VkResult, error) {
 			submitSlices := ([]core.VkSubmitInfo)(unsafe.Slice(pSubmits, int(submitCount)))
 
@@ -70,7 +70,7 @@ func TestSubmitToQueue_SignalSuccess(t *testing.T) {
 			return core.VKSuccess, nil
 		})
 
-	_, err = core.SubmitToQueue(mockQueue, fence, []*core.SubmitOptions{
+	_, err = queue.SubmitToQueue(fence, []*core.SubmitOptions{
 		{
 			CommandBuffers:   []core.CommandBuffer{buffer},
 			WaitSemaphores:   []core.Semaphore{waitSemaphore1, waitSemaphore2},
@@ -90,12 +90,12 @@ func TestSubmitToQueue_NoSignalSuccess(t *testing.T) {
 	require.NoError(t, err)
 
 	mockDevice := mocks.EasyDummyDevice(t, ctrl, loader)
-	mockQueue := mocks.EasyDummyQueue(t, mockDevice)
+	queue := mocks.EasyDummyQueue(t, mockDevice)
 
 	pool := mocks.EasyDummyCommandPool(t, loader, mockDevice)
 	buffer := mocks.EasyDummyCommandBuffer(t, mockDevice, pool)
 
-	mockDriver.EXPECT().VkQueueSubmit(mockQueue.Handle(), core.Uint32(1), gomock.Not(nil), nil).DoAndReturn(
+	mockDriver.EXPECT().VkQueueSubmit(queue.Handle(), core.Uint32(1), gomock.Not(nil), nil).DoAndReturn(
 		func(queue core.VkQueue, submitCount core.Uint32, pSubmits *core.VkSubmitInfo, fence core.VkFence) (core.VkResult, error) {
 			submitSlices := ([]core.VkSubmitInfo)(unsafe.Slice(pSubmits, int(submitCount)))
 
@@ -120,7 +120,7 @@ func TestSubmitToQueue_NoSignalSuccess(t *testing.T) {
 			return core.VKSuccess, nil
 		})
 
-	_, err = core.SubmitToQueue(mockQueue, nil, []*core.SubmitOptions{
+	_, err = queue.SubmitToQueue(nil, []*core.SubmitOptions{
 		{
 			CommandBuffers:   []core.CommandBuffer{buffer},
 			WaitSemaphores:   []core.Semaphore{},
@@ -140,7 +140,7 @@ func TestSubmitToQueue_MismatchWaitSemaphores(t *testing.T) {
 	require.NoError(t, err)
 
 	mockDevice := mocks.EasyDummyDevice(t, ctrl, loader)
-	mockQueue := mocks.EasyDummyQueue(t, mockDevice)
+	queue := mocks.EasyDummyQueue(t, mockDevice)
 
 	pool := mocks.EasyDummyCommandPool(t, loader, mockDevice)
 	buffer := mocks.EasyDummyCommandBuffer(t, mockDevice, pool)
@@ -148,7 +148,7 @@ func TestSubmitToQueue_MismatchWaitSemaphores(t *testing.T) {
 	waitSemaphore1 := mocks.EasyDummySemaphore(t, loader, mockDevice)
 	waitSemaphore2 := mocks.EasyDummySemaphore(t, loader, mockDevice)
 
-	_, err = core.SubmitToQueue(mockQueue, nil, []*core.SubmitOptions{
+	_, err = queue.SubmitToQueue(nil, []*core.SubmitOptions{
 		{
 			CommandBuffers:   []core.CommandBuffer{buffer},
 			WaitSemaphores:   []core.Semaphore{waitSemaphore1, waitSemaphore2},

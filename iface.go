@@ -34,6 +34,8 @@ type CommandBuffer interface {
 	CmdBindIndexBuffer(buffer Buffer, offset int, indexType common.IndexType) error
 	CmdCopyBuffer(srcBuffer Buffer, dstBuffer Buffer, copyRegions []BufferCopy) error
 	CmdBindDescriptorSets(bindPoint common.PipelineBindPoint, layout PipelineLayout, firstSet int, sets []DescriptorSet, dynamicOffsets []int) error
+	CmdPipelineBarrier(srcStageMask, dstStageMask common.PipelineStages, dependencies common.DependencyFlags, memoryBarriers []*MemoryBarrierOptions, bufferMemoryBarriers []*BufferMemoryBarrierOptions, imageMemoryBarriers []*ImageMemoryBarrierOptions) error
+	CmdCopyBufferToImage(buffer Buffer, image Image, layout common.ImageLayout, regions []*BufferImageCopy) error
 }
 
 type CommandPool interface {
@@ -63,7 +65,6 @@ type DeviceMemory interface {
 	Handle() VkDeviceMemory
 	MapMemory(offset int, size int, flags MemoryMapFlags) (unsafe.Pointer, VkResult, error)
 	UnmapMemory() error
-	WriteData(offset int, data interface{}) (VkResult, error)
 }
 
 type Device interface {
@@ -91,6 +92,9 @@ type Framebuffer interface {
 
 type Image interface {
 	Handle() VkImage
+	Destroy() error
+	MemoryRequirements() (*common.MemoryRequirements, error)
+	BindImageMemory(memory DeviceMemory, offset int) (VkResult, error)
 }
 
 type ImageView interface {
@@ -112,20 +116,21 @@ type Loader1_0 interface {
 	AvailableExtensions() (map[string]*common.ExtensionProperties, VkResult, error)
 	AvailableLayers() (map[string]*common.LayerProperties, VkResult, error)
 
-	CreateInstance(options *InstanceOptions) (Instance, VkResult, error)
-	CreateDevice(physicalDevice PhysicalDevice, options *DeviceOptions) (Device, VkResult, error)
-	CreateShaderModule(device Device, o *ShaderModuleOptions) (ShaderModule, VkResult, error)
-	CreateImageView(device Device, o *ImageViewOptions) (ImageView, VkResult, error)
-	CreateSemaphore(device Device, o *SemaphoreOptions) (Semaphore, VkResult, error)
-	CreateFence(device Device, o *FenceOptions) (Fence, VkResult, error)
 	CreateBuffer(device Device, o *BufferOptions) (Buffer, VkResult, error)
-	CreateDescriptorSetLayout(device Device, o *DescriptorSetLayoutOptions) (DescriptorSetLayout, VkResult, error)
-	CreateDescriptorPool(device Device, o *DescriptorPoolOptions) (DescriptorPool, VkResult, error)
 	CreateCommandPool(device Device, o *CommandPoolOptions) (CommandPool, VkResult, error)
-	CreateGraphicsPipelines(device Device, o []*GraphicsPipelineOptions) ([]Pipeline, VkResult, error)
+	CreateDescriptorPool(device Device, o *DescriptorPoolOptions) (DescriptorPool, VkResult, error)
+	CreateDescriptorSetLayout(device Device, o *DescriptorSetLayoutOptions) (DescriptorSetLayout, VkResult, error)
+	CreateDevice(physicalDevice PhysicalDevice, options *DeviceOptions) (Device, VkResult, error)
+	CreateFence(device Device, o *FenceOptions) (Fence, VkResult, error)
 	CreateFrameBuffer(device Device, o *FramebufferOptions) (Framebuffer, VkResult, error)
+	CreateGraphicsPipelines(device Device, o []*GraphicsPipelineOptions) ([]Pipeline, VkResult, error)
+	CreateInstance(options *InstanceOptions) (Instance, VkResult, error)
+	CreateImage(device Device, options *ImageOptions) (Image, VkResult, error)
+	CreateImageView(device Device, o *ImageViewOptions) (ImageView, VkResult, error)
 	CreatePipelineLayout(device Device, o *PipelineLayoutOptions) (PipelineLayout, VkResult, error)
 	CreateRenderPass(device Device, o *RenderPassOptions) (RenderPass, VkResult, error)
+	CreateSemaphore(device Device, o *SemaphoreOptions) (Semaphore, VkResult, error)
+	CreateShaderModule(device Device, o *ShaderModuleOptions) (ShaderModule, VkResult, error)
 }
 
 type PhysicalDevice interface {
@@ -152,6 +157,7 @@ type Queue interface {
 	Handle() VkQueue
 	Driver() Driver
 	WaitForIdle() (VkResult, error)
+	SubmitToQueue(fence Fence, o []*SubmitOptions) (VkResult, error)
 }
 
 type RenderPass interface {

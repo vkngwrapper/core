@@ -6,8 +6,6 @@ package core
 */
 import "C"
 import (
-	"bytes"
-	"encoding/binary"
 	"github.com/CannibalVox/VKng/core/common"
 	"github.com/CannibalVox/cgoparam"
 	"unsafe"
@@ -59,25 +57,4 @@ func (m *vulkanDeviceMemory) MapMemory(offset int, size int, flags MemoryMapFlag
 
 func (m *vulkanDeviceMemory) UnmapMemory() error {
 	return m.driver.VkUnmapMemory(m.device, m.handle)
-}
-
-func (m *vulkanDeviceMemory) WriteData(offset int, data interface{}) (VkResult, error) {
-	bufferSize := binary.Size(data)
-
-	memoryPtr, res, err := m.MapMemory(offset, bufferSize, 0)
-	if err != nil {
-		return res, err
-	}
-	defer m.UnmapMemory()
-
-	dataBuffer := unsafe.Slice((*byte)(memoryPtr), bufferSize)
-
-	buf := &bytes.Buffer{}
-	err = binary.Write(buf, common.ByteOrder, data)
-	if err != nil {
-		return VKErrorUnknown, err
-	}
-
-	copy(dataBuffer, buf.Bytes())
-	return res, nil
 }

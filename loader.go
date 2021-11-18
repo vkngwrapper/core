@@ -383,6 +383,24 @@ func (l *VulkanLoader1_0) CreateGraphicsPipelines(device Device, o []*GraphicsPi
 	return output, res, nil
 }
 
+func (l *VulkanLoader1_0) CreateImage(device Device, o *ImageOptions) (Image, VkResult, error) {
+	arena := cgoparam.GetAlloc()
+	defer cgoparam.ReturnAlloc(arena)
+
+	createInfo, err := common.AllocOptions(arena, o)
+	if err != nil {
+		return nil, VKErrorUnknown, err
+	}
+
+	var image VkImage
+	res, err := device.Driver().VkCreateImage(device.Handle(), (*VkImageCreateInfo)(createInfo), nil, &image)
+	if err != nil {
+		return nil, res, err
+	}
+
+	return &vulkanImage{device: device.Handle(), handle: image, driver: device.Driver()}, VKSuccess, nil
+}
+
 func (l *VulkanLoader1_0) CreatePipelineLayout(device Device, o *PipelineLayoutOptions) (PipelineLayout, VkResult, error) {
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)

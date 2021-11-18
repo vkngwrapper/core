@@ -1,12 +1,12 @@
 package common
 
 type Extent2D struct {
-	Width  uint32
-	Height uint32
+	Width  int
+	Height int
 }
 
 type Extent3D struct {
-	Width  uint32
-	Height uint32
-	Depth  uint32
+	Width  int
+	Height int
+	Depth  int
 }

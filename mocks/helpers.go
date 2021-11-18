@@ -272,6 +272,22 @@ func EasyDummyGraphicsPipeline(t *testing.T, loader core.Loader1_0, device core.
 	return pipelines[0]
 }
 
+func EasyDummyImage(t *testing.T, loader core.Loader1_0, device core.Device) core.Image {
+	driver := device.Driver().(*MockDriver)
+
+	driver.EXPECT().VkCreateImage(device.Handle(), gomock.Any(), gomock.Any(), gomock.Any()).DoAndReturn(
+		func(device core.VkDevice, pCreateInfo *core.VkImageCreateInfo, pAllocator *core.VkAllocationCallbacks, pImage *core.VkImage) (core.VkResult, error) {
+			*pImage = NewFakeImageHandle()
+
+			return core.VKSuccess, nil
+		})
+
+	image, _, err := loader.CreateImage(device, &core.ImageOptions{})
+	require.NoError(t, err)
+
+	return image
+}
+
 func EasyDummyInstance(t *testing.T, loader core.Loader1_0) core.Instance {
 	driver := loader.Driver().(*MockDriver)
 

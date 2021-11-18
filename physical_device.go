@@ -56,9 +56,9 @@ func (d *vulkanPhysicalDevice) QueueFamilyProperties() ([]*common.QueueFamily, e
 			QueueCount:         uint32(familyProperties[i].queueCount),
 			TimestampValidBits: uint32(familyProperties[i].timestampValidBits),
 			MinImageTransferGranularity: common.Extent3D{
-				Width:  uint32(familyProperties[i].minImageTransferGranularity.width),
-				Height: uint32(familyProperties[i].minImageTransferGranularity.height),
-				Depth:  uint32(familyProperties[i].minImageTransferGranularity.depth),
+				Width:  int(familyProperties[i].minImageTransferGranularity.width),
+				Height: int(familyProperties[i].minImageTransferGranularity.height),
+				Depth:  int(familyProperties[i].minImageTransferGranularity.depth),
 			},
 		})
 	}

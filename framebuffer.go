@@ -50,8 +50,8 @@ type FramebufferOptions struct {
 	Attachments []ImageView
 	Flags       FramebufferFlags
 
-	Width  uint32
-	Height uint32
+	Width  int
+	Height int
 	Layers uint32
 
 	RenderPass RenderPass

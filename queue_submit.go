@@ -90,7 +90,7 @@ func (o *SubmitOptions) AllocForC(allocator *cgoparam.Allocator, next unsafe.Poi
 	return unsafe.Pointer(createInfo), nil
 }
 
-func SubmitToQueue(queue Queue, fence Fence, o []*SubmitOptions) (VkResult, error) {
+func (q *vulkanQueue) SubmitToQueue(fence Fence, o []*SubmitOptions) (VkResult, error) {
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
@@ -115,5 +115,5 @@ func SubmitToQueue(queue Queue, fence Fence, o []*SubmitOptions) (VkResult, erro
 		fenceHandle = fence.Handle()
 	}
 
-	return queue.Driver().VkQueueSubmit(queue.Handle(), Uint32(submitCount), (*VkSubmitInfo)(createInfoPtrUnsafe), fenceHandle)
+	return q.Driver().VkQueueSubmit(q.Handle(), Uint32(submitCount), (*VkSubmitInfo)(createInfoPtrUnsafe), fenceHandle)
 }

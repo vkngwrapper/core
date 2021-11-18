@@ -35,7 +35,7 @@ typedef struct DriverFuncPtrs {
     PFN_vkAllocateMemory vkAllocateMemory;
     PFN_vkBeginCommandBuffer vkBeginCommandBuffer;
     PFN_vkBindBufferMemory vkBindBufferMemory;
-    PFN_vkBindImageMemory vkBindImageMemory;   //Todo
+    PFN_vkBindImageMemory vkBindImageMemory;
     PFN_vkCmdBeginQuery vkCmdBeginQuery; //Todo
     PFN_vkCmdBeginRenderPass vkCmdBeginRenderPass;
     PFN_vkCmdBindDescriptorSets vkCmdBindDescriptorSets;
@@ -47,7 +47,7 @@ typedef struct DriverFuncPtrs {
     PFN_vkCmdClearColorImage vkCmdClearColorImage; //Todo
     PFN_vkCmdClearDepthStencilImage vkCmdClearDepthStencilImage; //Todo
     PFN_vkCmdCopyBuffer vkCmdCopyBuffer;
-    PFN_vkCmdCopyBufferToImage vkCmdCopyBufferToImage; //Todo
+    PFN_vkCmdCopyBufferToImage vkCmdCopyBufferToImage;
     PFN_vkCmdCopyImage vkCmdCopyImage; //Todo
     PFN_vkCmdCopyImageToBuffer vkCmdCopyImageToBuffer; //Todo
     PFN_vkCmdCopyQueryPoolResults vkCmdCopyQueryPoolResults; //Todo
@@ -62,7 +62,7 @@ typedef struct DriverFuncPtrs {
     PFN_vkCmdExecuteCommands vkCmdExecuteCommands; //Todo
     PFN_vkCmdFillBuffer vkCmdFillBuffer; //Todo
     PFN_vkCmdNextSubpass vkCmdNextSubpass; //Todo
-    PFN_vkCmdPipelineBarrier vkCmdPipelineBarrier; //Todo
+    PFN_vkCmdPipelineBarrier vkCmdPipelineBarrier;
     PFN_vkCmdPushConstants vkCmdPushConstants; //Todo
     PFN_vkCmdResetEvent vkCmdResetEvent; //Todo
     PFN_vkCmdResetQueryPool vkCmdResetQueryPool; //Todo
@@ -129,7 +129,7 @@ typedef struct DriverFuncPtrs {
     PFN_vkGetDeviceQueue vkGetDeviceQueue;
     PFN_vkGetEventStatus vkGetEventStatus; //Todo
     PFN_vkGetFenceStatus vkGetFenceStatus; //Todo
-    PFN_vkGetImageMemoryRequirements vkGetImageMemoryRequirements; //Todo
+    PFN_vkGetImageMemoryRequirements vkGetImageMemoryRequirements;
     PFN_vkGetImageSparseMemoryRequirements vkGetImageSparseMemoryRequirements; //Todo
     PFN_vkGetImageSubresourceLayout vkGetImageSubresourceLayout; //Todo
     PFN_vkGetPipelineCacheData vkGetPipelineCacheData; //Todo

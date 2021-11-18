@@ -330,3 +330,232 @@ func TestVulkanCommandBuffer_CmdCopyBuffer(t *testing.T) {
 	})
 	require.NoError(t, err)
 }
+
+func TestVulkanCommandBuffer_CmdPipelineBarrier(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	mockDriver, buffer := setup(t, ctrl)
+	mockBuffer := mocks.EasyMockBuffer(ctrl)
+	mockImage := mocks.EasyMockImage(ctrl)
+
+	mockDriver.EXPECT().VkCmdPipelineBarrier(buffer.Handle(),
+		core.VkPipelineStageFlags(0x00010000), // VK_PIPELINE_STAGE_ALL_COMMANDS_BIT
+		core.VkPipelineStageFlags(0x00020000), // VK_PIPELINE_STAGE_COMMAND_PREPROCESS_BIT_NV
+		core.VkDependencyFlags(2),             // VK_DEPENDENCY_VIEW_LOCAL_BIT
+		core.Uint32(2),
+		gomock.Not(nil),
+		core.Uint32(1),
+		gomock.Not(nil),
+		core.Uint32(1),
+		gomock.Not(nil),
+	).DoAndReturn(
+		func(commandBuffer core.VkCommandBuffer, srcStage, dstStage core.VkPipelineStageFlags, dependencies core.VkDependencyFlags, memoryBarrierCount core.Uint32, pMemoryBarriers *core.VkMemoryBarrier, bufferMemoryBarrierCount core.Uint32, pBufferMemoryBarriers *core.VkBufferMemoryBarrier, imageMemoryBarrierCount core.Uint32, pImageMemoryBarriers *core.VkImageMemoryBarrier) error {
+			memoryBarrierSlice := reflect.ValueOf(([]core.VkMemoryBarrier)(unsafe.Slice(pMemoryBarriers, 2)))
+			bufferMemoryBarrierSlice := reflect.ValueOf(([]core.VkBufferMemoryBarrier)(unsafe.Slice(pBufferMemoryBarriers, 1)))
+			imageMemoryBarrierSlice := reflect.ValueOf(([]core.VkImageMemoryBarrier)(unsafe.Slice(pImageMemoryBarriers, 1)))
+
+			memoryBarrier := memoryBarrierSlice.Index(0)
+			require.Equal(t, uint64(46), memoryBarrier.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_MEMORY_BARRIER
+			require.True(t, memoryBarrier.FieldByName("pNext").IsNil())
+			require.Equal(t, uint64(0x00000080), memoryBarrier.FieldByName("srcAccessMask").Uint()) // VK_ACCESS_COLOR_ATTACHMENT_READ_BIT
+			require.Equal(t, uint64(0x00100000), memoryBarrier.FieldByName("dstAccessMask").Uint()) // VK_ACCESS_CONDITIONAL_RENDERING_READ_BIT_EXT
+
+			memoryBarrier = memoryBarrierSlice.Index(1)
+			require.Equal(t, uint64(46), memoryBarrier.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_MEMORY_BARRIER
+			require.True(t, memoryBarrier.FieldByName("pNext").IsNil())
+			require.Equal(t, uint64(0x00000400), memoryBarrier.FieldByName("srcAccessMask").Uint()) // VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT
+			require.Equal(t, uint64(0x01000000), memoryBarrier.FieldByName("dstAccessMask").Uint()) // VK_ACCESS_FRAGMENT_DENSITY_MAP_READ_BIT_EXT
+
+			bufferMemoryBarrier := bufferMemoryBarrierSlice.Index(0)
+			require.Equal(t, uint64(44), bufferMemoryBarrier.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_BUFFER_MEMORY_BARRIER
+			require.True(t, memoryBarrier.FieldByName("pNext").IsNil())
+			require.Equal(t, uint64(0x00004000), bufferMemoryBarrier.FieldByName("srcAccessMask").Uint()) // VK_ACCESS_HOST_WRITE_BIT
+			require.Equal(t, uint64(0x00000040), bufferMemoryBarrier.FieldByName("dstAccessMask").Uint()) // VK_ACCESS_SHADER_WRITE_BIT
+			require.Equal(t, uint64(1), bufferMemoryBarrier.FieldByName("srcQueueFamilyIndex").Uint())
+			require.Equal(t, uint64(3), bufferMemoryBarrier.FieldByName("dstQueueFamilyIndex").Uint())
+
+			actualBuffer := (core.VkBuffer)(unsafe.Pointer(bufferMemoryBarrier.FieldByName("buffer").Elem().UnsafeAddr()))
+			require.Equal(t, mockBuffer.Handle(), actualBuffer)
+
+			require.Equal(t, uint64(5), bufferMemoryBarrier.FieldByName("offset").Uint())
+			require.Equal(t, uint64(7), bufferMemoryBarrier.FieldByName("size").Uint())
+
+			imageMemoryBarrier := imageMemoryBarrierSlice.Index(0)
+			require.Equal(t, uint64(45), imageMemoryBarrier.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER
+			require.True(t, imageMemoryBarrier.FieldByName("pNext").IsNil())
+			require.Equal(t, uint64(0x00000002), imageMemoryBarrier.FieldByName("srcAccessMask").Uint()) // VK_ACCESS_INDEX_READ_BIT
+			require.Equal(t, uint64(0x00020000), imageMemoryBarrier.FieldByName("dstAccessMask").Uint())
+			require.Equal(t, uint64(1), imageMemoryBarrier.FieldByName("oldLayout").Uint())
+			require.Equal(t, uint64(3), imageMemoryBarrier.FieldByName("newLayout").Uint())
+			require.Equal(t, uint64(11), imageMemoryBarrier.FieldByName("srcQueueFamilyIndex").Uint())
+			require.Equal(t, uint64(13), imageMemoryBarrier.FieldByName("dstQueueFamilyIndex").Uint())
+
+			actualImage := (core.VkImage)(unsafe.Pointer(imageMemoryBarrier.FieldByName("image").Elem().UnsafeAddr()))
+			require.Equal(t, mockImage.Handle(), actualImage)
+
+			subresource := imageMemoryBarrier.FieldByName("subresourceRange")
+			require.Equal(t, uint64(0x00000010), subresource.FieldByName("aspectMask").Uint()) // VK_IMAGE_ASPECT_PLANE_0_BIT
+			require.Equal(t, uint64(17), subresource.FieldByName("baseMipLevel").Uint())
+			require.Equal(t, uint64(19), subresource.FieldByName("levelCount").Uint())
+			require.Equal(t, uint64(23), subresource.FieldByName("baseArrayLayer").Uint())
+			require.Equal(t, uint64(29), subresource.FieldByName("layerCount").Uint())
+
+			return nil
+		})
+
+	err := buffer.CmdPipelineBarrier(
+		common.PipelineStageAllCommands,
+		common.PipelineStageCommandPreprocessNV,
+		common.DependencyViewLocal,
+		[]*core.MemoryBarrierOptions{
+			{
+				SrcAccessMask:  common.AccessColorAttachmentRead,
+				DestAccessMask: common.AccessConditionalRenderingReadEXT,
+			},
+			{
+				SrcAccessMask:  common.AccessDepthStencilAttachmentWrite,
+				DestAccessMask: common.AccessFragmentDensityMapReadEXT,
+			},
+		},
+		[]*core.BufferMemoryBarrierOptions{
+			{
+				SrcAccessMask:        common.AccessHostWrite,
+				DestAccessMask:       common.AccessShaderWrite,
+				SrcQueueFamilyIndex:  1,
+				DestQueueFamilyIndex: 3,
+				Buffer:               mockBuffer,
+				Offset:               5,
+				Size:                 7,
+			},
+		},
+		[]*core.ImageMemoryBarrierOptions{
+			{
+				SrcAccessMask:        common.AccessIndexRead,
+				DestAccessMask:       common.AccessPreProcessReadNV,
+				OldLayout:            common.LayoutGeneral,
+				NewLayout:            common.LayoutDepthStencilAttachmentOptimal,
+				SrcQueueFamilyIndex:  11,
+				DestQueueFamilyIndex: 13,
+				Image:                mockImage,
+				SubresourceRange: core.ImageSubresourceRange{
+					AspectMask:     common.AspectPlane0,
+					BaseMipLevel:   17,
+					LevelCount:     19,
+					BaseArrayLayer: 23,
+					LayerCount:     29,
+				},
+			},
+		})
+	require.NoError(t, err)
+}
+
+func TestVulkanCommandBuffer_CmdCopyBufferToImage(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	mockDriver, buffer := setup(t, ctrl)
+	mockBuffer := mocks.EasyMockBuffer(ctrl)
+	mockImage := mocks.EasyMockImage(ctrl)
+
+	mockDriver.EXPECT().VkCmdCopyBufferToImage(buffer.Handle(),
+		mockBuffer.Handle(),
+		mockImage.Handle(),
+		core.VkImageLayout(1000241000), // VK_IMAGE_LAYOUT_DEPTH_ATTACHMENT_OPTIMAL
+		core.Uint32(2),
+		gomock.Not(nil),
+	).DoAndReturn(
+		func(commandBuffer core.VkCommandBuffer, srcBuffer core.VkBuffer, dstImage core.VkImage, dstImageLayout core.VkImageLayout, regionCount core.Uint32, pRegions *core.VkBufferImageCopy) error {
+			regionSlice := reflect.ValueOf(([]core.VkBufferImageCopy)(unsafe.Slice(pRegions, 2)))
+
+			region := regionSlice.Index(0)
+			require.Equal(t, uint64(1), region.FieldByName("bufferOffset").Uint())
+			require.Equal(t, uint64(3), region.FieldByName("bufferRowLength").Uint())
+			require.Equal(t, uint64(5), region.FieldByName("bufferImageHeight").Uint())
+
+			subresource := region.FieldByName("imageSubresource")
+			require.Equal(t, uint64(0x00000020), subresource.FieldByName("aspectMask").Uint()) // VK_IMAGE_ASPECT_PLANE_1_BIT
+			require.Equal(t, uint64(7), subresource.FieldByName("mipLevel").Uint())
+			require.Equal(t, uint64(11), subresource.FieldByName("baseArrayLayer").Uint())
+			require.Equal(t, uint64(13), subresource.FieldByName("layerCount").Uint())
+
+			offset := region.FieldByName("imageOffset")
+			require.Equal(t, int64(17), offset.FieldByName("x").Int())
+			require.Equal(t, int64(19), offset.FieldByName("y").Int())
+			require.Equal(t, int64(23), offset.FieldByName("z").Int())
+
+			extent := region.FieldByName("imageExtent")
+			require.Equal(t, uint64(29), extent.FieldByName("width").Uint())
+			require.Equal(t, uint64(31), extent.FieldByName("height").Uint())
+			require.Equal(t, uint64(37), extent.FieldByName("depth").Uint())
+
+			region = regionSlice.Index(1)
+			require.Equal(t, uint64(41), region.FieldByName("bufferOffset").Uint())
+			require.Equal(t, uint64(43), region.FieldByName("bufferRowLength").Uint())
+			require.Equal(t, uint64(47), region.FieldByName("bufferImageHeight").Uint())
+
+			subresource = region.FieldByName("imageSubresource")
+			require.Equal(t, uint64(0x00000001), subresource.FieldByName("aspectMask").Uint()) // VK_IMAGE_ASPECT_COLOR_BIT
+			require.Equal(t, uint64(53), subresource.FieldByName("mipLevel").Uint())
+			require.Equal(t, uint64(59), subresource.FieldByName("baseArrayLayer").Uint())
+			require.Equal(t, uint64(61), subresource.FieldByName("layerCount").Uint())
+
+			offset = region.FieldByName("imageOffset")
+			require.Equal(t, int64(67), offset.FieldByName("x").Int())
+			require.Equal(t, int64(71), offset.FieldByName("y").Int())
+			require.Equal(t, int64(73), offset.FieldByName("z").Int())
+
+			extent = region.FieldByName("imageExtent")
+			require.Equal(t, uint64(79), extent.FieldByName("width").Uint())
+			require.Equal(t, uint64(83), extent.FieldByName("height").Uint())
+			require.Equal(t, uint64(89), extent.FieldByName("depth").Uint())
+
+			return nil
+		})
+
+	err := buffer.CmdCopyBufferToImage(mockBuffer, mockImage, common.LayoutDepthAttachmentOptimal, []*core.BufferImageCopy{
+		{
+			BufferOffset:      1,
+			BufferRowLength:   3,
+			BufferImageHeight: 5,
+			ImageSubresource: core.ImageSubresourceLayers{
+				AspectMask:     common.AspectPlane1,
+				MipLevel:       7,
+				BaseArrayLayer: 11,
+				LayerCount:     13,
+			},
+			ImageOffset: common.Offset3D{
+				X: 17,
+				Y: 19,
+				Z: 23,
+			},
+			ImageExtent: common.Extent3D{
+				Width:  29,
+				Height: 31,
+				Depth:  37,
+			},
+		},
+		{
+			BufferOffset:      41,
+			BufferRowLength:   43,
+			BufferImageHeight: 47,
+			ImageSubresource: core.ImageSubresourceLayers{
+				AspectMask:     common.AspectColor,
+				MipLevel:       53,
+				BaseArrayLayer: 59,
+				LayerCount:     61,
+			},
+			ImageOffset: common.Offset3D{
+				X: 67,
+				Y: 71,
+				Z: 73,
+			},
+			ImageExtent: common.Extent3D{
+				Width:  79,
+				Height: 83,
+				Depth:  89,
+			},
+		},
+	})
+	require.NoError(t, err)
+}

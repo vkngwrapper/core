@@ -131,6 +131,94 @@ func (c *vulkanCommandBuffer) CmdBindDescriptorSets(bindPoint common.PipelineBin
 		(*Uint32)(dynamicOffsetPtr))
 }
 
+func (c *vulkanCommandBuffer) CmdPipelineBarrier(srcStageMask, dstStageMask common.PipelineStages, dependencies common.DependencyFlags, memoryBarriers []*MemoryBarrierOptions, bufferMemoryBarriers []*BufferMemoryBarrierOptions, imageMemoryBarriers []*ImageMemoryBarrierOptions) error {
+	arena := cgoparam.GetAlloc()
+	defer cgoparam.ReturnAlloc(arena)
+
+	barrierCount := len(memoryBarriers)
+	bufferBarrierCount := len(bufferMemoryBarriers)
+	imageBarrierCount := len(imageMemoryBarriers)
+
+	var barrierPtr *C.VkMemoryBarrier
+	var bufferBarrierPtr *C.VkBufferMemoryBarrier
+	var imageBarrierPtr *C.VkImageMemoryBarrier
+
+	if barrierCount > 0 {
+		barrierPtr = (*C.VkMemoryBarrier)(arena.Malloc(barrierCount * C.sizeof_struct_VkMemoryBarrier))
+		barrierSlice := ([]C.VkMemoryBarrier)(unsafe.Slice(barrierPtr, barrierCount))
+
+		for i := 0; i < barrierCount; i++ {
+			next, err := common.AllocNext(arena, memoryBarriers[i])
+			if err != nil {
+				return err
+			}
+
+			err = memoryBarriers[i].populate(&barrierSlice[i], next)
+			if err != nil {
+				return err
+			}
+		}
+	}
+
+	if bufferBarrierCount > 0 {
+		bufferBarrierPtr = (*C.VkBufferMemoryBarrier)(arena.Malloc(bufferBarrierCount * C.sizeof_struct_VkBufferMemoryBarrier))
+		bufferBarrierSlice := ([]C.VkBufferMemoryBarrier)(unsafe.Slice(bufferBarrierPtr, bufferBarrierCount))
+
+		for i := 0; i < bufferBarrierCount; i++ {
+			next, err := common.AllocNext(arena, bufferMemoryBarriers[i])
+			if err != nil {
+				return err
+			}
+
+			err = bufferMemoryBarriers[i].populate(&bufferBarrierSlice[i], next)
+			if err != nil {
+				return err
+			}
+		}
+	}
+
+	if imageBarrierCount > 0 {
+		imageBarrierPtr = (*C.VkImageMemoryBarrier)(arena.Malloc(imageBarrierCount * C.sizeof_struct_VkImageMemoryBarrier))
+		imageBarrierSlice := ([]C.VkImageMemoryBarrier)(unsafe.Slice(imageBarrierPtr, imageBarrierCount))
+
+		for i := 0; i < imageBarrierCount; i++ {
+			next, err := common.AllocNext(arena, imageMemoryBarriers[i])
+			if err != nil {
+				return err
+			}
+
+			err = imageMemoryBarriers[i].populate(&imageBarrierSlice[i], next)
+			if err != nil {
+				return err
+			}
+		}
+	}
+
+	return c.driver.VkCmdPipelineBarrier(c.handle, VkPipelineStageFlags(srcStageMask), VkPipelineStageFlags(dstStageMask), VkDependencyFlags(dependencies), Uint32(barrierCount), (*VkMemoryBarrier)(barrierPtr), Uint32(bufferBarrierCount), (*VkBufferMemoryBarrier)(bufferBarrierPtr), Uint32(imageBarrierCount), (*VkImageMemoryBarrier)(imageBarrierPtr))
+}
+
+func (c *vulkanCommandBuffer) CmdCopyBufferToImage(buffer Buffer, image Image, layout common.ImageLayout, regions []*BufferImageCopy) error {
+	arena := cgoparam.GetAlloc()
+	defer cgoparam.ReturnAlloc(arena)
+
+	regionCount := len(regions)
+	var regionPtr *C.VkBufferImageCopy
+
+	if regionCount > 0 {
+		regionPtr = (*C.VkBufferImageCopy)(arena.Malloc(regionCount * C.sizeof_struct_VkBufferImageCopy))
+		regionSlice := ([]C.VkBufferImageCopy)(unsafe.Slice(regionPtr, regionCount))
+
+		for i := 0; i < regionCount; i++ {
+			err := regions[i].populate(&regionSlice[i])
+			if err != nil {
+				return err
+			}
+		}
+	}
+
+	return c.driver.VkCmdCopyBufferToImage(c.handle, buffer.Handle(), image.Handle(), VkImageLayout(layout), Uint32(regionCount), (*VkBufferImageCopy)(regionPtr))
+}
+
 type CommandBufferOptions struct {
 	Level       common.CommandBufferLevel
 	BufferCount int

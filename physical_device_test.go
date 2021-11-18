@@ -99,9 +99,9 @@ func TestVulkanPhysicalDevice_QueueFamilyProperties(t *testing.T) {
 	require.NoError(t, err)
 	require.Equal(t, uint32(3), queueProperties[0].QueueCount)
 	require.Equal(t, uint32(5), queueProperties[0].TimestampValidBits)
-	require.Equal(t, uint32(7), queueProperties[0].MinImageTransferGranularity.Width)
-	require.Equal(t, uint32(11), queueProperties[0].MinImageTransferGranularity.Height)
-	require.Equal(t, uint32(13), queueProperties[0].MinImageTransferGranularity.Depth)
+	require.Equal(t, 7, queueProperties[0].MinImageTransferGranularity.Width)
+	require.Equal(t, 11, queueProperties[0].MinImageTransferGranularity.Height)
+	require.Equal(t, 13, queueProperties[0].MinImageTransferGranularity.Depth)
 	require.Equal(t, common.SparseBinding, queueProperties[0].Flags)
 }
 

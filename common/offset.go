@@ -1,12 +1,12 @@
 package common
 
 type Offset2D struct {
-	X int32
-	Y int32
+	X int
+	Y int
 }
 
 type Offset3D struct {
-	X int32
-	Y int32
-	Z int32
+	X int
+	Y int
+	Z int
 }
