@@ -431,10 +431,28 @@ func (l *VulkanLoader1_0) CreateRenderPass(device Device, o *RenderPassOptions) 
 	var renderPass VkRenderPass
 
 	res, err := device.Driver().VkCreateRenderPass(device.Handle(), (*VkRenderPassCreateInfo)(createInfo), nil, &renderPass)
-	err = res.ToError()
 	if err != nil {
 		return nil, res, err
 	}
 
 	return &vulkanRenderPass{driver: device.Driver(), device: device.Handle(), handle: renderPass}, res, nil
+}
+
+func (l *VulkanLoader1_0) CreateSampler(device Device, o *SamplerOptions) (Sampler, VkResult, error) {
+	arena := cgoparam.GetAlloc()
+	defer cgoparam.ReturnAlloc(arena)
+
+	createInfo, err := common.AllocOptions(arena, o)
+	if err != nil {
+		return nil, VKErrorUnknown, err
+	}
+
+	var sampler VkSampler
+
+	res, err := device.Driver().VkCreateSampler(device.Handle(), (*VkSamplerCreateInfo)(createInfo), nil, &sampler)
+	if err != nil {
+		return nil, res, err
+	}
+
+	return &vulkanSampler{handle: sampler, driver: device.Driver(), device: device.Handle()}, VKSuccess, nil
 }

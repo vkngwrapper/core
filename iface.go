@@ -129,6 +129,7 @@ type Loader1_0 interface {
 	CreateImageView(device Device, o *ImageViewOptions) (ImageView, VkResult, error)
 	CreatePipelineLayout(device Device, o *PipelineLayoutOptions) (PipelineLayout, VkResult, error)
 	CreateRenderPass(device Device, o *RenderPassOptions) (RenderPass, VkResult, error)
+	CreateSampler(device Device, o *SamplerOptions) (Sampler, VkResult, error)
 	CreateSemaphore(device Device, o *SemaphoreOptions) (Semaphore, VkResult, error)
 	CreateShaderModule(device Device, o *ShaderModuleOptions) (ShaderModule, VkResult, error)
 }
@@ -177,4 +178,5 @@ type ShaderModule interface {
 
 type Sampler interface {
 	Handle() VkSampler
+	Destroy() error
 }

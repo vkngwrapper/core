@@ -96,7 +96,7 @@ typedef struct DriverFuncPtrs {
     PFN_vkCreatePipelineLayout vkCreatePipelineLayout;
     PFN_vkCreateQueryPool vkCreateQueryPool; //Todo
     PFN_vkCreateRenderPass vkCreateRenderPass;
-    PFN_vkCreateSampler vkCreateSampler; //Todo
+    PFN_vkCreateSampler vkCreateSampler;
     PFN_vkCreateSemaphore vkCreateSemaphore;
     PFN_vkCreateShaderModule vkCreateShaderModule;
     PFN_vkDestroyBuffer vkDestroyBuffer;
@@ -115,7 +115,7 @@ typedef struct DriverFuncPtrs {
     PFN_vkDestroyPipelineLayout vkDestroyPipelineLayout;
     PFN_vkDestroyQueryPool vkDestroyQueryPool; //Todo
     PFN_vkDestroyRenderPass vkDestroyRenderPass;
-    PFN_vkDestroySampler vkDestroySampler; //Todo
+    PFN_vkDestroySampler vkDestroySampler;
     PFN_vkDestroySemaphore vkDestroySemaphore;
     PFN_vkDestroyShaderModule vkDestroyShaderModule;
     PFN_vkDeviceWaitIdle vkDeviceWaitIdle;

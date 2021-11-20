@@ -1,9 +1,8 @@
 package common
 
-type ImageSubresourceRange struct {
+type ImageSubresourceLayers struct {
 	AspectMask     ImageAspectFlags
-	BaseMipLevel   uint32
-	LevelCount     uint32
+	MipLevel       uint32
 	BaseArrayLayer uint32
 	LayerCount     uint32
 }

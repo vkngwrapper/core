@@ -254,6 +254,20 @@ func (mr *MockCommandBufferMockRecorder) CmdCopyBuffer(srcBuffer, dstBuffer, cop
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CmdCopyBuffer", reflect.TypeOf((*MockCommandBuffer)(nil).CmdCopyBuffer), srcBuffer, dstBuffer, copyRegions)
 }
 
+// CmdCopyBufferToImage mocks base method.
+func (m *MockCommandBuffer) CmdCopyBufferToImage(buffer core.Buffer, image core.Image, layout common.ImageLayout, regions []*core.BufferImageCopy) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CmdCopyBufferToImage", buffer, image, layout, regions)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// CmdCopyBufferToImage indicates an expected call of CmdCopyBufferToImage.
+func (mr *MockCommandBufferMockRecorder) CmdCopyBufferToImage(buffer, image, layout, regions interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CmdCopyBufferToImage", reflect.TypeOf((*MockCommandBuffer)(nil).CmdCopyBufferToImage), buffer, image, layout, regions)
+}
+
 // CmdDraw mocks base method.
 func (m *MockCommandBuffer) CmdDraw(vertexCount, instanceCount int, firstVertex, firstInstance uint32) error {
 	m.ctrl.T.Helper()
@@ -294,6 +308,20 @@ func (m *MockCommandBuffer) CmdEndRenderPass() error {
 func (mr *MockCommandBufferMockRecorder) CmdEndRenderPass() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CmdEndRenderPass", reflect.TypeOf((*MockCommandBuffer)(nil).CmdEndRenderPass))
+}
+
+// CmdPipelineBarrier mocks base method.
+func (m *MockCommandBuffer) CmdPipelineBarrier(srcStageMask, dstStageMask common.PipelineStages, dependencies common.DependencyFlags, memoryBarriers []*core.MemoryBarrierOptions, bufferMemoryBarriers []*core.BufferMemoryBarrierOptions, imageMemoryBarriers []*core.ImageMemoryBarrierOptions) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CmdPipelineBarrier", srcStageMask, dstStageMask, dependencies, memoryBarriers, bufferMemoryBarriers, imageMemoryBarriers)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// CmdPipelineBarrier indicates an expected call of CmdPipelineBarrier.
+func (mr *MockCommandBufferMockRecorder) CmdPipelineBarrier(srcStageMask, dstStageMask, dependencies, memoryBarriers, bufferMemoryBarriers, imageMemoryBarriers interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CmdPipelineBarrier", reflect.TypeOf((*MockCommandBuffer)(nil).CmdPipelineBarrier), srcStageMask, dstStageMask, dependencies, memoryBarriers, bufferMemoryBarriers, imageMemoryBarriers)
 }
 
 // End mocks base method.
@@ -952,6 +980,20 @@ func (mr *MockImageMockRecorder) BindImageMemory(memory, offset interface{}) *go
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "BindImageMemory", reflect.TypeOf((*MockImage)(nil).BindImageMemory), memory, offset)
 }
 
+// Destroy mocks base method.
+func (m *MockImage) Destroy() error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Destroy")
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// Destroy indicates an expected call of Destroy.
+func (mr *MockImageMockRecorder) Destroy() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Destroy", reflect.TypeOf((*MockImage)(nil).Destroy))
+}
+
 // Handle mocks base method.
 func (m *MockImage) Handle() core.VkImage {
 	m.ctrl.T.Helper()
@@ -1376,6 +1418,22 @@ func (mr *MockLoader1_0MockRecorder) CreateRenderPass(device, o interface{}) *go
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateRenderPass", reflect.TypeOf((*MockLoader1_0)(nil).CreateRenderPass), device, o)
 }
 
+// CreateSampler mocks base method.
+func (m *MockLoader1_0) CreateSampler(device core.Device, o *core.SamplerOptions) (core.Sampler, core.VkResult, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreateSampler", device, o)
+	ret0, _ := ret[0].(core.Sampler)
+	ret1, _ := ret[1].(core.VkResult)
+	ret2, _ := ret[2].(error)
+	return ret0, ret1, ret2
+}
+
+// CreateSampler indicates an expected call of CreateSampler.
+func (mr *MockLoader1_0MockRecorder) CreateSampler(device, o interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateSampler", reflect.TypeOf((*MockLoader1_0)(nil).CreateSampler), device, o)
+}
+
 // CreateSemaphore mocks base method.
 func (m *MockLoader1_0) CreateSemaphore(device core.Device, o *core.SemaphoreOptions) (core.Semaphore, core.VkResult, error) {
 	m.ctrl.T.Helper()
@@ -1716,6 +1774,21 @@ func (mr *MockQueueMockRecorder) Handle() *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Handle", reflect.TypeOf((*MockQueue)(nil).Handle))
 }
 
+// SubmitToQueue mocks base method.
+func (m *MockQueue) SubmitToQueue(fence core.Fence, o []*core.SubmitOptions) (core.VkResult, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "SubmitToQueue", fence, o)
+	ret0, _ := ret[0].(core.VkResult)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// SubmitToQueue indicates an expected call of SubmitToQueue.
+func (mr *MockQueueMockRecorder) SubmitToQueue(fence, o interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SubmitToQueue", reflect.TypeOf((*MockQueue)(nil).SubmitToQueue), fence, o)
+}
+
 // WaitForIdle mocks base method.
 func (m *MockQueue) WaitForIdle() (core.VkResult, error) {
 	m.ctrl.T.Helper()
@@ -1905,6 +1978,20 @@ func NewMockSampler(ctrl *gomock.Controller) *MockSampler {
 // EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockSampler) EXPECT() *MockSamplerMockRecorder {
 	return m.recorder
+}
+
+// Destroy mocks base method.
+func (m *MockSampler) Destroy() error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Destroy")
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// Destroy indicates an expected call of Destroy.
+func (mr *MockSamplerMockRecorder) Destroy() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Destroy", reflect.TypeOf((*MockSampler)(nil).Destroy))
 }
 
 // Handle mocks base method.

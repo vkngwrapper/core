@@ -11,19 +11,12 @@ import (
 	"github.com/cockroachdb/errors"
 )
 
-type ImageSubresourceLayers struct {
-	AspectMask     common.ImageAspectFlags
-	MipLevel       uint32
-	BaseArrayLayer uint32
-	LayerCount     uint32
-}
-
 type BufferImageCopy struct {
 	BufferOffset      uint64
 	BufferRowLength   uint32
 	BufferImageHeight int
 
-	ImageSubresource ImageSubresourceLayers
+	ImageSubresource common.ImageSubresourceLayers
 	ImageOffset      common.Offset3D
 	ImageExtent      common.Extent3D
 }

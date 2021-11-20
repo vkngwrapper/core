@@ -438,7 +438,7 @@ func TestVulkanCommandBuffer_CmdPipelineBarrier(t *testing.T) {
 				SrcQueueFamilyIndex:  11,
 				DestQueueFamilyIndex: 13,
 				Image:                mockImage,
-				SubresourceRange: core.ImageSubresourceRange{
+				SubresourceRange: common.ImageSubresourceRange{
 					AspectMask:     common.AspectPlane0,
 					BaseMipLevel:   17,
 					LevelCount:     19,
@@ -518,7 +518,7 @@ func TestVulkanCommandBuffer_CmdCopyBufferToImage(t *testing.T) {
 			BufferOffset:      1,
 			BufferRowLength:   3,
 			BufferImageHeight: 5,
-			ImageSubresource: core.ImageSubresourceLayers{
+			ImageSubresource: common.ImageSubresourceLayers{
 				AspectMask:     common.AspectPlane1,
 				MipLevel:       7,
 				BaseArrayLayer: 11,
@@ -539,7 +539,7 @@ func TestVulkanCommandBuffer_CmdCopyBufferToImage(t *testing.T) {
 			BufferOffset:      41,
 			BufferRowLength:   43,
 			BufferImageHeight: 47,
-			ImageSubresource: core.ImageSubresourceLayers{
+			ImageSubresource: common.ImageSubresourceLayers{
 				AspectMask:     common.AspectColor,
 				MipLevel:       53,
 				BaseArrayLayer: 59,

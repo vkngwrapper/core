@@ -68,14 +68,6 @@ func (o *BufferMemoryBarrierOptions) AllocForC(allocator *cgoparam.Allocator, ne
 	return unsafe.Pointer(createInfo), err
 }
 
-type ImageSubresourceRange struct {
-	AspectMask     common.ImageAspectFlags
-	BaseMipLevel   uint32
-	LevelCount     uint32
-	BaseArrayLayer uint32
-	LayerCount     uint32
-}
-
 type ImageMemoryBarrierOptions struct {
 	SrcAccessMask  common.AccessFlags
 	DestAccessMask common.AccessFlags
@@ -87,7 +79,7 @@ type ImageMemoryBarrierOptions struct {
 	DestQueueFamilyIndex int
 
 	Image            Image
-	SubresourceRange ImageSubresourceRange
+	SubresourceRange common.ImageSubresourceRange
 
 	common.HaveNext
 }
