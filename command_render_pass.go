@@ -63,7 +63,7 @@ type ClearValueDepthStencil struct {
 	Stencil uint32
 }
 
-func (s *ClearValueDepthStencil) populateUnion(c *C.VkClearValue) {
+func (s ClearValueDepthStencil) populateUnion(c *C.VkClearValue) {
 	depthStencil := (*C.VkClearDepthStencilValue)(unsafe.Pointer(c))
 	depthStencil.depth = C.float(s.Depth)
 	depthStencil.stencil = C.uint32_t(s.Stencil)

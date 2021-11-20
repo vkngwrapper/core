@@ -19,7 +19,7 @@ typedef struct DriverFuncPtrs {
     PFN_vkEnumerateDeviceLayerProperties vkEnumerateDeviceLayerProperties; //Todo
     PFN_vkEnumeratePhysicalDevices vkEnumeratePhysicalDevices;
     PFN_vkGetPhysicalDeviceFeatures vkGetPhysicalDeviceFeatures;
-    PFN_vkGetPhysicalDeviceFormatProperties vkGetPhysicalDeviceFormatProperties; //Todo
+    PFN_vkGetPhysicalDeviceFormatProperties vkGetPhysicalDeviceFormatProperties;
     PFN_vkGetPhysicalDeviceImageFormatProperties vkGetPhysicalDeviceImageFormatProperties; //Todo
     PFN_vkGetPhysicalDeviceMemoryProperties vkGetPhysicalDeviceMemoryProperties;
     PFN_vkGetPhysicalDeviceProperties vkGetPhysicalDeviceProperties;

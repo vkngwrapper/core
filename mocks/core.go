@@ -1562,6 +1562,21 @@ func (mr *MockPhysicalDeviceMockRecorder) Features() *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Features", reflect.TypeOf((*MockPhysicalDevice)(nil).Features))
 }
 
+// FormatProperties mocks base method.
+func (m *MockPhysicalDevice) FormatProperties(format common.DataFormat) (*common.FormatProperties, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "FormatProperties", format)
+	ret0, _ := ret[0].(*common.FormatProperties)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// FormatProperties indicates an expected call of FormatProperties.
+func (mr *MockPhysicalDeviceMockRecorder) FormatProperties(format interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FormatProperties", reflect.TypeOf((*MockPhysicalDevice)(nil).FormatProperties), format)
+}
+
 // Handle mocks base method.
 func (m *MockPhysicalDevice) Handle() core.VkPhysicalDevice {
 	m.ctrl.T.Helper()

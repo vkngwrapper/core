@@ -123,7 +123,7 @@ type SubPass struct {
 	InputAttachments           []common.AttachmentReference
 	ColorAttachments           []common.AttachmentReference
 	ResolveAttachments         []common.AttachmentReference
-	DepthStencilAttachments    []common.AttachmentReference
+	DepthStencilAttachment     *common.AttachmentReference
 	PreservedAttachmentIndices []int
 }
 
@@ -178,13 +178,9 @@ func (o *RenderPassOptions) AllocForC(allocator *cgoparam.Allocator, next unsafe
 		for i := 0; i < subPassCount; i++ {
 			resolveAttachmentCount := len(o.SubPasses[i].ResolveAttachments)
 			colorAttachmentCount := len(o.SubPasses[i].ColorAttachments)
-			depthStencilAttachmentCount := len(o.SubPasses[i].DepthStencilAttachments)
 
 			if resolveAttachmentCount > 0 && resolveAttachmentCount != colorAttachmentCount {
 				return nil, errors.Newf("in subpass %d, %d color attachments are defined, but %d resolve attachments are defined", i, colorAttachmentCount, resolveAttachmentCount)
-			}
-			if depthStencilAttachmentCount > 0 && depthStencilAttachmentCount != colorAttachmentCount {
-				return nil, errors.Newf("in subpass %d, %d color attachments are defined, but %d depth stencil attachments are defined", i, colorAttachmentCount, depthStencilAttachmentCount)
 			}
 
 			subPassSlice[i].flags = C.VkSubpassDescriptionFlags(o.SubPasses[i].Flags)
@@ -194,7 +190,13 @@ func (o *RenderPassOptions) AllocForC(allocator *cgoparam.Allocator, next unsafe
 			subPassSlice[i].colorAttachmentCount = C.uint32_t(colorAttachmentCount)
 			subPassSlice[i].pColorAttachments = createAttachmentReferences(allocator, o.SubPasses[i].ColorAttachments)
 			subPassSlice[i].pResolveAttachments = createAttachmentReferences(allocator, o.SubPasses[i].ResolveAttachments)
-			subPassSlice[i].pDepthStencilAttachment = createAttachmentReferences(allocator, o.SubPasses[i].DepthStencilAttachments)
+			subPassSlice[i].pDepthStencilAttachment = nil
+
+			if o.SubPasses[i].DepthStencilAttachment != nil {
+				subPassSlice[i].pDepthStencilAttachment = createAttachmentReferences(allocator, []common.AttachmentReference{
+					*o.SubPasses[i].DepthStencilAttachment,
+				})
+			}
 
 			preserveAttachmentCount := len(o.SubPasses[i].PreservedAttachmentIndices)
 			subPassSlice[i].preserveAttachmentCount = C.uint32_t(preserveAttachmentCount)

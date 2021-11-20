@@ -325,6 +325,37 @@ func TestVulkanPhysicalDevice_Features(t *testing.T) {
 	require.True(t, features.InheritedQueries)
 }
 
+func TestVulkanPhysicalDevice_FormatProperties(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	driver := mocks.NewMockDriver(ctrl)
+	loader, err := core.CreateLoaderFromDriver(driver)
+	require.NoError(t, err)
+
+	physicalDevice := mocks.EasyDummyPhysicalDevice(t, loader)
+
+	driver.EXPECT().VkGetPhysicalDeviceFormatProperties(physicalDevice.Handle(),
+		core.VkFormat(57), // VK_FORMAT_A8B8G8R8_SRGB_PACK32
+		gomock.Not(nil)).DoAndReturn(
+		func(device core.VkPhysicalDevice, format core.VkFormat, pFormatProperties *core.VkFormatProperties) error {
+			val := reflect.ValueOf(pFormatProperties).Elem()
+
+			*(*uint32)(unsafe.Pointer(val.FieldByName("optimalTilingFeatures").UnsafeAddr())) = uint32(0x00000100) // VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BLEND_BIT
+			*(*uint32)(unsafe.Pointer(val.FieldByName("linearTilingFeatures").UnsafeAddr())) = uint32(0x00400000)  // VK_FORMAT_FEATURE_DISJOINT_BIT
+			*(*uint32)(unsafe.Pointer(val.FieldByName("bufferFeatures").UnsafeAddr())) = uint32(0x00040000)        // VK_FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_LINEAR_FILTER_BIT
+
+			return nil
+		})
+
+	props, err := physicalDevice.FormatProperties(common.FormatA8B8G8R8SRGB)
+	require.NoError(t, err)
+	require.NotNil(t, props)
+	require.Equal(t, common.FormatFeatureColorAttachmentBlend, props.OptimalTilingFeatures)
+	require.Equal(t, common.FormatFeatureDisjoint, props.LinearTilingFeatures)
+	require.Equal(t, common.FormatFeatureSampledImageYcbcrConversionLinearFilter, props.BufferFeatures)
+}
+
 func TestVulkanPhysicalDevice_MemoryProperties(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()

@@ -142,6 +142,7 @@ type PhysicalDevice interface {
 	Features() (*common.PhysicalDeviceFeatures, error)
 	AvailableExtensions() (map[string]*common.ExtensionProperties, VkResult, error)
 	MemoryProperties() (*PhysicalDeviceMemoryProperties, error)
+	FormatProperties(format common.DataFormat) (*common.FormatProperties, error)
 }
 
 type Pipeline interface {

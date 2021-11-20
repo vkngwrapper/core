@@ -99,16 +99,9 @@ func TestVulkanLoader1_0_CreateRenderPass_Success(t *testing.T) {
 			require.Equal(t, uint64(5), attach.FieldByName("attachment").Uint())
 			require.Equal(t, uint64(1000117001), attach.FieldByName("layout").Uint()) // VK_IMAGE_LAYOUT_DEPTH_ATTACHMENT_STENCIL_READ_ONLY_OPTIMAL
 
-			depthStencilAttachmentPtr := (*core.VkAttachmentReference)(unsafe.Pointer(subpass.FieldByName("pDepthStencilAttachment").Elem().UnsafeAddr()))
-			depthStencilAttachmentSlice := reflect.ValueOf(([]core.VkAttachmentReference)(unsafe.Slice(depthStencilAttachmentPtr, 2)))
-
-			attach = depthStencilAttachmentSlice.Index(0)
+			attach = reflect.ValueOf((*core.VkAttachmentReference)(unsafe.Pointer(subpass.FieldByName("pDepthStencilAttachment").Elem().UnsafeAddr()))).Elem()
 			require.Equal(t, uint64(11), attach.FieldByName("attachment").Uint())
 			require.Equal(t, uint64(6), attach.FieldByName("layout").Uint()) // VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL
-
-			attach = depthStencilAttachmentSlice.Index(1)
-			require.Equal(t, uint64(13), attach.FieldByName("attachment").Uint())
-			require.Equal(t, uint64(2), attach.FieldByName("layout").Uint()) // VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL
 
 			preservePtr := (*core.Uint32)(unsafe.Pointer(subpass.FieldByName("pPreserveAttachments").Elem().UnsafeAddr()))
 			preserveSlice := reflect.ValueOf(([]core.Uint32)(unsafe.Slice(preservePtr, 1)))
@@ -203,15 +196,9 @@ func TestVulkanLoader1_0_CreateRenderPass_Success(t *testing.T) {
 						Layout:          common.LayoutDepthAttachmentStencilReadOnlyOptimal,
 					},
 				},
-				DepthStencilAttachments: []common.AttachmentReference{
-					{
-						AttachmentIndex: 11,
-						Layout:          common.LayoutTransferSrcOptimal,
-					},
-					{
-						AttachmentIndex: 13,
-						Layout:          common.LayoutColorAttachmentOptimal,
-					},
+				DepthStencilAttachment: &common.AttachmentReference{
+					AttachmentIndex: 11,
+					Layout:          common.LayoutTransferSrcOptimal,
 				},
 				PreservedAttachmentIndices: []int{17},
 			},
@@ -415,7 +402,6 @@ func TestVulkanLoader1_0_CreateRenderPass_SuccessNoNonColorAttachments(t *testin
 					},
 				},
 				ResolveAttachments:         []common.AttachmentReference{},
-				DepthStencilAttachments:    []common.AttachmentReference{},
 				PreservedAttachmentIndices: []int{17},
 			},
 		},
@@ -452,122 +438,6 @@ func TestVulkanLoader1_0_CreateRenderPass_SuccessNoNonColorAttachments(t *testin
 	require.NoError(t, err)
 	require.NotNil(t, renderPass)
 	require.Equal(t, renderPassHandle, renderPass.Handle())
-}
-
-func TestVulkanLoader1_0_CreateRenderPass_MismatchDepthStencil(t *testing.T) {
-	ctrl := gomock.NewController(t)
-	defer ctrl.Finish()
-
-	driver := mocks.NewMockDriver(ctrl)
-	loader, err := core.CreateLoaderFromDriver(driver)
-	require.NoError(t, err)
-
-	device := mocks.EasyMockDevice(ctrl, driver)
-
-	_, _, err = loader.CreateRenderPass(device, &core.RenderPassOptions{
-		Flags: core.RenderPassCreateTransformBitQCOM,
-		Attachments: []core.AttachmentDescription{
-			{
-				Flags:          common.AttachmentMayAlias,
-				Format:         common.FormatA2B10G10R10SignedInt,
-				Samples:        common.Samples4,
-				LoadOp:         common.LoadOpClear,
-				StoreOp:        common.StoreOpStore,
-				StencilLoadOp:  common.LoadOpDontCare,
-				StencilStoreOp: common.StoreOpDontCare,
-				InitialLayout:  common.LayoutColorAttachmentOptimal,
-				FinalLayout:    common.LayoutDepthReadOnlyOptimal,
-			},
-			{
-				Flags:          0,
-				Format:         common.FormatA2R10G10B10SignedInt,
-				Samples:        common.Samples64,
-				LoadOp:         common.LoadOpLoad,
-				StoreOp:        common.StoreOpNoneEXT,
-				StencilLoadOp:  common.LoadOpClear,
-				StencilStoreOp: common.StoreOpStore,
-				InitialLayout:  common.LayoutGeneral,
-				FinalLayout:    common.LayoutColorAttachmentOptimal,
-			},
-		},
-		SubPasses: []core.SubPass{
-			{
-				Flags:     core.SubPassShaderResolveQCOM,
-				BindPoint: common.BindCompute,
-				InputAttachments: []common.AttachmentReference{
-					{
-						AttachmentIndex: 0,
-						Layout:          common.LayoutGeneral,
-					},
-				},
-				ColorAttachments: []common.AttachmentReference{
-					{
-						AttachmentIndex: 1,
-						Layout:          common.LayoutDepthAttachmentOptimal,
-					},
-					{
-						AttachmentIndex: 2,
-						Layout:          common.LayoutDepthStencilAttachmentOptimal,
-					},
-				},
-				ResolveAttachments: []common.AttachmentReference{
-					{
-						AttachmentIndex: 3,
-						Layout:          common.LayoutDepthStencilReadOnlyOptimal,
-					},
-					{
-						AttachmentIndex: 5,
-						Layout:          common.LayoutDepthAttachmentStencilReadOnlyOptimal,
-					},
-				},
-				DepthStencilAttachments: []common.AttachmentReference{
-					{
-						AttachmentIndex: 11,
-						Layout:          common.LayoutTransferSrcOptimal,
-					},
-					{
-						AttachmentIndex: 13,
-						Layout:          common.LayoutColorAttachmentOptimal,
-					},
-					{
-						AttachmentIndex: 0,
-						Layout:          common.LayoutStencilReadOnlyOptimal,
-					},
-				},
-				PreservedAttachmentIndices: []int{17},
-			},
-		},
-		SubPassDependencies: []core.SubPassDependency{
-			{
-				Flags:           common.DependencyDeviceGroup,
-				SrcSubPassIndex: 17,
-				DstSubPassIndex: 19,
-				SrcStageMask:    common.PipelineStageVertexShader,
-				DstStageMask:    common.PipelineStageAccelerationStructureBuildKHR,
-				SrcAccess:       common.AccessColorAttachmentReadNonCoherentEXT,
-				DstAccess:       common.AccessConditionalRenderingReadEXT,
-			},
-			{
-				Flags:           common.DependencyViewLocal,
-				SrcSubPassIndex: 23,
-				DstSubPassIndex: 29,
-				SrcStageMask:    common.PipelineStageConditionalRenderingEXT,
-				DstStageMask:    common.PipelineStageBottomOfPipe,
-				SrcAccess:       common.AccessColorAttachmentRead,
-				DstAccess:       common.AccessFragmentDensityMapReadEXT,
-			},
-			{
-				Flags:           0,
-				SrcSubPassIndex: 31,
-				DstSubPassIndex: 37,
-				SrcStageMask:    common.PipelineStageBottomOfPipe,
-				DstStageMask:    common.PipelineStageAllGraphics,
-				SrcAccess:       common.AccessDepthStencilAttachmentWrite,
-				DstAccess:       common.AccessIndexRead,
-			},
-		},
-	})
-	require.EqualError(t, err, "in subpass 0, 2 color attachments are defined, but 3 depth stencil attachments are defined")
 }
 
 func TestVulkanLoader1_0_CreateRenderPass_MismatchResolve(t *testing.T) {
@@ -640,15 +510,9 @@ func TestVulkanLoader1_0_CreateRenderPass_MismatchResolve(t *testing.T) {
 						Layout:          common.LayoutStencilReadOnlyOptimal,
 					},
 				},
-				DepthStencilAttachments: []common.AttachmentReference{
-					{
-						AttachmentIndex: 11,
-						Layout:          common.LayoutTransferSrcOptimal,
-					},
-					{
-						AttachmentIndex: 13,
-						Layout:          common.LayoutColorAttachmentOptimal,
-					},
+				DepthStencilAttachment: &common.AttachmentReference{
+					AttachmentIndex: 11,
+					Layout:          common.LayoutTransferSrcOptimal,
 				},
 				PreservedAttachmentIndices: []int{17},
 			},

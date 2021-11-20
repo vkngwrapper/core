@@ -136,6 +136,24 @@ func (d *vulkanPhysicalDevice) AvailableExtensions() (map[string]*common.Extensi
 	return retVal, res, nil
 }
 
+func (d *vulkanPhysicalDevice) FormatProperties(format common.DataFormat) (*common.FormatProperties, error) {
+	allocator := cgoparam.GetAlloc()
+	defer cgoparam.ReturnAlloc(allocator)
+
+	properties := (*C.VkFormatProperties)(allocator.Malloc(C.sizeof_struct_VkFormatProperties))
+
+	err := d.driver.VkGetPhysicalDeviceFormatProperties(d.handle, VkFormat(format), (*VkFormatProperties)(properties))
+	if err != nil {
+		return nil, err
+	}
+
+	return &common.FormatProperties{
+		LinearTilingFeatures:  common.FormatFeatures(properties.linearTilingFeatures),
+		OptimalTilingFeatures: common.FormatFeatures(properties.optimalTilingFeatures),
+		BufferFeatures:        common.FormatFeatures(properties.bufferFeatures),
+	}, nil
+}
+
 func createPhysicalDeviceFeatures(f *C.VkPhysicalDeviceFeatures) *common.PhysicalDeviceFeatures {
 	return &common.PhysicalDeviceFeatures{
 		RobustBufferAccess:                      f.robustBufferAccess != C.VK_FALSE,
