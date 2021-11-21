@@ -219,6 +219,32 @@ func (c *vulkanCommandBuffer) CmdCopyBufferToImage(buffer Buffer, image Image, l
 	return c.driver.VkCmdCopyBufferToImage(c.handle, buffer.Handle(), image.Handle(), VkImageLayout(layout), Uint32(regionCount), (*VkBufferImageCopy)(regionPtr))
 }
 
+func (c *vulkanCommandBuffer) CmdBlitImage(sourceImage Image, sourceImageLayout common.ImageLayout, destinationImage Image, destinationImageLayout common.ImageLayout, regions []*ImageBlit, filter common.Filter) error {
+	allocator := cgoparam.GetAlloc()
+	defer cgoparam.ReturnAlloc(allocator)
+
+	regionCount := len(regions)
+	regionPtr := (*C.VkImageBlit)(allocator.Malloc(regionCount * C.sizeof_struct_VkImageBlit))
+	regionSlice := ([]C.VkImageBlit)(unsafe.Slice(regionPtr, regionCount))
+
+	for i := range regionSlice {
+		err := regions[i].Populate(&regionSlice[i])
+		if err != nil {
+			return err
+		}
+	}
+
+	return c.driver.VkCmdBlitImage(
+		c.handle,
+		VkImage(sourceImage.Handle()),
+		VkImageLayout(sourceImageLayout),
+		VkImage(destinationImage.Handle()),
+		VkImageLayout(destinationImageLayout),
+		Uint32(regionCount),
+		(*VkImageBlit)(regionPtr),
+		VkFilter(filter))
+}
+
 type CommandBufferOptions struct {
 	Level       common.CommandBufferLevel
 	BufferCount int

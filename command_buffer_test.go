@@ -559,3 +559,117 @@ func TestVulkanCommandBuffer_CmdCopyBufferToImage(t *testing.T) {
 	})
 	require.NoError(t, err)
 }
+
+func TestVulkanCommandBuffer_CmdBlitImage(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	mockDriver, buffer := setup(t, ctrl)
+	sourceImage := mocks.EasyMockImage(ctrl)
+	destImage := mocks.EasyMockImage(ctrl)
+
+	mockDriver.EXPECT().VkCmdBlitImage(buffer.Handle(),
+		sourceImage.Handle(),
+		core.VkImageLayout(1000241000), // VK_IMAGE_LAYOUT_DEPTH_ATTACHMENT_OPTIMAL
+		destImage.Handle(),
+		core.VkImageLayout(2), // VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL
+		core.Uint32(1),
+		gomock.Not(nil),
+		core.VkFilter(1), // VK_FILTER_LINEAR
+	).DoAndReturn(func(commandBuffer core.VkCommandBuffer,
+		sourceImage core.VkImage,
+		sourceImageLayout core.VkImageLayout,
+		destImage core.VkImage,
+		destImageLayout core.VkImageLayout,
+		regionCount core.Uint32,
+		pRegions *core.VkImageBlit,
+		filter core.VkFilter) error {
+
+		regionSlice := reflect.ValueOf(([]core.VkImageBlit)(unsafe.Slice(pRegions, 1)))
+		region := regionSlice.Index(0)
+
+		srcSubresource := region.FieldByName("srcSubresource")
+		require.Equal(t, uint64(8), srcSubresource.FieldByName("aspectMask").Uint()) // VK_IMAGE_ASPECT_METADATA_BIT
+		require.Equal(t, uint64(1), srcSubresource.FieldByName("mipLevel").Uint())
+		require.Equal(t, uint64(3), srcSubresource.FieldByName("baseArrayLayer").Uint())
+		require.Equal(t, uint64(5), srcSubresource.FieldByName("layerCount").Uint())
+
+		srcOffsets := region.FieldByName("srcOffsets")
+		offset := srcOffsets.Index(0)
+		require.Equal(t, int64(7), offset.FieldByName("x").Int())
+		require.Equal(t, int64(11), offset.FieldByName("y").Int())
+		require.Equal(t, int64(13), offset.FieldByName("z").Int())
+
+		offset = srcOffsets.Index(1)
+		require.Equal(t, int64(17), offset.FieldByName("x").Int())
+		require.Equal(t, int64(19), offset.FieldByName("y").Int())
+		require.Equal(t, int64(23), offset.FieldByName("z").Int())
+
+		dstSubresource := region.FieldByName("dstSubresource")
+		require.Equal(t, uint64(4), dstSubresource.FieldByName("aspectMask").Uint()) // VK_IMAGE_ASPECT_STENCIL_BIT
+		require.Equal(t, uint64(29), dstSubresource.FieldByName("mipLevel").Uint())
+		require.Equal(t, uint64(31), dstSubresource.FieldByName("baseArrayLayer").Uint())
+		require.Equal(t, uint64(37), dstSubresource.FieldByName("layerCount").Uint())
+
+		dstOffsets := region.FieldByName("dstOffsets")
+		offset = dstOffsets.Index(0)
+		require.Equal(t, int64(41), offset.FieldByName("x").Int())
+		require.Equal(t, int64(43), offset.FieldByName("y").Int())
+		require.Equal(t, int64(47), offset.FieldByName("z").Int())
+
+		offset = dstOffsets.Index(1)
+		require.Equal(t, int64(53), offset.FieldByName("x").Int())
+		require.Equal(t, int64(59), offset.FieldByName("y").Int())
+		require.Equal(t, int64(61), offset.FieldByName("z").Int())
+
+		return nil
+	})
+
+	err := buffer.CmdBlitImage(sourceImage,
+		common.LayoutDepthAttachmentOptimal,
+		destImage,
+		common.LayoutColorAttachmentOptimal,
+		[]*core.ImageBlit{
+			{
+				SourceSubresource: common.ImageSubresourceLayers{
+					AspectMask:     common.AspectMetadata,
+					MipLevel:       1,
+					BaseArrayLayer: 3,
+					LayerCount:     5,
+				},
+				SourceOffsets: [2]common.Offset3D{
+					{
+						X: 7,
+						Y: 11,
+						Z: 13,
+					},
+					{
+						X: 17,
+						Y: 19,
+						Z: 23,
+					},
+				},
+				DestinationSubresource: common.ImageSubresourceLayers{
+					AspectMask:     common.AspectStencil,
+					MipLevel:       29,
+					BaseArrayLayer: 31,
+					LayerCount:     37,
+				},
+				DestinationOffsets: [2]common.Offset3D{
+					{
+						X: 41,
+						Y: 43,
+						Z: 47,
+					},
+					{
+						X: 53,
+						Y: 59,
+						Z: 61,
+					},
+				},
+			},
+		},
+		common.FilterLinear,
+	)
+	require.NoError(t, err)
+}

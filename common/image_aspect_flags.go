@@ -27,7 +27,7 @@ var imageAspectToString = map[ImageAspectFlags]string{
 	AspectColor:           "Color",
 	AspectDepth:           "Depth",
 	AspectStencil:         "Stencil",
-	AspectMetadata:        "Metaddata",
+	AspectMetadata:        "Metadata",
 	AspectPlane0:          "Plane 0",
 	AspectPlane1:          "Plane 1",
 	AspectPlane2:          "Plane 2",
