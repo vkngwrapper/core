@@ -10,8 +10,8 @@ import (
 
 type Buffer interface {
 	Handle() VkBuffer
-	Destroy() error
-	MemoryRequirements() (*common.MemoryRequirements, error)
+	Destroy()
+	MemoryRequirements() *common.MemoryRequirements
 	BindBufferMemory(memory DeviceMemory, offset int) (VkResult, error)
 }
 
@@ -37,18 +37,22 @@ type CommandBuffer interface {
 	CmdPipelineBarrier(srcStageMask, dstStageMask common.PipelineStages, dependencies common.DependencyFlags, memoryBarriers []*MemoryBarrierOptions, bufferMemoryBarriers []*BufferMemoryBarrierOptions, imageMemoryBarriers []*ImageMemoryBarrierOptions) error
 	CmdCopyBufferToImage(buffer Buffer, image Image, layout common.ImageLayout, regions []*BufferImageCopy) error
 	CmdBlitImage(sourceImage Image, sourceImageLayout common.ImageLayout, destinationImage Image, destinationImageLayout common.ImageLayout, regions []*ImageBlit, filter common.Filter) error
+	CmdPushConstants(layout PipelineLayout, stageFlags common.ShaderStages, offset int, values interface{}) error
+	CmdSetViewport(firstViewport int, viewports []common.Viewport) error
+	CmdSetScissor(firstScissor int, scissors []common.Rect2D) error
+	CmdCopyImage(srcImage Image, srcImageLayout common.ImageLayout, dstImage Image, dstImageLayout common.ImageLayout, regions []ImageCopy) error
 }
 
 type CommandPool interface {
 	Handle() VkCommandPool
-	Destroy() error
+	Destroy()
 	AllocateCommandBuffers(o *CommandBufferOptions) ([]CommandBuffer, VkResult, error)
-	FreeCommandBuffers(buffers []CommandBuffer) error
+	FreeCommandBuffers(buffers []CommandBuffer)
 }
 
 type DescriptorPool interface {
 	Handle() VkDescriptorPool
-	Destroy() error
+	Destroy()
 	AllocateDescriptorSets(o *DescriptorSetOptions) ([]DescriptorSet, VkResult, error)
 	FreeDescriptorSets(sets []DescriptorSet) (VkResult, error)
 }
@@ -59,53 +63,54 @@ type DescriptorSet interface {
 
 type DescriptorSetLayout interface {
 	Handle() VkDescriptorSetLayout
-	Destroy() error
+	Destroy()
 }
 
 type DeviceMemory interface {
 	Handle() VkDeviceMemory
 	MapMemory(offset int, size int, flags MemoryMapFlags) (unsafe.Pointer, VkResult, error)
-	UnmapMemory() error
+	UnmapMemory()
 }
 
 type Device interface {
 	Handle() VkDevice
-	Destroy() error
+	Destroy()
 	Driver() Driver
-	GetQueue(queueFamilyIndex int, queueIndex int) (Queue, error)
+	GetQueue(queueFamilyIndex int, queueIndex int) Queue
 	WaitForIdle() (VkResult, error)
 	WaitForFences(waitForAll bool, timeout time.Duration, fences []Fence) (VkResult, error)
 	ResetFences(fences []Fence) (VkResult, error)
 	AllocateMemory(o *DeviceMemoryOptions) (DeviceMemory, VkResult, error)
-	FreeMemory(memory DeviceMemory) error
+	FreeMemory(memory DeviceMemory)
 	UpdateDescriptorSets(writes []WriteDescriptorSetOptions, copies []CopyDescriptorSetOptions) error
 }
 
 type Fence interface {
 	Handle() VkFence
-	Destroy() error
+	Destroy()
 }
 
 type Framebuffer interface {
 	Handle() VkFramebuffer
-	Destroy() error
+	Destroy()
 }
 
 type Image interface {
 	Handle() VkImage
-	Destroy() error
-	MemoryRequirements() (*common.MemoryRequirements, error)
+	Destroy()
+	MemoryRequirements() *common.MemoryRequirements
 	BindImageMemory(memory DeviceMemory, offset int) (VkResult, error)
+	SubresourceLayout(subresource *common.ImageSubresource) *common.SubresourceLayout
 }
 
 type ImageView interface {
 	Handle() VkImageView
-	Destroy() error
+	Destroy()
 }
 
 type Instance interface {
 	Handle() VkInstance
-	Destroy() error
+	Destroy()
 	Driver() Driver
 	PhysicalDevices() ([]PhysicalDevice, VkResult, error)
 }
@@ -115,6 +120,7 @@ type Loader1_0 interface {
 	Driver() Driver
 
 	AvailableExtensions() (map[string]*common.ExtensionProperties, VkResult, error)
+	AvailableExtensionsForLayer(layerName string) (map[string]*common.ExtensionProperties, VkResult, error)
 	AvailableLayers() (map[string]*common.LayerProperties, VkResult, error)
 
 	CreateBuffer(device Device, o *BufferOptions) (Buffer, VkResult, error)
@@ -128,6 +134,7 @@ type Loader1_0 interface {
 	CreateInstance(options *InstanceOptions) (Instance, VkResult, error)
 	CreateImage(device Device, options *ImageOptions) (Image, VkResult, error)
 	CreateImageView(device Device, o *ImageViewOptions) (ImageView, VkResult, error)
+	CreatePipelineCache(device Device, o *PipelineCacheOptions) (PipelineCache, VkResult, error)
 	CreatePipelineLayout(device Device, o *PipelineLayoutOptions) (PipelineLayout, VkResult, error)
 	CreateRenderPass(device Device, o *RenderPassOptions) (RenderPass, VkResult, error)
 	CreateSampler(device Device, o *SamplerOptions) (Sampler, VkResult, error)
@@ -138,22 +145,28 @@ type Loader1_0 interface {
 type PhysicalDevice interface {
 	Handle() VkPhysicalDevice
 	Driver() Driver
-	QueueFamilyProperties() ([]*common.QueueFamily, error)
-	Properties() (*common.PhysicalDeviceProperties, error)
-	Features() (*common.PhysicalDeviceFeatures, error)
+	QueueFamilyProperties() []*common.QueueFamily
+	Properties() *common.PhysicalDeviceProperties
+	Features() *common.PhysicalDeviceFeatures
 	AvailableExtensions() (map[string]*common.ExtensionProperties, VkResult, error)
-	MemoryProperties() (*PhysicalDeviceMemoryProperties, error)
-	FormatProperties(format common.DataFormat) (*common.FormatProperties, error)
+	AvailableExtensionsForLayer(layerName string) (map[string]*common.ExtensionProperties, VkResult, error)
+	MemoryProperties() *PhysicalDeviceMemoryProperties
+	FormatProperties(format common.DataFormat) *common.FormatProperties
 }
 
 type Pipeline interface {
 	Handle() VkPipeline
-	Destroy() error
+	Destroy()
+}
+
+type PipelineCache interface {
+	Handle() VkPipelineCache
+	Destroy()
 }
 
 type PipelineLayout interface {
 	Handle() VkPipelineLayout
-	Destroy() error
+	Destroy()
 }
 
 type Queue interface {
@@ -165,20 +178,20 @@ type Queue interface {
 
 type RenderPass interface {
 	Handle() VkRenderPass
-	Destroy() error
+	Destroy()
 }
 
 type Semaphore interface {
 	Handle() VkSemaphore
-	Destroy() error
+	Destroy()
 }
 
 type ShaderModule interface {
 	Handle() VkShaderModule
-	Destroy() error
+	Destroy()
 }
 
 type Sampler interface {
 	Handle() VkSampler
-	Destroy() error
+	Destroy()
 }

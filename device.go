@@ -26,19 +26,16 @@ func (d *vulkanDevice) Handle() VkDevice {
 	return d.handle
 }
 
-func (d *vulkanDevice) Destroy() error {
-	return d.driver.VkDestroyDevice(d.handle, nil)
+func (d *vulkanDevice) Destroy() {
+	d.driver.VkDestroyDevice(d.handle, nil)
 }
 
-func (d *vulkanDevice) GetQueue(queueFamilyIndex int, queueIndex int) (Queue, error) {
+func (d *vulkanDevice) GetQueue(queueFamilyIndex int, queueIndex int) Queue {
 	var queueHandle VkQueue
 
-	err := d.driver.VkGetDeviceQueue(d.handle, Uint32(queueFamilyIndex), Uint32(queueIndex), &queueHandle)
-	if err != nil {
-		return nil, err
-	}
+	d.driver.VkGetDeviceQueue(d.handle, Uint32(queueFamilyIndex), Uint32(queueIndex), &queueHandle)
 
-	return &vulkanQueue{driver: d.driver, handle: queueHandle}, nil
+	return &vulkanQueue{driver: d.driver, handle: queueHandle}
 }
 
 func (d *vulkanDevice) WaitForIdle() (VkResult, error) {
@@ -106,8 +103,8 @@ func (d *vulkanDevice) AllocateMemory(o *DeviceMemoryOptions) (DeviceMemory, VkR
 	}, res, nil
 }
 
-func (d *vulkanDevice) FreeMemory(memory DeviceMemory) error {
-	return d.driver.VkFreeMemory(d.handle, memory.Handle(), nil)
+func (d *vulkanDevice) FreeMemory(memory DeviceMemory) {
+	d.driver.VkFreeMemory(d.handle, memory.Handle(), nil)
 }
 
 func (d *vulkanDevice) UpdateDescriptorSets(writes []WriteDescriptorSetOptions, copies []CopyDescriptorSetOptions) error {
@@ -152,5 +149,6 @@ func (d *vulkanDevice) UpdateDescriptorSets(writes []WriteDescriptorSetOptions, 
 		}
 	}
 
-	return d.driver.VkUpdateDescriptorSets(d.handle, Uint32(writeCount), (*VkWriteDescriptorSet)(writePtr), Uint32(copyCount), (*VkCopyDescriptorSet)(copyPtr))
+	d.driver.VkUpdateDescriptorSets(d.handle, Uint32(writeCount), (*VkWriteDescriptorSet)(writePtr), Uint32(copyCount), (*VkCopyDescriptorSet)(copyPtr))
+	return nil
 }

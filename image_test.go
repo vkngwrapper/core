@@ -89,18 +89,15 @@ func TestVulkanImage_MemoryRequirements(t *testing.T) {
 	image := mocks.EasyDummyImage(t, loader, device)
 
 	driver.EXPECT().VkGetImageMemoryRequirements(device.Handle(), image.Handle(), gomock.Not(nil)).DoAndReturn(
-		func(device core.VkDevice, image core.VkImage, pRequirements *core.VkMemoryRequirements) error {
+		func(device core.VkDevice, image core.VkImage, pRequirements *core.VkMemoryRequirements) {
 			val := reflect.ValueOf(pRequirements).Elem()
 
 			*(*core.VkDeviceSize)(unsafe.Pointer(val.FieldByName("size").UnsafeAddr())) = 1
 			*(*core.VkDeviceSize)(unsafe.Pointer(val.FieldByName("alignment").UnsafeAddr())) = 3
 			*(*core.Uint32)(unsafe.Pointer(val.FieldByName("memoryTypeBits").UnsafeAddr())) = 5
-
-			return nil
 		})
 
-	reqs, err := image.MemoryRequirements()
-	require.NoError(t, err)
+	reqs := image.MemoryRequirements()
 	require.NotNil(t, reqs)
 	require.Equal(t, 1, reqs.Size)
 	require.Equal(t, 3, reqs.Alignment)
@@ -123,4 +120,44 @@ func TestVulkanImage_BindImageMemory(t *testing.T) {
 
 	_, err = image.BindImageMemory(memory, 3)
 	require.NoError(t, err)
+}
+
+func TestVulkanImage_SubresourceLayout(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	driver := mocks.NewMockDriver(ctrl)
+	loader, err := core.CreateLoaderFromDriver(driver)
+	require.NoError(t, err)
+
+	device := mocks.EasyMockDevice(ctrl, driver)
+	image := mocks.EasyDummyImage(t, loader, device)
+
+	driver.EXPECT().VkGetImageSubresourceLayout(device.Handle(), image.Handle(), gomock.Not(nil), gomock.Not(nil)).DoAndReturn(
+		func(device core.VkDevice, image core.VkImage, pSubresource *core.VkImageSubresource, pLayout *core.VkSubresourceLayout) {
+			val := reflect.ValueOf(pSubresource).Elem()
+
+			require.Equal(t, uint64(0x00000200), val.FieldByName("aspectMask").Uint())
+			require.Equal(t, uint64(1), val.FieldByName("mipLevel").Uint())
+			require.Equal(t, uint64(3), val.FieldByName("arrayLayer").Uint())
+
+			val = reflect.ValueOf(pLayout).Elem()
+			*(*uint64)(unsafe.Pointer(val.FieldByName("offset").UnsafeAddr())) = 5
+			*(*uint64)(unsafe.Pointer(val.FieldByName("size").UnsafeAddr())) = 7
+			*(*uint64)(unsafe.Pointer(val.FieldByName("rowPitch").UnsafeAddr())) = 11
+			*(*uint64)(unsafe.Pointer(val.FieldByName("depthPitch").UnsafeAddr())) = 13
+			*(*uint64)(unsafe.Pointer(val.FieldByName("arrayPitch").UnsafeAddr())) = 17
+		})
+
+	layout := image.SubresourceLayout(&common.ImageSubresource{
+		AspectMask: common.AspectMemoryPlane2EXT,
+		MipLevel:   1,
+		ArrayLayer: 3,
+	})
+	require.NotNil(t, layout)
+	require.Equal(t, 5, layout.Offset)
+	require.Equal(t, 7, layout.Size)
+	require.Equal(t, 11, layout.RowPitch)
+	require.Equal(t, 13, layout.DepthPitch)
+	require.Equal(t, 17, layout.ArrayPitch)
 }

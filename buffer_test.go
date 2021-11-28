@@ -113,16 +113,14 @@ func TestBuffer_MemoryRequirements(t *testing.T) {
 	buffer := mocks.EasyDummyBuffer(t, loader, device)
 
 	mockDriver.EXPECT().VkGetBufferMemoryRequirements(device.Handle(), buffer.Handle(), gomock.Not(nil)).DoAndReturn(
-		func(device core.VkDevice, buffer core.VkBuffer, requirements *core.VkMemoryRequirements) error {
+		func(device core.VkDevice, buffer core.VkBuffer, requirements *core.VkMemoryRequirements) {
 			v := reflect.ValueOf(requirements).Elem()
 			*(*uint64)(unsafe.Pointer(v.FieldByName("size").UnsafeAddr())) = 5
 			*(*uint64)(unsafe.Pointer(v.FieldByName("alignment").UnsafeAddr())) = 8
 			*(*uint32)(unsafe.Pointer(v.FieldByName("memoryTypeBits").UnsafeAddr())) = 0xff
-
-			return nil
 		})
 
-	reqs, err := buffer.MemoryRequirements()
+	reqs := buffer.MemoryRequirements()
 	require.Equal(t, 5, reqs.Size)
 	require.Equal(t, 8, reqs.Alignment)
 	require.Equal(t, uint32(0xFF), reqs.MemoryType)

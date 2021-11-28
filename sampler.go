@@ -22,8 +22,8 @@ func (s *vulkanSampler) Handle() VkSampler {
 	return s.handle
 }
 
-func (s *vulkanSampler) Destroy() error {
-	return s.driver.VkDestroySampler(s.device, s.handle, nil)
+func (s *vulkanSampler) Destroy() {
+	s.driver.VkDestroySampler(s.device, s.handle, nil)
 }
 
 type SamplerFlags int32

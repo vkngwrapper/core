@@ -7,125 +7,125 @@ package common
 import "C"
 
 type PhysicalDeviceLimits struct {
-	MaxImageDimension1D    uint32
-	MaxImageDimension2D    uint32
-	MaxImageDimension3D    uint32
-	MaxImageDimensionCube  uint32
-	MaxImageArrayLayers    uint32
-	MaxTexelBufferElements uint32
+	MaxImageDimension1D    int
+	MaxImageDimension2D    int
+	MaxImageDimension3D    int
+	MaxImageDimensionCube  int
+	MaxImageArrayLayers    int
+	MaxTexelBufferElements int
 
-	MaxUniformBufferRange uint32
-	MaxStorageBufferRange uint32
-	MaxPushConstantsSize  uint32
+	MaxUniformBufferRange int
+	MaxStorageBufferRange int
+	MaxPushConstantsSize  int
 
-	MaxMemoryAllocationCount  uint32
-	MaxSamplerAllocationCount uint32
+	MaxMemoryAllocationCount  int
+	MaxSamplerAllocationCount int
 
-	BufferImageGranularity uint64
-	SparseAddressSpaceSize uint64
+	BufferImageGranularity int
+	SparseAddressSpaceSize int
 
-	MaxBoundDescriptorSets                uint32
-	MaxPerStageDescriptorSamplers         uint32
-	MaxPerStageDescriptorUniformBuffers   uint32
-	MaxPerStageDescriptorStorageBuffers   uint32
-	MaxPerStageDescriptorSampledImages    uint32
-	MaxPerStageDescriptorStorageImages    uint32
-	MaxPerStageDescriptorInputAttachments uint32
-	MaxPerStageResources                  uint32
+	MaxBoundDescriptorSets                int
+	MaxPerStageDescriptorSamplers         int
+	MaxPerStageDescriptorUniformBuffers   int
+	MaxPerStageDescriptorStorageBuffers   int
+	MaxPerStageDescriptorSampledImages    int
+	MaxPerStageDescriptorStorageImages    int
+	MaxPerStageDescriptorInputAttachments int
+	MaxPerStageResources                  int
 
-	MaxDescriptorSetSamplers              uint32
-	MaxDescriptorSetUniformBuffers        uint32
-	MaxDescriptorSetUniformBuffersDynamic uint32
-	MaxDescriptorSetStorageBuffers        uint32
-	MaxDescriptorSetStorageBuffersDynamic uint32
-	MaxDescriptorSetSampledImages         uint32
-	MaxDescriptorSetStorageImages         uint32
-	MaxDescriptorSetInputAttachments      uint32
+	MaxDescriptorSetSamplers              int
+	MaxDescriptorSetUniformBuffers        int
+	MaxDescriptorSetUniformBuffersDynamic int
+	MaxDescriptorSetStorageBuffers        int
+	MaxDescriptorSetStorageBuffersDynamic int
+	MaxDescriptorSetSampledImages         int
+	MaxDescriptorSetStorageImages         int
+	MaxDescriptorSetInputAttachments      int
 
-	MaxVertexInputAttributes      uint32
-	MaxVertexInputBindings        uint32
-	MaxVertexInputAttributeOffset uint32
-	MaxVertexInputBindingStride   uint32
-	MaxVertexOutputComponents     uint32
+	MaxVertexInputAttributes      int
+	MaxVertexInputBindings        int
+	MaxVertexInputAttributeOffset int
+	MaxVertexInputBindingStride   int
+	MaxVertexOutputComponents     int
 
-	MaxTessellationGenerationLevel                  uint32
-	MaxTessellationPatchSize                        uint32
-	MaxTessellationControlPerVertexInputComponents  uint32
-	MaxTessellationControlPerVertexOutputComponents uint32
-	MaxTessellationControlPerPatchOutputComponents  uint32
-	MaxTessellationControlTotalOutputComponents     uint32
-	MaxTessellationEvaluationInputComponents        uint32
-	MaxTessellationEvaluationOutputComponents       uint32
+	MaxTessellationGenerationLevel                  int
+	MaxTessellationPatchSize                        int
+	MaxTessellationControlPerVertexInputComponents  int
+	MaxTessellationControlPerVertexOutputComponents int
+	MaxTessellationControlPerPatchOutputComponents  int
+	MaxTessellationControlTotalOutputComponents     int
+	MaxTessellationEvaluationInputComponents        int
+	MaxTessellationEvaluationOutputComponents       int
 
-	MaxGeometryShaderInvocations     uint32
-	MaxGeometryInputComponents       uint32
-	MaxGeometryOutputComponents      uint32
-	MaxGeometryOutputVertices        uint32
-	MaxGeometryTotalOutputComponents uint32
+	MaxGeometryShaderInvocations     int
+	MaxGeometryInputComponents       int
+	MaxGeometryOutputComponents      int
+	MaxGeometryOutputVertices        int
+	MaxGeometryTotalOutputComponents int
 
-	MaxFragmentInputComponents         uint32
-	MaxFragmentOutputAttachments       uint32
-	MaxFragmentDualSrcAttachments      uint32
-	MaxFragmentCombinedOutputResources uint32
+	MaxFragmentInputComponents         int
+	MaxFragmentOutputAttachments       int
+	MaxFragmentDualSrcAttachments      int
+	MaxFragmentCombinedOutputResources int
 
-	MaxComputeSharedMemorySize     uint32
-	MaxComputeWorkGroupCount       [3]uint32
-	MaxComputeWorkGroupInvocations uint32
-	MaxComputeWorkGroupSize        [3]uint32
+	MaxComputeSharedMemorySize     int
+	MaxComputeWorkGroupCount       [3]int
+	MaxComputeWorkGroupInvocations int
+	MaxComputeWorkGroupSize        [3]int
 
-	SubPixelPrecisionBits uint32
-	SubTexelPrecisionBits uint32
-	MipmapPrecisionBits   uint32
+	SubPixelPrecisionBits int
+	SubTexelPrecisionBits int
+	MipmapPrecisionBits   int
 
-	MaxDrawIndexedIndexValue uint32
-	MaxDrawIndirectCount     uint32
+	MaxDrawIndexedIndexValue int
+	MaxDrawIndirectCount     int
 
 	MaxSamplerLodBias    float32
 	MaxSamplerAnisotropy float32
 
-	MaxViewports          uint32
-	MaxViewportDimensions [2]uint32
+	MaxViewports          int
+	MaxViewportDimensions [2]int
 	ViewportBoundsRange   [2]float32
-	ViewportSubPixelBits  uint32
+	ViewportSubPixelBits  int
 
-	MinMemoryMapAlignment           uint
-	MinTexelBufferOffsetAlignment   uint64
-	MinUniformBufferOffsetAlignment uint64
-	MinStorageBufferOffsetAlignment uint64
+	MinMemoryMapAlignment           int
+	MinTexelBufferOffsetAlignment   int
+	MinUniformBufferOffsetAlignment int
+	MinStorageBufferOffsetAlignment int
 
-	MinTexelOffset                  int32
-	MaxTexelOffset                  uint32
-	MinTexelGatherOffset            int32
-	MaxTexelGatherOffset            uint32
+	MinTexelOffset                  int
+	MaxTexelOffset                  int
+	MinTexelGatherOffset            int
+	MaxTexelGatherOffset            int
 	MinInterpolationOffset          float32
 	MaxInterpolationOffset          float32
-	SubPixelInterpolationOffsetBits uint32
+	SubPixelInterpolationOffsetBits int
 
-	MaxFramebufferWidth  uint32
-	MaxFramebufferHeight uint32
-	MaxFramebufferLayers uint32
+	MaxFramebufferWidth  int
+	MaxFramebufferHeight int
+	MaxFramebufferLayers int
 
 	FramebufferColorSampleCounts         SampleCounts
 	FramebufferDepthSampleCounts         SampleCounts
 	FramebufferStencilSampleCounts       SampleCounts
 	FramebufferNoAttachmentsSampleCounts SampleCounts
 
-	MaxColorAttachments             uint32
+	MaxColorAttachments             int
 	SampledImageColorSampleCounts   SampleCounts
 	SampledImageIntegerSampleCounts SampleCounts
 	SampledImageDepthSampleCounts   SampleCounts
 	SampledImageStencilSampleCounts SampleCounts
 	StorageImageSampleCounts        SampleCounts
-	MaxSampleMaskWords              uint32
+	MaxSampleMaskWords              int
 
 	TimestampComputeAndGraphics bool
 	TimestampPeriod             float32
 
-	MaxClipDistances                uint32
-	MaxCullDistances                uint32
-	MaxCombinedClipAndCullDistances uint32
+	MaxClipDistances                int
+	MaxCullDistances                int
+	MaxCombinedClipAndCullDistances int
 
-	DiscreteQueuePriorities uint32
+	DiscreteQueuePriorities int
 
 	PointSizeRange       [2]float32
 	LineWidthRange       [2]float32
@@ -135,7 +135,7 @@ type PhysicalDeviceLimits struct {
 	StrictLines             bool
 	StandardSampleLocations bool
 
-	OptimalBufferCopyOffsetAlignment   uint64
-	OptimalBufferCopyRowPitchAlignment uint64
-	NonCoherentAtomSize                uint64
+	OptimalBufferCopyOffsetAlignment   int
+	OptimalBufferCopyRowPitchAlignment int
+	NonCoherentAtomSize                int
 }

@@ -17,7 +17,7 @@ func TestVulkanQueue_WaitForIdle(t *testing.T) {
 	require.NoError(t, err)
 
 	device := mocks.EasyDummyDevice(t, ctrl, loader)
-	queue := mocks.EasyDummyQueue(t, device)
+	queue := mocks.EasyDummyQueue(device)
 
 	driver.EXPECT().VkQueueWaitIdle(queue.Handle()).Return(core.VKSuccess, nil)
 

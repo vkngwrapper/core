@@ -20,7 +20,7 @@ func TestSubmitToQueue_SignalSuccess(t *testing.T) {
 	require.NoError(t, err)
 
 	mockDevice := mocks.EasyDummyDevice(t, ctrl, loader)
-	queue := mocks.EasyDummyQueue(t, mockDevice)
+	queue := mocks.EasyDummyQueue(mockDevice)
 
 	fence := mocks.EasyDummyFence(t, loader, mockDevice)
 
@@ -90,7 +90,7 @@ func TestSubmitToQueue_NoSignalSuccess(t *testing.T) {
 	require.NoError(t, err)
 
 	mockDevice := mocks.EasyDummyDevice(t, ctrl, loader)
-	queue := mocks.EasyDummyQueue(t, mockDevice)
+	queue := mocks.EasyDummyQueue(mockDevice)
 
 	pool := mocks.EasyDummyCommandPool(t, loader, mockDevice)
 	buffer := mocks.EasyDummyCommandBuffer(t, mockDevice, pool)
@@ -140,7 +140,7 @@ func TestSubmitToQueue_MismatchWaitSemaphores(t *testing.T) {
 	require.NoError(t, err)
 
 	mockDevice := mocks.EasyDummyDevice(t, ctrl, loader)
-	queue := mocks.EasyDummyQueue(t, mockDevice)
+	queue := mocks.EasyDummyQueue(mockDevice)
 
 	pool := mocks.EasyDummyCommandPool(t, loader, mockDevice)
 	buffer := mocks.EasyDummyCommandBuffer(t, mockDevice, pool)

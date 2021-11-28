@@ -8,6 +8,7 @@ import "C"
 import (
 	"github.com/CannibalVox/VKng/core/common"
 	"github.com/CannibalVox/cgoparam"
+	"github.com/cockroachdb/errors"
 	"github.com/google/uuid"
 	"unsafe"
 )
@@ -25,18 +26,15 @@ func (d *vulkanPhysicalDevice) Driver() Driver {
 	return d.driver
 }
 
-func (d *vulkanPhysicalDevice) QueueFamilyProperties() ([]*common.QueueFamily, error) {
+func (d *vulkanPhysicalDevice) QueueFamilyProperties() []*common.QueueFamily {
 	allocator := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(allocator)
 
 	count := (*Uint32)(allocator.Malloc(int(unsafe.Sizeof(C.uint32_t(0)))))
-	err := d.driver.VkGetPhysicalDeviceQueueFamilyProperties(d.handle, count, nil)
-	if err != nil {
-		return nil, err
-	}
+	d.driver.VkGetPhysicalDeviceQueueFamilyProperties(d.handle, count, nil)
 
 	if *count == 0 {
-		return nil, nil
+		return nil
 	}
 
 	goCount := int(*count)
@@ -44,10 +42,7 @@ func (d *vulkanPhysicalDevice) QueueFamilyProperties() ([]*common.QueueFamily, e
 	allocatedHandles := allocator.Malloc(goCount * int(unsafe.Sizeof(C.VkQueueFamilyProperties{})))
 	familyProperties := ([]C.VkQueueFamilyProperties)(unsafe.Slice((*C.VkQueueFamilyProperties)(allocatedHandles), int(*count)))
 
-	err = d.driver.VkGetPhysicalDeviceQueueFamilyProperties(d.handle, count, (*VkQueueFamilyProperties)(allocatedHandles))
-	if err != nil {
-		return nil, err
-	}
+	d.driver.VkGetPhysicalDeviceQueueFamilyProperties(d.handle, count, (*VkQueueFamilyProperties)(allocatedHandles))
 
 	var queueFamilies []*common.QueueFamily
 	for i := 0; i < goCount; i++ {
@@ -63,38 +58,32 @@ func (d *vulkanPhysicalDevice) QueueFamilyProperties() ([]*common.QueueFamily, e
 		})
 	}
 
-	return queueFamilies, nil
+	return queueFamilies
 }
 
-func (d *vulkanPhysicalDevice) Properties() (*common.PhysicalDeviceProperties, error) {
+func (d *vulkanPhysicalDevice) Properties() *common.PhysicalDeviceProperties {
 	allocator := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(allocator)
 
 	propertiesUnsafe := allocator.Malloc(int(unsafe.Sizeof([1]C.VkPhysicalDeviceProperties{})))
 
-	err := d.driver.VkGetPhysicalDeviceProperties(d.handle, (*VkPhysicalDeviceProperties)(propertiesUnsafe))
-	if err != nil {
-		return nil, err
-	}
+	d.driver.VkGetPhysicalDeviceProperties(d.handle, (*VkPhysicalDeviceProperties)(propertiesUnsafe))
 
 	return createPhysicalDeviceProperties((*C.VkPhysicalDeviceProperties)(propertiesUnsafe))
 }
 
-func (d *vulkanPhysicalDevice) Features() (*common.PhysicalDeviceFeatures, error) {
+func (d *vulkanPhysicalDevice) Features() *common.PhysicalDeviceFeatures {
 	allocator := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(allocator)
 
 	featuresUnsafe := allocator.Malloc(int(unsafe.Sizeof([1]C.VkPhysicalDeviceFeatures{})))
 
-	err := d.driver.VkGetPhysicalDeviceFeatures(d.handle, (*VkPhysicalDeviceFeatures)(featuresUnsafe))
-	if err != nil {
-		return nil, err
-	}
+	d.driver.VkGetPhysicalDeviceFeatures(d.handle, (*VkPhysicalDeviceFeatures)(featuresUnsafe))
 
-	return createPhysicalDeviceFeatures((*C.VkPhysicalDeviceFeatures)(featuresUnsafe)), nil
+	return createPhysicalDeviceFeatures((*C.VkPhysicalDeviceFeatures)(featuresUnsafe))
 }
 
-func (d *vulkanPhysicalDevice) AvailableExtensions() (map[string]*common.ExtensionProperties, VkResult, error) {
+func (d *vulkanPhysicalDevice) attemptAvailableExtensions(layerNamePtr *Char) (map[string]*common.ExtensionProperties, VkResult, error) {
 	allocator := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(allocator)
 
@@ -136,22 +125,49 @@ func (d *vulkanPhysicalDevice) AvailableExtensions() (map[string]*common.Extensi
 	return retVal, res, nil
 }
 
-func (d *vulkanPhysicalDevice) FormatProperties(format common.DataFormat) (*common.FormatProperties, error) {
+func (d *vulkanPhysicalDevice) AvailableExtensions() (map[string]*common.ExtensionProperties, VkResult, error) {
+	// There may be a race condition that adds new available extensions between getting the
+	// extension count & pulling the extensions, in which case, attemptAvailableExtensions will return
+	// VK_INCOMPLETE.  In this case, we should try again.
+	var layers map[string]*common.ExtensionProperties
+	var result VkResult
+	var err error
+	for doWhile := true; doWhile; doWhile = (result == VKIncomplete) {
+		layers, result, err = d.attemptAvailableExtensions(nil)
+	}
+	return layers, result, err
+}
+
+func (d *vulkanPhysicalDevice) AvailableExtensionsForLayer(layerName string) (map[string]*common.ExtensionProperties, VkResult, error) {
+	// There may be a race condition that adds new available extensions between getting the
+	// extension count & pulling the extensions, in which case, attemptAvailableExtensions will return
+	// VK_INCOMPLETE.  In this case, we should try again.
+	var layers map[string]*common.ExtensionProperties
+	var result VkResult
+	var err error
+	allocator := cgoparam.GetAlloc()
+	defer cgoparam.ReturnAlloc(allocator)
+
+	layerNamePtr := (*Char)(allocator.CString(layerName))
+	for doWhile := true; doWhile; doWhile = (result == VKIncomplete) {
+		layers, result, err = d.attemptAvailableExtensions(layerNamePtr)
+	}
+	return layers, result, err
+}
+
+func (d *vulkanPhysicalDevice) FormatProperties(format common.DataFormat) *common.FormatProperties {
 	allocator := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(allocator)
 
 	properties := (*C.VkFormatProperties)(allocator.Malloc(C.sizeof_struct_VkFormatProperties))
 
-	err := d.driver.VkGetPhysicalDeviceFormatProperties(d.handle, VkFormat(format), (*VkFormatProperties)(properties))
-	if err != nil {
-		return nil, err
-	}
+	d.driver.VkGetPhysicalDeviceFormatProperties(d.handle, VkFormat(format), (*VkFormatProperties)(properties))
 
 	return &common.FormatProperties{
 		LinearTilingFeatures:  common.FormatFeatures(properties.linearTilingFeatures),
 		OptimalTilingFeatures: common.FormatFeatures(properties.optimalTilingFeatures),
 		BufferFeatures:        common.FormatFeatures(properties.bufferFeatures),
-	}, nil
+	}
 }
 
 func createPhysicalDeviceFeatures(f *C.VkPhysicalDeviceFeatures) *common.PhysicalDeviceFeatures {
@@ -216,119 +232,119 @@ func createPhysicalDeviceFeatures(f *C.VkPhysicalDeviceFeatures) *common.Physica
 
 func createPhysicalDeviceLimits(l *C.VkPhysicalDeviceLimits) *common.PhysicalDeviceLimits {
 	return &common.PhysicalDeviceLimits{
-		MaxImageDimension1D:                             uint32(l.maxImageDimension1D),
-		MaxImageDimension2D:                             uint32(l.maxImageDimension2D),
-		MaxImageDimension3D:                             uint32(l.maxImageDimension3D),
-		MaxImageDimensionCube:                           uint32(l.maxImageDimensionCube),
-		MaxImageArrayLayers:                             uint32(l.maxImageArrayLayers),
-		MaxTexelBufferElements:                          uint32(l.maxTexelBufferElements),
-		MaxUniformBufferRange:                           uint32(l.maxUniformBufferRange),
-		MaxStorageBufferRange:                           uint32(l.maxStorageBufferRange),
-		MaxPushConstantsSize:                            uint32(l.maxPushConstantsSize),
-		MaxMemoryAllocationCount:                        uint32(l.maxMemoryAllocationCount),
-		MaxSamplerAllocationCount:                       uint32(l.maxSamplerAllocationCount),
-		BufferImageGranularity:                          uint64(l.bufferImageGranularity),
-		SparseAddressSpaceSize:                          uint64(l.sparseAddressSpaceSize),
-		MaxBoundDescriptorSets:                          uint32(l.maxBoundDescriptorSets),
-		MaxPerStageDescriptorSamplers:                   uint32(l.maxPerStageDescriptorSamplers),
-		MaxPerStageDescriptorUniformBuffers:             uint32(l.maxPerStageDescriptorUniformBuffers),
-		MaxPerStageDescriptorStorageBuffers:             uint32(l.maxPerStageDescriptorStorageBuffers),
-		MaxPerStageDescriptorSampledImages:              uint32(l.maxPerStageDescriptorSampledImages),
-		MaxPerStageDescriptorStorageImages:              uint32(l.maxPerStageDescriptorStorageImages),
-		MaxPerStageDescriptorInputAttachments:           uint32(l.maxPerStageDescriptorInputAttachments),
-		MaxPerStageResources:                            uint32(l.maxPerStageResources),
-		MaxDescriptorSetSamplers:                        uint32(l.maxDescriptorSetSamplers),
-		MaxDescriptorSetUniformBuffers:                  uint32(l.maxDescriptorSetUniformBuffers),
-		MaxDescriptorSetUniformBuffersDynamic:           uint32(l.maxDescriptorSetUniformBuffersDynamic),
-		MaxDescriptorSetStorageBuffers:                  uint32(l.maxDescriptorSetStorageBuffers),
-		MaxDescriptorSetStorageBuffersDynamic:           uint32(l.maxDescriptorSetStorageBuffersDynamic),
-		MaxDescriptorSetSampledImages:                   uint32(l.maxDescriptorSetSampledImages),
-		MaxDescriptorSetStorageImages:                   uint32(l.maxDescriptorSetStorageImages),
-		MaxDescriptorSetInputAttachments:                uint32(l.maxDescriptorSetInputAttachments),
-		MaxVertexInputAttributes:                        uint32(l.maxVertexInputAttributes),
-		MaxVertexInputBindings:                          uint32(l.maxVertexInputBindings),
-		MaxVertexInputAttributeOffset:                   uint32(l.maxVertexInputAttributeOffset),
-		MaxVertexInputBindingStride:                     uint32(l.maxVertexInputBindingStride),
-		MaxVertexOutputComponents:                       uint32(l.maxVertexOutputComponents),
-		MaxTessellationGenerationLevel:                  uint32(l.maxTessellationGenerationLevel),
-		MaxTessellationPatchSize:                        uint32(l.maxTessellationPatchSize),
-		MaxTessellationControlPerVertexInputComponents:  uint32(l.maxTessellationControlPerVertexInputComponents),
-		MaxTessellationControlPerVertexOutputComponents: uint32(l.maxTessellationControlPerVertexOutputComponents),
-		MaxTessellationControlPerPatchOutputComponents:  uint32(l.maxTessellationControlPerPatchOutputComponents),
-		MaxTessellationControlTotalOutputComponents:     uint32(l.maxTessellationControlTotalOutputComponents),
-		MaxTessellationEvaluationInputComponents:        uint32(l.maxTessellationEvaluationInputComponents),
-		MaxTessellationEvaluationOutputComponents:       uint32(l.maxTessellationEvaluationOutputComponents),
-		MaxGeometryShaderInvocations:                    uint32(l.maxGeometryShaderInvocations),
-		MaxGeometryInputComponents:                      uint32(l.maxGeometryInputComponents),
-		MaxGeometryOutputComponents:                     uint32(l.maxGeometryOutputComponents),
-		MaxGeometryOutputVertices:                       uint32(l.maxGeometryOutputVertices),
-		MaxGeometryTotalOutputComponents:                uint32(l.maxGeometryTotalOutputComponents),
-		MaxFragmentInputComponents:                      uint32(l.maxFragmentInputComponents),
-		MaxFragmentOutputAttachments:                    uint32(l.maxFragmentOutputAttachments),
-		MaxFragmentDualSrcAttachments:                   uint32(l.maxFragmentDualSrcAttachments),
-		MaxFragmentCombinedOutputResources:              uint32(l.maxFragmentCombinedOutputResources),
-		MaxComputeSharedMemorySize:                      uint32(l.maxComputeSharedMemorySize),
-		MaxComputeWorkGroupInvocations:                  uint32(l.maxComputeWorkGroupInvocations),
-		SubPixelPrecisionBits:                           uint32(l.subPixelPrecisionBits),
-		SubTexelPrecisionBits:                           uint32(l.subTexelPrecisionBits),
-		MipmapPrecisionBits:                             uint32(l.mipmapPrecisionBits),
-		MaxDrawIndexedIndexValue:                        uint32(l.maxDrawIndexedIndexValue),
-		MaxDrawIndirectCount:                            uint32(l.maxDrawIndirectCount),
+		MaxImageDimension1D:                             int(l.maxImageDimension1D),
+		MaxImageDimension2D:                             int(l.maxImageDimension2D),
+		MaxImageDimension3D:                             int(l.maxImageDimension3D),
+		MaxImageDimensionCube:                           int(l.maxImageDimensionCube),
+		MaxImageArrayLayers:                             int(l.maxImageArrayLayers),
+		MaxTexelBufferElements:                          int(l.maxTexelBufferElements),
+		MaxUniformBufferRange:                           int(l.maxUniformBufferRange),
+		MaxStorageBufferRange:                           int(l.maxStorageBufferRange),
+		MaxPushConstantsSize:                            int(l.maxPushConstantsSize),
+		MaxMemoryAllocationCount:                        int(l.maxMemoryAllocationCount),
+		MaxSamplerAllocationCount:                       int(l.maxSamplerAllocationCount),
+		BufferImageGranularity:                          int(l.bufferImageGranularity),
+		SparseAddressSpaceSize:                          int(l.sparseAddressSpaceSize),
+		MaxBoundDescriptorSets:                          int(l.maxBoundDescriptorSets),
+		MaxPerStageDescriptorSamplers:                   int(l.maxPerStageDescriptorSamplers),
+		MaxPerStageDescriptorUniformBuffers:             int(l.maxPerStageDescriptorUniformBuffers),
+		MaxPerStageDescriptorStorageBuffers:             int(l.maxPerStageDescriptorStorageBuffers),
+		MaxPerStageDescriptorSampledImages:              int(l.maxPerStageDescriptorSampledImages),
+		MaxPerStageDescriptorStorageImages:              int(l.maxPerStageDescriptorStorageImages),
+		MaxPerStageDescriptorInputAttachments:           int(l.maxPerStageDescriptorInputAttachments),
+		MaxPerStageResources:                            int(l.maxPerStageResources),
+		MaxDescriptorSetSamplers:                        int(l.maxDescriptorSetSamplers),
+		MaxDescriptorSetUniformBuffers:                  int(l.maxDescriptorSetUniformBuffers),
+		MaxDescriptorSetUniformBuffersDynamic:           int(l.maxDescriptorSetUniformBuffersDynamic),
+		MaxDescriptorSetStorageBuffers:                  int(l.maxDescriptorSetStorageBuffers),
+		MaxDescriptorSetStorageBuffersDynamic:           int(l.maxDescriptorSetStorageBuffersDynamic),
+		MaxDescriptorSetSampledImages:                   int(l.maxDescriptorSetSampledImages),
+		MaxDescriptorSetStorageImages:                   int(l.maxDescriptorSetStorageImages),
+		MaxDescriptorSetInputAttachments:                int(l.maxDescriptorSetInputAttachments),
+		MaxVertexInputAttributes:                        int(l.maxVertexInputAttributes),
+		MaxVertexInputBindings:                          int(l.maxVertexInputBindings),
+		MaxVertexInputAttributeOffset:                   int(l.maxVertexInputAttributeOffset),
+		MaxVertexInputBindingStride:                     int(l.maxVertexInputBindingStride),
+		MaxVertexOutputComponents:                       int(l.maxVertexOutputComponents),
+		MaxTessellationGenerationLevel:                  int(l.maxTessellationGenerationLevel),
+		MaxTessellationPatchSize:                        int(l.maxTessellationPatchSize),
+		MaxTessellationControlPerVertexInputComponents:  int(l.maxTessellationControlPerVertexInputComponents),
+		MaxTessellationControlPerVertexOutputComponents: int(l.maxTessellationControlPerVertexOutputComponents),
+		MaxTessellationControlPerPatchOutputComponents:  int(l.maxTessellationControlPerPatchOutputComponents),
+		MaxTessellationControlTotalOutputComponents:     int(l.maxTessellationControlTotalOutputComponents),
+		MaxTessellationEvaluationInputComponents:        int(l.maxTessellationEvaluationInputComponents),
+		MaxTessellationEvaluationOutputComponents:       int(l.maxTessellationEvaluationOutputComponents),
+		MaxGeometryShaderInvocations:                    int(l.maxGeometryShaderInvocations),
+		MaxGeometryInputComponents:                      int(l.maxGeometryInputComponents),
+		MaxGeometryOutputComponents:                     int(l.maxGeometryOutputComponents),
+		MaxGeometryOutputVertices:                       int(l.maxGeometryOutputVertices),
+		MaxGeometryTotalOutputComponents:                int(l.maxGeometryTotalOutputComponents),
+		MaxFragmentInputComponents:                      int(l.maxFragmentInputComponents),
+		MaxFragmentOutputAttachments:                    int(l.maxFragmentOutputAttachments),
+		MaxFragmentDualSrcAttachments:                   int(l.maxFragmentDualSrcAttachments),
+		MaxFragmentCombinedOutputResources:              int(l.maxFragmentCombinedOutputResources),
+		MaxComputeSharedMemorySize:                      int(l.maxComputeSharedMemorySize),
+		MaxComputeWorkGroupInvocations:                  int(l.maxComputeWorkGroupInvocations),
+		SubPixelPrecisionBits:                           int(l.subPixelPrecisionBits),
+		SubTexelPrecisionBits:                           int(l.subTexelPrecisionBits),
+		MipmapPrecisionBits:                             int(l.mipmapPrecisionBits),
+		MaxDrawIndexedIndexValue:                        int(l.maxDrawIndexedIndexValue),
+		MaxDrawIndirectCount:                            int(l.maxDrawIndirectCount),
 		MaxSamplerLodBias:                               float32(l.maxSamplerLodBias),
 		MaxSamplerAnisotropy:                            float32(l.maxSamplerAnisotropy),
-		MaxViewports:                                    uint32(l.maxViewports),
-		ViewportSubPixelBits:                            uint32(l.viewportSubPixelBits),
-		MinMemoryMapAlignment:                           uint(l.minMemoryMapAlignment),
-		MinTexelBufferOffsetAlignment:                   uint64(l.minTexelBufferOffsetAlignment),
-		MinUniformBufferOffsetAlignment:                 uint64(l.minUniformBufferOffsetAlignment),
-		MinStorageBufferOffsetAlignment:                 uint64(l.minStorageBufferOffsetAlignment),
-		MinTexelOffset:                                  int32(l.minTexelOffset),
-		MaxTexelOffset:                                  uint32(l.maxTexelOffset),
-		MinTexelGatherOffset:                            int32(l.minTexelGatherOffset),
-		MaxTexelGatherOffset:                            uint32(l.maxTexelGatherOffset),
+		MaxViewports:                                    int(l.maxViewports),
+		ViewportSubPixelBits:                            int(l.viewportSubPixelBits),
+		MinMemoryMapAlignment:                           int(l.minMemoryMapAlignment),
+		MinTexelBufferOffsetAlignment:                   int(l.minTexelBufferOffsetAlignment),
+		MinUniformBufferOffsetAlignment:                 int(l.minUniformBufferOffsetAlignment),
+		MinStorageBufferOffsetAlignment:                 int(l.minStorageBufferOffsetAlignment),
+		MinTexelOffset:                                  int(l.minTexelOffset),
+		MaxTexelOffset:                                  int(l.maxTexelOffset),
+		MinTexelGatherOffset:                            int(l.minTexelGatherOffset),
+		MaxTexelGatherOffset:                            int(l.maxTexelGatherOffset),
 		MinInterpolationOffset:                          float32(l.minInterpolationOffset),
 		MaxInterpolationOffset:                          float32(l.maxInterpolationOffset),
-		SubPixelInterpolationOffsetBits:                 uint32(l.subPixelInterpolationOffsetBits),
-		MaxFramebufferWidth:                             uint32(l.maxFramebufferWidth),
-		MaxFramebufferHeight:                            uint32(l.maxFramebufferHeight),
-		MaxFramebufferLayers:                            uint32(l.maxFramebufferLayers),
+		SubPixelInterpolationOffsetBits:                 int(l.subPixelInterpolationOffsetBits),
+		MaxFramebufferWidth:                             int(l.maxFramebufferWidth),
+		MaxFramebufferHeight:                            int(l.maxFramebufferHeight),
+		MaxFramebufferLayers:                            int(l.maxFramebufferLayers),
 		FramebufferColorSampleCounts:                    common.SampleCounts(l.framebufferColorSampleCounts),
 		FramebufferDepthSampleCounts:                    common.SampleCounts(l.framebufferDepthSampleCounts),
 		FramebufferStencilSampleCounts:                  common.SampleCounts(l.framebufferStencilSampleCounts),
 		FramebufferNoAttachmentsSampleCounts:            common.SampleCounts(l.framebufferNoAttachmentsSampleCounts),
-		MaxColorAttachments:                             uint32(l.maxColorAttachments),
+		MaxColorAttachments:                             int(l.maxColorAttachments),
 		SampledImageColorSampleCounts:                   common.SampleCounts(l.sampledImageColorSampleCounts),
 		SampledImageIntegerSampleCounts:                 common.SampleCounts(l.sampledImageIntegerSampleCounts),
 		SampledImageDepthSampleCounts:                   common.SampleCounts(l.sampledImageDepthSampleCounts),
 		SampledImageStencilSampleCounts:                 common.SampleCounts(l.sampledImageStencilSampleCounts),
 		StorageImageSampleCounts:                        common.SampleCounts(l.storageImageSampleCounts),
-		MaxSampleMaskWords:                              uint32(l.maxSampleMaskWords),
+		MaxSampleMaskWords:                              int(l.maxSampleMaskWords),
 		TimestampComputeAndGraphics:                     l.timestampComputeAndGraphics != C.VK_FALSE,
 		TimestampPeriod:                                 float32(l.timestampPeriod),
-		MaxClipDistances:                                uint32(l.maxClipDistances),
-		MaxCullDistances:                                uint32(l.maxCullDistances),
-		MaxCombinedClipAndCullDistances:                 uint32(l.maxCombinedClipAndCullDistances),
-		DiscreteQueuePriorities:                         uint32(l.discreteQueuePriorities),
+		MaxClipDistances:                                int(l.maxClipDistances),
+		MaxCullDistances:                                int(l.maxCullDistances),
+		MaxCombinedClipAndCullDistances:                 int(l.maxCombinedClipAndCullDistances),
+		DiscreteQueuePriorities:                         int(l.discreteQueuePriorities),
 		PointSizeGranularity:                            float32(l.pointSizeGranularity),
 		LineWidthGranularity:                            float32(l.lineWidthGranularity),
 		StrictLines:                                     l.strictLines != C.VK_FALSE,
 		StandardSampleLocations:                         l.standardSampleLocations != C.VK_FALSE,
-		OptimalBufferCopyOffsetAlignment:                uint64(l.optimalBufferCopyOffsetAlignment),
-		OptimalBufferCopyRowPitchAlignment:              uint64(l.optimalBufferCopyRowPitchAlignment),
-		NonCoherentAtomSize:                             uint64(l.nonCoherentAtomSize),
-		MaxComputeWorkGroupCount: [3]uint32{
-			uint32(l.maxComputeWorkGroupCount[0]),
-			uint32(l.maxComputeWorkGroupCount[1]),
-			uint32(l.maxComputeWorkGroupCount[2]),
+		OptimalBufferCopyOffsetAlignment:                int(l.optimalBufferCopyOffsetAlignment),
+		OptimalBufferCopyRowPitchAlignment:              int(l.optimalBufferCopyRowPitchAlignment),
+		NonCoherentAtomSize:                             int(l.nonCoherentAtomSize),
+		MaxComputeWorkGroupCount: [3]int{
+			int(l.maxComputeWorkGroupCount[0]),
+			int(l.maxComputeWorkGroupCount[1]),
+			int(l.maxComputeWorkGroupCount[2]),
 		},
-		MaxComputeWorkGroupSize: [3]uint32{
-			uint32(l.maxComputeWorkGroupSize[0]),
-			uint32(l.maxComputeWorkGroupSize[1]),
-			uint32(l.maxComputeWorkGroupSize[2]),
+		MaxComputeWorkGroupSize: [3]int{
+			int(l.maxComputeWorkGroupSize[0]),
+			int(l.maxComputeWorkGroupSize[1]),
+			int(l.maxComputeWorkGroupSize[2]),
 		},
-		MaxViewportDimensions: [2]uint32{
-			uint32(l.maxViewportDimensions[0]),
-			uint32(l.maxViewportDimensions[1]),
+		MaxViewportDimensions: [2]int{
+			int(l.maxViewportDimensions[0]),
+			int(l.maxViewportDimensions[1]),
 		},
 		ViewportBoundsRange: [2]float32{
 			float32(l.viewportBoundsRange[0]),
@@ -355,11 +371,11 @@ func createSparseProperties(p *C.VkPhysicalDeviceSparseProperties) *common.Physi
 	}
 }
 
-func createPhysicalDeviceProperties(p *C.VkPhysicalDeviceProperties) (*common.PhysicalDeviceProperties, error) {
+func createPhysicalDeviceProperties(p *C.VkPhysicalDeviceProperties) *common.PhysicalDeviceProperties {
 	uuidBytes := C.GoBytes(unsafe.Pointer(&p.pipelineCacheUUID[0]), C.VK_UUID_SIZE)
 	uuid, err := uuid.FromBytes(uuidBytes)
 	if err != nil {
-		return nil, err
+		panic(errors.Wrap(err, "vulkan provided invalid pipeline cache uuid"))
 	}
 
 	return &common.PhysicalDeviceProperties{
@@ -375,5 +391,5 @@ func createPhysicalDeviceProperties(p *C.VkPhysicalDeviceProperties) (*common.Ph
 		PipelineCacheUUID: uuid,
 		Limits:            createPhysicalDeviceLimits(&p.limits),
 		SparseProperties:  createSparseProperties(&p.sparseProperties),
-	}, nil
+	}
 }

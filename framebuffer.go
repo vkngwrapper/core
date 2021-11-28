@@ -100,6 +100,6 @@ func (b *vulkanFramebuffer) Handle() VkFramebuffer {
 	return b.handle
 }
 
-func (b *vulkanFramebuffer) Destroy() error {
-	return b.driver.VkDestroyFramebuffer(b.device, b.handle, nil)
+func (b *vulkanFramebuffer) Destroy() {
+	b.driver.VkDestroyFramebuffer(b.device, b.handle, nil)
 }

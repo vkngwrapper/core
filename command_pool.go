@@ -21,17 +21,17 @@ func (p *vulkanCommandPool) Handle() VkCommandPool {
 	return p.handle
 }
 
-func (p *vulkanCommandPool) Destroy() error {
-	return p.driver.VkDestroyCommandPool(p.device, p.handle, nil)
+func (p *vulkanCommandPool) Destroy() {
+	p.driver.VkDestroyCommandPool(p.device, p.handle, nil)
 }
 
-func (p *vulkanCommandPool) FreeCommandBuffers(buffers []CommandBuffer) error {
+func (p *vulkanCommandPool) FreeCommandBuffers(buffers []CommandBuffer) {
 	allocator := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(allocator)
 
 	bufferCount := len(buffers)
 	if bufferCount == 0 {
-		return nil
+		return
 	}
 
 	destroyPtr := allocator.Malloc(bufferCount * int(unsafe.Sizeof([1]C.VkCommandBuffer{})))
@@ -40,7 +40,7 @@ func (p *vulkanCommandPool) FreeCommandBuffers(buffers []CommandBuffer) error {
 		destroySlice[i] = buffers[i].Handle()
 	}
 
-	return p.driver.VkFreeCommandBuffers(p.device, p.handle, Uint32(bufferCount), (*VkCommandBuffer)(destroyPtr))
+	p.driver.VkFreeCommandBuffers(p.device, p.handle, Uint32(bufferCount), (*VkCommandBuffer)(destroyPtr))
 }
 
 func (p *vulkanCommandPool) AllocateCommandBuffers(o *CommandBufferOptions) ([]CommandBuffer, VkResult, error) {

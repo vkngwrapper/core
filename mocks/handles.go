@@ -85,6 +85,11 @@ func NewFakePipeline() core.VkPipeline {
 	return core.VkPipeline(unsafe.Pointer(&val))
 }
 
+func NewFakePipelineCache() core.VkPipelineCache {
+	val := 0
+	return core.VkPipelineCache(unsafe.Pointer(&val))
+}
+
 func NewFakePipelineLayout() core.VkPipelineLayout {
 	val := 0
 	return core.VkPipelineLayout(unsafe.Pointer(&val))

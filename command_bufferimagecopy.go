@@ -12,7 +12,7 @@ import (
 )
 
 type BufferImageCopy struct {
-	BufferOffset      uint64
+	BufferOffset      int
 	BufferRowLength   uint32
 	BufferImageHeight int
 

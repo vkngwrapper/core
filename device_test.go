@@ -199,13 +199,11 @@ func TestDevice_GetQueue(t *testing.T) {
 	queueHandle := mocks.NewFakeQueue()
 
 	mockDriver.EXPECT().VkGetDeviceQueue(device.Handle(), core.Uint32(1), core.Uint32(2), gomock.Not(nil)).DoAndReturn(
-		func(device core.VkDevice, queueFamilyIndex, queueIndex core.Uint32, pQueue *core.VkQueue) error {
+		func(device core.VkDevice, queueFamilyIndex, queueIndex core.Uint32, pQueue *core.VkQueue) {
 			*pQueue = queueHandle
-			return nil
 		})
 
-	queue, err := device.GetQueue(1, 2)
-	require.NoError(t, err)
+	queue := device.GetQueue(1, 2)
 	require.NotNil(t, queue)
 	require.Equal(t, queueHandle, queue.Handle())
 }
@@ -322,7 +320,7 @@ func TestVulkanDevice_AllocateAndFreeMemory(t *testing.T) {
 			*pMemory = memoryHandle
 			return core.VKSuccess, nil
 		})
-	mockDriver.EXPECT().VkFreeMemory(device.Handle(), memoryHandle, nil).Return(nil)
+	mockDriver.EXPECT().VkFreeMemory(device.Handle(), memoryHandle, nil)
 
 	memory, _, err := device.AllocateMemory(&core.DeviceMemoryOptions{
 		AllocationSize:  7,
@@ -332,8 +330,7 @@ func TestVulkanDevice_AllocateAndFreeMemory(t *testing.T) {
 	require.NotNil(t, memory)
 	require.Equal(t, memoryHandle, memory.Handle())
 
-	err = device.FreeMemory(memory)
-	require.NoError(t, err)
+	device.FreeMemory(memory)
 }
 
 func TestVulkanDevice_UpdateDescriptorSets_WriteImageInfo(t *testing.T) {

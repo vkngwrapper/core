@@ -16,6 +16,6 @@ func (p *vulkanRenderPass) Handle() VkRenderPass {
 	return p.handle
 }
 
-func (p *vulkanRenderPass) Destroy() error {
-	return p.driver.VkDestroyRenderPass(p.device, p.handle, nil)
+func (p *vulkanRenderPass) Destroy() {
+	p.driver.VkDestroyRenderPass(p.device, p.handle, nil)
 }

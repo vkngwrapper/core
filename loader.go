@@ -40,20 +40,20 @@ func (l *VulkanLoader1_0) Driver() Driver {
 	return l.driver
 }
 
-func (l *VulkanLoader1_0) AvailableExtensions() (map[string]*common.ExtensionProperties, VkResult, error) {
+func (l *VulkanLoader1_0) attemptAvailableExtensions(layerName *Char) (map[string]*common.ExtensionProperties, VkResult, error) {
 	alloc := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(alloc)
 
 	extensionCount := (*Uint32)(alloc.Malloc(int(unsafe.Sizeof(C.uint32_t(0)))))
 
-	res, err := l.driver.VkEnumerateInstanceExtensionProperties(nil, extensionCount, nil)
+	res, err := l.driver.VkEnumerateInstanceExtensionProperties(layerName, extensionCount, nil)
 	if err != nil || *extensionCount == 0 {
 		return nil, res, err
 	}
 
 	extensionsUnsafe := alloc.Malloc(int(*extensionCount) * int(unsafe.Sizeof(C.VkExtensionProperties{})))
 
-	res, err = l.driver.VkEnumerateInstanceExtensionProperties(nil, extensionCount, (*VkExtensionProperties)(extensionsUnsafe))
+	res, err = l.driver.VkEnumerateInstanceExtensionProperties(layerName, extensionCount, (*VkExtensionProperties)(extensionsUnsafe))
 	if err != nil {
 		return nil, res, err
 	}
@@ -79,7 +79,37 @@ func (l *VulkanLoader1_0) AvailableExtensions() (map[string]*common.ExtensionPro
 	return outExtensions, res, nil
 }
 
-func (l *VulkanLoader1_0) AvailableLayers() (map[string]*common.LayerProperties, VkResult, error) {
+func (l *VulkanLoader1_0) AvailableExtensions() (map[string]*common.ExtensionProperties, VkResult, error) {
+	// There may be a race condition that adds new available extensions between getting the
+	// extension count & pulling the extensions, in which case, attemptAvailableExtensions will return
+	// VK_INCOMPLETE.  In this case, we should try again.
+	var layers map[string]*common.ExtensionProperties
+	var result VkResult
+	var err error
+	for doWhile := true; doWhile; doWhile = (result == VKIncomplete) {
+		layers, result, err = l.attemptAvailableExtensions(nil)
+	}
+	return layers, result, err
+}
+
+func (l *VulkanLoader1_0) AvailableExtensionsForLayer(layerName string) (map[string]*common.ExtensionProperties, VkResult, error) {
+	// There may be a race condition that adds new available extensions between getting the
+	// extension count & pulling the extensions, in which case, attemptAvailableExtensions will return
+	// VK_INCOMPLETE.  In this case, we should try again.
+	var layers map[string]*common.ExtensionProperties
+	var result VkResult
+	var err error
+	allocator := cgoparam.GetAlloc()
+	defer cgoparam.ReturnAlloc(allocator)
+
+	layerNamePtr := (*Char)(allocator.CString(layerName))
+	for doWhile := true; doWhile; doWhile = (result == VKIncomplete) {
+		layers, result, err = l.attemptAvailableExtensions(layerNamePtr)
+	}
+	return layers, result, err
+}
+
+func (l *VulkanLoader1_0) attemptAvailableLayers() (map[string]*common.LayerProperties, VkResult, error) {
 	alloc := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(alloc)
 
@@ -118,6 +148,19 @@ func (l *VulkanLoader1_0) AvailableLayers() (map[string]*common.LayerProperties,
 	}
 
 	return outLayers, res, nil
+}
+
+func (l *VulkanLoader1_0) AvailableLayers() (map[string]*common.LayerProperties, VkResult, error) {
+	// There may be a race condition that adds new available layers between getting the
+	// layer count & pulling the layers, in which case, attemptAvailableLayers will return
+	// VK_INCOMPLETE.  In this case, we should try again.
+	var layers map[string]*common.LayerProperties
+	var result VkResult
+	var err error
+	for doWhile := true; doWhile; doWhile = (result == VKIncomplete) {
+		layers, result, err = l.attemptAvailableLayers()
+	}
+	return layers, result, err
 }
 
 func (l *VulkanLoader1_0) CreateInstance(options *InstanceOptions) (Instance, VkResult, error) {
@@ -398,7 +441,25 @@ func (l *VulkanLoader1_0) CreateImage(device Device, o *ImageOptions) (Image, Vk
 		return nil, res, err
 	}
 
-	return &vulkanImage{device: device.Handle(), handle: image, driver: device.Driver()}, VKSuccess, nil
+	return &vulkanImage{device: device.Handle(), handle: image, driver: device.Driver()}, res, nil
+}
+
+func (l *VulkanLoader1_0) CreatePipelineCache(device Device, o *PipelineCacheOptions) (PipelineCache, VkResult, error) {
+	arena := cgoparam.GetAlloc()
+	defer cgoparam.ReturnAlloc(arena)
+
+	createInfo, err := common.AllocOptions(arena, o)
+	if err != nil {
+		return nil, VKErrorUnknown, err
+	}
+
+	var pipelineCache VkPipelineCache
+	res, err := device.Driver().VkCreatePipelineCache(device.Handle(), (*VkPipelineCacheCreateInfo)(createInfo), nil, &pipelineCache)
+	if err != nil {
+		return nil, res, err
+	}
+
+	return &vulkanPipelineCache{driver: device.Driver(), handle: pipelineCache, device: device.Handle()}, res, nil
 }
 
 func (l *VulkanLoader1_0) CreatePipelineLayout(device Device, o *PipelineLayoutOptions) (PipelineLayout, VkResult, error) {

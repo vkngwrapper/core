@@ -42,8 +42,8 @@ type BufferMemoryBarrierOptions struct {
 
 	Buffer Buffer
 
-	Offset uint64
-	Size   uint64
+	Offset int
+	Size   int
 
 	common.HaveNext
 }

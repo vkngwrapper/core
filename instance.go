@@ -23,14 +23,9 @@ func (i *vulkanInstance) Handle() VkInstance {
 	return i.handle
 }
 
-func (i *vulkanInstance) Destroy() error {
-	err := i.driver.VkDestroyInstance(i.handle, nil)
-	if err != nil {
-		return err
-	}
-
+func (i *vulkanInstance) Destroy() {
+	i.driver.VkDestroyInstance(i.handle, nil)
 	i.driver.Destroy()
-	return nil
 }
 
 func (i *vulkanInstance) PhysicalDevices() ([]PhysicalDevice, VkResult, error) {

@@ -317,20 +317,20 @@ func TestVulkanLoader1_0_CreateGraphicsPipelines_VertexInputSuccess(t *testing.T
 						Location: 1,
 						Binding:  3,
 						Format:   common.FormatA1R5G5B5UnsignedNormalized,
-						Offset:   uintptr(5),
+						Offset:   5,
 					},
 					{
 						Location: 7,
 						Binding:  11,
 						Format:   common.FormatA2B10G10R10UnsignedNormalized,
-						Offset:   uintptr(13),
+						Offset:   13,
 					},
 				},
 				VertexBindingDescriptions: []core.VertexBindingDescription{
 					{
 						InputRate: core.RateInstance,
 						Binding:   17,
-						Stride:    uintptr(19),
+						Stride:    19,
 					},
 				},
 			},
@@ -571,7 +571,7 @@ func TestVulkanLoader1_0_CreateGraphicsPipelines_RasterizationSuccess(t *testing
 
 				PolygonMode: core.ModeLine,
 				CullMode:    common.CullFrontAndBack,
-				FrontFace:   common.Clockwise,
+				FrontFace:   common.FrontFaceClockwise,
 
 				DepthBias:               true,
 				DepthBiasClamp:          2.3,

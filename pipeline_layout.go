@@ -67,6 +67,6 @@ func (l *vulkanPipelineLayout) Handle() VkPipelineLayout {
 	return l.handle
 }
 
-func (l *vulkanPipelineLayout) Destroy() error {
-	return l.driver.VkDestroyPipelineLayout(l.device, l.handle, nil)
+func (l *vulkanPipelineLayout) Destroy() {
+	l.driver.VkDestroyPipelineLayout(l.device, l.handle, nil)
 }

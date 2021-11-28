@@ -122,6 +122,6 @@ func (h *vulkanDescriptorSetLayout) Handle() VkDescriptorSetLayout {
 	return h.handle
 }
 
-func (h *vulkanDescriptorSetLayout) Destroy() error {
-	return h.driver.VkDestroyDescriptorSetLayout(h.device, h.handle, nil)
+func (h *vulkanDescriptorSetLayout) Destroy() {
+	h.driver.VkDestroyDescriptorSetLayout(h.device, h.handle, nil)
 }

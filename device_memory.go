@@ -55,6 +55,6 @@ func (m *vulkanDeviceMemory) MapMemory(offset int, size int, flags MemoryMapFlag
 	return data, res, nil
 }
 
-func (m *vulkanDeviceMemory) UnmapMemory() error {
-	return m.driver.VkUnmapMemory(m.device, m.handle)
+func (m *vulkanDeviceMemory) UnmapMemory() {
+	m.driver.VkUnmapMemory(m.device, m.handle)
 }

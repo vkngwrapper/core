@@ -27,20 +27,17 @@ func (i *vulkanImage) Handle() VkImage {
 	return i.handle
 }
 
-func (i *vulkanImage) Destroy() error {
-	return i.driver.VkDestroyImage(i.device, i.handle, nil)
+func (i *vulkanImage) Destroy() {
+	i.driver.VkDestroyImage(i.device, i.handle, nil)
 }
 
-func (i *vulkanImage) MemoryRequirements() (*common.MemoryRequirements, error) {
+func (i *vulkanImage) MemoryRequirements() *common.MemoryRequirements {
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
 	memRequirementsUnsafe := arena.Malloc(C.sizeof_struct_VkMemoryRequirements)
 
-	err := i.driver.VkGetImageMemoryRequirements(i.device, i.handle, (*VkMemoryRequirements)(memRequirementsUnsafe))
-	if err != nil {
-		return nil, err
-	}
+	i.driver.VkGetImageMemoryRequirements(i.device, i.handle, (*VkMemoryRequirements)(memRequirementsUnsafe))
 
 	memRequirements := (*C.VkMemoryRequirements)(memRequirementsUnsafe)
 
@@ -48,7 +45,7 @@ func (i *vulkanImage) MemoryRequirements() (*common.MemoryRequirements, error) {
 		Size:       int(memRequirements.size),
 		Alignment:  int(memRequirements.alignment),
 		MemoryType: uint32(memRequirements.memoryTypeBits),
-	}, nil
+	}
 }
 
 func (i *vulkanImage) BindImageMemory(memory DeviceMemory, offset int) (VkResult, error) {
@@ -60,6 +57,29 @@ func (i *vulkanImage) BindImageMemory(memory DeviceMemory, offset int) (VkResult
 	}
 
 	return i.driver.VkBindImageMemory(i.device, i.handle, memory.Handle(), VkDeviceSize(offset))
+}
+
+func (i *vulkanImage) SubresourceLayout(subresource *common.ImageSubresource) *common.SubresourceLayout {
+	arena := cgoparam.GetAlloc()
+	defer cgoparam.ReturnAlloc(arena)
+
+	subresourcePtr := (*C.VkImageSubresource)(arena.Malloc(C.sizeof_struct_VkImageSubresource))
+	subresourceLayoutUnsafe := arena.Malloc(C.sizeof_struct_VkSubresourceLayout)
+
+	subresourcePtr.aspectMask = C.VkImageAspectFlags(subresource.AspectMask)
+	subresourcePtr.mipLevel = C.uint32_t(subresource.MipLevel)
+	subresourcePtr.arrayLayer = C.uint32_t(subresource.ArrayLayer)
+
+	i.driver.VkGetImageSubresourceLayout(i.device, i.handle, (*VkImageSubresource)(subresourcePtr), (*VkSubresourceLayout)(subresourceLayoutUnsafe))
+
+	subresourceLayout := (*C.VkSubresourceLayout)(subresourceLayoutUnsafe)
+	return &common.SubresourceLayout{
+		Offset:     int(subresourceLayout.offset),
+		Size:       int(subresourceLayout.size),
+		RowPitch:   int(subresourceLayout.rowPitch),
+		ArrayPitch: int(subresourceLayout.arrayPitch),
+		DepthPitch: int(subresourceLayout.depthPitch),
+	}
 }
 
 type ImageFlags int32

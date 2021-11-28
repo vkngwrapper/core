@@ -111,16 +111,13 @@ type PhysicalDeviceMemoryProperties struct {
 	MemoryHeaps []MemoryHeap
 }
 
-func (d *vulkanPhysicalDevice) MemoryProperties() (*PhysicalDeviceMemoryProperties, error) {
+func (d *vulkanPhysicalDevice) MemoryProperties() *PhysicalDeviceMemoryProperties {
 	allocator := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(allocator)
 
 	propsUnsafe := allocator.Malloc(C.sizeof_struct_VkPhysicalDeviceMemoryProperties)
 
-	err := d.driver.VkGetPhysicalDeviceMemoryProperties(d.handle, (*VkPhysicalDeviceMemoryProperties)(propsUnsafe))
-	if err != nil {
-		return nil, err
-	}
+	d.driver.VkGetPhysicalDeviceMemoryProperties(d.handle, (*VkPhysicalDeviceMemoryProperties)(propsUnsafe))
 
 	props := (*C.VkPhysicalDeviceMemoryProperties)(propsUnsafe)
 
@@ -144,5 +141,5 @@ func (d *vulkanPhysicalDevice) MemoryProperties() (*PhysicalDeviceMemoryProperti
 		})
 	}
 
-	return outProps, nil
+	return outProps
 }

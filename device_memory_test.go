@@ -45,8 +45,7 @@ func TestVulkanDeviceMemory_UnmapMemory(t *testing.T) {
 	device := mocks.EasyDummyDevice(t, ctrl, loader)
 	memory := mocks.EasyDummyDeviceMemory(t, device)
 
-	mockDriver.EXPECT().VkUnmapMemory(device.Handle(), memory.Handle()).Return(nil)
+	mockDriver.EXPECT().VkUnmapMemory(device.Handle(), memory.Handle())
 
-	err = memory.UnmapMemory()
-	require.NoError(t, err)
+	memory.UnmapMemory()
 }

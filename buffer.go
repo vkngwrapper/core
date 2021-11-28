@@ -58,20 +58,17 @@ func (b *vulkanBuffer) Handle() VkBuffer {
 	return b.handle
 }
 
-func (b *vulkanBuffer) Destroy() error {
-	return b.driver.VkDestroyBuffer(b.device, b.handle, nil)
+func (b *vulkanBuffer) Destroy() {
+	b.driver.VkDestroyBuffer(b.device, b.handle, nil)
 }
 
-func (b *vulkanBuffer) MemoryRequirements() (*common.MemoryRequirements, error) {
+func (b *vulkanBuffer) MemoryRequirements() *common.MemoryRequirements {
 	allocator := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(allocator)
 
 	requirementsUnsafe := allocator.Malloc(C.sizeof_struct_VkMemoryRequirements)
 
-	err := b.driver.VkGetBufferMemoryRequirements(b.device, b.handle, (*VkMemoryRequirements)(requirementsUnsafe))
-	if err != nil {
-		return nil, err
-	}
+	b.driver.VkGetBufferMemoryRequirements(b.device, b.handle, (*VkMemoryRequirements)(requirementsUnsafe))
 
 	requirements := (*C.VkMemoryRequirements)(requirementsUnsafe)
 
@@ -79,7 +76,7 @@ func (b *vulkanBuffer) MemoryRequirements() (*common.MemoryRequirements, error) 
 		Size:       int(requirements.size),
 		Alignment:  int(requirements.alignment),
 		MemoryType: uint32(requirements.memoryTypeBits),
-	}, nil
+	}
 }
 
 func (b *vulkanBuffer) BindBufferMemory(memory DeviceMemory, offset int) (VkResult, error) {

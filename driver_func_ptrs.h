@@ -16,15 +16,15 @@ typedef struct DriverFuncPtrs {
     PFN_vkCreateDevice vkCreateDevice;
     PFN_vkDestroyInstance vkDestroyInstance;
     PFN_vkEnumerateDeviceExtensionProperties vkEnumerateDeviceExtensionProperties;
-    PFN_vkEnumerateDeviceLayerProperties vkEnumerateDeviceLayerProperties; //Todo
+    PFN_vkEnumerateDeviceLayerProperties vkEnumerateDeviceLayerProperties; //Todo*
     PFN_vkEnumeratePhysicalDevices vkEnumeratePhysicalDevices;
     PFN_vkGetPhysicalDeviceFeatures vkGetPhysicalDeviceFeatures;
     PFN_vkGetPhysicalDeviceFormatProperties vkGetPhysicalDeviceFormatProperties;
-    PFN_vkGetPhysicalDeviceImageFormatProperties vkGetPhysicalDeviceImageFormatProperties; //Todo
+    PFN_vkGetPhysicalDeviceImageFormatProperties vkGetPhysicalDeviceImageFormatProperties; //Todo*
     PFN_vkGetPhysicalDeviceMemoryProperties vkGetPhysicalDeviceMemoryProperties;
     PFN_vkGetPhysicalDeviceProperties vkGetPhysicalDeviceProperties;
     PFN_vkGetPhysicalDeviceQueueFamilyProperties vkGetPhysicalDeviceQueueFamilyProperties;
-    PFN_vkGetPhysicalDeviceSparseImageFormatProperties vkGetPhysicalDeviceSparseImageFormatProperties; //Todo
+    PFN_vkGetPhysicalDeviceSparseImageFormatProperties vkGetPhysicalDeviceSparseImageFormatProperties; //Todo*
 
     //Device-Platform
     PFN_vkGetDeviceProcAddr vkGetDeviceProcAddr;
@@ -43,47 +43,47 @@ typedef struct DriverFuncPtrs {
     PFN_vkCmdBindPipeline vkCmdBindPipeline;
     PFN_vkCmdBindVertexBuffers vkCmdBindVertexBuffers;
     PFN_vkCmdBlitImage vkCmdBlitImage;
-    PFN_vkCmdClearAttachments vkCmdClearAttachments; //Todo
-    PFN_vkCmdClearColorImage vkCmdClearColorImage; //Todo
-    PFN_vkCmdClearDepthStencilImage vkCmdClearDepthStencilImage; //Todo
+    PFN_vkCmdClearAttachments vkCmdClearAttachments; //Todo*
+    PFN_vkCmdClearColorImage vkCmdClearColorImage; //Todo*
+    PFN_vkCmdClearDepthStencilImage vkCmdClearDepthStencilImage; //Todo*
     PFN_vkCmdCopyBuffer vkCmdCopyBuffer;
     PFN_vkCmdCopyBufferToImage vkCmdCopyBufferToImage;
-    PFN_vkCmdCopyImage vkCmdCopyImage; //Todo
-    PFN_vkCmdCopyImageToBuffer vkCmdCopyImageToBuffer; //Todo
+    PFN_vkCmdCopyImage vkCmdCopyImage;
+    PFN_vkCmdCopyImageToBuffer vkCmdCopyImageToBuffer; //Todo*
     PFN_vkCmdCopyQueryPoolResults vkCmdCopyQueryPoolResults; //Todo
-    PFN_vkCmdDispatch vkCmdDispatch; //Todo
-    PFN_vkCmdDispatchIndirect vkCmdDispatchIndirect; //Todo
+    PFN_vkCmdDispatch vkCmdDispatch; //Todo*
+    PFN_vkCmdDispatchIndirect vkCmdDispatchIndirect; //Todo*
     PFN_vkCmdDraw vkCmdDraw;
     PFN_vkCmdDrawIndexed vkCmdDrawIndexed;
-    PFN_vkCmdDrawIndexedIndirect vkCmdDrawIndexedIndirect; //Todo
-    PFN_vkCmdDrawIndirect vkCmdDrawIndirect; //Todo
+    PFN_vkCmdDrawIndexedIndirect vkCmdDrawIndexedIndirect; //Todo*
+    PFN_vkCmdDrawIndirect vkCmdDrawIndirect; //Todo*
     PFN_vkCmdEndQuery vkCmdEndQuery; //Todo
     PFN_vkCmdEndRenderPass vkCmdEndRenderPass;
-    PFN_vkCmdExecuteCommands vkCmdExecuteCommands; //Todo
-    PFN_vkCmdFillBuffer vkCmdFillBuffer; //Todo
-    PFN_vkCmdNextSubpass vkCmdNextSubpass; //Todo
+    PFN_vkCmdExecuteCommands vkCmdExecuteCommands; //Todo - secondary_command_buffer
+    PFN_vkCmdFillBuffer vkCmdFillBuffer; //Todo*
+    PFN_vkCmdNextSubpass vkCmdNextSubpass; //Todo - draw_subpasses
     PFN_vkCmdPipelineBarrier vkCmdPipelineBarrier;
-    PFN_vkCmdPushConstants vkCmdPushConstants; //Todo
-    PFN_vkCmdResetEvent vkCmdResetEvent; //Todo
+    PFN_vkCmdPushConstants vkCmdPushConstants;
+    PFN_vkCmdResetEvent vkCmdResetEvent; //Todo*
     PFN_vkCmdResetQueryPool vkCmdResetQueryPool; //Todo
-    PFN_vkCmdResolveImage vkCmdResolveImage; //Todo
-    PFN_vkCmdSetBlendConstants vkCmdSetBlendConstants; //Todo
-    PFN_vkCmdSetDepthBias vkCmdSetDepthBias; //Todo
-    PFN_vkCmdSetDepthBounds vkCmdSetDepthBounds; //Todo
+    PFN_vkCmdResolveImage vkCmdResolveImage; //Todo*
+    PFN_vkCmdSetBlendConstants vkCmdSetBlendConstants; //Todo*
+    PFN_vkCmdSetDepthBias vkCmdSetDepthBias; //Todo*
+    PFN_vkCmdSetDepthBounds vkCmdSetDepthBounds; //Todo*
     PFN_vkCmdSetEvent vkCmdSetEvent; //Todo
-    PFN_vkCmdSetLineWidth vkCmdSetLineWidth; //Todo
-    PFN_vkCmdSetScissor vkCmdSetScissor;   //Todo
-    PFN_vkCmdSetStencilCompareMask vkCmdSetStencilCompareMask; //Todo
-    PFN_vkCmdSetStencilReference vkCmdSetStencilReference; //Todo
-    PFN_vkCmdSetStencilWriteMask vkCmdSetStencilWriteMask; //Todo
-    PFN_vkCmdSetViewport vkCmdSetViewport; //Todo
+    PFN_vkCmdSetLineWidth vkCmdSetLineWidth; //Todo*
+    PFN_vkCmdSetScissor vkCmdSetScissor;
+    PFN_vkCmdSetStencilCompareMask vkCmdSetStencilCompareMask; //Todo*
+    PFN_vkCmdSetStencilReference vkCmdSetStencilReference; //Todo*
+    PFN_vkCmdSetStencilWriteMask vkCmdSetStencilWriteMask; //Todo*
+    PFN_vkCmdSetViewport vkCmdSetViewport;
     PFN_vkCmdUpdateBuffer vkCmdUpdateBuffer; //Todo
     PFN_vkCmdWaitEvents vkCmdWaitEvents; //Todo
-    PFN_vkCmdWriteTimestamp vkCmdWriteTimestamp; //Todo
+    PFN_vkCmdWriteTimestamp vkCmdWriteTimestamp; //Todo*
     PFN_vkCreateBuffer vkCreateBuffer;
     PFN_vkCreateBufferView vkCreateBufferView; //Todo
     PFN_vkCreateCommandPool vkCreateCommandPool;
-    PFN_vkCreateComputePipelines vkCreateComputePipelines; //Todo
+    PFN_vkCreateComputePipelines vkCreateComputePipelines; //Todo*
     PFN_vkCreateDescriptorPool vkCreateDescriptorPool;
     PFN_vkCreateDescriptorSetLayout vkCreateDescriptorSetLayout;
     PFN_vkCreateEvent vkCreateEvent; //Todo
@@ -92,7 +92,7 @@ typedef struct DriverFuncPtrs {
     PFN_vkCreateGraphicsPipelines vkCreateGraphicsPipelines;
     PFN_vkCreateImage vkCreateImage;
     PFN_vkCreateImageView vkCreateImageView;
-    PFN_vkCreatePipelineCache vkCreatePipelineCache; //Todo
+    PFN_vkCreatePipelineCache vkCreatePipelineCache;
     PFN_vkCreatePipelineLayout vkCreatePipelineLayout;
     PFN_vkCreateQueryPool vkCreateQueryPool; //Todo
     PFN_vkCreateRenderPass vkCreateRenderPass;
@@ -111,7 +111,7 @@ typedef struct DriverFuncPtrs {
     PFN_vkDestroyImage vkDestroyImage;
     PFN_vkDestroyImageView vkDestroyImageView;
     PFN_vkDestroyPipeline vkDestroyPipeline;
-    PFN_vkDestroyPipelineCache vkDestroyPipelineCache; //Todo
+    PFN_vkDestroyPipelineCache vkDestroyPipelineCache;
     PFN_vkDestroyPipelineLayout vkDestroyPipelineLayout;
     PFN_vkDestroyQueryPool vkDestroyQueryPool; //Todo
     PFN_vkDestroyRenderPass vkDestroyRenderPass;
@@ -120,30 +120,30 @@ typedef struct DriverFuncPtrs {
     PFN_vkDestroyShaderModule vkDestroyShaderModule;
     PFN_vkDeviceWaitIdle vkDeviceWaitIdle;
     PFN_vkEndCommandBuffer vkEndCommandBuffer;
-    PFN_vkFlushMappedMemoryRanges vkFlushMappedMemoryRanges; //Todo
+    PFN_vkFlushMappedMemoryRanges vkFlushMappedMemoryRanges; //Todo - copy_blit_image
     PFN_vkFreeCommandBuffers vkFreeCommandBuffers;
     PFN_vkFreeDescriptorSets vkFreeDescriptorSets;
     PFN_vkFreeMemory vkFreeMemory;
     PFN_vkGetBufferMemoryRequirements vkGetBufferMemoryRequirements;
-    PFN_vkGetDeviceMemoryCommitment vkGetDeviceMemoryCommitment; //Todo
+    PFN_vkGetDeviceMemoryCommitment vkGetDeviceMemoryCommitment; //Todo*
     PFN_vkGetDeviceQueue vkGetDeviceQueue;
     PFN_vkGetEventStatus vkGetEventStatus; //Todo
-    PFN_vkGetFenceStatus vkGetFenceStatus; //Todo
+    PFN_vkGetFenceStatus vkGetFenceStatus; //Todo*
     PFN_vkGetImageMemoryRequirements vkGetImageMemoryRequirements;
     PFN_vkGetImageSparseMemoryRequirements vkGetImageSparseMemoryRequirements; //Todo
-    PFN_vkGetImageSubresourceLayout vkGetImageSubresourceLayout; //Todo
+    PFN_vkGetImageSubresourceLayout vkGetImageSubresourceLayout;
     PFN_vkGetPipelineCacheData vkGetPipelineCacheData; //Todo
     PFN_vkGetQueryPoolResults vkGetQueryPoolResults; //Todo
-    PFN_vkGetRenderAreaGranularity vkGetRenderAreaGranularity; //Todo
-    PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges; //Todo
+    PFN_vkGetRenderAreaGranularity vkGetRenderAreaGranularity; //Todo*
+    PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges; //Todo*
     PFN_vkMapMemory vkMapMemory;
-    PFN_vkMergePipelineCaches vkMergePipelineCaches; //Todo
-    PFN_vkQueueBindSparse vkQueueBindSparse; //Todo
+    PFN_vkMergePipelineCaches vkMergePipelineCaches; //Todo*
+    PFN_vkQueueBindSparse vkQueueBindSparse; //Todo*
     PFN_vkQueueSubmit vkQueueSubmit;
     PFN_vkQueueWaitIdle vkQueueWaitIdle;
     PFN_vkResetCommandBuffer vkResetCommandBuffer; //Todo
-    PFN_vkResetCommandPool vkResetCommandPool; //Todo
-    PFN_vkResetDescriptorPool vkResetDescriptorPool; //Todo
+    PFN_vkResetCommandPool vkResetCommandPool; //Todo*
+    PFN_vkResetDescriptorPool vkResetDescriptorPool; //Todo*
     PFN_vkResetEvent vkResetEvent; //Todo
     PFN_vkResetFences vkResetFences;
     PFN_vkSetEvent vkSetEvent; //Todo

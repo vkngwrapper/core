@@ -53,11 +53,9 @@ func (mr *MockBufferMockRecorder) BindBufferMemory(memory, offset interface{}) *
 }
 
 // Destroy mocks base method.
-func (m *MockBuffer) Destroy() error {
+func (m *MockBuffer) Destroy() {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Destroy")
-	ret0, _ := ret[0].(error)
-	return ret0
+	m.ctrl.Call(m, "Destroy")
 }
 
 // Destroy indicates an expected call of Destroy.
@@ -81,12 +79,11 @@ func (mr *MockBufferMockRecorder) Handle() *gomock.Call {
 }
 
 // MemoryRequirements mocks base method.
-func (m *MockBuffer) MemoryRequirements() (*common.MemoryRequirements, error) {
+func (m *MockBuffer) MemoryRequirements() *common.MemoryRequirements {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "MemoryRequirements")
 	ret0, _ := ret[0].(*common.MemoryRequirements)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
+	return ret0
 }
 
 // MemoryRequirements indicates an expected call of MemoryRequirements.
@@ -240,6 +237,20 @@ func (mr *MockCommandBufferMockRecorder) CmdBindVertexBuffers(firstBinding, buff
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CmdBindVertexBuffers", reflect.TypeOf((*MockCommandBuffer)(nil).CmdBindVertexBuffers), firstBinding, buffers, bufferOffsets)
 }
 
+// CmdBlitImage mocks base method.
+func (m *MockCommandBuffer) CmdBlitImage(sourceImage core.Image, sourceImageLayout common.ImageLayout, destinationImage core.Image, destinationImageLayout common.ImageLayout, regions []*core.ImageBlit, filter common.Filter) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CmdBlitImage", sourceImage, sourceImageLayout, destinationImage, destinationImageLayout, regions, filter)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// CmdBlitImage indicates an expected call of CmdBlitImage.
+func (mr *MockCommandBufferMockRecorder) CmdBlitImage(sourceImage, sourceImageLayout, destinationImage, destinationImageLayout, regions, filter interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CmdBlitImage", reflect.TypeOf((*MockCommandBuffer)(nil).CmdBlitImage), sourceImage, sourceImageLayout, destinationImage, destinationImageLayout, regions, filter)
+}
+
 // CmdCopyBuffer mocks base method.
 func (m *MockCommandBuffer) CmdCopyBuffer(srcBuffer, dstBuffer core.Buffer, copyRegions []core.BufferCopy) error {
 	m.ctrl.T.Helper()
@@ -266,6 +277,20 @@ func (m *MockCommandBuffer) CmdCopyBufferToImage(buffer core.Buffer, image core.
 func (mr *MockCommandBufferMockRecorder) CmdCopyBufferToImage(buffer, image, layout, regions interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CmdCopyBufferToImage", reflect.TypeOf((*MockCommandBuffer)(nil).CmdCopyBufferToImage), buffer, image, layout, regions)
+}
+
+// CmdCopyImage mocks base method.
+func (m *MockCommandBuffer) CmdCopyImage(srcImage core.Image, srcImageLayout common.ImageLayout, dstImage core.Image, dstImageLayout common.ImageLayout, regions []core.ImageCopy) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CmdCopyImage", srcImage, srcImageLayout, dstImage, dstImageLayout, regions)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// CmdCopyImage indicates an expected call of CmdCopyImage.
+func (mr *MockCommandBufferMockRecorder) CmdCopyImage(srcImage, srcImageLayout, dstImage, dstImageLayout, regions interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CmdCopyImage", reflect.TypeOf((*MockCommandBuffer)(nil).CmdCopyImage), srcImage, srcImageLayout, dstImage, dstImageLayout, regions)
 }
 
 // CmdDraw mocks base method.
@@ -322,6 +347,48 @@ func (m *MockCommandBuffer) CmdPipelineBarrier(srcStageMask, dstStageMask common
 func (mr *MockCommandBufferMockRecorder) CmdPipelineBarrier(srcStageMask, dstStageMask, dependencies, memoryBarriers, bufferMemoryBarriers, imageMemoryBarriers interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CmdPipelineBarrier", reflect.TypeOf((*MockCommandBuffer)(nil).CmdPipelineBarrier), srcStageMask, dstStageMask, dependencies, memoryBarriers, bufferMemoryBarriers, imageMemoryBarriers)
+}
+
+// CmdPushConstants mocks base method.
+func (m *MockCommandBuffer) CmdPushConstants(layout core.PipelineLayout, stageFlags common.ShaderStages, offset int, values interface{}) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CmdPushConstants", layout, stageFlags, offset, values)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// CmdPushConstants indicates an expected call of CmdPushConstants.
+func (mr *MockCommandBufferMockRecorder) CmdPushConstants(layout, stageFlags, offset, values interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CmdPushConstants", reflect.TypeOf((*MockCommandBuffer)(nil).CmdPushConstants), layout, stageFlags, offset, values)
+}
+
+// CmdSetScissor mocks base method.
+func (m *MockCommandBuffer) CmdSetScissor(firstScissor int, scissors []common.Rect2D) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CmdSetScissor", firstScissor, scissors)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// CmdSetScissor indicates an expected call of CmdSetScissor.
+func (mr *MockCommandBufferMockRecorder) CmdSetScissor(firstScissor, scissors interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CmdSetScissor", reflect.TypeOf((*MockCommandBuffer)(nil).CmdSetScissor), firstScissor, scissors)
+}
+
+// CmdSetViewport mocks base method.
+func (m *MockCommandBuffer) CmdSetViewport(firstViewport int, viewports []common.Viewport) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CmdSetViewport", firstViewport, viewports)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// CmdSetViewport indicates an expected call of CmdSetViewport.
+func (mr *MockCommandBufferMockRecorder) CmdSetViewport(firstViewport, viewports interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CmdSetViewport", reflect.TypeOf((*MockCommandBuffer)(nil).CmdSetViewport), firstViewport, viewports)
 }
 
 // End mocks base method.
@@ -393,11 +460,9 @@ func (mr *MockCommandPoolMockRecorder) AllocateCommandBuffers(o interface{}) *go
 }
 
 // Destroy mocks base method.
-func (m *MockCommandPool) Destroy() error {
+func (m *MockCommandPool) Destroy() {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Destroy")
-	ret0, _ := ret[0].(error)
-	return ret0
+	m.ctrl.Call(m, "Destroy")
 }
 
 // Destroy indicates an expected call of Destroy.
@@ -407,11 +472,9 @@ func (mr *MockCommandPoolMockRecorder) Destroy() *gomock.Call {
 }
 
 // FreeCommandBuffers mocks base method.
-func (m *MockCommandPool) FreeCommandBuffers(buffers []core.CommandBuffer) error {
+func (m *MockCommandPool) FreeCommandBuffers(buffers []core.CommandBuffer) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "FreeCommandBuffers", buffers)
-	ret0, _ := ret[0].(error)
-	return ret0
+	m.ctrl.Call(m, "FreeCommandBuffers", buffers)
 }
 
 // FreeCommandBuffers indicates an expected call of FreeCommandBuffers.
@@ -474,11 +537,9 @@ func (mr *MockDescriptorPoolMockRecorder) AllocateDescriptorSets(o interface{}) 
 }
 
 // Destroy mocks base method.
-func (m *MockDescriptorPool) Destroy() error {
+func (m *MockDescriptorPool) Destroy() {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Destroy")
-	ret0, _ := ret[0].(error)
-	return ret0
+	m.ctrl.Call(m, "Destroy")
 }
 
 // Destroy indicates an expected call of Destroy.
@@ -577,11 +638,9 @@ func (m *MockDescriptorSetLayout) EXPECT() *MockDescriptorSetLayoutMockRecorder 
 }
 
 // Destroy mocks base method.
-func (m *MockDescriptorSetLayout) Destroy() error {
+func (m *MockDescriptorSetLayout) Destroy() {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Destroy")
-	ret0, _ := ret[0].(error)
-	return ret0
+	m.ctrl.Call(m, "Destroy")
 }
 
 // Destroy indicates an expected call of Destroy.
@@ -658,11 +717,9 @@ func (mr *MockDeviceMemoryMockRecorder) MapMemory(offset, size, flags interface{
 }
 
 // UnmapMemory mocks base method.
-func (m *MockDeviceMemory) UnmapMemory() error {
+func (m *MockDeviceMemory) UnmapMemory() {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "UnmapMemory")
-	ret0, _ := ret[0].(error)
-	return ret0
+	m.ctrl.Call(m, "UnmapMemory")
 }
 
 // UnmapMemory indicates an expected call of UnmapMemory.
@@ -711,11 +768,9 @@ func (mr *MockDeviceMockRecorder) AllocateMemory(o interface{}) *gomock.Call {
 }
 
 // Destroy mocks base method.
-func (m *MockDevice) Destroy() error {
+func (m *MockDevice) Destroy() {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Destroy")
-	ret0, _ := ret[0].(error)
-	return ret0
+	m.ctrl.Call(m, "Destroy")
 }
 
 // Destroy indicates an expected call of Destroy.
@@ -739,11 +794,9 @@ func (mr *MockDeviceMockRecorder) Driver() *gomock.Call {
 }
 
 // FreeMemory mocks base method.
-func (m *MockDevice) FreeMemory(memory core.DeviceMemory) error {
+func (m *MockDevice) FreeMemory(memory core.DeviceMemory) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "FreeMemory", memory)
-	ret0, _ := ret[0].(error)
-	return ret0
+	m.ctrl.Call(m, "FreeMemory", memory)
 }
 
 // FreeMemory indicates an expected call of FreeMemory.
@@ -753,12 +806,11 @@ func (mr *MockDeviceMockRecorder) FreeMemory(memory interface{}) *gomock.Call {
 }
 
 // GetQueue mocks base method.
-func (m *MockDevice) GetQueue(queueFamilyIndex, queueIndex int) (core.Queue, error) {
+func (m *MockDevice) GetQueue(queueFamilyIndex, queueIndex int) core.Queue {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetQueue", queueFamilyIndex, queueIndex)
 	ret0, _ := ret[0].(core.Queue)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
+	return ret0
 }
 
 // GetQueue indicates an expected call of GetQueue.
@@ -864,11 +916,9 @@ func (m *MockFence) EXPECT() *MockFenceMockRecorder {
 }
 
 // Destroy mocks base method.
-func (m *MockFence) Destroy() error {
+func (m *MockFence) Destroy() {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Destroy")
-	ret0, _ := ret[0].(error)
-	return ret0
+	m.ctrl.Call(m, "Destroy")
 }
 
 // Destroy indicates an expected call of Destroy.
@@ -915,11 +965,9 @@ func (m *MockFramebuffer) EXPECT() *MockFramebufferMockRecorder {
 }
 
 // Destroy mocks base method.
-func (m *MockFramebuffer) Destroy() error {
+func (m *MockFramebuffer) Destroy() {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Destroy")
-	ret0, _ := ret[0].(error)
-	return ret0
+	m.ctrl.Call(m, "Destroy")
 }
 
 // Destroy indicates an expected call of Destroy.
@@ -981,11 +1029,9 @@ func (mr *MockImageMockRecorder) BindImageMemory(memory, offset interface{}) *go
 }
 
 // Destroy mocks base method.
-func (m *MockImage) Destroy() error {
+func (m *MockImage) Destroy() {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Destroy")
-	ret0, _ := ret[0].(error)
-	return ret0
+	m.ctrl.Call(m, "Destroy")
 }
 
 // Destroy indicates an expected call of Destroy.
@@ -1009,18 +1055,31 @@ func (mr *MockImageMockRecorder) Handle() *gomock.Call {
 }
 
 // MemoryRequirements mocks base method.
-func (m *MockImage) MemoryRequirements() (*common.MemoryRequirements, error) {
+func (m *MockImage) MemoryRequirements() *common.MemoryRequirements {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "MemoryRequirements")
 	ret0, _ := ret[0].(*common.MemoryRequirements)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
+	return ret0
 }
 
 // MemoryRequirements indicates an expected call of MemoryRequirements.
 func (mr *MockImageMockRecorder) MemoryRequirements() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "MemoryRequirements", reflect.TypeOf((*MockImage)(nil).MemoryRequirements))
+}
+
+// SubresourceLayout mocks base method.
+func (m *MockImage) SubresourceLayout(subresource *common.ImageSubresource) *common.SubresourceLayout {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "SubresourceLayout", subresource)
+	ret0, _ := ret[0].(*common.SubresourceLayout)
+	return ret0
+}
+
+// SubresourceLayout indicates an expected call of SubresourceLayout.
+func (mr *MockImageMockRecorder) SubresourceLayout(subresource interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SubresourceLayout", reflect.TypeOf((*MockImage)(nil).SubresourceLayout), subresource)
 }
 
 // MockImageView is a mock of ImageView interface.
@@ -1047,11 +1106,9 @@ func (m *MockImageView) EXPECT() *MockImageViewMockRecorder {
 }
 
 // Destroy mocks base method.
-func (m *MockImageView) Destroy() error {
+func (m *MockImageView) Destroy() {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Destroy")
-	ret0, _ := ret[0].(error)
-	return ret0
+	m.ctrl.Call(m, "Destroy")
 }
 
 // Destroy indicates an expected call of Destroy.
@@ -1098,11 +1155,9 @@ func (m *MockInstance) EXPECT() *MockInstanceMockRecorder {
 }
 
 // Destroy mocks base method.
-func (m *MockInstance) Destroy() error {
+func (m *MockInstance) Destroy() {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Destroy")
-	ret0, _ := ret[0].(error)
-	return ret0
+	m.ctrl.Call(m, "Destroy")
 }
 
 // Destroy indicates an expected call of Destroy.
@@ -1192,6 +1247,22 @@ func (m *MockLoader1_0) AvailableExtensions() (map[string]*common.ExtensionPrope
 func (mr *MockLoader1_0MockRecorder) AvailableExtensions() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AvailableExtensions", reflect.TypeOf((*MockLoader1_0)(nil).AvailableExtensions))
+}
+
+// AvailableExtensionsForLayer mocks base method.
+func (m *MockLoader1_0) AvailableExtensionsForLayer(layerName string) (map[string]*common.ExtensionProperties, core.VkResult, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "AvailableExtensionsForLayer", layerName)
+	ret0, _ := ret[0].(map[string]*common.ExtensionProperties)
+	ret1, _ := ret[1].(core.VkResult)
+	ret2, _ := ret[2].(error)
+	return ret0, ret1, ret2
+}
+
+// AvailableExtensionsForLayer indicates an expected call of AvailableExtensionsForLayer.
+func (mr *MockLoader1_0MockRecorder) AvailableExtensionsForLayer(layerName interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AvailableExtensionsForLayer", reflect.TypeOf((*MockLoader1_0)(nil).AvailableExtensionsForLayer), layerName)
 }
 
 // AvailableLayers mocks base method.
@@ -1386,6 +1457,22 @@ func (mr *MockLoader1_0MockRecorder) CreateInstance(options interface{}) *gomock
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateInstance", reflect.TypeOf((*MockLoader1_0)(nil).CreateInstance), options)
 }
 
+// CreatePipelineCache mocks base method.
+func (m *MockLoader1_0) CreatePipelineCache(device core.Device, o *core.PipelineCacheOptions) (core.PipelineCache, core.VkResult, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreatePipelineCache", device, o)
+	ret0, _ := ret[0].(core.PipelineCache)
+	ret1, _ := ret[1].(core.VkResult)
+	ret2, _ := ret[2].(error)
+	return ret0, ret1, ret2
+}
+
+// CreatePipelineCache indicates an expected call of CreatePipelineCache.
+func (mr *MockLoader1_0MockRecorder) CreatePipelineCache(device, o interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreatePipelineCache", reflect.TypeOf((*MockLoader1_0)(nil).CreatePipelineCache), device, o)
+}
+
 // CreatePipelineLayout mocks base method.
 func (m *MockLoader1_0) CreatePipelineLayout(device core.Device, o *core.PipelineLayoutOptions) (core.PipelineLayout, core.VkResult, error) {
 	m.ctrl.T.Helper()
@@ -1533,6 +1620,22 @@ func (mr *MockPhysicalDeviceMockRecorder) AvailableExtensions() *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AvailableExtensions", reflect.TypeOf((*MockPhysicalDevice)(nil).AvailableExtensions))
 }
 
+// AvailableExtensionsForLayer mocks base method.
+func (m *MockPhysicalDevice) AvailableExtensionsForLayer(layerName string) (map[string]*common.ExtensionProperties, core.VkResult, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "AvailableExtensionsForLayer", layerName)
+	ret0, _ := ret[0].(map[string]*common.ExtensionProperties)
+	ret1, _ := ret[1].(core.VkResult)
+	ret2, _ := ret[2].(error)
+	return ret0, ret1, ret2
+}
+
+// AvailableExtensionsForLayer indicates an expected call of AvailableExtensionsForLayer.
+func (mr *MockPhysicalDeviceMockRecorder) AvailableExtensionsForLayer(layerName interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AvailableExtensionsForLayer", reflect.TypeOf((*MockPhysicalDevice)(nil).AvailableExtensionsForLayer), layerName)
+}
+
 // Driver mocks base method.
 func (m *MockPhysicalDevice) Driver() core.Driver {
 	m.ctrl.T.Helper()
@@ -1548,12 +1651,11 @@ func (mr *MockPhysicalDeviceMockRecorder) Driver() *gomock.Call {
 }
 
 // Features mocks base method.
-func (m *MockPhysicalDevice) Features() (*common.PhysicalDeviceFeatures, error) {
+func (m *MockPhysicalDevice) Features() *common.PhysicalDeviceFeatures {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Features")
 	ret0, _ := ret[0].(*common.PhysicalDeviceFeatures)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
+	return ret0
 }
 
 // Features indicates an expected call of Features.
@@ -1563,12 +1665,11 @@ func (mr *MockPhysicalDeviceMockRecorder) Features() *gomock.Call {
 }
 
 // FormatProperties mocks base method.
-func (m *MockPhysicalDevice) FormatProperties(format common.DataFormat) (*common.FormatProperties, error) {
+func (m *MockPhysicalDevice) FormatProperties(format common.DataFormat) *common.FormatProperties {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "FormatProperties", format)
 	ret0, _ := ret[0].(*common.FormatProperties)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
+	return ret0
 }
 
 // FormatProperties indicates an expected call of FormatProperties.
@@ -1592,12 +1693,11 @@ func (mr *MockPhysicalDeviceMockRecorder) Handle() *gomock.Call {
 }
 
 // MemoryProperties mocks base method.
-func (m *MockPhysicalDevice) MemoryProperties() (*core.PhysicalDeviceMemoryProperties, error) {
+func (m *MockPhysicalDevice) MemoryProperties() *core.PhysicalDeviceMemoryProperties {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "MemoryProperties")
 	ret0, _ := ret[0].(*core.PhysicalDeviceMemoryProperties)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
+	return ret0
 }
 
 // MemoryProperties indicates an expected call of MemoryProperties.
@@ -1607,12 +1707,11 @@ func (mr *MockPhysicalDeviceMockRecorder) MemoryProperties() *gomock.Call {
 }
 
 // Properties mocks base method.
-func (m *MockPhysicalDevice) Properties() (*common.PhysicalDeviceProperties, error) {
+func (m *MockPhysicalDevice) Properties() *common.PhysicalDeviceProperties {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Properties")
 	ret0, _ := ret[0].(*common.PhysicalDeviceProperties)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
+	return ret0
 }
 
 // Properties indicates an expected call of Properties.
@@ -1622,12 +1721,11 @@ func (mr *MockPhysicalDeviceMockRecorder) Properties() *gomock.Call {
 }
 
 // QueueFamilyProperties mocks base method.
-func (m *MockPhysicalDevice) QueueFamilyProperties() ([]*common.QueueFamily, error) {
+func (m *MockPhysicalDevice) QueueFamilyProperties() []*common.QueueFamily {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "QueueFamilyProperties")
 	ret0, _ := ret[0].([]*common.QueueFamily)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
+	return ret0
 }
 
 // QueueFamilyProperties indicates an expected call of QueueFamilyProperties.
@@ -1660,11 +1758,9 @@ func (m *MockPipeline) EXPECT() *MockPipelineMockRecorder {
 }
 
 // Destroy mocks base method.
-func (m *MockPipeline) Destroy() error {
+func (m *MockPipeline) Destroy() {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Destroy")
-	ret0, _ := ret[0].(error)
-	return ret0
+	m.ctrl.Call(m, "Destroy")
 }
 
 // Destroy indicates an expected call of Destroy.
@@ -1685,6 +1781,55 @@ func (m *MockPipeline) Handle() core.VkPipeline {
 func (mr *MockPipelineMockRecorder) Handle() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Handle", reflect.TypeOf((*MockPipeline)(nil).Handle))
+}
+
+// MockPipelineCache is a mock of PipelineCache interface.
+type MockPipelineCache struct {
+	ctrl     *gomock.Controller
+	recorder *MockPipelineCacheMockRecorder
+}
+
+// MockPipelineCacheMockRecorder is the mock recorder for MockPipelineCache.
+type MockPipelineCacheMockRecorder struct {
+	mock *MockPipelineCache
+}
+
+// NewMockPipelineCache creates a new mock instance.
+func NewMockPipelineCache(ctrl *gomock.Controller) *MockPipelineCache {
+	mock := &MockPipelineCache{ctrl: ctrl}
+	mock.recorder = &MockPipelineCacheMockRecorder{mock}
+	return mock
+}
+
+// EXPECT returns an object that allows the caller to indicate expected use.
+func (m *MockPipelineCache) EXPECT() *MockPipelineCacheMockRecorder {
+	return m.recorder
+}
+
+// Destroy mocks base method.
+func (m *MockPipelineCache) Destroy() {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "Destroy")
+}
+
+// Destroy indicates an expected call of Destroy.
+func (mr *MockPipelineCacheMockRecorder) Destroy() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Destroy", reflect.TypeOf((*MockPipelineCache)(nil).Destroy))
+}
+
+// Handle mocks base method.
+func (m *MockPipelineCache) Handle() core.VkPipelineCache {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Handle")
+	ret0, _ := ret[0].(core.VkPipelineCache)
+	return ret0
+}
+
+// Handle indicates an expected call of Handle.
+func (mr *MockPipelineCacheMockRecorder) Handle() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Handle", reflect.TypeOf((*MockPipelineCache)(nil).Handle))
 }
 
 // MockPipelineLayout is a mock of PipelineLayout interface.
@@ -1711,11 +1856,9 @@ func (m *MockPipelineLayout) EXPECT() *MockPipelineLayoutMockRecorder {
 }
 
 // Destroy mocks base method.
-func (m *MockPipelineLayout) Destroy() error {
+func (m *MockPipelineLayout) Destroy() {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Destroy")
-	ret0, _ := ret[0].(error)
-	return ret0
+	m.ctrl.Call(m, "Destroy")
 }
 
 // Destroy indicates an expected call of Destroy.
@@ -1843,11 +1986,9 @@ func (m *MockRenderPass) EXPECT() *MockRenderPassMockRecorder {
 }
 
 // Destroy mocks base method.
-func (m *MockRenderPass) Destroy() error {
+func (m *MockRenderPass) Destroy() {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Destroy")
-	ret0, _ := ret[0].(error)
-	return ret0
+	m.ctrl.Call(m, "Destroy")
 }
 
 // Destroy indicates an expected call of Destroy.
@@ -1894,11 +2035,9 @@ func (m *MockSemaphore) EXPECT() *MockSemaphoreMockRecorder {
 }
 
 // Destroy mocks base method.
-func (m *MockSemaphore) Destroy() error {
+func (m *MockSemaphore) Destroy() {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Destroy")
-	ret0, _ := ret[0].(error)
-	return ret0
+	m.ctrl.Call(m, "Destroy")
 }
 
 // Destroy indicates an expected call of Destroy.
@@ -1945,11 +2084,9 @@ func (m *MockShaderModule) EXPECT() *MockShaderModuleMockRecorder {
 }
 
 // Destroy mocks base method.
-func (m *MockShaderModule) Destroy() error {
+func (m *MockShaderModule) Destroy() {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Destroy")
-	ret0, _ := ret[0].(error)
-	return ret0
+	m.ctrl.Call(m, "Destroy")
 }
 
 // Destroy indicates an expected call of Destroy.
@@ -1996,11 +2133,9 @@ func (m *MockSampler) EXPECT() *MockSamplerMockRecorder {
 }
 
 // Destroy mocks base method.
-func (m *MockSampler) Destroy() error {
+func (m *MockSampler) Destroy() {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Destroy")
-	ret0, _ := ret[0].(error)
-	return ret0
+	m.ctrl.Call(m, "Destroy")
 }
 
 // Destroy indicates an expected call of Destroy.

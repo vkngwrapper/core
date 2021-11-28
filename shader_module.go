@@ -16,6 +16,6 @@ func (m *vulkanShaderModule) Handle() VkShaderModule {
 	return m.handle
 }
 
-func (m *vulkanShaderModule) Destroy() error {
-	return m.driver.VkDestroyShaderModule(m.device, m.handle, nil)
+func (m *vulkanShaderModule) Destroy() {
+	m.driver.VkDestroyShaderModule(m.device, m.handle, nil)
 }

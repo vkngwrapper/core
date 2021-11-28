@@ -227,11 +227,9 @@ func (mr *MockDriverMockRecorder) VkBindImageMemory2(device, bindInfoCount, pBin
 }
 
 // VkCmdBeginQuery mocks base method.
-func (m *MockDriver) VkCmdBeginQuery(commandBuffer core.VkCommandBuffer, queryPool core.VkQueryPool, query core.Uint32, flags core.VkQueryControlFlags) error {
+func (m *MockDriver) VkCmdBeginQuery(commandBuffer core.VkCommandBuffer, queryPool core.VkQueryPool, query core.Uint32, flags core.VkQueryControlFlags) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "VkCmdBeginQuery", commandBuffer, queryPool, query, flags)
-	ret0, _ := ret[0].(error)
-	return ret0
+	m.ctrl.Call(m, "VkCmdBeginQuery", commandBuffer, queryPool, query, flags)
 }
 
 // VkCmdBeginQuery indicates an expected call of VkCmdBeginQuery.
@@ -241,11 +239,9 @@ func (mr *MockDriverMockRecorder) VkCmdBeginQuery(commandBuffer, queryPool, quer
 }
 
 // VkCmdBeginRenderPass mocks base method.
-func (m *MockDriver) VkCmdBeginRenderPass(commandBuffer core.VkCommandBuffer, pRenderPassBegin *core.VkRenderPassBeginInfo, contents core.VkSubpassContents) error {
+func (m *MockDriver) VkCmdBeginRenderPass(commandBuffer core.VkCommandBuffer, pRenderPassBegin *core.VkRenderPassBeginInfo, contents core.VkSubpassContents) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "VkCmdBeginRenderPass", commandBuffer, pRenderPassBegin, contents)
-	ret0, _ := ret[0].(error)
-	return ret0
+	m.ctrl.Call(m, "VkCmdBeginRenderPass", commandBuffer, pRenderPassBegin, contents)
 }
 
 // VkCmdBeginRenderPass indicates an expected call of VkCmdBeginRenderPass.
@@ -255,11 +251,9 @@ func (mr *MockDriverMockRecorder) VkCmdBeginRenderPass(commandBuffer, pRenderPas
 }
 
 // VkCmdBeginRenderPass2 mocks base method.
-func (m *MockDriver) VkCmdBeginRenderPass2(commandBuffer core.VkCommandBuffer, pRenderPassBegin *core.VkRenderPassBeginInfo, pSubpassBeginInfo *core.VkSubpassBeginInfo) error {
+func (m *MockDriver) VkCmdBeginRenderPass2(commandBuffer core.VkCommandBuffer, pRenderPassBegin *core.VkRenderPassBeginInfo, pSubpassBeginInfo *core.VkSubpassBeginInfo) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "VkCmdBeginRenderPass2", commandBuffer, pRenderPassBegin, pSubpassBeginInfo)
-	ret0, _ := ret[0].(error)
-	return ret0
+	m.ctrl.Call(m, "VkCmdBeginRenderPass2", commandBuffer, pRenderPassBegin, pSubpassBeginInfo)
 }
 
 // VkCmdBeginRenderPass2 indicates an expected call of VkCmdBeginRenderPass2.
@@ -269,11 +263,9 @@ func (mr *MockDriverMockRecorder) VkCmdBeginRenderPass2(commandBuffer, pRenderPa
 }
 
 // VkCmdBindDescriptorSets mocks base method.
-func (m *MockDriver) VkCmdBindDescriptorSets(commandBuffer core.VkCommandBuffer, pipelineBindPoint core.VkPipelineBindPoint, layout core.VkPipelineLayout, firstSet, descriptorSetCount core.Uint32, pDescriptorSets *core.VkDescriptorSet, dynamicOffsetCount core.Uint32, pDynamicOffsets *core.Uint32) error {
+func (m *MockDriver) VkCmdBindDescriptorSets(commandBuffer core.VkCommandBuffer, pipelineBindPoint core.VkPipelineBindPoint, layout core.VkPipelineLayout, firstSet, descriptorSetCount core.Uint32, pDescriptorSets *core.VkDescriptorSet, dynamicOffsetCount core.Uint32, pDynamicOffsets *core.Uint32) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "VkCmdBindDescriptorSets", commandBuffer, pipelineBindPoint, layout, firstSet, descriptorSetCount, pDescriptorSets, dynamicOffsetCount, pDynamicOffsets)
-	ret0, _ := ret[0].(error)
-	return ret0
+	m.ctrl.Call(m, "VkCmdBindDescriptorSets", commandBuffer, pipelineBindPoint, layout, firstSet, descriptorSetCount, pDescriptorSets, dynamicOffsetCount, pDynamicOffsets)
 }
 
 // VkCmdBindDescriptorSets indicates an expected call of VkCmdBindDescriptorSets.
@@ -283,11 +275,9 @@ func (mr *MockDriverMockRecorder) VkCmdBindDescriptorSets(commandBuffer, pipelin
 }
 
 // VkCmdBindIndexBuffer mocks base method.
-func (m *MockDriver) VkCmdBindIndexBuffer(commandBuffer core.VkCommandBuffer, buffer core.VkBuffer, offset core.VkDeviceSize, indexType core.VkIndexType) error {
+func (m *MockDriver) VkCmdBindIndexBuffer(commandBuffer core.VkCommandBuffer, buffer core.VkBuffer, offset core.VkDeviceSize, indexType core.VkIndexType) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "VkCmdBindIndexBuffer", commandBuffer, buffer, offset, indexType)
-	ret0, _ := ret[0].(error)
-	return ret0
+	m.ctrl.Call(m, "VkCmdBindIndexBuffer", commandBuffer, buffer, offset, indexType)
 }
 
 // VkCmdBindIndexBuffer indicates an expected call of VkCmdBindIndexBuffer.
@@ -297,11 +287,9 @@ func (mr *MockDriverMockRecorder) VkCmdBindIndexBuffer(commandBuffer, buffer, of
 }
 
 // VkCmdBindPipeline mocks base method.
-func (m *MockDriver) VkCmdBindPipeline(commandBuffer core.VkCommandBuffer, pipelineBindPoint core.VkPipelineBindPoint, pipeline core.VkPipeline) error {
+func (m *MockDriver) VkCmdBindPipeline(commandBuffer core.VkCommandBuffer, pipelineBindPoint core.VkPipelineBindPoint, pipeline core.VkPipeline) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "VkCmdBindPipeline", commandBuffer, pipelineBindPoint, pipeline)
-	ret0, _ := ret[0].(error)
-	return ret0
+	m.ctrl.Call(m, "VkCmdBindPipeline", commandBuffer, pipelineBindPoint, pipeline)
 }
 
 // VkCmdBindPipeline indicates an expected call of VkCmdBindPipeline.
@@ -311,11 +299,9 @@ func (mr *MockDriverMockRecorder) VkCmdBindPipeline(commandBuffer, pipelineBindP
 }
 
 // VkCmdBindVertexBuffers mocks base method.
-func (m *MockDriver) VkCmdBindVertexBuffers(commandBuffer core.VkCommandBuffer, firstBinding, bindingCount core.Uint32, pBuffers *core.VkBuffer, pOffsets *core.VkDeviceSize) error {
+func (m *MockDriver) VkCmdBindVertexBuffers(commandBuffer core.VkCommandBuffer, firstBinding, bindingCount core.Uint32, pBuffers *core.VkBuffer, pOffsets *core.VkDeviceSize) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "VkCmdBindVertexBuffers", commandBuffer, firstBinding, bindingCount, pBuffers, pOffsets)
-	ret0, _ := ret[0].(error)
-	return ret0
+	m.ctrl.Call(m, "VkCmdBindVertexBuffers", commandBuffer, firstBinding, bindingCount, pBuffers, pOffsets)
 }
 
 // VkCmdBindVertexBuffers indicates an expected call of VkCmdBindVertexBuffers.
@@ -325,11 +311,9 @@ func (mr *MockDriverMockRecorder) VkCmdBindVertexBuffers(commandBuffer, firstBin
 }
 
 // VkCmdBlitImage mocks base method.
-func (m *MockDriver) VkCmdBlitImage(commandBuffer core.VkCommandBuffer, srcImage core.VkImage, srcImageLayout core.VkImageLayout, dstImage core.VkImage, dstImageLayout core.VkImageLayout, regionCount core.Uint32, pRegions *core.VkImageBlit, filter core.VkFilter) error {
+func (m *MockDriver) VkCmdBlitImage(commandBuffer core.VkCommandBuffer, srcImage core.VkImage, srcImageLayout core.VkImageLayout, dstImage core.VkImage, dstImageLayout core.VkImageLayout, regionCount core.Uint32, pRegions *core.VkImageBlit, filter core.VkFilter) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "VkCmdBlitImage", commandBuffer, srcImage, srcImageLayout, dstImage, dstImageLayout, regionCount, pRegions, filter)
-	ret0, _ := ret[0].(error)
-	return ret0
+	m.ctrl.Call(m, "VkCmdBlitImage", commandBuffer, srcImage, srcImageLayout, dstImage, dstImageLayout, regionCount, pRegions, filter)
 }
 
 // VkCmdBlitImage indicates an expected call of VkCmdBlitImage.
@@ -339,11 +323,9 @@ func (mr *MockDriverMockRecorder) VkCmdBlitImage(commandBuffer, srcImage, srcIma
 }
 
 // VkCmdClearAttachments mocks base method.
-func (m *MockDriver) VkCmdClearAttachments(commandBuffer core.VkCommandBuffer, attachmentCount core.Uint32, pAttachments *core.VkClearAttachment, rectCount core.Uint32, pRects *core.VkClearRect) error {
+func (m *MockDriver) VkCmdClearAttachments(commandBuffer core.VkCommandBuffer, attachmentCount core.Uint32, pAttachments *core.VkClearAttachment, rectCount core.Uint32, pRects *core.VkClearRect) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "VkCmdClearAttachments", commandBuffer, attachmentCount, pAttachments, rectCount, pRects)
-	ret0, _ := ret[0].(error)
-	return ret0
+	m.ctrl.Call(m, "VkCmdClearAttachments", commandBuffer, attachmentCount, pAttachments, rectCount, pRects)
 }
 
 // VkCmdClearAttachments indicates an expected call of VkCmdClearAttachments.
@@ -353,11 +335,9 @@ func (mr *MockDriverMockRecorder) VkCmdClearAttachments(commandBuffer, attachmen
 }
 
 // VkCmdClearColorImage mocks base method.
-func (m *MockDriver) VkCmdClearColorImage(commandBuffer core.VkCommandBuffer, image core.VkImage, imageLayout core.VkImageLayout, pColor *core.VkClearColorValue, rangeCount core.Uint32, pRanges *core.VkImageSubresourceRange) error {
+func (m *MockDriver) VkCmdClearColorImage(commandBuffer core.VkCommandBuffer, image core.VkImage, imageLayout core.VkImageLayout, pColor *core.VkClearColorValue, rangeCount core.Uint32, pRanges *core.VkImageSubresourceRange) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "VkCmdClearColorImage", commandBuffer, image, imageLayout, pColor, rangeCount, pRanges)
-	ret0, _ := ret[0].(error)
-	return ret0
+	m.ctrl.Call(m, "VkCmdClearColorImage", commandBuffer, image, imageLayout, pColor, rangeCount, pRanges)
 }
 
 // VkCmdClearColorImage indicates an expected call of VkCmdClearColorImage.
@@ -367,11 +347,9 @@ func (mr *MockDriverMockRecorder) VkCmdClearColorImage(commandBuffer, image, ima
 }
 
 // VkCmdClearDepthStencilImage mocks base method.
-func (m *MockDriver) VkCmdClearDepthStencilImage(commandBuffer core.VkCommandBuffer, image core.VkImage, imageLayout core.VkImageLayout, pDepthStencil *core.VkClearDepthStencilValue, rangeCount core.Uint32, pRanges *core.VkImageSubresourceRange) error {
+func (m *MockDriver) VkCmdClearDepthStencilImage(commandBuffer core.VkCommandBuffer, image core.VkImage, imageLayout core.VkImageLayout, pDepthStencil *core.VkClearDepthStencilValue, rangeCount core.Uint32, pRanges *core.VkImageSubresourceRange) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "VkCmdClearDepthStencilImage", commandBuffer, image, imageLayout, pDepthStencil, rangeCount, pRanges)
-	ret0, _ := ret[0].(error)
-	return ret0
+	m.ctrl.Call(m, "VkCmdClearDepthStencilImage", commandBuffer, image, imageLayout, pDepthStencil, rangeCount, pRanges)
 }
 
 // VkCmdClearDepthStencilImage indicates an expected call of VkCmdClearDepthStencilImage.
@@ -381,11 +359,9 @@ func (mr *MockDriverMockRecorder) VkCmdClearDepthStencilImage(commandBuffer, ima
 }
 
 // VkCmdCopyBuffer mocks base method.
-func (m *MockDriver) VkCmdCopyBuffer(commandBuffer core.VkCommandBuffer, srcBuffer, dstBuffer core.VkBuffer, regionCount core.Uint32, pRegions *core.VkBufferCopy) error {
+func (m *MockDriver) VkCmdCopyBuffer(commandBuffer core.VkCommandBuffer, srcBuffer, dstBuffer core.VkBuffer, regionCount core.Uint32, pRegions *core.VkBufferCopy) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "VkCmdCopyBuffer", commandBuffer, srcBuffer, dstBuffer, regionCount, pRegions)
-	ret0, _ := ret[0].(error)
-	return ret0
+	m.ctrl.Call(m, "VkCmdCopyBuffer", commandBuffer, srcBuffer, dstBuffer, regionCount, pRegions)
 }
 
 // VkCmdCopyBuffer indicates an expected call of VkCmdCopyBuffer.
@@ -395,11 +371,9 @@ func (mr *MockDriverMockRecorder) VkCmdCopyBuffer(commandBuffer, srcBuffer, dstB
 }
 
 // VkCmdCopyBufferToImage mocks base method.
-func (m *MockDriver) VkCmdCopyBufferToImage(commandBuffer core.VkCommandBuffer, srcBuffer core.VkBuffer, dstImage core.VkImage, dstImageLayout core.VkImageLayout, regionCount core.Uint32, pRegions *core.VkBufferImageCopy) error {
+func (m *MockDriver) VkCmdCopyBufferToImage(commandBuffer core.VkCommandBuffer, srcBuffer core.VkBuffer, dstImage core.VkImage, dstImageLayout core.VkImageLayout, regionCount core.Uint32, pRegions *core.VkBufferImageCopy) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "VkCmdCopyBufferToImage", commandBuffer, srcBuffer, dstImage, dstImageLayout, regionCount, pRegions)
-	ret0, _ := ret[0].(error)
-	return ret0
+	m.ctrl.Call(m, "VkCmdCopyBufferToImage", commandBuffer, srcBuffer, dstImage, dstImageLayout, regionCount, pRegions)
 }
 
 // VkCmdCopyBufferToImage indicates an expected call of VkCmdCopyBufferToImage.
@@ -409,11 +383,9 @@ func (mr *MockDriverMockRecorder) VkCmdCopyBufferToImage(commandBuffer, srcBuffe
 }
 
 // VkCmdCopyImage mocks base method.
-func (m *MockDriver) VkCmdCopyImage(commandBuffer core.VkCommandBuffer, srcImage core.VkImage, srcImageLayout core.VkImageLayout, dstImage core.VkImage, dstImageLayout core.VkImageLayout, regionCount core.Uint32, pRegions *core.VkImageCopy) error {
+func (m *MockDriver) VkCmdCopyImage(commandBuffer core.VkCommandBuffer, srcImage core.VkImage, srcImageLayout core.VkImageLayout, dstImage core.VkImage, dstImageLayout core.VkImageLayout, regionCount core.Uint32, pRegions *core.VkImageCopy) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "VkCmdCopyImage", commandBuffer, srcImage, srcImageLayout, dstImage, dstImageLayout, regionCount, pRegions)
-	ret0, _ := ret[0].(error)
-	return ret0
+	m.ctrl.Call(m, "VkCmdCopyImage", commandBuffer, srcImage, srcImageLayout, dstImage, dstImageLayout, regionCount, pRegions)
 }
 
 // VkCmdCopyImage indicates an expected call of VkCmdCopyImage.
@@ -423,11 +395,9 @@ func (mr *MockDriverMockRecorder) VkCmdCopyImage(commandBuffer, srcImage, srcIma
 }
 
 // VkCmdCopyImageToBuffer mocks base method.
-func (m *MockDriver) VkCmdCopyImageToBuffer(commandBuffer core.VkCommandBuffer, srcImage core.VkImage, srcImageLayout core.VkImageLayout, dstBuffer core.VkBuffer, regionCount core.Uint32, pRegions *core.VkBufferImageCopy) error {
+func (m *MockDriver) VkCmdCopyImageToBuffer(commandBuffer core.VkCommandBuffer, srcImage core.VkImage, srcImageLayout core.VkImageLayout, dstBuffer core.VkBuffer, regionCount core.Uint32, pRegions *core.VkBufferImageCopy) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "VkCmdCopyImageToBuffer", commandBuffer, srcImage, srcImageLayout, dstBuffer, regionCount, pRegions)
-	ret0, _ := ret[0].(error)
-	return ret0
+	m.ctrl.Call(m, "VkCmdCopyImageToBuffer", commandBuffer, srcImage, srcImageLayout, dstBuffer, regionCount, pRegions)
 }
 
 // VkCmdCopyImageToBuffer indicates an expected call of VkCmdCopyImageToBuffer.
@@ -437,11 +407,9 @@ func (mr *MockDriverMockRecorder) VkCmdCopyImageToBuffer(commandBuffer, srcImage
 }
 
 // VkCmdCopyQueryPoolResults mocks base method.
-func (m *MockDriver) VkCmdCopyQueryPoolResults(commandBuffer core.VkCommandBuffer, queryPool core.VkQueryPool, firstQuery, queryCount core.Uint32, dstBuffer core.VkBuffer, dstOffset, stride core.VkDeviceSize, flags core.VkQueryResultFlags) error {
+func (m *MockDriver) VkCmdCopyQueryPoolResults(commandBuffer core.VkCommandBuffer, queryPool core.VkQueryPool, firstQuery, queryCount core.Uint32, dstBuffer core.VkBuffer, dstOffset, stride core.VkDeviceSize, flags core.VkQueryResultFlags) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "VkCmdCopyQueryPoolResults", commandBuffer, queryPool, firstQuery, queryCount, dstBuffer, dstOffset, stride, flags)
-	ret0, _ := ret[0].(error)
-	return ret0
+	m.ctrl.Call(m, "VkCmdCopyQueryPoolResults", commandBuffer, queryPool, firstQuery, queryCount, dstBuffer, dstOffset, stride, flags)
 }
 
 // VkCmdCopyQueryPoolResults indicates an expected call of VkCmdCopyQueryPoolResults.
@@ -451,11 +419,9 @@ func (mr *MockDriverMockRecorder) VkCmdCopyQueryPoolResults(commandBuffer, query
 }
 
 // VkCmdDispatch mocks base method.
-func (m *MockDriver) VkCmdDispatch(commandBuffer core.VkCommandBuffer, groupCountX, groupCountY, groupCountZ core.Uint32) error {
+func (m *MockDriver) VkCmdDispatch(commandBuffer core.VkCommandBuffer, groupCountX, groupCountY, groupCountZ core.Uint32) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "VkCmdDispatch", commandBuffer, groupCountX, groupCountY, groupCountZ)
-	ret0, _ := ret[0].(error)
-	return ret0
+	m.ctrl.Call(m, "VkCmdDispatch", commandBuffer, groupCountX, groupCountY, groupCountZ)
 }
 
 // VkCmdDispatch indicates an expected call of VkCmdDispatch.
@@ -465,11 +431,9 @@ func (mr *MockDriverMockRecorder) VkCmdDispatch(commandBuffer, groupCountX, grou
 }
 
 // VkCmdDispatchBase mocks base method.
-func (m *MockDriver) VkCmdDispatchBase(commandBuffer core.VkCommandBuffer, baseGroupX, baseGroupY, baseGroupZ, groupCountX, groupCountY, groupCountZ core.Uint32) error {
+func (m *MockDriver) VkCmdDispatchBase(commandBuffer core.VkCommandBuffer, baseGroupX, baseGroupY, baseGroupZ, groupCountX, groupCountY, groupCountZ core.Uint32) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "VkCmdDispatchBase", commandBuffer, baseGroupX, baseGroupY, baseGroupZ, groupCountX, groupCountY, groupCountZ)
-	ret0, _ := ret[0].(error)
-	return ret0
+	m.ctrl.Call(m, "VkCmdDispatchBase", commandBuffer, baseGroupX, baseGroupY, baseGroupZ, groupCountX, groupCountY, groupCountZ)
 }
 
 // VkCmdDispatchBase indicates an expected call of VkCmdDispatchBase.
@@ -479,11 +443,9 @@ func (mr *MockDriverMockRecorder) VkCmdDispatchBase(commandBuffer, baseGroupX, b
 }
 
 // VkCmdDispatchIndirect mocks base method.
-func (m *MockDriver) VkCmdDispatchIndirect(commandBuffer core.VkCommandBuffer, buffer core.VkBuffer, offset core.VkDeviceSize) error {
+func (m *MockDriver) VkCmdDispatchIndirect(commandBuffer core.VkCommandBuffer, buffer core.VkBuffer, offset core.VkDeviceSize) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "VkCmdDispatchIndirect", commandBuffer, buffer, offset)
-	ret0, _ := ret[0].(error)
-	return ret0
+	m.ctrl.Call(m, "VkCmdDispatchIndirect", commandBuffer, buffer, offset)
 }
 
 // VkCmdDispatchIndirect indicates an expected call of VkCmdDispatchIndirect.
@@ -493,11 +455,9 @@ func (mr *MockDriverMockRecorder) VkCmdDispatchIndirect(commandBuffer, buffer, o
 }
 
 // VkCmdDraw mocks base method.
-func (m *MockDriver) VkCmdDraw(commandBuffer core.VkCommandBuffer, vertexCount, instanceCount, firstVertex, firstInstance core.Uint32) error {
+func (m *MockDriver) VkCmdDraw(commandBuffer core.VkCommandBuffer, vertexCount, instanceCount, firstVertex, firstInstance core.Uint32) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "VkCmdDraw", commandBuffer, vertexCount, instanceCount, firstVertex, firstInstance)
-	ret0, _ := ret[0].(error)
-	return ret0
+	m.ctrl.Call(m, "VkCmdDraw", commandBuffer, vertexCount, instanceCount, firstVertex, firstInstance)
 }
 
 // VkCmdDraw indicates an expected call of VkCmdDraw.
@@ -507,11 +467,9 @@ func (mr *MockDriverMockRecorder) VkCmdDraw(commandBuffer, vertexCount, instance
 }
 
 // VkCmdDrawIndexed mocks base method.
-func (m *MockDriver) VkCmdDrawIndexed(commandBuffer core.VkCommandBuffer, indexCount, instanceCount, firstIndex core.Uint32, vertexOffset core.Int32, firstInstance core.Uint32) error {
+func (m *MockDriver) VkCmdDrawIndexed(commandBuffer core.VkCommandBuffer, indexCount, instanceCount, firstIndex core.Uint32, vertexOffset core.Int32, firstInstance core.Uint32) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "VkCmdDrawIndexed", commandBuffer, indexCount, instanceCount, firstIndex, vertexOffset, firstInstance)
-	ret0, _ := ret[0].(error)
-	return ret0
+	m.ctrl.Call(m, "VkCmdDrawIndexed", commandBuffer, indexCount, instanceCount, firstIndex, vertexOffset, firstInstance)
 }
 
 // VkCmdDrawIndexed indicates an expected call of VkCmdDrawIndexed.
@@ -521,11 +479,9 @@ func (mr *MockDriverMockRecorder) VkCmdDrawIndexed(commandBuffer, indexCount, in
 }
 
 // VkCmdDrawIndexedIndirect mocks base method.
-func (m *MockDriver) VkCmdDrawIndexedIndirect(commandBuffer core.VkCommandBuffer, buffer core.VkBuffer, offset core.VkDeviceSize, drawCount, stride core.Uint32) error {
+func (m *MockDriver) VkCmdDrawIndexedIndirect(commandBuffer core.VkCommandBuffer, buffer core.VkBuffer, offset core.VkDeviceSize, drawCount, stride core.Uint32) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "VkCmdDrawIndexedIndirect", commandBuffer, buffer, offset, drawCount, stride)
-	ret0, _ := ret[0].(error)
-	return ret0
+	m.ctrl.Call(m, "VkCmdDrawIndexedIndirect", commandBuffer, buffer, offset, drawCount, stride)
 }
 
 // VkCmdDrawIndexedIndirect indicates an expected call of VkCmdDrawIndexedIndirect.
@@ -535,11 +491,9 @@ func (mr *MockDriverMockRecorder) VkCmdDrawIndexedIndirect(commandBuffer, buffer
 }
 
 // VkCmdDrawIndexedIndirectCount mocks base method.
-func (m *MockDriver) VkCmdDrawIndexedIndirectCount(commandBuffer core.VkCommandBuffer, buffer core.VkBuffer, offset core.VkDeviceSize, countBuffer core.VkBuffer, countBufferOffset core.VkDeviceSize, maxDrawCount, stride core.Uint32) error {
+func (m *MockDriver) VkCmdDrawIndexedIndirectCount(commandBuffer core.VkCommandBuffer, buffer core.VkBuffer, offset core.VkDeviceSize, countBuffer core.VkBuffer, countBufferOffset core.VkDeviceSize, maxDrawCount, stride core.Uint32) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "VkCmdDrawIndexedIndirectCount", commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride)
-	ret0, _ := ret[0].(error)
-	return ret0
+	m.ctrl.Call(m, "VkCmdDrawIndexedIndirectCount", commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride)
 }
 
 // VkCmdDrawIndexedIndirectCount indicates an expected call of VkCmdDrawIndexedIndirectCount.
@@ -549,11 +503,9 @@ func (mr *MockDriverMockRecorder) VkCmdDrawIndexedIndirectCount(commandBuffer, b
 }
 
 // VkCmdDrawIndirect mocks base method.
-func (m *MockDriver) VkCmdDrawIndirect(commandBuffer core.VkCommandBuffer, buffer core.VkBuffer, offset core.VkDeviceSize, drawCount, stride core.Uint32) error {
+func (m *MockDriver) VkCmdDrawIndirect(commandBuffer core.VkCommandBuffer, buffer core.VkBuffer, offset core.VkDeviceSize, drawCount, stride core.Uint32) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "VkCmdDrawIndirect", commandBuffer, buffer, offset, drawCount, stride)
-	ret0, _ := ret[0].(error)
-	return ret0
+	m.ctrl.Call(m, "VkCmdDrawIndirect", commandBuffer, buffer, offset, drawCount, stride)
 }
 
 // VkCmdDrawIndirect indicates an expected call of VkCmdDrawIndirect.
@@ -563,11 +515,9 @@ func (mr *MockDriverMockRecorder) VkCmdDrawIndirect(commandBuffer, buffer, offse
 }
 
 // VkCmdDrawIndirectCount mocks base method.
-func (m *MockDriver) VkCmdDrawIndirectCount(commandBuffer core.VkCommandBuffer, buffer core.VkBuffer, offset core.VkDeviceSize, countBuffer core.VkBuffer, countBufferOffset core.VkDeviceSize, maxDrawCount, stride core.Uint32) error {
+func (m *MockDriver) VkCmdDrawIndirectCount(commandBuffer core.VkCommandBuffer, buffer core.VkBuffer, offset core.VkDeviceSize, countBuffer core.VkBuffer, countBufferOffset core.VkDeviceSize, maxDrawCount, stride core.Uint32) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "VkCmdDrawIndirectCount", commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride)
-	ret0, _ := ret[0].(error)
-	return ret0
+	m.ctrl.Call(m, "VkCmdDrawIndirectCount", commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride)
 }
 
 // VkCmdDrawIndirectCount indicates an expected call of VkCmdDrawIndirectCount.
@@ -577,11 +527,9 @@ func (mr *MockDriverMockRecorder) VkCmdDrawIndirectCount(commandBuffer, buffer, 
 }
 
 // VkCmdEndQuery mocks base method.
-func (m *MockDriver) VkCmdEndQuery(commandBuffer core.VkCommandBuffer, queryPool core.VkQueryPool, query core.Uint32) error {
+func (m *MockDriver) VkCmdEndQuery(commandBuffer core.VkCommandBuffer, queryPool core.VkQueryPool, query core.Uint32) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "VkCmdEndQuery", commandBuffer, queryPool, query)
-	ret0, _ := ret[0].(error)
-	return ret0
+	m.ctrl.Call(m, "VkCmdEndQuery", commandBuffer, queryPool, query)
 }
 
 // VkCmdEndQuery indicates an expected call of VkCmdEndQuery.
@@ -591,11 +539,9 @@ func (mr *MockDriverMockRecorder) VkCmdEndQuery(commandBuffer, queryPool, query 
 }
 
 // VkCmdEndRenderPass mocks base method.
-func (m *MockDriver) VkCmdEndRenderPass(commandBuffer core.VkCommandBuffer) error {
+func (m *MockDriver) VkCmdEndRenderPass(commandBuffer core.VkCommandBuffer) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "VkCmdEndRenderPass", commandBuffer)
-	ret0, _ := ret[0].(error)
-	return ret0
+	m.ctrl.Call(m, "VkCmdEndRenderPass", commandBuffer)
 }
 
 // VkCmdEndRenderPass indicates an expected call of VkCmdEndRenderPass.
@@ -605,11 +551,9 @@ func (mr *MockDriverMockRecorder) VkCmdEndRenderPass(commandBuffer interface{}) 
 }
 
 // VkCmdEndRenderPass2 mocks base method.
-func (m *MockDriver) VkCmdEndRenderPass2(commandBuffer core.VkCommandBuffer, pSubpassEndInfo *core.VkSubpassEndInfo) error {
+func (m *MockDriver) VkCmdEndRenderPass2(commandBuffer core.VkCommandBuffer, pSubpassEndInfo *core.VkSubpassEndInfo) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "VkCmdEndRenderPass2", commandBuffer, pSubpassEndInfo)
-	ret0, _ := ret[0].(error)
-	return ret0
+	m.ctrl.Call(m, "VkCmdEndRenderPass2", commandBuffer, pSubpassEndInfo)
 }
 
 // VkCmdEndRenderPass2 indicates an expected call of VkCmdEndRenderPass2.
@@ -619,11 +563,9 @@ func (mr *MockDriverMockRecorder) VkCmdEndRenderPass2(commandBuffer, pSubpassEnd
 }
 
 // VkCmdExecuteCommands mocks base method.
-func (m *MockDriver) VkCmdExecuteCommands(commandBuffer core.VkCommandBuffer, commandBufferCount core.Uint32, pCommandBuffers *core.VkCommandBuffer) error {
+func (m *MockDriver) VkCmdExecuteCommands(commandBuffer core.VkCommandBuffer, commandBufferCount core.Uint32, pCommandBuffers *core.VkCommandBuffer) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "VkCmdExecuteCommands", commandBuffer, commandBufferCount, pCommandBuffers)
-	ret0, _ := ret[0].(error)
-	return ret0
+	m.ctrl.Call(m, "VkCmdExecuteCommands", commandBuffer, commandBufferCount, pCommandBuffers)
 }
 
 // VkCmdExecuteCommands indicates an expected call of VkCmdExecuteCommands.
@@ -633,11 +575,9 @@ func (mr *MockDriverMockRecorder) VkCmdExecuteCommands(commandBuffer, commandBuf
 }
 
 // VkCmdFillBuffer mocks base method.
-func (m *MockDriver) VkCmdFillBuffer(commandBuffer core.VkCommandBuffer, dstBuffer core.VkBuffer, dstOffset, size core.VkDeviceSize, data core.Uint32) error {
+func (m *MockDriver) VkCmdFillBuffer(commandBuffer core.VkCommandBuffer, dstBuffer core.VkBuffer, dstOffset, size core.VkDeviceSize, data core.Uint32) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "VkCmdFillBuffer", commandBuffer, dstBuffer, dstOffset, size, data)
-	ret0, _ := ret[0].(error)
-	return ret0
+	m.ctrl.Call(m, "VkCmdFillBuffer", commandBuffer, dstBuffer, dstOffset, size, data)
 }
 
 // VkCmdFillBuffer indicates an expected call of VkCmdFillBuffer.
@@ -647,11 +587,9 @@ func (mr *MockDriverMockRecorder) VkCmdFillBuffer(commandBuffer, dstBuffer, dstO
 }
 
 // VkCmdNextSubpass mocks base method.
-func (m *MockDriver) VkCmdNextSubpass(commandBuffer core.VkCommandBuffer, contents core.VkSubpassContents) error {
+func (m *MockDriver) VkCmdNextSubpass(commandBuffer core.VkCommandBuffer, contents core.VkSubpassContents) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "VkCmdNextSubpass", commandBuffer, contents)
-	ret0, _ := ret[0].(error)
-	return ret0
+	m.ctrl.Call(m, "VkCmdNextSubpass", commandBuffer, contents)
 }
 
 // VkCmdNextSubpass indicates an expected call of VkCmdNextSubpass.
@@ -661,11 +599,9 @@ func (mr *MockDriverMockRecorder) VkCmdNextSubpass(commandBuffer, contents inter
 }
 
 // VkCmdNextSubpass2 mocks base method.
-func (m *MockDriver) VkCmdNextSubpass2(commandBuffer core.VkCommandBuffer, pSubpassBeginInfo *core.VkSubpassBeginInfo, pSubpassEndInfo *core.VkSubpassEndInfo) error {
+func (m *MockDriver) VkCmdNextSubpass2(commandBuffer core.VkCommandBuffer, pSubpassBeginInfo *core.VkSubpassBeginInfo, pSubpassEndInfo *core.VkSubpassEndInfo) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "VkCmdNextSubpass2", commandBuffer, pSubpassBeginInfo, pSubpassEndInfo)
-	ret0, _ := ret[0].(error)
-	return ret0
+	m.ctrl.Call(m, "VkCmdNextSubpass2", commandBuffer, pSubpassBeginInfo, pSubpassEndInfo)
 }
 
 // VkCmdNextSubpass2 indicates an expected call of VkCmdNextSubpass2.
@@ -675,11 +611,9 @@ func (mr *MockDriverMockRecorder) VkCmdNextSubpass2(commandBuffer, pSubpassBegin
 }
 
 // VkCmdPipelineBarrier mocks base method.
-func (m *MockDriver) VkCmdPipelineBarrier(commandBuffer core.VkCommandBuffer, srcStageMask, dstStageMask core.VkPipelineStageFlags, dependencyFlags core.VkDependencyFlags, memoryBarrierCount core.Uint32, pMemoryBarriers *core.VkMemoryBarrier, bufferMemoryBarrierCount core.Uint32, pBufferMemoryBarriers *core.VkBufferMemoryBarrier, imageMemoryBarrierCount core.Uint32, pImageMemoryBarriers *core.VkImageMemoryBarrier) error {
+func (m *MockDriver) VkCmdPipelineBarrier(commandBuffer core.VkCommandBuffer, srcStageMask, dstStageMask core.VkPipelineStageFlags, dependencyFlags core.VkDependencyFlags, memoryBarrierCount core.Uint32, pMemoryBarriers *core.VkMemoryBarrier, bufferMemoryBarrierCount core.Uint32, pBufferMemoryBarriers *core.VkBufferMemoryBarrier, imageMemoryBarrierCount core.Uint32, pImageMemoryBarriers *core.VkImageMemoryBarrier) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "VkCmdPipelineBarrier", commandBuffer, srcStageMask, dstStageMask, dependencyFlags, memoryBarrierCount, pMemoryBarriers, bufferMemoryBarrierCount, pBufferMemoryBarriers, imageMemoryBarrierCount, pImageMemoryBarriers)
-	ret0, _ := ret[0].(error)
-	return ret0
+	m.ctrl.Call(m, "VkCmdPipelineBarrier", commandBuffer, srcStageMask, dstStageMask, dependencyFlags, memoryBarrierCount, pMemoryBarriers, bufferMemoryBarrierCount, pBufferMemoryBarriers, imageMemoryBarrierCount, pImageMemoryBarriers)
 }
 
 // VkCmdPipelineBarrier indicates an expected call of VkCmdPipelineBarrier.
@@ -689,11 +623,9 @@ func (mr *MockDriverMockRecorder) VkCmdPipelineBarrier(commandBuffer, srcStageMa
 }
 
 // VkCmdPushConstants mocks base method.
-func (m *MockDriver) VkCmdPushConstants(commandBuffer core.VkCommandBuffer, layout core.VkPipelineLayout, stageFlags core.VkShaderStageFlags, offset, size core.Uint32, pValues unsafe.Pointer) error {
+func (m *MockDriver) VkCmdPushConstants(commandBuffer core.VkCommandBuffer, layout core.VkPipelineLayout, stageFlags core.VkShaderStageFlags, offset, size core.Uint32, pValues unsafe.Pointer) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "VkCmdPushConstants", commandBuffer, layout, stageFlags, offset, size, pValues)
-	ret0, _ := ret[0].(error)
-	return ret0
+	m.ctrl.Call(m, "VkCmdPushConstants", commandBuffer, layout, stageFlags, offset, size, pValues)
 }
 
 // VkCmdPushConstants indicates an expected call of VkCmdPushConstants.
@@ -703,11 +635,9 @@ func (mr *MockDriverMockRecorder) VkCmdPushConstants(commandBuffer, layout, stag
 }
 
 // VkCmdResetEvent mocks base method.
-func (m *MockDriver) VkCmdResetEvent(commandBuffer core.VkCommandBuffer, event core.VkEvent, stageMask core.VkPipelineStageFlags) error {
+func (m *MockDriver) VkCmdResetEvent(commandBuffer core.VkCommandBuffer, event core.VkEvent, stageMask core.VkPipelineStageFlags) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "VkCmdResetEvent", commandBuffer, event, stageMask)
-	ret0, _ := ret[0].(error)
-	return ret0
+	m.ctrl.Call(m, "VkCmdResetEvent", commandBuffer, event, stageMask)
 }
 
 // VkCmdResetEvent indicates an expected call of VkCmdResetEvent.
@@ -717,11 +647,9 @@ func (mr *MockDriverMockRecorder) VkCmdResetEvent(commandBuffer, event, stageMas
 }
 
 // VkCmdResetQueryPool mocks base method.
-func (m *MockDriver) VkCmdResetQueryPool(commandBuffer core.VkCommandBuffer, queryPool core.VkQueryPool, firstQuery, queryCount core.Uint32) error {
+func (m *MockDriver) VkCmdResetQueryPool(commandBuffer core.VkCommandBuffer, queryPool core.VkQueryPool, firstQuery, queryCount core.Uint32) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "VkCmdResetQueryPool", commandBuffer, queryPool, firstQuery, queryCount)
-	ret0, _ := ret[0].(error)
-	return ret0
+	m.ctrl.Call(m, "VkCmdResetQueryPool", commandBuffer, queryPool, firstQuery, queryCount)
 }
 
 // VkCmdResetQueryPool indicates an expected call of VkCmdResetQueryPool.
@@ -731,11 +659,9 @@ func (mr *MockDriverMockRecorder) VkCmdResetQueryPool(commandBuffer, queryPool, 
 }
 
 // VkCmdResolveImage mocks base method.
-func (m *MockDriver) VkCmdResolveImage(commandBuffer core.VkCommandBuffer, srcImage core.VkImage, srcImageLayout core.VkImageLayout, dstImage core.VkImage, dstImageLayout core.VkImageLayout, regionCount core.Uint32, pRegions *core.VkImageResolve) error {
+func (m *MockDriver) VkCmdResolveImage(commandBuffer core.VkCommandBuffer, srcImage core.VkImage, srcImageLayout core.VkImageLayout, dstImage core.VkImage, dstImageLayout core.VkImageLayout, regionCount core.Uint32, pRegions *core.VkImageResolve) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "VkCmdResolveImage", commandBuffer, srcImage, srcImageLayout, dstImage, dstImageLayout, regionCount, pRegions)
-	ret0, _ := ret[0].(error)
-	return ret0
+	m.ctrl.Call(m, "VkCmdResolveImage", commandBuffer, srcImage, srcImageLayout, dstImage, dstImageLayout, regionCount, pRegions)
 }
 
 // VkCmdResolveImage indicates an expected call of VkCmdResolveImage.
@@ -745,11 +671,9 @@ func (mr *MockDriverMockRecorder) VkCmdResolveImage(commandBuffer, srcImage, src
 }
 
 // VkCmdSetBlendConstants mocks base method.
-func (m *MockDriver) VkCmdSetBlendConstants(commandBuffer core.VkCommandBuffer, blendConstants *core.Float) error {
+func (m *MockDriver) VkCmdSetBlendConstants(commandBuffer core.VkCommandBuffer, blendConstants *core.Float) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "VkCmdSetBlendConstants", commandBuffer, blendConstants)
-	ret0, _ := ret[0].(error)
-	return ret0
+	m.ctrl.Call(m, "VkCmdSetBlendConstants", commandBuffer, blendConstants)
 }
 
 // VkCmdSetBlendConstants indicates an expected call of VkCmdSetBlendConstants.
@@ -759,11 +683,9 @@ func (mr *MockDriverMockRecorder) VkCmdSetBlendConstants(commandBuffer, blendCon
 }
 
 // VkCmdSetDepthBias mocks base method.
-func (m *MockDriver) VkCmdSetDepthBias(commandBuffer core.VkCommandBuffer, depthBiasConstantFactor, depthBiasClamp, depthBiasSlopeFactor core.Float) error {
+func (m *MockDriver) VkCmdSetDepthBias(commandBuffer core.VkCommandBuffer, depthBiasConstantFactor, depthBiasClamp, depthBiasSlopeFactor core.Float) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "VkCmdSetDepthBias", commandBuffer, depthBiasConstantFactor, depthBiasClamp, depthBiasSlopeFactor)
-	ret0, _ := ret[0].(error)
-	return ret0
+	m.ctrl.Call(m, "VkCmdSetDepthBias", commandBuffer, depthBiasConstantFactor, depthBiasClamp, depthBiasSlopeFactor)
 }
 
 // VkCmdSetDepthBias indicates an expected call of VkCmdSetDepthBias.
@@ -773,11 +695,9 @@ func (mr *MockDriverMockRecorder) VkCmdSetDepthBias(commandBuffer, depthBiasCons
 }
 
 // VkCmdSetDepthBounds mocks base method.
-func (m *MockDriver) VkCmdSetDepthBounds(commandBuffer core.VkCommandBuffer, minDepthBounds, maxDepthBounds core.Float) error {
+func (m *MockDriver) VkCmdSetDepthBounds(commandBuffer core.VkCommandBuffer, minDepthBounds, maxDepthBounds core.Float) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "VkCmdSetDepthBounds", commandBuffer, minDepthBounds, maxDepthBounds)
-	ret0, _ := ret[0].(error)
-	return ret0
+	m.ctrl.Call(m, "VkCmdSetDepthBounds", commandBuffer, minDepthBounds, maxDepthBounds)
 }
 
 // VkCmdSetDepthBounds indicates an expected call of VkCmdSetDepthBounds.
@@ -787,11 +707,9 @@ func (mr *MockDriverMockRecorder) VkCmdSetDepthBounds(commandBuffer, minDepthBou
 }
 
 // VkCmdSetDeviceMask mocks base method.
-func (m *MockDriver) VkCmdSetDeviceMask(commandBuffer core.VkCommandBuffer, deviceMask core.Uint32) error {
+func (m *MockDriver) VkCmdSetDeviceMask(commandBuffer core.VkCommandBuffer, deviceMask core.Uint32) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "VkCmdSetDeviceMask", commandBuffer, deviceMask)
-	ret0, _ := ret[0].(error)
-	return ret0
+	m.ctrl.Call(m, "VkCmdSetDeviceMask", commandBuffer, deviceMask)
 }
 
 // VkCmdSetDeviceMask indicates an expected call of VkCmdSetDeviceMask.
@@ -801,11 +719,9 @@ func (mr *MockDriverMockRecorder) VkCmdSetDeviceMask(commandBuffer, deviceMask i
 }
 
 // VkCmdSetEvent mocks base method.
-func (m *MockDriver) VkCmdSetEvent(commandBuffer core.VkCommandBuffer, event core.VkEvent, stageMask core.VkPipelineStageFlags) error {
+func (m *MockDriver) VkCmdSetEvent(commandBuffer core.VkCommandBuffer, event core.VkEvent, stageMask core.VkPipelineStageFlags) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "VkCmdSetEvent", commandBuffer, event, stageMask)
-	ret0, _ := ret[0].(error)
-	return ret0
+	m.ctrl.Call(m, "VkCmdSetEvent", commandBuffer, event, stageMask)
 }
 
 // VkCmdSetEvent indicates an expected call of VkCmdSetEvent.
@@ -815,11 +731,9 @@ func (mr *MockDriverMockRecorder) VkCmdSetEvent(commandBuffer, event, stageMask 
 }
 
 // VkCmdSetLineWidth mocks base method.
-func (m *MockDriver) VkCmdSetLineWidth(commandBuffer core.VkCommandBuffer, lineWidth core.Float) error {
+func (m *MockDriver) VkCmdSetLineWidth(commandBuffer core.VkCommandBuffer, lineWidth core.Float) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "VkCmdSetLineWidth", commandBuffer, lineWidth)
-	ret0, _ := ret[0].(error)
-	return ret0
+	m.ctrl.Call(m, "VkCmdSetLineWidth", commandBuffer, lineWidth)
 }
 
 // VkCmdSetLineWidth indicates an expected call of VkCmdSetLineWidth.
@@ -829,11 +743,9 @@ func (mr *MockDriverMockRecorder) VkCmdSetLineWidth(commandBuffer, lineWidth int
 }
 
 // VkCmdSetScissor mocks base method.
-func (m *MockDriver) VkCmdSetScissor(commandBuffer core.VkCommandBuffer, firstScissor, scissorCount core.Uint32, pScissors *core.VkRect2D) error {
+func (m *MockDriver) VkCmdSetScissor(commandBuffer core.VkCommandBuffer, firstScissor, scissorCount core.Uint32, pScissors *core.VkRect2D) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "VkCmdSetScissor", commandBuffer, firstScissor, scissorCount, pScissors)
-	ret0, _ := ret[0].(error)
-	return ret0
+	m.ctrl.Call(m, "VkCmdSetScissor", commandBuffer, firstScissor, scissorCount, pScissors)
 }
 
 // VkCmdSetScissor indicates an expected call of VkCmdSetScissor.
@@ -843,11 +755,9 @@ func (mr *MockDriverMockRecorder) VkCmdSetScissor(commandBuffer, firstScissor, s
 }
 
 // VkCmdSetStencilCompareMask mocks base method.
-func (m *MockDriver) VkCmdSetStencilCompareMask(commandBuffer core.VkCommandBuffer, faceMask core.VkStencilFaceFlags, compareMask core.Uint32) error {
+func (m *MockDriver) VkCmdSetStencilCompareMask(commandBuffer core.VkCommandBuffer, faceMask core.VkStencilFaceFlags, compareMask core.Uint32) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "VkCmdSetStencilCompareMask", commandBuffer, faceMask, compareMask)
-	ret0, _ := ret[0].(error)
-	return ret0
+	m.ctrl.Call(m, "VkCmdSetStencilCompareMask", commandBuffer, faceMask, compareMask)
 }
 
 // VkCmdSetStencilCompareMask indicates an expected call of VkCmdSetStencilCompareMask.
@@ -857,11 +767,9 @@ func (mr *MockDriverMockRecorder) VkCmdSetStencilCompareMask(commandBuffer, face
 }
 
 // VkCmdSetStencilReference mocks base method.
-func (m *MockDriver) VkCmdSetStencilReference(commandBuffer core.VkCommandBuffer, faceMask core.VkStencilFaceFlags, reference core.Uint32) error {
+func (m *MockDriver) VkCmdSetStencilReference(commandBuffer core.VkCommandBuffer, faceMask core.VkStencilFaceFlags, reference core.Uint32) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "VkCmdSetStencilReference", commandBuffer, faceMask, reference)
-	ret0, _ := ret[0].(error)
-	return ret0
+	m.ctrl.Call(m, "VkCmdSetStencilReference", commandBuffer, faceMask, reference)
 }
 
 // VkCmdSetStencilReference indicates an expected call of VkCmdSetStencilReference.
@@ -871,11 +779,9 @@ func (mr *MockDriverMockRecorder) VkCmdSetStencilReference(commandBuffer, faceMa
 }
 
 // VkCmdSetStencilWriteMask mocks base method.
-func (m *MockDriver) VkCmdSetStencilWriteMask(commandBuffer core.VkCommandBuffer, faceMask core.VkStencilFaceFlags, writeMask core.Uint32) error {
+func (m *MockDriver) VkCmdSetStencilWriteMask(commandBuffer core.VkCommandBuffer, faceMask core.VkStencilFaceFlags, writeMask core.Uint32) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "VkCmdSetStencilWriteMask", commandBuffer, faceMask, writeMask)
-	ret0, _ := ret[0].(error)
-	return ret0
+	m.ctrl.Call(m, "VkCmdSetStencilWriteMask", commandBuffer, faceMask, writeMask)
 }
 
 // VkCmdSetStencilWriteMask indicates an expected call of VkCmdSetStencilWriteMask.
@@ -885,11 +791,9 @@ func (mr *MockDriverMockRecorder) VkCmdSetStencilWriteMask(commandBuffer, faceMa
 }
 
 // VkCmdSetViewport mocks base method.
-func (m *MockDriver) VkCmdSetViewport(commandBuffer core.VkCommandBuffer, firstViewport, viewportCount core.Uint32, pViewports *core.VkViewport) error {
+func (m *MockDriver) VkCmdSetViewport(commandBuffer core.VkCommandBuffer, firstViewport, viewportCount core.Uint32, pViewports *core.VkViewport) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "VkCmdSetViewport", commandBuffer, firstViewport, viewportCount, pViewports)
-	ret0, _ := ret[0].(error)
-	return ret0
+	m.ctrl.Call(m, "VkCmdSetViewport", commandBuffer, firstViewport, viewportCount, pViewports)
 }
 
 // VkCmdSetViewport indicates an expected call of VkCmdSetViewport.
@@ -899,11 +803,9 @@ func (mr *MockDriverMockRecorder) VkCmdSetViewport(commandBuffer, firstViewport,
 }
 
 // VkCmdUpdateBuffer mocks base method.
-func (m *MockDriver) VkCmdUpdateBuffer(commandBuffer core.VkCommandBuffer, dstBuffer core.VkBuffer, dstOffset, dataSize core.VkDeviceSize, pData unsafe.Pointer) error {
+func (m *MockDriver) VkCmdUpdateBuffer(commandBuffer core.VkCommandBuffer, dstBuffer core.VkBuffer, dstOffset, dataSize core.VkDeviceSize, pData unsafe.Pointer) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "VkCmdUpdateBuffer", commandBuffer, dstBuffer, dstOffset, dataSize, pData)
-	ret0, _ := ret[0].(error)
-	return ret0
+	m.ctrl.Call(m, "VkCmdUpdateBuffer", commandBuffer, dstBuffer, dstOffset, dataSize, pData)
 }
 
 // VkCmdUpdateBuffer indicates an expected call of VkCmdUpdateBuffer.
@@ -913,11 +815,9 @@ func (mr *MockDriverMockRecorder) VkCmdUpdateBuffer(commandBuffer, dstBuffer, ds
 }
 
 // VkCmdWaitEvents mocks base method.
-func (m *MockDriver) VkCmdWaitEvents(commandBuffer core.VkCommandBuffer, eventCount core.Uint32, pEvents *core.VkEvent, srcStageMask, dstStageMask core.VkPipelineStageFlags, memoryBarrierCount core.Uint32, pMemoryBarriers *core.VkMemoryBarrier, bufferMemoryBarrierCount core.Uint32, pBufferMemoryBarriers *core.VkBufferMemoryBarrier, imageMemoryBarrierCount core.Uint32, pImageMemoryBarriers *core.VkImageMemoryBarrier) error {
+func (m *MockDriver) VkCmdWaitEvents(commandBuffer core.VkCommandBuffer, eventCount core.Uint32, pEvents *core.VkEvent, srcStageMask, dstStageMask core.VkPipelineStageFlags, memoryBarrierCount core.Uint32, pMemoryBarriers *core.VkMemoryBarrier, bufferMemoryBarrierCount core.Uint32, pBufferMemoryBarriers *core.VkBufferMemoryBarrier, imageMemoryBarrierCount core.Uint32, pImageMemoryBarriers *core.VkImageMemoryBarrier) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "VkCmdWaitEvents", commandBuffer, eventCount, pEvents, srcStageMask, dstStageMask, memoryBarrierCount, pMemoryBarriers, bufferMemoryBarrierCount, pBufferMemoryBarriers, imageMemoryBarrierCount, pImageMemoryBarriers)
-	ret0, _ := ret[0].(error)
-	return ret0
+	m.ctrl.Call(m, "VkCmdWaitEvents", commandBuffer, eventCount, pEvents, srcStageMask, dstStageMask, memoryBarrierCount, pMemoryBarriers, bufferMemoryBarrierCount, pBufferMemoryBarriers, imageMemoryBarrierCount, pImageMemoryBarriers)
 }
 
 // VkCmdWaitEvents indicates an expected call of VkCmdWaitEvents.
@@ -927,11 +827,9 @@ func (mr *MockDriverMockRecorder) VkCmdWaitEvents(commandBuffer, eventCount, pEv
 }
 
 // VkCmdWriteTimestamp mocks base method.
-func (m *MockDriver) VkCmdWriteTimestamp(commandBuffer core.VkCommandBuffer, pipelineStage core.VkPipelineStageFlags, queryPool core.VkQueryPool, query core.Uint32) error {
+func (m *MockDriver) VkCmdWriteTimestamp(commandBuffer core.VkCommandBuffer, pipelineStage core.VkPipelineStageFlags, queryPool core.VkQueryPool, query core.Uint32) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "VkCmdWriteTimestamp", commandBuffer, pipelineStage, queryPool, query)
-	ret0, _ := ret[0].(error)
-	return ret0
+	m.ctrl.Call(m, "VkCmdWriteTimestamp", commandBuffer, pipelineStage, queryPool, query)
 }
 
 // VkCmdWriteTimestamp indicates an expected call of VkCmdWriteTimestamp.
@@ -1301,11 +1199,9 @@ func (mr *MockDriverMockRecorder) VkCreateShaderModule(device, pCreateInfo, pAll
 }
 
 // VkDestroyBuffer mocks base method.
-func (m *MockDriver) VkDestroyBuffer(device core.VkDevice, buffer core.VkBuffer, pAllocator *core.VkAllocationCallbacks) error {
+func (m *MockDriver) VkDestroyBuffer(device core.VkDevice, buffer core.VkBuffer, pAllocator *core.VkAllocationCallbacks) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "VkDestroyBuffer", device, buffer, pAllocator)
-	ret0, _ := ret[0].(error)
-	return ret0
+	m.ctrl.Call(m, "VkDestroyBuffer", device, buffer, pAllocator)
 }
 
 // VkDestroyBuffer indicates an expected call of VkDestroyBuffer.
@@ -1315,11 +1211,9 @@ func (mr *MockDriverMockRecorder) VkDestroyBuffer(device, buffer, pAllocator int
 }
 
 // VkDestroyBufferView mocks base method.
-func (m *MockDriver) VkDestroyBufferView(device core.VkDevice, bufferView core.VkBufferView, pAllocator *core.VkAllocationCallbacks) error {
+func (m *MockDriver) VkDestroyBufferView(device core.VkDevice, bufferView core.VkBufferView, pAllocator *core.VkAllocationCallbacks) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "VkDestroyBufferView", device, bufferView, pAllocator)
-	ret0, _ := ret[0].(error)
-	return ret0
+	m.ctrl.Call(m, "VkDestroyBufferView", device, bufferView, pAllocator)
 }
 
 // VkDestroyBufferView indicates an expected call of VkDestroyBufferView.
@@ -1329,11 +1223,9 @@ func (mr *MockDriverMockRecorder) VkDestroyBufferView(device, bufferView, pAlloc
 }
 
 // VkDestroyCommandPool mocks base method.
-func (m *MockDriver) VkDestroyCommandPool(device core.VkDevice, commandPool core.VkCommandPool, pAllocator *core.VkAllocationCallbacks) error {
+func (m *MockDriver) VkDestroyCommandPool(device core.VkDevice, commandPool core.VkCommandPool, pAllocator *core.VkAllocationCallbacks) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "VkDestroyCommandPool", device, commandPool, pAllocator)
-	ret0, _ := ret[0].(error)
-	return ret0
+	m.ctrl.Call(m, "VkDestroyCommandPool", device, commandPool, pAllocator)
 }
 
 // VkDestroyCommandPool indicates an expected call of VkDestroyCommandPool.
@@ -1343,11 +1235,9 @@ func (mr *MockDriverMockRecorder) VkDestroyCommandPool(device, commandPool, pAll
 }
 
 // VkDestroyDescriptorPool mocks base method.
-func (m *MockDriver) VkDestroyDescriptorPool(device core.VkDevice, descriptorPool core.VkDescriptorPool, pAllocator *core.VkAllocationCallbacks) error {
+func (m *MockDriver) VkDestroyDescriptorPool(device core.VkDevice, descriptorPool core.VkDescriptorPool, pAllocator *core.VkAllocationCallbacks) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "VkDestroyDescriptorPool", device, descriptorPool, pAllocator)
-	ret0, _ := ret[0].(error)
-	return ret0
+	m.ctrl.Call(m, "VkDestroyDescriptorPool", device, descriptorPool, pAllocator)
 }
 
 // VkDestroyDescriptorPool indicates an expected call of VkDestroyDescriptorPool.
@@ -1357,11 +1247,9 @@ func (mr *MockDriverMockRecorder) VkDestroyDescriptorPool(device, descriptorPool
 }
 
 // VkDestroyDescriptorSetLayout mocks base method.
-func (m *MockDriver) VkDestroyDescriptorSetLayout(device core.VkDevice, descriptorSetLayout core.VkDescriptorSetLayout, pAllocator *core.VkAllocationCallbacks) error {
+func (m *MockDriver) VkDestroyDescriptorSetLayout(device core.VkDevice, descriptorSetLayout core.VkDescriptorSetLayout, pAllocator *core.VkAllocationCallbacks) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "VkDestroyDescriptorSetLayout", device, descriptorSetLayout, pAllocator)
-	ret0, _ := ret[0].(error)
-	return ret0
+	m.ctrl.Call(m, "VkDestroyDescriptorSetLayout", device, descriptorSetLayout, pAllocator)
 }
 
 // VkDestroyDescriptorSetLayout indicates an expected call of VkDestroyDescriptorSetLayout.
@@ -1371,11 +1259,9 @@ func (mr *MockDriverMockRecorder) VkDestroyDescriptorSetLayout(device, descripto
 }
 
 // VkDestroyDescriptorUpdateTemplate mocks base method.
-func (m *MockDriver) VkDestroyDescriptorUpdateTemplate(device core.VkDevice, descriptorUpdateTemplate core.VkDescriptorUpdateTemplate, pAllocator *core.VkAllocationCallbacks) error {
+func (m *MockDriver) VkDestroyDescriptorUpdateTemplate(device core.VkDevice, descriptorUpdateTemplate core.VkDescriptorUpdateTemplate, pAllocator *core.VkAllocationCallbacks) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "VkDestroyDescriptorUpdateTemplate", device, descriptorUpdateTemplate, pAllocator)
-	ret0, _ := ret[0].(error)
-	return ret0
+	m.ctrl.Call(m, "VkDestroyDescriptorUpdateTemplate", device, descriptorUpdateTemplate, pAllocator)
 }
 
 // VkDestroyDescriptorUpdateTemplate indicates an expected call of VkDestroyDescriptorUpdateTemplate.
@@ -1385,11 +1271,9 @@ func (mr *MockDriverMockRecorder) VkDestroyDescriptorUpdateTemplate(device, desc
 }
 
 // VkDestroyDevice mocks base method.
-func (m *MockDriver) VkDestroyDevice(device core.VkDevice, pAllocator *core.VkAllocationCallbacks) error {
+func (m *MockDriver) VkDestroyDevice(device core.VkDevice, pAllocator *core.VkAllocationCallbacks) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "VkDestroyDevice", device, pAllocator)
-	ret0, _ := ret[0].(error)
-	return ret0
+	m.ctrl.Call(m, "VkDestroyDevice", device, pAllocator)
 }
 
 // VkDestroyDevice indicates an expected call of VkDestroyDevice.
@@ -1399,11 +1283,9 @@ func (mr *MockDriverMockRecorder) VkDestroyDevice(device, pAllocator interface{}
 }
 
 // VkDestroyEvent mocks base method.
-func (m *MockDriver) VkDestroyEvent(device core.VkDevice, event core.VkEvent, pAllocator *core.VkAllocationCallbacks) error {
+func (m *MockDriver) VkDestroyEvent(device core.VkDevice, event core.VkEvent, pAllocator *core.VkAllocationCallbacks) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "VkDestroyEvent", device, event, pAllocator)
-	ret0, _ := ret[0].(error)
-	return ret0
+	m.ctrl.Call(m, "VkDestroyEvent", device, event, pAllocator)
 }
 
 // VkDestroyEvent indicates an expected call of VkDestroyEvent.
@@ -1413,11 +1295,9 @@ func (mr *MockDriverMockRecorder) VkDestroyEvent(device, event, pAllocator inter
 }
 
 // VkDestroyFence mocks base method.
-func (m *MockDriver) VkDestroyFence(device core.VkDevice, fence core.VkFence, pAllocator *core.VkAllocationCallbacks) error {
+func (m *MockDriver) VkDestroyFence(device core.VkDevice, fence core.VkFence, pAllocator *core.VkAllocationCallbacks) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "VkDestroyFence", device, fence, pAllocator)
-	ret0, _ := ret[0].(error)
-	return ret0
+	m.ctrl.Call(m, "VkDestroyFence", device, fence, pAllocator)
 }
 
 // VkDestroyFence indicates an expected call of VkDestroyFence.
@@ -1427,11 +1307,9 @@ func (mr *MockDriverMockRecorder) VkDestroyFence(device, fence, pAllocator inter
 }
 
 // VkDestroyFramebuffer mocks base method.
-func (m *MockDriver) VkDestroyFramebuffer(device core.VkDevice, framebuffer core.VkFramebuffer, pAllocator *core.VkAllocationCallbacks) error {
+func (m *MockDriver) VkDestroyFramebuffer(device core.VkDevice, framebuffer core.VkFramebuffer, pAllocator *core.VkAllocationCallbacks) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "VkDestroyFramebuffer", device, framebuffer, pAllocator)
-	ret0, _ := ret[0].(error)
-	return ret0
+	m.ctrl.Call(m, "VkDestroyFramebuffer", device, framebuffer, pAllocator)
 }
 
 // VkDestroyFramebuffer indicates an expected call of VkDestroyFramebuffer.
@@ -1441,11 +1319,9 @@ func (mr *MockDriverMockRecorder) VkDestroyFramebuffer(device, framebuffer, pAll
 }
 
 // VkDestroyImage mocks base method.
-func (m *MockDriver) VkDestroyImage(device core.VkDevice, image core.VkImage, pAllocator *core.VkAllocationCallbacks) error {
+func (m *MockDriver) VkDestroyImage(device core.VkDevice, image core.VkImage, pAllocator *core.VkAllocationCallbacks) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "VkDestroyImage", device, image, pAllocator)
-	ret0, _ := ret[0].(error)
-	return ret0
+	m.ctrl.Call(m, "VkDestroyImage", device, image, pAllocator)
 }
 
 // VkDestroyImage indicates an expected call of VkDestroyImage.
@@ -1455,11 +1331,9 @@ func (mr *MockDriverMockRecorder) VkDestroyImage(device, image, pAllocator inter
 }
 
 // VkDestroyImageView mocks base method.
-func (m *MockDriver) VkDestroyImageView(device core.VkDevice, imageView core.VkImageView, pAllocator *core.VkAllocationCallbacks) error {
+func (m *MockDriver) VkDestroyImageView(device core.VkDevice, imageView core.VkImageView, pAllocator *core.VkAllocationCallbacks) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "VkDestroyImageView", device, imageView, pAllocator)
-	ret0, _ := ret[0].(error)
-	return ret0
+	m.ctrl.Call(m, "VkDestroyImageView", device, imageView, pAllocator)
 }
 
 // VkDestroyImageView indicates an expected call of VkDestroyImageView.
@@ -1469,11 +1343,9 @@ func (mr *MockDriverMockRecorder) VkDestroyImageView(device, imageView, pAllocat
 }
 
 // VkDestroyInstance mocks base method.
-func (m *MockDriver) VkDestroyInstance(instance core.VkInstance, pAllocator *core.VkAllocationCallbacks) error {
+func (m *MockDriver) VkDestroyInstance(instance core.VkInstance, pAllocator *core.VkAllocationCallbacks) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "VkDestroyInstance", instance, pAllocator)
-	ret0, _ := ret[0].(error)
-	return ret0
+	m.ctrl.Call(m, "VkDestroyInstance", instance, pAllocator)
 }
 
 // VkDestroyInstance indicates an expected call of VkDestroyInstance.
@@ -1483,11 +1355,9 @@ func (mr *MockDriverMockRecorder) VkDestroyInstance(instance, pAllocator interfa
 }
 
 // VkDestroyPipeline mocks base method.
-func (m *MockDriver) VkDestroyPipeline(device core.VkDevice, pipeline core.VkPipeline, pAllocator *core.VkAllocationCallbacks) error {
+func (m *MockDriver) VkDestroyPipeline(device core.VkDevice, pipeline core.VkPipeline, pAllocator *core.VkAllocationCallbacks) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "VkDestroyPipeline", device, pipeline, pAllocator)
-	ret0, _ := ret[0].(error)
-	return ret0
+	m.ctrl.Call(m, "VkDestroyPipeline", device, pipeline, pAllocator)
 }
 
 // VkDestroyPipeline indicates an expected call of VkDestroyPipeline.
@@ -1497,11 +1367,9 @@ func (mr *MockDriverMockRecorder) VkDestroyPipeline(device, pipeline, pAllocator
 }
 
 // VkDestroyPipelineCache mocks base method.
-func (m *MockDriver) VkDestroyPipelineCache(device core.VkDevice, pipelineCache core.VkPipelineCache, pAllocator *core.VkAllocationCallbacks) error {
+func (m *MockDriver) VkDestroyPipelineCache(device core.VkDevice, pipelineCache core.VkPipelineCache, pAllocator *core.VkAllocationCallbacks) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "VkDestroyPipelineCache", device, pipelineCache, pAllocator)
-	ret0, _ := ret[0].(error)
-	return ret0
+	m.ctrl.Call(m, "VkDestroyPipelineCache", device, pipelineCache, pAllocator)
 }
 
 // VkDestroyPipelineCache indicates an expected call of VkDestroyPipelineCache.
@@ -1511,11 +1379,9 @@ func (mr *MockDriverMockRecorder) VkDestroyPipelineCache(device, pipelineCache, 
 }
 
 // VkDestroyPipelineLayout mocks base method.
-func (m *MockDriver) VkDestroyPipelineLayout(device core.VkDevice, pipelineLayout core.VkPipelineLayout, pAllocator *core.VkAllocationCallbacks) error {
+func (m *MockDriver) VkDestroyPipelineLayout(device core.VkDevice, pipelineLayout core.VkPipelineLayout, pAllocator *core.VkAllocationCallbacks) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "VkDestroyPipelineLayout", device, pipelineLayout, pAllocator)
-	ret0, _ := ret[0].(error)
-	return ret0
+	m.ctrl.Call(m, "VkDestroyPipelineLayout", device, pipelineLayout, pAllocator)
 }
 
 // VkDestroyPipelineLayout indicates an expected call of VkDestroyPipelineLayout.
@@ -1525,11 +1391,9 @@ func (mr *MockDriverMockRecorder) VkDestroyPipelineLayout(device, pipelineLayout
 }
 
 // VkDestroyQueryPool mocks base method.
-func (m *MockDriver) VkDestroyQueryPool(device core.VkDevice, queryPool core.VkQueryPool, pAllocator *core.VkAllocationCallbacks) error {
+func (m *MockDriver) VkDestroyQueryPool(device core.VkDevice, queryPool core.VkQueryPool, pAllocator *core.VkAllocationCallbacks) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "VkDestroyQueryPool", device, queryPool, pAllocator)
-	ret0, _ := ret[0].(error)
-	return ret0
+	m.ctrl.Call(m, "VkDestroyQueryPool", device, queryPool, pAllocator)
 }
 
 // VkDestroyQueryPool indicates an expected call of VkDestroyQueryPool.
@@ -1539,11 +1403,9 @@ func (mr *MockDriverMockRecorder) VkDestroyQueryPool(device, queryPool, pAllocat
 }
 
 // VkDestroyRenderPass mocks base method.
-func (m *MockDriver) VkDestroyRenderPass(device core.VkDevice, renderPass core.VkRenderPass, pAllocator *core.VkAllocationCallbacks) error {
+func (m *MockDriver) VkDestroyRenderPass(device core.VkDevice, renderPass core.VkRenderPass, pAllocator *core.VkAllocationCallbacks) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "VkDestroyRenderPass", device, renderPass, pAllocator)
-	ret0, _ := ret[0].(error)
-	return ret0
+	m.ctrl.Call(m, "VkDestroyRenderPass", device, renderPass, pAllocator)
 }
 
 // VkDestroyRenderPass indicates an expected call of VkDestroyRenderPass.
@@ -1553,11 +1415,9 @@ func (mr *MockDriverMockRecorder) VkDestroyRenderPass(device, renderPass, pAlloc
 }
 
 // VkDestroySampler mocks base method.
-func (m *MockDriver) VkDestroySampler(device core.VkDevice, sampler core.VkSampler, pAllocator *core.VkAllocationCallbacks) error {
+func (m *MockDriver) VkDestroySampler(device core.VkDevice, sampler core.VkSampler, pAllocator *core.VkAllocationCallbacks) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "VkDestroySampler", device, sampler, pAllocator)
-	ret0, _ := ret[0].(error)
-	return ret0
+	m.ctrl.Call(m, "VkDestroySampler", device, sampler, pAllocator)
 }
 
 // VkDestroySampler indicates an expected call of VkDestroySampler.
@@ -1567,11 +1427,9 @@ func (mr *MockDriverMockRecorder) VkDestroySampler(device, sampler, pAllocator i
 }
 
 // VkDestroySamplerYcbcrConversion mocks base method.
-func (m *MockDriver) VkDestroySamplerYcbcrConversion(device core.VkDevice, ycbcrConversion core.VkSamplerYcbcrConversion, pAllocator *core.VkAllocationCallbacks) error {
+func (m *MockDriver) VkDestroySamplerYcbcrConversion(device core.VkDevice, ycbcrConversion core.VkSamplerYcbcrConversion, pAllocator *core.VkAllocationCallbacks) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "VkDestroySamplerYcbcrConversion", device, ycbcrConversion, pAllocator)
-	ret0, _ := ret[0].(error)
-	return ret0
+	m.ctrl.Call(m, "VkDestroySamplerYcbcrConversion", device, ycbcrConversion, pAllocator)
 }
 
 // VkDestroySamplerYcbcrConversion indicates an expected call of VkDestroySamplerYcbcrConversion.
@@ -1581,11 +1439,9 @@ func (mr *MockDriverMockRecorder) VkDestroySamplerYcbcrConversion(device, ycbcrC
 }
 
 // VkDestroySemaphore mocks base method.
-func (m *MockDriver) VkDestroySemaphore(device core.VkDevice, semaphore core.VkSemaphore, pAllocator *core.VkAllocationCallbacks) error {
+func (m *MockDriver) VkDestroySemaphore(device core.VkDevice, semaphore core.VkSemaphore, pAllocator *core.VkAllocationCallbacks) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "VkDestroySemaphore", device, semaphore, pAllocator)
-	ret0, _ := ret[0].(error)
-	return ret0
+	m.ctrl.Call(m, "VkDestroySemaphore", device, semaphore, pAllocator)
 }
 
 // VkDestroySemaphore indicates an expected call of VkDestroySemaphore.
@@ -1595,11 +1451,9 @@ func (mr *MockDriverMockRecorder) VkDestroySemaphore(device, semaphore, pAllocat
 }
 
 // VkDestroyShaderModule mocks base method.
-func (m *MockDriver) VkDestroyShaderModule(device core.VkDevice, shaderModule core.VkShaderModule, pAllocator *core.VkAllocationCallbacks) error {
+func (m *MockDriver) VkDestroyShaderModule(device core.VkDevice, shaderModule core.VkShaderModule, pAllocator *core.VkAllocationCallbacks) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "VkDestroyShaderModule", device, shaderModule, pAllocator)
-	ret0, _ := ret[0].(error)
-	return ret0
+	m.ctrl.Call(m, "VkDestroyShaderModule", device, shaderModule, pAllocator)
 }
 
 // VkDestroyShaderModule indicates an expected call of VkDestroyShaderModule.
@@ -1759,11 +1613,9 @@ func (mr *MockDriverMockRecorder) VkFlushMappedMemoryRanges(device, memoryRangeC
 }
 
 // VkFreeCommandBuffers mocks base method.
-func (m *MockDriver) VkFreeCommandBuffers(device core.VkDevice, commandPool core.VkCommandPool, commandBufferCount core.Uint32, pCommandBuffers *core.VkCommandBuffer) error {
+func (m *MockDriver) VkFreeCommandBuffers(device core.VkDevice, commandPool core.VkCommandPool, commandBufferCount core.Uint32, pCommandBuffers *core.VkCommandBuffer) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "VkFreeCommandBuffers", device, commandPool, commandBufferCount, pCommandBuffers)
-	ret0, _ := ret[0].(error)
-	return ret0
+	m.ctrl.Call(m, "VkFreeCommandBuffers", device, commandPool, commandBufferCount, pCommandBuffers)
 }
 
 // VkFreeCommandBuffers indicates an expected call of VkFreeCommandBuffers.
@@ -1788,11 +1640,9 @@ func (mr *MockDriverMockRecorder) VkFreeDescriptorSets(device, descriptorPool, d
 }
 
 // VkFreeMemory mocks base method.
-func (m *MockDriver) VkFreeMemory(device core.VkDevice, memory core.VkDeviceMemory, pAllocator *core.VkAllocationCallbacks) error {
+func (m *MockDriver) VkFreeMemory(device core.VkDevice, memory core.VkDeviceMemory, pAllocator *core.VkAllocationCallbacks) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "VkFreeMemory", device, memory, pAllocator)
-	ret0, _ := ret[0].(error)
-	return ret0
+	m.ctrl.Call(m, "VkFreeMemory", device, memory, pAllocator)
 }
 
 // VkFreeMemory indicates an expected call of VkFreeMemory.
@@ -1802,12 +1652,11 @@ func (mr *MockDriverMockRecorder) VkFreeMemory(device, memory, pAllocator interf
 }
 
 // VkGetBufferDeviceAddress mocks base method.
-func (m *MockDriver) VkGetBufferDeviceAddress(device core.VkDevice, pInfo *core.VkBufferDeviceAddressInfo) (core.VkDeviceAddress, error) {
+func (m *MockDriver) VkGetBufferDeviceAddress(device core.VkDevice, pInfo *core.VkBufferDeviceAddressInfo) core.VkDeviceAddress {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "VkGetBufferDeviceAddress", device, pInfo)
 	ret0, _ := ret[0].(core.VkDeviceAddress)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
+	return ret0
 }
 
 // VkGetBufferDeviceAddress indicates an expected call of VkGetBufferDeviceAddress.
@@ -1817,11 +1666,9 @@ func (mr *MockDriverMockRecorder) VkGetBufferDeviceAddress(device, pInfo interfa
 }
 
 // VkGetBufferMemoryRequirements mocks base method.
-func (m *MockDriver) VkGetBufferMemoryRequirements(device core.VkDevice, buffer core.VkBuffer, pMemoryRequirements *core.VkMemoryRequirements) error {
+func (m *MockDriver) VkGetBufferMemoryRequirements(device core.VkDevice, buffer core.VkBuffer, pMemoryRequirements *core.VkMemoryRequirements) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "VkGetBufferMemoryRequirements", device, buffer, pMemoryRequirements)
-	ret0, _ := ret[0].(error)
-	return ret0
+	m.ctrl.Call(m, "VkGetBufferMemoryRequirements", device, buffer, pMemoryRequirements)
 }
 
 // VkGetBufferMemoryRequirements indicates an expected call of VkGetBufferMemoryRequirements.
@@ -1831,11 +1678,9 @@ func (mr *MockDriverMockRecorder) VkGetBufferMemoryRequirements(device, buffer, 
 }
 
 // VkGetBufferMemoryRequirements2 mocks base method.
-func (m *MockDriver) VkGetBufferMemoryRequirements2(device core.VkDevice, pInfo *core.VkBufferMemoryRequirementsInfo2, pMemoryRequirements *core.VkMemoryRequirements2) error {
+func (m *MockDriver) VkGetBufferMemoryRequirements2(device core.VkDevice, pInfo *core.VkBufferMemoryRequirementsInfo2, pMemoryRequirements *core.VkMemoryRequirements2) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "VkGetBufferMemoryRequirements2", device, pInfo, pMemoryRequirements)
-	ret0, _ := ret[0].(error)
-	return ret0
+	m.ctrl.Call(m, "VkGetBufferMemoryRequirements2", device, pInfo, pMemoryRequirements)
 }
 
 // VkGetBufferMemoryRequirements2 indicates an expected call of VkGetBufferMemoryRequirements2.
@@ -1845,12 +1690,11 @@ func (mr *MockDriverMockRecorder) VkGetBufferMemoryRequirements2(device, pInfo, 
 }
 
 // VkGetBufferOpaqueCaptureAddress mocks base method.
-func (m *MockDriver) VkGetBufferOpaqueCaptureAddress(device core.VkDevice, pInfo *core.VkBufferDeviceAddressInfo) (core.Uint64, error) {
+func (m *MockDriver) VkGetBufferOpaqueCaptureAddress(device core.VkDevice, pInfo *core.VkBufferDeviceAddressInfo) core.Uint64 {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "VkGetBufferOpaqueCaptureAddress", device, pInfo)
 	ret0, _ := ret[0].(core.Uint64)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
+	return ret0
 }
 
 // VkGetBufferOpaqueCaptureAddress indicates an expected call of VkGetBufferOpaqueCaptureAddress.
@@ -1860,11 +1704,9 @@ func (mr *MockDriverMockRecorder) VkGetBufferOpaqueCaptureAddress(device, pInfo 
 }
 
 // VkGetDescriptorSetLayoutSupport mocks base method.
-func (m *MockDriver) VkGetDescriptorSetLayoutSupport(device core.VkDevice, pCreateInfo *core.VkDescriptorSetLayoutCreateInfo, pSupport *core.VkDescriptorSetLayoutSupport) error {
+func (m *MockDriver) VkGetDescriptorSetLayoutSupport(device core.VkDevice, pCreateInfo *core.VkDescriptorSetLayoutCreateInfo, pSupport *core.VkDescriptorSetLayoutSupport) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "VkGetDescriptorSetLayoutSupport", device, pCreateInfo, pSupport)
-	ret0, _ := ret[0].(error)
-	return ret0
+	m.ctrl.Call(m, "VkGetDescriptorSetLayoutSupport", device, pCreateInfo, pSupport)
 }
 
 // VkGetDescriptorSetLayoutSupport indicates an expected call of VkGetDescriptorSetLayoutSupport.
@@ -1874,11 +1716,9 @@ func (mr *MockDriverMockRecorder) VkGetDescriptorSetLayoutSupport(device, pCreat
 }
 
 // VkGetDeviceGroupPeerMemoryFeatures mocks base method.
-func (m *MockDriver) VkGetDeviceGroupPeerMemoryFeatures(device core.VkDevice, heapIndex, localDeviceIndex, remoteDeviceIndex core.Uint32, pPeerMemoryFeatures *core.VkPeerMemoryFeatureFlags) error {
+func (m *MockDriver) VkGetDeviceGroupPeerMemoryFeatures(device core.VkDevice, heapIndex, localDeviceIndex, remoteDeviceIndex core.Uint32, pPeerMemoryFeatures *core.VkPeerMemoryFeatureFlags) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "VkGetDeviceGroupPeerMemoryFeatures", device, heapIndex, localDeviceIndex, remoteDeviceIndex, pPeerMemoryFeatures)
-	ret0, _ := ret[0].(error)
-	return ret0
+	m.ctrl.Call(m, "VkGetDeviceGroupPeerMemoryFeatures", device, heapIndex, localDeviceIndex, remoteDeviceIndex, pPeerMemoryFeatures)
 }
 
 // VkGetDeviceGroupPeerMemoryFeatures indicates an expected call of VkGetDeviceGroupPeerMemoryFeatures.
@@ -1888,11 +1728,9 @@ func (mr *MockDriverMockRecorder) VkGetDeviceGroupPeerMemoryFeatures(device, hea
 }
 
 // VkGetDeviceMemoryCommitment mocks base method.
-func (m *MockDriver) VkGetDeviceMemoryCommitment(device core.VkDevice, memory core.VkDeviceMemory, pCommittedMemoryInBytes *core.VkDeviceSize) error {
+func (m *MockDriver) VkGetDeviceMemoryCommitment(device core.VkDevice, memory core.VkDeviceMemory, pCommittedMemoryInBytes *core.VkDeviceSize) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "VkGetDeviceMemoryCommitment", device, memory, pCommittedMemoryInBytes)
-	ret0, _ := ret[0].(error)
-	return ret0
+	m.ctrl.Call(m, "VkGetDeviceMemoryCommitment", device, memory, pCommittedMemoryInBytes)
 }
 
 // VkGetDeviceMemoryCommitment indicates an expected call of VkGetDeviceMemoryCommitment.
@@ -1902,12 +1740,11 @@ func (mr *MockDriverMockRecorder) VkGetDeviceMemoryCommitment(device, memory, pC
 }
 
 // VkGetDeviceMemoryOpaqueCaptureAddress mocks base method.
-func (m *MockDriver) VkGetDeviceMemoryOpaqueCaptureAddress(device core.VkDevice, pInfo *core.VkDeviceMemoryOpaqueCaptureAddressInfo) (core.Uint64, error) {
+func (m *MockDriver) VkGetDeviceMemoryOpaqueCaptureAddress(device core.VkDevice, pInfo *core.VkDeviceMemoryOpaqueCaptureAddressInfo) core.Uint64 {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "VkGetDeviceMemoryOpaqueCaptureAddress", device, pInfo)
 	ret0, _ := ret[0].(core.Uint64)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
+	return ret0
 }
 
 // VkGetDeviceMemoryOpaqueCaptureAddress indicates an expected call of VkGetDeviceMemoryOpaqueCaptureAddress.
@@ -1917,11 +1754,9 @@ func (mr *MockDriverMockRecorder) VkGetDeviceMemoryOpaqueCaptureAddress(device, 
 }
 
 // VkGetDeviceQueue mocks base method.
-func (m *MockDriver) VkGetDeviceQueue(device core.VkDevice, queueFamilyIndex, queueIndex core.Uint32, pQueue *core.VkQueue) error {
+func (m *MockDriver) VkGetDeviceQueue(device core.VkDevice, queueFamilyIndex, queueIndex core.Uint32, pQueue *core.VkQueue) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "VkGetDeviceQueue", device, queueFamilyIndex, queueIndex, pQueue)
-	ret0, _ := ret[0].(error)
-	return ret0
+	m.ctrl.Call(m, "VkGetDeviceQueue", device, queueFamilyIndex, queueIndex, pQueue)
 }
 
 // VkGetDeviceQueue indicates an expected call of VkGetDeviceQueue.
@@ -1931,11 +1766,9 @@ func (mr *MockDriverMockRecorder) VkGetDeviceQueue(device, queueFamilyIndex, que
 }
 
 // VkGetDeviceQueue2 mocks base method.
-func (m *MockDriver) VkGetDeviceQueue2(device core.VkDevice, pQueueInfo *core.VkDeviceQueueInfo2, pQueue *core.VkQueue) error {
+func (m *MockDriver) VkGetDeviceQueue2(device core.VkDevice, pQueueInfo *core.VkDeviceQueueInfo2, pQueue *core.VkQueue) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "VkGetDeviceQueue2", device, pQueueInfo, pQueue)
-	ret0, _ := ret[0].(error)
-	return ret0
+	m.ctrl.Call(m, "VkGetDeviceQueue2", device, pQueueInfo, pQueue)
 }
 
 // VkGetDeviceQueue2 indicates an expected call of VkGetDeviceQueue2.
@@ -1975,11 +1808,9 @@ func (mr *MockDriverMockRecorder) VkGetFenceStatus(device, fence interface{}) *g
 }
 
 // VkGetImageMemoryRequirements mocks base method.
-func (m *MockDriver) VkGetImageMemoryRequirements(device core.VkDevice, image core.VkImage, pMemoryRequirements *core.VkMemoryRequirements) error {
+func (m *MockDriver) VkGetImageMemoryRequirements(device core.VkDevice, image core.VkImage, pMemoryRequirements *core.VkMemoryRequirements) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "VkGetImageMemoryRequirements", device, image, pMemoryRequirements)
-	ret0, _ := ret[0].(error)
-	return ret0
+	m.ctrl.Call(m, "VkGetImageMemoryRequirements", device, image, pMemoryRequirements)
 }
 
 // VkGetImageMemoryRequirements indicates an expected call of VkGetImageMemoryRequirements.
@@ -1989,11 +1820,9 @@ func (mr *MockDriverMockRecorder) VkGetImageMemoryRequirements(device, image, pM
 }
 
 // VkGetImageMemoryRequirements2 mocks base method.
-func (m *MockDriver) VkGetImageMemoryRequirements2(device core.VkDevice, pInfo *core.VkImageMemoryRequirementsInfo2, pMemoryRequirements *core.VkMemoryRequirements2) error {
+func (m *MockDriver) VkGetImageMemoryRequirements2(device core.VkDevice, pInfo *core.VkImageMemoryRequirementsInfo2, pMemoryRequirements *core.VkMemoryRequirements2) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "VkGetImageMemoryRequirements2", device, pInfo, pMemoryRequirements)
-	ret0, _ := ret[0].(error)
-	return ret0
+	m.ctrl.Call(m, "VkGetImageMemoryRequirements2", device, pInfo, pMemoryRequirements)
 }
 
 // VkGetImageMemoryRequirements2 indicates an expected call of VkGetImageMemoryRequirements2.
@@ -2003,11 +1832,9 @@ func (mr *MockDriverMockRecorder) VkGetImageMemoryRequirements2(device, pInfo, p
 }
 
 // VkGetImageSparseMemoryRequirements mocks base method.
-func (m *MockDriver) VkGetImageSparseMemoryRequirements(device core.VkDevice, image core.VkImage, pSparseMemoryRequirementCount *core.Uint32, pSparseMemoryRequirements *core.VkSparseImageMemoryRequirements) error {
+func (m *MockDriver) VkGetImageSparseMemoryRequirements(device core.VkDevice, image core.VkImage, pSparseMemoryRequirementCount *core.Uint32, pSparseMemoryRequirements *core.VkSparseImageMemoryRequirements) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "VkGetImageSparseMemoryRequirements", device, image, pSparseMemoryRequirementCount, pSparseMemoryRequirements)
-	ret0, _ := ret[0].(error)
-	return ret0
+	m.ctrl.Call(m, "VkGetImageSparseMemoryRequirements", device, image, pSparseMemoryRequirementCount, pSparseMemoryRequirements)
 }
 
 // VkGetImageSparseMemoryRequirements indicates an expected call of VkGetImageSparseMemoryRequirements.
@@ -2017,11 +1844,9 @@ func (mr *MockDriverMockRecorder) VkGetImageSparseMemoryRequirements(device, ima
 }
 
 // VkGetImageSparseMemoryRequirements2 mocks base method.
-func (m *MockDriver) VkGetImageSparseMemoryRequirements2(device core.VkDevice, pInfo *core.VkImageSparseMemoryRequirementsInfo2, pSparseMemoryRequirementCount *core.Uint32, pSparseMemoryRequirements *core.VkSparseImageMemoryRequirements2) error {
+func (m *MockDriver) VkGetImageSparseMemoryRequirements2(device core.VkDevice, pInfo *core.VkImageSparseMemoryRequirementsInfo2, pSparseMemoryRequirementCount *core.Uint32, pSparseMemoryRequirements *core.VkSparseImageMemoryRequirements2) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "VkGetImageSparseMemoryRequirements2", device, pInfo, pSparseMemoryRequirementCount, pSparseMemoryRequirements)
-	ret0, _ := ret[0].(error)
-	return ret0
+	m.ctrl.Call(m, "VkGetImageSparseMemoryRequirements2", device, pInfo, pSparseMemoryRequirementCount, pSparseMemoryRequirements)
 }
 
 // VkGetImageSparseMemoryRequirements2 indicates an expected call of VkGetImageSparseMemoryRequirements2.
@@ -2031,11 +1856,9 @@ func (mr *MockDriverMockRecorder) VkGetImageSparseMemoryRequirements2(device, pI
 }
 
 // VkGetImageSubresourceLayout mocks base method.
-func (m *MockDriver) VkGetImageSubresourceLayout(device core.VkDevice, image core.VkImage, pSubresource *core.VkImageSubresource, pLayout *core.VkSubresourceLayout) error {
+func (m *MockDriver) VkGetImageSubresourceLayout(device core.VkDevice, image core.VkImage, pSubresource *core.VkImageSubresource, pLayout *core.VkSubresourceLayout) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "VkGetImageSubresourceLayout", device, image, pSubresource, pLayout)
-	ret0, _ := ret[0].(error)
-	return ret0
+	m.ctrl.Call(m, "VkGetImageSubresourceLayout", device, image, pSubresource, pLayout)
 }
 
 // VkGetImageSubresourceLayout indicates an expected call of VkGetImageSubresourceLayout.
@@ -2045,11 +1868,9 @@ func (mr *MockDriverMockRecorder) VkGetImageSubresourceLayout(device, image, pSu
 }
 
 // VkGetPhysicalDeviceExternalBufferProperties mocks base method.
-func (m *MockDriver) VkGetPhysicalDeviceExternalBufferProperties(physicalDevice core.VkPhysicalDevice, pExternalBufferInfo *core.VkPhysicalDeviceExternalBufferInfo, pExternalBufferProperties *core.VkExternalBufferProperties) error {
+func (m *MockDriver) VkGetPhysicalDeviceExternalBufferProperties(physicalDevice core.VkPhysicalDevice, pExternalBufferInfo *core.VkPhysicalDeviceExternalBufferInfo, pExternalBufferProperties *core.VkExternalBufferProperties) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "VkGetPhysicalDeviceExternalBufferProperties", physicalDevice, pExternalBufferInfo, pExternalBufferProperties)
-	ret0, _ := ret[0].(error)
-	return ret0
+	m.ctrl.Call(m, "VkGetPhysicalDeviceExternalBufferProperties", physicalDevice, pExternalBufferInfo, pExternalBufferProperties)
 }
 
 // VkGetPhysicalDeviceExternalBufferProperties indicates an expected call of VkGetPhysicalDeviceExternalBufferProperties.
@@ -2059,11 +1880,9 @@ func (mr *MockDriverMockRecorder) VkGetPhysicalDeviceExternalBufferProperties(ph
 }
 
 // VkGetPhysicalDeviceExternalFenceProperties mocks base method.
-func (m *MockDriver) VkGetPhysicalDeviceExternalFenceProperties(physicalDevice core.VkPhysicalDevice, pExternalFenceInfo *core.VkPhysicalDeviceExternalFenceInfo, pExternalFenceProperties *core.VkExternalFenceProperties) error {
+func (m *MockDriver) VkGetPhysicalDeviceExternalFenceProperties(physicalDevice core.VkPhysicalDevice, pExternalFenceInfo *core.VkPhysicalDeviceExternalFenceInfo, pExternalFenceProperties *core.VkExternalFenceProperties) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "VkGetPhysicalDeviceExternalFenceProperties", physicalDevice, pExternalFenceInfo, pExternalFenceProperties)
-	ret0, _ := ret[0].(error)
-	return ret0
+	m.ctrl.Call(m, "VkGetPhysicalDeviceExternalFenceProperties", physicalDevice, pExternalFenceInfo, pExternalFenceProperties)
 }
 
 // VkGetPhysicalDeviceExternalFenceProperties indicates an expected call of VkGetPhysicalDeviceExternalFenceProperties.
@@ -2073,11 +1892,9 @@ func (mr *MockDriverMockRecorder) VkGetPhysicalDeviceExternalFenceProperties(phy
 }
 
 // VkGetPhysicalDeviceExternalSemaphoreProperties mocks base method.
-func (m *MockDriver) VkGetPhysicalDeviceExternalSemaphoreProperties(physicalDevice core.VkPhysicalDevice, pExternalSemaphoreInfo *core.VkPhysicalDeviceExternalSemaphoreInfo, pExternalSemaphoreProperties *core.VkExternalSemaphoreProperties) error {
+func (m *MockDriver) VkGetPhysicalDeviceExternalSemaphoreProperties(physicalDevice core.VkPhysicalDevice, pExternalSemaphoreInfo *core.VkPhysicalDeviceExternalSemaphoreInfo, pExternalSemaphoreProperties *core.VkExternalSemaphoreProperties) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "VkGetPhysicalDeviceExternalSemaphoreProperties", physicalDevice, pExternalSemaphoreInfo, pExternalSemaphoreProperties)
-	ret0, _ := ret[0].(error)
-	return ret0
+	m.ctrl.Call(m, "VkGetPhysicalDeviceExternalSemaphoreProperties", physicalDevice, pExternalSemaphoreInfo, pExternalSemaphoreProperties)
 }
 
 // VkGetPhysicalDeviceExternalSemaphoreProperties indicates an expected call of VkGetPhysicalDeviceExternalSemaphoreProperties.
@@ -2087,11 +1904,9 @@ func (mr *MockDriverMockRecorder) VkGetPhysicalDeviceExternalSemaphoreProperties
 }
 
 // VkGetPhysicalDeviceFeatures mocks base method.
-func (m *MockDriver) VkGetPhysicalDeviceFeatures(physicalDevice core.VkPhysicalDevice, pFeatures *core.VkPhysicalDeviceFeatures) error {
+func (m *MockDriver) VkGetPhysicalDeviceFeatures(physicalDevice core.VkPhysicalDevice, pFeatures *core.VkPhysicalDeviceFeatures) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "VkGetPhysicalDeviceFeatures", physicalDevice, pFeatures)
-	ret0, _ := ret[0].(error)
-	return ret0
+	m.ctrl.Call(m, "VkGetPhysicalDeviceFeatures", physicalDevice, pFeatures)
 }
 
 // VkGetPhysicalDeviceFeatures indicates an expected call of VkGetPhysicalDeviceFeatures.
@@ -2101,11 +1916,9 @@ func (mr *MockDriverMockRecorder) VkGetPhysicalDeviceFeatures(physicalDevice, pF
 }
 
 // VkGetPhysicalDeviceFeatures2 mocks base method.
-func (m *MockDriver) VkGetPhysicalDeviceFeatures2(physicalDevice core.VkPhysicalDevice, pFeatures *core.VkPhysicalDeviceFeatures2) error {
+func (m *MockDriver) VkGetPhysicalDeviceFeatures2(physicalDevice core.VkPhysicalDevice, pFeatures *core.VkPhysicalDeviceFeatures2) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "VkGetPhysicalDeviceFeatures2", physicalDevice, pFeatures)
-	ret0, _ := ret[0].(error)
-	return ret0
+	m.ctrl.Call(m, "VkGetPhysicalDeviceFeatures2", physicalDevice, pFeatures)
 }
 
 // VkGetPhysicalDeviceFeatures2 indicates an expected call of VkGetPhysicalDeviceFeatures2.
@@ -2115,11 +1928,9 @@ func (mr *MockDriverMockRecorder) VkGetPhysicalDeviceFeatures2(physicalDevice, p
 }
 
 // VkGetPhysicalDeviceFormatProperties mocks base method.
-func (m *MockDriver) VkGetPhysicalDeviceFormatProperties(physicalDevice core.VkPhysicalDevice, format core.VkFormat, pFormatProperties *core.VkFormatProperties) error {
+func (m *MockDriver) VkGetPhysicalDeviceFormatProperties(physicalDevice core.VkPhysicalDevice, format core.VkFormat, pFormatProperties *core.VkFormatProperties) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "VkGetPhysicalDeviceFormatProperties", physicalDevice, format, pFormatProperties)
-	ret0, _ := ret[0].(error)
-	return ret0
+	m.ctrl.Call(m, "VkGetPhysicalDeviceFormatProperties", physicalDevice, format, pFormatProperties)
 }
 
 // VkGetPhysicalDeviceFormatProperties indicates an expected call of VkGetPhysicalDeviceFormatProperties.
@@ -2129,11 +1940,9 @@ func (mr *MockDriverMockRecorder) VkGetPhysicalDeviceFormatProperties(physicalDe
 }
 
 // VkGetPhysicalDeviceFormatProperties2 mocks base method.
-func (m *MockDriver) VkGetPhysicalDeviceFormatProperties2(physicalDevice core.VkPhysicalDevice, format core.VkFormat, pFormatProperties *core.VkFormatProperties2) error {
+func (m *MockDriver) VkGetPhysicalDeviceFormatProperties2(physicalDevice core.VkPhysicalDevice, format core.VkFormat, pFormatProperties *core.VkFormatProperties2) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "VkGetPhysicalDeviceFormatProperties2", physicalDevice, format, pFormatProperties)
-	ret0, _ := ret[0].(error)
-	return ret0
+	m.ctrl.Call(m, "VkGetPhysicalDeviceFormatProperties2", physicalDevice, format, pFormatProperties)
 }
 
 // VkGetPhysicalDeviceFormatProperties2 indicates an expected call of VkGetPhysicalDeviceFormatProperties2.
@@ -2173,11 +1982,9 @@ func (mr *MockDriverMockRecorder) VkGetPhysicalDeviceImageFormatProperties2(phys
 }
 
 // VkGetPhysicalDeviceMemoryProperties mocks base method.
-func (m *MockDriver) VkGetPhysicalDeviceMemoryProperties(physicalDevice core.VkPhysicalDevice, pMemoryProperties *core.VkPhysicalDeviceMemoryProperties) error {
+func (m *MockDriver) VkGetPhysicalDeviceMemoryProperties(physicalDevice core.VkPhysicalDevice, pMemoryProperties *core.VkPhysicalDeviceMemoryProperties) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "VkGetPhysicalDeviceMemoryProperties", physicalDevice, pMemoryProperties)
-	ret0, _ := ret[0].(error)
-	return ret0
+	m.ctrl.Call(m, "VkGetPhysicalDeviceMemoryProperties", physicalDevice, pMemoryProperties)
 }
 
 // VkGetPhysicalDeviceMemoryProperties indicates an expected call of VkGetPhysicalDeviceMemoryProperties.
@@ -2187,11 +1994,9 @@ func (mr *MockDriverMockRecorder) VkGetPhysicalDeviceMemoryProperties(physicalDe
 }
 
 // VkGetPhysicalDeviceMemoryProperties2 mocks base method.
-func (m *MockDriver) VkGetPhysicalDeviceMemoryProperties2(physicalDevice core.VkPhysicalDevice, pMemoryProperties *core.VkPhysicalDeviceMemoryProperties2) error {
+func (m *MockDriver) VkGetPhysicalDeviceMemoryProperties2(physicalDevice core.VkPhysicalDevice, pMemoryProperties *core.VkPhysicalDeviceMemoryProperties2) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "VkGetPhysicalDeviceMemoryProperties2", physicalDevice, pMemoryProperties)
-	ret0, _ := ret[0].(error)
-	return ret0
+	m.ctrl.Call(m, "VkGetPhysicalDeviceMemoryProperties2", physicalDevice, pMemoryProperties)
 }
 
 // VkGetPhysicalDeviceMemoryProperties2 indicates an expected call of VkGetPhysicalDeviceMemoryProperties2.
@@ -2201,11 +2006,9 @@ func (mr *MockDriverMockRecorder) VkGetPhysicalDeviceMemoryProperties2(physicalD
 }
 
 // VkGetPhysicalDeviceProperties mocks base method.
-func (m *MockDriver) VkGetPhysicalDeviceProperties(physicalDevice core.VkPhysicalDevice, pProperties *core.VkPhysicalDeviceProperties) error {
+func (m *MockDriver) VkGetPhysicalDeviceProperties(physicalDevice core.VkPhysicalDevice, pProperties *core.VkPhysicalDeviceProperties) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "VkGetPhysicalDeviceProperties", physicalDevice, pProperties)
-	ret0, _ := ret[0].(error)
-	return ret0
+	m.ctrl.Call(m, "VkGetPhysicalDeviceProperties", physicalDevice, pProperties)
 }
 
 // VkGetPhysicalDeviceProperties indicates an expected call of VkGetPhysicalDeviceProperties.
@@ -2215,11 +2018,9 @@ func (mr *MockDriverMockRecorder) VkGetPhysicalDeviceProperties(physicalDevice, 
 }
 
 // VkGetPhysicalDeviceProperties2 mocks base method.
-func (m *MockDriver) VkGetPhysicalDeviceProperties2(physicalDevice core.VkPhysicalDevice, pProperties *core.VkPhysicalDeviceProperties2) error {
+func (m *MockDriver) VkGetPhysicalDeviceProperties2(physicalDevice core.VkPhysicalDevice, pProperties *core.VkPhysicalDeviceProperties2) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "VkGetPhysicalDeviceProperties2", physicalDevice, pProperties)
-	ret0, _ := ret[0].(error)
-	return ret0
+	m.ctrl.Call(m, "VkGetPhysicalDeviceProperties2", physicalDevice, pProperties)
 }
 
 // VkGetPhysicalDeviceProperties2 indicates an expected call of VkGetPhysicalDeviceProperties2.
@@ -2229,11 +2030,9 @@ func (mr *MockDriverMockRecorder) VkGetPhysicalDeviceProperties2(physicalDevice,
 }
 
 // VkGetPhysicalDeviceQueueFamilyProperties mocks base method.
-func (m *MockDriver) VkGetPhysicalDeviceQueueFamilyProperties(physicalDevice core.VkPhysicalDevice, pQueueFamilyPropertyCount *core.Uint32, pQueueFamilyProperties *core.VkQueueFamilyProperties) error {
+func (m *MockDriver) VkGetPhysicalDeviceQueueFamilyProperties(physicalDevice core.VkPhysicalDevice, pQueueFamilyPropertyCount *core.Uint32, pQueueFamilyProperties *core.VkQueueFamilyProperties) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "VkGetPhysicalDeviceQueueFamilyProperties", physicalDevice, pQueueFamilyPropertyCount, pQueueFamilyProperties)
-	ret0, _ := ret[0].(error)
-	return ret0
+	m.ctrl.Call(m, "VkGetPhysicalDeviceQueueFamilyProperties", physicalDevice, pQueueFamilyPropertyCount, pQueueFamilyProperties)
 }
 
 // VkGetPhysicalDeviceQueueFamilyProperties indicates an expected call of VkGetPhysicalDeviceQueueFamilyProperties.
@@ -2243,11 +2042,9 @@ func (mr *MockDriverMockRecorder) VkGetPhysicalDeviceQueueFamilyProperties(physi
 }
 
 // VkGetPhysicalDeviceQueueFamilyProperties2 mocks base method.
-func (m *MockDriver) VkGetPhysicalDeviceQueueFamilyProperties2(physicalDevice core.VkPhysicalDevice, pQueueFamilyPropertyCount *core.Uint32, pQueueFamilyProperties *core.VkQueueFamilyProperties2) error {
+func (m *MockDriver) VkGetPhysicalDeviceQueueFamilyProperties2(physicalDevice core.VkPhysicalDevice, pQueueFamilyPropertyCount *core.Uint32, pQueueFamilyProperties *core.VkQueueFamilyProperties2) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "VkGetPhysicalDeviceQueueFamilyProperties2", physicalDevice, pQueueFamilyPropertyCount, pQueueFamilyProperties)
-	ret0, _ := ret[0].(error)
-	return ret0
+	m.ctrl.Call(m, "VkGetPhysicalDeviceQueueFamilyProperties2", physicalDevice, pQueueFamilyPropertyCount, pQueueFamilyProperties)
 }
 
 // VkGetPhysicalDeviceQueueFamilyProperties2 indicates an expected call of VkGetPhysicalDeviceQueueFamilyProperties2.
@@ -2257,11 +2054,9 @@ func (mr *MockDriverMockRecorder) VkGetPhysicalDeviceQueueFamilyProperties2(phys
 }
 
 // VkGetPhysicalDeviceSparseImageFormatProperties mocks base method.
-func (m *MockDriver) VkGetPhysicalDeviceSparseImageFormatProperties(physicalDevice core.VkPhysicalDevice, format core.VkFormat, t core.VkImageType, samples core.VkSampleCountFlagBits, usage core.VkImageUsageFlags, tiling core.VkImageTiling, pPropertyCount *core.Uint32, pProperties *core.VkSparseImageFormatProperties) error {
+func (m *MockDriver) VkGetPhysicalDeviceSparseImageFormatProperties(physicalDevice core.VkPhysicalDevice, format core.VkFormat, t core.VkImageType, samples core.VkSampleCountFlagBits, usage core.VkImageUsageFlags, tiling core.VkImageTiling, pPropertyCount *core.Uint32, pProperties *core.VkSparseImageFormatProperties) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "VkGetPhysicalDeviceSparseImageFormatProperties", physicalDevice, format, t, samples, usage, tiling, pPropertyCount, pProperties)
-	ret0, _ := ret[0].(error)
-	return ret0
+	m.ctrl.Call(m, "VkGetPhysicalDeviceSparseImageFormatProperties", physicalDevice, format, t, samples, usage, tiling, pPropertyCount, pProperties)
 }
 
 // VkGetPhysicalDeviceSparseImageFormatProperties indicates an expected call of VkGetPhysicalDeviceSparseImageFormatProperties.
@@ -2271,11 +2066,9 @@ func (mr *MockDriverMockRecorder) VkGetPhysicalDeviceSparseImageFormatProperties
 }
 
 // VkGetPhysicalDeviceSparseImageFormatProperties2 mocks base method.
-func (m *MockDriver) VkGetPhysicalDeviceSparseImageFormatProperties2(physicalDevice core.VkPhysicalDevice, pFormatInfo *core.VkPhysicalDeviceSparseImageFormatInfo2, pPropertyCount *core.Uint32, pProperties *core.VkSparseImageFormatProperties2) error {
+func (m *MockDriver) VkGetPhysicalDeviceSparseImageFormatProperties2(physicalDevice core.VkPhysicalDevice, pFormatInfo *core.VkPhysicalDeviceSparseImageFormatInfo2, pPropertyCount *core.Uint32, pProperties *core.VkSparseImageFormatProperties2) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "VkGetPhysicalDeviceSparseImageFormatProperties2", physicalDevice, pFormatInfo, pPropertyCount, pProperties)
-	ret0, _ := ret[0].(error)
-	return ret0
+	m.ctrl.Call(m, "VkGetPhysicalDeviceSparseImageFormatProperties2", physicalDevice, pFormatInfo, pPropertyCount, pProperties)
 }
 
 // VkGetPhysicalDeviceSparseImageFormatProperties2 indicates an expected call of VkGetPhysicalDeviceSparseImageFormatProperties2.
@@ -2315,11 +2108,9 @@ func (mr *MockDriverMockRecorder) VkGetQueryPoolResults(device, queryPool, first
 }
 
 // VkGetRenderAreaGranularity mocks base method.
-func (m *MockDriver) VkGetRenderAreaGranularity(device core.VkDevice, renderPass core.VkRenderPass, pGranularity *core.VkExtent2D) error {
+func (m *MockDriver) VkGetRenderAreaGranularity(device core.VkDevice, renderPass core.VkRenderPass, pGranularity *core.VkExtent2D) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "VkGetRenderAreaGranularity", device, renderPass, pGranularity)
-	ret0, _ := ret[0].(error)
-	return ret0
+	m.ctrl.Call(m, "VkGetRenderAreaGranularity", device, renderPass, pGranularity)
 }
 
 // VkGetRenderAreaGranularity indicates an expected call of VkGetRenderAreaGranularity.
@@ -2509,11 +2300,9 @@ func (mr *MockDriverMockRecorder) VkResetFences(device, fenceCount, pFences inte
 }
 
 // VkResetQueryPool mocks base method.
-func (m *MockDriver) VkResetQueryPool(device core.VkDevice, queryPool core.VkQueryPool, firstQuery, queryCount core.Uint32) error {
+func (m *MockDriver) VkResetQueryPool(device core.VkDevice, queryPool core.VkQueryPool, firstQuery, queryCount core.Uint32) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "VkResetQueryPool", device, queryPool, firstQuery, queryCount)
-	ret0, _ := ret[0].(error)
-	return ret0
+	m.ctrl.Call(m, "VkResetQueryPool", device, queryPool, firstQuery, queryCount)
 }
 
 // VkResetQueryPool indicates an expected call of VkResetQueryPool.
@@ -2553,11 +2342,9 @@ func (mr *MockDriverMockRecorder) VkSignalSemaphore(device, pSignalInfo interfac
 }
 
 // VkTrimCommandPool mocks base method.
-func (m *MockDriver) VkTrimCommandPool(device core.VkDevice, commandPool core.VkCommandPool, flags core.VkCommandPoolTrimFlags) error {
+func (m *MockDriver) VkTrimCommandPool(device core.VkDevice, commandPool core.VkCommandPool, flags core.VkCommandPoolTrimFlags) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "VkTrimCommandPool", device, commandPool, flags)
-	ret0, _ := ret[0].(error)
-	return ret0
+	m.ctrl.Call(m, "VkTrimCommandPool", device, commandPool, flags)
 }
 
 // VkTrimCommandPool indicates an expected call of VkTrimCommandPool.
@@ -2567,11 +2354,9 @@ func (mr *MockDriverMockRecorder) VkTrimCommandPool(device, commandPool, flags i
 }
 
 // VkUnmapMemory mocks base method.
-func (m *MockDriver) VkUnmapMemory(device core.VkDevice, memory core.VkDeviceMemory) error {
+func (m *MockDriver) VkUnmapMemory(device core.VkDevice, memory core.VkDeviceMemory) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "VkUnmapMemory", device, memory)
-	ret0, _ := ret[0].(error)
-	return ret0
+	m.ctrl.Call(m, "VkUnmapMemory", device, memory)
 }
 
 // VkUnmapMemory indicates an expected call of VkUnmapMemory.
@@ -2581,11 +2366,9 @@ func (mr *MockDriverMockRecorder) VkUnmapMemory(device, memory interface{}) *gom
 }
 
 // VkUpdateDescriptorSetWithTemplate mocks base method.
-func (m *MockDriver) VkUpdateDescriptorSetWithTemplate(device core.VkDevice, descriptorSet core.VkDescriptorSet, descriptorUpdateTemplate core.VkDescriptorUpdateTemplate, pData unsafe.Pointer) error {
+func (m *MockDriver) VkUpdateDescriptorSetWithTemplate(device core.VkDevice, descriptorSet core.VkDescriptorSet, descriptorUpdateTemplate core.VkDescriptorUpdateTemplate, pData unsafe.Pointer) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "VkUpdateDescriptorSetWithTemplate", device, descriptorSet, descriptorUpdateTemplate, pData)
-	ret0, _ := ret[0].(error)
-	return ret0
+	m.ctrl.Call(m, "VkUpdateDescriptorSetWithTemplate", device, descriptorSet, descriptorUpdateTemplate, pData)
 }
 
 // VkUpdateDescriptorSetWithTemplate indicates an expected call of VkUpdateDescriptorSetWithTemplate.
@@ -2595,11 +2378,9 @@ func (mr *MockDriverMockRecorder) VkUpdateDescriptorSetWithTemplate(device, desc
 }
 
 // VkUpdateDescriptorSets mocks base method.
-func (m *MockDriver) VkUpdateDescriptorSets(device core.VkDevice, descriptorWriteCount core.Uint32, pDescriptorWrites *core.VkWriteDescriptorSet, descriptorCopyCount core.Uint32, pDescriptorCopies *core.VkCopyDescriptorSet) error {
+func (m *MockDriver) VkUpdateDescriptorSets(device core.VkDevice, descriptorWriteCount core.Uint32, pDescriptorWrites *core.VkWriteDescriptorSet, descriptorCopyCount core.Uint32, pDescriptorCopies *core.VkCopyDescriptorSet) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "VkUpdateDescriptorSets", device, descriptorWriteCount, pDescriptorWrites, descriptorCopyCount, pDescriptorCopies)
-	ret0, _ := ret[0].(error)
-	return ret0
+	m.ctrl.Call(m, "VkUpdateDescriptorSets", device, descriptorWriteCount, pDescriptorWrites, descriptorCopyCount, pDescriptorCopies)
 }
 
 // VkUpdateDescriptorSets indicates an expected call of VkUpdateDescriptorSets.

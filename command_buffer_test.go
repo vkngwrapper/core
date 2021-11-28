@@ -1,6 +1,8 @@
 package core_test
 
 import (
+	"bytes"
+	"encoding/binary"
 	"github.com/CannibalVox/VKng/core"
 	"github.com/CannibalVox/VKng/core/common"
 	"github.com/CannibalVox/VKng/core/mocks"
@@ -124,7 +126,7 @@ func TestCommandBuffer_BeginRenderPass(t *testing.T) {
 	mockDriver, buffer, renderPass, framebuffer := setupWithRenderPass(t, ctrl)
 
 	mockDriver.EXPECT().VkCmdBeginRenderPass(buffer.Handle(), gomock.Any(), core.VkSubpassContents(1) /*VK_SUBPASS_CONTENTS_SECONDARY_COMMAND_BUFFERS*/).DoAndReturn(
-		func(commandBuffer core.VkCommandBuffer, pRenderPassBegin *core.VkRenderPassBeginInfo, contents core.VkSubpassContents) error {
+		func(commandBuffer core.VkCommandBuffer, pRenderPassBegin *core.VkRenderPassBeginInfo, contents core.VkSubpassContents) {
 			v := reflect.ValueOf(*pRenderPassBegin)
 			require.Equal(t, uint64(43), v.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO
 			require.True(t, v.FieldByName("pNext").IsNil())
@@ -140,8 +142,6 @@ func TestCommandBuffer_BeginRenderPass(t *testing.T) {
 			clearValueSlice := ([]float32)(unsafe.Slice(clearValue, 4))
 
 			require.ElementsMatch(t, []float32{5, 6, 7, 8}, clearValueSlice)
-
-			return nil
 		})
 
 	err := buffer.CmdBeginRenderPass(core.ContentsSecondaryCommandBuffers, &core.RenderPassBeginOptions{
@@ -162,7 +162,7 @@ func TestCommandBuffer_EndRenderPass(t *testing.T) {
 
 	mockDriver, buffer := setup(t, ctrl)
 
-	mockDriver.EXPECT().VkCmdEndRenderPass(buffer.Handle()).Return(nil)
+	mockDriver.EXPECT().VkCmdEndRenderPass(buffer.Handle())
 
 	err := buffer.CmdEndRenderPass()
 	require.NoError(t, err)
@@ -182,7 +182,7 @@ func TestCommandBuffer_CmdBindGraphicsPipeline(t *testing.T) {
 	buffer := mocks.EasyDummyCommandBuffer(t, mockDevice, mockPool)
 	pipeline := mocks.EasyDummyGraphicsPipeline(t, loader, mockDevice)
 
-	mockDriver.EXPECT().VkCmdBindPipeline(buffer.Handle(), core.VkPipelineBindPoint(0), pipeline.Handle()).Return(nil)
+	mockDriver.EXPECT().VkCmdBindPipeline(buffer.Handle(), core.VkPipelineBindPoint(0), pipeline.Handle())
 
 	err = buffer.CmdBindPipeline(common.BindGraphics, pipeline)
 	require.NoError(t, err)
@@ -206,7 +206,7 @@ func TestCommandBuffer_CmdDrawIndexed(t *testing.T) {
 
 	mockDriver, buffer := setup(t, ctrl)
 
-	mockDriver.EXPECT().VkCmdDrawIndexed(buffer.Handle(), core.Uint32(1), core.Uint32(2), core.Uint32(3), core.Int32(4), core.Uint32(5)).Return(nil)
+	mockDriver.EXPECT().VkCmdDrawIndexed(buffer.Handle(), core.Uint32(1), core.Uint32(2), core.Uint32(3), core.Int32(4), core.Uint32(5))
 
 	err := buffer.CmdDrawIndexed(1, 2, 3, 4, 5)
 	require.NoError(t, err)
@@ -223,13 +223,12 @@ func TestVulkanCommandBuffer_CmdBindVertexBuffers(t *testing.T) {
 	vertexBuffer.EXPECT().Handle().Return(bufferHandle)
 
 	mockDriver.EXPECT().VkCmdBindVertexBuffers(buffer.Handle(), core.Uint32(3), core.Uint32(1), gomock.Not(nil), gomock.Not(nil)).DoAndReturn(
-		func(commandBuffer core.VkCommandBuffer, firstBinding core.Uint32, bindingCount core.Uint32, pBuffers *core.VkBuffer, pOffsets *core.VkDeviceSize) error {
+		func(commandBuffer core.VkCommandBuffer, firstBinding core.Uint32, bindingCount core.Uint32, pBuffers *core.VkBuffer, pOffsets *core.VkDeviceSize) {
 			singleBuffer := ([]core.VkBuffer)(unsafe.Slice(pBuffers, 1))
 			singleOffset := ([]core.VkDeviceSize)(unsafe.Slice(pOffsets, 1))
 
 			require.ElementsMatch(t, []core.VkBuffer{bufferHandle}, singleBuffer)
 			require.ElementsMatch(t, []core.VkDeviceSize{2}, singleOffset)
-			return nil
 		})
 
 	err := buffer.CmdBindVertexBuffers(3, []core.Buffer{vertexBuffer}, []int{2})
@@ -246,7 +245,7 @@ func TestVulkanCommandBuffer_CmdBindIndexBuffer(t *testing.T) {
 	indexBuffer := mocks.NewMockBuffer(ctrl)
 	indexBuffer.EXPECT().Handle().Return(bufferHandle)
 
-	mockDriver.EXPECT().VkCmdBindIndexBuffer(buffer.Handle(), bufferHandle, core.VkDeviceSize(2), core.VkIndexType(1) /* VK_INDEX_TYPE_UINT32*/).Return(nil)
+	mockDriver.EXPECT().VkCmdBindIndexBuffer(buffer.Handle(), bufferHandle, core.VkDeviceSize(2), core.VkIndexType(1) /* VK_INDEX_TYPE_UINT32*/)
 
 	err := buffer.CmdBindIndexBuffer(indexBuffer, 2, common.IndexUInt32)
 	require.NoError(t, err)
@@ -275,14 +274,12 @@ func TestVulkanCommandBuffer_CmdBindDescriptorSets(t *testing.T) {
 		gomock.Not(nil),
 		core.Uint32(3),
 		gomock.Not(nil)).DoAndReturn(
-		func(commandBuffer core.VkCommandBuffer, bind core.VkPipelineBindPoint, pipelineLayout core.VkPipelineLayout, firstSet, descriptorSetCount core.Uint32, pDescriptorSets *core.VkDescriptorSet, dynamicOffsetCount core.Uint32, pDynamicOffsets *core.Uint32) error {
+		func(commandBuffer core.VkCommandBuffer, bind core.VkPipelineBindPoint, pipelineLayout core.VkPipelineLayout, firstSet, descriptorSetCount core.Uint32, pDescriptorSets *core.VkDescriptorSet, dynamicOffsetCount core.Uint32, pDynamicOffsets *core.Uint32) {
 			descriptorSetSlice := ([]core.VkDescriptorSet)(unsafe.Slice(pDescriptorSets, 1))
 			dynamicOffsetSlice := ([]core.Uint32)(unsafe.Slice(pDynamicOffsets, 3))
 
 			require.ElementsMatch(t, []core.VkDescriptorSet{descriptorSetHandle}, descriptorSetSlice)
 			require.ElementsMatch(t, []core.Uint32{4, 5, 6}, dynamicOffsetSlice)
-
-			return nil
 		})
 
 	err := buffer.CmdBindDescriptorSets(common.BindCompute, pipelineLayout, 1, []core.DescriptorSet{
@@ -300,7 +297,7 @@ func TestVulkanCommandBuffer_CmdCopyBuffer(t *testing.T) {
 	dest := mocks.EasyMockBuffer(ctrl)
 
 	mockDriver.EXPECT().VkCmdCopyBuffer(buffer.Handle(), src.Handle(), dest.Handle(), core.Uint32(2), gomock.Not(nil)).DoAndReturn(
-		func(buffer core.VkCommandBuffer, src core.VkBuffer, dest core.VkBuffer, regionCount core.Uint32, pRegions *core.VkBufferCopy) error {
+		func(buffer core.VkCommandBuffer, src core.VkBuffer, dest core.VkBuffer, regionCount core.Uint32, pRegions *core.VkBufferCopy) {
 			regionSlice := ([]core.VkBufferCopy)(unsafe.Slice(pRegions, 2))
 
 			regionVal := reflect.ValueOf(regionSlice[0])
@@ -312,8 +309,6 @@ func TestVulkanCommandBuffer_CmdCopyBuffer(t *testing.T) {
 			require.Equal(t, uint64(11), regionVal.FieldByName("srcOffset").Uint())
 			require.Equal(t, uint64(13), regionVal.FieldByName("dstOffset").Uint())
 			require.Equal(t, uint64(17), regionVal.FieldByName("size").Uint())
-
-			return nil
 		})
 
 	err := buffer.CmdCopyBuffer(src, dest, []core.BufferCopy{
@@ -350,7 +345,7 @@ func TestVulkanCommandBuffer_CmdPipelineBarrier(t *testing.T) {
 		core.Uint32(1),
 		gomock.Not(nil),
 	).DoAndReturn(
-		func(commandBuffer core.VkCommandBuffer, srcStage, dstStage core.VkPipelineStageFlags, dependencies core.VkDependencyFlags, memoryBarrierCount core.Uint32, pMemoryBarriers *core.VkMemoryBarrier, bufferMemoryBarrierCount core.Uint32, pBufferMemoryBarriers *core.VkBufferMemoryBarrier, imageMemoryBarrierCount core.Uint32, pImageMemoryBarriers *core.VkImageMemoryBarrier) error {
+		func(commandBuffer core.VkCommandBuffer, srcStage, dstStage core.VkPipelineStageFlags, dependencies core.VkDependencyFlags, memoryBarrierCount core.Uint32, pMemoryBarriers *core.VkMemoryBarrier, bufferMemoryBarrierCount core.Uint32, pBufferMemoryBarriers *core.VkBufferMemoryBarrier, imageMemoryBarrierCount core.Uint32, pImageMemoryBarriers *core.VkImageMemoryBarrier) {
 			memoryBarrierSlice := reflect.ValueOf(([]core.VkMemoryBarrier)(unsafe.Slice(pMemoryBarriers, 2)))
 			bufferMemoryBarrierSlice := reflect.ValueOf(([]core.VkBufferMemoryBarrier)(unsafe.Slice(pBufferMemoryBarriers, 1)))
 			imageMemoryBarrierSlice := reflect.ValueOf(([]core.VkImageMemoryBarrier)(unsafe.Slice(pImageMemoryBarriers, 1)))
@@ -400,8 +395,6 @@ func TestVulkanCommandBuffer_CmdPipelineBarrier(t *testing.T) {
 			require.Equal(t, uint64(19), subresource.FieldByName("levelCount").Uint())
 			require.Equal(t, uint64(23), subresource.FieldByName("baseArrayLayer").Uint())
 			require.Equal(t, uint64(29), subresource.FieldByName("layerCount").Uint())
-
-			return nil
 		})
 
 	err := buffer.CmdPipelineBarrier(
@@ -465,7 +458,7 @@ func TestVulkanCommandBuffer_CmdCopyBufferToImage(t *testing.T) {
 		core.Uint32(2),
 		gomock.Not(nil),
 	).DoAndReturn(
-		func(commandBuffer core.VkCommandBuffer, srcBuffer core.VkBuffer, dstImage core.VkImage, dstImageLayout core.VkImageLayout, regionCount core.Uint32, pRegions *core.VkBufferImageCopy) error {
+		func(commandBuffer core.VkCommandBuffer, srcBuffer core.VkBuffer, dstImage core.VkImage, dstImageLayout core.VkImageLayout, regionCount core.Uint32, pRegions *core.VkBufferImageCopy) {
 			regionSlice := reflect.ValueOf(([]core.VkBufferImageCopy)(unsafe.Slice(pRegions, 2)))
 
 			region := regionSlice.Index(0)
@@ -509,8 +502,6 @@ func TestVulkanCommandBuffer_CmdCopyBufferToImage(t *testing.T) {
 			require.Equal(t, uint64(79), extent.FieldByName("width").Uint())
 			require.Equal(t, uint64(83), extent.FieldByName("height").Uint())
 			require.Equal(t, uint64(89), extent.FieldByName("depth").Uint())
-
-			return nil
 		})
 
 	err := buffer.CmdCopyBufferToImage(mockBuffer, mockImage, common.LayoutDepthAttachmentOptimal, []*core.BufferImageCopy{
@@ -583,7 +574,7 @@ func TestVulkanCommandBuffer_CmdBlitImage(t *testing.T) {
 		destImageLayout core.VkImageLayout,
 		regionCount core.Uint32,
 		pRegions *core.VkImageBlit,
-		filter core.VkFilter) error {
+		filter core.VkFilter) {
 
 		regionSlice := reflect.ValueOf(([]core.VkImageBlit)(unsafe.Slice(pRegions, 1)))
 		region := regionSlice.Index(0)
@@ -621,8 +612,6 @@ func TestVulkanCommandBuffer_CmdBlitImage(t *testing.T) {
 		require.Equal(t, int64(53), offset.FieldByName("x").Int())
 		require.Equal(t, int64(59), offset.FieldByName("y").Int())
 		require.Equal(t, int64(61), offset.FieldByName("z").Int())
-
-		return nil
 	})
 
 	err := buffer.CmdBlitImage(sourceImage,
@@ -671,5 +660,258 @@ func TestVulkanCommandBuffer_CmdBlitImage(t *testing.T) {
 		},
 		common.FilterLinear,
 	)
+	require.NoError(t, err)
+}
+
+func TestVulkanCommandBuffer_CmdPushConstants(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	mockDriver, buffer := setup(t, ctrl)
+	pipelineLayout := mocks.EasyMockPipelineLayout(ctrl)
+
+	mockDriver.EXPECT().VkCmdPushConstants(buffer.Handle(),
+		pipelineLayout.Handle(),
+		core.VkShaderStageFlags(8), // VK_SHADER_STAGE_GEOMETRY_BIT
+		core.Uint32(1),
+		core.Uint32(4),
+		gomock.Not(nil),
+	).DoAndReturn(
+		func(commandBuffer core.VkCommandBuffer,
+			pipelineLayout core.VkPipelineLayout,
+			shaderStages core.VkShaderStageFlags,
+			offset core.Uint32,
+			size core.Uint32,
+			valuePtr unsafe.Pointer) {
+
+			bytesPtr := (*byte)(valuePtr)
+			bytesSlice := ([]byte)(unsafe.Slice(bytesPtr, 4))
+
+			var intVal uint32
+			err := binary.Read(bytes.NewBuffer(bytesSlice), binary.LittleEndian, &intVal)
+			require.NoError(t, err)
+
+			require.Equal(t, uint32(5), intVal)
+		})
+
+	err := buffer.CmdPushConstants(pipelineLayout, common.StageGeometry, 1, uint32(5))
+	require.NoError(t, err)
+}
+
+func TestVulkanCommandBuffer_CmdSetViewport(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	mockDriver, buffer := setup(t, ctrl)
+
+	mockDriver.EXPECT().VkCmdSetViewport(buffer.Handle(), core.Uint32(1), core.Uint32(2), gomock.Not(nil)).DoAndReturn(
+		func(
+			commandBuffer core.VkCommandBuffer,
+			firstViewport core.Uint32,
+			viewportCount core.Uint32,
+			pViewports *core.VkViewport) {
+
+			viewportSlice := ([]core.VkViewport)(unsafe.Slice(pViewports, 2))
+			val := reflect.ValueOf(viewportSlice)
+
+			viewport := val.Index(0)
+			require.InDelta(t, 3, viewport.FieldByName("x").Float(), 0.0001)
+			require.InDelta(t, 5, viewport.FieldByName("y").Float(), 0.0001)
+			require.InDelta(t, 7, viewport.FieldByName("width").Float(), 0.0001)
+			require.InDelta(t, 11, viewport.FieldByName("height").Float(), 0.0001)
+			require.InDelta(t, 13, viewport.FieldByName("minDepth").Float(), 0.0001)
+			require.InDelta(t, 17, viewport.FieldByName("maxDepth").Float(), 0.0001)
+
+			viewport = val.Index(1)
+			require.InDelta(t, 19, viewport.FieldByName("x").Float(), 0.0001)
+			require.InDelta(t, 23, viewport.FieldByName("y").Float(), 0.0001)
+			require.InDelta(t, 29, viewport.FieldByName("width").Float(), 0.0001)
+			require.InDelta(t, 31, viewport.FieldByName("height").Float(), 0.0001)
+			require.InDelta(t, 37, viewport.FieldByName("minDepth").Float(), 0.0001)
+			require.InDelta(t, 41, viewport.FieldByName("maxDepth").Float(), 0.0001)
+		})
+
+	err := buffer.CmdSetViewport(1, []common.Viewport{
+		{
+			X:        3,
+			Y:        5,
+			Width:    7,
+			Height:   11,
+			MinDepth: 13,
+			MaxDepth: 17,
+		},
+		{
+			X:        19,
+			Y:        23,
+			Width:    29,
+			Height:   31,
+			MinDepth: 37,
+			MaxDepth: 41,
+		},
+	})
+	require.NoError(t, err)
+}
+
+func TestVulkanCommandBuffer_CmdSetScissor(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	mockDriver, buffer := setup(t, ctrl)
+
+	mockDriver.EXPECT().VkCmdSetScissor(buffer.Handle(), core.Uint32(1), core.Uint32(2), gomock.Not(nil)).DoAndReturn(
+		func(
+			commandBuffer core.VkCommandBuffer,
+			firstScissor core.Uint32,
+			scissorCount core.Uint32,
+			pScissors *core.VkRect2D) {
+
+			scissorSlice := ([]core.VkRect2D)(unsafe.Slice(pScissors, 2))
+			val := reflect.ValueOf(scissorSlice)
+
+			scissor := val.Index(0)
+			offset := scissor.FieldByName("offset")
+			require.Equal(t, int64(3), offset.FieldByName("x").Int())
+			require.Equal(t, int64(5), offset.FieldByName("y").Int())
+			extent := scissor.FieldByName("extent")
+			require.Equal(t, uint64(7), extent.FieldByName("width").Uint())
+			require.Equal(t, uint64(11), extent.FieldByName("height").Uint())
+
+			scissor = val.Index(1)
+			offset = scissor.FieldByName("offset")
+			require.Equal(t, int64(13), offset.FieldByName("x").Int())
+			require.Equal(t, int64(17), offset.FieldByName("y").Int())
+			extent = scissor.FieldByName("extent")
+			require.Equal(t, uint64(19), extent.FieldByName("width").Uint())
+			require.Equal(t, uint64(23), extent.FieldByName("height").Uint())
+		})
+
+	err := buffer.CmdSetScissor(1, []common.Rect2D{
+		{
+			Offset: common.Offset2D{3, 5},
+			Extent: common.Extent2D{7, 11},
+		},
+		{
+			Offset: common.Offset2D{13, 17},
+			Extent: common.Extent2D{19, 23},
+		},
+	})
+	require.NoError(t, err)
+}
+
+func TestVulkanCommandBuffer_CmdCopyImage(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	mockDriver, buffer := setup(t, ctrl)
+	srcImage := mocks.EasyMockImage(ctrl)
+	dstImage := mocks.EasyMockImage(ctrl)
+
+	mockDriver.EXPECT().VkCmdCopyImage(buffer.Handle(),
+		srcImage.Handle(),
+		core.VkImageLayout(1000001002), // VK_IMAGE_LAYOUT_PRESENT_SRC_KHR
+		dstImage.Handle(),
+		core.VkImageLayout(5), // VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL
+		core.Uint32(2),
+		gomock.Not(nil),
+	).DoAndReturn(
+		func(commandBuffer core.VkCommandBuffer, srcImage core.VkImage, srcImageLayout core.VkImageLayout, dstImage core.VkImage, dstImageLayout core.VkImageLayout, regionCount core.Uint32, pRegions *core.VkImageCopy) {
+			regionSlice := ([]core.VkImageCopy)(unsafe.Slice(pRegions, 2))
+			val := reflect.ValueOf(regionSlice)
+
+			region := val.Index(0)
+			srcSubresource := region.FieldByName("srcSubresource")
+			dstSubresource := region.FieldByName("dstSubresource")
+			srcOffset := region.FieldByName("srcOffset")
+			dstOffset := region.FieldByName("dstOffset")
+			extent := region.FieldByName("extent")
+
+			require.Equal(t, uint64(8), srcSubresource.FieldByName("aspectMask").Uint()) // VK_IMAGE_ASPECT_METADATA_BIT
+			require.Equal(t, uint64(1), srcSubresource.FieldByName("mipLevel").Uint())
+			require.Equal(t, uint64(3), srcSubresource.FieldByName("baseArrayLayer").Uint())
+			require.Equal(t, uint64(5), srcSubresource.FieldByName("layerCount").Uint())
+
+			require.Equal(t, uint64(0x00000200), dstSubresource.FieldByName("aspectMask").Uint()) // VK_IMAGE_ASPECT_MEMORY_PLANE_2_BIT_EXT
+			require.Equal(t, uint64(7), dstSubresource.FieldByName("mipLevel").Uint())
+			require.Equal(t, uint64(11), dstSubresource.FieldByName("baseArrayLayer").Uint())
+			require.Equal(t, uint64(13), dstSubresource.FieldByName("layerCount").Uint())
+
+			require.Equal(t, int64(17), srcOffset.FieldByName("x").Int())
+			require.Equal(t, int64(19), srcOffset.FieldByName("y").Int())
+			require.Equal(t, int64(23), srcOffset.FieldByName("z").Int())
+
+			require.Equal(t, int64(29), dstOffset.FieldByName("x").Int())
+			require.Equal(t, int64(31), dstOffset.FieldByName("y").Int())
+			require.Equal(t, int64(37), dstOffset.FieldByName("z").Int())
+
+			require.Equal(t, uint64(41), extent.FieldByName("width").Uint())
+			require.Equal(t, uint64(43), extent.FieldByName("height").Uint())
+			require.Equal(t, uint64(47), extent.FieldByName("depth").Uint())
+
+			region = val.Index(1)
+			srcSubresource = region.FieldByName("srcSubresource")
+			dstSubresource = region.FieldByName("dstSubresource")
+			srcOffset = region.FieldByName("srcOffset")
+			dstOffset = region.FieldByName("dstOffset")
+			extent = region.FieldByName("extent")
+
+			require.Equal(t, uint64(1), srcSubresource.FieldByName("aspectMask").Uint()) // VK_IMAGE_ASPECT_COLOR_BIT
+			require.Equal(t, uint64(53), srcSubresource.FieldByName("mipLevel").Uint())
+			require.Equal(t, uint64(59), srcSubresource.FieldByName("baseArrayLayer").Uint())
+			require.Equal(t, uint64(61), srcSubresource.FieldByName("layerCount").Uint())
+
+			require.Equal(t, uint64(2), dstSubresource.FieldByName("aspectMask").Uint()) // VK_IMAGE_ASPECT_DEPTH_BIT
+			require.Equal(t, uint64(67), dstSubresource.FieldByName("mipLevel").Uint())
+			require.Equal(t, uint64(71), dstSubresource.FieldByName("baseArrayLayer").Uint())
+			require.Equal(t, uint64(73), dstSubresource.FieldByName("layerCount").Uint())
+
+			require.Equal(t, int64(79), srcOffset.FieldByName("x").Int())
+			require.Equal(t, int64(83), srcOffset.FieldByName("y").Int())
+			require.Equal(t, int64(89), srcOffset.FieldByName("z").Int())
+
+			require.Equal(t, int64(97), dstOffset.FieldByName("x").Int())
+			require.Equal(t, int64(101), dstOffset.FieldByName("y").Int())
+			require.Equal(t, int64(103), dstOffset.FieldByName("z").Int())
+
+			require.Equal(t, uint64(107), extent.FieldByName("width").Uint())
+			require.Equal(t, uint64(109), extent.FieldByName("height").Uint())
+			require.Equal(t, uint64(113), extent.FieldByName("depth").Uint())
+		})
+
+	err := buffer.CmdCopyImage(srcImage, common.LayoutPresentSrcKHR, dstImage, common.LayoutShaderReadOnlyOptimal, []core.ImageCopy{
+		{
+			SrcSubresource: common.ImageSubresourceLayers{
+				AspectMask:     common.AspectMetadata,
+				MipLevel:       1,
+				BaseArrayLayer: 3,
+				LayerCount:     5,
+			},
+			DstSubresource: common.ImageSubresourceLayers{
+				AspectMask:     common.AspectMemoryPlane2EXT,
+				MipLevel:       7,
+				BaseArrayLayer: 11,
+				LayerCount:     13,
+			},
+			SrcOffset: common.Offset3D{17, 19, 23},
+			DstOffset: common.Offset3D{29, 31, 37},
+			Extent:    common.Extent3D{41, 43, 47},
+		},
+		{
+			SrcSubresource: common.ImageSubresourceLayers{
+				AspectMask:     common.AspectColor,
+				MipLevel:       53,
+				BaseArrayLayer: 59,
+				LayerCount:     61,
+			},
+			DstSubresource: common.ImageSubresourceLayers{
+				AspectMask:     common.AspectDepth,
+				MipLevel:       67,
+				BaseArrayLayer: 71,
+				LayerCount:     73,
+			},
+			SrcOffset: common.Offset3D{79, 83, 89},
+			DstOffset: common.Offset3D{97, 101, 103},
+			Extent:    common.Extent3D{107, 109, 113},
+		},
+	})
 	require.NoError(t, err)
 }

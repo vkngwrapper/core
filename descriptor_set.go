@@ -64,8 +64,8 @@ type DescriptorImageInfo struct {
 
 type DescriptorBufferInfo struct {
 	Buffer Buffer
-	Offset uint64
-	Range  uint64
+	Offset int
+	Range  int
 }
 
 type WriteDescriptorSetOptions struct {

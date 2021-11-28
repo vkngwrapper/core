@@ -16,6 +16,6 @@ func (f *vulkanFence) Handle() VkFence {
 	return f.handle
 }
 
-func (f *vulkanFence) Destroy() error {
-	return f.driver.VkDestroyFence(f.device, f.handle, nil)
+func (f *vulkanFence) Destroy() {
+	f.driver.VkDestroyFence(f.device, f.handle, nil)
 }

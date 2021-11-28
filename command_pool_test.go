@@ -115,8 +115,7 @@ func TestCommandBufferSingleAllocateFree(t *testing.T) {
 			return nil
 		})
 
-	err = commandPool.FreeCommandBuffers(buffers)
-	require.NoError(t, err)
+	commandPool.FreeCommandBuffers(buffers)
 }
 
 func TestCommandBufferMultiAllocateFree(t *testing.T) {
@@ -172,13 +171,10 @@ func TestCommandBufferMultiAllocateFree(t *testing.T) {
 	require.ElementsMatch(t, bufferHandles, actualHandles)
 
 	mockDriver.EXPECT().VkFreeCommandBuffers(mockDevice.Handle(), commandPool.Handle(), core.Uint32(3), gomock.Not(nil)).DoAndReturn(
-		func(device core.VkDevice, commandPool core.VkCommandPool, bufferCount core.Uint32, buffers *core.VkCommandBuffer) error {
+		func(device core.VkDevice, commandPool core.VkCommandPool, bufferCount core.Uint32, buffers *core.VkCommandBuffer) {
 			slice := ([]core.VkCommandBuffer)(unsafe.Slice(buffers, 3))
 			require.ElementsMatch(t, bufferHandles, slice)
-
-			return nil
 		})
 
-	err = commandPool.FreeCommandBuffers(buffers)
-	require.NoError(t, err)
+	commandPool.FreeCommandBuffers(buffers)
 }

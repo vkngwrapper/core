@@ -346,7 +346,7 @@ func EasyDummyPipeline(t *testing.T, ctrl *gomock.Controller, loader core.Loader
 	return pipelines[0]
 }
 
-func EasyDummyQueue(t *testing.T, device core.Device) core.Queue {
+func EasyDummyQueue(device core.Device) core.Queue {
 	driver := device.Driver().(*MockDriver)
 
 	driver.EXPECT().VkGetDeviceQueue(gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any()).DoAndReturn(
@@ -355,8 +355,7 @@ func EasyDummyQueue(t *testing.T, device core.Device) core.Queue {
 			return nil
 		})
 
-	queue, err := device.GetQueue(0, 0)
-	require.NoError(t, err)
+	queue := device.GetQueue(0, 0)
 
 	return queue
 }

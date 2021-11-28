@@ -72,13 +72,11 @@ func TestVulkanPhysicalDevice_QueueFamilyProperties(t *testing.T) {
 	physicalDevice := mocks.EasyDummyPhysicalDevice(t, loader)
 
 	driver.EXPECT().VkGetPhysicalDeviceQueueFamilyProperties(physicalDevice.Handle(), gomock.Not(nil), nil).DoAndReturn(
-		func(device core.VkPhysicalDevice, pPropertyCount *core.Uint32, pProperties *core.VkQueueFamilyProperties) (core.VkResult, error) {
+		func(device core.VkPhysicalDevice, pPropertyCount *core.Uint32, pProperties *core.VkQueueFamilyProperties) {
 			*pPropertyCount = 1
-
-			return core.VKSuccess, nil
 		})
 	driver.EXPECT().VkGetPhysicalDeviceQueueFamilyProperties(physicalDevice.Handle(), gomock.Not(nil), gomock.Not(nil)).DoAndReturn(
-		func(device core.VkPhysicalDevice, pPropertyCount *core.Uint32, pProperties *core.VkQueueFamilyProperties) (core.VkResult, error) {
+		func(device core.VkPhysicalDevice, pPropertyCount *core.Uint32, pProperties *core.VkQueueFamilyProperties) {
 			*pPropertyCount = 1
 			propertySlice := reflect.ValueOf(([]core.VkQueueFamilyProperties)(unsafe.Slice(pProperties, 3)))
 
@@ -91,18 +89,15 @@ func TestVulkanPhysicalDevice_QueueFamilyProperties(t *testing.T) {
 			*(*uint32)(unsafe.Pointer(propertyExtent.FieldByName("width").UnsafeAddr())) = uint32(7)
 			*(*uint32)(unsafe.Pointer(propertyExtent.FieldByName("height").UnsafeAddr())) = uint32(11)
 			*(*uint32)(unsafe.Pointer(propertyExtent.FieldByName("depth").UnsafeAddr())) = uint32(13)
-
-			return core.VKSuccess, nil
 		})
 
-	queueProperties, err := physicalDevice.QueueFamilyProperties()
-	require.NoError(t, err)
+	queueProperties := physicalDevice.QueueFamilyProperties()
 	require.Equal(t, uint32(3), queueProperties[0].QueueCount)
 	require.Equal(t, uint32(5), queueProperties[0].TimestampValidBits)
 	require.Equal(t, 7, queueProperties[0].MinImageTransferGranularity.Width)
 	require.Equal(t, 11, queueProperties[0].MinImageTransferGranularity.Height)
 	require.Equal(t, 13, queueProperties[0].MinImageTransferGranularity.Depth)
-	require.Equal(t, common.SparseBinding, queueProperties[0].Flags)
+	require.Equal(t, common.QueueSparseBinding, queueProperties[0].Flags)
 }
 
 func TestVulkanPhysicalDevice_Properties(t *testing.T) {
@@ -119,7 +114,7 @@ func TestVulkanPhysicalDevice_Properties(t *testing.T) {
 	require.NoError(t, err)
 
 	driver.EXPECT().VkGetPhysicalDeviceProperties(physicalDevice.Handle(), gomock.Not(nil)).DoAndReturn(
-		func(device core.VkPhysicalDevice, pProperties *core.VkPhysicalDeviceProperties) (core.VkResult, error) {
+		func(device core.VkPhysicalDevice, pProperties *core.VkPhysicalDeviceProperties) {
 			pPropertySlice := reflect.ValueOf(unsafe.Slice(pProperties, 1))
 			val := pPropertySlice.Index(0)
 
@@ -162,12 +157,9 @@ func TestVulkanPhysicalDevice_Properties(t *testing.T) {
 			*(*core.VkBool32)(unsafe.Pointer(sparseProperties.FieldByName("residencyStandard3DBlockShape").UnsafeAddr())) = core.VkBool32(1)
 			*(*core.VkBool32)(unsafe.Pointer(sparseProperties.FieldByName("residencyAlignedMipSize").UnsafeAddr())) = core.VkBool32(0)
 			*(*core.VkBool32)(unsafe.Pointer(sparseProperties.FieldByName("residencyNonResidentStrict").UnsafeAddr())) = core.VkBool32(1)
-
-			return core.VKSuccess, nil
 		})
 
-	properties, err := physicalDevice.Properties()
-	require.NoError(t, err)
+	properties := physicalDevice.Properties()
 	require.NotNil(t, properties)
 	require.Equal(t, common.CreateVersion(1, 2, 3), properties.APIVersion)
 	require.Equal(t, common.CreateVersion(3, 2, 1), properties.DriverVersion)
@@ -177,12 +169,12 @@ func TestVulkanPhysicalDevice_Properties(t *testing.T) {
 	require.Equal(t, "Some Device", properties.Name)
 	require.Equal(t, deviceUUID, properties.PipelineCacheUUID)
 
-	require.Equal(t, uint32(7), properties.Limits.MaxUniformBufferRange)
-	require.Equal(t, uint32(11), properties.Limits.MaxVertexInputBindingStride)
-	require.Equal(t, [3]uint32{13, 17, 19}, properties.Limits.MaxComputeWorkGroupCount)
+	require.Equal(t, 7, properties.Limits.MaxUniformBufferRange)
+	require.Equal(t, 11, properties.Limits.MaxVertexInputBindingStride)
+	require.Equal(t, [3]int{13, 17, 19}, properties.Limits.MaxComputeWorkGroupCount)
 	require.Equal(t, float32(23), properties.Limits.MaxInterpolationOffset)
 	require.True(t, properties.Limits.StrictLines)
-	require.Equal(t, uint64(29), properties.Limits.OptimalBufferCopyRowPitchAlignment)
+	require.Equal(t, 29, properties.Limits.OptimalBufferCopyRowPitchAlignment)
 
 	require.True(t, properties.SparseProperties.ResidencyStandard2DBlockShape)
 	require.False(t, properties.SparseProperties.ResidencyStandard2DMultisampleBlockShape)
@@ -202,7 +194,7 @@ func TestVulkanPhysicalDevice_Features(t *testing.T) {
 	physicalDevice := mocks.EasyDummyPhysicalDevice(t, loader)
 
 	driver.EXPECT().VkGetPhysicalDeviceFeatures(physicalDevice.Handle(), gomock.Not(nil)).DoAndReturn(
-		func(physicalDevice core.VkPhysicalDevice, pFeatures *core.VkPhysicalDeviceFeatures) (core.VkResult, error) {
+		func(physicalDevice core.VkPhysicalDevice, pFeatures *core.VkPhysicalDeviceFeatures) {
 			featureSlice := reflect.ValueOf(unsafe.Slice(pFeatures, 1))
 			val := featureSlice.Index(0)
 
@@ -261,12 +253,9 @@ func TestVulkanPhysicalDevice_Features(t *testing.T) {
 			*(*core.VkBool32)(unsafe.Pointer(val.FieldByName("sparseResidencyAliased").UnsafeAddr())) = core.VkBool32(1)
 			*(*core.VkBool32)(unsafe.Pointer(val.FieldByName("variableMultisampleRate").UnsafeAddr())) = core.VkBool32(0)
 			*(*core.VkBool32)(unsafe.Pointer(val.FieldByName("inheritedQueries").UnsafeAddr())) = core.VkBool32(1)
-
-			return core.VKSuccess, nil
 		})
 
-	features, err := physicalDevice.Features()
-	require.NoError(t, err)
+	features := physicalDevice.Features()
 	require.NotNil(t, features)
 	require.True(t, features.RobustBufferAccess)
 	require.False(t, features.FullDrawIndexUint32)
@@ -338,18 +327,15 @@ func TestVulkanPhysicalDevice_FormatProperties(t *testing.T) {
 	driver.EXPECT().VkGetPhysicalDeviceFormatProperties(physicalDevice.Handle(),
 		core.VkFormat(57), // VK_FORMAT_A8B8G8R8_SRGB_PACK32
 		gomock.Not(nil)).DoAndReturn(
-		func(device core.VkPhysicalDevice, format core.VkFormat, pFormatProperties *core.VkFormatProperties) error {
+		func(device core.VkPhysicalDevice, format core.VkFormat, pFormatProperties *core.VkFormatProperties) {
 			val := reflect.ValueOf(pFormatProperties).Elem()
 
 			*(*uint32)(unsafe.Pointer(val.FieldByName("optimalTilingFeatures").UnsafeAddr())) = uint32(0x00000100) // VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BLEND_BIT
 			*(*uint32)(unsafe.Pointer(val.FieldByName("linearTilingFeatures").UnsafeAddr())) = uint32(0x00400000)  // VK_FORMAT_FEATURE_DISJOINT_BIT
 			*(*uint32)(unsafe.Pointer(val.FieldByName("bufferFeatures").UnsafeAddr())) = uint32(0x00040000)        // VK_FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_LINEAR_FILTER_BIT
-
-			return nil
 		})
 
-	props, err := physicalDevice.FormatProperties(common.FormatA8B8G8R8SRGB)
-	require.NoError(t, err)
+	props := physicalDevice.FormatProperties(common.FormatA8B8G8R8SRGB)
 	require.NotNil(t, props)
 	require.Equal(t, common.FormatFeatureColorAttachmentBlend, props.OptimalTilingFeatures)
 	require.Equal(t, common.FormatFeatureDisjoint, props.LinearTilingFeatures)
@@ -367,7 +353,7 @@ func TestVulkanPhysicalDevice_MemoryProperties(t *testing.T) {
 	physicalDevice := mocks.EasyDummyPhysicalDevice(t, loader)
 
 	driver.EXPECT().VkGetPhysicalDeviceMemoryProperties(physicalDevice.Handle(), gomock.Not(nil)).DoAndReturn(
-		func(physicalDevice core.VkPhysicalDevice, pProperties *core.VkPhysicalDeviceMemoryProperties) (core.VkResult, error) {
+		func(physicalDevice core.VkPhysicalDevice, pProperties *core.VkPhysicalDeviceMemoryProperties) {
 			propertySlice := reflect.ValueOf(unsafe.Slice(pProperties, 1))
 			val := propertySlice.Index(0)
 			*(*uint32)(unsafe.Pointer(val.FieldByName("memoryTypeCount").UnsafeAddr())) = uint32(1)
@@ -380,12 +366,9 @@ func TestVulkanPhysicalDevice_MemoryProperties(t *testing.T) {
 			memoryHeap := val.FieldByName("memoryHeaps").Index(0)
 			*(*uint64)(unsafe.Pointer(memoryHeap.FieldByName("size").UnsafeAddr())) = uint64(99)
 			*(*int32)(unsafe.Pointer(memoryHeap.FieldByName("flags").UnsafeAddr())) = int32(2) // VK_MEMORY_HEAP_MULTI_INSTANCE_BIT
-
-			return core.VKSuccess, nil
 		})
 
-	memoryProps, err := physicalDevice.MemoryProperties()
-	require.NoError(t, err)
+	memoryProps := physicalDevice.MemoryProperties()
 	require.NotNil(t, memoryProps)
 	require.Len(t, memoryProps.MemoryTypes, 1)
 	require.Len(t, memoryProps.MemoryHeaps, 1)

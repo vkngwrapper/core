@@ -101,8 +101,8 @@ func (p *vulkanDescriptorPool) Handle() VkDescriptorPool {
 	return p.handle
 }
 
-func (p *vulkanDescriptorPool) Destroy() error {
-	return p.driver.VkDestroyDescriptorPool(p.device, p.handle, nil)
+func (p *vulkanDescriptorPool) Destroy() {
+	p.driver.VkDestroyDescriptorPool(p.device, p.handle, nil)
 }
 
 func (p *vulkanDescriptorPool) AllocateDescriptorSets(o *DescriptorSetOptions) ([]DescriptorSet, VkResult, error) {

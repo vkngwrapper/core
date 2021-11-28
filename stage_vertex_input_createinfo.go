@@ -30,14 +30,14 @@ func (r InputRate) String() string {
 type VertexBindingDescription struct {
 	InputRate InputRate
 	Binding   int
-	Stride    uintptr
+	Stride    int
 }
 
 type VertexAttributeDescription struct {
 	Location uint32
 	Binding  int
 	Format   common.DataFormat
-	Offset   uintptr
+	Offset   int
 }
 
 type VertexInputOptions struct {
