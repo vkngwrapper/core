@@ -60,7 +60,7 @@ func TestVulkanLoader1_0_CreateGraphicsPipelines_EmptySuccess(t *testing.T) {
 			return core.VKSuccess, nil
 		})
 
-	pipelines, _, err := loader.CreateGraphicsPipelines(device, []*core.GraphicsPipelineOptions{
+	pipelines, _, err := loader.CreateGraphicsPipelines(device, nil, []*core.GraphicsPipelineOptions{
 		{
 			Flags:             core.PipelineLibraryKHR,
 			Layout:            layout,
@@ -184,7 +184,7 @@ func TestVulkanLoader1_0_CreateGraphicsPipelines_ShaderStagesSuccess(t *testing.
 			return core.VKSuccess, nil
 		})
 
-	pipelines, _, err := loader.CreateGraphicsPipelines(device, []*core.GraphicsPipelineOptions{
+	pipelines, _, err := loader.CreateGraphicsPipelines(device, nil, []*core.GraphicsPipelineOptions{
 		{
 			Layout:     layout,
 			RenderPass: renderPass,
@@ -226,7 +226,7 @@ func TestVulkanLoader1_0_CreateGraphicsPipelines_ShaderStagesFailure_InvalidSpec
 	shaderModule1 := mocks.EasyMockShaderModule(ctrl)
 	shaderModule2 := mocks.EasyMockShaderModule(ctrl)
 
-	_, _, err = loader.CreateGraphicsPipelines(device, []*core.GraphicsPipelineOptions{
+	_, _, err = loader.CreateGraphicsPipelines(device, nil, []*core.GraphicsPipelineOptions{
 		{
 			Layout:     layout,
 			RenderPass: renderPass,
@@ -307,7 +307,7 @@ func TestVulkanLoader1_0_CreateGraphicsPipelines_VertexInputSuccess(t *testing.T
 			return core.VKSuccess, nil
 		})
 
-	pipelines, _, err := loader.CreateGraphicsPipelines(device, []*core.GraphicsPipelineOptions{
+	pipelines, _, err := loader.CreateGraphicsPipelines(device, nil, []*core.GraphicsPipelineOptions{
 		{
 			Layout:     layout,
 			RenderPass: renderPass,
@@ -371,7 +371,7 @@ func TestVulkanLoader1_0_CreateGraphicsPipelines_InputAssemblySuccess(t *testing
 			return core.VKSuccess, nil
 		})
 
-	pipelines, _, err := loader.CreateGraphicsPipelines(device, []*core.GraphicsPipelineOptions{
+	pipelines, _, err := loader.CreateGraphicsPipelines(device, nil, []*core.GraphicsPipelineOptions{
 		{
 			Layout:     layout,
 			RenderPass: renderPass,
@@ -416,7 +416,7 @@ func TestVulkanLoader1_0_CreateGraphicsPipelines_TessellationSuccess(t *testing.
 			return core.VKSuccess, nil
 		})
 
-	pipelines, _, err := loader.CreateGraphicsPipelines(device, []*core.GraphicsPipelineOptions{
+	pipelines, _, err := loader.CreateGraphicsPipelines(device, nil, []*core.GraphicsPipelineOptions{
 		{
 			Layout:     layout,
 			RenderPass: renderPass,
@@ -490,7 +490,7 @@ func TestVulkanLoader1_0_CreateGraphicsPipelines_ViewportSuccess(t *testing.T) {
 			return core.VKSuccess, nil
 		})
 
-	pipelines, _, err := loader.CreateGraphicsPipelines(device, []*core.GraphicsPipelineOptions{
+	pipelines, _, err := loader.CreateGraphicsPipelines(device, nil, []*core.GraphicsPipelineOptions{
 		{
 			Layout:     layout,
 			RenderPass: renderPass,
@@ -561,7 +561,7 @@ func TestVulkanLoader1_0_CreateGraphicsPipelines_RasterizationSuccess(t *testing
 			return core.VKSuccess, nil
 		})
 
-	pipelines, _, err := loader.CreateGraphicsPipelines(device, []*core.GraphicsPipelineOptions{
+	pipelines, _, err := loader.CreateGraphicsPipelines(device, nil, []*core.GraphicsPipelineOptions{
 		{
 			Layout:     layout,
 			RenderPass: renderPass,
@@ -569,7 +569,7 @@ func TestVulkanLoader1_0_CreateGraphicsPipelines_RasterizationSuccess(t *testing
 				DepthClamp:        true,
 				RasterizerDiscard: true,
 
-				PolygonMode: core.ModeLine,
+				PolygonMode: core.PolygonModeLine,
 				CullMode:    common.CullFrontAndBack,
 				FrontFace:   common.FrontFaceClockwise,
 
@@ -625,7 +625,7 @@ func TestVulkanLoader1_0_CreateGraphicsPipelines_MultisampleSuccess(t *testing.T
 			return core.VKSuccess, nil
 		})
 
-	pipelines, _, err := loader.CreateGraphicsPipelines(device, []*core.GraphicsPipelineOptions{
+	pipelines, _, err := loader.CreateGraphicsPipelines(device, nil, []*core.GraphicsPipelineOptions{
 		{
 			Layout:     layout,
 			RenderPass: renderPass,
@@ -678,7 +678,7 @@ func TestVulkanLoader1_0_CreateGraphicsPipelines_MultisampleSuccess_NoSampleMask
 			return core.VKSuccess, nil
 		})
 
-	pipelines, _, err := loader.CreateGraphicsPipelines(device, []*core.GraphicsPipelineOptions{
+	pipelines, _, err := loader.CreateGraphicsPipelines(device, nil, []*core.GraphicsPipelineOptions{
 		{
 			Layout:     layout,
 			RenderPass: renderPass,
@@ -708,7 +708,7 @@ func TestVulkanLoader1_0_CreateGraphicsPipelines_MultisampleFail_MismatchSampleM
 	layout := mocks.EasyMockPipelineLayout(ctrl)
 	renderPass := mocks.EasyMockRenderPass(ctrl)
 
-	_, _, err = loader.CreateGraphicsPipelines(device, []*core.GraphicsPipelineOptions{
+	_, _, err = loader.CreateGraphicsPipelines(device, nil, []*core.GraphicsPipelineOptions{
 		{
 			Layout:     layout,
 			RenderPass: renderPass,
@@ -777,7 +777,7 @@ func TestVulkanLoader1_0_CreateGraphicsPipelines_DepthStencilSuccess(t *testing.
 			return core.VKSuccess, nil
 		})
 
-	pipelines, _, err := loader.CreateGraphicsPipelines(device, []*core.GraphicsPipelineOptions{
+	pipelines, _, err := loader.CreateGraphicsPipelines(device, nil, []*core.GraphicsPipelineOptions{
 		{
 			Layout:     layout,
 			RenderPass: renderPass,
@@ -875,7 +875,7 @@ func TestVulkanLoader1_0_CreateGraphicsPipelines_ColorBlendSuccess(t *testing.T)
 			return core.VKSuccess, nil
 		})
 
-	pipelines, _, err := loader.CreateGraphicsPipelines(device, []*core.GraphicsPipelineOptions{
+	pipelines, _, err := loader.CreateGraphicsPipelines(device, nil, []*core.GraphicsPipelineOptions{
 		{
 			Layout:     layout,
 			RenderPass: renderPass,
@@ -948,13 +948,13 @@ func TestVulkanLoader1_0_CreateGraphicsPipelines_DynamicStateSuccess(t *testing.
 			return core.VKSuccess, nil
 		})
 
-	pipelines, _, err := loader.CreateGraphicsPipelines(device, []*core.GraphicsPipelineOptions{
+	pipelines, _, err := loader.CreateGraphicsPipelines(device, nil, []*core.GraphicsPipelineOptions{
 		{
 			Layout:     layout,
 			RenderPass: renderPass,
 			DynamicState: &core.DynamicStateOptions{
 				DynamicStates: []core.DynamicState{
-					core.StateDepthBounds, core.StateCullModeEXT,
+					core.DynamicStateDepthBounds, core.DynamicStateCullModeEXT,
 				},
 			},
 		}})

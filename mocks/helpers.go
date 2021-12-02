@@ -266,7 +266,7 @@ func EasyDummyGraphicsPipeline(t *testing.T, loader core.Loader1_0, device core.
 			return core.VKSuccess, nil
 		})
 
-	pipelines, _, err := loader.CreateGraphicsPipelines(device, []*core.GraphicsPipelineOptions{{}})
+	pipelines, _, err := loader.CreateGraphicsPipelines(device, nil, []*core.GraphicsPipelineOptions{{}})
 	require.NoError(t, err)
 
 	return pipelines[0]
@@ -339,7 +339,7 @@ func EasyDummyPipeline(t *testing.T, ctrl *gomock.Controller, loader core.Loader
 			return core.VKSuccess, nil
 		})
 
-	pipelines, _, err := loader.CreateGraphicsPipelines(device, []*core.GraphicsPipelineOptions{
+	pipelines, _, err := loader.CreateGraphicsPipelines(device, nil, []*core.GraphicsPipelineOptions{
 		{},
 	})
 	require.NoError(t, err)

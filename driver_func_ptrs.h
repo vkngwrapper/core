@@ -61,7 +61,7 @@ typedef struct DriverFuncPtrs {
     PFN_vkCmdEndRenderPass vkCmdEndRenderPass;
     PFN_vkCmdExecuteCommands vkCmdExecuteCommands; //Todo - secondary_command_buffer
     PFN_vkCmdFillBuffer vkCmdFillBuffer; //Todo*
-    PFN_vkCmdNextSubpass vkCmdNextSubpass; //Todo - draw_subpasses
+    PFN_vkCmdNextSubpass vkCmdNextSubpass;
     PFN_vkCmdPipelineBarrier vkCmdPipelineBarrier;
     PFN_vkCmdPushConstants vkCmdPushConstants;
     PFN_vkCmdResetEvent vkCmdResetEvent; //Todo*

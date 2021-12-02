@@ -164,8 +164,7 @@ func TestCommandBuffer_EndRenderPass(t *testing.T) {
 
 	mockDriver.EXPECT().VkCmdEndRenderPass(buffer.Handle())
 
-	err := buffer.CmdEndRenderPass()
-	require.NoError(t, err)
+	buffer.CmdEndRenderPass()
 }
 
 func TestCommandBuffer_CmdBindGraphicsPipeline(t *testing.T) {
@@ -184,8 +183,7 @@ func TestCommandBuffer_CmdBindGraphicsPipeline(t *testing.T) {
 
 	mockDriver.EXPECT().VkCmdBindPipeline(buffer.Handle(), core.VkPipelineBindPoint(0), pipeline.Handle())
 
-	err = buffer.CmdBindPipeline(common.BindGraphics, pipeline)
-	require.NoError(t, err)
+	buffer.CmdBindPipeline(common.BindGraphics, pipeline)
 }
 
 func TestCommandBuffer_CmdDraw(t *testing.T) {
@@ -196,8 +194,7 @@ func TestCommandBuffer_CmdDraw(t *testing.T) {
 
 	mockDriver.EXPECT().VkCmdDraw(buffer.Handle(), core.Uint32(6), core.Uint32(1), core.Uint32(2), core.Uint32(3))
 
-	err := buffer.CmdDraw(6, 1, 2, 3)
-	require.NoError(t, err)
+	buffer.CmdDraw(6, 1, 2, 3)
 }
 
 func TestCommandBuffer_CmdDrawIndexed(t *testing.T) {
@@ -208,8 +205,7 @@ func TestCommandBuffer_CmdDrawIndexed(t *testing.T) {
 
 	mockDriver.EXPECT().VkCmdDrawIndexed(buffer.Handle(), core.Uint32(1), core.Uint32(2), core.Uint32(3), core.Int32(4), core.Uint32(5))
 
-	err := buffer.CmdDrawIndexed(1, 2, 3, 4, 5)
-	require.NoError(t, err)
+	buffer.CmdDrawIndexed(1, 2, 3, 4, 5)
 }
 
 func TestVulkanCommandBuffer_CmdBindVertexBuffers(t *testing.T) {
@@ -231,8 +227,7 @@ func TestVulkanCommandBuffer_CmdBindVertexBuffers(t *testing.T) {
 			require.ElementsMatch(t, []core.VkDeviceSize{2}, singleOffset)
 		})
 
-	err := buffer.CmdBindVertexBuffers(3, []core.Buffer{vertexBuffer}, []int{2})
-	require.NoError(t, err)
+	buffer.CmdBindVertexBuffers(3, []core.Buffer{vertexBuffer}, []int{2})
 }
 
 func TestVulkanCommandBuffer_CmdBindIndexBuffer(t *testing.T) {
@@ -247,8 +242,7 @@ func TestVulkanCommandBuffer_CmdBindIndexBuffer(t *testing.T) {
 
 	mockDriver.EXPECT().VkCmdBindIndexBuffer(buffer.Handle(), bufferHandle, core.VkDeviceSize(2), core.VkIndexType(1) /* VK_INDEX_TYPE_UINT32*/)
 
-	err := buffer.CmdBindIndexBuffer(indexBuffer, 2, common.IndexUInt32)
-	require.NoError(t, err)
+	buffer.CmdBindIndexBuffer(indexBuffer, 2, common.IndexUInt32)
 }
 
 func TestVulkanCommandBuffer_CmdBindDescriptorSets(t *testing.T) {
@@ -282,10 +276,9 @@ func TestVulkanCommandBuffer_CmdBindDescriptorSets(t *testing.T) {
 			require.ElementsMatch(t, []core.Uint32{4, 5, 6}, dynamicOffsetSlice)
 		})
 
-	err := buffer.CmdBindDescriptorSets(common.BindCompute, pipelineLayout, 1, []core.DescriptorSet{
+	buffer.CmdBindDescriptorSets(common.BindCompute, pipelineLayout, 1, []core.DescriptorSet{
 		descriptorSet,
 	}, []int{4, 5, 6})
-	require.NoError(t, err)
 }
 
 func TestVulkanCommandBuffer_CmdCopyBuffer(t *testing.T) {
@@ -731,7 +724,7 @@ func TestVulkanCommandBuffer_CmdSetViewport(t *testing.T) {
 			require.InDelta(t, 41, viewport.FieldByName("maxDepth").Float(), 0.0001)
 		})
 
-	err := buffer.CmdSetViewport(1, []common.Viewport{
+	buffer.CmdSetViewport(1, []common.Viewport{
 		{
 			X:        3,
 			Y:        5,
@@ -749,7 +742,6 @@ func TestVulkanCommandBuffer_CmdSetViewport(t *testing.T) {
 			MaxDepth: 41,
 		},
 	})
-	require.NoError(t, err)
 }
 
 func TestVulkanCommandBuffer_CmdSetScissor(t *testing.T) {
@@ -785,7 +777,7 @@ func TestVulkanCommandBuffer_CmdSetScissor(t *testing.T) {
 			require.Equal(t, uint64(23), extent.FieldByName("height").Uint())
 		})
 
-	err := buffer.CmdSetScissor(1, []common.Rect2D{
+	buffer.CmdSetScissor(1, []common.Rect2D{
 		{
 			Offset: common.Offset2D{3, 5},
 			Extent: common.Extent2D{7, 11},
@@ -795,7 +787,6 @@ func TestVulkanCommandBuffer_CmdSetScissor(t *testing.T) {
 			Extent: common.Extent2D{19, 23},
 		},
 	})
-	require.NoError(t, err)
 }
 
 func TestVulkanCommandBuffer_CmdCopyImage(t *testing.T) {
@@ -914,4 +905,17 @@ func TestVulkanCommandBuffer_CmdCopyImage(t *testing.T) {
 		},
 	})
 	require.NoError(t, err)
+}
+
+func TestVulkanCommandBuffer_CmdNextSubpass(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	mockDriver, buffer := setup(t, ctrl)
+
+	mockDriver.EXPECT().VkCmdNextSubpass(buffer.Handle(),
+		core.VkSubpassContents(1), /* VK_SUBPASS_CONTENTS_SECONDARY_COMMAND_BUFFERS */
+	)
+
+	buffer.CmdNextSubpass(core.ContentsSecondaryCommandBuffers)
 }

@@ -112,8 +112,8 @@ type SubPassDependency struct {
 	SrcStageMask common.PipelineStages
 	DstStageMask common.PipelineStages
 
-	SrcAccess common.AccessFlags
-	DstAccess common.AccessFlags
+	SrcAccessMask common.AccessFlags
+	DstAccessMask common.AccessFlags
 }
 
 type SubPass struct {
@@ -229,8 +229,8 @@ func (o *RenderPassOptions) AllocForC(allocator *cgoparam.Allocator, next unsafe
 			dependencySlice[i].dstSubpass = C.uint32_t(o.SubPassDependencies[i].DstSubPassIndex)
 			dependencySlice[i].srcStageMask = C.VkPipelineStageFlags(o.SubPassDependencies[i].SrcStageMask)
 			dependencySlice[i].dstStageMask = C.VkPipelineStageFlags(o.SubPassDependencies[i].DstStageMask)
-			dependencySlice[i].srcAccessMask = C.VkAccessFlags(o.SubPassDependencies[i].SrcAccess)
-			dependencySlice[i].dstAccessMask = C.VkAccessFlags(o.SubPassDependencies[i].DstAccess)
+			dependencySlice[i].srcAccessMask = C.VkAccessFlags(o.SubPassDependencies[i].SrcAccessMask)
+			dependencySlice[i].dstAccessMask = C.VkAccessFlags(o.SubPassDependencies[i].DstAccessMask)
 			dependencySlice[i].dependencyFlags = C.VkDependencyFlags(o.SubPassDependencies[i].Flags)
 		}
 	}

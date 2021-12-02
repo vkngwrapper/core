@@ -26,21 +26,22 @@ type CommandBuffer interface {
 	End() (VkResult, error)
 
 	CmdBeginRenderPass(contents SubpassContents, o *RenderPassBeginOptions) error
-	CmdEndRenderPass() error
-	CmdBindPipeline(bindPoint common.PipelineBindPoint, pipeline Pipeline) error
-	CmdDraw(vertexCount, instanceCount int, firstVertex, firstInstance uint32) error
-	CmdDrawIndexed(indexCount, instanceCount int, firstIndex uint32, vertexOffset int, firstInstance uint32) error
-	CmdBindVertexBuffers(firstBinding uint32, buffers []Buffer, bufferOffsets []int) error
-	CmdBindIndexBuffer(buffer Buffer, offset int, indexType common.IndexType) error
+	CmdEndRenderPass()
+	CmdBindPipeline(bindPoint common.PipelineBindPoint, pipeline Pipeline)
+	CmdDraw(vertexCount, instanceCount int, firstVertex, firstInstance uint32)
+	CmdDrawIndexed(indexCount, instanceCount int, firstIndex uint32, vertexOffset int, firstInstance uint32)
+	CmdBindVertexBuffers(firstBinding uint32, buffers []Buffer, bufferOffsets []int)
+	CmdBindIndexBuffer(buffer Buffer, offset int, indexType common.IndexType)
 	CmdCopyBuffer(srcBuffer Buffer, dstBuffer Buffer, copyRegions []BufferCopy) error
-	CmdBindDescriptorSets(bindPoint common.PipelineBindPoint, layout PipelineLayout, firstSet int, sets []DescriptorSet, dynamicOffsets []int) error
+	CmdBindDescriptorSets(bindPoint common.PipelineBindPoint, layout PipelineLayout, firstSet int, sets []DescriptorSet, dynamicOffsets []int)
 	CmdPipelineBarrier(srcStageMask, dstStageMask common.PipelineStages, dependencies common.DependencyFlags, memoryBarriers []*MemoryBarrierOptions, bufferMemoryBarriers []*BufferMemoryBarrierOptions, imageMemoryBarriers []*ImageMemoryBarrierOptions) error
 	CmdCopyBufferToImage(buffer Buffer, image Image, layout common.ImageLayout, regions []*BufferImageCopy) error
 	CmdBlitImage(sourceImage Image, sourceImageLayout common.ImageLayout, destinationImage Image, destinationImageLayout common.ImageLayout, regions []*ImageBlit, filter common.Filter) error
 	CmdPushConstants(layout PipelineLayout, stageFlags common.ShaderStages, offset int, values interface{}) error
-	CmdSetViewport(firstViewport int, viewports []common.Viewport) error
-	CmdSetScissor(firstScissor int, scissors []common.Rect2D) error
+	CmdSetViewport(firstViewport int, viewports []common.Viewport)
+	CmdSetScissor(firstScissor int, scissors []common.Rect2D)
 	CmdCopyImage(srcImage Image, srcImageLayout common.ImageLayout, dstImage Image, dstImageLayout common.ImageLayout, regions []ImageCopy) error
+	CmdNextSubpass(contents SubpassContents)
 }
 
 type CommandPool interface {
@@ -130,7 +131,7 @@ type Loader1_0 interface {
 	CreateDevice(physicalDevice PhysicalDevice, options *DeviceOptions) (Device, VkResult, error)
 	CreateFence(device Device, o *FenceOptions) (Fence, VkResult, error)
 	CreateFrameBuffer(device Device, o *FramebufferOptions) (Framebuffer, VkResult, error)
-	CreateGraphicsPipelines(device Device, o []*GraphicsPipelineOptions) ([]Pipeline, VkResult, error)
+	CreateGraphicsPipelines(device Device, pipelineCache PipelineCache, o []*GraphicsPipelineOptions) ([]Pipeline, VkResult, error)
 	CreateInstance(options *InstanceOptions) (Instance, VkResult, error)
 	CreateImage(device Device, options *ImageOptions) (Image, VkResult, error)
 	CreateImageView(device Device, o *ImageViewOptions) (ImageView, VkResult, error)

@@ -335,6 +335,20 @@ func (mr *MockCommandBufferMockRecorder) CmdEndRenderPass() *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CmdEndRenderPass", reflect.TypeOf((*MockCommandBuffer)(nil).CmdEndRenderPass))
 }
 
+// CmdNextSubpass mocks base method.
+func (m *MockCommandBuffer) CmdNextSubpass(contents core.SubpassContents) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CmdNextSubpass", contents)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// CmdNextSubpass indicates an expected call of CmdNextSubpass.
+func (mr *MockCommandBufferMockRecorder) CmdNextSubpass(contents interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CmdNextSubpass", reflect.TypeOf((*MockCommandBuffer)(nil).CmdNextSubpass), contents)
+}
+
 // CmdPipelineBarrier mocks base method.
 func (m *MockCommandBuffer) CmdPipelineBarrier(srcStageMask, dstStageMask common.PipelineStages, dependencies common.DependencyFlags, memoryBarriers []*core.MemoryBarrierOptions, bufferMemoryBarriers []*core.BufferMemoryBarrierOptions, imageMemoryBarriers []*core.ImageMemoryBarrierOptions) error {
 	m.ctrl.T.Helper()
@@ -1394,9 +1408,9 @@ func (mr *MockLoader1_0MockRecorder) CreateFrameBuffer(device, o interface{}) *g
 }
 
 // CreateGraphicsPipelines mocks base method.
-func (m *MockLoader1_0) CreateGraphicsPipelines(device core.Device, o []*core.GraphicsPipelineOptions) ([]core.Pipeline, core.VkResult, error) {
+func (m *MockLoader1_0) CreateGraphicsPipelines(device core.Device, pipelineCache core.PipelineCache, o []*core.GraphicsPipelineOptions) ([]core.Pipeline, core.VkResult, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreateGraphicsPipelines", device, o)
+	ret := m.ctrl.Call(m, "CreateGraphicsPipelines", device, pipelineCache, o)
 	ret0, _ := ret[0].([]core.Pipeline)
 	ret1, _ := ret[1].(core.VkResult)
 	ret2, _ := ret[2].(error)
@@ -1404,9 +1418,9 @@ func (m *MockLoader1_0) CreateGraphicsPipelines(device core.Device, o []*core.Gr
 }
 
 // CreateGraphicsPipelines indicates an expected call of CreateGraphicsPipelines.
-func (mr *MockLoader1_0MockRecorder) CreateGraphicsPipelines(device, o interface{}) *gomock.Call {
+func (mr *MockLoader1_0MockRecorder) CreateGraphicsPipelines(device, pipelineCache, o interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateGraphicsPipelines", reflect.TypeOf((*MockLoader1_0)(nil).CreateGraphicsPipelines), device, o)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateGraphicsPipelines", reflect.TypeOf((*MockLoader1_0)(nil).CreateGraphicsPipelines), device, pipelineCache, o)
 }
 
 // CreateImage mocks base method.

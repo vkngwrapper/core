@@ -54,27 +54,23 @@ func (c *vulkanCommandBuffer) CmdBeginRenderPass(contents SubpassContents, o *Re
 	return nil
 }
 
-func (c *vulkanCommandBuffer) CmdEndRenderPass() error {
+func (c *vulkanCommandBuffer) CmdEndRenderPass() {
 	c.driver.VkCmdEndRenderPass(c.handle)
-	return nil
 }
 
-func (c *vulkanCommandBuffer) CmdBindPipeline(bindPoint common.PipelineBindPoint, pipeline Pipeline) error {
+func (c *vulkanCommandBuffer) CmdBindPipeline(bindPoint common.PipelineBindPoint, pipeline Pipeline) {
 	c.driver.VkCmdBindPipeline(c.handle, VkPipelineBindPoint(bindPoint), pipeline.Handle())
-	return nil
 }
 
-func (c *vulkanCommandBuffer) CmdDraw(vertexCount, instanceCount int, firstVertex, firstInstance uint32) error {
+func (c *vulkanCommandBuffer) CmdDraw(vertexCount, instanceCount int, firstVertex, firstInstance uint32) {
 	c.driver.VkCmdDraw(c.handle, Uint32(vertexCount), Uint32(instanceCount), Uint32(firstVertex), Uint32(firstInstance))
-	return nil
 }
 
-func (c *vulkanCommandBuffer) CmdDrawIndexed(indexCount, instanceCount int, firstIndex uint32, vertexOffset int, firstInstance uint32) error {
+func (c *vulkanCommandBuffer) CmdDrawIndexed(indexCount, instanceCount int, firstIndex uint32, vertexOffset int, firstInstance uint32) {
 	c.driver.VkCmdDrawIndexed(c.handle, Uint32(indexCount), Uint32(instanceCount), Uint32(firstIndex), Int32(vertexOffset), Uint32(firstInstance))
-	return nil
 }
 
-func (c *vulkanCommandBuffer) CmdBindVertexBuffers(firstBinding uint32, buffers []Buffer, bufferOffsets []int) error {
+func (c *vulkanCommandBuffer) CmdBindVertexBuffers(firstBinding uint32, buffers []Buffer, bufferOffsets []int) {
 	allocator := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(allocator)
 
@@ -95,15 +91,13 @@ func (c *vulkanCommandBuffer) CmdBindVertexBuffers(firstBinding uint32, buffers 
 	}
 
 	c.driver.VkCmdBindVertexBuffers(c.handle, Uint32(firstBinding), Uint32(bufferCount), bufferArrayPtr, offsetArrayPtr)
-	return nil
 }
 
-func (c *vulkanCommandBuffer) CmdBindIndexBuffer(buffer Buffer, offset int, indexType common.IndexType) error {
+func (c *vulkanCommandBuffer) CmdBindIndexBuffer(buffer Buffer, offset int, indexType common.IndexType) {
 	c.driver.VkCmdBindIndexBuffer(c.handle, buffer.Handle(), VkDeviceSize(offset), VkIndexType(indexType))
-	return nil
 }
 
-func (c *vulkanCommandBuffer) CmdBindDescriptorSets(bindPoint common.PipelineBindPoint, layout PipelineLayout, firstSet int, sets []DescriptorSet, dynamicOffsets []int) error {
+func (c *vulkanCommandBuffer) CmdBindDescriptorSets(bindPoint common.PipelineBindPoint, layout PipelineLayout, firstSet int, sets []DescriptorSet, dynamicOffsets []int) {
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
@@ -138,7 +132,6 @@ func (c *vulkanCommandBuffer) CmdBindDescriptorSets(bindPoint common.PipelineBin
 		(*VkDescriptorSet)(setPtr),
 		Uint32(dynamicOffsetCount),
 		(*Uint32)(dynamicOffsetPtr))
-	return nil
 }
 
 func (c *vulkanCommandBuffer) CmdPipelineBarrier(srcStageMask, dstStageMask common.PipelineStages, dependencies common.DependencyFlags, memoryBarriers []*MemoryBarrierOptions, bufferMemoryBarriers []*BufferMemoryBarrierOptions, imageMemoryBarriers []*ImageMemoryBarrierOptions) error {
@@ -275,7 +268,7 @@ func (c *vulkanCommandBuffer) CmdPushConstants(layout PipelineLayout, stageFlags
 	return nil
 }
 
-func (c *vulkanCommandBuffer) CmdSetViewport(firstViewport int, viewports []common.Viewport) error {
+func (c *vulkanCommandBuffer) CmdSetViewport(firstViewport int, viewports []common.Viewport) {
 	allocator := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(allocator)
 
@@ -298,10 +291,9 @@ func (c *vulkanCommandBuffer) CmdSetViewport(firstViewport int, viewports []comm
 	}
 
 	c.driver.VkCmdSetViewport(c.handle, Uint32(firstViewport), Uint32(viewportCount), (*VkViewport)(viewportPtr))
-	return nil
 }
 
-func (c *vulkanCommandBuffer) CmdSetScissor(firstScissor int, scissors []common.Rect2D) error {
+func (c *vulkanCommandBuffer) CmdSetScissor(firstScissor int, scissors []common.Rect2D) {
 	allocator := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(allocator)
 
@@ -322,7 +314,10 @@ func (c *vulkanCommandBuffer) CmdSetScissor(firstScissor int, scissors []common.
 	}
 
 	c.driver.VkCmdSetScissor(c.handle, Uint32(firstScissor), Uint32(scissorCount), (*VkRect2D)(scissorPtr))
-	return nil
+}
+
+func (c *vulkanCommandBuffer) CmdNextSubpass(contents SubpassContents) {
+	c.driver.VkCmdNextSubpass(c.handle, VkSubpassContents(contents))
 }
 
 type CommandBufferOptions struct {

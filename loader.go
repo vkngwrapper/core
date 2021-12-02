@@ -390,7 +390,7 @@ func (l *VulkanLoader1_0) CreateFrameBuffer(device Device, o *FramebufferOptions
 	return &vulkanFramebuffer{driver: device.Driver(), device: device.Handle(), handle: framebuffer}, res, nil
 }
 
-func (l *VulkanLoader1_0) CreateGraphicsPipelines(device Device, o []*GraphicsPipelineOptions) ([]Pipeline, VkResult, error) {
+func (l *VulkanLoader1_0) CreateGraphicsPipelines(device Device, pipelineCache PipelineCache, o []*GraphicsPipelineOptions) ([]Pipeline, VkResult, error) {
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
@@ -412,7 +412,12 @@ func (l *VulkanLoader1_0) CreateGraphicsPipelines(device Device, o []*GraphicsPi
 
 	pipelinePtr := (*VkPipeline)(arena.Malloc(pipelineCount * int(unsafe.Sizeof([1]VkPipeline{}))))
 
-	res, err := device.Driver().VkCreateGraphicsPipelines(device.Handle(), nil, Uint32(pipelineCount), (*VkGraphicsPipelineCreateInfo)(pipelineCreateInfosPtrUnsafe), nil, pipelinePtr)
+	var pipelineCacheHandle VkPipelineCache
+	if pipelineCache != nil {
+		pipelineCacheHandle = pipelineCache.Handle()
+	}
+
+	res, err := device.Driver().VkCreateGraphicsPipelines(device.Handle(), pipelineCacheHandle, Uint32(pipelineCount), (*VkGraphicsPipelineCreateInfo)(pipelineCreateInfosPtrUnsafe), nil, pipelinePtr)
 	if err != nil {
 		return nil, res, err
 	}
