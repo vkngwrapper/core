@@ -182,11 +182,9 @@ func (mr *MockCommandBufferMockRecorder) CmdBeginRenderPass(contents, o interfac
 }
 
 // CmdBindDescriptorSets mocks base method.
-func (m *MockCommandBuffer) CmdBindDescriptorSets(bindPoint common.PipelineBindPoint, layout core.PipelineLayout, firstSet int, sets []core.DescriptorSet, dynamicOffsets []int) error {
+func (m *MockCommandBuffer) CmdBindDescriptorSets(bindPoint common.PipelineBindPoint, layout core.PipelineLayout, firstSet int, sets []core.DescriptorSet, dynamicOffsets []int) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CmdBindDescriptorSets", bindPoint, layout, firstSet, sets, dynamicOffsets)
-	ret0, _ := ret[0].(error)
-	return ret0
+	m.ctrl.Call(m, "CmdBindDescriptorSets", bindPoint, layout, firstSet, sets, dynamicOffsets)
 }
 
 // CmdBindDescriptorSets indicates an expected call of CmdBindDescriptorSets.
@@ -196,11 +194,9 @@ func (mr *MockCommandBufferMockRecorder) CmdBindDescriptorSets(bindPoint, layout
 }
 
 // CmdBindIndexBuffer mocks base method.
-func (m *MockCommandBuffer) CmdBindIndexBuffer(buffer core.Buffer, offset int, indexType common.IndexType) error {
+func (m *MockCommandBuffer) CmdBindIndexBuffer(buffer core.Buffer, offset int, indexType common.IndexType) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CmdBindIndexBuffer", buffer, offset, indexType)
-	ret0, _ := ret[0].(error)
-	return ret0
+	m.ctrl.Call(m, "CmdBindIndexBuffer", buffer, offset, indexType)
 }
 
 // CmdBindIndexBuffer indicates an expected call of CmdBindIndexBuffer.
@@ -210,11 +206,9 @@ func (mr *MockCommandBufferMockRecorder) CmdBindIndexBuffer(buffer, offset, inde
 }
 
 // CmdBindPipeline mocks base method.
-func (m *MockCommandBuffer) CmdBindPipeline(bindPoint common.PipelineBindPoint, pipeline core.Pipeline) error {
+func (m *MockCommandBuffer) CmdBindPipeline(bindPoint common.PipelineBindPoint, pipeline core.Pipeline) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CmdBindPipeline", bindPoint, pipeline)
-	ret0, _ := ret[0].(error)
-	return ret0
+	m.ctrl.Call(m, "CmdBindPipeline", bindPoint, pipeline)
 }
 
 // CmdBindPipeline indicates an expected call of CmdBindPipeline.
@@ -224,11 +218,9 @@ func (mr *MockCommandBufferMockRecorder) CmdBindPipeline(bindPoint, pipeline int
 }
 
 // CmdBindVertexBuffers mocks base method.
-func (m *MockCommandBuffer) CmdBindVertexBuffers(firstBinding uint32, buffers []core.Buffer, bufferOffsets []int) error {
+func (m *MockCommandBuffer) CmdBindVertexBuffers(firstBinding uint32, buffers []core.Buffer, bufferOffsets []int) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CmdBindVertexBuffers", firstBinding, buffers, bufferOffsets)
-	ret0, _ := ret[0].(error)
-	return ret0
+	m.ctrl.Call(m, "CmdBindVertexBuffers", firstBinding, buffers, bufferOffsets)
 }
 
 // CmdBindVertexBuffers indicates an expected call of CmdBindVertexBuffers.
@@ -294,11 +286,9 @@ func (mr *MockCommandBufferMockRecorder) CmdCopyImage(srcImage, srcImageLayout, 
 }
 
 // CmdDraw mocks base method.
-func (m *MockCommandBuffer) CmdDraw(vertexCount, instanceCount int, firstVertex, firstInstance uint32) error {
+func (m *MockCommandBuffer) CmdDraw(vertexCount, instanceCount int, firstVertex, firstInstance uint32) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CmdDraw", vertexCount, instanceCount, firstVertex, firstInstance)
-	ret0, _ := ret[0].(error)
-	return ret0
+	m.ctrl.Call(m, "CmdDraw", vertexCount, instanceCount, firstVertex, firstInstance)
 }
 
 // CmdDraw indicates an expected call of CmdDraw.
@@ -308,11 +298,9 @@ func (mr *MockCommandBufferMockRecorder) CmdDraw(vertexCount, instanceCount, fir
 }
 
 // CmdDrawIndexed mocks base method.
-func (m *MockCommandBuffer) CmdDrawIndexed(indexCount, instanceCount int, firstIndex uint32, vertexOffset int, firstInstance uint32) error {
+func (m *MockCommandBuffer) CmdDrawIndexed(indexCount, instanceCount int, firstIndex uint32, vertexOffset int, firstInstance uint32) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CmdDrawIndexed", indexCount, instanceCount, firstIndex, vertexOffset, firstInstance)
-	ret0, _ := ret[0].(error)
-	return ret0
+	m.ctrl.Call(m, "CmdDrawIndexed", indexCount, instanceCount, firstIndex, vertexOffset, firstInstance)
 }
 
 // CmdDrawIndexed indicates an expected call of CmdDrawIndexed.
@@ -322,11 +310,9 @@ func (mr *MockCommandBufferMockRecorder) CmdDrawIndexed(indexCount, instanceCoun
 }
 
 // CmdEndRenderPass mocks base method.
-func (m *MockCommandBuffer) CmdEndRenderPass() error {
+func (m *MockCommandBuffer) CmdEndRenderPass() {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CmdEndRenderPass")
-	ret0, _ := ret[0].(error)
-	return ret0
+	m.ctrl.Call(m, "CmdEndRenderPass")
 }
 
 // CmdEndRenderPass indicates an expected call of CmdEndRenderPass.
@@ -336,11 +322,9 @@ func (mr *MockCommandBufferMockRecorder) CmdEndRenderPass() *gomock.Call {
 }
 
 // CmdNextSubpass mocks base method.
-func (m *MockCommandBuffer) CmdNextSubpass(contents core.SubpassContents) error {
+func (m *MockCommandBuffer) CmdNextSubpass(contents core.SubpassContents) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CmdNextSubpass", contents)
-	ret0, _ := ret[0].(error)
-	return ret0
+	m.ctrl.Call(m, "CmdNextSubpass", contents)
 }
 
 // CmdNextSubpass indicates an expected call of CmdNextSubpass.
@@ -377,12 +361,22 @@ func (mr *MockCommandBufferMockRecorder) CmdPushConstants(layout, stageFlags, of
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CmdPushConstants", reflect.TypeOf((*MockCommandBuffer)(nil).CmdPushConstants), layout, stageFlags, offset, values)
 }
 
-// CmdSetScissor mocks base method.
-func (m *MockCommandBuffer) CmdSetScissor(firstScissor int, scissors []common.Rect2D) error {
+// CmdSetEvent mocks base method.
+func (m *MockCommandBuffer) CmdSetEvent(event core.Event, stageMask common.PipelineStages) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CmdSetScissor", firstScissor, scissors)
-	ret0, _ := ret[0].(error)
-	return ret0
+	m.ctrl.Call(m, "CmdSetEvent", event, stageMask)
+}
+
+// CmdSetEvent indicates an expected call of CmdSetEvent.
+func (mr *MockCommandBufferMockRecorder) CmdSetEvent(event, stageMask interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CmdSetEvent", reflect.TypeOf((*MockCommandBuffer)(nil).CmdSetEvent), event, stageMask)
+}
+
+// CmdSetScissor mocks base method.
+func (m *MockCommandBuffer) CmdSetScissor(firstScissor int, scissors []common.Rect2D) {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "CmdSetScissor", firstScissor, scissors)
 }
 
 // CmdSetScissor indicates an expected call of CmdSetScissor.
@@ -392,17 +386,29 @@ func (mr *MockCommandBufferMockRecorder) CmdSetScissor(firstScissor, scissors in
 }
 
 // CmdSetViewport mocks base method.
-func (m *MockCommandBuffer) CmdSetViewport(firstViewport int, viewports []common.Viewport) error {
+func (m *MockCommandBuffer) CmdSetViewport(firstViewport int, viewports []common.Viewport) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CmdSetViewport", firstViewport, viewports)
-	ret0, _ := ret[0].(error)
-	return ret0
+	m.ctrl.Call(m, "CmdSetViewport", firstViewport, viewports)
 }
 
 // CmdSetViewport indicates an expected call of CmdSetViewport.
 func (mr *MockCommandBufferMockRecorder) CmdSetViewport(firstViewport, viewports interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CmdSetViewport", reflect.TypeOf((*MockCommandBuffer)(nil).CmdSetViewport), firstViewport, viewports)
+}
+
+// CmdWaitEvents mocks base method.
+func (m *MockCommandBuffer) CmdWaitEvents(events []core.Event, srcStageMask, dstStageMask common.PipelineStages, memoryBarriers []*core.MemoryBarrierOptions, bufferMemoryBarriers []*core.BufferMemoryBarrierOptions, imageMemoryBarriers []*core.ImageMemoryBarrierOptions) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CmdWaitEvents", events, srcStageMask, dstStageMask, memoryBarriers, bufferMemoryBarriers, imageMemoryBarriers)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// CmdWaitEvents indicates an expected call of CmdWaitEvents.
+func (mr *MockCommandBufferMockRecorder) CmdWaitEvents(events, srcStageMask, dstStageMask, memoryBarriers, bufferMemoryBarriers, imageMemoryBarriers interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CmdWaitEvents", reflect.TypeOf((*MockCommandBuffer)(nil).CmdWaitEvents), events, srcStageMask, dstStageMask, memoryBarriers, bufferMemoryBarriers, imageMemoryBarriers)
 }
 
 // End mocks base method.
@@ -432,6 +438,21 @@ func (m *MockCommandBuffer) Handle() core.VkCommandBuffer {
 func (mr *MockCommandBufferMockRecorder) Handle() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Handle", reflect.TypeOf((*MockCommandBuffer)(nil).Handle))
+}
+
+// Reset mocks base method.
+func (m *MockCommandBuffer) Reset(flags core.CommandBufferResetFlags) (core.VkResult, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Reset", flags)
+	ret0, _ := ret[0].(core.VkResult)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// Reset indicates an expected call of Reset.
+func (mr *MockCommandBufferMockRecorder) Reset(flags interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Reset", reflect.TypeOf((*MockCommandBuffer)(nil).Reset), flags)
 }
 
 // MockCommandPool is a mock of CommandPool interface.
@@ -906,6 +927,100 @@ func (mr *MockDeviceMockRecorder) WaitForIdle() *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "WaitForIdle", reflect.TypeOf((*MockDevice)(nil).WaitForIdle))
 }
 
+// MockEvent is a mock of Event interface.
+type MockEvent struct {
+	ctrl     *gomock.Controller
+	recorder *MockEventMockRecorder
+}
+
+// MockEventMockRecorder is the mock recorder for MockEvent.
+type MockEventMockRecorder struct {
+	mock *MockEvent
+}
+
+// NewMockEvent creates a new mock instance.
+func NewMockEvent(ctrl *gomock.Controller) *MockEvent {
+	mock := &MockEvent{ctrl: ctrl}
+	mock.recorder = &MockEventMockRecorder{mock}
+	return mock
+}
+
+// EXPECT returns an object that allows the caller to indicate expected use.
+func (m *MockEvent) EXPECT() *MockEventMockRecorder {
+	return m.recorder
+}
+
+// Destroy mocks base method.
+func (m *MockEvent) Destroy() {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "Destroy")
+}
+
+// Destroy indicates an expected call of Destroy.
+func (mr *MockEventMockRecorder) Destroy() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Destroy", reflect.TypeOf((*MockEvent)(nil).Destroy))
+}
+
+// Handle mocks base method.
+func (m *MockEvent) Handle() core.VkEvent {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Handle")
+	ret0, _ := ret[0].(core.VkEvent)
+	return ret0
+}
+
+// Handle indicates an expected call of Handle.
+func (mr *MockEventMockRecorder) Handle() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Handle", reflect.TypeOf((*MockEvent)(nil).Handle))
+}
+
+// Reset mocks base method.
+func (m *MockEvent) Reset() (core.VkResult, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Reset")
+	ret0, _ := ret[0].(core.VkResult)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// Reset indicates an expected call of Reset.
+func (mr *MockEventMockRecorder) Reset() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Reset", reflect.TypeOf((*MockEvent)(nil).Reset))
+}
+
+// Set mocks base method.
+func (m *MockEvent) Set() (core.VkResult, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Set")
+	ret0, _ := ret[0].(core.VkResult)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// Set indicates an expected call of Set.
+func (mr *MockEventMockRecorder) Set() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Set", reflect.TypeOf((*MockEvent)(nil).Set))
+}
+
+// Status mocks base method.
+func (m *MockEvent) Status() (core.VkResult, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Status")
+	ret0, _ := ret[0].(core.VkResult)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// Status indicates an expected call of Status.
+func (mr *MockEventMockRecorder) Status() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Status", reflect.TypeOf((*MockEvent)(nil).Status))
+}
+
 // MockFence is a mock of Fence interface.
 type MockFence struct {
 	ctrl     *gomock.Controller
@@ -953,6 +1068,36 @@ func (m *MockFence) Handle() core.VkFence {
 func (mr *MockFenceMockRecorder) Handle() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Handle", reflect.TypeOf((*MockFence)(nil).Handle))
+}
+
+// Reset mocks base method.
+func (m *MockFence) Reset() (core.VkResult, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Reset")
+	ret0, _ := ret[0].(core.VkResult)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// Reset indicates an expected call of Reset.
+func (mr *MockFenceMockRecorder) Reset() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Reset", reflect.TypeOf((*MockFence)(nil).Reset))
+}
+
+// Wait mocks base method.
+func (m *MockFence) Wait(timeout time.Duration) (core.VkResult, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Wait", timeout)
+	ret0, _ := ret[0].(core.VkResult)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// Wait indicates an expected call of Wait.
+func (mr *MockFenceMockRecorder) Wait(timeout interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Wait", reflect.TypeOf((*MockFence)(nil).Wait), timeout)
 }
 
 // MockFramebuffer is a mock of Framebuffer interface.
@@ -1373,6 +1518,22 @@ func (m *MockLoader1_0) CreateDevice(physicalDevice core.PhysicalDevice, options
 func (mr *MockLoader1_0MockRecorder) CreateDevice(physicalDevice, options interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateDevice", reflect.TypeOf((*MockLoader1_0)(nil).CreateDevice), physicalDevice, options)
+}
+
+// CreateEvent mocks base method.
+func (m *MockLoader1_0) CreateEvent(device core.Device, options *core.EventOptions) (core.Event, core.VkResult, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreateEvent", device, options)
+	ret0, _ := ret[0].(core.Event)
+	ret1, _ := ret[1].(core.VkResult)
+	ret2, _ := ret[2].(error)
+	return ret0, ret1, ret2
+}
+
+// CreateEvent indicates an expected call of CreateEvent.
+func (mr *MockLoader1_0MockRecorder) CreateEvent(device, options interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateEvent", reflect.TypeOf((*MockLoader1_0)(nil).CreateEvent), device, options)
 }
 
 // CreateFence mocks base method.

@@ -11,6 +11,7 @@ import (
 	"github.com/CannibalVox/VKng/core/common"
 	"github.com/CannibalVox/cgoparam"
 	"github.com/cockroachdb/errors"
+	"strings"
 	"unsafe"
 )
 
@@ -318,6 +319,127 @@ func (c *vulkanCommandBuffer) CmdSetScissor(firstScissor int, scissors []common.
 
 func (c *vulkanCommandBuffer) CmdNextSubpass(contents SubpassContents) {
 	c.driver.VkCmdNextSubpass(c.handle, VkSubpassContents(contents))
+}
+
+func (c *vulkanCommandBuffer) CmdWaitEvents(events []Event, srcStageMask common.PipelineStages, dstStageMask common.PipelineStages, memoryBarriers []*MemoryBarrierOptions, bufferMemoryBarriers []*BufferMemoryBarrierOptions, imageMemoryBarriers []*ImageMemoryBarrierOptions) error {
+	arena := cgoparam.GetAlloc()
+	defer cgoparam.ReturnAlloc(arena)
+
+	eventCount := len(events)
+	barrierCount := len(memoryBarriers)
+	bufferBarrierCount := len(bufferMemoryBarriers)
+	imageBarrierCount := len(imageMemoryBarriers)
+
+	var eventPtr *C.VkEvent
+	var barrierPtr *C.VkMemoryBarrier
+	var bufferBarrierPtr *C.VkBufferMemoryBarrier
+	var imageBarrierPtr *C.VkImageMemoryBarrier
+
+	if eventCount > 0 {
+		eventPtr = (*C.VkEvent)(arena.Malloc(eventCount * int(unsafe.Sizeof([1]C.VkEvent{}))))
+		eventSlice := ([]C.VkEvent)(unsafe.Slice(eventPtr, eventCount))
+
+		for i := 0; i < eventCount; i++ {
+			eventSlice[i] = C.VkEvent(events[i].Handle())
+		}
+	}
+
+	if barrierCount > 0 {
+		barrierPtr = (*C.VkMemoryBarrier)(arena.Malloc(barrierCount * C.sizeof_struct_VkMemoryBarrier))
+		barrierSlice := ([]C.VkMemoryBarrier)(unsafe.Slice(barrierPtr, barrierCount))
+
+		for i := 0; i < barrierCount; i++ {
+			next, err := common.AllocNext(arena, memoryBarriers[i])
+			if err != nil {
+				return err
+			}
+
+			err = memoryBarriers[i].populate(&barrierSlice[i], next)
+			if err != nil {
+				return err
+			}
+		}
+	}
+
+	if bufferBarrierCount > 0 {
+		bufferBarrierPtr = (*C.VkBufferMemoryBarrier)(arena.Malloc(bufferBarrierCount * C.sizeof_struct_VkBufferMemoryBarrier))
+		bufferBarrierSlice := ([]C.VkBufferMemoryBarrier)(unsafe.Slice(bufferBarrierPtr, bufferBarrierCount))
+
+		for i := 0; i < bufferBarrierCount; i++ {
+			next, err := common.AllocNext(arena, bufferMemoryBarriers[i])
+			if err != nil {
+				return err
+			}
+
+			err = bufferMemoryBarriers[i].populate(&bufferBarrierSlice[i], next)
+			if err != nil {
+				return err
+			}
+		}
+	}
+
+	if imageBarrierCount > 0 {
+		imageBarrierPtr = (*C.VkImageMemoryBarrier)(arena.Malloc(imageBarrierCount * C.sizeof_struct_VkImageMemoryBarrier))
+		imageBarrierSlice := ([]C.VkImageMemoryBarrier)(unsafe.Slice(imageBarrierPtr, imageBarrierCount))
+
+		for i := 0; i < imageBarrierCount; i++ {
+			next, err := common.AllocNext(arena, imageMemoryBarriers[i])
+			if err != nil {
+				return err
+			}
+
+			err = imageMemoryBarriers[i].populate(&imageBarrierSlice[i], next)
+			if err != nil {
+				return err
+			}
+		}
+	}
+
+	c.driver.VkCmdWaitEvents(c.handle, Uint32(eventCount), (*VkEvent)(eventPtr), VkPipelineStageFlags(srcStageMask), VkPipelineStageFlags(dstStageMask), Uint32(barrierCount), (*VkMemoryBarrier)(barrierPtr), Uint32(bufferBarrierCount), (*VkBufferMemoryBarrier)(bufferBarrierPtr), Uint32(imageBarrierCount), (*VkImageMemoryBarrier)(imageBarrierPtr))
+	return nil
+}
+
+func (c *vulkanCommandBuffer) CmdSetEvent(event Event, stageMask common.PipelineStages) {
+	c.driver.VkCmdSetEvent(c.handle, event.Handle(), VkPipelineStageFlags(stageMask))
+}
+
+type CommandBufferResetFlags int32
+
+const (
+	ResetReleaseResources CommandBufferResetFlags = C.VK_COMMAND_BUFFER_RESET_RELEASE_RESOURCES_BIT
+)
+
+var resetFlagsToString = map[CommandBufferResetFlags]string{
+	ResetReleaseResources: "Reset Release Resources",
+}
+
+func (f CommandBufferResetFlags) String() string {
+	if f == 0 {
+		return "None"
+	}
+
+	var hasOne bool
+	var sb strings.Builder
+
+	for i := 0; i < 32; i++ {
+		checkBit := CommandBufferResetFlags(1 << i)
+		if (f & checkBit) != 0 {
+			str, hasStr := resetFlagsToString[checkBit]
+			if hasStr {
+				if hasOne {
+					sb.WriteRune('|')
+				}
+				sb.WriteString(str)
+				hasOne = true
+			}
+		}
+	}
+
+	return sb.String()
+}
+
+func (c *vulkanCommandBuffer) Reset(flags CommandBufferResetFlags) (VkResult, error) {
+	return c.driver.VkResetCommandBuffer(c.handle, VkCommandBufferResetFlags(flags))
 }
 
 type CommandBufferOptions struct {

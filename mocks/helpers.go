@@ -51,6 +51,13 @@ func EasyMockDeviceMemory(ctrl *gomock.Controller) *MockDeviceMemory {
 	return deviceMemory
 }
 
+func EasyMockEvent(ctrl *gomock.Controller) *MockEvent {
+	event := NewMockEvent(ctrl)
+	event.EXPECT().Handle().Return(NewFakeEventHandle()).AnyTimes()
+
+	return event
+}
+
 func EasyMockImage(ctrl *gomock.Controller) *MockImage {
 	image := NewMockImage(ctrl)
 	image.EXPECT().Handle().Return(NewFakeImageHandle()).AnyTimes()
@@ -225,6 +232,21 @@ func EasyDummyDeviceMemory(t *testing.T, device core.Device) core.DeviceMemory {
 	require.NoError(t, err)
 
 	return memory
+}
+
+func EasyDummyEvent(t *testing.T, loader core.Loader1_0, device core.Device) core.Event {
+	mockDriver := device.Driver().(*MockDriver)
+
+	mockDriver.EXPECT().VkCreateEvent(device.Handle(), gomock.Not(nil), nil, gomock.Not(nil)).DoAndReturn(
+		func(device core.VkDevice, pCreateInfo *core.VkEventCreateInfo, pAllocator *core.VkAllocationCallbacks, pEvent *core.VkEvent) (core.VkResult, error) {
+			*pEvent = NewFakeEventHandle()
+			return core.VKSuccess, nil
+		})
+
+	event, _, err := loader.CreateEvent(device, &core.EventOptions{})
+	require.NoError(t, err)
+
+	return event
 }
 
 func EasyDummyFence(t *testing.T, loader core.Loader1_0, device core.Device) core.Fence {

@@ -24,6 +24,7 @@ type CommandBuffer interface {
 
 	Begin(o *BeginOptions) (VkResult, error)
 	End() (VkResult, error)
+	Reset(flags CommandBufferResetFlags) (VkResult, error)
 
 	CmdBeginRenderPass(contents SubpassContents, o *RenderPassBeginOptions) error
 	CmdEndRenderPass()
@@ -42,6 +43,8 @@ type CommandBuffer interface {
 	CmdSetScissor(firstScissor int, scissors []common.Rect2D)
 	CmdCopyImage(srcImage Image, srcImageLayout common.ImageLayout, dstImage Image, dstImageLayout common.ImageLayout, regions []ImageCopy) error
 	CmdNextSubpass(contents SubpassContents)
+	CmdWaitEvents(events []Event, srcStageMask common.PipelineStages, dstStageMask common.PipelineStages, memoryBarriers []*MemoryBarrierOptions, bufferMemoryBarriers []*BufferMemoryBarrierOptions, imageMemoryBarriers []*ImageMemoryBarrierOptions) error
+	CmdSetEvent(event Event, stageMask common.PipelineStages)
 }
 
 type CommandPool interface {
@@ -86,9 +89,19 @@ type Device interface {
 	UpdateDescriptorSets(writes []WriteDescriptorSetOptions, copies []CopyDescriptorSetOptions) error
 }
 
+type Event interface {
+	Handle() VkEvent
+	Destroy()
+	Set() (VkResult, error)
+	Reset() (VkResult, error)
+	Status() (VkResult, error)
+}
+
 type Fence interface {
 	Handle() VkFence
 	Destroy()
+	Wait(timeout time.Duration) (VkResult, error)
+	Reset() (VkResult, error)
 }
 
 type Framebuffer interface {
@@ -129,6 +142,7 @@ type Loader1_0 interface {
 	CreateDescriptorPool(device Device, o *DescriptorPoolOptions) (DescriptorPool, VkResult, error)
 	CreateDescriptorSetLayout(device Device, o *DescriptorSetLayoutOptions) (DescriptorSetLayout, VkResult, error)
 	CreateDevice(physicalDevice PhysicalDevice, options *DeviceOptions) (Device, VkResult, error)
+	CreateEvent(device Device, options *EventOptions) (Event, VkResult, error)
 	CreateFence(device Device, o *FenceOptions) (Fence, VkResult, error)
 	CreateFrameBuffer(device Device, o *FramebufferOptions) (Framebuffer, VkResult, error)
 	CreateGraphicsPipelines(device Device, pipelineCache PipelineCache, o []*GraphicsPipelineOptions) ([]Pipeline, VkResult, error)

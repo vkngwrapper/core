@@ -70,7 +70,7 @@ typedef struct DriverFuncPtrs {
     PFN_vkCmdSetBlendConstants vkCmdSetBlendConstants; //Todo*
     PFN_vkCmdSetDepthBias vkCmdSetDepthBias; //Todo*
     PFN_vkCmdSetDepthBounds vkCmdSetDepthBounds; //Todo*
-    PFN_vkCmdSetEvent vkCmdSetEvent; //Todo
+    PFN_vkCmdSetEvent vkCmdSetEvent;
     PFN_vkCmdSetLineWidth vkCmdSetLineWidth; //Todo*
     PFN_vkCmdSetScissor vkCmdSetScissor;
     PFN_vkCmdSetStencilCompareMask vkCmdSetStencilCompareMask; //Todo*
@@ -78,7 +78,7 @@ typedef struct DriverFuncPtrs {
     PFN_vkCmdSetStencilWriteMask vkCmdSetStencilWriteMask; //Todo*
     PFN_vkCmdSetViewport vkCmdSetViewport;
     PFN_vkCmdUpdateBuffer vkCmdUpdateBuffer; //Todo
-    PFN_vkCmdWaitEvents vkCmdWaitEvents; //Todo
+    PFN_vkCmdWaitEvents vkCmdWaitEvents;
     PFN_vkCmdWriteTimestamp vkCmdWriteTimestamp; //Todo*
     PFN_vkCreateBuffer vkCreateBuffer;
     PFN_vkCreateBufferView vkCreateBufferView; //Todo
@@ -86,7 +86,7 @@ typedef struct DriverFuncPtrs {
     PFN_vkCreateComputePipelines vkCreateComputePipelines; //Todo*
     PFN_vkCreateDescriptorPool vkCreateDescriptorPool;
     PFN_vkCreateDescriptorSetLayout vkCreateDescriptorSetLayout;
-    PFN_vkCreateEvent vkCreateEvent; //Todo
+    PFN_vkCreateEvent vkCreateEvent;
     PFN_vkCreateFence vkCreateFence;
     PFN_vkCreateFramebuffer vkCreateFramebuffer;
     PFN_vkCreateGraphicsPipelines vkCreateGraphicsPipelines;
@@ -105,7 +105,7 @@ typedef struct DriverFuncPtrs {
     PFN_vkDestroyDescriptorPool vkDestroyDescriptorPool;
     PFN_vkDestroyDescriptorSetLayout vkDestroyDescriptorSetLayout;
     PFN_vkDestroyDevice vkDestroyDevice;
-    PFN_vkDestroyEvent vkDestroyEvent; //Todo
+    PFN_vkDestroyEvent vkDestroyEvent;
     PFN_vkDestroyFence vkDestroyFence;
     PFN_vkDestroyFramebuffer vkDestroyFramebuffer;
     PFN_vkDestroyImage vkDestroyImage;
@@ -127,7 +127,7 @@ typedef struct DriverFuncPtrs {
     PFN_vkGetBufferMemoryRequirements vkGetBufferMemoryRequirements;
     PFN_vkGetDeviceMemoryCommitment vkGetDeviceMemoryCommitment; //Todo*
     PFN_vkGetDeviceQueue vkGetDeviceQueue;
-    PFN_vkGetEventStatus vkGetEventStatus; //Todo
+    PFN_vkGetEventStatus vkGetEventStatus;
     PFN_vkGetFenceStatus vkGetFenceStatus; //Todo*
     PFN_vkGetImageMemoryRequirements vkGetImageMemoryRequirements;
     PFN_vkGetImageSparseMemoryRequirements vkGetImageSparseMemoryRequirements; //Todo
@@ -141,12 +141,12 @@ typedef struct DriverFuncPtrs {
     PFN_vkQueueBindSparse vkQueueBindSparse; //Todo*
     PFN_vkQueueSubmit vkQueueSubmit;
     PFN_vkQueueWaitIdle vkQueueWaitIdle;
-    PFN_vkResetCommandBuffer vkResetCommandBuffer; //Todo
+    PFN_vkResetCommandBuffer vkResetCommandBuffer;
     PFN_vkResetCommandPool vkResetCommandPool; //Todo*
     PFN_vkResetDescriptorPool vkResetDescriptorPool; //Todo*
-    PFN_vkResetEvent vkResetEvent; //Todo
+    PFN_vkResetEvent vkResetEvent;
     PFN_vkResetFences vkResetFences;
-    PFN_vkSetEvent vkSetEvent; //Todo
+    PFN_vkSetEvent vkSetEvent;
     PFN_vkUnmapMemory vkUnmapMemory;
     PFN_vkUpdateDescriptorSets vkUpdateDescriptorSets;
     PFN_vkWaitForFences vkWaitForFences;

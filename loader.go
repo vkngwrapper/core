@@ -371,6 +371,24 @@ func (l *VulkanLoader1_0) CreateCommandPool(device Device, o *CommandPoolOptions
 	return &vulkanCommandPool{driver: device.Driver(), handle: cmdPoolHandle, device: device.Handle()}, res, nil
 }
 
+func (l *VulkanLoader1_0) CreateEvent(device Device, o *EventOptions) (Event, VkResult, error) {
+	arena := cgoparam.GetAlloc()
+	defer cgoparam.ReturnAlloc(arena)
+
+	createInfo, err := common.AllocOptions(arena, o)
+	if err != nil {
+		return nil, VKErrorUnknown, err
+	}
+
+	var eventHandle VkEvent
+	res, err := device.Driver().VkCreateEvent(device.Handle(), (*VkEventCreateInfo)(createInfo), nil, &eventHandle)
+	if err != nil {
+		return nil, res, err
+	}
+
+	return &vulkanEvent{driver: device.Driver(), handle: eventHandle, device: device.Handle()}, res, nil
+}
+
 func (l *VulkanLoader1_0) CreateFrameBuffer(device Device, o *FramebufferOptions) (Framebuffer, VkResult, error) {
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)

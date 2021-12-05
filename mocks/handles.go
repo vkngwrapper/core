@@ -50,6 +50,11 @@ func NewFakeDeviceMemoryHandle() core.VkDeviceMemory {
 	return core.VkDeviceMemory(unsafe.Pointer(&val))
 }
 
+func NewFakeEventHandle() core.VkEvent {
+	val := 0
+	return core.VkEvent(unsafe.Pointer(&val))
+}
+
 func NewFakeFenceHandle() core.VkFence {
 	val := 0
 	return core.VkFence(unsafe.Pointer(&val))
