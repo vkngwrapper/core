@@ -735,3 +735,51 @@ func TestVulkanDevice_UpdateDescriptorSets_FailureNoSource(t *testing.T) {
 
 	require.EqualError(t, err, "a WriteDescriptorSetOptions must have a source to write the descriptor from: ImageInfo, BufferInfo, TexelBufferView, or an extension source")
 }
+
+func TestVulkanDevice_FlushMappedMemoryRanges(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	mockDriver := mocks.NewMockDriver(ctrl)
+	loader, err := core.CreateLoaderFromDriver(mockDriver)
+	require.NoError(t, err)
+
+	device := mocks.EasyDummyDevice(t, ctrl, loader)
+	mem1 := mocks.EasyMockDeviceMemory(ctrl)
+	mem2 := mocks.EasyMockDeviceMemory(ctrl)
+
+	mockDriver.EXPECT().VkFlushMappedMemoryRanges(device.Handle(), core.Uint32(2), gomock.Not(nil)).DoAndReturn(
+		func(device core.VkDevice, rangeCount core.Uint32, pRanges *core.VkMappedMemoryRange) (core.VkResult, error) {
+			val := reflect.ValueOf([]core.VkMappedMemoryRange(unsafe.Slice(pRanges, 2)))
+
+			r := val.Index(0)
+			require.Equal(t, uint64(6), r.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_MAPPED_MEMORY_RANGE
+			require.True(t, r.FieldByName("pNext").IsNil())
+			require.Equal(t, mem1.Handle(), core.VkDeviceMemory(unsafe.Pointer(r.FieldByName("memory").Elem().UnsafeAddr())))
+			require.Equal(t, uint64(1), r.FieldByName("offset").Uint())
+			require.Equal(t, uint64(3), r.FieldByName("size").Uint())
+
+			r = val.Index(1)
+			require.Equal(t, uint64(6), r.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_MAPPED_MEMORY_RANGE
+			require.True(t, r.FieldByName("pNext").IsNil())
+			require.Equal(t, mem2.Handle(), core.VkDeviceMemory(unsafe.Pointer(r.FieldByName("memory").Elem().UnsafeAddr())))
+			require.Equal(t, uint64(5), r.FieldByName("offset").Uint())
+			require.Equal(t, uint64(7), r.FieldByName("size").Uint())
+
+			return core.VKSuccess, nil
+		})
+
+	_, err = device.FlushMappedMemoryRanges([]*core.MappedMemoryRange{
+		{
+			Memory: mem1,
+			Offset: 1,
+			Size:   3,
+		},
+		{
+			Memory: mem2,
+			Offset: 5,
+			Size:   7,
+		},
+	})
+	require.NoError(t, err)
+}

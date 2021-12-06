@@ -120,7 +120,7 @@ typedef struct DriverFuncPtrs {
     PFN_vkDestroyShaderModule vkDestroyShaderModule;
     PFN_vkDeviceWaitIdle vkDeviceWaitIdle;
     PFN_vkEndCommandBuffer vkEndCommandBuffer;
-    PFN_vkFlushMappedMemoryRanges vkFlushMappedMemoryRanges; //Todo - copy_blit_image
+    PFN_vkFlushMappedMemoryRanges vkFlushMappedMemoryRanges;
     PFN_vkFreeCommandBuffers vkFreeCommandBuffers;
     PFN_vkFreeDescriptorSets vkFreeDescriptorSets;
     PFN_vkFreeMemory vkFreeMemory;

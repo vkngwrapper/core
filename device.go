@@ -152,3 +152,50 @@ func (d *vulkanDevice) UpdateDescriptorSets(writes []WriteDescriptorSetOptions, 
 	d.driver.VkUpdateDescriptorSets(d.handle, Uint32(writeCount), (*VkWriteDescriptorSet)(writePtr), Uint32(copyCount), (*VkCopyDescriptorSet)(copyPtr))
 	return nil
 }
+
+type MappedMemoryRange struct {
+	Memory DeviceMemory
+	Offset int
+	Size   int
+
+	common.HaveNext
+}
+
+func (r *MappedMemoryRange) populate(mappedRange *C.VkMappedMemoryRange, next unsafe.Pointer) error {
+	mappedRange.sType = C.VK_STRUCTURE_TYPE_MAPPED_MEMORY_RANGE
+	mappedRange.pNext = next
+	mappedRange.memory = C.VkDeviceMemory(r.Memory.Handle())
+	mappedRange.offset = C.VkDeviceSize(r.Offset)
+	mappedRange.size = C.VkDeviceSize(r.Size)
+
+	return nil
+}
+
+func (r *MappedMemoryRange) AllocForC(allocator *cgoparam.Allocator, next unsafe.Pointer) (unsafe.Pointer, error) {
+	createInfo := (*C.VkMappedMemoryRange)(allocator.Malloc(C.sizeof_struct_VkMappedMemoryRange))
+	err := r.populate(createInfo, next)
+	return unsafe.Pointer(createInfo), err
+}
+
+func (d *vulkanDevice) FlushMappedMemoryRanges(ranges []*MappedMemoryRange) (VkResult, error) {
+	arena := cgoparam.GetAlloc()
+	defer cgoparam.ReturnAlloc(arena)
+
+	rangeCount := len(ranges)
+	createInfos := (*C.VkMappedMemoryRange)(arena.Malloc(rangeCount * C.sizeof_struct_VkMappedMemoryRange))
+	createInfoSlice := ([]C.VkMappedMemoryRange)(unsafe.Slice(createInfos, rangeCount))
+
+	for rangeIndex, memRange := range ranges {
+		next, err := common.AllocNext(arena, memRange)
+		if err != nil {
+			return VKErrorUnknown, err
+		}
+
+		err = memRange.populate(&createInfoSlice[rangeIndex], next)
+		if err != nil {
+			return VKErrorUnknown, err
+		}
+	}
+
+	return d.driver.VkFlushMappedMemoryRanges(d.handle, Uint32(rangeCount), (*VkMappedMemoryRange)(createInfos))
+}

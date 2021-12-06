@@ -12,8 +12,8 @@ import (
 )
 
 type MemoryBarrierOptions struct {
-	SrcAccessMask  common.AccessFlags
-	DestAccessMask common.AccessFlags
+	SrcAccessMask common.AccessFlags
+	DstAccessMask common.AccessFlags
 
 	common.HaveNext
 }
@@ -22,7 +22,7 @@ func (o *MemoryBarrierOptions) populate(createInfo *C.VkMemoryBarrier, next unsa
 	createInfo.sType = C.VK_STRUCTURE_TYPE_MEMORY_BARRIER
 	createInfo.pNext = next
 	createInfo.srcAccessMask = C.VkAccessFlags(o.SrcAccessMask)
-	createInfo.dstAccessMask = C.VkAccessFlags(o.DestAccessMask)
+	createInfo.dstAccessMask = C.VkAccessFlags(o.DstAccessMask)
 
 	return nil
 }
@@ -34,11 +34,11 @@ func (o *MemoryBarrierOptions) AllocForC(allocator *cgoparam.Allocator, next uns
 }
 
 type BufferMemoryBarrierOptions struct {
-	SrcAccessMask  common.AccessFlags
-	DestAccessMask common.AccessFlags
+	SrcAccessMask common.AccessFlags
+	DstAccessMask common.AccessFlags
 
-	SrcQueueFamilyIndex  int
-	DestQueueFamilyIndex int
+	SrcQueueFamilyIndex int
+	DstQueueFamilyIndex int
 
 	Buffer Buffer
 
@@ -52,9 +52,9 @@ func (o *BufferMemoryBarrierOptions) populate(createInfo *C.VkBufferMemoryBarrie
 	createInfo.sType = C.VK_STRUCTURE_TYPE_BUFFER_MEMORY_BARRIER
 	createInfo.pNext = next
 	createInfo.srcAccessMask = C.VkAccessFlags(o.SrcAccessMask)
-	createInfo.dstAccessMask = C.VkAccessFlags(o.DestAccessMask)
+	createInfo.dstAccessMask = C.VkAccessFlags(o.DstAccessMask)
 	createInfo.srcQueueFamilyIndex = C.uint32_t(o.SrcQueueFamilyIndex)
-	createInfo.dstQueueFamilyIndex = C.uint32_t(o.DestQueueFamilyIndex)
+	createInfo.dstQueueFamilyIndex = C.uint32_t(o.DstQueueFamilyIndex)
 	createInfo.buffer = C.VkBuffer(o.Buffer.Handle())
 	createInfo.offset = C.VkDeviceSize(o.Offset)
 	createInfo.size = C.VkDeviceSize(o.Size)
@@ -69,14 +69,14 @@ func (o *BufferMemoryBarrierOptions) AllocForC(allocator *cgoparam.Allocator, ne
 }
 
 type ImageMemoryBarrierOptions struct {
-	SrcAccessMask  common.AccessFlags
-	DestAccessMask common.AccessFlags
+	SrcAccessMask common.AccessFlags
+	DstAccessMask common.AccessFlags
 
 	OldLayout common.ImageLayout
 	NewLayout common.ImageLayout
 
-	SrcQueueFamilyIndex  int
-	DestQueueFamilyIndex int
+	SrcQueueFamilyIndex int
+	DstQueueFamilyIndex int
 
 	Image            Image
 	SubresourceRange common.ImageSubresourceRange
@@ -88,11 +88,11 @@ func (o *ImageMemoryBarrierOptions) populate(createInfo *C.VkImageMemoryBarrier,
 	createInfo.sType = C.VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER
 	createInfo.pNext = next
 	createInfo.srcAccessMask = C.VkAccessFlags(o.SrcAccessMask)
-	createInfo.dstAccessMask = C.VkAccessFlags(o.DestAccessMask)
+	createInfo.dstAccessMask = C.VkAccessFlags(o.DstAccessMask)
 	createInfo.oldLayout = C.VkImageLayout(o.OldLayout)
 	createInfo.newLayout = C.VkImageLayout(o.NewLayout)
 	createInfo.srcQueueFamilyIndex = C.uint32_t(o.SrcQueueFamilyIndex)
-	createInfo.dstQueueFamilyIndex = C.uint32_t(o.DestQueueFamilyIndex)
+	createInfo.dstQueueFamilyIndex = C.uint32_t(o.DstQueueFamilyIndex)
 	createInfo.image = C.VkImage(o.Image.Handle())
 	createInfo.subresourceRange.aspectMask = C.VkImageAspectFlags(o.SubresourceRange.AspectMask)
 	createInfo.subresourceRange.baseMipLevel = C.uint32_t(o.SubresourceRange.BaseMipLevel)

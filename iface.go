@@ -87,6 +87,7 @@ type Device interface {
 	AllocateMemory(o *DeviceMemoryOptions) (DeviceMemory, VkResult, error)
 	FreeMemory(memory DeviceMemory)
 	UpdateDescriptorSets(writes []WriteDescriptorSetOptions, copies []CopyDescriptorSetOptions) error
+	FlushMappedMemoryRanges(ranges []*MappedMemoryRange) (VkResult, error)
 }
 
 type Event interface {

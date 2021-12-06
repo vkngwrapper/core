@@ -828,6 +828,21 @@ func (mr *MockDeviceMockRecorder) Driver() *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Driver", reflect.TypeOf((*MockDevice)(nil).Driver))
 }
 
+// FlushMappedMemoryRanges mocks base method.
+func (m *MockDevice) FlushMappedMemoryRanges(ranges []*core.MappedMemoryRange) (core.VkResult, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "FlushMappedMemoryRanges", ranges)
+	ret0, _ := ret[0].(core.VkResult)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// FlushMappedMemoryRanges indicates an expected call of FlushMappedMemoryRanges.
+func (mr *MockDeviceMockRecorder) FlushMappedMemoryRanges(ranges interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FlushMappedMemoryRanges", reflect.TypeOf((*MockDevice)(nil).FlushMappedMemoryRanges), ranges)
+}
+
 // FreeMemory mocks base method.
 func (m *MockDevice) FreeMemory(memory core.DeviceMemory) {
 	m.ctrl.T.Helper()
