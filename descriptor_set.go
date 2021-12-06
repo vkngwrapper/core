@@ -143,8 +143,17 @@ func (o WriteDescriptorSetOptions) populate(allocator *cgoparam.Allocator, creat
 		imageInfoPtr := (*C.VkDescriptorImageInfo)(allocator.Malloc(imageInfoCount * C.sizeof_struct_VkDescriptorImageInfo))
 		imageInfoSlice := ([]C.VkDescriptorImageInfo)(unsafe.Slice(imageInfoPtr, imageInfoCount))
 		for i := 0; i < imageInfoCount; i++ {
-			imageInfoSlice[i].sampler = C.VkSampler(unsafe.Pointer(o.ImageInfo[i].Sampler.Handle()))
-			imageInfoSlice[i].imageView = C.VkImageView(unsafe.Pointer(o.ImageInfo[i].ImageView.Handle()))
+			imageInfoSlice[i].sampler = nil
+			imageInfoSlice[i].imageView = nil
+
+			if o.ImageInfo[i].Sampler != nil {
+				imageInfoSlice[i].sampler = C.VkSampler(unsafe.Pointer(o.ImageInfo[i].Sampler.Handle()))
+			}
+
+			if o.ImageInfo[i].ImageView != nil {
+				imageInfoSlice[i].imageView = C.VkImageView(unsafe.Pointer(o.ImageInfo[i].ImageView.Handle()))
+			}
+
 			imageInfoSlice[i].imageLayout = C.VkImageLayout(o.ImageInfo[i].ImageLayout)
 		}
 

@@ -13,7 +13,7 @@ import (
 
 type BufferImageCopy struct {
 	BufferOffset      int
-	BufferRowLength   uint32
+	BufferRowLength   int
 	BufferImageHeight int
 
 	ImageSubresource common.ImageSubresourceLayers
