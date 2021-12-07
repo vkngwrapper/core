@@ -403,6 +403,35 @@ func (c *vulkanCommandBuffer) CmdSetEvent(event Event, stageMask common.Pipeline
 	c.driver.VkCmdSetEvent(c.handle, event.Handle(), VkPipelineStageFlags(stageMask))
 }
 
+func (c *vulkanCommandBuffer) CmdClearColorImage(image Image, imageLayout common.ImageLayout, color ClearColorValue, ranges []*common.ImageSubresourceRange) {
+	arena := cgoparam.GetAlloc()
+	defer cgoparam.ReturnAlloc(arena)
+
+	rangeCount := len(ranges)
+	var pRanges *C.VkImageSubresourceRange
+
+	if rangeCount > 0 {
+		pRanges = (*C.VkImageSubresourceRange)(arena.Malloc(rangeCount * C.sizeof_struct_VkImageSubresourceRange))
+		rangeSlice := ([]C.VkImageSubresourceRange)(unsafe.Slice(pRanges, rangeCount))
+
+		for rangeIndex, oneRange := range ranges {
+			rangeSlice[rangeIndex].aspectMask = C.VkImageAspectFlags(oneRange.AspectMask)
+			rangeSlice[rangeIndex].baseMipLevel = C.uint32_t(oneRange.BaseMipLevel)
+			rangeSlice[rangeIndex].levelCount = C.uint32_t(oneRange.LevelCount)
+			rangeSlice[rangeIndex].baseArrayLayer = C.uint32_t(oneRange.BaseArrayLayer)
+			rangeSlice[rangeIndex].layerCount = C.uint32_t(oneRange.LayerCount)
+		}
+	}
+
+	var pColor *C.VkClearColorValue
+	if color != nil {
+		pColor = (*C.VkClearColorValue)(arena.Malloc(C.sizeof_union_VkClearColorValue))
+		color.populateColorUnion(pColor)
+	}
+
+	c.driver.VkCmdClearColorImage(c.handle, image.Handle(), VkImageLayout(imageLayout), (*VkClearColorValue)(pColor), Uint32(rangeCount), (*VkImageSubresourceRange)(pRanges))
+}
+
 type CommandBufferResetFlags int32
 
 const (

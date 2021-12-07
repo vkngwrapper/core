@@ -52,8 +52,8 @@ func (f DescriptorPoolFlags) String() string {
 }
 
 type PoolSize struct {
-	Type  common.DescriptorType
-	Count int
+	Type            common.DescriptorType
+	DescriptorCount int
 }
 
 type DescriptorPoolOptions struct {
@@ -82,7 +82,7 @@ func (o *DescriptorPoolOptions) AllocForC(allocator *cgoparam.Allocator, next un
 
 		for i := 0; i < sizeCount; i++ {
 			poolsSlice[i]._type = C.VkDescriptorType(o.PoolSizes[i].Type)
-			poolsSlice[i].descriptorCount = C.uint32_t(o.PoolSizes[i].Count)
+			poolsSlice[i].descriptorCount = C.uint32_t(o.PoolSizes[i].DescriptorCount)
 		}
 
 		createInfo.pPoolSizes = poolsPtr

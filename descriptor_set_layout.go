@@ -53,10 +53,10 @@ func (f DescriptorSetLayoutFlags) String() string {
 }
 
 type DescriptorLayoutBinding struct {
-	Binding      int
-	Type         common.DescriptorType
-	Count        int
-	ShaderStages common.ShaderStages
+	Binding         int
+	DescriptorType  common.DescriptorType
+	DescriptorCount int
+	StageFlags      common.ShaderStages
 
 	ImmutableSamplers []Sampler
 }
@@ -84,14 +84,14 @@ func (o *DescriptorSetLayoutOptions) AllocForC(allocator *cgoparam.Allocator, ne
 
 		for i := 0; i < bindingCount; i++ {
 			samplerCount := len(o.Bindings[i].ImmutableSamplers)
-			if samplerCount != 0 && samplerCount != o.Bindings[i].Count {
-				return nil, errors.Newf("allocate descriptor set layout bindings: binding %d has %d descriptors, but %d immutable samplers. if immutable samplers are provided, they must match the descriptor count", i, o.Bindings[i].Count, len(o.Bindings[i].ImmutableSamplers))
+			if samplerCount != 0 && samplerCount != o.Bindings[i].DescriptorCount {
+				return nil, errors.Newf("allocate descriptor set layout bindings: binding %d has %d descriptors, but %d immutable samplers. if immutable samplers are provided, they must match the descriptor count", i, o.Bindings[i].DescriptorCount, len(o.Bindings[i].ImmutableSamplers))
 			}
 
 			bindingsSlice[i].binding = C.uint32_t(o.Bindings[i].Binding)
-			bindingsSlice[i].descriptorType = C.VkDescriptorType(o.Bindings[i].Type)
-			bindingsSlice[i].descriptorCount = C.uint32_t(o.Bindings[i].Count)
-			bindingsSlice[i].stageFlags = C.VkShaderStageFlags(o.Bindings[i].ShaderStages)
+			bindingsSlice[i].descriptorType = C.VkDescriptorType(o.Bindings[i].DescriptorType)
+			bindingsSlice[i].descriptorCount = C.uint32_t(o.Bindings[i].DescriptorCount)
+			bindingsSlice[i].stageFlags = C.VkShaderStageFlags(o.Bindings[i].StageFlags)
 
 			bindingsSlice[i].pImmutableSamplers = nil
 			if samplerCount > 0 {

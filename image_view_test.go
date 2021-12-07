@@ -52,7 +52,7 @@ func TestVulkanLoader1_0_CreateImageView(t *testing.T) {
 
 	imageView, _, err := loader.CreateImageView(device, &core.ImageViewOptions{
 		Image:    image,
-		ViewType: common.View2D,
+		ViewType: common.ViewType2D,
 		Format:   common.FormatA2B10G10R10SignedScaled,
 		Flags:    core.ImageViewCreateFragmentDensityMapDeferredEXT,
 		Components: common.ComponentMapping{

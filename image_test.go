@@ -55,9 +55,9 @@ func TestVulkanLoader1_0_CreateImage(t *testing.T) {
 		})
 
 	image, _, err := loader.CreateImage(device, &core.ImageOptions{
-		Flags:  core.ImageProtected,
-		Type:   common.ImageType2D,
-		Format: common.FormatA2R10G10B10SignedNormalized,
+		Flags:     core.ImageProtected,
+		ImageType: common.ImageType2D,
+		Format:    common.FormatA2R10G10B10SignedNormalized,
 		Extent: common.Extent3D{
 			Width:  1,
 			Height: 3,
@@ -67,7 +67,7 @@ func TestVulkanLoader1_0_CreateImage(t *testing.T) {
 		ArrayLayers:   11,
 		Samples:       common.Samples16,
 		Tiling:        common.ImageTilingLinear,
-		Usage:         common.ImageTransferSrc,
+		Usage:         common.ImageUsageTransferSrc,
 		SharingMode:   common.SharingConcurrent,
 		QueueFamilies: []uint32{13, 17, 19},
 		InitialLayout: common.LayoutDepthAttachmentStencilReadOnlyOptimal,

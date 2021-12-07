@@ -45,6 +45,7 @@ type CommandBuffer interface {
 	CmdNextSubpass(contents SubpassContents)
 	CmdWaitEvents(events []Event, srcStageMask common.PipelineStages, dstStageMask common.PipelineStages, memoryBarriers []*MemoryBarrierOptions, bufferMemoryBarriers []*BufferMemoryBarrierOptions, imageMemoryBarriers []*ImageMemoryBarrierOptions) error
 	CmdSetEvent(event Event, stageMask common.PipelineStages)
+	CmdClearColorImage(image Image, imageLayout common.ImageLayout, color ClearColorValue, ranges []*common.ImageSubresourceRange)
 }
 
 type CommandPool interface {

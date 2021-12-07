@@ -55,12 +55,12 @@ func TestDescriptorPool_Create(t *testing.T) {
 		MaxSets: 3,
 		PoolSizes: []core.PoolSize{
 			{
-				Type:  common.DescriptorCombinedImageSampler,
-				Count: 5,
+				Type:            common.DescriptorCombinedImageSampler,
+				DescriptorCount: 5,
 			},
 			{
-				Type:  common.DescriptorMutableValve,
-				Count: 4,
+				Type:            common.DescriptorMutableValve,
+				DescriptorCount: 4,
 			},
 		},
 	})

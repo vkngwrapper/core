@@ -9,23 +9,23 @@ import "C"
 type ImageViewType int32
 
 const (
-	View1D        ImageViewType = C.VK_IMAGE_VIEW_TYPE_1D
-	View2D        ImageViewType = C.VK_IMAGE_VIEW_TYPE_2D
-	View3D        ImageViewType = C.VK_IMAGE_VIEW_TYPE_3D
-	ViewCube      ImageViewType = C.VK_IMAGE_VIEW_TYPE_CUBE
-	View1DArray   ImageViewType = C.VK_IMAGE_VIEW_TYPE_1D_ARRAY
-	View2DArray   ImageViewType = C.VK_IMAGE_VIEW_TYPE_2D_ARRAY
-	ViewCubeArray ImageViewType = C.VK_IMAGE_VIEW_TYPE_CUBE_ARRAY
+	ViewType1D        ImageViewType = C.VK_IMAGE_VIEW_TYPE_1D
+	ViewType2D        ImageViewType = C.VK_IMAGE_VIEW_TYPE_2D
+	ViewType3D        ImageViewType = C.VK_IMAGE_VIEW_TYPE_3D
+	ViewTypeCube      ImageViewType = C.VK_IMAGE_VIEW_TYPE_CUBE
+	ViewType1DArray   ImageViewType = C.VK_IMAGE_VIEW_TYPE_1D_ARRAY
+	ViewType2DArray   ImageViewType = C.VK_IMAGE_VIEW_TYPE_2D_ARRAY
+	ViewTypeCubeArray ImageViewType = C.VK_IMAGE_VIEW_TYPE_CUBE_ARRAY
 )
 
 var imageViewTypeToString = map[ImageViewType]string{
-	View1D:        "1D",
-	View2D:        "2D",
-	View3D:        "3D",
-	ViewCube:      "Cube",
-	View1DArray:   "1D Array",
-	View2DArray:   "2D Array",
-	ViewCubeArray: "Cube Array",
+	ViewType1D:        "1D",
+	ViewType2D:        "2D",
+	ViewType3D:        "3D",
+	ViewTypeCube:      "Cube",
+	ViewType1DArray:   "1D Array",
+	ViewType2DArray:   "2D Array",
+	ViewTypeCubeArray: "Cube Array",
 }
 
 func (t ImageViewType) String() string {

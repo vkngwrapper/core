@@ -1056,6 +1056,62 @@ func TestVulkanCommandBuffer_CmdSetEvent(t *testing.T) {
 	buffer.CmdSetEvent(event, common.PipelineStageFragmentShader)
 }
 
+func TestVulkanCommandBuffer_CmdClearColorImage(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	mockDriver, buffer := setup(t, ctrl)
+	image := mocks.EasyMockImage(ctrl)
+
+	mockDriver.EXPECT().VkCmdClearColorImage(buffer.Handle(),
+		image.Handle(),
+		core.VkImageLayout(3), // VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL
+		gomock.Not(nil),
+		core.Uint32(2),
+		gomock.Not(nil),
+	).DoAndReturn(
+		func(buffer core.VkCommandBuffer, image core.VkImage, imageLayout core.VkImageLayout, pColor *core.VkClearColorValue, rangeCount core.Uint32, pRanges *core.VkImageSubresourceRange) {
+			colorFloat := unsafe.Slice((*float32)(unsafe.Pointer(pColor)), 4)
+			require.InDelta(t, 0.2, colorFloat[0], 0.0001)
+			require.InDelta(t, 0.3, colorFloat[1], 0.0001)
+			require.InDelta(t, 0.4, colorFloat[2], 0.0001)
+			require.InDelta(t, 0.5, colorFloat[3], 0.0001)
+
+			rangeSlice := reflect.ValueOf(([]core.VkImageSubresourceRange)(unsafe.Slice(pRanges, 2)))
+			r := rangeSlice.Index(0)
+
+			require.Equal(t, uint64(8), r.FieldByName("aspectMask").Uint()) // VK_IMAGE_ASPECT_METADATA_BIT
+			require.Equal(t, uint64(1), r.FieldByName("baseMipLevel").Uint())
+			require.Equal(t, uint64(3), r.FieldByName("levelCount").Uint())
+			require.Equal(t, uint64(5), r.FieldByName("baseArrayLayer").Uint())
+			require.Equal(t, uint64(7), r.FieldByName("layerCount").Uint())
+
+			r = rangeSlice.Index(1)
+			require.Equal(t, uint64(2), r.FieldByName("aspectMask").Uint()) // VK_IMAGE_ASPECT_DEPTH_BIT
+			require.Equal(t, uint64(11), r.FieldByName("baseMipLevel").Uint())
+			require.Equal(t, uint64(13), r.FieldByName("levelCount").Uint())
+			require.Equal(t, uint64(17), r.FieldByName("baseArrayLayer").Uint())
+			require.Equal(t, uint64(19), r.FieldByName("layerCount").Uint())
+		})
+
+	buffer.CmdClearColorImage(image, common.LayoutDepthStencilAttachmentOptimal, &core.ClearValueFloat{0.2, 0.3, 0.4, 0.5}, []*common.ImageSubresourceRange{
+		{
+			AspectMask:     common.AspectMetadata,
+			BaseMipLevel:   1,
+			LevelCount:     3,
+			BaseArrayLayer: 5,
+			LayerCount:     7,
+		},
+		{
+			AspectMask:     common.AspectDepth,
+			BaseMipLevel:   11,
+			LevelCount:     13,
+			BaseArrayLayer: 17,
+			LayerCount:     19,
+		},
+	})
+}
+
 func TestVulkanCommandBuffer_Reset(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()

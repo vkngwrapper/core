@@ -143,13 +143,13 @@ func (f ImageFlags) String() string {
 }
 
 type ImageOptions struct {
-	Flags  ImageFlags
-	Type   common.ImageType
-	Format common.DataFormat
-	Extent common.Extent3D
+	Flags     ImageFlags
+	ImageType common.ImageType
+	Format    common.DataFormat
+	Extent    common.Extent3D
 
-	MipLevels   uint32
-	ArrayLayers uint32
+	MipLevels   int
+	ArrayLayers int
 
 	Samples     common.SampleCounts
 	Tiling      common.ImageTiling
@@ -169,7 +169,7 @@ func (o *ImageOptions) AllocForC(allocator *cgoparam.Allocator, next unsafe.Poin
 	createInfo.sType = C.VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO
 	createInfo.pNext = next
 	createInfo.flags = C.VkImageCreateFlags(o.Flags)
-	createInfo.imageType = C.VkImageType(o.Type)
+	createInfo.imageType = C.VkImageType(o.ImageType)
 	createInfo.format = C.VkFormat(o.Format)
 	createInfo.mipLevels = C.uint32_t(o.MipLevels)
 	createInfo.arrayLayers = C.uint32_t(o.ArrayLayers)

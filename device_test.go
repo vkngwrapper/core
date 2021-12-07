@@ -383,10 +383,10 @@ func TestVulkanDevice_UpdateDescriptorSets_WriteImageInfo(t *testing.T) {
 
 	err = device.UpdateDescriptorSets([]core.WriteDescriptorSetOptions{
 		{
-			Destination:             destDescriptor,
-			DestinationBinding:      1,
-			DestinationArrayElement: 2,
-			DescriptorType:          common.DescriptorUniformBuffer,
+			DstSet:          destDescriptor,
+			DstBinding:      1,
+			DstArrayElement: 2,
+			DescriptorType:  common.DescriptorUniformBuffer,
 			ImageInfo: []core.DescriptorImageInfo{
 				{
 					Sampler:     sampler1,
@@ -452,10 +452,10 @@ func TestVulkanDevice_UpdateDescriptorSets_WriteBufferInfo(t *testing.T) {
 
 	err = device.UpdateDescriptorSets([]core.WriteDescriptorSetOptions{
 		{
-			Destination:             destDescriptor,
-			DestinationBinding:      1,
-			DestinationArrayElement: 3,
-			DescriptorType:          common.DescriptorUniformBuffer,
+			DstSet:          destDescriptor,
+			DstBinding:      1,
+			DstArrayElement: 3,
+			DescriptorType:  common.DescriptorUniformBuffer,
 			BufferInfo: []core.DescriptorBufferInfo{
 				{
 					Buffer: buffer1,
@@ -515,10 +515,10 @@ func TestVulkanDevice_UpdateDescriptorSets_TexelBufferView(t *testing.T) {
 
 	err = device.UpdateDescriptorSets([]core.WriteDescriptorSetOptions{
 		{
-			Destination:             destDescriptor,
-			DestinationBinding:      1,
-			DestinationArrayElement: 3,
-			DescriptorType:          common.DescriptorUniformBuffer,
+			DstSet:          destDescriptor,
+			DstBinding:      1,
+			DstArrayElement: 3,
+			DescriptorType:  common.DescriptorUniformBuffer,
 			TexelBufferView: []core.BufferView{
 				bufferView1, bufferView2,
 			},
@@ -593,10 +593,10 @@ func TestVulkanDevice_UpdateDescriptorSets_FailureImageInfoAndBufferInfo(t *test
 
 	err = device.UpdateDescriptorSets([]core.WriteDescriptorSetOptions{
 		{
-			Destination:             destDescriptor,
-			DestinationBinding:      1,
-			DestinationArrayElement: 3,
-			DescriptorType:          common.DescriptorUniformBuffer,
+			DstSet:          destDescriptor,
+			DstBinding:      1,
+			DstArrayElement: 3,
+			DescriptorType:  common.DescriptorUniformBuffer,
 			BufferInfo: []core.DescriptorBufferInfo{
 				{
 					Buffer: buffer1,
@@ -646,10 +646,10 @@ func TestVulkanDevice_UpdateDescriptorSets_FailureImageInfoAndBufferView(t *test
 
 	err = device.UpdateDescriptorSets([]core.WriteDescriptorSetOptions{
 		{
-			Destination:             destDescriptor,
-			DestinationBinding:      1,
-			DestinationArrayElement: 3,
-			DescriptorType:          common.DescriptorUniformBuffer,
+			DstSet:          destDescriptor,
+			DstBinding:      1,
+			DstArrayElement: 3,
+			DescriptorType:  common.DescriptorUniformBuffer,
 			ImageInfo: []core.DescriptorImageInfo{
 				{
 					Sampler:     sampler1,
@@ -688,10 +688,10 @@ func TestVulkanDevice_UpdateDescriptorSets_FailureBufferInfoAndBufferView(t *tes
 
 	err = device.UpdateDescriptorSets([]core.WriteDescriptorSetOptions{
 		{
-			Destination:             destDescriptor,
-			DestinationBinding:      1,
-			DestinationArrayElement: 3,
-			DescriptorType:          common.DescriptorUniformBuffer,
+			DstSet:          destDescriptor,
+			DstBinding:      1,
+			DstArrayElement: 3,
+			DescriptorType:  common.DescriptorUniformBuffer,
 			BufferInfo: []core.DescriptorBufferInfo{
 				{
 					Buffer: buffer1,
@@ -726,10 +726,10 @@ func TestVulkanDevice_UpdateDescriptorSets_FailureNoSource(t *testing.T) {
 
 	err = device.UpdateDescriptorSets([]core.WriteDescriptorSetOptions{
 		{
-			Destination:             destDescriptor,
-			DestinationBinding:      1,
-			DestinationArrayElement: 3,
-			DescriptorType:          common.DescriptorUniformBuffer,
+			DstSet:          destDescriptor,
+			DstBinding:      1,
+			DstArrayElement: 3,
+			DescriptorType:  common.DescriptorUniformBuffer,
 		},
 	}, nil)
 

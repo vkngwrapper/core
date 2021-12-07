@@ -28,12 +28,23 @@ func (c SubpassContents) String() string {
 }
 
 type ClearValue interface {
-	populateUnion(v *C.VkClearValue)
+	populateValueUnion(v *C.VkClearValue)
+}
+
+type ClearColorValue interface {
+	populateColorUnion(c *C.VkClearColorValue)
 }
 
 type ClearValueInt32 [4]int32
 
-func (v ClearValueInt32) populateUnion(c *C.VkClearValue) {
+func (v ClearValueInt32) populateValueUnion(c *C.VkClearValue) {
+	colorInt32 := unsafe.Slice((*C.int32_t)(unsafe.Pointer(c)), 4)
+	for i := 0; i < 4; i++ {
+		colorInt32[i] = C.int32_t(v[i])
+	}
+}
+
+func (v ClearValueInt32) populateColorUnion(c *C.VkClearColorValue) {
 	colorInt32 := unsafe.Slice((*C.int32_t)(unsafe.Pointer(c)), 4)
 	for i := 0; i < 4; i++ {
 		colorInt32[i] = C.int32_t(v[i])
@@ -42,7 +53,14 @@ func (v ClearValueInt32) populateUnion(c *C.VkClearValue) {
 
 type ClearValueUint32 [4]uint32
 
-func (v ClearValueUint32) populateUnion(c *C.VkClearValue) {
+func (v ClearValueUint32) populateValueUnion(c *C.VkClearValue) {
+	colorUint32 := unsafe.Slice((*C.uint32_t)(unsafe.Pointer(c)), 4)
+	for i := 0; i < 4; i++ {
+		colorUint32[i] = C.uint32_t(v[i])
+	}
+}
+
+func (v ClearValueUint32) populateColorUnion(c *C.VkClearColorValue) {
 	colorUint32 := unsafe.Slice((*C.uint32_t)(unsafe.Pointer(c)), 4)
 	for i := 0; i < 4; i++ {
 		colorUint32[i] = C.uint32_t(v[i])
@@ -51,7 +69,14 @@ func (v ClearValueUint32) populateUnion(c *C.VkClearValue) {
 
 type ClearValueFloat [4]float32
 
-func (v ClearValueFloat) populateUnion(c *C.VkClearValue) {
+func (v ClearValueFloat) populateValueUnion(c *C.VkClearValue) {
+	colorFloat := unsafe.Slice((*C.float)(unsafe.Pointer(c)), 4)
+	for i := 0; i < 4; i++ {
+		colorFloat[i] = C.float(v[i])
+	}
+}
+
+func (v ClearValueFloat) populateColorUnion(c *C.VkClearColorValue) {
 	colorFloat := unsafe.Slice((*C.float)(unsafe.Pointer(c)), 4)
 	for i := 0; i < 4; i++ {
 		colorFloat[i] = C.float(v[i])
@@ -63,7 +88,7 @@ type ClearValueDepthStencil struct {
 	Stencil uint32
 }
 
-func (s ClearValueDepthStencil) populateUnion(c *C.VkClearValue) {
+func (s ClearValueDepthStencil) populateValueUnion(c *C.VkClearValue) {
 	depthStencil := (*C.VkClearDepthStencilValue)(unsafe.Pointer(c))
 	depthStencil.depth = C.float(s.Depth)
 	depthStencil.stencil = C.uint32_t(s.Stencil)
@@ -108,7 +133,7 @@ func (o *RenderPassBeginOptions) AllocForC(allocator *cgoparam.Allocator, next u
 		valueSlice := ([]C.VkClearValue)(unsafe.Slice(valuePtr, clearValueCount))
 
 		for i := 0; i < clearValueCount; i++ {
-			o.ClearValues[i].populateUnion(&(valueSlice[i]))
+			o.ClearValues[i].populateValueUnion(&(valueSlice[i]))
 		}
 
 		createInfo.pClearValues = valuePtr

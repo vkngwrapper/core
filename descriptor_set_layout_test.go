@@ -48,10 +48,10 @@ func TestDescriptorSetLayout_Create_SingleBinding(t *testing.T) {
 		Flags: core.DescriptorSetLayoutHostOnlyPoolValve,
 		Bindings: []*core.DescriptorLayoutBinding{
 			{
-				Binding:      3,
-				Type:         common.DescriptorStorageBuffer,
-				Count:        1,
-				ShaderStages: common.StageGeometry,
+				Binding:         3,
+				DescriptorType:  common.DescriptorStorageBuffer,
+				DescriptorCount: 1,
+				StageFlags:      common.StageGeometry,
 			},
 		},
 	})
@@ -113,10 +113,10 @@ func TestDescriptorSetLayout_Create_SingleBindingImmutableSamplers(t *testing.T)
 		Flags: core.DescriptorSetLayoutHostOnlyPoolValve,
 		Bindings: []*core.DescriptorLayoutBinding{
 			{
-				Binding:      3,
-				Type:         common.DescriptorCombinedImageSampler,
-				Count:        4,
-				ShaderStages: common.StageGeometry,
+				Binding:         3,
+				DescriptorType:  common.DescriptorCombinedImageSampler,
+				DescriptorCount: 4,
+				StageFlags:      common.StageGeometry,
 				ImmutableSamplers: []core.Sampler{
 					sampler1, sampler2, sampler3, sampler4,
 				},
@@ -148,10 +148,10 @@ func TestDescriptorSetLayout_Create_FailBindingSamplerMismatch(t *testing.T) {
 		Flags: core.DescriptorSetLayoutHostOnlyPoolValve,
 		Bindings: []*core.DescriptorLayoutBinding{
 			{
-				Binding:      3,
-				Type:         common.DescriptorCombinedImageSampler,
-				Count:        3,
-				ShaderStages: common.StageGeometry,
+				Binding:         3,
+				DescriptorType:  common.DescriptorCombinedImageSampler,
+				DescriptorCount: 3,
+				StageFlags:      common.StageGeometry,
 				ImmutableSamplers: []core.Sampler{
 					sampler1, sampler2, sampler3, sampler4,
 				},
@@ -213,22 +213,22 @@ func TestDescriptorSetLayout_Create_MultiBinding(t *testing.T) {
 		Flags: core.DescriptorSetLayoutHostOnlyPoolValve,
 		Bindings: []*core.DescriptorLayoutBinding{
 			{
-				Binding:      3,
-				Type:         common.DescriptorStorageBuffer,
-				Count:        1,
-				ShaderStages: common.StageGeometry,
+				Binding:         3,
+				DescriptorType:  common.DescriptorStorageBuffer,
+				DescriptorCount: 1,
+				StageFlags:      common.StageGeometry,
 			},
 			{
-				Binding:      11,
-				Type:         common.DescriptorInputAttachment,
-				Count:        9,
-				ShaderStages: common.StageGeometry,
+				Binding:         11,
+				DescriptorType:  common.DescriptorInputAttachment,
+				DescriptorCount: 9,
+				StageFlags:      common.StageGeometry,
 			},
 			{
-				Binding:      12,
-				Type:         common.DescriptorInputAttachment,
-				Count:        18,
-				ShaderStages: common.StageGeometry,
+				Binding:         12,
+				DescriptorType:  common.DescriptorInputAttachment,
+				DescriptorCount: 18,
+				StageFlags:      common.StageGeometry,
 			},
 		},
 	})

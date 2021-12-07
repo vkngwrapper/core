@@ -69,9 +69,9 @@ type DescriptorBufferInfo struct {
 }
 
 type WriteDescriptorSetOptions struct {
-	Destination             DescriptorSet
-	DestinationBinding      int
-	DestinationArrayElement int
+	DstSet          DescriptorSet
+	DstBinding      int
+	DstArrayElement int
 
 	DescriptorType common.DescriptorType
 
@@ -126,9 +126,9 @@ func (o WriteDescriptorSetOptions) populate(allocator *cgoparam.Allocator, creat
 	createInfo.sType = C.VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET
 	createInfo.pNext = next
 
-	createInfo.dstSet = C.VkDescriptorSet(unsafe.Pointer(o.Destination.Handle()))
-	createInfo.dstBinding = C.uint32_t(o.DestinationBinding)
-	createInfo.dstArrayElement = C.uint32_t(o.DestinationArrayElement)
+	createInfo.dstSet = C.VkDescriptorSet(unsafe.Pointer(o.DstSet.Handle()))
+	createInfo.dstBinding = C.uint32_t(o.DstBinding)
+	createInfo.dstArrayElement = C.uint32_t(o.DstArrayElement)
 
 	createInfo.descriptorType = C.VkDescriptorType(o.DescriptorType)
 
