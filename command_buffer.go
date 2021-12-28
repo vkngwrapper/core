@@ -71,7 +71,7 @@ func (c *vulkanCommandBuffer) CmdDrawIndexed(indexCount, instanceCount int, firs
 	c.driver.VkCmdDrawIndexed(c.handle, Uint32(indexCount), Uint32(instanceCount), Uint32(firstIndex), Int32(vertexOffset), Uint32(firstInstance))
 }
 
-func (c *vulkanCommandBuffer) CmdBindVertexBuffers(firstBinding uint32, buffers []Buffer, bufferOffsets []int) {
+func (c *vulkanCommandBuffer) CmdBindVertexBuffers(buffers []Buffer, bufferOffsets []int) {
 	allocator := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(allocator)
 
@@ -91,7 +91,7 @@ func (c *vulkanCommandBuffer) CmdBindVertexBuffers(firstBinding uint32, buffers 
 		offsetArraySlice[i] = VkDeviceSize(bufferOffsets[i])
 	}
 
-	c.driver.VkCmdBindVertexBuffers(c.handle, Uint32(firstBinding), Uint32(bufferCount), bufferArrayPtr, offsetArrayPtr)
+	c.driver.VkCmdBindVertexBuffers(c.handle, Uint32(0), Uint32(bufferCount), bufferArrayPtr, offsetArrayPtr)
 }
 
 func (c *vulkanCommandBuffer) CmdBindIndexBuffer(buffer Buffer, offset int, indexType common.IndexType) {
@@ -269,7 +269,7 @@ func (c *vulkanCommandBuffer) CmdPushConstants(layout PipelineLayout, stageFlags
 	return nil
 }
 
-func (c *vulkanCommandBuffer) CmdSetViewport(firstViewport int, viewports []common.Viewport) {
+func (c *vulkanCommandBuffer) CmdSetViewport(viewports []common.Viewport) {
 	allocator := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(allocator)
 
@@ -291,10 +291,10 @@ func (c *vulkanCommandBuffer) CmdSetViewport(firstViewport int, viewports []comm
 		}
 	}
 
-	c.driver.VkCmdSetViewport(c.handle, Uint32(firstViewport), Uint32(viewportCount), (*VkViewport)(viewportPtr))
+	c.driver.VkCmdSetViewport(c.handle, Uint32(0), Uint32(viewportCount), (*VkViewport)(viewportPtr))
 }
 
-func (c *vulkanCommandBuffer) CmdSetScissor(firstScissor int, scissors []common.Rect2D) {
+func (c *vulkanCommandBuffer) CmdSetScissor(scissors []common.Rect2D) {
 	allocator := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(allocator)
 
@@ -314,7 +314,7 @@ func (c *vulkanCommandBuffer) CmdSetScissor(firstScissor int, scissors []common.
 		}
 	}
 
-	c.driver.VkCmdSetScissor(c.handle, Uint32(firstScissor), Uint32(scissorCount), (*VkRect2D)(scissorPtr))
+	c.driver.VkCmdSetScissor(c.handle, Uint32(0), Uint32(scissorCount), (*VkRect2D)(scissorPtr))
 }
 
 func (c *vulkanCommandBuffer) CmdNextSubpass(contents SubpassContents) {
@@ -403,7 +403,7 @@ func (c *vulkanCommandBuffer) CmdSetEvent(event Event, stageMask common.Pipeline
 	c.driver.VkCmdSetEvent(c.handle, event.Handle(), VkPipelineStageFlags(stageMask))
 }
 
-func (c *vulkanCommandBuffer) CmdClearColorImage(image Image, imageLayout common.ImageLayout, color ClearColorValue, ranges []*common.ImageSubresourceRange) {
+func (c *vulkanCommandBuffer) CmdClearColorImage(image Image, imageLayout common.ImageLayout, color ClearColorValue, ranges []common.ImageSubresourceRange) {
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 

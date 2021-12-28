@@ -118,7 +118,7 @@ func TestVulkanPhysicalDevice_Properties(t *testing.T) {
 			pPropertySlice := reflect.ValueOf(unsafe.Slice(pProperties, 1))
 			val := pPropertySlice.Index(0)
 
-			*(*uint32)(unsafe.Pointer(val.FieldByName("apiVersion").UnsafeAddr())) = uint32(common.CreateVersion(1, 2, 3))
+			*(*uint32)(unsafe.Pointer(val.FieldByName("apiVersion").UnsafeAddr())) = uint32(common.Vulkan1_1)
 			*(*uint32)(unsafe.Pointer(val.FieldByName("driverVersion").UnsafeAddr())) = uint32(common.CreateVersion(3, 2, 1))
 			*(*uint32)(unsafe.Pointer(val.FieldByName("vendorID").UnsafeAddr())) = uint32(3)
 			*(*uint32)(unsafe.Pointer(val.FieldByName("deviceID").UnsafeAddr())) = uint32(5)
@@ -161,7 +161,7 @@ func TestVulkanPhysicalDevice_Properties(t *testing.T) {
 
 	properties := physicalDevice.Properties()
 	require.NotNil(t, properties)
-	require.Equal(t, common.CreateVersion(1, 2, 3), properties.APIVersion)
+	require.Equal(t, common.Vulkan1_1, properties.APIVersion)
 	require.Equal(t, common.CreateVersion(3, 2, 1), properties.DriverVersion)
 	require.Equal(t, uint32(3), properties.VendorID)
 	require.Equal(t, uint32(5), properties.DeviceID)

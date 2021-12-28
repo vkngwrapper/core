@@ -14,7 +14,7 @@ import (
 
 type BufferOptions struct {
 	BufferSize         int
-	Usages             common.BufferUsages
+	Usage              common.BufferUsages
 	SharingMode        common.SharingMode
 	QueueFamilyIndices []int
 
@@ -27,7 +27,7 @@ func (o *BufferOptions) AllocForC(allocator *cgoparam.Allocator, next unsafe.Poi
 	createInfo.flags = 0
 	createInfo.pNext = next
 	createInfo.size = C.VkDeviceSize(o.BufferSize)
-	createInfo.usage = C.VkBufferUsageFlags(o.Usages)
+	createInfo.usage = C.VkBufferUsageFlags(o.Usage)
 	createInfo.sharingMode = C.VkSharingMode(o.SharingMode)
 
 	queueFamilyCount := len(o.QueueFamilyIndices)

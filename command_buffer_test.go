@@ -218,7 +218,7 @@ func TestVulkanCommandBuffer_CmdBindVertexBuffers(t *testing.T) {
 	vertexBuffer := mocks.NewMockBuffer(ctrl)
 	vertexBuffer.EXPECT().Handle().Return(bufferHandle)
 
-	mockDriver.EXPECT().VkCmdBindVertexBuffers(buffer.Handle(), core.Uint32(3), core.Uint32(1), gomock.Not(nil), gomock.Not(nil)).DoAndReturn(
+	mockDriver.EXPECT().VkCmdBindVertexBuffers(buffer.Handle(), core.Uint32(0), core.Uint32(1), gomock.Not(nil), gomock.Not(nil)).DoAndReturn(
 		func(commandBuffer core.VkCommandBuffer, firstBinding core.Uint32, bindingCount core.Uint32, pBuffers *core.VkBuffer, pOffsets *core.VkDeviceSize) {
 			singleBuffer := ([]core.VkBuffer)(unsafe.Slice(pBuffers, 1))
 			singleOffset := ([]core.VkDeviceSize)(unsafe.Slice(pOffsets, 1))
@@ -227,7 +227,7 @@ func TestVulkanCommandBuffer_CmdBindVertexBuffers(t *testing.T) {
 			require.ElementsMatch(t, []core.VkDeviceSize{2}, singleOffset)
 		})
 
-	buffer.CmdBindVertexBuffers(3, []core.Buffer{vertexBuffer}, []int{2})
+	buffer.CmdBindVertexBuffers([]core.Buffer{vertexBuffer}, []int{2})
 }
 
 func TestVulkanCommandBuffer_CmdBindIndexBuffer(t *testing.T) {
@@ -697,7 +697,7 @@ func TestVulkanCommandBuffer_CmdSetViewport(t *testing.T) {
 
 	mockDriver, buffer := setup(t, ctrl)
 
-	mockDriver.EXPECT().VkCmdSetViewport(buffer.Handle(), core.Uint32(1), core.Uint32(2), gomock.Not(nil)).DoAndReturn(
+	mockDriver.EXPECT().VkCmdSetViewport(buffer.Handle(), core.Uint32(0), core.Uint32(2), gomock.Not(nil)).DoAndReturn(
 		func(
 			commandBuffer core.VkCommandBuffer,
 			firstViewport core.Uint32,
@@ -724,7 +724,7 @@ func TestVulkanCommandBuffer_CmdSetViewport(t *testing.T) {
 			require.InDelta(t, 41, viewport.FieldByName("maxDepth").Float(), 0.0001)
 		})
 
-	buffer.CmdSetViewport(1, []common.Viewport{
+	buffer.CmdSetViewport([]common.Viewport{
 		{
 			X:        3,
 			Y:        5,
@@ -750,7 +750,7 @@ func TestVulkanCommandBuffer_CmdSetScissor(t *testing.T) {
 
 	mockDriver, buffer := setup(t, ctrl)
 
-	mockDriver.EXPECT().VkCmdSetScissor(buffer.Handle(), core.Uint32(1), core.Uint32(2), gomock.Not(nil)).DoAndReturn(
+	mockDriver.EXPECT().VkCmdSetScissor(buffer.Handle(), core.Uint32(0), core.Uint32(2), gomock.Not(nil)).DoAndReturn(
 		func(
 			commandBuffer core.VkCommandBuffer,
 			firstScissor core.Uint32,
@@ -777,7 +777,7 @@ func TestVulkanCommandBuffer_CmdSetScissor(t *testing.T) {
 			require.Equal(t, uint64(23), extent.FieldByName("height").Uint())
 		})
 
-	buffer.CmdSetScissor(1, []common.Rect2D{
+	buffer.CmdSetScissor([]common.Rect2D{
 		{
 			Offset: common.Offset2D{3, 5},
 			Extent: common.Extent2D{7, 11},
@@ -1094,7 +1094,7 @@ func TestVulkanCommandBuffer_CmdClearColorImage(t *testing.T) {
 			require.Equal(t, uint64(19), r.FieldByName("layerCount").Uint())
 		})
 
-	buffer.CmdClearColorImage(image, common.LayoutDepthStencilAttachmentOptimal, &core.ClearValueFloat{0.2, 0.3, 0.4, 0.5}, []*common.ImageSubresourceRange{
+	buffer.CmdClearColorImage(image, common.LayoutDepthStencilAttachmentOptimal, &core.ClearValueFloat{0.2, 0.3, 0.4, 0.5}, []common.ImageSubresourceRange{
 		{
 			AspectMask:     common.AspectMetadata,
 			BaseMipLevel:   1,

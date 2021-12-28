@@ -31,7 +31,7 @@ type CommandBuffer interface {
 	CmdBindPipeline(bindPoint common.PipelineBindPoint, pipeline Pipeline)
 	CmdDraw(vertexCount, instanceCount int, firstVertex, firstInstance uint32)
 	CmdDrawIndexed(indexCount, instanceCount int, firstIndex uint32, vertexOffset int, firstInstance uint32)
-	CmdBindVertexBuffers(firstBinding uint32, buffers []Buffer, bufferOffsets []int)
+	CmdBindVertexBuffers(buffers []Buffer, bufferOffsets []int)
 	CmdBindIndexBuffer(buffer Buffer, offset int, indexType common.IndexType)
 	CmdCopyBuffer(srcBuffer Buffer, dstBuffer Buffer, copyRegions []BufferCopy) error
 	CmdBindDescriptorSets(bindPoint common.PipelineBindPoint, layout PipelineLayout, firstSet int, sets []DescriptorSet, dynamicOffsets []int)
@@ -39,13 +39,13 @@ type CommandBuffer interface {
 	CmdCopyBufferToImage(buffer Buffer, image Image, layout common.ImageLayout, regions []*BufferImageCopy) error
 	CmdBlitImage(sourceImage Image, sourceImageLayout common.ImageLayout, destinationImage Image, destinationImageLayout common.ImageLayout, regions []*ImageBlit, filter common.Filter) error
 	CmdPushConstants(layout PipelineLayout, stageFlags common.ShaderStages, offset int, values interface{}) error
-	CmdSetViewport(firstViewport int, viewports []common.Viewport)
-	CmdSetScissor(firstScissor int, scissors []common.Rect2D)
+	CmdSetViewport(viewports []common.Viewport)
+	CmdSetScissor(scissors []common.Rect2D)
 	CmdCopyImage(srcImage Image, srcImageLayout common.ImageLayout, dstImage Image, dstImageLayout common.ImageLayout, regions []ImageCopy) error
 	CmdNextSubpass(contents SubpassContents)
 	CmdWaitEvents(events []Event, srcStageMask common.PipelineStages, dstStageMask common.PipelineStages, memoryBarriers []*MemoryBarrierOptions, bufferMemoryBarriers []*BufferMemoryBarrierOptions, imageMemoryBarriers []*ImageMemoryBarrierOptions) error
 	CmdSetEvent(event Event, stageMask common.PipelineStages)
-	CmdClearColorImage(image Image, imageLayout common.ImageLayout, color ClearColorValue, ranges []*common.ImageSubresourceRange)
+	CmdClearColorImage(image Image, imageLayout common.ImageLayout, color ClearColorValue, ranges []common.ImageSubresourceRange)
 }
 
 type CommandPool interface {

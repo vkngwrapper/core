@@ -382,7 +382,7 @@ func createPhysicalDeviceProperties(p *C.VkPhysicalDeviceProperties) *common.Phy
 		Type: common.PhysicalDeviceType(p.deviceType),
 		Name: C.GoString((*C.char)(&p.deviceName[0])),
 
-		APIVersion:    common.Version(p.apiVersion),
+		APIVersion:    common.APIVersion(p.apiVersion),
 		DriverVersion: common.Version(p.driverVersion),
 
 		VendorID: uint32(p.vendorID),

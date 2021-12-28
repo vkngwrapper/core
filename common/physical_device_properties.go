@@ -16,7 +16,7 @@ type PhysicalDeviceProperties struct {
 	Type PhysicalDeviceType
 	Name string
 
-	APIVersion    Version
+	APIVersion    APIVersion
 	DriverVersion Version
 	VendorID      uint32
 	DeviceID      uint32
