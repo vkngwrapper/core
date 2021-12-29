@@ -167,6 +167,18 @@ func (mr *MockCommandBufferMockRecorder) Begin(o interface{}) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Begin", reflect.TypeOf((*MockCommandBuffer)(nil).Begin), o)
 }
 
+// CmdBeginQuery mocks base method.
+func (m *MockCommandBuffer) CmdBeginQuery(queryPool core.QueryPool, query int, flags common.QueryControlFlags) {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "CmdBeginQuery", queryPool, query, flags)
+}
+
+// CmdBeginQuery indicates an expected call of CmdBeginQuery.
+func (mr *MockCommandBufferMockRecorder) CmdBeginQuery(queryPool, query, flags interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CmdBeginQuery", reflect.TypeOf((*MockCommandBuffer)(nil).CmdBeginQuery), queryPool, query, flags)
+}
+
 // CmdBeginRenderPass mocks base method.
 func (m *MockCommandBuffer) CmdBeginRenderPass(contents core.SubpassContents, o *core.RenderPassBeginOptions) error {
 	m.ctrl.T.Helper()
@@ -218,15 +230,15 @@ func (mr *MockCommandBufferMockRecorder) CmdBindPipeline(bindPoint, pipeline int
 }
 
 // CmdBindVertexBuffers mocks base method.
-func (m *MockCommandBuffer) CmdBindVertexBuffers(firstBinding uint32, buffers []core.Buffer, bufferOffsets []int) {
+func (m *MockCommandBuffer) CmdBindVertexBuffers(buffers []core.Buffer, bufferOffsets []int) {
 	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "CmdBindVertexBuffers", firstBinding, buffers, bufferOffsets)
+	m.ctrl.Call(m, "CmdBindVertexBuffers", buffers, bufferOffsets)
 }
 
 // CmdBindVertexBuffers indicates an expected call of CmdBindVertexBuffers.
-func (mr *MockCommandBufferMockRecorder) CmdBindVertexBuffers(firstBinding, buffers, bufferOffsets interface{}) *gomock.Call {
+func (mr *MockCommandBufferMockRecorder) CmdBindVertexBuffers(buffers, bufferOffsets interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CmdBindVertexBuffers", reflect.TypeOf((*MockCommandBuffer)(nil).CmdBindVertexBuffers), firstBinding, buffers, bufferOffsets)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CmdBindVertexBuffers", reflect.TypeOf((*MockCommandBuffer)(nil).CmdBindVertexBuffers), buffers, bufferOffsets)
 }
 
 // CmdBlitImage mocks base method.
@@ -241,6 +253,18 @@ func (m *MockCommandBuffer) CmdBlitImage(sourceImage core.Image, sourceImageLayo
 func (mr *MockCommandBufferMockRecorder) CmdBlitImage(sourceImage, sourceImageLayout, destinationImage, destinationImageLayout, regions, filter interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CmdBlitImage", reflect.TypeOf((*MockCommandBuffer)(nil).CmdBlitImage), sourceImage, sourceImageLayout, destinationImage, destinationImageLayout, regions, filter)
+}
+
+// CmdClearColorImage mocks base method.
+func (m *MockCommandBuffer) CmdClearColorImage(image core.Image, imageLayout common.ImageLayout, color core.ClearColorValue, ranges []common.ImageSubresourceRange) {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "CmdClearColorImage", image, imageLayout, color, ranges)
+}
+
+// CmdClearColorImage indicates an expected call of CmdClearColorImage.
+func (mr *MockCommandBufferMockRecorder) CmdClearColorImage(image, imageLayout, color, ranges interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CmdClearColorImage", reflect.TypeOf((*MockCommandBuffer)(nil).CmdClearColorImage), image, imageLayout, color, ranges)
 }
 
 // CmdCopyBuffer mocks base method.
@@ -285,6 +309,18 @@ func (mr *MockCommandBufferMockRecorder) CmdCopyImage(srcImage, srcImageLayout, 
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CmdCopyImage", reflect.TypeOf((*MockCommandBuffer)(nil).CmdCopyImage), srcImage, srcImageLayout, dstImage, dstImageLayout, regions)
 }
 
+// CmdCopyQueryPoolResults mocks base method.
+func (m *MockCommandBuffer) CmdCopyQueryPoolResults(queryPool core.QueryPool, firstQuery, queryCount int, dstBuffer core.Buffer, dstOffset, stride int, flags common.QueryResultFlags) {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "CmdCopyQueryPoolResults", queryPool, firstQuery, queryCount, dstBuffer, dstOffset, stride, flags)
+}
+
+// CmdCopyQueryPoolResults indicates an expected call of CmdCopyQueryPoolResults.
+func (mr *MockCommandBufferMockRecorder) CmdCopyQueryPoolResults(queryPool, firstQuery, queryCount, dstBuffer, dstOffset, stride, flags interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CmdCopyQueryPoolResults", reflect.TypeOf((*MockCommandBuffer)(nil).CmdCopyQueryPoolResults), queryPool, firstQuery, queryCount, dstBuffer, dstOffset, stride, flags)
+}
+
 // CmdDraw mocks base method.
 func (m *MockCommandBuffer) CmdDraw(vertexCount, instanceCount int, firstVertex, firstInstance uint32) {
 	m.ctrl.T.Helper()
@@ -307,6 +343,18 @@ func (m *MockCommandBuffer) CmdDrawIndexed(indexCount, instanceCount int, firstI
 func (mr *MockCommandBufferMockRecorder) CmdDrawIndexed(indexCount, instanceCount, firstIndex, vertexOffset, firstInstance interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CmdDrawIndexed", reflect.TypeOf((*MockCommandBuffer)(nil).CmdDrawIndexed), indexCount, instanceCount, firstIndex, vertexOffset, firstInstance)
+}
+
+// CmdEndQuery mocks base method.
+func (m *MockCommandBuffer) CmdEndQuery(queryPool core.QueryPool, query int) {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "CmdEndQuery", queryPool, query)
+}
+
+// CmdEndQuery indicates an expected call of CmdEndQuery.
+func (mr *MockCommandBufferMockRecorder) CmdEndQuery(queryPool, query interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CmdEndQuery", reflect.TypeOf((*MockCommandBuffer)(nil).CmdEndQuery), queryPool, query)
 }
 
 // CmdEndRenderPass mocks base method.
@@ -361,6 +409,18 @@ func (mr *MockCommandBufferMockRecorder) CmdPushConstants(layout, stageFlags, of
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CmdPushConstants", reflect.TypeOf((*MockCommandBuffer)(nil).CmdPushConstants), layout, stageFlags, offset, values)
 }
 
+// CmdResetQueryPool mocks base method.
+func (m *MockCommandBuffer) CmdResetQueryPool(queryPool core.QueryPool, startQuery, queryCount int) {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "CmdResetQueryPool", queryPool, startQuery, queryCount)
+}
+
+// CmdResetQueryPool indicates an expected call of CmdResetQueryPool.
+func (mr *MockCommandBufferMockRecorder) CmdResetQueryPool(queryPool, startQuery, queryCount interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CmdResetQueryPool", reflect.TypeOf((*MockCommandBuffer)(nil).CmdResetQueryPool), queryPool, startQuery, queryCount)
+}
+
 // CmdSetEvent mocks base method.
 func (m *MockCommandBuffer) CmdSetEvent(event core.Event, stageMask common.PipelineStages) {
 	m.ctrl.T.Helper()
@@ -374,27 +434,27 @@ func (mr *MockCommandBufferMockRecorder) CmdSetEvent(event, stageMask interface{
 }
 
 // CmdSetScissor mocks base method.
-func (m *MockCommandBuffer) CmdSetScissor(firstScissor int, scissors []common.Rect2D) {
+func (m *MockCommandBuffer) CmdSetScissor(scissors []common.Rect2D) {
 	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "CmdSetScissor", firstScissor, scissors)
+	m.ctrl.Call(m, "CmdSetScissor", scissors)
 }
 
 // CmdSetScissor indicates an expected call of CmdSetScissor.
-func (mr *MockCommandBufferMockRecorder) CmdSetScissor(firstScissor, scissors interface{}) *gomock.Call {
+func (mr *MockCommandBufferMockRecorder) CmdSetScissor(scissors interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CmdSetScissor", reflect.TypeOf((*MockCommandBuffer)(nil).CmdSetScissor), firstScissor, scissors)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CmdSetScissor", reflect.TypeOf((*MockCommandBuffer)(nil).CmdSetScissor), scissors)
 }
 
 // CmdSetViewport mocks base method.
-func (m *MockCommandBuffer) CmdSetViewport(firstViewport int, viewports []common.Viewport) {
+func (m *MockCommandBuffer) CmdSetViewport(viewports []common.Viewport) {
 	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "CmdSetViewport", firstViewport, viewports)
+	m.ctrl.Call(m, "CmdSetViewport", viewports)
 }
 
 // CmdSetViewport indicates an expected call of CmdSetViewport.
-func (mr *MockCommandBufferMockRecorder) CmdSetViewport(firstViewport, viewports interface{}) *gomock.Call {
+func (mr *MockCommandBufferMockRecorder) CmdSetViewport(viewports interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CmdSetViewport", reflect.TypeOf((*MockCommandBuffer)(nil).CmdSetViewport), firstViewport, viewports)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CmdSetViewport", reflect.TypeOf((*MockCommandBuffer)(nil).CmdSetViewport), viewports)
 }
 
 // CmdWaitEvents mocks base method.
@@ -1679,6 +1739,22 @@ func (mr *MockLoader1_0MockRecorder) CreatePipelineLayout(device, o interface{})
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreatePipelineLayout", reflect.TypeOf((*MockLoader1_0)(nil).CreatePipelineLayout), device, o)
 }
 
+// CreateQueryPool mocks base method.
+func (m *MockLoader1_0) CreateQueryPool(device core.Device, o *core.QueryPoolOptions) (core.QueryPool, core.VkResult, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreateQueryPool", device, o)
+	ret0, _ := ret[0].(core.QueryPool)
+	ret1, _ := ret[1].(core.VkResult)
+	ret2, _ := ret[2].(error)
+	return ret0, ret1, ret2
+}
+
+// CreateQueryPool indicates an expected call of CreateQueryPool.
+func (mr *MockLoader1_0MockRecorder) CreateQueryPool(device, o interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateQueryPool", reflect.TypeOf((*MockLoader1_0)(nil).CreateQueryPool), device, o)
+}
+
 // CreateRenderPass mocks base method.
 func (m *MockLoader1_0) CreateRenderPass(device core.Device, o *core.RenderPassOptions) (core.RenderPass, core.VkResult, error) {
 	m.ctrl.T.Helper()
@@ -2069,6 +2145,70 @@ func (m *MockPipelineLayout) Handle() core.VkPipelineLayout {
 func (mr *MockPipelineLayoutMockRecorder) Handle() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Handle", reflect.TypeOf((*MockPipelineLayout)(nil).Handle))
+}
+
+// MockQueryPool is a mock of QueryPool interface.
+type MockQueryPool struct {
+	ctrl     *gomock.Controller
+	recorder *MockQueryPoolMockRecorder
+}
+
+// MockQueryPoolMockRecorder is the mock recorder for MockQueryPool.
+type MockQueryPoolMockRecorder struct {
+	mock *MockQueryPool
+}
+
+// NewMockQueryPool creates a new mock instance.
+func NewMockQueryPool(ctrl *gomock.Controller) *MockQueryPool {
+	mock := &MockQueryPool{ctrl: ctrl}
+	mock.recorder = &MockQueryPoolMockRecorder{mock}
+	return mock
+}
+
+// EXPECT returns an object that allows the caller to indicate expected use.
+func (m *MockQueryPool) EXPECT() *MockQueryPoolMockRecorder {
+	return m.recorder
+}
+
+// Destroy mocks base method.
+func (m *MockQueryPool) Destroy() {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "Destroy")
+}
+
+// Destroy indicates an expected call of Destroy.
+func (mr *MockQueryPoolMockRecorder) Destroy() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Destroy", reflect.TypeOf((*MockQueryPool)(nil).Destroy))
+}
+
+// Handle mocks base method.
+func (m *MockQueryPool) Handle() core.VkQueryPool {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Handle")
+	ret0, _ := ret[0].(core.VkQueryPool)
+	return ret0
+}
+
+// Handle indicates an expected call of Handle.
+func (mr *MockQueryPoolMockRecorder) Handle() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Handle", reflect.TypeOf((*MockQueryPool)(nil).Handle))
+}
+
+// PopulateResults mocks base method.
+func (m *MockQueryPool) PopulateResults(firstQuery, queryCount int, results interface{}, flags common.QueryResultFlags) (core.VkResult, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "PopulateResults", firstQuery, queryCount, results, flags)
+	ret0, _ := ret[0].(core.VkResult)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// PopulateResults indicates an expected call of PopulateResults.
+func (mr *MockQueryPoolMockRecorder) PopulateResults(firstQuery, queryCount, results, flags interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "PopulateResults", reflect.TypeOf((*MockQueryPool)(nil).PopulateResults), firstQuery, queryCount, results, flags)
 }
 
 // MockQueue is a mock of Queue interface.

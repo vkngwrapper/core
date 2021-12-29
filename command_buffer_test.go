@@ -1123,3 +1123,70 @@ func TestVulkanCommandBuffer_Reset(t *testing.T) {
 	_, err := buffer.Reset(core.ResetReleaseResources)
 	require.NoError(t, err)
 }
+
+func TestVulkanCommandBuffer_CmdResetQueryPool(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	mockDriver, buffer := setup(t, ctrl)
+	queryPool := mocks.EasyMockQueryPool(ctrl)
+
+	mockDriver.EXPECT().VkCmdResetQueryPool(buffer.Handle(), queryPool.Handle(), core.Uint32(1), core.Uint32(3))
+
+	buffer.CmdResetQueryPool(queryPool, 1, 3)
+}
+
+func TestVulkanCommandBuffer_CmdBeginQuery(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	mockDriver, buffer := setup(t, ctrl)
+	queryPool := mocks.EasyMockQueryPool(ctrl)
+
+	mockDriver.EXPECT().VkCmdBeginQuery(
+		buffer.Handle(),
+		queryPool.Handle(),
+		core.Uint32(5),
+		core.VkQueryControlFlags(1), // VK_QUERY_CONTROL_PRECISE_BIT
+	)
+
+	buffer.CmdBeginQuery(queryPool, 5, common.QueryPrecise)
+}
+
+func TestVulkanCommandBuffer_CmdEndQuery(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	mockDriver, buffer := setup(t, ctrl)
+	queryPool := mocks.EasyMockQueryPool(ctrl)
+
+	mockDriver.EXPECT().VkCmdEndQuery(
+		buffer.Handle(),
+		queryPool.Handle(),
+		core.Uint32(5),
+	)
+
+	buffer.CmdEndQuery(queryPool, 5)
+}
+
+func TestVulkanCommandBuffer_CmdCopyQueryPoolResults(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	mockDriver, buffer := setup(t, ctrl)
+	queryPool := mocks.EasyMockQueryPool(ctrl)
+	dstBuffer := mocks.EasyMockBuffer(ctrl)
+
+	mockDriver.EXPECT().VkCmdCopyQueryPoolResults(
+		buffer.Handle(),
+		queryPool.Handle(),
+		core.Uint32(1),
+		core.Uint32(3),
+		dstBuffer.Handle(),
+		core.VkDeviceSize(5),
+		core.VkDeviceSize(7),
+		core.VkQueryResultFlags(8), // VK_QUERY_RESULT_PARTIAL_BIT
+	)
+
+	buffer.CmdCopyQueryPoolResults(queryPool, 1, 3, dstBuffer, 5, 7, common.QueryResultPartial)
+}

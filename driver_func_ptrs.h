@@ -36,7 +36,7 @@ typedef struct DriverFuncPtrs {
     PFN_vkBeginCommandBuffer vkBeginCommandBuffer;
     PFN_vkBindBufferMemory vkBindBufferMemory;
     PFN_vkBindImageMemory vkBindImageMemory;
-    PFN_vkCmdBeginQuery vkCmdBeginQuery; //Todo
+    PFN_vkCmdBeginQuery vkCmdBeginQuery;
     PFN_vkCmdBeginRenderPass vkCmdBeginRenderPass;
     PFN_vkCmdBindDescriptorSets vkCmdBindDescriptorSets;
     PFN_vkCmdBindIndexBuffer vkCmdBindIndexBuffer;
@@ -65,7 +65,7 @@ typedef struct DriverFuncPtrs {
     PFN_vkCmdPipelineBarrier vkCmdPipelineBarrier;
     PFN_vkCmdPushConstants vkCmdPushConstants;
     PFN_vkCmdResetEvent vkCmdResetEvent; //Todo*
-    PFN_vkCmdResetQueryPool vkCmdResetQueryPool; //Todo
+    PFN_vkCmdResetQueryPool vkCmdResetQueryPool;
     PFN_vkCmdResolveImage vkCmdResolveImage; //Todo*
     PFN_vkCmdSetBlendConstants vkCmdSetBlendConstants; //Todo*
     PFN_vkCmdSetDepthBias vkCmdSetDepthBias; //Todo*
@@ -94,7 +94,7 @@ typedef struct DriverFuncPtrs {
     PFN_vkCreateImageView vkCreateImageView;
     PFN_vkCreatePipelineCache vkCreatePipelineCache;
     PFN_vkCreatePipelineLayout vkCreatePipelineLayout;
-    PFN_vkCreateQueryPool vkCreateQueryPool; //Todo
+    PFN_vkCreateQueryPool vkCreateQueryPool;
     PFN_vkCreateRenderPass vkCreateRenderPass;
     PFN_vkCreateSampler vkCreateSampler;
     PFN_vkCreateSemaphore vkCreateSemaphore;
@@ -113,7 +113,7 @@ typedef struct DriverFuncPtrs {
     PFN_vkDestroyPipeline vkDestroyPipeline;
     PFN_vkDestroyPipelineCache vkDestroyPipelineCache;
     PFN_vkDestroyPipelineLayout vkDestroyPipelineLayout;
-    PFN_vkDestroyQueryPool vkDestroyQueryPool; //Todo
+    PFN_vkDestroyQueryPool vkDestroyQueryPool;
     PFN_vkDestroyRenderPass vkDestroyRenderPass;
     PFN_vkDestroySampler vkDestroySampler;
     PFN_vkDestroySemaphore vkDestroySemaphore;

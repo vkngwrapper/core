@@ -94,6 +94,13 @@ func EasyMockPhysicalDevice(ctrl *gomock.Controller, driver core.Driver) *MockPh
 	return physicalDevice
 }
 
+func EasyMockQueryPool(ctrl *gomock.Controller) *MockQueryPool {
+	queryPool := NewMockQueryPool(ctrl)
+	queryPool.EXPECT().Handle().Return(NewFakeQueryPool()).AnyTimes()
+
+	return queryPool
+}
+
 func EasyMockRenderPass(ctrl *gomock.Controller) *MockRenderPass {
 	renderPass := NewMockRenderPass(ctrl)
 	renderPass.EXPECT().Handle().Return(NewFakeRenderPassHandle()).AnyTimes()
@@ -366,6 +373,20 @@ func EasyDummyPipeline(t *testing.T, ctrl *gomock.Controller, loader core.Loader
 	})
 	require.NoError(t, err)
 	return pipelines[0]
+}
+
+func EasyDummyQueryPool(t *testing.T, loader core.Loader1_0, device core.Device) core.QueryPool {
+	driver := device.Driver().(*MockDriver)
+
+	driver.EXPECT().VkCreateQueryPool(gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any()).DoAndReturn(
+		func(device core.VkDevice, pCreateInfo *core.VkQueryPoolCreateInfo, pAllocator *core.VkAllocationCallbacks, pQueryPool *core.VkQueryPool) (core.VkResult, error) {
+			*pQueryPool = NewFakeQueryPool()
+			return core.VKSuccess, nil
+		})
+
+	queryPool, _, err := loader.CreateQueryPool(device, &core.QueryPoolOptions{})
+	require.NoError(t, err)
+	return queryPool
 }
 
 func EasyDummyQueue(device core.Device) core.Queue {

@@ -503,6 +503,26 @@ func (l *VulkanLoader1_0) CreatePipelineLayout(device Device, o *PipelineLayoutO
 	return &vulkanPipelineLayout{driver: device.Driver(), handle: pipelineLayout, device: device.Handle()}, res, nil
 }
 
+func (l *VulkanLoader1_0) CreateQueryPool(device Device, o *QueryPoolOptions) (QueryPool, VkResult, error) {
+	arena := cgoparam.GetAlloc()
+	defer cgoparam.ReturnAlloc(arena)
+
+	createInfo, err := common.AllocOptions(arena, o)
+	if err != nil {
+		return nil, VKErrorUnknown, err
+	}
+
+	var queryPool VkQueryPool
+
+	res, err := device.Driver().VkCreateQueryPool(device.Handle(), (*VkQueryPoolCreateInfo)(createInfo), nil, &queryPool)
+	if err != nil {
+		return nil, res, err
+	}
+
+	return &vulkanQueryPool{driver: device.Driver(), device: device.Handle(), handle: queryPool}, res, nil
+
+}
+
 func (l *VulkanLoader1_0) CreateRenderPass(device Device, o *RenderPassOptions) (RenderPass, VkResult, error) {
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)

@@ -100,6 +100,11 @@ func NewFakePipelineLayout() core.VkPipelineLayout {
 	return core.VkPipelineLayout(unsafe.Pointer(&val))
 }
 
+func NewFakeQueryPool() core.VkQueryPool {
+	val := 0
+	return core.VkQueryPool(unsafe.Pointer(&val))
+}
+
 func NewFakeQueue() core.VkQueue {
 	val := 0
 	return core.VkQueue(unsafe.Pointer(&val))

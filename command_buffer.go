@@ -432,6 +432,22 @@ func (c *vulkanCommandBuffer) CmdClearColorImage(image Image, imageLayout common
 	c.driver.VkCmdClearColorImage(c.handle, image.Handle(), VkImageLayout(imageLayout), (*VkClearColorValue)(pColor), Uint32(rangeCount), (*VkImageSubresourceRange)(pRanges))
 }
 
+func (c *vulkanCommandBuffer) CmdResetQueryPool(queryPool QueryPool, startQuery, queryCount int) {
+	c.driver.VkCmdResetQueryPool(c.handle, queryPool.Handle(), Uint32(startQuery), Uint32(queryCount))
+}
+
+func (c *vulkanCommandBuffer) CmdBeginQuery(queryPool QueryPool, query int, flags common.QueryControlFlags) {
+	c.driver.VkCmdBeginQuery(c.handle, queryPool.Handle(), Uint32(query), VkQueryControlFlags(flags))
+}
+
+func (c *vulkanCommandBuffer) CmdEndQuery(queryPool QueryPool, query int) {
+	c.driver.VkCmdEndQuery(c.handle, queryPool.Handle(), Uint32(query))
+}
+
+func (c *vulkanCommandBuffer) CmdCopyQueryPoolResults(queryPool QueryPool, firstQuery, queryCount int, dstBuffer Buffer, dstOffset, stride int, flags common.QueryResultFlags) {
+	c.driver.VkCmdCopyQueryPoolResults(c.handle, queryPool.Handle(), Uint32(firstQuery), Uint32(queryCount), dstBuffer.Handle(), VkDeviceSize(dstOffset), VkDeviceSize(stride), VkQueryResultFlags(flags))
+}
+
 type CommandBufferResetFlags int32
 
 const (

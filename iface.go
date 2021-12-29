@@ -46,6 +46,10 @@ type CommandBuffer interface {
 	CmdWaitEvents(events []Event, srcStageMask common.PipelineStages, dstStageMask common.PipelineStages, memoryBarriers []*MemoryBarrierOptions, bufferMemoryBarriers []*BufferMemoryBarrierOptions, imageMemoryBarriers []*ImageMemoryBarrierOptions) error
 	CmdSetEvent(event Event, stageMask common.PipelineStages)
 	CmdClearColorImage(image Image, imageLayout common.ImageLayout, color ClearColorValue, ranges []common.ImageSubresourceRange)
+	CmdResetQueryPool(queryPool QueryPool, startQuery, queryCount int)
+	CmdBeginQuery(queryPool QueryPool, query int, flags common.QueryControlFlags)
+	CmdEndQuery(queryPool QueryPool, query int)
+	CmdCopyQueryPoolResults(queryPool QueryPool, firstQuery, queryCount int, dstBuffer Buffer, dstOffset, stride int, flags common.QueryResultFlags)
 }
 
 type CommandPool interface {
@@ -153,6 +157,7 @@ type Loader1_0 interface {
 	CreateImageView(device Device, o *ImageViewOptions) (ImageView, VkResult, error)
 	CreatePipelineCache(device Device, o *PipelineCacheOptions) (PipelineCache, VkResult, error)
 	CreatePipelineLayout(device Device, o *PipelineLayoutOptions) (PipelineLayout, VkResult, error)
+	CreateQueryPool(device Device, o *QueryPoolOptions) (QueryPool, VkResult, error)
 	CreateRenderPass(device Device, o *RenderPassOptions) (RenderPass, VkResult, error)
 	CreateSampler(device Device, o *SamplerOptions) (Sampler, VkResult, error)
 	CreateSemaphore(device Device, o *SemaphoreOptions) (Semaphore, VkResult, error)
@@ -184,6 +189,12 @@ type PipelineCache interface {
 type PipelineLayout interface {
 	Handle() VkPipelineLayout
 	Destroy()
+}
+
+type QueryPool interface {
+	Handle() VkQueryPool
+	Destroy()
+	PopulateResults(firstQuery, queryCount int, results interface{}, flags common.QueryResultFlags) (VkResult, error)
 }
 
 type Queue interface {
