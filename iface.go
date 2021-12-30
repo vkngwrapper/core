@@ -34,7 +34,7 @@ type CommandBuffer interface {
 	CmdBindVertexBuffers(buffers []Buffer, bufferOffsets []int)
 	CmdBindIndexBuffer(buffer Buffer, offset int, indexType common.IndexType)
 	CmdCopyBuffer(srcBuffer Buffer, dstBuffer Buffer, copyRegions []BufferCopy) error
-	CmdBindDescriptorSets(bindPoint common.PipelineBindPoint, layout PipelineLayout, firstSet int, sets []DescriptorSet, dynamicOffsets []int)
+	CmdBindDescriptorSets(bindPoint common.PipelineBindPoint, layout PipelineLayout, sets []DescriptorSet, dynamicOffsets []int)
 	CmdPipelineBarrier(srcStageMask, dstStageMask common.PipelineStages, dependencies common.DependencyFlags, memoryBarriers []*MemoryBarrierOptions, bufferMemoryBarriers []*BufferMemoryBarrierOptions, imageMemoryBarriers []*ImageMemoryBarrierOptions) error
 	CmdCopyBufferToImage(buffer Buffer, image Image, layout common.ImageLayout, regions []*BufferImageCopy) error
 	CmdBlitImage(sourceImage Image, sourceImageLayout common.ImageLayout, destinationImage Image, destinationImageLayout common.ImageLayout, regions []*ImageBlit, filter common.Filter) error
@@ -50,6 +50,7 @@ type CommandBuffer interface {
 	CmdBeginQuery(queryPool QueryPool, query int, flags common.QueryControlFlags)
 	CmdEndQuery(queryPool QueryPool, query int)
 	CmdCopyQueryPoolResults(queryPool QueryPool, firstQuery, queryCount int, dstBuffer Buffer, dstOffset, stride int, flags common.QueryResultFlags)
+	CmdExecuteCommands(commandBuffers []CommandBuffer)
 }
 
 type CommandPool interface {

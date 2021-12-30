@@ -194,15 +194,15 @@ func (mr *MockCommandBufferMockRecorder) CmdBeginRenderPass(contents, o interfac
 }
 
 // CmdBindDescriptorSets mocks base method.
-func (m *MockCommandBuffer) CmdBindDescriptorSets(bindPoint common.PipelineBindPoint, layout core.PipelineLayout, firstSet int, sets []core.DescriptorSet, dynamicOffsets []int) {
+func (m *MockCommandBuffer) CmdBindDescriptorSets(bindPoint common.PipelineBindPoint, layout core.PipelineLayout, sets []core.DescriptorSet, dynamicOffsets []int) {
 	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "CmdBindDescriptorSets", bindPoint, layout, firstSet, sets, dynamicOffsets)
+	m.ctrl.Call(m, "CmdBindDescriptorSets", bindPoint, layout, sets, dynamicOffsets)
 }
 
 // CmdBindDescriptorSets indicates an expected call of CmdBindDescriptorSets.
-func (mr *MockCommandBufferMockRecorder) CmdBindDescriptorSets(bindPoint, layout, firstSet, sets, dynamicOffsets interface{}) *gomock.Call {
+func (mr *MockCommandBufferMockRecorder) CmdBindDescriptorSets(bindPoint, layout, sets, dynamicOffsets interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CmdBindDescriptorSets", reflect.TypeOf((*MockCommandBuffer)(nil).CmdBindDescriptorSets), bindPoint, layout, firstSet, sets, dynamicOffsets)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CmdBindDescriptorSets", reflect.TypeOf((*MockCommandBuffer)(nil).CmdBindDescriptorSets), bindPoint, layout, sets, dynamicOffsets)
 }
 
 // CmdBindIndexBuffer mocks base method.
@@ -367,6 +367,18 @@ func (m *MockCommandBuffer) CmdEndRenderPass() {
 func (mr *MockCommandBufferMockRecorder) CmdEndRenderPass() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CmdEndRenderPass", reflect.TypeOf((*MockCommandBuffer)(nil).CmdEndRenderPass))
+}
+
+// CmdExecuteCommands mocks base method.
+func (m *MockCommandBuffer) CmdExecuteCommands(commandBuffers []core.CommandBuffer) {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "CmdExecuteCommands", commandBuffers)
+}
+
+// CmdExecuteCommands indicates an expected call of CmdExecuteCommands.
+func (mr *MockCommandBufferMockRecorder) CmdExecuteCommands(commandBuffers interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CmdExecuteCommands", reflect.TypeOf((*MockCommandBuffer)(nil).CmdExecuteCommands), commandBuffers)
 }
 
 // CmdNextSubpass mocks base method.

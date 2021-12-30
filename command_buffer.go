@@ -98,7 +98,7 @@ func (c *vulkanCommandBuffer) CmdBindIndexBuffer(buffer Buffer, offset int, inde
 	c.driver.VkCmdBindIndexBuffer(c.handle, buffer.Handle(), VkDeviceSize(offset), VkIndexType(indexType))
 }
 
-func (c *vulkanCommandBuffer) CmdBindDescriptorSets(bindPoint common.PipelineBindPoint, layout PipelineLayout, firstSet int, sets []DescriptorSet, dynamicOffsets []int) {
+func (c *vulkanCommandBuffer) CmdBindDescriptorSets(bindPoint common.PipelineBindPoint, layout PipelineLayout, sets []DescriptorSet, dynamicOffsets []int) {
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
@@ -128,7 +128,7 @@ func (c *vulkanCommandBuffer) CmdBindDescriptorSets(bindPoint common.PipelineBin
 	c.driver.VkCmdBindDescriptorSets(c.handle,
 		VkPipelineBindPoint(bindPoint),
 		layout.Handle(),
-		Uint32(firstSet),
+		Uint32(0),
 		Uint32(setCount),
 		(*VkDescriptorSet)(setPtr),
 		Uint32(dynamicOffsetCount),
@@ -446,6 +446,21 @@ func (c *vulkanCommandBuffer) CmdEndQuery(queryPool QueryPool, query int) {
 
 func (c *vulkanCommandBuffer) CmdCopyQueryPoolResults(queryPool QueryPool, firstQuery, queryCount int, dstBuffer Buffer, dstOffset, stride int, flags common.QueryResultFlags) {
 	c.driver.VkCmdCopyQueryPoolResults(c.handle, queryPool.Handle(), Uint32(firstQuery), Uint32(queryCount), dstBuffer.Handle(), VkDeviceSize(dstOffset), VkDeviceSize(stride), VkQueryResultFlags(flags))
+}
+
+func (c *vulkanCommandBuffer) CmdExecuteCommands(commandBuffers []CommandBuffer) {
+	arena := cgoparam.GetAlloc()
+	defer cgoparam.ReturnAlloc(arena)
+
+	bufferCount := len(commandBuffers)
+	commandBufferPtr := (*C.VkCommandBuffer)(arena.Malloc(bufferCount * int(unsafe.Sizeof([1]C.VkCommandBuffer{}))))
+	commandBufferSlice := ([]C.VkCommandBuffer)(unsafe.Slice(commandBufferPtr, bufferCount))
+
+	for i := 0; i < bufferCount; i++ {
+		commandBufferSlice[i] = C.VkCommandBuffer(commandBuffers[i].Handle())
+	}
+
+	c.driver.VkCmdExecuteCommands(c.handle, Uint32(bufferCount), (*VkCommandBuffer)(commandBufferPtr))
 }
 
 type CommandBufferResetFlags int32

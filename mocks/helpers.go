@@ -22,6 +22,13 @@ func EasyMockBufferView(ctrl *gomock.Controller) *MockBufferView {
 	return bufferView
 }
 
+func EasyMockCommandBuffer(ctrl *gomock.Controller) *MockCommandBuffer {
+	commandBuffer := NewMockCommandBuffer(ctrl)
+	commandBuffer.EXPECT().Handle().Return(NewFakeCommandBufferHandle()).AnyTimes()
+
+	return commandBuffer
+}
+
 func EasyMockDescriptorSet(ctrl *gomock.Controller) *MockDescriptorSet {
 	set := NewMockDescriptorSet(ctrl)
 	set.EXPECT().Handle().Return(NewFakeDescriptorSet()).AnyTimes()
@@ -447,4 +454,3 @@ func EasyDummySemaphore(t *testing.T, loader core.Loader1_0, device core.Device)
 
 	return semaphore
 }
-

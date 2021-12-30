@@ -263,7 +263,7 @@ func TestVulkanCommandBuffer_CmdBindDescriptorSets(t *testing.T) {
 		buffer.Handle(),
 		core.VkPipelineBindPoint(1), /* VK_PIPELINE_BIND_POINT_RAY_TRACING_KHR */
 		pipelineLayoutHandle,
-		core.Uint32(1),
+		core.Uint32(0),
 		core.Uint32(1),
 		gomock.Not(nil),
 		core.Uint32(3),
@@ -276,7 +276,7 @@ func TestVulkanCommandBuffer_CmdBindDescriptorSets(t *testing.T) {
 			require.ElementsMatch(t, []core.Uint32{4, 5, 6}, dynamicOffsetSlice)
 		})
 
-	buffer.CmdBindDescriptorSets(common.BindCompute, pipelineLayout, 1, []core.DescriptorSet{
+	buffer.CmdBindDescriptorSets(common.BindCompute, pipelineLayout, []core.DescriptorSet{
 		descriptorSet,
 	}, []int{4, 5, 6})
 }
@@ -1189,4 +1189,34 @@ func TestVulkanCommandBuffer_CmdCopyQueryPoolResults(t *testing.T) {
 	)
 
 	buffer.CmdCopyQueryPoolResults(queryPool, 1, 3, dstBuffer, 5, 7, common.QueryResultPartial)
+}
+
+func TestVulkanCommandBuffer_CmdExecuteCommands(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	mockDriver, buffer := setup(t, ctrl)
+
+	commandBuffers := []core.CommandBuffer{
+		mocks.EasyMockCommandBuffer(ctrl),
+		mocks.EasyMockCommandBuffer(ctrl),
+		mocks.EasyMockCommandBuffer(ctrl),
+	}
+
+	mockDriver.EXPECT().VkCmdExecuteCommands(
+		buffer.Handle(),
+		core.Uint32(3),
+		gomock.Not(nil)).DoAndReturn(
+		func(commandBuffer core.VkCommandBuffer, secondaryCount core.Uint32, pSecondaryBuffers *core.VkCommandBuffer) (core.VkResult, error) {
+			secondaryBufferSlice := ([]core.VkCommandBuffer)(unsafe.Slice(pSecondaryBuffers, 3))
+			require.Equal(t, secondaryBufferSlice, []core.VkCommandBuffer{
+				commandBuffers[0].Handle(),
+				commandBuffers[1].Handle(),
+				commandBuffers[2].Handle(),
+			})
+
+			return core.VKSuccess, nil
+		})
+
+	buffer.CmdExecuteCommands(commandBuffers)
 }
