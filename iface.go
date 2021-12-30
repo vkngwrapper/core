@@ -184,6 +184,7 @@ type Pipeline interface {
 type PipelineCache interface {
 	Handle() VkPipelineCache
 	Destroy()
+	CacheData() ([]byte, VkResult, error)
 }
 
 type PipelineLayout interface {

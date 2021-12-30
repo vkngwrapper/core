@@ -132,7 +132,7 @@ typedef struct DriverFuncPtrs {
     PFN_vkGetImageMemoryRequirements vkGetImageMemoryRequirements;
     PFN_vkGetImageSparseMemoryRequirements vkGetImageSparseMemoryRequirements; //Todo
     PFN_vkGetImageSubresourceLayout vkGetImageSubresourceLayout;
-    PFN_vkGetPipelineCacheData vkGetPipelineCacheData; //Todo
+    PFN_vkGetPipelineCacheData vkGetPipelineCacheData;
     PFN_vkGetQueryPoolResults vkGetQueryPoolResults; //Todo
     PFN_vkGetRenderAreaGranularity vkGetRenderAreaGranularity; //Todo*
     PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges; //Todo*

@@ -50,3 +50,32 @@ func TestVulkanLoader1_0_CreatePipelineCache(t *testing.T) {
 	require.NotNil(t, pipelineCache)
 	require.Equal(t, pipelineCacheHandle, pipelineCache.Handle())
 }
+
+func TestVulkanPipelineCache_CacheData(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	driver := mocks.NewMockDriver(ctrl)
+	loader, err := core.CreateLoaderFromDriver(driver)
+	require.NoError(t, err)
+
+	device := mocks.EasyMockDevice(ctrl, driver)
+	pipelineCache := mocks.EasyDummyPipelineCache(t, ctrl, loader)
+
+	driver.EXPECT().VkGetPipelineCacheData(device.Handle(), pipelineCache.Handle(), gomock.Not(nil), unsafe.Pointer(nil)).DoAndReturn(
+		func(device core.VkDevice, pipelineCache core.VkPipelineCache, pSize *core.Size, pCacheData unsafe.Pointer) (core.VkResult, error) {
+			*pSize = 8
+			return core.VKSuccess, nil
+		})
+	driver.EXPECT().VkGetPipelineCacheData(device.Handle(), pipelineCache.Handle(), gomock.Not(nil), gomock.Not(unsafe.Pointer(nil))).DoAndReturn(
+		func(device core.VkDevice, pipelineCache core.VkPipelineCache, pSize *core.Size, pCacheData unsafe.Pointer) (core.VkResult, error) {
+			require.Equal(t, core.Size(8), *pSize)
+			bytes := ([]byte)(unsafe.Slice((*byte)(pCacheData), 8))
+			copy(bytes, []byte{1, 1, 2, 3, 5, 8, 13, 21})
+			return core.VKSuccess, nil
+		})
+
+	data, _, err := pipelineCache.CacheData()
+	require.NoError(t, err)
+	require.Equal(t, []byte{1, 1, 2, 3, 5, 8, 13, 21}, data)
+}

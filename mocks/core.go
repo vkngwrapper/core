@@ -2072,6 +2072,22 @@ func (m *MockPipelineCache) EXPECT() *MockPipelineCacheMockRecorder {
 	return m.recorder
 }
 
+// CacheData mocks base method.
+func (m *MockPipelineCache) CacheData() ([]byte, core.VkResult, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CacheData")
+	ret0, _ := ret[0].([]byte)
+	ret1, _ := ret[1].(core.VkResult)
+	ret2, _ := ret[2].(error)
+	return ret0, ret1, ret2
+}
+
+// CacheData indicates an expected call of CacheData.
+func (mr *MockPipelineCacheMockRecorder) CacheData() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CacheData", reflect.TypeOf((*MockPipelineCache)(nil).CacheData))
+}
+
 // Destroy mocks base method.
 func (m *MockPipelineCache) Destroy() {
 	m.ctrl.T.Helper()

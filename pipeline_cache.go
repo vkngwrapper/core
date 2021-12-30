@@ -26,6 +26,32 @@ func (c *vulkanPipelineCache) Destroy() {
 	c.driver.VkDestroyPipelineCache(c.device, c.handle, nil)
 }
 
+func (c *vulkanPipelineCache) CacheData() ([]byte, VkResult, error) {
+	arena := cgoparam.GetAlloc()
+	defer cgoparam.ReturnAlloc(arena)
+
+	cacheSizePtr := arena.Malloc(int(unsafe.Sizeof(C.size_t(0))))
+	cacheSize := (*Size)(cacheSizePtr)
+
+	res, err := c.driver.VkGetPipelineCacheData(c.device, c.handle, cacheSize, nil)
+	if err != nil {
+		return nil, res, err
+	}
+
+	cacheDataPtr := arena.Malloc(int(*cacheSize))
+
+	res, err = c.driver.VkGetPipelineCacheData(c.device, c.handle, cacheSize, cacheDataPtr)
+	if err != nil {
+		return nil, res, err
+	}
+
+	outData := make([]byte, *cacheSize)
+	inData := ([]byte)(unsafe.Slice((*byte)(cacheDataPtr), int(*cacheSize)))
+	copy(outData, inData)
+
+	return outData, res, nil
+}
+
 type PipelineCacheFlags int32
 
 const (

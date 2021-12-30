@@ -375,6 +375,21 @@ func EasyDummyPipeline(t *testing.T, ctrl *gomock.Controller, loader core.Loader
 	return pipelines[0]
 }
 
+func EasyDummyPipelineCache(t *testing.T, ctrl *gomock.Controller, loader core.Loader1_0) core.PipelineCache {
+	driver := loader.Driver().(*MockDriver)
+	device := EasyMockDevice(ctrl, driver)
+
+	driver.EXPECT().VkCreatePipelineCache(gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any()).DoAndReturn(
+		func(device core.VkDevice, pCreateInfo *core.VkPipelineCacheCreateInfo, pAllocator *core.VkAllocationCallbacks, pPipelineCache *core.VkPipelineCache) (core.VkResult, error) {
+			*pPipelineCache = NewFakePipelineCache()
+			return core.VKSuccess, nil
+		})
+
+	pipelineCache, _, err := loader.CreatePipelineCache(device, &core.PipelineCacheOptions{})
+	require.NoError(t, err)
+	return pipelineCache
+}
+
 func EasyDummyQueryPool(t *testing.T, loader core.Loader1_0, device core.Device) core.QueryPool {
 	driver := device.Driver().(*MockDriver)
 
@@ -432,3 +447,4 @@ func EasyDummySemaphore(t *testing.T, loader core.Loader1_0, device core.Device)
 
 	return semaphore
 }
+
