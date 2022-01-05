@@ -163,6 +163,29 @@ func (l *VulkanLoader1_0) AvailableLayers() (map[string]*common.LayerProperties,
 	return layers, result, err
 }
 
+func (l *VulkanLoader1_0) CreateBufferView(device Device, options *BufferViewOptions) (BufferView, VkResult, error) {
+	arena := cgoparam.GetAlloc()
+	defer cgoparam.ReturnAlloc(arena)
+
+	createInfo, err := common.AllocOptions(arena, options)
+	if err != nil {
+		return nil, VKErrorUnknown, err
+	}
+
+	var bufferViewHandle VkBufferView
+
+	res, err := device.Driver().VkCreateBufferView(device.Handle(), (*VkBufferViewCreateInfo)(createInfo), nil, &bufferViewHandle)
+	if err != nil {
+		return nil, res, err
+	}
+
+	return &vulkanBufferView{
+		driver: device.Driver(),
+		device: device.Handle(),
+		handle: bufferViewHandle,
+	}, res, nil
+}
+
 func (l *VulkanLoader1_0) CreateInstance(options *InstanceOptions) (Instance, VkResult, error) {
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)

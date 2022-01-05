@@ -132,6 +132,7 @@ func (o WriteDescriptorSetOptions) populate(allocator *cgoparam.Allocator, creat
 
 	createInfo.descriptorType = C.VkDescriptorType(o.DescriptorType)
 
+	createInfo.descriptorCount = 0
 	createInfo.pImageInfo = nil
 	createInfo.pBufferInfo = nil
 	createInfo.pTexelBufferView = nil

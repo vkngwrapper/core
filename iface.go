@@ -17,6 +17,7 @@ type Buffer interface {
 
 type BufferView interface {
 	Handle() VkBufferView
+	Destroy()
 }
 
 type CommandBuffer interface {
@@ -145,6 +146,7 @@ type Loader1_0 interface {
 	AvailableLayers() (map[string]*common.LayerProperties, VkResult, error)
 
 	CreateBuffer(device Device, o *BufferOptions) (Buffer, VkResult, error)
+	CreateBufferView(device Device, o *BufferViewOptions) (BufferView, VkResult, error)
 	CreateCommandPool(device Device, o *CommandPoolOptions) (CommandPool, VkResult, error)
 	CreateDescriptorPool(device Device, o *DescriptorPoolOptions) (DescriptorPool, VkResult, error)
 	CreateDescriptorSetLayout(device Device, o *DescriptorSetLayoutOptions) (DescriptorSetLayout, VkResult, error)

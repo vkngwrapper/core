@@ -115,6 +115,18 @@ func (m *MockBufferView) EXPECT() *MockBufferViewMockRecorder {
 	return m.recorder
 }
 
+// Destroy mocks base method.
+func (m *MockBufferView) Destroy() {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "Destroy")
+}
+
+// Destroy indicates an expected call of Destroy.
+func (mr *MockBufferViewMockRecorder) Destroy() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Destroy", reflect.TypeOf((*MockBufferView)(nil).Destroy))
+}
+
 // Handle mocks base method.
 func (m *MockBufferView) Handle() core.VkBufferView {
 	m.ctrl.T.Helper()
@@ -1541,6 +1553,22 @@ func (m *MockLoader1_0) CreateBuffer(device core.Device, o *core.BufferOptions) 
 func (mr *MockLoader1_0MockRecorder) CreateBuffer(device, o interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateBuffer", reflect.TypeOf((*MockLoader1_0)(nil).CreateBuffer), device, o)
+}
+
+// CreateBufferView mocks base method.
+func (m *MockLoader1_0) CreateBufferView(device core.Device, o *core.BufferViewOptions) (core.BufferView, core.VkResult, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreateBufferView", device, o)
+	ret0, _ := ret[0].(core.BufferView)
+	ret1, _ := ret[1].(core.VkResult)
+	ret2, _ := ret[2].(error)
+	return ret0, ret1, ret2
+}
+
+// CreateBufferView indicates an expected call of CreateBufferView.
+func (mr *MockLoader1_0MockRecorder) CreateBufferView(device, o interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateBufferView", reflect.TypeOf((*MockLoader1_0)(nil).CreateBufferView), device, o)
 }
 
 // CreateCommandPool mocks base method.
