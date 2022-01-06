@@ -267,6 +267,18 @@ func (mr *MockCommandBufferMockRecorder) CmdBlitImage(sourceImage, sourceImageLa
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CmdBlitImage", reflect.TypeOf((*MockCommandBuffer)(nil).CmdBlitImage), sourceImage, sourceImageLayout, destinationImage, destinationImageLayout, regions, filter)
 }
 
+// CmdClearAttachments mocks base method.
+func (m *MockCommandBuffer) CmdClearAttachments(attachments []core.ClearAttachment, rects []core.ClearRect) {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "CmdClearAttachments", attachments, rects)
+}
+
+// CmdClearAttachments indicates an expected call of CmdClearAttachments.
+func (mr *MockCommandBufferMockRecorder) CmdClearAttachments(attachments, rects interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CmdClearAttachments", reflect.TypeOf((*MockCommandBuffer)(nil).CmdClearAttachments), attachments, rects)
+}
+
 // CmdClearColorImage mocks base method.
 func (m *MockCommandBuffer) CmdClearColorImage(image core.Image, imageLayout common.ImageLayout, color core.ClearColorValue, ranges []common.ImageSubresourceRange) {
 	m.ctrl.T.Helper()
@@ -277,6 +289,18 @@ func (m *MockCommandBuffer) CmdClearColorImage(image core.Image, imageLayout com
 func (mr *MockCommandBufferMockRecorder) CmdClearColorImage(image, imageLayout, color, ranges interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CmdClearColorImage", reflect.TypeOf((*MockCommandBuffer)(nil).CmdClearColorImage), image, imageLayout, color, ranges)
+}
+
+// CmdClearDepthStencilImage mocks base method.
+func (m *MockCommandBuffer) CmdClearDepthStencilImage(image core.Image, imageLayout common.ImageLayout, depthStencil *core.ClearValueDepthStencil, ranges []common.ImageSubresourceRange) {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "CmdClearDepthStencilImage", image, imageLayout, depthStencil, ranges)
+}
+
+// CmdClearDepthStencilImage indicates an expected call of CmdClearDepthStencilImage.
+func (mr *MockCommandBufferMockRecorder) CmdClearDepthStencilImage(image, imageLayout, depthStencil, ranges interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CmdClearDepthStencilImage", reflect.TypeOf((*MockCommandBuffer)(nil).CmdClearDepthStencilImage), image, imageLayout, depthStencil, ranges)
 }
 
 // CmdCopyBuffer mocks base method.
@@ -319,6 +343,20 @@ func (m *MockCommandBuffer) CmdCopyImage(srcImage core.Image, srcImageLayout com
 func (mr *MockCommandBufferMockRecorder) CmdCopyImage(srcImage, srcImageLayout, dstImage, dstImageLayout, regions interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CmdCopyImage", reflect.TypeOf((*MockCommandBuffer)(nil).CmdCopyImage), srcImage, srcImageLayout, dstImage, dstImageLayout, regions)
+}
+
+// CmdCopyImageToBuffer mocks base method.
+func (m *MockCommandBuffer) CmdCopyImageToBuffer(srcImage core.Image, srcImageLayout common.ImageLayout, dstBuffer core.Buffer, regions []core.BufferImageCopy) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CmdCopyImageToBuffer", srcImage, srcImageLayout, dstBuffer, regions)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// CmdCopyImageToBuffer indicates an expected call of CmdCopyImageToBuffer.
+func (mr *MockCommandBufferMockRecorder) CmdCopyImageToBuffer(srcImage, srcImageLayout, dstBuffer, regions interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CmdCopyImageToBuffer", reflect.TypeOf((*MockCommandBuffer)(nil).CmdCopyImageToBuffer), srcImage, srcImageLayout, dstBuffer, regions)
 }
 
 // CmdCopyQueryPoolResults mocks base method.

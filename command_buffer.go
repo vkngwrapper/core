@@ -463,6 +463,91 @@ func (c *vulkanCommandBuffer) CmdExecuteCommands(commandBuffers []CommandBuffer)
 	c.driver.VkCmdExecuteCommands(c.handle, Uint32(bufferCount), (*VkCommandBuffer)(commandBufferPtr))
 }
 
+type ClearAttachment struct {
+	AspectMask      common.ImageAspectFlags
+	ColorAttachment int
+	ClearValue      ClearValue
+}
+
+type ClearRect struct {
+	Rect           common.Rect2D
+	BaseArrayLayer int
+	LayerCount     int
+}
+
+func (c *vulkanCommandBuffer) CmdClearAttachments(attachments []ClearAttachment, rects []ClearRect) {
+	arena := cgoparam.GetAlloc()
+	defer cgoparam.ReturnAlloc(arena)
+
+	attachmentCount := len(attachments)
+	attachmentsPtr := (*C.VkClearAttachment)(arena.Malloc(attachmentCount * C.sizeof_struct_VkClearAttachment))
+	attachmentsSlice := ([]C.VkClearAttachment)(unsafe.Slice(attachmentsPtr, attachmentCount))
+
+	for i := 0; i < attachmentCount; i++ {
+		attachmentsSlice[i].aspectMask = C.VkImageAspectFlags(attachments[i].AspectMask)
+		attachmentsSlice[i].colorAttachment = C.uint32_t(attachments[i].ColorAttachment)
+		attachments[i].ClearValue.populateValueUnion(&attachmentsSlice[i].clearValue)
+	}
+
+	rectsCount := len(rects)
+	rectsPtr := (*C.VkClearRect)(arena.Malloc(rectsCount * C.sizeof_struct_VkClearRect))
+	rectsSlice := ([]C.VkClearRect)(unsafe.Slice(rectsPtr, rectsCount))
+
+	for i := 0; i < rectsCount; i++ {
+		rectsSlice[i].baseArrayLayer = C.uint32_t(rects[i].BaseArrayLayer)
+		rectsSlice[i].layerCount = C.uint32_t(rects[i].LayerCount)
+		rectsSlice[i].rect.extent.width = C.uint32_t(rects[i].Rect.Extent.Width)
+		rectsSlice[i].rect.extent.height = C.uint32_t(rects[i].Rect.Extent.Height)
+		rectsSlice[i].rect.offset.x = C.int32_t(rects[i].Rect.Offset.X)
+		rectsSlice[i].rect.offset.y = C.int32_t(rects[i].Rect.Offset.Y)
+	}
+
+	c.driver.VkCmdClearAttachments(c.handle, Uint32(attachmentCount), (*VkClearAttachment)(attachmentsPtr), Uint32(rectsCount), (*VkClearRect)(rectsPtr))
+}
+
+func (c *vulkanCommandBuffer) CmdClearDepthStencilImage(image Image, imageLayout common.ImageLayout, depthStencil *ClearValueDepthStencil, ranges []common.ImageSubresourceRange) {
+	arena := cgoparam.GetAlloc()
+	defer cgoparam.ReturnAlloc(arena)
+
+	rangeCount := len(ranges)
+	rangePtr := (*C.VkImageSubresourceRange)(arena.Malloc(rangeCount * C.sizeof_struct_VkImageSubresourceRange))
+	rangeSlice := ([]C.VkImageSubresourceRange)(unsafe.Slice(rangePtr, rangeCount))
+
+	for i := 0; i < rangeCount; i++ {
+		rangeSlice[i].aspectMask = C.VkImageAspectFlags(ranges[i].AspectMask)
+		rangeSlice[i].baseMipLevel = C.uint32_t(ranges[i].BaseMipLevel)
+		rangeSlice[i].levelCount = C.uint32_t(ranges[i].LevelCount)
+		rangeSlice[i].baseArrayLayer = C.uint32_t(ranges[i].BaseArrayLayer)
+		rangeSlice[i].layerCount = C.uint32_t(ranges[i].LayerCount)
+	}
+
+	depthStencilPtr := (*C.VkClearDepthStencilValue)(arena.Malloc(C.sizeof_struct_VkClearDepthStencilValue))
+	depthStencilPtr.depth = C.float(depthStencil.Depth)
+	depthStencilPtr.stencil = C.uint32_t(depthStencil.Stencil)
+
+	c.driver.VkCmdClearDepthStencilImage(c.handle, image.Handle(), VkImageLayout(imageLayout), (*VkClearDepthStencilValue)(depthStencilPtr), Uint32(rangeCount), (*VkImageSubresourceRange)(rangePtr))
+}
+
+func (c *vulkanCommandBuffer) CmdCopyImageToBuffer(srcImage Image, srcImageLayout common.ImageLayout, dstBuffer Buffer, regions []BufferImageCopy) error {
+	arena := cgoparam.GetAlloc()
+	defer cgoparam.ReturnAlloc(arena)
+
+	regionCount := len(regions)
+	regionPtr := (*C.VkBufferImageCopy)(arena.Malloc(regionCount * C.sizeof_struct_VkBufferImageCopy))
+	regionSlice := ([]C.VkBufferImageCopy)(unsafe.Slice(regionPtr, regionCount))
+
+	for i := 0; i < regionCount; i++ {
+		err := regions[i].populate(&regionSlice[i])
+		if err != nil {
+			return err
+		}
+	}
+
+	c.driver.VkCmdCopyImageToBuffer(c.handle, srcImage.Handle(), VkImageLayout(srcImageLayout), dstBuffer.Handle(), Uint32(regionCount), (*VkBufferImageCopy)(regionPtr))
+
+	return nil
+}
+
 type CommandBufferResetFlags int32
 
 const (

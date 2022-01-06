@@ -43,13 +43,13 @@ typedef struct DriverFuncPtrs {
     PFN_vkCmdBindPipeline vkCmdBindPipeline;
     PFN_vkCmdBindVertexBuffers vkCmdBindVertexBuffers;
     PFN_vkCmdBlitImage vkCmdBlitImage;
-    PFN_vkCmdClearAttachments vkCmdClearAttachments; //Todo*
+    PFN_vkCmdClearAttachments vkCmdClearAttachments;
     PFN_vkCmdClearColorImage vkCmdClearColorImage;
-    PFN_vkCmdClearDepthStencilImage vkCmdClearDepthStencilImage; //Todo*
+    PFN_vkCmdClearDepthStencilImage vkCmdClearDepthStencilImage;
     PFN_vkCmdCopyBuffer vkCmdCopyBuffer;
     PFN_vkCmdCopyBufferToImage vkCmdCopyBufferToImage;
     PFN_vkCmdCopyImage vkCmdCopyImage;
-    PFN_vkCmdCopyImageToBuffer vkCmdCopyImageToBuffer; //Todo*
+    PFN_vkCmdCopyImageToBuffer vkCmdCopyImageToBuffer; 
     PFN_vkCmdCopyQueryPoolResults vkCmdCopyQueryPoolResults;
     PFN_vkCmdDispatch vkCmdDispatch; //Todo*
     PFN_vkCmdDispatchIndirect vkCmdDispatchIndirect; //Todo*

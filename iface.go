@@ -52,6 +52,9 @@ type CommandBuffer interface {
 	CmdEndQuery(queryPool QueryPool, query int)
 	CmdCopyQueryPoolResults(queryPool QueryPool, firstQuery, queryCount int, dstBuffer Buffer, dstOffset, stride int, flags common.QueryResultFlags)
 	CmdExecuteCommands(commandBuffers []CommandBuffer)
+	CmdClearAttachments(attachments []ClearAttachment, rects []ClearRect)
+	CmdClearDepthStencilImage(image Image, imageLayout common.ImageLayout, depthStencil *ClearValueDepthStencil, ranges []common.ImageSubresourceRange)
+	CmdCopyImageToBuffer(srcImage Image, srcImageLayout common.ImageLayout, dstBuffer Buffer, regions []BufferImageCopy) error
 }
 
 type CommandPool interface {

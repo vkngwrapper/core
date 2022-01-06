@@ -1220,3 +1220,181 @@ func TestVulkanCommandBuffer_CmdExecuteCommands(t *testing.T) {
 
 	buffer.CmdExecuteCommands(commandBuffers)
 }
+
+func TestVulkanCommandBuffer_CmdClearAttachments(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	mockDriver, buffer := setup(t, ctrl)
+
+	mockDriver.EXPECT().VkCmdClearAttachments(
+		buffer.Handle(),
+		core.Uint32(1),
+		gomock.Not(nil),
+		core.Uint32(2),
+		gomock.Not(nil),
+	).DoAndReturn(
+		func(commandBuffer core.VkCommandBuffer, attachmentCount core.Uint32, pAttachments *core.VkClearAttachment, rectCount core.Uint32, pRects *core.VkClearRect) {
+			attachmentSlice := ([]core.VkClearAttachment)(unsafe.Slice(pAttachments, 1))
+			rectSlice := ([]core.VkClearRect)(unsafe.Slice(pRects, 2))
+
+			val := reflect.ValueOf(attachmentSlice).Index(0)
+			require.Equal(t, uint64(1), val.FieldByName("aspectMask").Uint()) // VK_IMAGE_ASPECT_COLOR_BIT
+			require.Equal(t, uint64(3), val.FieldByName("colorAttachment").Uint())
+			floatClear := (*float32)(unsafe.Pointer(val.FieldByName("clearValue").UnsafeAddr()))
+			floatSlice := ([]float32)(unsafe.Slice(floatClear, 4))
+			require.InDelta(t, 5, floatSlice[0], 0.001)
+			require.InDelta(t, 7, floatSlice[1], 0.001)
+			require.InDelta(t, 11, floatSlice[2], 0.001)
+			require.InDelta(t, 13, floatSlice[3], 0.001)
+
+			val = reflect.ValueOf(rectSlice[0])
+			require.Equal(t, uint64(17), val.FieldByName("baseArrayLayer").Uint())
+			require.Equal(t, uint64(19), val.FieldByName("layerCount").Uint())
+			require.Equal(t, int64(23), val.FieldByName("rect").FieldByName("offset").FieldByName("x").Int())
+			require.Equal(t, int64(29), val.FieldByName("rect").FieldByName("offset").FieldByName("y").Int())
+			require.Equal(t, uint64(31), val.FieldByName("rect").FieldByName("extent").FieldByName("width").Uint())
+			require.Equal(t, uint64(37), val.FieldByName("rect").FieldByName("extent").FieldByName("height").Uint())
+
+			val = reflect.ValueOf(rectSlice[1])
+			require.Equal(t, uint64(41), val.FieldByName("baseArrayLayer").Uint())
+			require.Equal(t, uint64(43), val.FieldByName("layerCount").Uint())
+			require.Equal(t, int64(47), val.FieldByName("rect").FieldByName("offset").FieldByName("x").Int())
+			require.Equal(t, int64(53), val.FieldByName("rect").FieldByName("offset").FieldByName("y").Int())
+			require.Equal(t, uint64(59), val.FieldByName("rect").FieldByName("extent").FieldByName("width").Uint())
+			require.Equal(t, uint64(61), val.FieldByName("rect").FieldByName("extent").FieldByName("height").Uint())
+		})
+
+	buffer.CmdClearAttachments([]core.ClearAttachment{
+		{
+			AspectMask:      common.AspectColor,
+			ColorAttachment: 3,
+			ClearValue:      core.ClearValueFloat{5, 7, 11, 13},
+		},
+	}, []core.ClearRect{
+		{
+			BaseArrayLayer: 17,
+			LayerCount:     19,
+			Rect: common.Rect2D{
+				Offset: common.Offset2D{23, 29},
+				Extent: common.Extent2D{31, 37},
+			},
+		},
+		{
+			BaseArrayLayer: 41,
+			LayerCount:     43,
+			Rect: common.Rect2D{
+				Offset: common.Offset2D{47, 53},
+				Extent: common.Extent2D{59, 61},
+			},
+		},
+	})
+}
+
+func TestVulkanCommandBuffer_CmdClearDepthStencilImage(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	mockDriver, buffer := setup(t, ctrl)
+	image := mocks.EasyMockImage(ctrl)
+
+	mockDriver.EXPECT().VkCmdClearDepthStencilImage(buffer.Handle(), image.Handle(),
+		core.VkImageLayout(5), // VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL
+		gomock.Not(nil),
+		core.Uint32(2),
+		gomock.Not(nil),
+	).DoAndReturn(func(commandBuffer core.VkCommandBuffer, image core.VkImage, imageLayout core.VkImageLayout, pDepthStencil *core.VkClearDepthStencilValue, rangeCount core.Uint32, pRanges *core.VkImageSubresourceRange) {
+		depthStencil := reflect.ValueOf(pDepthStencil).Elem()
+
+		require.InDelta(t, 0.5, depthStencil.FieldByName("depth").Float(), 0.00001)
+		require.Equal(t, uint64(3), depthStencil.FieldByName("stencil").Uint())
+
+		rangeSlice := reflect.ValueOf(([]core.VkImageSubresourceRange)(unsafe.Slice(pRanges, 2)))
+
+		val := rangeSlice.Index(0)
+		require.Equal(t, uint64(1), val.FieldByName("aspectMask").Uint()) // VK_IMAGE_ASPECT_COLOR_BIT
+		require.Equal(t, uint64(5), val.FieldByName("baseMipLevel").Uint())
+		require.Equal(t, uint64(7), val.FieldByName("levelCount").Uint())
+		require.Equal(t, uint64(11), val.FieldByName("baseArrayLayer").Uint())
+		require.Equal(t, uint64(13), val.FieldByName("layerCount").Uint())
+
+		val = rangeSlice.Index(1)
+		require.Equal(t, uint64(2), val.FieldByName("aspectMask").Uint()) // VK_IMAGE_ASPECT_DEPTH_BIT
+		require.Equal(t, uint64(17), val.FieldByName("baseMipLevel").Uint())
+		require.Equal(t, uint64(19), val.FieldByName("levelCount").Uint())
+		require.Equal(t, uint64(23), val.FieldByName("baseArrayLayer").Uint())
+		require.Equal(t, uint64(29), val.FieldByName("layerCount").Uint())
+	})
+
+	buffer.CmdClearDepthStencilImage(image, common.LayoutShaderReadOnlyOptimal, &core.ClearValueDepthStencil{
+		Depth:   0.5,
+		Stencil: 3,
+	}, []common.ImageSubresourceRange{
+		{
+			AspectMask:     common.AspectColor,
+			BaseMipLevel:   5,
+			LevelCount:     7,
+			BaseArrayLayer: 11,
+			LayerCount:     13,
+		},
+		{
+			AspectMask:     common.AspectDepth,
+			BaseMipLevel:   17,
+			LevelCount:     19,
+			BaseArrayLayer: 23,
+			LayerCount:     29,
+		},
+	})
+}
+
+func TestVulkanCommandBuffer_CmdCopyImageToBuffer(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	mockDriver, buffer := setup(t, ctrl)
+	image := mocks.EasyMockImage(ctrl)
+	dstBuffer := mocks.EasyMockBuffer(ctrl)
+
+	mockDriver.EXPECT().VkCmdCopyImageToBuffer(buffer.Handle(), image.Handle(),
+		core.VkImageLayout(1000241000), // VK_IMAGE_LAYOUT_DEPTH_ATTACHMENT_OPTIMAL
+		dstBuffer.Handle(),
+		core.Uint32(1),
+		gomock.Not(nil),
+	).DoAndReturn(
+		func(commandBuffer core.VkCommandBuffer, srcImage core.VkImage, srcImageLayout core.VkImageLayout, dstBuffer core.VkBuffer, regionCount core.Uint32, pRegions *core.VkBufferImageCopy) {
+			regionSlice := ([]core.VkBufferImageCopy)(unsafe.Slice(pRegions, 1))
+			val := reflect.ValueOf(regionSlice)
+			val = val.Index(0)
+
+			require.Equal(t, uint64(1), val.FieldByName("bufferOffset").Uint())
+			require.Equal(t, uint64(3), val.FieldByName("bufferRowLength").Uint())
+			require.Equal(t, uint64(5), val.FieldByName("bufferImageHeight").Uint())
+			require.Equal(t, uint64(1), val.FieldByName("imageSubresource").FieldByName("aspectMask").Uint()) // VK_IMAGE_ASPECT_COLOR_BIT
+			require.Equal(t, uint64(7), val.FieldByName("imageSubresource").FieldByName("mipLevel").Uint())
+			require.Equal(t, uint64(11), val.FieldByName("imageSubresource").FieldByName("baseArrayLayer").Uint())
+			require.Equal(t, uint64(13), val.FieldByName("imageSubresource").FieldByName("layerCount").Uint())
+			require.Equal(t, int64(17), val.FieldByName("imageOffset").FieldByName("x").Int())
+			require.Equal(t, int64(19), val.FieldByName("imageOffset").FieldByName("y").Int())
+			require.Equal(t, int64(23), val.FieldByName("imageOffset").FieldByName("z").Int())
+			require.Equal(t, uint64(29), val.FieldByName("imageExtent").FieldByName("width").Uint())
+			require.Equal(t, uint64(31), val.FieldByName("imageExtent").FieldByName("height").Uint())
+			require.Equal(t, uint64(37), val.FieldByName("imageExtent").FieldByName("depth").Uint())
+		})
+
+	err := buffer.CmdCopyImageToBuffer(image, common.LayoutDepthAttachmentOptimal, dstBuffer, []core.BufferImageCopy{
+		{
+			BufferOffset:      1,
+			BufferRowLength:   3,
+			BufferImageHeight: 5,
+			ImageSubresource: common.ImageSubresourceLayers{
+				AspectMask:     common.AspectColor,
+				MipLevel:       7,
+				BaseArrayLayer: 11,
+				LayerCount:     13,
+			},
+			ImageOffset: common.Offset3D{17, 19, 23},
+			ImageExtent: common.Extent3D{29, 31, 37},
+		},
+	})
+	require.NoError(t, err)
+}
