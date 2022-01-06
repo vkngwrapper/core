@@ -61,6 +61,197 @@ func TestVulkanPhysicalDevice_AvailableExtensions(t *testing.T) {
 	require.Equal(t, common.CreateVersion(3, 2, 1), extension.SpecVersion)
 }
 
+func TestVulkanPhysicalDevice_AvailableExtensions_Incomplete(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	driver := mocks.NewMockDriver(ctrl)
+	loader, err := core.CreateLoaderFromDriver(driver)
+	require.NoError(t, err)
+
+	physicalDevice := mocks.EasyDummyPhysicalDevice(t, loader)
+
+	driver.EXPECT().VkEnumerateDeviceExtensionProperties(physicalDevice.Handle(), nil, gomock.Not(nil), nil).DoAndReturn(
+		func(physDevice core.VkPhysicalDevice, pLayerName *core.Char, pPropertyCount *core.Uint32, pProperties *core.VkExtensionProperties) (core.VkResult, error) {
+			*pPropertyCount = core.Uint32(2)
+
+			return core.VKSuccess, nil
+		})
+	driver.EXPECT().VkEnumerateDeviceExtensionProperties(physicalDevice.Handle(), nil, gomock.Not(nil), gomock.Not(nil)).DoAndReturn(
+		func(physDevice core.VkPhysicalDevice, pLayerName *core.Char, pPropertyCount *core.Uint32, pProperties *core.VkExtensionProperties) (core.VkResult, error) {
+			return core.VKIncomplete, nil
+		})
+	driver.EXPECT().VkEnumerateDeviceExtensionProperties(physicalDevice.Handle(), nil, gomock.Not(nil), nil).DoAndReturn(
+		func(physDevice core.VkPhysicalDevice, pLayerName *core.Char, pPropertyCount *core.Uint32, pProperties *core.VkExtensionProperties) (core.VkResult, error) {
+			*pPropertyCount = core.Uint32(2)
+
+			return core.VKSuccess, nil
+		})
+	driver.EXPECT().VkEnumerateDeviceExtensionProperties(physicalDevice.Handle(), nil, gomock.Not(nil), gomock.Not(nil)).DoAndReturn(
+		func(physDevice core.VkPhysicalDevice, pLayerName *core.Char, pPropertyCount *core.Uint32, pProperties *core.VkExtensionProperties) (core.VkResult, error) {
+			*pPropertyCount = 2
+			propertySlice := reflect.ValueOf(([]core.VkExtensionProperties)(unsafe.Slice(pProperties, 2)))
+
+			extension := propertySlice.Index(0)
+
+			*(*uint32)(unsafe.Pointer(extension.FieldByName("specVersion").UnsafeAddr())) = uint32(common.CreateVersion(1, 2, 3))
+			extensionName := ([]core.Char)(unsafe.Slice((*core.Char)(unsafe.Pointer(extension.FieldByName("extensionName").UnsafeAddr())), 256))
+			strToCharSlice("extension 1", extensionName)
+
+			extension = propertySlice.Index(1)
+			*(*uint32)(unsafe.Pointer(extension.FieldByName("specVersion").UnsafeAddr())) = uint32(common.CreateVersion(3, 2, 1))
+			extensionName = ([]core.Char)(unsafe.Slice((*core.Char)(unsafe.Pointer(extension.FieldByName("extensionName").UnsafeAddr())), 256))
+			strToCharSlice("extension A", extensionName)
+
+			return core.VKSuccess, nil
+		})
+	extensions, _, err := physicalDevice.AvailableExtensions()
+	require.NoError(t, err)
+	require.Len(t, extensions, 2)
+
+	extension := extensions["extension 1"]
+	require.NotNil(t, extension)
+	require.Equal(t, "extension 1", extension.ExtensionName)
+	require.Equal(t, common.CreateVersion(1, 2, 3), extension.SpecVersion)
+
+	extension = extensions["extension A"]
+	require.NotNil(t, extension)
+	require.Equal(t, "extension A", extension.ExtensionName)
+	require.Equal(t, common.CreateVersion(3, 2, 1), extension.SpecVersion)
+}
+
+func TestVulkanPhysicalDevice_AvailableLayers(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	driver := mocks.NewMockDriver(ctrl)
+	loader, err := core.CreateLoaderFromDriver(driver)
+	require.NoError(t, err)
+
+	physicalDevice := mocks.EasyDummyPhysicalDevice(t, loader)
+
+	driver.EXPECT().VkEnumerateDeviceLayerProperties(physicalDevice.Handle(), gomock.Not(nil), nil).DoAndReturn(
+		func(physicalDevice core.VkPhysicalDevice, pPropertyCount *core.Uint32, pProperties *core.VkLayerProperties) (core.VkResult, error) {
+			*pPropertyCount = core.Uint32(2)
+
+			return core.VKSuccess, nil
+		})
+	driver.EXPECT().VkEnumerateDeviceLayerProperties(physicalDevice.Handle(), gomock.Not(nil), gomock.Not(nil)).DoAndReturn(
+		func(physicalDevice core.VkPhysicalDevice, pPropertyCount *core.Uint32, pProperties *core.VkLayerProperties) (core.VkResult, error) {
+			*pPropertyCount = 2
+			propertySlice := reflect.ValueOf(([]core.VkLayerProperties)(unsafe.Slice(pProperties, 2)))
+
+			layer := propertySlice.Index(0)
+
+			*(*uint32)(unsafe.Pointer(layer.FieldByName("specVersion").UnsafeAddr())) = uint32(common.CreateVersion(1, 2, 3))
+			*(*uint32)(unsafe.Pointer(layer.FieldByName("implementationVersion").UnsafeAddr())) = uint32(common.CreateVersion(2, 1, 3))
+			layerName := ([]core.Char)(unsafe.Slice((*core.Char)(unsafe.Pointer(layer.FieldByName("layerName").UnsafeAddr())), 256))
+			strToCharSlice("layer 1", layerName)
+			layerDesc := ([]core.Char)(unsafe.Slice((*core.Char)(unsafe.Pointer(layer.FieldByName("description").UnsafeAddr())), 256))
+			strToCharSlice("a cool layer", layerDesc)
+
+			layer = propertySlice.Index(1)
+
+			*(*uint32)(unsafe.Pointer(layer.FieldByName("specVersion").UnsafeAddr())) = uint32(common.CreateVersion(3, 2, 1))
+			*(*uint32)(unsafe.Pointer(layer.FieldByName("implementationVersion").UnsafeAddr())) = uint32(common.CreateVersion(2, 3, 1))
+			layerName = ([]core.Char)(unsafe.Slice((*core.Char)(unsafe.Pointer(layer.FieldByName("layerName").UnsafeAddr())), 256))
+			strToCharSlice("layer A", layerName)
+			layerDesc = ([]core.Char)(unsafe.Slice((*core.Char)(unsafe.Pointer(layer.FieldByName("description").UnsafeAddr())), 256))
+			strToCharSlice("a bad layer", layerDesc)
+
+			return core.VKSuccess, nil
+		})
+
+	layers, _, err := physicalDevice.AvailableLayers()
+	require.NoError(t, err)
+	require.Len(t, layers, 2)
+
+	layer := layers["layer 1"]
+	require.NotNil(t, layer)
+	require.Equal(t, "layer 1", layer.LayerName)
+	require.Equal(t, "a cool layer", layer.Description)
+	require.Equal(t, common.CreateVersion(1, 2, 3), layer.SpecVersion)
+	require.Equal(t, common.CreateVersion(2, 1, 3), layer.ImplementationVersion)
+
+	layer = layers["layer A"]
+	require.NotNil(t, layer)
+	require.Equal(t, "layer A", layer.LayerName)
+	require.Equal(t, "a bad layer", layer.Description)
+	require.Equal(t, common.CreateVersion(3, 2, 1), layer.SpecVersion)
+	require.Equal(t, common.CreateVersion(2, 3, 1), layer.ImplementationVersion)
+}
+
+func TestVulkanPhysicalDevice_AvailableLayers_Incomplete(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	driver := mocks.NewMockDriver(ctrl)
+	loader, err := core.CreateLoaderFromDriver(driver)
+	require.NoError(t, err)
+
+	physicalDevice := mocks.EasyDummyPhysicalDevice(t, loader)
+
+	driver.EXPECT().VkEnumerateDeviceLayerProperties(physicalDevice.Handle(), gomock.Not(nil), nil).DoAndReturn(
+		func(physicalDevice core.VkPhysicalDevice, pPropertyCount *core.Uint32, pProperties *core.VkLayerProperties) (core.VkResult, error) {
+			*pPropertyCount = core.Uint32(2)
+
+			return core.VKSuccess, nil
+		})
+	driver.EXPECT().VkEnumerateDeviceLayerProperties(physicalDevice.Handle(), gomock.Not(nil), gomock.Not(nil)).DoAndReturn(
+		func(physicalDevice core.VkPhysicalDevice, pPropertyCount *core.Uint32, pProperties *core.VkLayerProperties) (core.VkResult, error) {
+			return core.VKIncomplete, nil
+		})
+	driver.EXPECT().VkEnumerateDeviceLayerProperties(physicalDevice.Handle(), gomock.Not(nil), nil).DoAndReturn(
+		func(physicalDevice core.VkPhysicalDevice, pPropertyCount *core.Uint32, pProperties *core.VkLayerProperties) (core.VkResult, error) {
+			*pPropertyCount = core.Uint32(2)
+
+			return core.VKSuccess, nil
+		})
+	driver.EXPECT().VkEnumerateDeviceLayerProperties(physicalDevice.Handle(), gomock.Not(nil), gomock.Not(nil)).DoAndReturn(
+		func(physicalDevice core.VkPhysicalDevice, pPropertyCount *core.Uint32, pProperties *core.VkLayerProperties) (core.VkResult, error) {
+			*pPropertyCount = 2
+			propertySlice := reflect.ValueOf(([]core.VkLayerProperties)(unsafe.Slice(pProperties, 2)))
+
+			layer := propertySlice.Index(0)
+
+			*(*uint32)(unsafe.Pointer(layer.FieldByName("specVersion").UnsafeAddr())) = uint32(common.CreateVersion(1, 2, 3))
+			*(*uint32)(unsafe.Pointer(layer.FieldByName("implementationVersion").UnsafeAddr())) = uint32(common.CreateVersion(2, 1, 3))
+			layerName := ([]core.Char)(unsafe.Slice((*core.Char)(unsafe.Pointer(layer.FieldByName("layerName").UnsafeAddr())), 256))
+			strToCharSlice("layer 1", layerName)
+			layerDesc := ([]core.Char)(unsafe.Slice((*core.Char)(unsafe.Pointer(layer.FieldByName("description").UnsafeAddr())), 256))
+			strToCharSlice("a cool layer", layerDesc)
+
+			layer = propertySlice.Index(1)
+
+			*(*uint32)(unsafe.Pointer(layer.FieldByName("specVersion").UnsafeAddr())) = uint32(common.CreateVersion(3, 2, 1))
+			*(*uint32)(unsafe.Pointer(layer.FieldByName("implementationVersion").UnsafeAddr())) = uint32(common.CreateVersion(2, 3, 1))
+			layerName = ([]core.Char)(unsafe.Slice((*core.Char)(unsafe.Pointer(layer.FieldByName("layerName").UnsafeAddr())), 256))
+			strToCharSlice("layer A", layerName)
+			layerDesc = ([]core.Char)(unsafe.Slice((*core.Char)(unsafe.Pointer(layer.FieldByName("description").UnsafeAddr())), 256))
+			strToCharSlice("a bad layer", layerDesc)
+
+			return core.VKSuccess, nil
+		})
+
+	layers, _, err := physicalDevice.AvailableLayers()
+	require.NoError(t, err)
+	require.Len(t, layers, 2)
+
+	layer := layers["layer 1"]
+	require.NotNil(t, layer)
+	require.Equal(t, "layer 1", layer.LayerName)
+	require.Equal(t, "a cool layer", layer.Description)
+	require.Equal(t, common.CreateVersion(1, 2, 3), layer.SpecVersion)
+	require.Equal(t, common.CreateVersion(2, 1, 3), layer.ImplementationVersion)
+
+	layer = layers["layer A"]
+	require.NotNil(t, layer)
+	require.Equal(t, "layer A", layer.LayerName)
+	require.Equal(t, "a bad layer", layer.Description)
+	require.Equal(t, common.CreateVersion(3, 2, 1), layer.SpecVersion)
+	require.Equal(t, common.CreateVersion(2, 3, 1), layer.ImplementationVersion)
+}
+
 func TestVulkanPhysicalDevice_QueueFamilyProperties(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
@@ -340,6 +531,57 @@ func TestVulkanPhysicalDevice_FormatProperties(t *testing.T) {
 	require.Equal(t, common.FormatFeatureColorAttachmentBlend, props.OptimalTilingFeatures)
 	require.Equal(t, common.FormatFeatureDisjoint, props.LinearTilingFeatures)
 	require.Equal(t, common.FormatFeatureSampledImageYcbcrConversionLinearFilter, props.BufferFeatures)
+}
+
+func TestVulkanPhysicalDevice_ImageFormatProperties(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	driver := mocks.NewMockDriver(ctrl)
+	loader, err := core.CreateLoaderFromDriver(driver)
+	require.NoError(t, err)
+
+	physicalDevice := mocks.EasyDummyPhysicalDevice(t, loader)
+
+	driver.EXPECT().VkGetPhysicalDeviceImageFormatProperties(physicalDevice.Handle(),
+		core.VkFormat(57),              // VK_FORMAT_A8B8G8R8_SRGB_PACK32
+		core.VkImageType(1),            // VK_IMAGE_TYPE_2D
+		core.VkImageTiling(1000158000), // VK_IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT
+		core.VkImageUsageFlags(8),      // VK_IMAGE_USAGE_STORAGE_BIT
+		core.VkImageCreateFlags(0x100), // VK_IMAGE_CREATE_EXTENDED_USAGE_BIT
+		gomock.Not(nil),
+	).DoAndReturn(
+		func(physicalDevice core.VkPhysicalDevice,
+			format core.VkFormat,
+			imageType core.VkImageType,
+			imageTiling core.VkImageTiling,
+			imageUsages core.VkImageUsageFlags,
+			flags core.VkImageCreateFlags,
+			pProperties *core.VkImageFormatProperties) (core.VkResult, error) {
+
+			val := reflect.ValueOf(pProperties).Elem()
+
+			*(*uint32)(unsafe.Pointer(val.FieldByName("maxMipLevels").UnsafeAddr())) = uint32(1)
+			*(*uint32)(unsafe.Pointer(val.FieldByName("maxArrayLayers").UnsafeAddr())) = uint32(3)
+			*(*uint64)(unsafe.Pointer(val.FieldByName("maxResourceSize").UnsafeAddr())) = uint64(5)
+			*(*uint32)(unsafe.Pointer(val.FieldByName("sampleCounts").UnsafeAddr())) = uint32(common.Samples8)
+			*(*uint32)(unsafe.Pointer(val.FieldByName("maxExtent").FieldByName("width").UnsafeAddr())) = uint32(11)
+			*(*uint32)(unsafe.Pointer(val.FieldByName("maxExtent").FieldByName("height").UnsafeAddr())) = uint32(13)
+			*(*uint32)(unsafe.Pointer(val.FieldByName("maxExtent").FieldByName("depth").UnsafeAddr())) = uint32(17)
+
+			return core.VKSuccess, nil
+		})
+
+	props, _, err := physicalDevice.ImageFormatProperties(common.FormatA8B8G8R8SRGB, common.ImageType2D, common.ImageTilingDRMFormatModifierEXT, common.ImageUsageStorage, core.ImageExtendedUsage)
+	require.NoError(t, err)
+	require.NotNil(t, props)
+	require.Equal(t, 1, props.MaxMipLevels)
+	require.Equal(t, 3, props.MaxArrayLayers)
+	require.Equal(t, 5, props.MaxResourceSize)
+	require.Equal(t, common.Samples8, props.SampleCounts)
+	require.Equal(t, 11, props.MaxExtent.Width)
+	require.Equal(t, 13, props.MaxExtent.Height)
+	require.Equal(t, 17, props.MaxExtent.Depth)
 }
 
 func TestVulkanPhysicalDevice_MemoryProperties(t *testing.T) {

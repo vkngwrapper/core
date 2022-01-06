@@ -175,8 +175,10 @@ type PhysicalDevice interface {
 	Features() *common.PhysicalDeviceFeatures
 	AvailableExtensions() (map[string]*common.ExtensionProperties, VkResult, error)
 	AvailableExtensionsForLayer(layerName string) (map[string]*common.ExtensionProperties, VkResult, error)
+	AvailableLayers() (map[string]*common.LayerProperties, VkResult, error)
 	MemoryProperties() *PhysicalDeviceMemoryProperties
 	FormatProperties(format common.DataFormat) *common.FormatProperties
+	ImageFormatProperties(format common.DataFormat, imageType common.ImageType, tiling common.ImageTiling, usages common.ImageUsages, flags ImageFlags) (*common.ImageFormatProperties, VkResult, error)
 }
 
 type Pipeline interface {

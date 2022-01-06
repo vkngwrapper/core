@@ -97,7 +97,7 @@ func (d *vulkanPhysicalDevice) attemptAvailableExtensions(layerNamePtr *Char) (m
 	}
 
 	extensionTotal := int(*extensionCount)
-	extensionsPtr := allocator.Malloc(extensionTotal * int(unsafe.Sizeof([1]C.VkExtensionProperties{})))
+	extensionsPtr := allocator.Malloc(extensionTotal * C.sizeof_struct_VkExtensionProperties)
 
 	res, err = d.driver.VkEnumerateDeviceExtensionProperties(d.handle, nil, extensionCount, (*VkExtensionProperties)(extensionsPtr))
 	if err != nil {
@@ -155,6 +155,65 @@ func (d *vulkanPhysicalDevice) AvailableExtensionsForLayer(layerName string) (ma
 	return layers, result, err
 }
 
+func (d *vulkanPhysicalDevice) attemptAvailableLayers() (map[string]*common.LayerProperties, VkResult, error) {
+	allocator := cgoparam.GetAlloc()
+	defer cgoparam.ReturnAlloc(allocator)
+
+	layerCountPtr := allocator.Malloc(int(unsafe.Sizeof(C.uint32_t(0))))
+	layerCount := (*Uint32)(layerCountPtr)
+
+	res, err := d.driver.VkEnumerateDeviceLayerProperties(d.handle, layerCount, nil)
+
+	if err != nil || *layerCount == 0 {
+		return nil, res, err
+	}
+
+	layerTotal := int(*layerCount)
+	layersPtr := allocator.Malloc(layerTotal * C.sizeof_struct_VkLayerProperties)
+
+	res, err = d.driver.VkEnumerateDeviceLayerProperties(d.handle, layerCount, (*VkLayerProperties)(layersPtr))
+	if err != nil || res == VKIncomplete {
+		return nil, res, err
+	}
+
+	retVal := make(map[string]*common.LayerProperties)
+	layerSlice := ([]C.VkLayerProperties)(unsafe.Slice((*C.VkLayerProperties)(layersPtr), layerTotal))
+
+	for i := 0; i < layerTotal; i++ {
+		layer := layerSlice[i]
+
+		outLayer := &common.LayerProperties{
+			LayerName:             C.GoString((*C.char)(&layer.layerName[0])),
+			Description:           C.GoString((*C.char)(&layer.description[0])),
+			SpecVersion:           common.Version(layer.specVersion),
+			ImplementationVersion: common.Version(layer.implementationVersion),
+		}
+
+		existingLayer, ok := retVal[outLayer.LayerName]
+		if ok && existingLayer.SpecVersion >= outLayer.SpecVersion {
+			continue
+		} else if ok && existingLayer.SpecVersion == outLayer.SpecVersion && existingLayer.ImplementationVersion >= outLayer.ImplementationVersion {
+			continue
+		}
+		retVal[outLayer.LayerName] = outLayer
+	}
+
+	return retVal, res, nil
+}
+
+func (d *vulkanPhysicalDevice) AvailableLayers() (map[string]*common.LayerProperties, VkResult, error) {
+	// There may be a race condition that adds new available extensions between getting the
+	// extension count & pulling the extensions, in which case, attemptAvailableExtensions will return
+	// VK_INCOMPLETE.  In this case, we should try again.
+	var layers map[string]*common.LayerProperties
+	var result VkResult
+	var err error
+	for doWhile := true; doWhile; doWhile = (result == VKIncomplete) {
+		layers, result, err = d.attemptAvailableLayers()
+	}
+	return layers, result, err
+}
+
 func (d *vulkanPhysicalDevice) FormatProperties(format common.DataFormat) *common.FormatProperties {
 	allocator := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(allocator)
@@ -168,6 +227,30 @@ func (d *vulkanPhysicalDevice) FormatProperties(format common.DataFormat) *commo
 		OptimalTilingFeatures: common.FormatFeatures(properties.optimalTilingFeatures),
 		BufferFeatures:        common.FormatFeatures(properties.bufferFeatures),
 	}
+}
+
+func (d *vulkanPhysicalDevice) ImageFormatProperties(format common.DataFormat, imageType common.ImageType, tiling common.ImageTiling, usages common.ImageUsages, flags ImageFlags) (*common.ImageFormatProperties, VkResult, error) {
+	allocator := cgoparam.GetAlloc()
+	defer cgoparam.ReturnAlloc(allocator)
+
+	properties := (*C.VkImageFormatProperties)(allocator.Malloc(C.sizeof_struct_VkImageFormatProperties))
+
+	res, err := d.driver.VkGetPhysicalDeviceImageFormatProperties(d.handle, VkFormat(format), VkImageType(imageType), VkImageTiling(tiling), VkImageUsageFlags(usages), VkImageCreateFlags(flags), (*VkImageFormatProperties)(properties))
+	if err != nil {
+		return nil, res, err
+	}
+
+	return &common.ImageFormatProperties{
+		MaxExtent: common.Extent3D{
+			Width:  int(properties.maxExtent.width),
+			Height: int(properties.maxExtent.height),
+			Depth:  int(properties.maxExtent.depth),
+		},
+		MaxMipLevels:    int(properties.maxMipLevels),
+		MaxArrayLayers:  int(properties.maxArrayLayers),
+		SampleCounts:    common.SampleCounts(properties.sampleCounts),
+		MaxResourceSize: int(properties.maxResourceSize),
+	}, res, nil
 }
 
 func createPhysicalDeviceFeatures(f *C.VkPhysicalDeviceFeatures) *common.PhysicalDeviceFeatures {

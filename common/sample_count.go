@@ -10,13 +10,13 @@ import "strings"
 type SampleCounts int32
 
 const (
-	Samples1  = C.VK_SAMPLE_COUNT_1_BIT
-	Samples2  = C.VK_SAMPLE_COUNT_2_BIT
-	Samples4  = C.VK_SAMPLE_COUNT_4_BIT
-	Samples8  = C.VK_SAMPLE_COUNT_8_BIT
-	Samples16 = C.VK_SAMPLE_COUNT_16_BIT
-	Samples32 = C.VK_SAMPLE_COUNT_32_BIT
-	Samples64 = C.VK_SAMPLE_COUNT_64_BIT
+	Samples1  SampleCounts = C.VK_SAMPLE_COUNT_1_BIT
+	Samples2  SampleCounts = C.VK_SAMPLE_COUNT_2_BIT
+	Samples4  SampleCounts = C.VK_SAMPLE_COUNT_4_BIT
+	Samples8  SampleCounts = C.VK_SAMPLE_COUNT_8_BIT
+	Samples16 SampleCounts = C.VK_SAMPLE_COUNT_16_BIT
+	Samples32 SampleCounts = C.VK_SAMPLE_COUNT_32_BIT
+	Samples64 SampleCounts = C.VK_SAMPLE_COUNT_64_BIT
 )
 
 var sampleCountsToString = map[SampleCounts]string{

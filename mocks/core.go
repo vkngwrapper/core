@@ -1942,6 +1942,22 @@ func (mr *MockPhysicalDeviceMockRecorder) AvailableExtensionsForLayer(layerName 
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AvailableExtensionsForLayer", reflect.TypeOf((*MockPhysicalDevice)(nil).AvailableExtensionsForLayer), layerName)
 }
 
+// AvailableLayers mocks base method.
+func (m *MockPhysicalDevice) AvailableLayers() (map[string]*common.LayerProperties, core.VkResult, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "AvailableLayers")
+	ret0, _ := ret[0].(map[string]*common.LayerProperties)
+	ret1, _ := ret[1].(core.VkResult)
+	ret2, _ := ret[2].(error)
+	return ret0, ret1, ret2
+}
+
+// AvailableLayers indicates an expected call of AvailableLayers.
+func (mr *MockPhysicalDeviceMockRecorder) AvailableLayers() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AvailableLayers", reflect.TypeOf((*MockPhysicalDevice)(nil).AvailableLayers))
+}
+
 // Driver mocks base method.
 func (m *MockPhysicalDevice) Driver() core.Driver {
 	m.ctrl.T.Helper()
@@ -1996,6 +2012,22 @@ func (m *MockPhysicalDevice) Handle() core.VkPhysicalDevice {
 func (mr *MockPhysicalDeviceMockRecorder) Handle() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Handle", reflect.TypeOf((*MockPhysicalDevice)(nil).Handle))
+}
+
+// ImageFormatProperties mocks base method.
+func (m *MockPhysicalDevice) ImageFormatProperties(format common.DataFormat, imageType common.ImageType, tiling common.ImageTiling, usages common.ImageUsages, flags core.ImageFlags) (*common.ImageFormatProperties, core.VkResult, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ImageFormatProperties", format, imageType, tiling, usages, flags)
+	ret0, _ := ret[0].(*common.ImageFormatProperties)
+	ret1, _ := ret[1].(core.VkResult)
+	ret2, _ := ret[2].(error)
+	return ret0, ret1, ret2
+}
+
+// ImageFormatProperties indicates an expected call of ImageFormatProperties.
+func (mr *MockPhysicalDeviceMockRecorder) ImageFormatProperties(format, imageType, tiling, usages, flags interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ImageFormatProperties", reflect.TypeOf((*MockPhysicalDevice)(nil).ImageFormatProperties), format, imageType, tiling, usages, flags)
 }
 
 // MemoryProperties mocks base method.
