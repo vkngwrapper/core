@@ -39,7 +39,7 @@ type CommandBuffer interface {
 	CmdPipelineBarrier(srcStageMask, dstStageMask common.PipelineStages, dependencies common.DependencyFlags, memoryBarriers []*MemoryBarrierOptions, bufferMemoryBarriers []*BufferMemoryBarrierOptions, imageMemoryBarriers []*ImageMemoryBarrierOptions) error
 	CmdCopyBufferToImage(buffer Buffer, image Image, layout common.ImageLayout, regions []*BufferImageCopy) error
 	CmdBlitImage(sourceImage Image, sourceImageLayout common.ImageLayout, destinationImage Image, destinationImageLayout common.ImageLayout, regions []*ImageBlit, filter common.Filter) error
-	CmdPushConstants(layout PipelineLayout, stageFlags common.ShaderStages, offset int, values interface{}) error
+	CmdPushConstants(layout PipelineLayout, stageFlags common.ShaderStages, offset int, valueBytes []byte)
 	CmdSetViewport(viewports []common.Viewport)
 	CmdSetScissor(scissors []common.Rect2D)
 	CmdCopyImage(srcImage Image, srcImageLayout common.ImageLayout, dstImage Image, dstImageLayout common.ImageLayout, regions []ImageCopy) error
@@ -55,6 +55,22 @@ type CommandBuffer interface {
 	CmdClearAttachments(attachments []ClearAttachment, rects []ClearRect)
 	CmdClearDepthStencilImage(image Image, imageLayout common.ImageLayout, depthStencil *ClearValueDepthStencil, ranges []common.ImageSubresourceRange)
 	CmdCopyImageToBuffer(srcImage Image, srcImageLayout common.ImageLayout, dstBuffer Buffer, regions []BufferImageCopy) error
+	CmdDispatch(groupCountX, groupCountY, groupCountZ int)
+	CmdDispatchIndirect(buffer Buffer, offset int)
+	CmdDrawIndexedIndirect(buffer Buffer, offset int, drawCount, stride int)
+	CmdDrawIndirect(buffer Buffer, offset int, drawCount, stride int)
+	CmdFillBuffer(dstBuffer Buffer, dstOffset int, size int, data uint32)
+	CmdResetEvent(event Event, stageMask common.PipelineStages)
+	CmdResolveImage(srcImage Image, srcImageLayout common.ImageLayout, dstImage Image, dstImageLayout common.ImageLayout, regions []ImageResolve)
+	CmdSetBlendConstants(blendConstants [4]float32)
+	CmdSetDepthBias(depthBiasConstantFactor, depthBiasClamp, depthBiasSlopeFactor float32)
+	CmdSetDepthBounds(min, max float32)
+	CmdSetLineWidth(lineWidth float32)
+	CmdSetStencilCompareMask(faceMask common.StencilFaces, compareMask uint32)
+	CmdSetStencilReference(faceMask common.StencilFaces, reference uint32)
+	CmdSetStencilWriteMask(faceMask common.StencilFaces, writeMask uint32)
+	CmdUpdateBuffer(dstBuffer Buffer, dstOffset int, dataSize int, data []byte)
+	CmdWriteTimestamp(pipelineStage common.PipelineStages, queryPool QueryPool, query int)
 }
 
 type CommandPool interface {
@@ -203,7 +219,7 @@ type PipelineLayout interface {
 type QueryPool interface {
 	Handle() VkQueryPool
 	Destroy()
-	PopulateResults(firstQuery, queryCount int, results interface{}, flags common.QueryResultFlags) (VkResult, error)
+	PopulateResults(firstQuery, queryCount int, resultSize, resultStride int, flags common.QueryResultFlags) ([]byte, VkResult, error)
 }
 
 type Queue interface {

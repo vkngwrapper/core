@@ -687,7 +687,11 @@ func TestVulkanCommandBuffer_CmdPushConstants(t *testing.T) {
 			require.Equal(t, uint32(5), intVal)
 		})
 
-	err := buffer.CmdPushConstants(pipelineLayout, common.StageGeometry, 1, uint32(5))
+	writer := bytes.NewBuffer(make([]byte, 0, 4))
+	err := binary.Write(writer, common.ByteOrder, uint32(5))
+	require.NoError(t, err)
+
+	buffer.CmdPushConstants(pipelineLayout, common.StageGeometry, 1, writer.Bytes())
 	require.NoError(t, err)
 }
 
@@ -1397,4 +1401,326 @@ func TestVulkanCommandBuffer_CmdCopyImageToBuffer(t *testing.T) {
 		},
 	})
 	require.NoError(t, err)
+}
+
+func TestVulkanCommandBuffer_CmdDispatch(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	mockDriver, buffer := setup(t, ctrl)
+
+	mockDriver.EXPECT().VkCmdDispatch(buffer.Handle(), core.Uint32(1), core.Uint32(3), core.Uint32(5))
+
+	buffer.CmdDispatch(1, 3, 5)
+}
+
+func TestVulkanCommandBuffer_CmdDispatchIndirect(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	mockDriver, buffer := setup(t, ctrl)
+	indirectBuffer := mocks.EasyMockBuffer(ctrl)
+
+	mockDriver.EXPECT().VkCmdDispatchIndirect(buffer.Handle(), indirectBuffer.Handle(), core.VkDeviceSize(3))
+
+	buffer.CmdDispatchIndirect(indirectBuffer, 3)
+}
+
+func TestVulkanCommandBuffer_CmdDrawIndexedIndirect(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	mockDriver, buffer := setup(t, ctrl)
+	indirectBuffer := mocks.EasyMockBuffer(ctrl)
+
+	mockDriver.EXPECT().VkCmdDrawIndexedIndirect(buffer.Handle(), indirectBuffer.Handle(), core.VkDeviceSize(3), core.Uint32(5), core.Uint32(7))
+
+	buffer.CmdDrawIndexedIndirect(indirectBuffer, 3, 5, 7)
+}
+
+func TestVulkanCommandBuffer_CmdDrawIndirect(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	mockDriver, buffer := setup(t, ctrl)
+	indirectBuffer := mocks.EasyMockBuffer(ctrl)
+
+	mockDriver.EXPECT().VkCmdDrawIndirect(buffer.Handle(), indirectBuffer.Handle(), core.VkDeviceSize(3), core.Uint32(5), core.Uint32(7))
+
+	buffer.CmdDrawIndirect(indirectBuffer, 3, 5, 7)
+}
+
+func TestVulkanCommandBuffer_CmdFillBuffer(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	mockDriver, buffer := setup(t, ctrl)
+	fillBuffer := mocks.EasyMockBuffer(ctrl)
+
+	mockDriver.EXPECT().VkCmdFillBuffer(buffer.Handle(), fillBuffer.Handle(), core.VkDeviceSize(1), core.VkDeviceSize(3), core.Uint32(5))
+
+	buffer.CmdFillBuffer(fillBuffer, 1, 3, 5)
+}
+
+func TestVulkanCommandBuffer_CmdResetEvent(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	mockDriver, buffer := setup(t, ctrl)
+	event := mocks.EasyMockEvent(ctrl)
+
+	mockDriver.EXPECT().VkCmdResetEvent(
+		buffer.Handle(), event.Handle(),
+		core.VkPipelineStageFlags(0x40000), // VK_PIPELINE_STAGE_CONDITIONAL_RENDERING_BIT_EXT
+	)
+
+	buffer.CmdResetEvent(event, common.PipelineStageConditionalRenderingEXT)
+}
+
+func TestVulkanCommandBuffer_CmdResolveImage(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	mockDriver, buffer := setup(t, ctrl)
+	srcImage := mocks.EasyMockImage(ctrl)
+	dstImage := mocks.EasyMockImage(ctrl)
+
+	mockDriver.EXPECT().VkCmdResolveImage(
+		buffer.Handle(),
+		srcImage.Handle(),
+		core.VkImageLayout(5), // VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL
+		dstImage.Handle(),
+		core.VkImageLayout(1000001002), // VK_IMAGE_LAYOUT_PRESENT_SRC_KHR
+		core.Uint32(2),
+		gomock.Not(nil),
+	).DoAndReturn(
+		func(commandBuffer core.VkCommandBuffer, srcImage core.VkImage, srcImageLayout core.VkImageLayout, dstImage core.VkImage, dstImageLayout core.VkImageLayout, resolveCount core.Uint32, pResolves *core.VkImageResolve) {
+			resolveSlice := ([]core.VkImageResolve)(unsafe.Slice(pResolves, 2))
+			sliceVal := reflect.ValueOf(resolveSlice)
+
+			val := sliceVal.Index(0)
+			require.Equal(t, uint64(1), val.FieldByName("srcSubresource").FieldByName("aspectMask").Uint()) // VK_IMAGE_ASPECT_COLOR_BIT
+			require.Equal(t, uint64(1), val.FieldByName("srcSubresource").FieldByName("mipLevel").Uint())
+			require.Equal(t, uint64(3), val.FieldByName("srcSubresource").FieldByName("baseArrayLayer").Uint())
+			require.Equal(t, uint64(5), val.FieldByName("srcSubresource").FieldByName("layerCount").Uint())
+
+			require.Equal(t, int64(7), val.FieldByName("srcOffset").FieldByName("x").Int())
+			require.Equal(t, int64(11), val.FieldByName("srcOffset").FieldByName("y").Int())
+			require.Equal(t, int64(13), val.FieldByName("srcOffset").FieldByName("z").Int())
+
+			require.Equal(t, uint64(2), val.FieldByName("dstSubresource").FieldByName("aspectMask").Uint()) // VK_IMAGE_ASPECT_DEPTH_BIT
+			require.Equal(t, uint64(17), val.FieldByName("dstSubresource").FieldByName("mipLevel").Uint())
+			require.Equal(t, uint64(19), val.FieldByName("dstSubresource").FieldByName("baseArrayLayer").Uint())
+			require.Equal(t, uint64(23), val.FieldByName("dstSubresource").FieldByName("layerCount").Uint())
+
+			require.Equal(t, int64(29), val.FieldByName("dstOffset").FieldByName("x").Int())
+			require.Equal(t, int64(31), val.FieldByName("dstOffset").FieldByName("y").Int())
+			require.Equal(t, int64(37), val.FieldByName("dstOffset").FieldByName("z").Int())
+
+			require.Equal(t, uint64(41), val.FieldByName("extent").FieldByName("width").Uint())
+			require.Equal(t, uint64(43), val.FieldByName("extent").FieldByName("height").Uint())
+			require.Equal(t, uint64(47), val.FieldByName("extent").FieldByName("depth").Uint())
+
+			val = sliceVal.Index(1)
+			require.Equal(t, uint64(8), val.FieldByName("srcSubresource").FieldByName("aspectMask").Uint()) // VK_IMAGE_ASPECT_METADATA_BIT
+			require.Equal(t, uint64(53), val.FieldByName("srcSubresource").FieldByName("mipLevel").Uint())
+			require.Equal(t, uint64(59), val.FieldByName("srcSubresource").FieldByName("baseArrayLayer").Uint())
+			require.Equal(t, uint64(61), val.FieldByName("srcSubresource").FieldByName("layerCount").Uint())
+
+			require.Equal(t, int64(67), val.FieldByName("srcOffset").FieldByName("x").Int())
+			require.Equal(t, int64(71), val.FieldByName("srcOffset").FieldByName("y").Int())
+			require.Equal(t, int64(73), val.FieldByName("srcOffset").FieldByName("z").Int())
+
+			require.Equal(t, uint64(4), val.FieldByName("dstSubresource").FieldByName("aspectMask").Uint()) // VK_IMAGE_ASPECT_STENCIL_BIT
+			require.Equal(t, uint64(79), val.FieldByName("dstSubresource").FieldByName("mipLevel").Uint())
+			require.Equal(t, uint64(83), val.FieldByName("dstSubresource").FieldByName("baseArrayLayer").Uint())
+			require.Equal(t, uint64(89), val.FieldByName("dstSubresource").FieldByName("layerCount").Uint())
+
+			require.Equal(t, int64(97), val.FieldByName("dstOffset").FieldByName("x").Int())
+			require.Equal(t, int64(101), val.FieldByName("dstOffset").FieldByName("y").Int())
+			require.Equal(t, int64(103), val.FieldByName("dstOffset").FieldByName("z").Int())
+
+			require.Equal(t, uint64(107), val.FieldByName("extent").FieldByName("width").Uint())
+			require.Equal(t, uint64(109), val.FieldByName("extent").FieldByName("height").Uint())
+			require.Equal(t, uint64(113), val.FieldByName("extent").FieldByName("depth").Uint())
+		})
+
+	buffer.CmdResolveImage(srcImage,
+		common.LayoutShaderReadOnlyOptimal,
+		dstImage,
+		common.LayoutPresentSrcKHR,
+		[]core.ImageResolve{
+			{
+				SrcSubresource: common.ImageSubresourceLayers{
+					AspectMask:     common.AspectColor,
+					MipLevel:       1,
+					BaseArrayLayer: 3,
+					LayerCount:     5,
+				},
+				SrcOffset: common.Offset3D{7, 11, 13},
+				DstSubresource: common.ImageSubresourceLayers{
+					AspectMask:     common.AspectDepth,
+					MipLevel:       17,
+					BaseArrayLayer: 19,
+					LayerCount:     23,
+				},
+				DstOffset: common.Offset3D{29, 31, 37},
+				Extent:    common.Extent3D{41, 43, 47},
+			},
+			{
+				SrcSubresource: common.ImageSubresourceLayers{
+					AspectMask:     common.AspectMetadata,
+					MipLevel:       53,
+					BaseArrayLayer: 59,
+					LayerCount:     61,
+				},
+				SrcOffset: common.Offset3D{67, 71, 73},
+				DstSubresource: common.ImageSubresourceLayers{
+					AspectMask:     common.AspectStencil,
+					MipLevel:       79,
+					BaseArrayLayer: 83,
+					LayerCount:     89,
+				},
+				DstOffset: common.Offset3D{97, 101, 103},
+				Extent:    common.Extent3D{107, 109, 113},
+			},
+		})
+}
+
+func TestVulkanCommandBuffer_CmdSetBlendConstants(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	mockDriver, buffer := setup(t, ctrl)
+
+	mockDriver.EXPECT().VkCmdSetBlendConstants(buffer.Handle(), gomock.Not(nil)).DoAndReturn(
+		func(commandBuffer core.VkCommandBuffer, blendConstants *core.Float) {
+			blendConsts := unsafe.Slice(blendConstants, 4)
+			require.InDelta(t, 1, float32(blendConsts[0]), 0.0001)
+			require.InDelta(t, 3, float32(blendConsts[1]), 0.0001)
+			require.InDelta(t, 5, float32(blendConsts[2]), 0.0001)
+			require.InDelta(t, 7, float32(blendConsts[3]), 0.0001)
+		})
+
+	buffer.CmdSetBlendConstants([4]float32{1, 3, 5, 7})
+}
+
+func TestVulkanCommandBuffer_CmdSetDepthBias(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	mockDriver, buffer := setup(t, ctrl)
+
+	mockDriver.EXPECT().VkCmdSetDepthBias(buffer.Handle(), gomock.Any(), gomock.Any(), gomock.Any()).DoAndReturn(
+		func(commandBuffer core.VkCommandBuffer, depthBiasConstantFactor core.Float, depthBiasClamp core.Float, depthBiasSlopeFactor core.Float) {
+			require.InDelta(t, 1, float32(depthBiasConstantFactor), 0.0001)
+			require.InDelta(t, 3, float32(depthBiasClamp), 0.0001)
+			require.InDelta(t, 5, float32(depthBiasSlopeFactor), 0.0001)
+		})
+
+	buffer.CmdSetDepthBias(1, 3, 5)
+}
+
+func TestVulkanCommandBuffer_CmdSetDepthBounds(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	mockDriver, buffer := setup(t, ctrl)
+
+	mockDriver.EXPECT().VkCmdSetDepthBounds(buffer.Handle(), gomock.Any(), gomock.Any()).DoAndReturn(
+		func(commandBuffer core.VkCommandBuffer, minDepthBounds core.Float, maxDepthBounds core.Float) {
+			require.InDelta(t, 1, float32(minDepthBounds), 0.0001)
+			require.InDelta(t, 3, float32(maxDepthBounds), 0.0001)
+		})
+
+	buffer.CmdSetDepthBounds(1, 3)
+}
+
+func TestVulkanCommandBuffer_CmdSetLineWidth(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	mockDriver, buffer := setup(t, ctrl)
+
+	mockDriver.EXPECT().VkCmdSetLineWidth(buffer.Handle(), gomock.Any()).DoAndReturn(
+		func(commandBuffer core.VkCommandBuffer, lineWidth core.Float) {
+			require.InDelta(t, 3, float32(lineWidth), 0.0001)
+		})
+
+	buffer.CmdSetLineWidth(3)
+}
+
+func TestVulkanCommandBuffer_CmdSetStencilCompareMask(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	mockDriver, buffer := setup(t, ctrl)
+
+	mockDriver.EXPECT().VkCmdSetStencilCompareMask(buffer.Handle(),
+		core.VkStencilFaceFlags(1), // VK_STENCIL_FACE_FRONT_BIT
+		core.Uint32(3),
+	)
+
+	buffer.CmdSetStencilCompareMask(common.StencilFaceFront, 3)
+}
+
+func TestVulkanCommandBuffer_CmdSetStencilReference(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	mockDriver, buffer := setup(t, ctrl)
+
+	mockDriver.EXPECT().VkCmdSetStencilReference(buffer.Handle(),
+		core.VkStencilFaceFlags(1), // VK_STENCIL_FACE_FRONT_BIT
+		core.Uint32(3),
+	)
+
+	buffer.CmdSetStencilReference(common.StencilFaceFront, 3)
+}
+
+func TestVulkanCommandBuffer_CmdSetStencilWriteMask(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	mockDriver, buffer := setup(t, ctrl)
+
+	mockDriver.EXPECT().VkCmdSetStencilWriteMask(buffer.Handle(),
+		core.VkStencilFaceFlags(1), // VK_STENCIL_FACE_FRONT_BIT
+		core.Uint32(3),
+	)
+
+	buffer.CmdSetStencilWriteMask(common.StencilFaceFront, 3)
+}
+
+func TestVulkanCommandBuffer_CmdUpdateBuffer(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	mockDriver, buffer := setup(t, ctrl)
+	dstBuffer := mocks.EasyMockBuffer(ctrl)
+
+	mockDriver.EXPECT().VkCmdUpdateBuffer(buffer.Handle(), dstBuffer.Handle(), core.VkDeviceSize(1), core.VkDeviceSize(3), gomock.Not(nil)).DoAndReturn(
+		func(commandBuffer core.VkCommandBuffer, dstBuffer core.VkBuffer, dstOffset core.VkDeviceSize, dataSize core.VkDeviceSize, pData unsafe.Pointer) {
+			dataPtr := (*byte)(pData)
+			dataSlice := unsafe.Slice(dataPtr, 4)
+			require.Equal(t, []byte{5, 7, 11, 13}, dataSlice)
+		})
+
+	buffer.CmdUpdateBuffer(dstBuffer, 1, 3, []byte{5, 7, 11, 13})
+}
+
+func TestVulkanCommandBuffer_CmdWriteTimestamp(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	mockDriver, buffer := setup(t, ctrl)
+	queryPool := mocks.EasyMockQueryPool(ctrl)
+
+	mockDriver.EXPECT().VkCmdWriteTimestamp(buffer.Handle(),
+		core.VkPipelineStageFlags(0x800), // VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT
+		queryPool.Handle(),
+		core.Uint32(3),
+	)
+
+	buffer.CmdWriteTimestamp(common.PipelineStageComputeShader, queryPool, 3)
 }

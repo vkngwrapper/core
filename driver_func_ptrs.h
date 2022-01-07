@@ -51,35 +51,35 @@ typedef struct DriverFuncPtrs {
     PFN_vkCmdCopyImage vkCmdCopyImage;
     PFN_vkCmdCopyImageToBuffer vkCmdCopyImageToBuffer; 
     PFN_vkCmdCopyQueryPoolResults vkCmdCopyQueryPoolResults;
-    PFN_vkCmdDispatch vkCmdDispatch; //Todo*
-    PFN_vkCmdDispatchIndirect vkCmdDispatchIndirect; //Todo*
+    PFN_vkCmdDispatch vkCmdDispatch;
+    PFN_vkCmdDispatchIndirect vkCmdDispatchIndirect;
     PFN_vkCmdDraw vkCmdDraw;
     PFN_vkCmdDrawIndexed vkCmdDrawIndexed;
-    PFN_vkCmdDrawIndexedIndirect vkCmdDrawIndexedIndirect; //Todo*
-    PFN_vkCmdDrawIndirect vkCmdDrawIndirect; //Todo*
+    PFN_vkCmdDrawIndexedIndirect vkCmdDrawIndexedIndirect;
+    PFN_vkCmdDrawIndirect vkCmdDrawIndirect;
     PFN_vkCmdEndQuery vkCmdEndQuery;
     PFN_vkCmdEndRenderPass vkCmdEndRenderPass;
     PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
-    PFN_vkCmdFillBuffer vkCmdFillBuffer; //Todo*
+    PFN_vkCmdFillBuffer vkCmdFillBuffer;
     PFN_vkCmdNextSubpass vkCmdNextSubpass;
     PFN_vkCmdPipelineBarrier vkCmdPipelineBarrier;
     PFN_vkCmdPushConstants vkCmdPushConstants;
-    PFN_vkCmdResetEvent vkCmdResetEvent; //Todo*
+    PFN_vkCmdResetEvent vkCmdResetEvent;
     PFN_vkCmdResetQueryPool vkCmdResetQueryPool;
-    PFN_vkCmdResolveImage vkCmdResolveImage; //Todo*
-    PFN_vkCmdSetBlendConstants vkCmdSetBlendConstants; //Todo*
-    PFN_vkCmdSetDepthBias vkCmdSetDepthBias; //Todo*
-    PFN_vkCmdSetDepthBounds vkCmdSetDepthBounds; //Todo*
+    PFN_vkCmdResolveImage vkCmdResolveImage;
+    PFN_vkCmdSetBlendConstants vkCmdSetBlendConstants;
+    PFN_vkCmdSetDepthBias vkCmdSetDepthBias;
+    PFN_vkCmdSetDepthBounds vkCmdSetDepthBounds;
     PFN_vkCmdSetEvent vkCmdSetEvent;
-    PFN_vkCmdSetLineWidth vkCmdSetLineWidth; //Todo*
+    PFN_vkCmdSetLineWidth vkCmdSetLineWidth;
     PFN_vkCmdSetScissor vkCmdSetScissor;
-    PFN_vkCmdSetStencilCompareMask vkCmdSetStencilCompareMask; //Todo*
-    PFN_vkCmdSetStencilReference vkCmdSetStencilReference; //Todo*
-    PFN_vkCmdSetStencilWriteMask vkCmdSetStencilWriteMask; //Todo*
+    PFN_vkCmdSetStencilCompareMask vkCmdSetStencilCompareMask;
+    PFN_vkCmdSetStencilReference vkCmdSetStencilReference;
+    PFN_vkCmdSetStencilWriteMask vkCmdSetStencilWriteMask;
     PFN_vkCmdSetViewport vkCmdSetViewport;
-    PFN_vkCmdUpdateBuffer vkCmdUpdateBuffer; //Todo*
+    PFN_vkCmdUpdateBuffer vkCmdUpdateBuffer;
     PFN_vkCmdWaitEvents vkCmdWaitEvents;
-    PFN_vkCmdWriteTimestamp vkCmdWriteTimestamp; //Todo*
+    PFN_vkCmdWriteTimestamp vkCmdWriteTimestamp;
     PFN_vkCreateBuffer vkCreateBuffer;
     PFN_vkCreateBufferView vkCreateBufferView;
     PFN_vkCreateCommandPool vkCreateCommandPool;

@@ -6,11 +6,8 @@ package core
 */
 import "C"
 import (
-	"encoding/binary"
 	"github.com/CannibalVox/VKng/core/common"
 	"github.com/CannibalVox/cgoparam"
-	"github.com/cockroachdb/errors"
-	"reflect"
 	"unsafe"
 )
 
@@ -28,38 +25,23 @@ func (p *vulkanQueryPool) Destroy() {
 	p.driver.VkDestroyQueryPool(p.device, p.handle, nil)
 }
 
-func (p *vulkanQueryPool) PopulateResults(firstQuery, queryCount int, results interface{}, flags common.QueryResultFlags) (VkResult, error) {
+func (p *vulkanQueryPool) PopulateResults(firstQuery, queryCount int, resultSize, resultStride int, flags common.QueryResultFlags) ([]byte, VkResult, error) {
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
-	resultsSize := binary.Size(results)
-	if resultsSize < 0 {
-		return VKErrorUnknown, errors.New("could not determine size of results with binary.Size- data must be strongly typed and strongly sized")
-	}
-	stride := resultsSize
-	resultsVal := reflect.ValueOf(results)
-	resultsPtr := unsafe.Pointer(&results)
+	outBuffer := make([]byte, resultSize)
 
-	if resultsVal.Kind() == reflect.Slice {
-		idxVal := resultsVal.Index(0)
-		stride = binary.Size(idxVal.Interface())
-		resultsPtr = unsafe.Pointer(idxVal.UnsafeAddr())
-	} else if resultsVal.Kind() == reflect.Ptr {
-		resultsPtr = unsafe.Pointer(resultsVal.Elem().UnsafeAddr())
-	}
+	inPointer := arena.Malloc(resultSize)
 
-	outBuffer := ([]byte)(unsafe.Slice((*byte)(resultsPtr), resultsSize))
-	inPointer := arena.Malloc(resultsSize)
-
-	res, err := p.driver.VkGetQueryPoolResults(p.device, p.handle, Uint32(firstQuery), Uint32(queryCount), Size(resultsSize), inPointer, VkDeviceSize(stride), VkQueryResultFlags(flags))
+	res, err := p.driver.VkGetQueryPoolResults(p.device, p.handle, Uint32(firstQuery), Uint32(queryCount), Size(resultSize), inPointer, VkDeviceSize(resultStride), VkQueryResultFlags(flags))
 	if err != nil {
-		return res, err
+		return nil, res, err
 	}
 
-	inBuffer := ([]byte)(unsafe.Slice((*byte)(inPointer), resultsSize))
+	inBuffer := ([]byte)(unsafe.Slice((*byte)(inPointer), resultSize))
 	copy(outBuffer, inBuffer)
 
-	return res, nil
+	return outBuffer, res, nil
 }
 
 type QueryPoolOptions struct {

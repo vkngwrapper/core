@@ -1,6 +1,8 @@
 package core_test
 
 import (
+	"bytes"
+	"encoding/binary"
 	"github.com/CannibalVox/VKng/core"
 	"github.com/CannibalVox/VKng/core/common"
 	"github.com/CannibalVox/VKng/core/mocks"
@@ -85,9 +87,15 @@ func TestVulkanQueryPool_PopulateResults(t *testing.T) {
 			return core.VKSuccess, nil
 		})
 
-	longs := []uint64{uint64(0), uint64(0), uint64(0), uint64(0), uint64(0)}
-	_, err = queryPool.PopulateResults(1, 3, longs, common.QueryResultPartial)
+	results, _, err := queryPool.PopulateResults(1, 3, 40, 8, common.QueryResultPartial)
 	require.NoError(t, err)
+	require.Len(t, results, 40)
+
+	longs := []uint64{uint64(0), uint64(0), uint64(0), uint64(0), uint64(0)}
+	reader := bytes.NewReader(results)
+	err = binary.Read(reader, common.ByteOrder, longs)
+	require.NoError(t, err)
+
 	require.Len(t, longs, 5)
 	require.Equal(t, []uint64{uint64(1), uint64(3), uint64(5), uint64(8), uint64(13)}, longs)
 }

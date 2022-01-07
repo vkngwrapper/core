@@ -6,8 +6,6 @@ package core
 */
 import "C"
 import (
-	"bytes"
-	"encoding/binary"
 	"github.com/CannibalVox/VKng/core/common"
 	"github.com/CannibalVox/cgoparam"
 	"github.com/cockroachdb/errors"
@@ -252,21 +250,13 @@ func (c *vulkanCommandBuffer) CmdBlitImage(sourceImage Image, sourceImageLayout 
 	return nil
 }
 
-func (c *vulkanCommandBuffer) CmdPushConstants(layout PipelineLayout, stageFlags common.ShaderStages, offset int, values interface{}) error {
-	buf := &bytes.Buffer{}
-	err := binary.Write(buf, common.ByteOrder, values)
-	if err != nil {
-		return err
-	}
-	valueBytes := buf.Bytes()
-
+func (c *vulkanCommandBuffer) CmdPushConstants(layout PipelineLayout, stageFlags common.ShaderStages, offset int, valueBytes []byte) {
 	alloc := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(alloc)
 
 	valueBytesPtr := alloc.CBytes(valueBytes)
 
 	c.driver.VkCmdPushConstants(c.handle, layout.Handle(), VkShaderStageFlags(stageFlags), Uint32(offset), Uint32(len(valueBytes)), valueBytesPtr)
-	return nil
 }
 
 func (c *vulkanCommandBuffer) CmdSetViewport(viewports []common.Viewport) {
@@ -546,6 +536,127 @@ func (c *vulkanCommandBuffer) CmdCopyImageToBuffer(srcImage Image, srcImageLayou
 	c.driver.VkCmdCopyImageToBuffer(c.handle, srcImage.Handle(), VkImageLayout(srcImageLayout), dstBuffer.Handle(), Uint32(regionCount), (*VkBufferImageCopy)(regionPtr))
 
 	return nil
+}
+
+func (c *vulkanCommandBuffer) CmdDispatch(groupCountX, groupCountY, groupCountZ int) {
+	c.driver.VkCmdDispatch(c.handle, Uint32(groupCountX), Uint32(groupCountY), Uint32(groupCountZ))
+}
+
+func (c *vulkanCommandBuffer) CmdDispatchIndirect(buffer Buffer, offset int) {
+	c.driver.VkCmdDispatchIndirect(c.handle, buffer.Handle(), VkDeviceSize(offset))
+}
+
+func (c *vulkanCommandBuffer) CmdDrawIndexedIndirect(buffer Buffer, offset int, drawCount, stride int) {
+	c.driver.VkCmdDrawIndexedIndirect(c.handle, buffer.Handle(), VkDeviceSize(offset), Uint32(drawCount), Uint32(stride))
+}
+
+func (c *vulkanCommandBuffer) CmdDrawIndirect(buffer Buffer, offset int, drawCount, stride int) {
+	c.driver.VkCmdDrawIndirect(c.handle, buffer.Handle(), VkDeviceSize(offset), Uint32(drawCount), Uint32(stride))
+}
+
+func (c *vulkanCommandBuffer) CmdFillBuffer(dstBuffer Buffer, dstOffset int, size int, data uint32) {
+	c.driver.VkCmdFillBuffer(c.handle, dstBuffer.Handle(), VkDeviceSize(dstOffset), VkDeviceSize(size), Uint32(data))
+}
+
+func (c *vulkanCommandBuffer) CmdResetEvent(event Event, stageMask common.PipelineStages) {
+	c.driver.VkCmdResetEvent(c.handle, event.Handle(), VkPipelineStageFlags(stageMask))
+}
+
+type ImageResolve struct {
+	SrcSubresource common.ImageSubresourceLayers
+	SrcOffset      common.Offset3D
+	DstSubresource common.ImageSubresourceLayers
+	DstOffset      common.Offset3D
+	Extent         common.Extent3D
+}
+
+func (c *vulkanCommandBuffer) CmdResolveImage(srcImage Image, srcImageLayout common.ImageLayout, dstImage Image, dstImageLayout common.ImageLayout, regions []ImageResolve) {
+	arena := cgoparam.GetAlloc()
+	defer cgoparam.ReturnAlloc(arena)
+
+	regionCount := len(regions)
+	regionsPtr := (*C.VkImageResolve)(arena.Malloc(regionCount * C.sizeof_struct_VkImageResolve))
+	regionSlice := ([]C.VkImageResolve)(unsafe.Slice(regionsPtr, regionCount))
+
+	for i := 0; i < regionCount; i++ {
+		regionSlice[i].srcSubresource.aspectMask = C.VkImageAspectFlags(regions[i].SrcSubresource.AspectMask)
+		regionSlice[i].srcSubresource.mipLevel = C.uint32_t(regions[i].SrcSubresource.MipLevel)
+		regionSlice[i].srcSubresource.baseArrayLayer = C.uint32_t(regions[i].SrcSubresource.BaseArrayLayer)
+		regionSlice[i].srcSubresource.layerCount = C.uint32_t(regions[i].SrcSubresource.LayerCount)
+
+		regionSlice[i].srcOffset.x = C.int32_t(regions[i].SrcOffset.X)
+		regionSlice[i].srcOffset.y = C.int32_t(regions[i].SrcOffset.Y)
+		regionSlice[i].srcOffset.z = C.int32_t(regions[i].SrcOffset.Z)
+
+		regionSlice[i].dstSubresource.aspectMask = C.VkImageAspectFlags(regions[i].DstSubresource.AspectMask)
+		regionSlice[i].dstSubresource.mipLevel = C.uint32_t(regions[i].DstSubresource.MipLevel)
+		regionSlice[i].dstSubresource.baseArrayLayer = C.uint32_t(regions[i].DstSubresource.BaseArrayLayer)
+		regionSlice[i].dstSubresource.layerCount = C.uint32_t(regions[i].DstSubresource.LayerCount)
+
+		regionSlice[i].dstOffset.x = C.int32_t(regions[i].DstOffset.X)
+		regionSlice[i].dstOffset.y = C.int32_t(regions[i].DstOffset.Y)
+		regionSlice[i].dstOffset.z = C.int32_t(regions[i].DstOffset.Z)
+
+		regionSlice[i].extent.width = C.uint32_t(regions[i].Extent.Width)
+		regionSlice[i].extent.height = C.uint32_t(regions[i].Extent.Height)
+		regionSlice[i].extent.depth = C.uint32_t(regions[i].Extent.Depth)
+	}
+
+	c.driver.VkCmdResolveImage(c.handle, srcImage.Handle(), VkImageLayout(srcImageLayout), dstImage.Handle(), VkImageLayout(dstImageLayout), Uint32(regionCount), (*VkImageResolve)(regionsPtr))
+}
+
+func (c *vulkanCommandBuffer) CmdSetBlendConstants(blendConstants [4]float32) {
+	arena := cgoparam.GetAlloc()
+	defer cgoparam.ReturnAlloc(arena)
+
+	constsPtr := (*C.float)(arena.Malloc(16))
+	constsSlice := ([]C.float)(unsafe.Slice(constsPtr, 4))
+
+	for i := 0; i < 4; i++ {
+		constsSlice[i] = C.float(blendConstants[i])
+	}
+
+	c.driver.VkCmdSetBlendConstants(c.handle, (*Float)(constsPtr))
+}
+
+func (c *vulkanCommandBuffer) CmdSetDepthBias(depthBiasConstantFactor, depthBiasClamp, depthBiasSlopeFactor float32) {
+	c.driver.VkCmdSetDepthBias(c.handle, Float(depthBiasConstantFactor), Float(depthBiasClamp), Float(depthBiasSlopeFactor))
+}
+
+func (c *vulkanCommandBuffer) CmdSetDepthBounds(min, max float32) {
+	c.driver.VkCmdSetDepthBounds(c.handle, Float(min), Float(max))
+}
+
+func (c *vulkanCommandBuffer) CmdSetLineWidth(lineWidth float32) {
+	c.driver.VkCmdSetLineWidth(c.handle, Float(lineWidth))
+}
+
+func (c *vulkanCommandBuffer) CmdSetStencilCompareMask(faceMask common.StencilFaces, compareMask uint32) {
+	c.driver.VkCmdSetStencilCompareMask(c.handle, VkStencilFaceFlags(faceMask), Uint32(compareMask))
+}
+
+func (c *vulkanCommandBuffer) CmdSetStencilReference(faceMask common.StencilFaces, reference uint32) {
+	c.driver.VkCmdSetStencilReference(c.handle, VkStencilFaceFlags(faceMask), Uint32(reference))
+}
+
+func (c *vulkanCommandBuffer) CmdSetStencilWriteMask(faceMask common.StencilFaces, writeMask uint32) {
+	c.driver.VkCmdSetStencilWriteMask(c.handle, VkStencilFaceFlags(faceMask), Uint32(writeMask))
+}
+
+func (c *vulkanCommandBuffer) CmdUpdateBuffer(dstBuffer Buffer, dstOffset int, dataSize int, data []byte) {
+	arena := cgoparam.GetAlloc()
+	defer cgoparam.ReturnAlloc(arena)
+
+	size := len(data)
+	dataPtr := arena.Malloc(size)
+	dataSlice := ([]byte)(unsafe.Slice((*byte)(dataPtr), size))
+	copy(dataSlice, data)
+
+	c.driver.VkCmdUpdateBuffer(c.handle, dstBuffer.Handle(), VkDeviceSize(dstOffset), VkDeviceSize(dataSize), dataPtr)
+}
+
+func (c *vulkanCommandBuffer) CmdWriteTimestamp(pipelineStage common.PipelineStages, queryPool QueryPool, query int) {
+	c.driver.VkCmdWriteTimestamp(c.handle, VkPipelineStageFlags(pipelineStage), queryPool.Handle(), Uint32(query))
 }
 
 type CommandBufferResetFlags int32
