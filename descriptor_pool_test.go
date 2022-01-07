@@ -194,3 +194,20 @@ func TestDescriptorPool_AllocAndFree_Multi(t *testing.T) {
 	_, err = pool.FreeDescriptorSets(sets)
 	require.NoError(t, err)
 }
+
+func TestVulkanDescriptorPool_Reset(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	mockDriver := mocks.NewMockDriver(ctrl)
+	loader, err := core.CreateLoaderFromDriver(mockDriver)
+	require.NoError(t, err)
+
+	mockDevice := mocks.EasyMockDevice(ctrl, mockDriver)
+	pool := mocks.EasyDummyDescriptorPool(t, loader, mockDevice)
+
+	mockDriver.EXPECT().VkResetDescriptorPool(mockDevice.Handle(), pool.Handle(), core.VkDescriptorPoolResetFlags(3)).Return(core.VKSuccess, nil)
+
+	_, err = pool.Reset(3)
+	require.NoError(t, err)
+}

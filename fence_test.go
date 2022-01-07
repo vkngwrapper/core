@@ -87,3 +87,21 @@ func TestVulkanFence_Reset(t *testing.T) {
 	_, err = fence.Reset()
 	require.NoError(t, err)
 }
+
+func TestVulkanFence_Status(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	mockDriver := mocks.NewMockDriver(ctrl)
+	loader, err := core.CreateLoaderFromDriver(mockDriver)
+	require.NoError(t, err)
+
+	device := mocks.EasyMockDevice(ctrl, mockDriver)
+	fence := mocks.EasyDummyFence(t, loader, device)
+
+	mockDriver.EXPECT().VkGetFenceStatus(device.Handle(), fence.Handle()).Return(core.VKNotReady, nil)
+
+	res, err := fence.Status()
+	require.NoError(t, err)
+	require.Equal(t, core.VKNotReady, res)
+}

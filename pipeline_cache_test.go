@@ -79,3 +79,32 @@ func TestVulkanPipelineCache_CacheData(t *testing.T) {
 	require.NoError(t, err)
 	require.Equal(t, []byte{1, 1, 2, 3, 5, 8, 13, 21}, data)
 }
+
+func TestVulkanPipelineCache_MergePipelineCaches(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	driver := mocks.NewMockDriver(ctrl)
+	loader, err := core.CreateLoaderFromDriver(driver)
+	require.NoError(t, err)
+
+	device := mocks.EasyMockDevice(ctrl, driver)
+	pipelineCache := mocks.EasyDummyPipelineCache(t, ctrl, loader)
+
+	srcPipeline1 := mocks.EasyMockPipelineCache(ctrl)
+	srcPipeline2 := mocks.EasyMockPipelineCache(ctrl)
+	srcPipeline3 := mocks.EasyMockPipelineCache(ctrl)
+
+	driver.EXPECT().VkMergePipelineCaches(device.Handle(), pipelineCache.Handle(), core.Uint32(3), gomock.Not(nil)).DoAndReturn(
+		func(device core.VkDevice, dstCache core.VkPipelineCache, srcCacheCount core.Uint32, pSrcCaches *core.VkPipelineCache) (core.VkResult, error) {
+			cacheSlice := unsafe.Slice(pSrcCaches, 3)
+			require.Equal(t, []core.VkPipelineCache{srcPipeline1.Handle(), srcPipeline2.Handle(), srcPipeline3.Handle()}, cacheSlice)
+
+			return core.VKSuccess, nil
+		})
+
+	_, err = pipelineCache.MergePipelineCaches([]core.PipelineCache{
+		srcPipeline1, srcPipeline2, srcPipeline3,
+	})
+	require.NoError(t, err)
+}

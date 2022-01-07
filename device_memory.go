@@ -58,3 +58,14 @@ func (m *vulkanDeviceMemory) MapMemory(offset int, size int, flags MemoryMapFlag
 func (m *vulkanDeviceMemory) UnmapMemory() {
 	m.driver.VkUnmapMemory(m.device, m.handle)
 }
+
+func (m *vulkanDeviceMemory) Commitment() int {
+	arena := cgoparam.GetAlloc()
+	defer cgoparam.ReturnAlloc(arena)
+
+	committedMemoryPtr := (*VkDeviceSize)(arena.Malloc(8))
+
+	m.driver.VkGetDeviceMemoryCommitment(m.device, m.handle, committedMemoryPtr)
+
+	return int(*committedMemoryPtr)
+}

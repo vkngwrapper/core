@@ -125,10 +125,10 @@ typedef struct DriverFuncPtrs {
     PFN_vkFreeDescriptorSets vkFreeDescriptorSets;
     PFN_vkFreeMemory vkFreeMemory;
     PFN_vkGetBufferMemoryRequirements vkGetBufferMemoryRequirements;
-    PFN_vkGetDeviceMemoryCommitment vkGetDeviceMemoryCommitment; //Todo*
+    PFN_vkGetDeviceMemoryCommitment vkGetDeviceMemoryCommitment;
     PFN_vkGetDeviceQueue vkGetDeviceQueue;
     PFN_vkGetEventStatus vkGetEventStatus;
-    PFN_vkGetFenceStatus vkGetFenceStatus; //Todo*
+    PFN_vkGetFenceStatus vkGetFenceStatus;
     PFN_vkGetImageMemoryRequirements vkGetImageMemoryRequirements;
     PFN_vkGetImageSparseMemoryRequirements vkGetImageSparseMemoryRequirements; //Todo*
     PFN_vkGetImageSubresourceLayout vkGetImageSubresourceLayout;
@@ -137,13 +137,13 @@ typedef struct DriverFuncPtrs {
     PFN_vkGetRenderAreaGranularity vkGetRenderAreaGranularity; //Todo*
     PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges; //Todo*
     PFN_vkMapMemory vkMapMemory;
-    PFN_vkMergePipelineCaches vkMergePipelineCaches; //Todo*
+    PFN_vkMergePipelineCaches vkMergePipelineCaches;
     PFN_vkQueueBindSparse vkQueueBindSparse; //Todo*
     PFN_vkQueueSubmit vkQueueSubmit;
     PFN_vkQueueWaitIdle vkQueueWaitIdle;
     PFN_vkResetCommandBuffer vkResetCommandBuffer;
-    PFN_vkResetCommandPool vkResetCommandPool; //Todo*
-    PFN_vkResetDescriptorPool vkResetDescriptorPool; //Todo*
+    PFN_vkResetCommandPool vkResetCommandPool;
+    PFN_vkResetDescriptorPool vkResetDescriptorPool;
     PFN_vkResetEvent vkResetEvent;
     PFN_vkResetFences vkResetFences;
     PFN_vkSetEvent vkSetEvent;

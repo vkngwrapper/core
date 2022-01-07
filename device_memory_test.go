@@ -49,3 +49,22 @@ func TestVulkanDeviceMemory_UnmapMemory(t *testing.T) {
 
 	memory.UnmapMemory()
 }
+
+func TestVulkanDeviceMemory_Commitment(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	mockDriver := mocks.NewMockDriver(ctrl)
+	loader, err := core.CreateLoaderFromDriver(mockDriver)
+	require.NoError(t, err)
+
+	device := mocks.EasyDummyDevice(t, ctrl, loader)
+	memory := mocks.EasyDummyDeviceMemory(t, device)
+
+	mockDriver.EXPECT().VkGetDeviceMemoryCommitment(device.Handle(), memory.Handle(), gomock.Not(nil)).DoAndReturn(
+		func(device core.VkDevice, memory core.VkDeviceMemory, pCommitment *core.VkDeviceSize) {
+			*pCommitment = 3
+		})
+
+	require.Equal(t, 3, memory.Commitment())
+}

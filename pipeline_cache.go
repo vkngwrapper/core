@@ -52,6 +52,21 @@ func (c *vulkanPipelineCache) CacheData() ([]byte, VkResult, error) {
 	return outData, res, nil
 }
 
+func (c *vulkanPipelineCache) MergePipelineCaches(srcCaches []PipelineCache) (VkResult, error) {
+	arena := cgoparam.GetAlloc()
+	defer cgoparam.ReturnAlloc(arena)
+
+	srcCount := len(srcCaches)
+	srcPtr := (*VkPipelineCache)(arena.Malloc(srcCount * int(unsafe.Sizeof([1]VkPipelineCache{}))))
+	srcSlice := ([]VkPipelineCache)(unsafe.Slice(srcPtr, srcCount))
+
+	for i := 0; i < srcCount; i++ {
+		srcSlice[i] = srcCaches[i].Handle()
+	}
+
+	return c.driver.VkMergePipelineCaches(c.device, c.handle, Uint32(srcCount), srcPtr)
+}
+
 type PipelineCacheFlags int32
 
 const (

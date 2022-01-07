@@ -78,6 +78,7 @@ type CommandPool interface {
 	Destroy()
 	AllocateCommandBuffers(o *CommandBufferOptions) ([]CommandBuffer, VkResult, error)
 	FreeCommandBuffers(buffers []CommandBuffer)
+	Reset(flags CommandPoolResetFlags) (VkResult, error)
 }
 
 type DescriptorPool interface {
@@ -85,6 +86,7 @@ type DescriptorPool interface {
 	Destroy()
 	AllocateDescriptorSets(o *DescriptorSetOptions) ([]DescriptorSet, VkResult, error)
 	FreeDescriptorSets(sets []DescriptorSet) (VkResult, error)
+	Reset(flags DescriptorPoolResetFlags) (VkResult, error)
 }
 
 type DescriptorSet interface {
@@ -100,6 +102,7 @@ type DeviceMemory interface {
 	Handle() VkDeviceMemory
 	MapMemory(offset int, size int, flags MemoryMapFlags) (unsafe.Pointer, VkResult, error)
 	UnmapMemory()
+	Commitment() int
 }
 
 type Device interface {
@@ -129,6 +132,7 @@ type Fence interface {
 	Destroy()
 	Wait(timeout time.Duration) (VkResult, error)
 	Reset() (VkResult, error)
+	Status() (VkResult, error)
 }
 
 type Framebuffer interface {
@@ -209,6 +213,7 @@ type PipelineCache interface {
 	Handle() VkPipelineCache
 	Destroy()
 	CacheData() ([]byte, VkResult, error)
+	MergePipelineCaches(srcCaches []PipelineCache) (VkResult, error)
 }
 
 type PipelineLayout interface {

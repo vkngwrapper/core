@@ -52,3 +52,7 @@ func (f *vulkanFence) Reset() (VkResult, error) {
 
 	return f.driver.VkResetFences(f.device, Uint32(1), fencePtr)
 }
+
+func (f *vulkanFence) Status() (VkResult, error) {
+	return f.driver.VkGetFenceStatus(f.device, f.handle)
+}

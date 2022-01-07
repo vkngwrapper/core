@@ -86,6 +86,13 @@ func EasyMockPipeline(ctrl *gomock.Controller) *MockPipeline {
 	return pipeline
 }
 
+func EasyMockPipelineCache(ctrl *gomock.Controller) *MockPipelineCache {
+	pipelineCache := NewMockPipelineCache(ctrl)
+	pipelineCache.EXPECT().Handle().Return(NewFakePipelineCache()).AnyTimes()
+
+	return pipelineCache
+}
+
 func EasyMockPipelineLayout(ctrl *gomock.Controller) *MockPipelineLayout {
 	pipelineLayout := NewMockPipelineLayout(ctrl)
 	pipelineLayout.EXPECT().Handle().Return(NewFakePipelineLayout()).AnyTimes()

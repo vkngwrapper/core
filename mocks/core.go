@@ -844,6 +844,21 @@ func (mr *MockCommandPoolMockRecorder) Handle() *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Handle", reflect.TypeOf((*MockCommandPool)(nil).Handle))
 }
 
+// Reset mocks base method.
+func (m *MockCommandPool) Reset(flags core.CommandPoolResetFlags) (core.VkResult, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Reset", flags)
+	ret0, _ := ret[0].(core.VkResult)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// Reset indicates an expected call of Reset.
+func (mr *MockCommandPoolMockRecorder) Reset(flags interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Reset", reflect.TypeOf((*MockCommandPool)(nil).Reset), flags)
+}
+
 // MockDescriptorPool is a mock of DescriptorPool interface.
 type MockDescriptorPool struct {
 	ctrl     *gomock.Controller
@@ -922,6 +937,21 @@ func (m *MockDescriptorPool) Handle() core.VkDescriptorPool {
 func (mr *MockDescriptorPoolMockRecorder) Handle() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Handle", reflect.TypeOf((*MockDescriptorPool)(nil).Handle))
+}
+
+// Reset mocks base method.
+func (m *MockDescriptorPool) Reset(flags core.DescriptorPoolResetFlags) (core.VkResult, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Reset", flags)
+	ret0, _ := ret[0].(core.VkResult)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// Reset indicates an expected call of Reset.
+func (mr *MockDescriptorPoolMockRecorder) Reset(flags interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Reset", reflect.TypeOf((*MockDescriptorPool)(nil).Reset), flags)
 }
 
 // MockDescriptorSet is a mock of DescriptorSet interface.
@@ -1031,6 +1061,20 @@ func NewMockDeviceMemory(ctrl *gomock.Controller) *MockDeviceMemory {
 // EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockDeviceMemory) EXPECT() *MockDeviceMemoryMockRecorder {
 	return m.recorder
+}
+
+// Commitment mocks base method.
+func (m *MockDeviceMemory) Commitment() int {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Commitment")
+	ret0, _ := ret[0].(int)
+	return ret0
+}
+
+// Commitment indicates an expected call of Commitment.
+func (mr *MockDeviceMemoryMockRecorder) Commitment() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Commitment", reflect.TypeOf((*MockDeviceMemory)(nil).Commitment))
 }
 
 // Handle mocks base method.
@@ -1410,6 +1454,21 @@ func (m *MockFence) Reset() (core.VkResult, error) {
 func (mr *MockFenceMockRecorder) Reset() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Reset", reflect.TypeOf((*MockFence)(nil).Reset))
+}
+
+// Status mocks base method.
+func (m *MockFence) Status() (core.VkResult, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Status")
+	ret0, _ := ret[0].(core.VkResult)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// Status indicates an expected call of Status.
+func (mr *MockFenceMockRecorder) Status() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Status", reflect.TypeOf((*MockFence)(nil).Status))
 }
 
 // Wait mocks base method.
@@ -2412,6 +2471,21 @@ func (m *MockPipelineCache) Handle() core.VkPipelineCache {
 func (mr *MockPipelineCacheMockRecorder) Handle() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Handle", reflect.TypeOf((*MockPipelineCache)(nil).Handle))
+}
+
+// MergePipelineCaches mocks base method.
+func (m *MockPipelineCache) MergePipelineCaches(srcCaches []core.PipelineCache) (core.VkResult, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "MergePipelineCaches", srcCaches)
+	ret0, _ := ret[0].(core.VkResult)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// MergePipelineCaches indicates an expected call of MergePipelineCaches.
+func (mr *MockPipelineCacheMockRecorder) MergePipelineCaches(srcCaches interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "MergePipelineCaches", reflect.TypeOf((*MockPipelineCache)(nil).MergePipelineCaches), srcCaches)
 }
 
 // MockPipelineLayout is a mock of PipelineLayout interface.

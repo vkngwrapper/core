@@ -8,6 +8,7 @@ import "C"
 import (
 	"github.com/CannibalVox/VKng/core/common"
 	"github.com/CannibalVox/cgoparam"
+	"strings"
 	"unsafe"
 )
 
@@ -69,4 +70,40 @@ func (p *vulkanCommandPool) AllocateCommandBuffers(o *CommandBufferOptions) ([]C
 	}
 
 	return result, res, nil
+}
+
+type CommandPoolResetFlags int32
+
+const (
+	CommandPoolResetReleaseResources CommandPoolResetFlags = C.VK_COMMAND_POOL_RESET_RELEASE_RESOURCES_BIT
+)
+
+var commandPoolResetFlagsToString = map[CommandPoolResetFlags]string{
+	CommandPoolResetReleaseResources: "Release Resources",
+}
+
+func (f CommandPoolResetFlags) String() string {
+	if f == 0 {
+		return "None"
+	}
+
+	var hasOne bool
+	var sb strings.Builder
+
+	for i := 0; i < 32; i++ {
+		checkBit := CommandPoolResetFlags(1 << i)
+		if (f & checkBit) != 0 {
+			if hasOne {
+				sb.WriteString("|")
+			}
+			sb.WriteString(commandPoolResetFlagsToString[checkBit])
+			hasOne = true
+		}
+	}
+
+	return sb.String()
+}
+
+func (p *vulkanCommandPool) Reset(flags CommandPoolResetFlags) (VkResult, error) {
+	return p.driver.VkResetCommandPool(p.device, p.handle, VkCommandPoolResetFlags(flags))
 }

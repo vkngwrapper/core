@@ -178,3 +178,23 @@ func TestCommandBufferMultiAllocateFree(t *testing.T) {
 
 	commandPool.FreeCommandBuffers(buffers)
 }
+
+func TestVulkanCommandPool_Reset(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	mockDriver := mocks.NewMockDriver(ctrl)
+	mockDevice := mocks.EasyMockDevice(ctrl, mockDriver)
+
+	loader, err := core.CreateLoaderFromDriver(mockDriver)
+	require.NoError(t, err)
+
+	commandPool := mocks.EasyDummyCommandPool(t, loader, mockDevice)
+
+	mockDriver.EXPECT().VkResetCommandPool(mockDevice.Handle(), commandPool.Handle(),
+		core.VkCommandPoolResetFlags(1), // VK_COMMAND_POOL_RESET_RELEASE_RESOURCES_BIT
+	).Return(core.VKSuccess, nil)
+
+	_, err = commandPool.Reset(core.CommandPoolResetReleaseResources)
+	require.NoError(t, err)
+}

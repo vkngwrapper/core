@@ -147,3 +147,9 @@ func (p *vulkanDescriptorPool) FreeDescriptorSets(sets []DescriptorSet) (VkResul
 
 	return p.driver.VkFreeDescriptorSets(p.device, p.handle, Uint32(setCount), (*VkDescriptorSet)(descriptorsPtrUnsafe))
 }
+
+type DescriptorPoolResetFlags int32
+
+func (p *vulkanDescriptorPool) Reset(flags DescriptorPoolResetFlags) (VkResult, error) {
+	return p.driver.VkResetDescriptorPool(p.device, p.handle, VkDescriptorPoolResetFlags(flags))
+}
