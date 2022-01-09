@@ -251,3 +251,42 @@ func (o *GraphicsPipelineOptions) AllocForC(allocator *cgoparam.Allocator, next 
 	err := o.populate(allocator, createInfo, next)
 	return unsafe.Pointer(createInfo), err
 }
+
+type ComputePipelineOptions struct {
+	Flags  PipelineFlags
+	Shader ShaderStage
+	Layout PipelineLayout
+
+	BasePipeline      Pipeline
+	BasePipelineIndex int
+
+	common.HaveNext
+}
+
+func (o *ComputePipelineOptions) populate(allocator *cgoparam.Allocator, createInfo *C.VkComputePipelineCreateInfo, next unsafe.Pointer) error {
+	createInfo.sType = C.VK_STRUCTURE_TYPE_COMPUTE_PIPELINE_CREATE_INFO
+	createInfo.pNext = next
+	createInfo.flags = C.VkPipelineCreateFlags(o.Flags)
+
+	shaderNext, err := common.AllocNext(allocator, &o.Shader)
+	if err != nil {
+		return err
+	}
+	err = o.Shader.populate(allocator, &createInfo.stage, shaderNext)
+	if err != nil {
+		return err
+	}
+
+	createInfo.layout = C.VkPipelineLayout(o.Layout.Handle())
+	createInfo.basePipelineHandle = C.VkPipeline(o.BasePipeline.Handle())
+	createInfo.basePipelineIndex = C.int32_t(o.BasePipelineIndex)
+
+	return nil
+}
+
+func (o *ComputePipelineOptions) AllocForC(allocator *cgoparam.Allocator, next unsafe.Pointer) (unsafe.Pointer, error) {
+	createInfo := (*C.VkComputePipelineCreateInfo)(allocator.Malloc(C.sizeof_struct_VkComputePipelineCreateInfo))
+
+	err := o.populate(allocator, createInfo, next)
+	return unsafe.Pointer(createInfo), err
+}

@@ -49,7 +49,7 @@ func TestCommandBuffer_Begin_NoInheritance(t *testing.T) {
 
 	mockDriver, buffer := setup(t, ctrl)
 
-	mockDriver.EXPECT().VkBeginCommandBuffer(buffer.Handle(), gomock.Any()).DoAndReturn(
+	mockDriver.EXPECT().VkBeginCommandBuffer(mocks.Exactly(buffer.Handle()), gomock.Any()).DoAndReturn(
 		func(commandBuffer core.VkCommandBuffer, pBeginInfo *core.VkCommandBufferBeginInfo) (core.VkResult, error) {
 			v := reflect.ValueOf(*pBeginInfo)
 			require.Equal(t, uint64(42), v.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO
@@ -72,7 +72,7 @@ func TestCommandBuffer_Begin_WithInheritance(t *testing.T) {
 
 	mockDriver, buffer, renderPass, framebuffer := setupWithRenderPass(t, ctrl)
 
-	mockDriver.EXPECT().VkBeginCommandBuffer(buffer.Handle(), gomock.Any()).DoAndReturn(
+	mockDriver.EXPECT().VkBeginCommandBuffer(mocks.Exactly(buffer.Handle()), gomock.Any()).DoAndReturn(
 		func(commandBuffer core.VkCommandBuffer, pBeginInfo *core.VkCommandBufferBeginInfo) (core.VkResult, error) {
 			v := reflect.ValueOf(*pBeginInfo)
 			require.Equal(t, uint64(42), v.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO
@@ -83,8 +83,8 @@ func TestCommandBuffer_Begin_WithInheritance(t *testing.T) {
 			inheritance := v.FieldByName("pInheritanceInfo").Elem()
 			require.Equal(t, inheritance.FieldByName("sType").Uint(), uint64(41)) // VK_STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_INFO
 			require.True(t, inheritance.FieldByName("pNext").IsNil())
-			require.Equal(t, renderPass.Handle(), (core.VkRenderPass)(unsafe.Pointer(inheritance.FieldByName("renderPass").Elem().UnsafeAddr())))
-			require.Equal(t, framebuffer.Handle(), (core.VkFramebuffer)(unsafe.Pointer(inheritance.FieldByName("framebuffer").Elem().UnsafeAddr())))
+			require.Same(t, renderPass.Handle(), (core.VkRenderPass)(unsafe.Pointer(inheritance.FieldByName("renderPass").Elem().UnsafeAddr())))
+			require.Same(t, framebuffer.Handle(), (core.VkFramebuffer)(unsafe.Pointer(inheritance.FieldByName("framebuffer").Elem().UnsafeAddr())))
 			require.Equal(t, uint64(3), inheritance.FieldByName("subpass").Uint())
 			require.Equal(t, uint64(1), inheritance.FieldByName("occlusionQueryEnable").Uint())
 			require.Equal(t, uint64(1), inheritance.FieldByName("queryFlags").Uint())          // VK_QUERY_CONTROL_PRECISE_BIT
@@ -113,7 +113,7 @@ func TestCommandBuffer_End(t *testing.T) {
 
 	mockDriver, buffer := setup(t, ctrl)
 
-	mockDriver.EXPECT().VkEndCommandBuffer(buffer.Handle()).Return(core.VKSuccess, nil)
+	mockDriver.EXPECT().VkEndCommandBuffer(mocks.Exactly(buffer.Handle())).Return(core.VKSuccess, nil)
 
 	_, err := buffer.End()
 	require.NoError(t, err)
@@ -125,13 +125,13 @@ func TestCommandBuffer_BeginRenderPass(t *testing.T) {
 
 	mockDriver, buffer, renderPass, framebuffer := setupWithRenderPass(t, ctrl)
 
-	mockDriver.EXPECT().VkCmdBeginRenderPass(buffer.Handle(), gomock.Any(), core.VkSubpassContents(1) /*VK_SUBPASS_CONTENTS_SECONDARY_COMMAND_BUFFERS*/).DoAndReturn(
+	mockDriver.EXPECT().VkCmdBeginRenderPass(mocks.Exactly(buffer.Handle()), gomock.Any(), core.VkSubpassContents(1) /*VK_SUBPASS_CONTENTS_SECONDARY_COMMAND_BUFFERS*/).DoAndReturn(
 		func(commandBuffer core.VkCommandBuffer, pRenderPassBegin *core.VkRenderPassBeginInfo, contents core.VkSubpassContents) {
 			v := reflect.ValueOf(*pRenderPassBegin)
 			require.Equal(t, uint64(43), v.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO
 			require.True(t, v.FieldByName("pNext").IsNil())
-			require.Equal(t, renderPass.Handle(), (core.VkRenderPass)(unsafe.Pointer(v.FieldByName("renderPass").Elem().UnsafeAddr())))
-			require.Equal(t, framebuffer.Handle(), (core.VkFramebuffer)(unsafe.Pointer(v.FieldByName("framebuffer").Elem().UnsafeAddr())))
+			require.Same(t, renderPass.Handle(), (core.VkRenderPass)(unsafe.Pointer(v.FieldByName("renderPass").Elem().UnsafeAddr())))
+			require.Same(t, framebuffer.Handle(), (core.VkFramebuffer)(unsafe.Pointer(v.FieldByName("framebuffer").Elem().UnsafeAddr())))
 			require.Equal(t, int64(1), v.FieldByName("renderArea").FieldByName("offset").FieldByName("x").Int())
 			require.Equal(t, int64(2), v.FieldByName("renderArea").FieldByName("offset").FieldByName("y").Int())
 			require.Equal(t, uint64(30), v.FieldByName("renderArea").FieldByName("extent").FieldByName("width").Uint())
@@ -162,7 +162,7 @@ func TestCommandBuffer_EndRenderPass(t *testing.T) {
 
 	mockDriver, buffer := setup(t, ctrl)
 
-	mockDriver.EXPECT().VkCmdEndRenderPass(buffer.Handle())
+	mockDriver.EXPECT().VkCmdEndRenderPass(mocks.Exactly(buffer.Handle()))
 
 	buffer.CmdEndRenderPass()
 }
@@ -181,7 +181,7 @@ func TestCommandBuffer_CmdBindGraphicsPipeline(t *testing.T) {
 	buffer := mocks.EasyDummyCommandBuffer(t, mockDevice, mockPool)
 	pipeline := mocks.EasyDummyGraphicsPipeline(t, loader, mockDevice)
 
-	mockDriver.EXPECT().VkCmdBindPipeline(buffer.Handle(), core.VkPipelineBindPoint(0), pipeline.Handle())
+	mockDriver.EXPECT().VkCmdBindPipeline(mocks.Exactly(buffer.Handle()), core.VkPipelineBindPoint(0), pipeline.Handle())
 
 	buffer.CmdBindPipeline(common.BindGraphics, pipeline)
 }
@@ -192,7 +192,7 @@ func TestCommandBuffer_CmdDraw(t *testing.T) {
 
 	mockDriver, buffer := setup(t, ctrl)
 
-	mockDriver.EXPECT().VkCmdDraw(buffer.Handle(), core.Uint32(6), core.Uint32(1), core.Uint32(2), core.Uint32(3))
+	mockDriver.EXPECT().VkCmdDraw(mocks.Exactly(buffer.Handle()), core.Uint32(6), core.Uint32(1), core.Uint32(2), core.Uint32(3))
 
 	buffer.CmdDraw(6, 1, 2, 3)
 }
@@ -203,7 +203,7 @@ func TestCommandBuffer_CmdDrawIndexed(t *testing.T) {
 
 	mockDriver, buffer := setup(t, ctrl)
 
-	mockDriver.EXPECT().VkCmdDrawIndexed(buffer.Handle(), core.Uint32(1), core.Uint32(2), core.Uint32(3), core.Int32(4), core.Uint32(5))
+	mockDriver.EXPECT().VkCmdDrawIndexed(mocks.Exactly(buffer.Handle()), core.Uint32(1), core.Uint32(2), core.Uint32(3), core.Int32(4), core.Uint32(5))
 
 	buffer.CmdDrawIndexed(1, 2, 3, 4, 5)
 }
@@ -218,12 +218,12 @@ func TestVulkanCommandBuffer_CmdBindVertexBuffers(t *testing.T) {
 	vertexBuffer := mocks.NewMockBuffer(ctrl)
 	vertexBuffer.EXPECT().Handle().Return(bufferHandle)
 
-	mockDriver.EXPECT().VkCmdBindVertexBuffers(buffer.Handle(), core.Uint32(0), core.Uint32(1), gomock.Not(nil), gomock.Not(nil)).DoAndReturn(
+	mockDriver.EXPECT().VkCmdBindVertexBuffers(mocks.Exactly(buffer.Handle()), core.Uint32(0), core.Uint32(1), gomock.Not(nil), gomock.Not(nil)).DoAndReturn(
 		func(commandBuffer core.VkCommandBuffer, firstBinding core.Uint32, bindingCount core.Uint32, pBuffers *core.VkBuffer, pOffsets *core.VkDeviceSize) {
 			singleBuffer := ([]core.VkBuffer)(unsafe.Slice(pBuffers, 1))
 			singleOffset := ([]core.VkDeviceSize)(unsafe.Slice(pOffsets, 1))
 
-			require.ElementsMatch(t, []core.VkBuffer{bufferHandle}, singleBuffer)
+			require.Same(t, bufferHandle, singleBuffer[0])
 			require.ElementsMatch(t, []core.VkDeviceSize{2}, singleOffset)
 		})
 
@@ -240,7 +240,7 @@ func TestVulkanCommandBuffer_CmdBindIndexBuffer(t *testing.T) {
 	indexBuffer := mocks.NewMockBuffer(ctrl)
 	indexBuffer.EXPECT().Handle().Return(bufferHandle)
 
-	mockDriver.EXPECT().VkCmdBindIndexBuffer(buffer.Handle(), bufferHandle, core.VkDeviceSize(2), core.VkIndexType(1) /* VK_INDEX_TYPE_UINT32*/)
+	mockDriver.EXPECT().VkCmdBindIndexBuffer(mocks.Exactly(buffer.Handle()), mocks.Exactly(bufferHandle), core.VkDeviceSize(2), core.VkIndexType(1) /* VK_INDEX_TYPE_UINT32*/)
 
 	buffer.CmdBindIndexBuffer(indexBuffer, 2, common.IndexUInt32)
 }
@@ -260,9 +260,9 @@ func TestVulkanCommandBuffer_CmdBindDescriptorSets(t *testing.T) {
 	descriptorSet.EXPECT().Handle().Return(descriptorSetHandle)
 
 	mockDriver.EXPECT().VkCmdBindDescriptorSets(
-		buffer.Handle(),
+		mocks.Exactly(buffer.Handle()),
 		core.VkPipelineBindPoint(1), /* VK_PIPELINE_BIND_POINT_RAY_TRACING_KHR */
-		pipelineLayoutHandle,
+		mocks.Exactly(pipelineLayoutHandle),
 		core.Uint32(0),
 		core.Uint32(1),
 		gomock.Not(nil),
@@ -272,7 +272,7 @@ func TestVulkanCommandBuffer_CmdBindDescriptorSets(t *testing.T) {
 			descriptorSetSlice := ([]core.VkDescriptorSet)(unsafe.Slice(pDescriptorSets, 1))
 			dynamicOffsetSlice := ([]core.Uint32)(unsafe.Slice(pDynamicOffsets, 3))
 
-			require.ElementsMatch(t, []core.VkDescriptorSet{descriptorSetHandle}, descriptorSetSlice)
+			require.Same(t, descriptorSetHandle, descriptorSetSlice[0])
 			require.ElementsMatch(t, []core.Uint32{4, 5, 6}, dynamicOffsetSlice)
 		})
 
@@ -289,7 +289,7 @@ func TestVulkanCommandBuffer_CmdCopyBuffer(t *testing.T) {
 	src := mocks.EasyMockBuffer(ctrl)
 	dest := mocks.EasyMockBuffer(ctrl)
 
-	mockDriver.EXPECT().VkCmdCopyBuffer(buffer.Handle(), src.Handle(), dest.Handle(), core.Uint32(2), gomock.Not(nil)).DoAndReturn(
+	mockDriver.EXPECT().VkCmdCopyBuffer(mocks.Exactly(buffer.Handle()), mocks.Exactly(src.Handle()), mocks.Exactly(dest.Handle()), core.Uint32(2), gomock.Not(nil)).DoAndReturn(
 		func(buffer core.VkCommandBuffer, src core.VkBuffer, dest core.VkBuffer, regionCount core.Uint32, pRegions *core.VkBufferCopy) {
 			regionSlice := ([]core.VkBufferCopy)(unsafe.Slice(pRegions, 2))
 
@@ -327,7 +327,7 @@ func TestVulkanCommandBuffer_CmdPipelineBarrier(t *testing.T) {
 	mockBuffer := mocks.EasyMockBuffer(ctrl)
 	mockImage := mocks.EasyMockImage(ctrl)
 
-	mockDriver.EXPECT().VkCmdPipelineBarrier(buffer.Handle(),
+	mockDriver.EXPECT().VkCmdPipelineBarrier(mocks.Exactly(buffer.Handle()),
 		core.VkPipelineStageFlags(0x00010000), // VK_PIPELINE_STAGE_ALL_COMMANDS_BIT
 		core.VkPipelineStageFlags(0x00020000), // VK_PIPELINE_STAGE_COMMAND_PREPROCESS_BIT_NV
 		core.VkDependencyFlags(2),             // VK_DEPENDENCY_VIEW_LOCAL_BIT
@@ -364,7 +364,7 @@ func TestVulkanCommandBuffer_CmdPipelineBarrier(t *testing.T) {
 			require.Equal(t, uint64(3), bufferMemoryBarrier.FieldByName("dstQueueFamilyIndex").Uint())
 
 			actualBuffer := (core.VkBuffer)(unsafe.Pointer(bufferMemoryBarrier.FieldByName("buffer").Elem().UnsafeAddr()))
-			require.Equal(t, mockBuffer.Handle(), actualBuffer)
+			require.Same(t, mockBuffer.Handle(), actualBuffer)
 
 			require.Equal(t, uint64(5), bufferMemoryBarrier.FieldByName("offset").Uint())
 			require.Equal(t, uint64(7), bufferMemoryBarrier.FieldByName("size").Uint())
@@ -380,7 +380,7 @@ func TestVulkanCommandBuffer_CmdPipelineBarrier(t *testing.T) {
 			require.Equal(t, uint64(13), imageMemoryBarrier.FieldByName("dstQueueFamilyIndex").Uint())
 
 			actualImage := (core.VkImage)(unsafe.Pointer(imageMemoryBarrier.FieldByName("image").Elem().UnsafeAddr()))
-			require.Equal(t, mockImage.Handle(), actualImage)
+			require.Same(t, mockImage.Handle(), actualImage)
 
 			subresource := imageMemoryBarrier.FieldByName("subresourceRange")
 			require.Equal(t, uint64(0x00000010), subresource.FieldByName("aspectMask").Uint()) // VK_IMAGE_ASPECT_PLANE_0_BIT
@@ -444,9 +444,9 @@ func TestVulkanCommandBuffer_CmdCopyBufferToImage(t *testing.T) {
 	mockBuffer := mocks.EasyMockBuffer(ctrl)
 	mockImage := mocks.EasyMockImage(ctrl)
 
-	mockDriver.EXPECT().VkCmdCopyBufferToImage(buffer.Handle(),
-		mockBuffer.Handle(),
-		mockImage.Handle(),
+	mockDriver.EXPECT().VkCmdCopyBufferToImage(mocks.Exactly(buffer.Handle()),
+		mocks.Exactly(mockBuffer.Handle()),
+		mocks.Exactly(mockImage.Handle()),
 		core.VkImageLayout(1000241000), // VK_IMAGE_LAYOUT_DEPTH_ATTACHMENT_OPTIMAL
 		core.Uint32(2),
 		gomock.Not(nil),
@@ -552,10 +552,10 @@ func TestVulkanCommandBuffer_CmdBlitImage(t *testing.T) {
 	sourceImage := mocks.EasyMockImage(ctrl)
 	destImage := mocks.EasyMockImage(ctrl)
 
-	mockDriver.EXPECT().VkCmdBlitImage(buffer.Handle(),
-		sourceImage.Handle(),
+	mockDriver.EXPECT().VkCmdBlitImage(mocks.Exactly(buffer.Handle()),
+		mocks.Exactly(sourceImage.Handle()),
 		core.VkImageLayout(1000241000), // VK_IMAGE_LAYOUT_DEPTH_ATTACHMENT_OPTIMAL
-		destImage.Handle(),
+		mocks.Exactly(destImage.Handle()),
 		core.VkImageLayout(2), // VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL
 		core.Uint32(1),
 		gomock.Not(nil),
@@ -663,8 +663,8 @@ func TestVulkanCommandBuffer_CmdPushConstants(t *testing.T) {
 	mockDriver, buffer := setup(t, ctrl)
 	pipelineLayout := mocks.EasyMockPipelineLayout(ctrl)
 
-	mockDriver.EXPECT().VkCmdPushConstants(buffer.Handle(),
-		pipelineLayout.Handle(),
+	mockDriver.EXPECT().VkCmdPushConstants(mocks.Exactly(buffer.Handle()),
+		mocks.Exactly(pipelineLayout.Handle()),
 		core.VkShaderStageFlags(8), // VK_SHADER_STAGE_GEOMETRY_BIT
 		core.Uint32(1),
 		core.Uint32(4),
@@ -701,7 +701,7 @@ func TestVulkanCommandBuffer_CmdSetViewport(t *testing.T) {
 
 	mockDriver, buffer := setup(t, ctrl)
 
-	mockDriver.EXPECT().VkCmdSetViewport(buffer.Handle(), core.Uint32(0), core.Uint32(2), gomock.Not(nil)).DoAndReturn(
+	mockDriver.EXPECT().VkCmdSetViewport(mocks.Exactly(buffer.Handle()), core.Uint32(0), core.Uint32(2), gomock.Not(nil)).DoAndReturn(
 		func(
 			commandBuffer core.VkCommandBuffer,
 			firstViewport core.Uint32,
@@ -754,7 +754,7 @@ func TestVulkanCommandBuffer_CmdSetScissor(t *testing.T) {
 
 	mockDriver, buffer := setup(t, ctrl)
 
-	mockDriver.EXPECT().VkCmdSetScissor(buffer.Handle(), core.Uint32(0), core.Uint32(2), gomock.Not(nil)).DoAndReturn(
+	mockDriver.EXPECT().VkCmdSetScissor(mocks.Exactly(buffer.Handle()), core.Uint32(0), core.Uint32(2), gomock.Not(nil)).DoAndReturn(
 		func(
 			commandBuffer core.VkCommandBuffer,
 			firstScissor core.Uint32,
@@ -801,10 +801,10 @@ func TestVulkanCommandBuffer_CmdCopyImage(t *testing.T) {
 	srcImage := mocks.EasyMockImage(ctrl)
 	dstImage := mocks.EasyMockImage(ctrl)
 
-	mockDriver.EXPECT().VkCmdCopyImage(buffer.Handle(),
-		srcImage.Handle(),
+	mockDriver.EXPECT().VkCmdCopyImage(mocks.Exactly(buffer.Handle()),
+		mocks.Exactly(srcImage.Handle()),
 		core.VkImageLayout(1000001002), // VK_IMAGE_LAYOUT_PRESENT_SRC_KHR
-		dstImage.Handle(),
+		mocks.Exactly(dstImage.Handle()),
 		core.VkImageLayout(5), // VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL
 		core.Uint32(2),
 		gomock.Not(nil),
@@ -917,7 +917,7 @@ func TestVulkanCommandBuffer_CmdNextSubpass(t *testing.T) {
 
 	mockDriver, buffer := setup(t, ctrl)
 
-	mockDriver.EXPECT().VkCmdNextSubpass(buffer.Handle(),
+	mockDriver.EXPECT().VkCmdNextSubpass(mocks.Exactly(buffer.Handle()),
 		core.VkSubpassContents(1), /* VK_SUBPASS_CONTENTS_SECONDARY_COMMAND_BUFFERS */
 	)
 
@@ -934,7 +934,7 @@ func TestVulkanCommandBuffer_CmdWaitEvents(t *testing.T) {
 	event1 := mocks.EasyMockEvent(ctrl)
 	event2 := mocks.EasyMockEvent(ctrl)
 
-	mockDriver.EXPECT().VkCmdWaitEvents(buffer.Handle(),
+	mockDriver.EXPECT().VkCmdWaitEvents(mocks.Exactly(buffer.Handle()),
 		core.Uint32(2),
 		gomock.Not(nil),
 		core.VkPipelineStageFlags(0x00010000), // VK_PIPELINE_STAGE_ALL_COMMANDS_BIT
@@ -952,8 +952,8 @@ func TestVulkanCommandBuffer_CmdWaitEvents(t *testing.T) {
 			bufferMemoryBarrierSlice := reflect.ValueOf(([]core.VkBufferMemoryBarrier)(unsafe.Slice(pBufferMemoryBarriers, 1)))
 			imageMemoryBarrierSlice := reflect.ValueOf(([]core.VkImageMemoryBarrier)(unsafe.Slice(pImageMemoryBarriers, 1)))
 
-			require.Equal(t, event1.Handle(), eventSlice[0])
-			require.Equal(t, event2.Handle(), eventSlice[1])
+			require.Same(t, event1.Handle(), eventSlice[0])
+			require.Same(t, event2.Handle(), eventSlice[1])
 
 			memoryBarrier := memoryBarrierSlice.Index(0)
 			require.Equal(t, uint64(46), memoryBarrier.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_MEMORY_BARRIER
@@ -992,7 +992,7 @@ func TestVulkanCommandBuffer_CmdWaitEvents(t *testing.T) {
 			require.Equal(t, uint64(13), imageMemoryBarrier.FieldByName("dstQueueFamilyIndex").Uint())
 
 			actualImage := (core.VkImage)(unsafe.Pointer(imageMemoryBarrier.FieldByName("image").Elem().UnsafeAddr()))
-			require.Equal(t, mockImage.Handle(), actualImage)
+			require.Same(t, mockImage.Handle(), actualImage)
 
 			subresource := imageMemoryBarrier.FieldByName("subresourceRange")
 			require.Equal(t, uint64(0x00000010), subresource.FieldByName("aspectMask").Uint()) // VK_IMAGE_ASPECT_PLANE_0_BIT
@@ -1055,7 +1055,7 @@ func TestVulkanCommandBuffer_CmdSetEvent(t *testing.T) {
 	mockDriver, buffer := setup(t, ctrl)
 	event := mocks.EasyMockEvent(ctrl)
 
-	mockDriver.EXPECT().VkCmdSetEvent(buffer.Handle(), event.Handle(), core.VkPipelineStageFlags(0x80) /*VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT*/)
+	mockDriver.EXPECT().VkCmdSetEvent(mocks.Exactly(buffer.Handle()), mocks.Exactly(event.Handle()), core.VkPipelineStageFlags(0x80) /*VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT*/)
 
 	buffer.CmdSetEvent(event, common.PipelineStageFragmentShader)
 }
@@ -1067,8 +1067,8 @@ func TestVulkanCommandBuffer_CmdClearColorImage(t *testing.T) {
 	mockDriver, buffer := setup(t, ctrl)
 	image := mocks.EasyMockImage(ctrl)
 
-	mockDriver.EXPECT().VkCmdClearColorImage(buffer.Handle(),
-		image.Handle(),
+	mockDriver.EXPECT().VkCmdClearColorImage(mocks.Exactly(buffer.Handle()),
+		mocks.Exactly(image.Handle()),
 		core.VkImageLayout(3), // VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL
 		gomock.Not(nil),
 		core.Uint32(2),
@@ -1122,7 +1122,7 @@ func TestVulkanCommandBuffer_Reset(t *testing.T) {
 
 	mockDriver, buffer := setup(t, ctrl)
 
-	mockDriver.EXPECT().VkResetCommandBuffer(buffer.Handle(), core.VkCommandBufferResetFlags(1)).Return(core.VKSuccess, nil)
+	mockDriver.EXPECT().VkResetCommandBuffer(mocks.Exactly(buffer.Handle()), core.VkCommandBufferResetFlags(1)).Return(core.VKSuccess, nil)
 
 	_, err := buffer.Reset(core.ResetReleaseResources)
 	require.NoError(t, err)
@@ -1135,7 +1135,7 @@ func TestVulkanCommandBuffer_CmdResetQueryPool(t *testing.T) {
 	mockDriver, buffer := setup(t, ctrl)
 	queryPool := mocks.EasyMockQueryPool(ctrl)
 
-	mockDriver.EXPECT().VkCmdResetQueryPool(buffer.Handle(), queryPool.Handle(), core.Uint32(1), core.Uint32(3))
+	mockDriver.EXPECT().VkCmdResetQueryPool(mocks.Exactly(buffer.Handle()), mocks.Exactly(queryPool.Handle()), core.Uint32(1), core.Uint32(3))
 
 	buffer.CmdResetQueryPool(queryPool, 1, 3)
 }
@@ -1148,8 +1148,8 @@ func TestVulkanCommandBuffer_CmdBeginQuery(t *testing.T) {
 	queryPool := mocks.EasyMockQueryPool(ctrl)
 
 	mockDriver.EXPECT().VkCmdBeginQuery(
-		buffer.Handle(),
-		queryPool.Handle(),
+		mocks.Exactly(buffer.Handle()),
+		mocks.Exactly(queryPool.Handle()),
 		core.Uint32(5),
 		core.VkQueryControlFlags(1), // VK_QUERY_CONTROL_PRECISE_BIT
 	)
@@ -1165,8 +1165,8 @@ func TestVulkanCommandBuffer_CmdEndQuery(t *testing.T) {
 	queryPool := mocks.EasyMockQueryPool(ctrl)
 
 	mockDriver.EXPECT().VkCmdEndQuery(
-		buffer.Handle(),
-		queryPool.Handle(),
+		mocks.Exactly(buffer.Handle()),
+		mocks.Exactly(queryPool.Handle()),
 		core.Uint32(5),
 	)
 
@@ -1182,11 +1182,11 @@ func TestVulkanCommandBuffer_CmdCopyQueryPoolResults(t *testing.T) {
 	dstBuffer := mocks.EasyMockBuffer(ctrl)
 
 	mockDriver.EXPECT().VkCmdCopyQueryPoolResults(
-		buffer.Handle(),
-		queryPool.Handle(),
+		mocks.Exactly(buffer.Handle()),
+		mocks.Exactly(queryPool.Handle()),
 		core.Uint32(1),
 		core.Uint32(3),
-		dstBuffer.Handle(),
+		mocks.Exactly(dstBuffer.Handle()),
 		core.VkDeviceSize(5),
 		core.VkDeviceSize(7),
 		core.VkQueryResultFlags(8), // VK_QUERY_RESULT_PARTIAL_BIT
@@ -1208,16 +1208,14 @@ func TestVulkanCommandBuffer_CmdExecuteCommands(t *testing.T) {
 	}
 
 	mockDriver.EXPECT().VkCmdExecuteCommands(
-		buffer.Handle(),
+		mocks.Exactly(buffer.Handle()),
 		core.Uint32(3),
 		gomock.Not(nil)).DoAndReturn(
 		func(commandBuffer core.VkCommandBuffer, secondaryCount core.Uint32, pSecondaryBuffers *core.VkCommandBuffer) (core.VkResult, error) {
 			secondaryBufferSlice := ([]core.VkCommandBuffer)(unsafe.Slice(pSecondaryBuffers, 3))
-			require.Equal(t, secondaryBufferSlice, []core.VkCommandBuffer{
-				commandBuffers[0].Handle(),
-				commandBuffers[1].Handle(),
-				commandBuffers[2].Handle(),
-			})
+			require.Same(t, commandBuffers[0].Handle(), secondaryBufferSlice[0])
+			require.Same(t, commandBuffers[1].Handle(), secondaryBufferSlice[1])
+			require.Same(t, commandBuffers[2].Handle(), secondaryBufferSlice[2])
 
 			return core.VKSuccess, nil
 		})
@@ -1232,7 +1230,7 @@ func TestVulkanCommandBuffer_CmdClearAttachments(t *testing.T) {
 	mockDriver, buffer := setup(t, ctrl)
 
 	mockDriver.EXPECT().VkCmdClearAttachments(
-		buffer.Handle(),
+		mocks.Exactly(buffer.Handle()),
 		core.Uint32(1),
 		gomock.Not(nil),
 		core.Uint32(2),
@@ -1302,7 +1300,7 @@ func TestVulkanCommandBuffer_CmdClearDepthStencilImage(t *testing.T) {
 	mockDriver, buffer := setup(t, ctrl)
 	image := mocks.EasyMockImage(ctrl)
 
-	mockDriver.EXPECT().VkCmdClearDepthStencilImage(buffer.Handle(), image.Handle(),
+	mockDriver.EXPECT().VkCmdClearDepthStencilImage(mocks.Exactly(buffer.Handle()), mocks.Exactly(image.Handle()),
 		core.VkImageLayout(5), // VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL
 		gomock.Not(nil),
 		core.Uint32(2),
@@ -1359,9 +1357,9 @@ func TestVulkanCommandBuffer_CmdCopyImageToBuffer(t *testing.T) {
 	image := mocks.EasyMockImage(ctrl)
 	dstBuffer := mocks.EasyMockBuffer(ctrl)
 
-	mockDriver.EXPECT().VkCmdCopyImageToBuffer(buffer.Handle(), image.Handle(),
+	mockDriver.EXPECT().VkCmdCopyImageToBuffer(mocks.Exactly(buffer.Handle()), mocks.Exactly(image.Handle()),
 		core.VkImageLayout(1000241000), // VK_IMAGE_LAYOUT_DEPTH_ATTACHMENT_OPTIMAL
-		dstBuffer.Handle(),
+		mocks.Exactly(dstBuffer.Handle()),
 		core.Uint32(1),
 		gomock.Not(nil),
 	).DoAndReturn(
@@ -1409,7 +1407,7 @@ func TestVulkanCommandBuffer_CmdDispatch(t *testing.T) {
 
 	mockDriver, buffer := setup(t, ctrl)
 
-	mockDriver.EXPECT().VkCmdDispatch(buffer.Handle(), core.Uint32(1), core.Uint32(3), core.Uint32(5))
+	mockDriver.EXPECT().VkCmdDispatch(mocks.Exactly(buffer.Handle()), core.Uint32(1), core.Uint32(3), core.Uint32(5))
 
 	buffer.CmdDispatch(1, 3, 5)
 }
@@ -1421,7 +1419,7 @@ func TestVulkanCommandBuffer_CmdDispatchIndirect(t *testing.T) {
 	mockDriver, buffer := setup(t, ctrl)
 	indirectBuffer := mocks.EasyMockBuffer(ctrl)
 
-	mockDriver.EXPECT().VkCmdDispatchIndirect(buffer.Handle(), indirectBuffer.Handle(), core.VkDeviceSize(3))
+	mockDriver.EXPECT().VkCmdDispatchIndirect(mocks.Exactly(buffer.Handle()), mocks.Exactly(indirectBuffer.Handle()), core.VkDeviceSize(3))
 
 	buffer.CmdDispatchIndirect(indirectBuffer, 3)
 }
@@ -1433,7 +1431,7 @@ func TestVulkanCommandBuffer_CmdDrawIndexedIndirect(t *testing.T) {
 	mockDriver, buffer := setup(t, ctrl)
 	indirectBuffer := mocks.EasyMockBuffer(ctrl)
 
-	mockDriver.EXPECT().VkCmdDrawIndexedIndirect(buffer.Handle(), indirectBuffer.Handle(), core.VkDeviceSize(3), core.Uint32(5), core.Uint32(7))
+	mockDriver.EXPECT().VkCmdDrawIndexedIndirect(mocks.Exactly(buffer.Handle()), mocks.Exactly(indirectBuffer.Handle()), core.VkDeviceSize(3), core.Uint32(5), core.Uint32(7))
 
 	buffer.CmdDrawIndexedIndirect(indirectBuffer, 3, 5, 7)
 }
@@ -1445,7 +1443,7 @@ func TestVulkanCommandBuffer_CmdDrawIndirect(t *testing.T) {
 	mockDriver, buffer := setup(t, ctrl)
 	indirectBuffer := mocks.EasyMockBuffer(ctrl)
 
-	mockDriver.EXPECT().VkCmdDrawIndirect(buffer.Handle(), indirectBuffer.Handle(), core.VkDeviceSize(3), core.Uint32(5), core.Uint32(7))
+	mockDriver.EXPECT().VkCmdDrawIndirect(mocks.Exactly(buffer.Handle()), mocks.Exactly(indirectBuffer.Handle()), core.VkDeviceSize(3), core.Uint32(5), core.Uint32(7))
 
 	buffer.CmdDrawIndirect(indirectBuffer, 3, 5, 7)
 }
@@ -1457,7 +1455,7 @@ func TestVulkanCommandBuffer_CmdFillBuffer(t *testing.T) {
 	mockDriver, buffer := setup(t, ctrl)
 	fillBuffer := mocks.EasyMockBuffer(ctrl)
 
-	mockDriver.EXPECT().VkCmdFillBuffer(buffer.Handle(), fillBuffer.Handle(), core.VkDeviceSize(1), core.VkDeviceSize(3), core.Uint32(5))
+	mockDriver.EXPECT().VkCmdFillBuffer(mocks.Exactly(buffer.Handle()), mocks.Exactly(fillBuffer.Handle()), core.VkDeviceSize(1), core.VkDeviceSize(3), core.Uint32(5))
 
 	buffer.CmdFillBuffer(fillBuffer, 1, 3, 5)
 }
@@ -1470,7 +1468,7 @@ func TestVulkanCommandBuffer_CmdResetEvent(t *testing.T) {
 	event := mocks.EasyMockEvent(ctrl)
 
 	mockDriver.EXPECT().VkCmdResetEvent(
-		buffer.Handle(), event.Handle(),
+		mocks.Exactly(buffer.Handle()), mocks.Exactly(event.Handle()),
 		core.VkPipelineStageFlags(0x40000), // VK_PIPELINE_STAGE_CONDITIONAL_RENDERING_BIT_EXT
 	)
 
@@ -1486,10 +1484,10 @@ func TestVulkanCommandBuffer_CmdResolveImage(t *testing.T) {
 	dstImage := mocks.EasyMockImage(ctrl)
 
 	mockDriver.EXPECT().VkCmdResolveImage(
-		buffer.Handle(),
-		srcImage.Handle(),
+		mocks.Exactly(buffer.Handle()),
+		mocks.Exactly(srcImage.Handle()),
 		core.VkImageLayout(5), // VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL
-		dstImage.Handle(),
+		mocks.Exactly(dstImage.Handle()),
 		core.VkImageLayout(1000001002), // VK_IMAGE_LAYOUT_PRESENT_SRC_KHR
 		core.Uint32(2),
 		gomock.Not(nil),
@@ -1593,7 +1591,7 @@ func TestVulkanCommandBuffer_CmdSetBlendConstants(t *testing.T) {
 
 	mockDriver, buffer := setup(t, ctrl)
 
-	mockDriver.EXPECT().VkCmdSetBlendConstants(buffer.Handle(), gomock.Not(nil)).DoAndReturn(
+	mockDriver.EXPECT().VkCmdSetBlendConstants(mocks.Exactly(buffer.Handle()), gomock.Not(nil)).DoAndReturn(
 		func(commandBuffer core.VkCommandBuffer, blendConstants *core.Float) {
 			blendConsts := unsafe.Slice(blendConstants, 4)
 			require.InDelta(t, 1, float32(blendConsts[0]), 0.0001)
@@ -1611,7 +1609,7 @@ func TestVulkanCommandBuffer_CmdSetDepthBias(t *testing.T) {
 
 	mockDriver, buffer := setup(t, ctrl)
 
-	mockDriver.EXPECT().VkCmdSetDepthBias(buffer.Handle(), gomock.Any(), gomock.Any(), gomock.Any()).DoAndReturn(
+	mockDriver.EXPECT().VkCmdSetDepthBias(mocks.Exactly(buffer.Handle()), gomock.Any(), gomock.Any(), gomock.Any()).DoAndReturn(
 		func(commandBuffer core.VkCommandBuffer, depthBiasConstantFactor core.Float, depthBiasClamp core.Float, depthBiasSlopeFactor core.Float) {
 			require.InDelta(t, 1, float32(depthBiasConstantFactor), 0.0001)
 			require.InDelta(t, 3, float32(depthBiasClamp), 0.0001)
@@ -1627,7 +1625,7 @@ func TestVulkanCommandBuffer_CmdSetDepthBounds(t *testing.T) {
 
 	mockDriver, buffer := setup(t, ctrl)
 
-	mockDriver.EXPECT().VkCmdSetDepthBounds(buffer.Handle(), gomock.Any(), gomock.Any()).DoAndReturn(
+	mockDriver.EXPECT().VkCmdSetDepthBounds(mocks.Exactly(buffer.Handle()), gomock.Any(), gomock.Any()).DoAndReturn(
 		func(commandBuffer core.VkCommandBuffer, minDepthBounds core.Float, maxDepthBounds core.Float) {
 			require.InDelta(t, 1, float32(minDepthBounds), 0.0001)
 			require.InDelta(t, 3, float32(maxDepthBounds), 0.0001)
@@ -1642,7 +1640,7 @@ func TestVulkanCommandBuffer_CmdSetLineWidth(t *testing.T) {
 
 	mockDriver, buffer := setup(t, ctrl)
 
-	mockDriver.EXPECT().VkCmdSetLineWidth(buffer.Handle(), gomock.Any()).DoAndReturn(
+	mockDriver.EXPECT().VkCmdSetLineWidth(mocks.Exactly(buffer.Handle()), gomock.Any()).DoAndReturn(
 		func(commandBuffer core.VkCommandBuffer, lineWidth core.Float) {
 			require.InDelta(t, 3, float32(lineWidth), 0.0001)
 		})
@@ -1656,7 +1654,7 @@ func TestVulkanCommandBuffer_CmdSetStencilCompareMask(t *testing.T) {
 
 	mockDriver, buffer := setup(t, ctrl)
 
-	mockDriver.EXPECT().VkCmdSetStencilCompareMask(buffer.Handle(),
+	mockDriver.EXPECT().VkCmdSetStencilCompareMask(mocks.Exactly(buffer.Handle()),
 		core.VkStencilFaceFlags(1), // VK_STENCIL_FACE_FRONT_BIT
 		core.Uint32(3),
 	)
@@ -1670,7 +1668,7 @@ func TestVulkanCommandBuffer_CmdSetStencilReference(t *testing.T) {
 
 	mockDriver, buffer := setup(t, ctrl)
 
-	mockDriver.EXPECT().VkCmdSetStencilReference(buffer.Handle(),
+	mockDriver.EXPECT().VkCmdSetStencilReference(mocks.Exactly(buffer.Handle()),
 		core.VkStencilFaceFlags(1), // VK_STENCIL_FACE_FRONT_BIT
 		core.Uint32(3),
 	)
@@ -1684,7 +1682,7 @@ func TestVulkanCommandBuffer_CmdSetStencilWriteMask(t *testing.T) {
 
 	mockDriver, buffer := setup(t, ctrl)
 
-	mockDriver.EXPECT().VkCmdSetStencilWriteMask(buffer.Handle(),
+	mockDriver.EXPECT().VkCmdSetStencilWriteMask(mocks.Exactly(buffer.Handle()),
 		core.VkStencilFaceFlags(1), // VK_STENCIL_FACE_FRONT_BIT
 		core.Uint32(3),
 	)
@@ -1699,7 +1697,7 @@ func TestVulkanCommandBuffer_CmdUpdateBuffer(t *testing.T) {
 	mockDriver, buffer := setup(t, ctrl)
 	dstBuffer := mocks.EasyMockBuffer(ctrl)
 
-	mockDriver.EXPECT().VkCmdUpdateBuffer(buffer.Handle(), dstBuffer.Handle(), core.VkDeviceSize(1), core.VkDeviceSize(3), gomock.Not(nil)).DoAndReturn(
+	mockDriver.EXPECT().VkCmdUpdateBuffer(mocks.Exactly(buffer.Handle()), mocks.Exactly(dstBuffer.Handle()), core.VkDeviceSize(1), core.VkDeviceSize(3), gomock.Not(nil)).DoAndReturn(
 		func(commandBuffer core.VkCommandBuffer, dstBuffer core.VkBuffer, dstOffset core.VkDeviceSize, dataSize core.VkDeviceSize, pData unsafe.Pointer) {
 			dataPtr := (*byte)(pData)
 			dataSlice := unsafe.Slice(dataPtr, 4)
@@ -1716,9 +1714,9 @@ func TestVulkanCommandBuffer_CmdWriteTimestamp(t *testing.T) {
 	mockDriver, buffer := setup(t, ctrl)
 	queryPool := mocks.EasyMockQueryPool(ctrl)
 
-	mockDriver.EXPECT().VkCmdWriteTimestamp(buffer.Handle(),
+	mockDriver.EXPECT().VkCmdWriteTimestamp(mocks.Exactly(buffer.Handle()),
 		core.VkPipelineStageFlags(0x800), // VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT
-		queryPool.Handle(),
+		mocks.Exactly(queryPool.Handle()),
 		core.Uint32(3),
 	)
 

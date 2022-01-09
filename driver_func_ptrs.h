@@ -83,7 +83,7 @@ typedef struct DriverFuncPtrs {
     PFN_vkCreateBuffer vkCreateBuffer;
     PFN_vkCreateBufferView vkCreateBufferView;
     PFN_vkCreateCommandPool vkCreateCommandPool;
-    PFN_vkCreateComputePipelines vkCreateComputePipelines; //Todo*
+    PFN_vkCreateComputePipelines vkCreateComputePipelines;
     PFN_vkCreateDescriptorPool vkCreateDescriptorPool;
     PFN_vkCreateDescriptorSetLayout vkCreateDescriptorSetLayout;
     PFN_vkCreateEvent vkCreateEvent;
@@ -130,15 +130,15 @@ typedef struct DriverFuncPtrs {
     PFN_vkGetEventStatus vkGetEventStatus;
     PFN_vkGetFenceStatus vkGetFenceStatus;
     PFN_vkGetImageMemoryRequirements vkGetImageMemoryRequirements;
-    PFN_vkGetImageSparseMemoryRequirements vkGetImageSparseMemoryRequirements; //Todo*
+    PFN_vkGetImageSparseMemoryRequirements vkGetImageSparseMemoryRequirements;
     PFN_vkGetImageSubresourceLayout vkGetImageSubresourceLayout;
     PFN_vkGetPipelineCacheData vkGetPipelineCacheData;
     PFN_vkGetQueryPoolResults vkGetQueryPoolResults;
-    PFN_vkGetRenderAreaGranularity vkGetRenderAreaGranularity; //Todo*
-    PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges; //Todo*
+    PFN_vkGetRenderAreaGranularity vkGetRenderAreaGranularity;
+    PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges;
     PFN_vkMapMemory vkMapMemory;
     PFN_vkMergePipelineCaches vkMergePipelineCaches;
-    PFN_vkQueueBindSparse vkQueueBindSparse; //Todo*
+    PFN_vkQueueBindSparse vkQueueBindSparse; 
     PFN_vkQueueSubmit vkQueueSubmit;
     PFN_vkQueueWaitIdle vkQueueWaitIdle;
     PFN_vkResetCommandBuffer vkResetCommandBuffer;

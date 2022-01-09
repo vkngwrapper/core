@@ -22,7 +22,7 @@ func TestVulkanLoader1_0_CreateRenderPass_Success(t *testing.T) {
 	device := mocks.EasyMockDevice(ctrl, driver)
 	renderPassHandle := mocks.NewFakeRenderPassHandle()
 
-	driver.EXPECT().VkCreateRenderPass(device.Handle(), gomock.Not(nil), nil, gomock.Not(nil)).DoAndReturn(
+	driver.EXPECT().VkCreateRenderPass(mocks.Exactly(device.Handle()), gomock.Not(nil), nil, gomock.Not(nil)).DoAndReturn(
 		func(deviceHandle core.VkDevice, pCreateInfo *core.VkRenderPassCreateInfo, pAllocator *core.VkAllocationCallbacks, pRenderPass *core.VkRenderPass) (core.VkResult, error) {
 			*pRenderPass = renderPassHandle
 
@@ -235,7 +235,7 @@ func TestVulkanLoader1_0_CreateRenderPass_Success(t *testing.T) {
 	})
 	require.NoError(t, err)
 	require.NotNil(t, renderPass)
-	require.Equal(t, renderPassHandle, renderPass.Handle())
+	require.Same(t, renderPassHandle, renderPass.Handle())
 }
 
 func TestVulkanLoader1_0_CreateRenderPass_SuccessNoNonColorAttachments(t *testing.T) {
@@ -249,7 +249,7 @@ func TestVulkanLoader1_0_CreateRenderPass_SuccessNoNonColorAttachments(t *testin
 	device := mocks.EasyMockDevice(ctrl, driver)
 	renderPassHandle := mocks.NewFakeRenderPassHandle()
 
-	driver.EXPECT().VkCreateRenderPass(device.Handle(), gomock.Not(nil), nil, gomock.Not(nil)).DoAndReturn(
+	driver.EXPECT().VkCreateRenderPass(mocks.Exactly(device.Handle()), gomock.Not(nil), nil, gomock.Not(nil)).DoAndReturn(
 		func(deviceHandle core.VkDevice, pCreateInfo *core.VkRenderPassCreateInfo, pAllocator *core.VkAllocationCallbacks, pRenderPass *core.VkRenderPass) (core.VkResult, error) {
 			*pRenderPass = renderPassHandle
 
@@ -437,7 +437,7 @@ func TestVulkanLoader1_0_CreateRenderPass_SuccessNoNonColorAttachments(t *testin
 	})
 	require.NoError(t, err)
 	require.NotNil(t, renderPass)
-	require.Equal(t, renderPassHandle, renderPass.Handle())
+	require.Same(t, renderPassHandle, renderPass.Handle())
 }
 
 func TestVulkanLoader1_0_CreateRenderPass_MismatchResolve(t *testing.T) {
@@ -548,4 +548,28 @@ func TestVulkanLoader1_0_CreateRenderPass_MismatchResolve(t *testing.T) {
 		},
 	})
 	require.EqualError(t, err, "in subpass 0, 2 color attachments are defined, but 3 resolve attachments are defined")
+}
+
+func TestVulkanRenderPass_RenderAreaGranularity(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	driver := mocks.NewMockDriver(ctrl)
+	loader, err := core.CreateLoaderFromDriver(driver)
+	require.NoError(t, err)
+
+	device := mocks.EasyMockDevice(ctrl, driver)
+	renderPass := mocks.EasyDummyRenderPass(t, loader, device)
+
+	driver.EXPECT().VkGetRenderAreaGranularity(mocks.Exactly(device.Handle()), mocks.Exactly(renderPass.Handle()), gomock.Not(nil)).DoAndReturn(
+		func(device core.VkDevice, renderPass core.VkRenderPass, pGranularity *core.VkExtent2D) {
+			val := reflect.ValueOf(pGranularity).Elem()
+
+			*(*uint32)(unsafe.Pointer(val.FieldByName("width").UnsafeAddr())) = uint32(1)
+			*(*uint32)(unsafe.Pointer(val.FieldByName("height").UnsafeAddr())) = uint32(3)
+		})
+
+	gran := renderPass.RenderAreaGranularity()
+	require.Equal(t, 1, gran.Width)
+	require.Equal(t, 3, gran.Height)
 }

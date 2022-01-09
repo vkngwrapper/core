@@ -24,7 +24,7 @@ func TestVulkanLoader1_0_CreateFrameBuffer(t *testing.T) {
 	imageView2 := mocks.EasyMockImageView(ctrl)
 	framebufferHandle := mocks.NewFakeFramebufferHandle()
 
-	driver.EXPECT().VkCreateFramebuffer(device.Handle(), gomock.Not(nil), nil, gomock.Not(nil)).DoAndReturn(
+	driver.EXPECT().VkCreateFramebuffer(mocks.Exactly(device.Handle()), gomock.Not(nil), nil, gomock.Not(nil)).DoAndReturn(
 		func(device core.VkDevice, pCreateInfo *core.VkFramebufferCreateInfo, pAllocator *core.VkAllocationCallbacks, pFramebuffer *core.VkFramebuffer) (core.VkResult, error) {
 			val := reflect.ValueOf(*pCreateInfo)
 
@@ -36,12 +36,12 @@ func TestVulkanLoader1_0_CreateFrameBuffer(t *testing.T) {
 			require.Equal(t, uint64(7), val.FieldByName("layers").Uint())
 			require.Equal(t, uint64(2), val.FieldByName("attachmentCount").Uint())
 
-			require.Equal(t, renderPass.Handle(), (core.VkRenderPass)(unsafe.Pointer(val.FieldByName("renderPass").Elem().UnsafeAddr())))
+			require.Same(t, renderPass.Handle(), (core.VkRenderPass)(unsafe.Pointer(val.FieldByName("renderPass").Elem().UnsafeAddr())))
 
 			attachmentPtr := (*core.VkImageView)(unsafe.Pointer(val.FieldByName("pAttachments").Elem().UnsafeAddr()))
 			attachmentSlice := ([]core.VkImageView)(unsafe.Slice(attachmentPtr, 2))
-			require.Equal(t, imageView1.Handle(), attachmentSlice[0])
-			require.Equal(t, imageView2.Handle(), attachmentSlice[1])
+			require.Same(t, imageView1.Handle(), attachmentSlice[0])
+			require.Same(t, imageView2.Handle(), attachmentSlice[1])
 
 			*pFramebuffer = framebufferHandle
 			return core.VKSuccess, nil
@@ -59,5 +59,5 @@ func TestVulkanLoader1_0_CreateFrameBuffer(t *testing.T) {
 	})
 	require.NoError(t, err)
 	require.NotNil(t, framebuffer)
-	require.Equal(t, framebufferHandle, framebuffer.Handle())
+	require.Same(t, framebufferHandle, framebuffer.Handle())
 }

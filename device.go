@@ -100,6 +100,7 @@ func (d *vulkanDevice) AllocateMemory(o *DeviceMemoryOptions) (DeviceMemory, VkR
 		driver: d.driver,
 		device: d.handle,
 		handle: deviceMemory,
+		size:   o.AllocationSize,
 	}, res, nil
 }
 
@@ -198,4 +199,27 @@ func (d *vulkanDevice) FlushMappedMemoryRanges(ranges []*MappedMemoryRange) (VkR
 	}
 
 	return d.driver.VkFlushMappedMemoryRanges(d.handle, Uint32(rangeCount), (*VkMappedMemoryRange)(createInfos))
+}
+
+func (d *vulkanDevice) InvalidateMappedMemoryRanges(ranges []*MappedMemoryRange) (VkResult, error) {
+	arena := cgoparam.GetAlloc()
+	defer cgoparam.ReturnAlloc(arena)
+
+	rangeCount := len(ranges)
+	createInfos := (*C.VkMappedMemoryRange)(arena.Malloc(rangeCount * C.sizeof_struct_VkMappedMemoryRange))
+	createInfoSlice := ([]C.VkMappedMemoryRange)(unsafe.Slice(createInfos, rangeCount))
+
+	for rangeIndex, memRange := range ranges {
+		next, err := common.AllocNext(arena, memRange)
+		if err != nil {
+			return VKErrorUnknown, err
+		}
+
+		err = memRange.populate(&createInfoSlice[rangeIndex], next)
+		if err != nil {
+			return VKErrorUnknown, err
+		}
+	}
+
+	return d.driver.VkInvalidateMappedMemoryRanges(d.handle, Uint32(rangeCount), (*VkMappedMemoryRange)(createInfos))
 }

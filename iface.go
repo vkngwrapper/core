@@ -103,6 +103,8 @@ type DeviceMemory interface {
 	MapMemory(offset int, size int, flags MemoryMapFlags) (unsafe.Pointer, VkResult, error)
 	UnmapMemory()
 	Commitment() int
+	Flush() (VkResult, error)
+	Invalidate() (VkResult, error)
 }
 
 type Device interface {
@@ -117,6 +119,7 @@ type Device interface {
 	FreeMemory(memory DeviceMemory)
 	UpdateDescriptorSets(writes []WriteDescriptorSetOptions, copies []CopyDescriptorSetOptions) error
 	FlushMappedMemoryRanges(ranges []*MappedMemoryRange) (VkResult, error)
+	InvalidateMappedMemoryRanges(ranges []*MappedMemoryRange) (VkResult, error)
 }
 
 type Event interface {
@@ -146,6 +149,7 @@ type Image interface {
 	MemoryRequirements() *common.MemoryRequirements
 	BindImageMemory(memory DeviceMemory, offset int) (VkResult, error)
 	SubresourceLayout(subresource *common.ImageSubresource) *common.SubresourceLayout
+	SparseMemoryRequirements() []SparseImageMemoryRequirements
 }
 
 type ImageView interface {
@@ -178,6 +182,7 @@ type Loader1_0 interface {
 	CreateFence(device Device, o *FenceOptions) (Fence, VkResult, error)
 	CreateFrameBuffer(device Device, o *FramebufferOptions) (Framebuffer, VkResult, error)
 	CreateGraphicsPipelines(device Device, pipelineCache PipelineCache, o []*GraphicsPipelineOptions) ([]Pipeline, VkResult, error)
+	CreateComputePipelines(device Device, pipelineCache PipelineCache, o []*ComputePipelineOptions) ([]Pipeline, VkResult, error)
 	CreateInstance(options *InstanceOptions) (Instance, VkResult, error)
 	CreateImage(device Device, options *ImageOptions) (Image, VkResult, error)
 	CreateImageView(device Device, o *ImageViewOptions) (ImageView, VkResult, error)
@@ -232,11 +237,13 @@ type Queue interface {
 	Driver() Driver
 	WaitForIdle() (VkResult, error)
 	SubmitToQueue(fence Fence, o []*SubmitOptions) (VkResult, error)
+	BindSparse(fence Fence, bindInfos []*BindSparseOptions) (VkResult, error)
 }
 
 type RenderPass interface {
 	Handle() VkRenderPass
 	Destroy()
+	RenderAreaGranularity() common.Extent2D
 }
 
 type Semaphore interface {

@@ -22,13 +22,13 @@ func TestVulkanPhysicalDevice_AvailableExtensions(t *testing.T) {
 
 	physicalDevice := mocks.EasyDummyPhysicalDevice(t, loader)
 
-	driver.EXPECT().VkEnumerateDeviceExtensionProperties(physicalDevice.Handle(), nil, gomock.Not(nil), nil).DoAndReturn(
+	driver.EXPECT().VkEnumerateDeviceExtensionProperties(mocks.Exactly(physicalDevice.Handle()), nil, gomock.Not(nil), nil).DoAndReturn(
 		func(physDevice core.VkPhysicalDevice, pLayerName *core.Char, pPropertyCount *core.Uint32, pProperties *core.VkExtensionProperties) (core.VkResult, error) {
 			*pPropertyCount = core.Uint32(2)
 
 			return core.VKSuccess, nil
 		})
-	driver.EXPECT().VkEnumerateDeviceExtensionProperties(physicalDevice.Handle(), nil, gomock.Not(nil), gomock.Not(nil)).DoAndReturn(
+	driver.EXPECT().VkEnumerateDeviceExtensionProperties(mocks.Exactly(physicalDevice.Handle()), nil, gomock.Not(nil), gomock.Not(nil)).DoAndReturn(
 		func(physDevice core.VkPhysicalDevice, pLayerName *core.Char, pPropertyCount *core.Uint32, pProperties *core.VkExtensionProperties) (core.VkResult, error) {
 			*pPropertyCount = 2
 			propertySlice := reflect.ValueOf(([]core.VkExtensionProperties)(unsafe.Slice(pProperties, 2)))
@@ -71,23 +71,23 @@ func TestVulkanPhysicalDevice_AvailableExtensions_Incomplete(t *testing.T) {
 
 	physicalDevice := mocks.EasyDummyPhysicalDevice(t, loader)
 
-	driver.EXPECT().VkEnumerateDeviceExtensionProperties(physicalDevice.Handle(), nil, gomock.Not(nil), nil).DoAndReturn(
+	driver.EXPECT().VkEnumerateDeviceExtensionProperties(mocks.Exactly(physicalDevice.Handle()), nil, gomock.Not(nil), nil).DoAndReturn(
 		func(physDevice core.VkPhysicalDevice, pLayerName *core.Char, pPropertyCount *core.Uint32, pProperties *core.VkExtensionProperties) (core.VkResult, error) {
 			*pPropertyCount = core.Uint32(2)
 
 			return core.VKSuccess, nil
 		})
-	driver.EXPECT().VkEnumerateDeviceExtensionProperties(physicalDevice.Handle(), nil, gomock.Not(nil), gomock.Not(nil)).DoAndReturn(
+	driver.EXPECT().VkEnumerateDeviceExtensionProperties(mocks.Exactly(physicalDevice.Handle()), nil, gomock.Not(nil), gomock.Not(nil)).DoAndReturn(
 		func(physDevice core.VkPhysicalDevice, pLayerName *core.Char, pPropertyCount *core.Uint32, pProperties *core.VkExtensionProperties) (core.VkResult, error) {
 			return core.VKIncomplete, nil
 		})
-	driver.EXPECT().VkEnumerateDeviceExtensionProperties(physicalDevice.Handle(), nil, gomock.Not(nil), nil).DoAndReturn(
+	driver.EXPECT().VkEnumerateDeviceExtensionProperties(mocks.Exactly(physicalDevice.Handle()), nil, gomock.Not(nil), nil).DoAndReturn(
 		func(physDevice core.VkPhysicalDevice, pLayerName *core.Char, pPropertyCount *core.Uint32, pProperties *core.VkExtensionProperties) (core.VkResult, error) {
 			*pPropertyCount = core.Uint32(2)
 
 			return core.VKSuccess, nil
 		})
-	driver.EXPECT().VkEnumerateDeviceExtensionProperties(physicalDevice.Handle(), nil, gomock.Not(nil), gomock.Not(nil)).DoAndReturn(
+	driver.EXPECT().VkEnumerateDeviceExtensionProperties(mocks.Exactly(physicalDevice.Handle()), nil, gomock.Not(nil), gomock.Not(nil)).DoAndReturn(
 		func(physDevice core.VkPhysicalDevice, pLayerName *core.Char, pPropertyCount *core.Uint32, pProperties *core.VkExtensionProperties) (core.VkResult, error) {
 			*pPropertyCount = 2
 			propertySlice := reflect.ValueOf(([]core.VkExtensionProperties)(unsafe.Slice(pProperties, 2)))
@@ -130,13 +130,13 @@ func TestVulkanPhysicalDevice_AvailableLayers(t *testing.T) {
 
 	physicalDevice := mocks.EasyDummyPhysicalDevice(t, loader)
 
-	driver.EXPECT().VkEnumerateDeviceLayerProperties(physicalDevice.Handle(), gomock.Not(nil), nil).DoAndReturn(
+	driver.EXPECT().VkEnumerateDeviceLayerProperties(mocks.Exactly(physicalDevice.Handle()), gomock.Not(nil), nil).DoAndReturn(
 		func(physicalDevice core.VkPhysicalDevice, pPropertyCount *core.Uint32, pProperties *core.VkLayerProperties) (core.VkResult, error) {
 			*pPropertyCount = core.Uint32(2)
 
 			return core.VKSuccess, nil
 		})
-	driver.EXPECT().VkEnumerateDeviceLayerProperties(physicalDevice.Handle(), gomock.Not(nil), gomock.Not(nil)).DoAndReturn(
+	driver.EXPECT().VkEnumerateDeviceLayerProperties(mocks.Exactly(physicalDevice.Handle()), gomock.Not(nil), gomock.Not(nil)).DoAndReturn(
 		func(physicalDevice core.VkPhysicalDevice, pPropertyCount *core.Uint32, pProperties *core.VkLayerProperties) (core.VkResult, error) {
 			*pPropertyCount = 2
 			propertySlice := reflect.ValueOf(([]core.VkLayerProperties)(unsafe.Slice(pProperties, 2)))
@@ -191,23 +191,23 @@ func TestVulkanPhysicalDevice_AvailableLayers_Incomplete(t *testing.T) {
 
 	physicalDevice := mocks.EasyDummyPhysicalDevice(t, loader)
 
-	driver.EXPECT().VkEnumerateDeviceLayerProperties(physicalDevice.Handle(), gomock.Not(nil), nil).DoAndReturn(
+	driver.EXPECT().VkEnumerateDeviceLayerProperties(mocks.Exactly(physicalDevice.Handle()), gomock.Not(nil), nil).DoAndReturn(
 		func(physicalDevice core.VkPhysicalDevice, pPropertyCount *core.Uint32, pProperties *core.VkLayerProperties) (core.VkResult, error) {
 			*pPropertyCount = core.Uint32(2)
 
 			return core.VKSuccess, nil
 		})
-	driver.EXPECT().VkEnumerateDeviceLayerProperties(physicalDevice.Handle(), gomock.Not(nil), gomock.Not(nil)).DoAndReturn(
+	driver.EXPECT().VkEnumerateDeviceLayerProperties(mocks.Exactly(physicalDevice.Handle()), gomock.Not(nil), gomock.Not(nil)).DoAndReturn(
 		func(physicalDevice core.VkPhysicalDevice, pPropertyCount *core.Uint32, pProperties *core.VkLayerProperties) (core.VkResult, error) {
 			return core.VKIncomplete, nil
 		})
-	driver.EXPECT().VkEnumerateDeviceLayerProperties(physicalDevice.Handle(), gomock.Not(nil), nil).DoAndReturn(
+	driver.EXPECT().VkEnumerateDeviceLayerProperties(mocks.Exactly(physicalDevice.Handle()), gomock.Not(nil), nil).DoAndReturn(
 		func(physicalDevice core.VkPhysicalDevice, pPropertyCount *core.Uint32, pProperties *core.VkLayerProperties) (core.VkResult, error) {
 			*pPropertyCount = core.Uint32(2)
 
 			return core.VKSuccess, nil
 		})
-	driver.EXPECT().VkEnumerateDeviceLayerProperties(physicalDevice.Handle(), gomock.Not(nil), gomock.Not(nil)).DoAndReturn(
+	driver.EXPECT().VkEnumerateDeviceLayerProperties(mocks.Exactly(physicalDevice.Handle()), gomock.Not(nil), gomock.Not(nil)).DoAndReturn(
 		func(physicalDevice core.VkPhysicalDevice, pPropertyCount *core.Uint32, pProperties *core.VkLayerProperties) (core.VkResult, error) {
 			*pPropertyCount = 2
 			propertySlice := reflect.ValueOf(([]core.VkLayerProperties)(unsafe.Slice(pProperties, 2)))
@@ -262,11 +262,11 @@ func TestVulkanPhysicalDevice_QueueFamilyProperties(t *testing.T) {
 
 	physicalDevice := mocks.EasyDummyPhysicalDevice(t, loader)
 
-	driver.EXPECT().VkGetPhysicalDeviceQueueFamilyProperties(physicalDevice.Handle(), gomock.Not(nil), nil).DoAndReturn(
+	driver.EXPECT().VkGetPhysicalDeviceQueueFamilyProperties(mocks.Exactly(physicalDevice.Handle()), gomock.Not(nil), nil).DoAndReturn(
 		func(device core.VkPhysicalDevice, pPropertyCount *core.Uint32, pProperties *core.VkQueueFamilyProperties) {
 			*pPropertyCount = 1
 		})
-	driver.EXPECT().VkGetPhysicalDeviceQueueFamilyProperties(physicalDevice.Handle(), gomock.Not(nil), gomock.Not(nil)).DoAndReturn(
+	driver.EXPECT().VkGetPhysicalDeviceQueueFamilyProperties(mocks.Exactly(physicalDevice.Handle()), gomock.Not(nil), gomock.Not(nil)).DoAndReturn(
 		func(device core.VkPhysicalDevice, pPropertyCount *core.Uint32, pProperties *core.VkQueueFamilyProperties) {
 			*pPropertyCount = 1
 			propertySlice := reflect.ValueOf(([]core.VkQueueFamilyProperties)(unsafe.Slice(pProperties, 3)))
@@ -304,7 +304,7 @@ func TestVulkanPhysicalDevice_Properties(t *testing.T) {
 	deviceUUID, err := uuid.NewUUID()
 	require.NoError(t, err)
 
-	driver.EXPECT().VkGetPhysicalDeviceProperties(physicalDevice.Handle(), gomock.Not(nil)).DoAndReturn(
+	driver.EXPECT().VkGetPhysicalDeviceProperties(mocks.Exactly(physicalDevice.Handle()), gomock.Not(nil)).DoAndReturn(
 		func(device core.VkPhysicalDevice, pProperties *core.VkPhysicalDeviceProperties) {
 			pPropertySlice := reflect.ValueOf(unsafe.Slice(pProperties, 1))
 			val := pPropertySlice.Index(0)
@@ -384,7 +384,7 @@ func TestVulkanPhysicalDevice_Features(t *testing.T) {
 
 	physicalDevice := mocks.EasyDummyPhysicalDevice(t, loader)
 
-	driver.EXPECT().VkGetPhysicalDeviceFeatures(physicalDevice.Handle(), gomock.Not(nil)).DoAndReturn(
+	driver.EXPECT().VkGetPhysicalDeviceFeatures(mocks.Exactly(physicalDevice.Handle()), gomock.Not(nil)).DoAndReturn(
 		func(physicalDevice core.VkPhysicalDevice, pFeatures *core.VkPhysicalDeviceFeatures) {
 			featureSlice := reflect.ValueOf(unsafe.Slice(pFeatures, 1))
 			val := featureSlice.Index(0)
@@ -515,7 +515,7 @@ func TestVulkanPhysicalDevice_FormatProperties(t *testing.T) {
 
 	physicalDevice := mocks.EasyDummyPhysicalDevice(t, loader)
 
-	driver.EXPECT().VkGetPhysicalDeviceFormatProperties(physicalDevice.Handle(),
+	driver.EXPECT().VkGetPhysicalDeviceFormatProperties(mocks.Exactly(physicalDevice.Handle()),
 		core.VkFormat(57), // VK_FORMAT_A8B8G8R8_SRGB_PACK32
 		gomock.Not(nil)).DoAndReturn(
 		func(device core.VkPhysicalDevice, format core.VkFormat, pFormatProperties *core.VkFormatProperties) {
@@ -543,7 +543,7 @@ func TestVulkanPhysicalDevice_ImageFormatProperties(t *testing.T) {
 
 	physicalDevice := mocks.EasyDummyPhysicalDevice(t, loader)
 
-	driver.EXPECT().VkGetPhysicalDeviceImageFormatProperties(physicalDevice.Handle(),
+	driver.EXPECT().VkGetPhysicalDeviceImageFormatProperties(mocks.Exactly(physicalDevice.Handle()),
 		core.VkFormat(57),              // VK_FORMAT_A8B8G8R8_SRGB_PACK32
 		core.VkImageType(1),            // VK_IMAGE_TYPE_2D
 		core.VkImageTiling(1000158000), // VK_IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT
@@ -594,7 +594,7 @@ func TestVulkanPhysicalDevice_MemoryProperties(t *testing.T) {
 
 	physicalDevice := mocks.EasyDummyPhysicalDevice(t, loader)
 
-	driver.EXPECT().VkGetPhysicalDeviceMemoryProperties(physicalDevice.Handle(), gomock.Not(nil)).DoAndReturn(
+	driver.EXPECT().VkGetPhysicalDeviceMemoryProperties(mocks.Exactly(physicalDevice.Handle()), gomock.Not(nil)).DoAndReturn(
 		func(physicalDevice core.VkPhysicalDevice, pProperties *core.VkPhysicalDeviceMemoryProperties) {
 			propertySlice := reflect.ValueOf(unsafe.Slice(pProperties, 1))
 			val := propertySlice.Index(0)

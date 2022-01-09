@@ -2,130 +2,110 @@ package mocks
 
 import (
 	"github.com/CannibalVox/VKng/core"
+	"math/rand"
 	"unsafe"
 )
 
+func fakePointer() unsafe.Pointer {
+	return unsafe.Pointer(uintptr(rand.Int()))
+}
+
 func NewFakeBufferHandle() core.VkBuffer {
-	val := 0
-	return core.VkBuffer(unsafe.Pointer(&val))
+	return core.VkBuffer(fakePointer())
 }
 
 func NewFakeBufferViewHandle() core.VkBufferView {
-	val := 0
-	return core.VkBufferView(unsafe.Pointer(&val))
+	return core.VkBufferView(fakePointer())
 }
 
 func NewFakeCommandBufferHandle() core.VkCommandBuffer {
-	val := 0
-	return core.VkCommandBuffer(unsafe.Pointer(&val))
+	return core.VkCommandBuffer(fakePointer())
 }
 
 func NewFakeCommandPoolHandle() core.VkCommandPool {
-	val := 0
-	return core.VkCommandPool(unsafe.Pointer(&val))
+	return core.VkCommandPool(fakePointer())
 }
 
 func NewFakeDescriptorPool() core.VkDescriptorPool {
-	val := 0
-	return core.VkDescriptorPool(unsafe.Pointer(&val))
+	return core.VkDescriptorPool(fakePointer())
 }
 
 func NewFakeDescriptorSet() core.VkDescriptorSet {
-	val := 0
-	return core.VkDescriptorSet(unsafe.Pointer(&val))
+	return core.VkDescriptorSet(fakePointer())
 }
 
 func NewFakeDescriptorSetLayout() core.VkDescriptorSetLayout {
-	val := 0
-	return core.VkDescriptorSetLayout(unsafe.Pointer(&val))
+	return core.VkDescriptorSetLayout(fakePointer())
 }
 
 func NewFakeDeviceHandle() core.VkDevice {
-	val := 0
-	return core.VkDevice(unsafe.Pointer(&val))
+	return core.VkDevice(fakePointer())
 }
 
 func NewFakeDeviceMemoryHandle() core.VkDeviceMemory {
-	val := 0
-	return core.VkDeviceMemory(unsafe.Pointer(&val))
+	return core.VkDeviceMemory(fakePointer())
 }
 
 func NewFakeEventHandle() core.VkEvent {
-	val := 0
-	return core.VkEvent(unsafe.Pointer(&val))
+	return core.VkEvent(fakePointer())
 }
 
 func NewFakeFenceHandle() core.VkFence {
-	val := 0
-	return core.VkFence(unsafe.Pointer(&val))
+	return core.VkFence(fakePointer())
 }
 
 func NewFakeFramebufferHandle() core.VkFramebuffer {
-	val := 0
-	return core.VkFramebuffer(unsafe.Pointer(&val))
+	return core.VkFramebuffer(fakePointer())
 }
 
 func NewFakeImageHandle() core.VkImage {
-	val := 0
-	return core.VkImage(unsafe.Pointer(&val))
+	return core.VkImage(fakePointer())
 }
 
 func NewFakeImageViewHandle() core.VkImageView {
-	val := 0
-	return core.VkImageView(unsafe.Pointer(&val))
+	return core.VkImageView(fakePointer())
 }
 
 func NewFakeInstanceHandle() core.VkInstance {
-	val := 0
-	return core.VkInstance(unsafe.Pointer(&val))
+	return core.VkInstance(fakePointer())
 }
 
 func NewFakePhysicalDeviceHandle() core.VkPhysicalDevice {
-	val := 0
-	return core.VkPhysicalDevice(unsafe.Pointer(&val))
+	return core.VkPhysicalDevice(fakePointer())
 }
 
 func NewFakePipeline() core.VkPipeline {
-	val := 0
-	return core.VkPipeline(unsafe.Pointer(&val))
+	return core.VkPipeline(fakePointer())
 }
 
 func NewFakePipelineCache() core.VkPipelineCache {
-	val := 0
-	return core.VkPipelineCache(unsafe.Pointer(&val))
+	return core.VkPipelineCache(fakePointer())
 }
 
 func NewFakePipelineLayout() core.VkPipelineLayout {
-	val := 0
-	return core.VkPipelineLayout(unsafe.Pointer(&val))
+	return core.VkPipelineLayout(fakePointer())
 }
 
 func NewFakeQueryPool() core.VkQueryPool {
-	val := 0
-	return core.VkQueryPool(unsafe.Pointer(&val))
+	return core.VkQueryPool(fakePointer())
 }
 
 func NewFakeQueue() core.VkQueue {
-	val := 0
-	return core.VkQueue(unsafe.Pointer(&val))
+	return core.VkQueue(fakePointer())
 }
 
 func NewFakeRenderPassHandle() core.VkRenderPass {
-	val := 0
-	return core.VkRenderPass(unsafe.Pointer(&val))
+	return core.VkRenderPass(fakePointer())
 }
 
 func NewFakeSamplerHandle() core.VkSampler {
-	val := 0
-	return core.VkSampler(unsafe.Pointer(&val))
+	return core.VkSampler(fakePointer())
 }
 
 func NewFakeSemaphore() core.VkSemaphore {
-	val := 0
-	return core.VkSemaphore(unsafe.Pointer(&val))
+	return core.VkSemaphore(fakePointer())
 }
 
 func NewFakeShaderModule() core.VkShaderModule {
-	val := 0
-	return core.VkShaderModule(unsafe.Pointer(&val))
+	return core.VkShaderModule(fakePointer())
 }

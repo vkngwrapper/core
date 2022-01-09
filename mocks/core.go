@@ -1077,6 +1077,21 @@ func (mr *MockDeviceMemoryMockRecorder) Commitment() *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Commitment", reflect.TypeOf((*MockDeviceMemory)(nil).Commitment))
 }
 
+// Flush mocks base method.
+func (m *MockDeviceMemory) Flush() (core.VkResult, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Flush")
+	ret0, _ := ret[0].(core.VkResult)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// Flush indicates an expected call of Flush.
+func (mr *MockDeviceMemoryMockRecorder) Flush() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Flush", reflect.TypeOf((*MockDeviceMemory)(nil).Flush))
+}
+
 // Handle mocks base method.
 func (m *MockDeviceMemory) Handle() core.VkDeviceMemory {
 	m.ctrl.T.Helper()
@@ -1089,6 +1104,21 @@ func (m *MockDeviceMemory) Handle() core.VkDeviceMemory {
 func (mr *MockDeviceMemoryMockRecorder) Handle() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Handle", reflect.TypeOf((*MockDeviceMemory)(nil).Handle))
+}
+
+// Invalidate mocks base method.
+func (m *MockDeviceMemory) Invalidate() (core.VkResult, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Invalidate")
+	ret0, _ := ret[0].(core.VkResult)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// Invalidate indicates an expected call of Invalidate.
+func (mr *MockDeviceMemoryMockRecorder) Invalidate() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Invalidate", reflect.TypeOf((*MockDeviceMemory)(nil).Invalidate))
 }
 
 // MapMemory mocks base method.
@@ -1237,6 +1267,21 @@ func (m *MockDevice) Handle() core.VkDevice {
 func (mr *MockDeviceMockRecorder) Handle() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Handle", reflect.TypeOf((*MockDevice)(nil).Handle))
+}
+
+// InvalidateMappedMemoryRanges mocks base method.
+func (m *MockDevice) InvalidateMappedMemoryRanges(ranges []*core.MappedMemoryRange) (core.VkResult, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "InvalidateMappedMemoryRanges", ranges)
+	ret0, _ := ret[0].(core.VkResult)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// InvalidateMappedMemoryRanges indicates an expected call of InvalidateMappedMemoryRanges.
+func (mr *MockDeviceMockRecorder) InvalidateMappedMemoryRanges(ranges interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "InvalidateMappedMemoryRanges", reflect.TypeOf((*MockDevice)(nil).InvalidateMappedMemoryRanges), ranges)
 }
 
 // ResetFences mocks base method.
@@ -1613,6 +1658,20 @@ func (mr *MockImageMockRecorder) MemoryRequirements() *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "MemoryRequirements", reflect.TypeOf((*MockImage)(nil).MemoryRequirements))
 }
 
+// SparseMemoryRequirements mocks base method.
+func (m *MockImage) SparseMemoryRequirements() []core.SparseImageMemoryRequirements {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "SparseMemoryRequirements")
+	ret0, _ := ret[0].([]core.SparseImageMemoryRequirements)
+	return ret0
+}
+
+// SparseMemoryRequirements indicates an expected call of SparseMemoryRequirements.
+func (mr *MockImageMockRecorder) SparseMemoryRequirements() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SparseMemoryRequirements", reflect.TypeOf((*MockImage)(nil).SparseMemoryRequirements))
+}
+
 // SubresourceLayout mocks base method.
 func (m *MockImage) SubresourceLayout(subresource *common.ImageSubresource) *common.SubresourceLayout {
 	m.ctrl.T.Helper()
@@ -1872,6 +1931,22 @@ func (m *MockLoader1_0) CreateCommandPool(device core.Device, o *core.CommandPoo
 func (mr *MockLoader1_0MockRecorder) CreateCommandPool(device, o interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateCommandPool", reflect.TypeOf((*MockLoader1_0)(nil).CreateCommandPool), device, o)
+}
+
+// CreateComputePipelines mocks base method.
+func (m *MockLoader1_0) CreateComputePipelines(device core.Device, pipelineCache core.PipelineCache, o []*core.ComputePipelineOptions) ([]core.Pipeline, core.VkResult, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreateComputePipelines", device, pipelineCache, o)
+	ret0, _ := ret[0].([]core.Pipeline)
+	ret1, _ := ret[1].(core.VkResult)
+	ret2, _ := ret[2].(error)
+	return ret0, ret1, ret2
+}
+
+// CreateComputePipelines indicates an expected call of CreateComputePipelines.
+func (mr *MockLoader1_0MockRecorder) CreateComputePipelines(device, pipelineCache, o interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateComputePipelines", reflect.TypeOf((*MockLoader1_0)(nil).CreateComputePipelines), device, pipelineCache, o)
 }
 
 // CreateDescriptorPool mocks base method.
@@ -2625,6 +2700,21 @@ func (m *MockQueue) EXPECT() *MockQueueMockRecorder {
 	return m.recorder
 }
 
+// BindSparse mocks base method.
+func (m *MockQueue) BindSparse(fence core.Fence, bindInfos []*core.BindSparseOptions) (core.VkResult, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "BindSparse", fence, bindInfos)
+	ret0, _ := ret[0].(core.VkResult)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// BindSparse indicates an expected call of BindSparse.
+func (mr *MockQueueMockRecorder) BindSparse(fence, bindInfos interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "BindSparse", reflect.TypeOf((*MockQueue)(nil).BindSparse), fence, bindInfos)
+}
+
 // Driver mocks base method.
 func (m *MockQueue) Driver() core.Driver {
 	m.ctrl.T.Helper()
@@ -2730,6 +2820,20 @@ func (m *MockRenderPass) Handle() core.VkRenderPass {
 func (mr *MockRenderPassMockRecorder) Handle() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Handle", reflect.TypeOf((*MockRenderPass)(nil).Handle))
+}
+
+// RenderAreaGranularity mocks base method.
+func (m *MockRenderPass) RenderAreaGranularity() common.Extent2D {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "RenderAreaGranularity")
+	ret0, _ := ret[0].(common.Extent2D)
+	return ret0
+}
+
+// RenderAreaGranularity indicates an expected call of RenderAreaGranularity.
+func (mr *MockRenderPassMockRecorder) RenderAreaGranularity() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RenderAreaGranularity", reflect.TypeOf((*MockRenderPass)(nil).RenderAreaGranularity))
 }
 
 // MockSemaphore is a mock of Semaphore interface.

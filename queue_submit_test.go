@@ -34,7 +34,7 @@ func TestSubmitToQueue_SignalSuccess(t *testing.T) {
 	signalSemaphore2 := mocks.EasyDummySemaphore(t, loader, mockDevice)
 	signalSemaphore3 := mocks.EasyDummySemaphore(t, loader, mockDevice)
 
-	mockDriver.EXPECT().VkQueueSubmit(queue.Handle(), core.Uint32(1), gomock.Not(nil), fence.Handle()).DoAndReturn(
+	mockDriver.EXPECT().VkQueueSubmit(mocks.Exactly(queue.Handle()), core.Uint32(1), gomock.Not(nil), mocks.Exactly(fence.Handle())).DoAndReturn(
 		func(queue core.VkQueue, submitCount core.Uint32, pSubmits *core.VkSubmitInfo, fence core.VkFence) (core.VkResult, error) {
 			submitSlices := ([]core.VkSubmitInfo)(unsafe.Slice(pSubmits, int(submitCount)))
 
@@ -49,7 +49,8 @@ func TestSubmitToQueue_SignalSuccess(t *testing.T) {
 				waitSemaphorePtr := unsafe.Pointer(v.FieldByName("pWaitSemaphores").Elem().UnsafeAddr())
 				waitSemaphoreSlice := ([]core.VkSemaphore)(unsafe.Slice((*core.VkSemaphore)(waitSemaphorePtr), 2))
 
-				require.ElementsMatch(t, []core.VkSemaphore{waitSemaphore1.Handle(), waitSemaphore2.Handle()}, waitSemaphoreSlice)
+				require.Same(t, waitSemaphore1.Handle(), waitSemaphoreSlice[0])
+				require.Same(t, waitSemaphore2.Handle(), waitSemaphoreSlice[1])
 
 				waitDstStageMaskPtr := unsafe.Pointer(v.FieldByName("pWaitDstStageMask").Elem().UnsafeAddr())
 				waitDstStageMaskSlice := ([]core.VkPipelineStageFlags)(unsafe.Slice((*core.VkPipelineStageFlags)(waitDstStageMaskPtr), 2))
@@ -59,12 +60,14 @@ func TestSubmitToQueue_SignalSuccess(t *testing.T) {
 				commandBufferPtr := unsafe.Pointer(v.FieldByName("pCommandBuffers").Elem().UnsafeAddr())
 				commandBufferSlice := ([]core.VkCommandBuffer)(unsafe.Slice((*core.VkCommandBuffer)(commandBufferPtr), 1))
 
-				require.ElementsMatch(t, []core.VkCommandBuffer{buffer.Handle()}, commandBufferSlice)
+				require.Same(t, buffer.Handle(), commandBufferSlice[0])
 
 				signalSemaphorePtr := unsafe.Pointer(v.FieldByName("pSignalSemaphores").Elem().UnsafeAddr())
 				signalSemaphoreSlice := ([]core.VkSemaphore)(unsafe.Slice((*core.VkSemaphore)(signalSemaphorePtr), 3))
 
-				require.ElementsMatch(t, []core.VkSemaphore{signalSemaphore1.Handle(), signalSemaphore2.Handle(), signalSemaphore3.Handle()}, signalSemaphoreSlice)
+				require.Same(t, signalSemaphore1.Handle(), signalSemaphoreSlice[0])
+				require.Same(t, signalSemaphore2.Handle(), signalSemaphoreSlice[1])
+				require.Same(t, signalSemaphore3.Handle(), signalSemaphoreSlice[2])
 			}
 
 			return core.VKSuccess, nil
@@ -95,7 +98,7 @@ func TestSubmitToQueue_NoSignalSuccess(t *testing.T) {
 	pool := mocks.EasyDummyCommandPool(t, loader, mockDevice)
 	buffer := mocks.EasyDummyCommandBuffer(t, mockDevice, pool)
 
-	mockDriver.EXPECT().VkQueueSubmit(queue.Handle(), core.Uint32(1), gomock.Not(nil), nil).DoAndReturn(
+	mockDriver.EXPECT().VkQueueSubmit(mocks.Exactly(queue.Handle()), core.Uint32(1), gomock.Not(nil), nil).DoAndReturn(
 		func(queue core.VkQueue, submitCount core.Uint32, pSubmits *core.VkSubmitInfo, fence core.VkFence) (core.VkResult, error) {
 			submitSlices := ([]core.VkSubmitInfo)(unsafe.Slice(pSubmits, int(submitCount)))
 
@@ -114,7 +117,7 @@ func TestSubmitToQueue_NoSignalSuccess(t *testing.T) {
 				commandBufferPtr := unsafe.Pointer(v.FieldByName("pCommandBuffers").Elem().UnsafeAddr())
 				commandBufferSlice := ([]core.VkCommandBuffer)(unsafe.Slice((*core.VkCommandBuffer)(commandBufferPtr), 1))
 
-				require.ElementsMatch(t, []core.VkCommandBuffer{buffer.Handle()}, commandBufferSlice)
+				require.Same(t, buffer.Handle(), commandBufferSlice[0])
 			}
 
 			return core.VKSuccess, nil

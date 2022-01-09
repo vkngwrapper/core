@@ -95,7 +95,7 @@ func TestVulkanLoader1_0_CreateInstance(t *testing.T) {
 	})
 	require.NoError(t, err)
 	require.NotNil(t, instance)
-	require.Equal(t, instanceHandle, instance.Handle())
+	require.Same(t, instanceHandle, instance.Handle())
 }
 
 func TestVulkanInstance_PhysicalDevices(t *testing.T) {
@@ -110,13 +110,13 @@ func TestVulkanInstance_PhysicalDevices(t *testing.T) {
 	device1 := mocks.NewFakePhysicalDeviceHandle()
 	device2 := mocks.NewFakePhysicalDeviceHandle()
 
-	driver.EXPECT().VkEnumeratePhysicalDevices(instance.Handle(), gomock.Not(nil), nil).DoAndReturn(
+	driver.EXPECT().VkEnumeratePhysicalDevices(mocks.Exactly(instance.Handle()), gomock.Not(nil), nil).DoAndReturn(
 		func(instance core.VkInstance, pPhysicalDeviceCount *core.Uint32, pPhysicalDevices *core.VkPhysicalDevice) (core.VkResult, error) {
 			*pPhysicalDeviceCount = 2
 
 			return core.VKSuccess, nil
 		})
-	driver.EXPECT().VkEnumeratePhysicalDevices(instance.Handle(), gomock.Not(nil), gomock.Not(nil)).DoAndReturn(
+	driver.EXPECT().VkEnumeratePhysicalDevices(mocks.Exactly(instance.Handle()), gomock.Not(nil), gomock.Not(nil)).DoAndReturn(
 		func(instance core.VkInstance, pPhysicalDeviceCount *core.Uint32, pPhysicalDevices *core.VkPhysicalDevice) (core.VkResult, error) {
 			*pPhysicalDeviceCount = 2
 
@@ -130,6 +130,6 @@ func TestVulkanInstance_PhysicalDevices(t *testing.T) {
 	devices, _, err := instance.PhysicalDevices()
 	require.NoError(t, err)
 	require.Len(t, devices, 2)
-	require.Equal(t, device1, devices[0].Handle())
-	require.Equal(t, device2, devices[1].Handle())
+	require.Same(t, device1, devices[0].Handle())
+	require.Same(t, device2, devices[1].Handle())
 }

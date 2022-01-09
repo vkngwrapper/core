@@ -20,7 +20,7 @@ func TestVulkanLoader1_0_CreateSemaphore(t *testing.T) {
 	device := mocks.EasyMockDevice(ctrl, driver)
 	semaphoreHandle := mocks.NewFakeSemaphore()
 
-	driver.EXPECT().VkCreateSemaphore(device.Handle(), gomock.Not(nil), nil, gomock.Not(nil)).DoAndReturn(
+	driver.EXPECT().VkCreateSemaphore(mocks.Exactly(device.Handle()), gomock.Not(nil), nil, gomock.Not(nil)).DoAndReturn(
 		func(device core.VkDevice, pCreateInfo *core.VkSemaphoreCreateInfo, pAllocator *core.VkAllocationCallbacks, pSemaphore *core.VkSemaphore) (core.VkResult, error) {
 			*pSemaphore = semaphoreHandle
 			val := reflect.ValueOf(*pCreateInfo)
@@ -35,5 +35,5 @@ func TestVulkanLoader1_0_CreateSemaphore(t *testing.T) {
 	semaphore, _, err := loader.CreateSemaphore(device, &core.SemaphoreOptions{})
 	require.NoError(t, err)
 	require.NotNil(t, semaphore)
-	require.Equal(t, semaphoreHandle, semaphore.Handle())
+	require.Same(t, semaphoreHandle, semaphore.Handle())
 }

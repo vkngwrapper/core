@@ -129,6 +129,13 @@ func EasyMockSampler(ctrl *gomock.Controller) *MockSampler {
 	return sampler
 }
 
+func EasyMockSemaphore(ctrl *gomock.Controller) *MockSemaphore {
+	semaphore := NewMockSemaphore(ctrl)
+	semaphore.EXPECT().Handle().Return(NewFakeSemaphore()).AnyTimes()
+
+	return semaphore
+}
+
 func EasyMockShaderModule(ctrl *gomock.Controller) *MockShaderModule {
 	shader := NewMockShaderModule(ctrl)
 	shader.EXPECT().Handle().Return(NewFakeShaderModule()).AnyTimes()
@@ -240,7 +247,7 @@ func EasyDummyDevice(t *testing.T, ctrl *gomock.Controller, loader core.Loader1_
 	return device
 }
 
-func EasyDummyDeviceMemory(t *testing.T, device core.Device) core.DeviceMemory {
+func EasyDummyDeviceMemory(t *testing.T, device core.Device, size int) core.DeviceMemory {
 	mockDriver := device.Driver().(*MockDriver)
 
 	mockDriver.EXPECT().VkAllocateMemory(device.Handle(), gomock.Not(nil), nil, gomock.Not(nil)).DoAndReturn(
@@ -249,7 +256,9 @@ func EasyDummyDeviceMemory(t *testing.T, device core.Device) core.DeviceMemory {
 			return core.VKSuccess, nil
 		})
 
-	memory, _, err := device.AllocateMemory(&core.DeviceMemoryOptions{})
+	memory, _, err := device.AllocateMemory(&core.DeviceMemoryOptions{
+		AllocationSize: size,
+	})
 	require.NoError(t, err)
 
 	return memory
@@ -370,9 +379,8 @@ func EasyDummyPhysicalDevice(t *testing.T, loader core.Loader1_0) core.PhysicalD
 	return devices[0]
 }
 
-func EasyDummyPipeline(t *testing.T, ctrl *gomock.Controller, loader core.Loader1_0) core.Pipeline {
+func EasyDummyPipeline(t *testing.T, device core.Device, loader core.Loader1_0) core.Pipeline {
 	driver := loader.Driver().(*MockDriver)
-	device := EasyMockDevice(ctrl, driver)
 
 	driver.EXPECT().VkCreateGraphicsPipelines(device.Handle(), nil, core.Uint32(1), gomock.Not(nil), nil, gomock.Not(nil)).DoAndReturn(
 		func(device core.VkDevice, cache core.VkPipelineCache, createInfoCount core.Uint32, pCreateInfos *core.VkGraphicsPipelineCreateInfo, pAllocator *core.VkAllocationCallbacks, pPipelines *core.VkPipeline) (core.VkResult, error) {
@@ -389,9 +397,8 @@ func EasyDummyPipeline(t *testing.T, ctrl *gomock.Controller, loader core.Loader
 	return pipelines[0]
 }
 
-func EasyDummyPipelineCache(t *testing.T, ctrl *gomock.Controller, loader core.Loader1_0) core.PipelineCache {
+func EasyDummyPipelineCache(t *testing.T, device core.Device, loader core.Loader1_0) core.PipelineCache {
 	driver := loader.Driver().(*MockDriver)
-	device := EasyMockDevice(ctrl, driver)
 
 	driver.EXPECT().VkCreatePipelineCache(gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any()).DoAndReturn(
 		func(device core.VkDevice, pCreateInfo *core.VkPipelineCacheCreateInfo, pAllocator *core.VkAllocationCallbacks, pPipelineCache *core.VkPipelineCache) (core.VkResult, error) {

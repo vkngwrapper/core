@@ -22,7 +22,7 @@ func TestVulkanLoader1_0_CreateImage(t *testing.T) {
 	device := mocks.EasyMockDevice(ctrl, driver)
 	imageHandle := mocks.NewFakeImageHandle()
 
-	driver.EXPECT().VkCreateImage(device.Handle(), gomock.Not(nil), nil, gomock.Not(nil)).DoAndReturn(
+	driver.EXPECT().VkCreateImage(mocks.Exactly(device.Handle()), gomock.Not(nil), nil, gomock.Not(nil)).DoAndReturn(
 		func(device core.VkDevice, pCreateInfo *core.VkImageCreateInfo, pAllocator *core.VkAllocationCallbacks, pImage *core.VkImage) (core.VkResult, error) {
 			*pImage = imageHandle
 
@@ -74,7 +74,7 @@ func TestVulkanLoader1_0_CreateImage(t *testing.T) {
 	})
 	require.NoError(t, err)
 	require.NotNil(t, image)
-	require.Equal(t, imageHandle, image.Handle())
+	require.Same(t, imageHandle, image.Handle())
 }
 
 func TestVulkanImage_MemoryRequirements(t *testing.T) {
@@ -88,7 +88,7 @@ func TestVulkanImage_MemoryRequirements(t *testing.T) {
 	device := mocks.EasyMockDevice(ctrl, driver)
 	image := mocks.EasyDummyImage(t, loader, device)
 
-	driver.EXPECT().VkGetImageMemoryRequirements(device.Handle(), image.Handle(), gomock.Not(nil)).DoAndReturn(
+	driver.EXPECT().VkGetImageMemoryRequirements(mocks.Exactly(device.Handle()), mocks.Exactly(image.Handle()), gomock.Not(nil)).DoAndReturn(
 		func(device core.VkDevice, image core.VkImage, pRequirements *core.VkMemoryRequirements) {
 			val := reflect.ValueOf(pRequirements).Elem()
 
@@ -116,7 +116,7 @@ func TestVulkanImage_BindImageMemory(t *testing.T) {
 	memory := mocks.EasyMockDeviceMemory(ctrl)
 	image := mocks.EasyDummyImage(t, loader, device)
 
-	driver.EXPECT().VkBindImageMemory(device.Handle(), image.Handle(), memory.Handle(), core.VkDeviceSize(3)).Return(core.VKSuccess, nil)
+	driver.EXPECT().VkBindImageMemory(mocks.Exactly(device.Handle()), mocks.Exactly(image.Handle()), memory.Handle(), core.VkDeviceSize(3)).Return(core.VKSuccess, nil)
 
 	_, err = image.BindImageMemory(memory, 3)
 	require.NoError(t, err)
@@ -133,7 +133,7 @@ func TestVulkanImage_SubresourceLayout(t *testing.T) {
 	device := mocks.EasyMockDevice(ctrl, driver)
 	image := mocks.EasyDummyImage(t, loader, device)
 
-	driver.EXPECT().VkGetImageSubresourceLayout(device.Handle(), image.Handle(), gomock.Not(nil), gomock.Not(nil)).DoAndReturn(
+	driver.EXPECT().VkGetImageSubresourceLayout(mocks.Exactly(device.Handle()), mocks.Exactly(image.Handle()), gomock.Not(nil), gomock.Not(nil)).DoAndReturn(
 		func(device core.VkDevice, image core.VkImage, pSubresource *core.VkImageSubresource, pLayout *core.VkSubresourceLayout) {
 			val := reflect.ValueOf(pSubresource).Elem()
 
@@ -160,4 +160,79 @@ func TestVulkanImage_SubresourceLayout(t *testing.T) {
 	require.Equal(t, 11, layout.RowPitch)
 	require.Equal(t, 13, layout.DepthPitch)
 	require.Equal(t, 17, layout.ArrayPitch)
+}
+
+func TestVulkanImage_SparseMemoryRequirements(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	driver := mocks.NewMockDriver(ctrl)
+	loader, err := core.CreateLoaderFromDriver(driver)
+	require.NoError(t, err)
+
+	device := mocks.EasyMockDevice(ctrl, driver)
+	image := mocks.EasyDummyImage(t, loader, device)
+
+	driver.EXPECT().VkGetImageSparseMemoryRequirements(mocks.Exactly(device.Handle()), mocks.Exactly(image.Handle()), gomock.Not(nil), nil).DoAndReturn(
+		func(device core.VkDevice, image core.VkImage, pReqCount *core.Uint32, pRequirements *core.VkSparseImageMemoryRequirements) {
+			*pReqCount = 2
+		})
+
+	driver.EXPECT().VkGetImageSparseMemoryRequirements(mocks.Exactly(device.Handle()), mocks.Exactly(image.Handle()), gomock.Not(nil), gomock.Not(nil)).DoAndReturn(
+		func(device core.VkDevice, image core.VkImage, pReqCount *core.Uint32, pRequirements *core.VkSparseImageMemoryRequirements) {
+			require.Equal(t, core.Uint32(2), *pReqCount)
+
+			requirementSlice := unsafe.Slice(pRequirements, 2)
+			reqVal := reflect.ValueOf(requirementSlice)
+
+			req := reqVal.Index(0)
+
+			*(*uint32)(unsafe.Pointer(req.FieldByName("formatProperties").FieldByName("aspectMask").UnsafeAddr())) = uint32(1) // VK_IMAGE_ASPECT_COLOR_BIT
+			*(*int32)(unsafe.Pointer(req.FieldByName("formatProperties").FieldByName("imageGranularity").FieldByName("width").UnsafeAddr())) = int32(1)
+			*(*int32)(unsafe.Pointer(req.FieldByName("formatProperties").FieldByName("imageGranularity").FieldByName("height").UnsafeAddr())) = int32(3)
+			*(*int32)(unsafe.Pointer(req.FieldByName("formatProperties").FieldByName("imageGranularity").FieldByName("depth").UnsafeAddr())) = int32(5)
+			*(*uint32)(unsafe.Pointer(req.FieldByName("formatProperties").FieldByName("flags").UnsafeAddr())) = uint32(4) // VK_SPARSE_IMAGE_FORMAT_NONSTANDARD_BLOCK_SIZE_BIT
+			*(*uint32)(unsafe.Pointer(req.FieldByName("imageMipTailFirstLod").UnsafeAddr())) = uint32(7)
+			*(*uint64)(unsafe.Pointer(req.FieldByName("imageMipTailOffset").UnsafeAddr())) = uint64(11)
+			*(*uint64)(unsafe.Pointer(req.FieldByName("imageMipTailSize").UnsafeAddr())) = uint64(13)
+			*(*uint64)(unsafe.Pointer(req.FieldByName("imageMipTailStride").UnsafeAddr())) = uint64(17)
+
+			req = reqVal.Index(1)
+
+			*(*uint32)(unsafe.Pointer(req.FieldByName("formatProperties").FieldByName("aspectMask").UnsafeAddr())) = uint32(2) // VK_IMAGE_ASPECT_DEPTH_BIT
+			*(*int32)(unsafe.Pointer(req.FieldByName("formatProperties").FieldByName("imageGranularity").FieldByName("width").UnsafeAddr())) = int32(19)
+			*(*int32)(unsafe.Pointer(req.FieldByName("formatProperties").FieldByName("imageGranularity").FieldByName("height").UnsafeAddr())) = int32(23)
+			*(*int32)(unsafe.Pointer(req.FieldByName("formatProperties").FieldByName("imageGranularity").FieldByName("depth").UnsafeAddr())) = int32(29)
+			*(*uint32)(unsafe.Pointer(req.FieldByName("formatProperties").FieldByName("flags").UnsafeAddr())) = uint32(2) // VK_SPARSE_IMAGE_FORMAT_ALIGNED_MIP_SIZE_BIT
+			*(*uint32)(unsafe.Pointer(req.FieldByName("imageMipTailFirstLod").UnsafeAddr())) = uint32(31)
+			*(*uint64)(unsafe.Pointer(req.FieldByName("imageMipTailOffset").UnsafeAddr())) = uint64(37)
+			*(*uint64)(unsafe.Pointer(req.FieldByName("imageMipTailSize").UnsafeAddr())) = uint64(41)
+			*(*uint64)(unsafe.Pointer(req.FieldByName("imageMipTailStride").UnsafeAddr())) = uint64(43)
+		})
+
+	reqs := image.SparseMemoryRequirements()
+	require.Equal(t, []core.SparseImageMemoryRequirements{
+		{
+			FormatProperties: core.SparseImageFormatProperties{
+				AspectMask:       common.AspectColor,
+				ImageGranularity: common.Extent3D{1, 3, 5},
+				Flags:            core.SparseImageFormatNonstandardBlockSize,
+			},
+			ImageMipTailFirstLod: 7,
+			ImageMipTailOffset:   11,
+			ImageMipTailSize:     13,
+			ImageMipTailStride:   17,
+		},
+		{
+			FormatProperties: core.SparseImageFormatProperties{
+				AspectMask:       common.AspectDepth,
+				ImageGranularity: common.Extent3D{19, 23, 29},
+				Flags:            core.SparseImageFormatAlignedMipSize,
+			},
+			ImageMipTailFirstLod: 31,
+			ImageMipTailOffset:   37,
+			ImageMipTailSize:     41,
+			ImageMipTailStride:   43,
+		},
+	}, reqs)
 }

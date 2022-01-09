@@ -21,7 +21,7 @@ func TestVulkanLoader1_0_CreateShaderModule(t *testing.T) {
 	device := mocks.EasyMockDevice(ctrl, driver)
 	handle := mocks.NewFakeShaderModule()
 
-	driver.EXPECT().VkCreateShaderModule(device.Handle(), gomock.Not(nil), nil, gomock.Not(nil)).DoAndReturn(
+	driver.EXPECT().VkCreateShaderModule(mocks.Exactly(device.Handle()), gomock.Not(nil), nil, gomock.Not(nil)).DoAndReturn(
 		func(device core.VkDevice, pCreateInfo *core.VkShaderModuleCreateInfo, pAllocator *core.VkAllocationCallbacks, pShaderModule *core.VkShaderModule) (core.VkResult, error) {
 			*pShaderModule = handle
 			val := reflect.ValueOf(*pCreateInfo)
@@ -44,5 +44,5 @@ func TestVulkanLoader1_0_CreateShaderModule(t *testing.T) {
 	})
 	require.NoError(t, err)
 	require.NotNil(t, shaderModule)
-	require.Equal(t, handle, shaderModule.Handle())
+	require.Same(t, handle, shaderModule.Handle())
 }

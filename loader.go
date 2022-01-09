@@ -472,6 +472,47 @@ func (l *VulkanLoader1_0) CreateGraphicsPipelines(device Device, pipelineCache P
 	return output, res, nil
 }
 
+func (l *VulkanLoader1_0) CreateComputePipelines(device Device, pipelineCache PipelineCache, o []*ComputePipelineOptions) ([]Pipeline, VkResult, error) {
+	arena := cgoparam.GetAlloc()
+	defer cgoparam.ReturnAlloc(arena)
+
+	pipelineCount := len(o)
+
+	pipelineCreateInfosPtrUnsafe := arena.Malloc(pipelineCount * C.sizeof_struct_VkComputePipelineCreateInfo)
+	pipelineCreateInfosSlice := ([]C.VkComputePipelineCreateInfo)(unsafe.Slice((*C.VkComputePipelineCreateInfo)(pipelineCreateInfosPtrUnsafe), pipelineCount))
+	for i := 0; i < pipelineCount; i++ {
+		next, err := common.AllocNext(arena, o[i])
+		if err != nil {
+			return nil, VKErrorUnknown, err
+		}
+
+		err = o[i].populate(arena, &pipelineCreateInfosSlice[i], next)
+		if err != nil {
+			return nil, VKErrorUnknown, err
+		}
+	}
+
+	pipelinePtr := (*VkPipeline)(arena.Malloc(pipelineCount * int(unsafe.Sizeof([1]VkPipeline{}))))
+
+	var pipelineCacheHandle VkPipelineCache
+	if pipelineCache != nil {
+		pipelineCacheHandle = pipelineCache.Handle()
+	}
+
+	res, err := device.Driver().VkCreateComputePipelines(device.Handle(), pipelineCacheHandle, Uint32(pipelineCount), (*VkComputePipelineCreateInfo)(pipelineCreateInfosPtrUnsafe), nil, pipelinePtr)
+	if err != nil {
+		return nil, res, err
+	}
+
+	var output []Pipeline
+	pipelineSlice := ([]VkPipeline)(unsafe.Slice(pipelinePtr, pipelineCount))
+	for i := 0; i < pipelineCount; i++ {
+		output = append(output, &vulkanPipeline{driver: device.Driver(), device: device.Handle(), handle: pipelineSlice[i]})
+	}
+
+	return output, res, nil
+}
+
 func (l *VulkanLoader1_0) CreateImage(device Device, o *ImageOptions) (Image, VkResult, error) {
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)

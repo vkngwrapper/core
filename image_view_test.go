@@ -23,13 +23,13 @@ func TestVulkanLoader1_0_CreateImageView(t *testing.T) {
 	imageViewHandle := mocks.NewFakeImageViewHandle()
 	image := mocks.EasyMockImage(ctrl)
 
-	driver.EXPECT().VkCreateImageView(device.Handle(), gomock.Not(nil), nil, gomock.Not(nil)).DoAndReturn(
+	driver.EXPECT().VkCreateImageView(mocks.Exactly(device.Handle()), gomock.Not(nil), nil, gomock.Not(nil)).DoAndReturn(
 		func(device core.VkDevice, pCreateInfo *core.VkImageViewCreateInfo, pAllocator *core.VkAllocationCallbacks, pImageView *core.VkImageView) (core.VkResult, error) {
 			val := reflect.ValueOf(*pCreateInfo)
 			require.Equal(t, uint64(15), val.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO
 			require.True(t, val.FieldByName("pNext").IsNil())
 			require.Equal(t, uint64(2), val.FieldByName("flags").Uint()) // VK_IMAGE_VIEW_CREATE_FRAGMENT_DENSITY_MAP_DEFERRED_BIT_EXT
-			require.Equal(t, image.Handle(), (core.VkImage)(unsafe.Pointer(val.FieldByName("image").Elem().UnsafeAddr())))
+			require.Same(t, image.Handle(), (core.VkImage)(unsafe.Pointer(val.FieldByName("image").Elem().UnsafeAddr())))
 			require.Equal(t, uint64(1), val.FieldByName("viewType").Uint()) // VK_IMAGE_VIEW_TYPE_2D
 			require.Equal(t, uint64(67), val.FieldByName("format").Uint())  // VK_FORMAT_A2B10G10R10_SSCALED_PACK32
 
@@ -71,5 +71,5 @@ func TestVulkanLoader1_0_CreateImageView(t *testing.T) {
 	})
 	require.NoError(t, err)
 	require.NotNil(t, imageView)
-	require.Equal(t, imageViewHandle, imageView.Handle())
+	require.Same(t, imageViewHandle, imageView.Handle())
 }

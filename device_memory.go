@@ -39,6 +39,8 @@ type vulkanDeviceMemory struct {
 	driver Driver
 	device VkDevice
 	handle VkDeviceMemory
+
+	size int
 }
 
 func (m *vulkanDeviceMemory) Handle() VkDeviceMemory {
@@ -68,4 +70,32 @@ func (m *vulkanDeviceMemory) Commitment() int {
 	m.driver.VkGetDeviceMemoryCommitment(m.device, m.handle, committedMemoryPtr)
 
 	return int(*committedMemoryPtr)
+}
+
+func (m *vulkanDeviceMemory) Flush() (VkResult, error) {
+	arena := cgoparam.GetAlloc()
+	defer cgoparam.ReturnAlloc(arena)
+
+	mappedRange := (*C.VkMappedMemoryRange)(arena.Malloc(C.sizeof_struct_VkMappedMemoryRange))
+	mappedRange.sType = C.VK_STRUCTURE_TYPE_MAPPED_MEMORY_RANGE
+	mappedRange.pNext = nil
+	mappedRange.memory = C.VkDeviceMemory(m.handle)
+	mappedRange.offset = 0
+	mappedRange.size = C.VkDeviceSize(m.size)
+
+	return m.driver.VkFlushMappedMemoryRanges(m.device, Uint32(1), (*VkMappedMemoryRange)(mappedRange))
+}
+
+func (m *vulkanDeviceMemory) Invalidate() (VkResult, error) {
+	arena := cgoparam.GetAlloc()
+	defer cgoparam.ReturnAlloc(arena)
+
+	mappedRange := (*C.VkMappedMemoryRange)(arena.Malloc(C.sizeof_struct_VkMappedMemoryRange))
+	mappedRange.sType = C.VK_STRUCTURE_TYPE_MAPPED_MEMORY_RANGE
+	mappedRange.pNext = nil
+	mappedRange.memory = C.VkDeviceMemory(m.handle)
+	mappedRange.offset = 0
+	mappedRange.size = C.VkDeviceSize(m.size)
+
+	return m.driver.VkInvalidateMappedMemoryRanges(m.device, Uint32(1), (*VkMappedMemoryRange)(mappedRange))
 }
