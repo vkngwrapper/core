@@ -152,7 +152,7 @@ func EasyDummyBuffer(t *testing.T, loader core.Loader1_0, device core.Device) co
 			return core.VKSuccess, nil
 		})
 
-	buffer, _, err := loader.CreateBuffer(device, &core.BufferOptions{})
+	buffer, _, err := loader.CreateBuffer(device, nil, &core.BufferOptions{})
 	require.NoError(t, err)
 	require.NotNil(t, buffer)
 

@@ -1885,10 +1885,24 @@ func (mr *MockLoader1_0MockRecorder) AvailableLayers() *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AvailableLayers", reflect.TypeOf((*MockLoader1_0)(nil).AvailableLayers))
 }
 
-// CreateBuffer mocks base method.
-func (m *MockLoader1_0) CreateBuffer(device core.Device, o *core.BufferOptions) (core.Buffer, core.VkResult, error) {
+// CreateAllocationCallbacks mocks base method.
+func (m *MockLoader1_0) CreateAllocationCallbacks(allocation core.AllocationFunction, reallocation core.ReallocationFunction, free core.FreeFunction, internalAllocation core.InternalAllocationNotification, internalFree core.InternalFreeNotification, userData interface{}) *core.AllocationCallbacks {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreateBuffer", device, o)
+	ret := m.ctrl.Call(m, "CreateAllocationCallbacks", allocation, reallocation, free, internalAllocation, internalFree, userData)
+	ret0, _ := ret[0].(*core.AllocationCallbacks)
+	return ret0
+}
+
+// CreateAllocationCallbacks indicates an expected call of CreateAllocationCallbacks.
+func (mr *MockLoader1_0MockRecorder) CreateAllocationCallbacks(allocation, reallocation, free, internalAllocation, internalFree, userData interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateAllocationCallbacks", reflect.TypeOf((*MockLoader1_0)(nil).CreateAllocationCallbacks), allocation, reallocation, free, internalAllocation, internalFree, userData)
+}
+
+// CreateBuffer mocks base method.
+func (m *MockLoader1_0) CreateBuffer(device core.Device, allocationCallbacks *core.AllocationCallbacks, o *core.BufferOptions) (core.Buffer, core.VkResult, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreateBuffer", device, allocationCallbacks, o)
 	ret0, _ := ret[0].(core.Buffer)
 	ret1, _ := ret[1].(core.VkResult)
 	ret2, _ := ret[2].(error)
@@ -1896,9 +1910,9 @@ func (m *MockLoader1_0) CreateBuffer(device core.Device, o *core.BufferOptions) 
 }
 
 // CreateBuffer indicates an expected call of CreateBuffer.
-func (mr *MockLoader1_0MockRecorder) CreateBuffer(device, o interface{}) *gomock.Call {
+func (mr *MockLoader1_0MockRecorder) CreateBuffer(device, allocationCallbacks, o interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateBuffer", reflect.TypeOf((*MockLoader1_0)(nil).CreateBuffer), device, o)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateBuffer", reflect.TypeOf((*MockLoader1_0)(nil).CreateBuffer), device, allocationCallbacks, o)
 }
 
 // CreateBufferView mocks base method.

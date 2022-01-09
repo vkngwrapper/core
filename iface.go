@@ -172,7 +172,8 @@ type Loader1_0 interface {
 	AvailableExtensionsForLayer(layerName string) (map[string]*common.ExtensionProperties, VkResult, error)
 	AvailableLayers() (map[string]*common.LayerProperties, VkResult, error)
 
-	CreateBuffer(device Device, o *BufferOptions) (Buffer, VkResult, error)
+	CreateAllocationCallbacks(allocation AllocationFunction, reallocation ReallocationFunction, free FreeFunction, internalAllocation InternalAllocationNotification, internalFree InternalFreeNotification, userData interface{}) *AllocationCallbacks
+	CreateBuffer(device Device, allocationCallbacks *AllocationCallbacks, o *BufferOptions) (Buffer, VkResult, error)
 	CreateBufferView(device Device, o *BufferViewOptions) (BufferView, VkResult, error)
 	CreateCommandPool(device Device, o *CommandPoolOptions) (CommandPool, VkResult, error)
 	CreateDescriptorPool(device Device, o *DescriptorPoolOptions) (DescriptorPool, VkResult, error)

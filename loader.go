@@ -8,6 +8,7 @@ import "C"
 import (
 	"github.com/CannibalVox/VKng/core/common"
 	"github.com/CannibalVox/cgoparam"
+	"runtime/cgo"
 	"unsafe"
 )
 
@@ -163,6 +164,20 @@ func (l *VulkanLoader1_0) AvailableLayers() (map[string]*common.LayerProperties,
 	return layers, result, err
 }
 
+func (l *VulkanLoader1_0) CreateAllocationCallbacks(allocation AllocationFunction, reallocation ReallocationFunction, free FreeFunction, internalAllocation InternalAllocationNotification, internalFree InternalFreeNotification, userData interface{}) *AllocationCallbacks {
+	callbacks := &AllocationCallbacks{
+		allocation:         allocation,
+		reallocation:       reallocation,
+		free:               free,
+		internalAllocation: internalAllocation,
+		internalFree:       internalFree,
+		userData:           userData,
+	}
+	callbacks.thisHandle = cgo.NewHandle(callbacks)
+
+	return callbacks
+}
+
 func (l *VulkanLoader1_0) CreateBufferView(device Device, options *BufferViewOptions) (BufferView, VkResult, error) {
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
@@ -311,7 +326,7 @@ func (l *VulkanLoader1_0) CreateFence(device Device, o *FenceOptions) (Fence, Vk
 	return &vulkanFence{driver: device.Driver(), device: device.Handle(), handle: fenceHandle}, res, nil
 }
 
-func (l *VulkanLoader1_0) CreateBuffer(device Device, o *BufferOptions) (Buffer, VkResult, error) {
+func (l *VulkanLoader1_0) CreateBuffer(device Device, allocationCallbacks *AllocationCallbacks, o *BufferOptions) (Buffer, VkResult, error) {
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
@@ -322,12 +337,13 @@ func (l *VulkanLoader1_0) CreateBuffer(device Device, o *BufferOptions) (Buffer,
 
 	var buffer VkBuffer
 
-	res, err := device.Driver().VkCreateBuffer(device.Handle(), (*VkBufferCreateInfo)(createInfo), nil, &buffer)
+	res, err := device.Driver().VkCreateBuffer(device.Handle(), (*VkBufferCreateInfo)(createInfo), allocationCallbacks.BuildHandle(arena), &buffer)
 	if err != nil {
 		return nil, res, err
 	}
 
-	return &vulkanBuffer{driver: device.Driver(), handle: buffer, device: device.Handle()}, res, nil
+	allocationCallbacks.BeginReference()
+	return &vulkanBuffer{driver: device.Driver(), handle: buffer, device: device.Handle(), allocationCallbacks: allocationCallbacks}, res, nil
 }
 
 func (l *VulkanLoader1_0) CreateDescriptorSetLayout(device Device, o *DescriptorSetLayoutOptions) (DescriptorSetLayout, VkResult, error) {
