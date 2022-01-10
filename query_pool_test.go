@@ -38,7 +38,7 @@ func TestVulkanLoader1_0_CreateQueryPool(t *testing.T) {
 			return core.VKSuccess, nil
 		})
 
-	queryPool, _, err := loader.CreateQueryPool(device, &core.QueryPoolOptions{
+	queryPool, _, err := loader.CreateQueryPool(device, nil, &core.QueryPoolOptions{
 		QueryType:          common.QueryTypeAccelerationStructureCompactedSizeKHR,
 		QueryCount:         5,
 		PipelineStatistics: common.PipelineStatisticGeometryShaderPrimitives,

@@ -50,7 +50,7 @@ func TestDescriptorPool_Create(t *testing.T) {
 			return core.VKSuccess, nil
 		})
 
-	pool, _, err := loader.CreateDescriptorPool(mockDevice, &core.DescriptorPoolOptions{
+	pool, _, err := loader.CreateDescriptorPool(mockDevice, nil, &core.DescriptorPoolOptions{
 		Flags:   core.DescriptorPoolUpdateAfterBind,
 		MaxSets: 3,
 		PoolSizes: []core.PoolSize{

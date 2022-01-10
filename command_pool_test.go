@@ -38,7 +38,7 @@ func TestCommandPoolCreateBasic(t *testing.T) {
 	require.NoError(t, err)
 
 	graphicsFamily := 1
-	pool, res, err := loader.CreateCommandPool(device, &core.CommandPoolOptions{
+	pool, res, err := loader.CreateCommandPool(device, nil, &core.CommandPoolOptions{
 		Flags:               core.CommandPoolResetBuffer,
 		GraphicsQueueFamily: &graphicsFamily,
 	})
@@ -59,7 +59,7 @@ func TestCommandPoolNullQueue(t *testing.T) {
 	loader, err := core.CreateLoaderFromDriver(mockDriver)
 	require.NoError(t, err)
 
-	pool, res, err := loader.CreateCommandPool(mockDevice, &core.CommandPoolOptions{
+	pool, res, err := loader.CreateCommandPool(mockDevice, nil, &core.CommandPoolOptions{
 		Flags: core.CommandPoolResetBuffer,
 	})
 	require.Error(t, err)

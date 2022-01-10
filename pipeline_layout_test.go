@@ -63,7 +63,7 @@ func TestVulkanLoader1_0_CreatePipelineLayout(t *testing.T) {
 			return core.VKSuccess, nil
 		})
 
-	layout, _, err := loader.CreatePipelineLayout(device, &core.PipelineLayoutOptions{
+	layout, _, err := loader.CreatePipelineLayout(device, nil, &core.PipelineLayoutOptions{
 		SetLayouts: []core.DescriptorSetLayout{descriptorSetLayout1, descriptorSetLayout2},
 		PushConstantRanges: []common.PushConstantRange{
 			{

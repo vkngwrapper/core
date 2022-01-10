@@ -44,7 +44,7 @@ func TestDescriptorSetLayout_Create_SingleBinding(t *testing.T) {
 			return core.VKSuccess, nil
 		})
 
-	layout, _, err := loader.CreateDescriptorSetLayout(mockDevice, &core.DescriptorSetLayoutOptions{
+	layout, _, err := loader.CreateDescriptorSetLayout(mockDevice, nil, &core.DescriptorSetLayoutOptions{
 		Flags: core.DescriptorSetLayoutHostOnlyPoolValve,
 		Bindings: []*core.DescriptorLayoutBinding{
 			{
@@ -106,7 +106,7 @@ func TestDescriptorSetLayout_Create_SingleBindingImmutableSamplers(t *testing.T)
 			return core.VKSuccess, nil
 		})
 
-	layout, _, err := loader.CreateDescriptorSetLayout(mockDevice, &core.DescriptorSetLayoutOptions{
+	layout, _, err := loader.CreateDescriptorSetLayout(mockDevice, nil, &core.DescriptorSetLayoutOptions{
 		Flags: core.DescriptorSetLayoutHostOnlyPoolValve,
 		Bindings: []*core.DescriptorLayoutBinding{
 			{
@@ -141,7 +141,7 @@ func TestDescriptorSetLayout_Create_FailBindingSamplerMismatch(t *testing.T) {
 	sampler3 := mocks.EasyMockSampler(ctrl)
 	sampler4 := mocks.EasyMockSampler(ctrl)
 
-	_, _, err = loader.CreateDescriptorSetLayout(mockDevice, &core.DescriptorSetLayoutOptions{
+	_, _, err = loader.CreateDescriptorSetLayout(mockDevice, nil, &core.DescriptorSetLayoutOptions{
 		Flags: core.DescriptorSetLayoutHostOnlyPoolValve,
 		Bindings: []*core.DescriptorLayoutBinding{
 			{
@@ -206,7 +206,7 @@ func TestDescriptorSetLayout_Create_MultiBinding(t *testing.T) {
 			return core.VKSuccess, nil
 		})
 
-	layout, _, err := loader.CreateDescriptorSetLayout(mockDevice, &core.DescriptorSetLayoutOptions{
+	layout, _, err := loader.CreateDescriptorSetLayout(mockDevice, nil, &core.DescriptorSetLayoutOptions{
 		Flags: core.DescriptorSetLayoutHostOnlyPoolValve,
 		Bindings: []*core.DescriptorLayoutBinding{
 			{

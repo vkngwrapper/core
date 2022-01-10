@@ -48,7 +48,7 @@ func TestVulkanLoader1_0_CreateSampler(t *testing.T) {
 			return core.VKSuccess, nil
 		})
 
-	sampler, _, err := loader.CreateSampler(device, &core.SamplerOptions{
+	sampler, _, err := loader.CreateSampler(device, nil, &core.SamplerOptions{
 		Flags:                   core.SamplerSubsampledEXT,
 		MagFilter:               common.FilterCubic,
 		MinFilter:               common.FilterLinear,

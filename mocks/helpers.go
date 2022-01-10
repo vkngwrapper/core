@@ -170,7 +170,7 @@ func EasyDummyCommandPool(t *testing.T, loader core.Loader1_0, device core.Devic
 		})
 
 	graphicsFamily := 0
-	pool, res, err := loader.CreateCommandPool(device, &core.CommandPoolOptions{
+	pool, res, err := loader.CreateCommandPool(device, nil, &core.CommandPoolOptions{
 		Flags:               core.CommandPoolResetBuffer,
 		GraphicsQueueFamily: &graphicsFamily,
 	})
@@ -205,7 +205,7 @@ func EasyDummyDescriptorPool(t *testing.T, loader core.Loader1_0, device core.De
 			return core.VKSuccess, nil
 		})
 
-	pool, _, err := loader.CreateDescriptorPool(device, &core.DescriptorPoolOptions{})
+	pool, _, err := loader.CreateDescriptorPool(device, nil, &core.DescriptorPoolOptions{})
 	require.NoError(t, err)
 
 	return pool
@@ -220,7 +220,7 @@ func EasyDummyDescriptorSetLayout(t *testing.T, loader core.Loader1_0, device co
 			return core.VKSuccess, nil
 		})
 
-	layout, _, err := loader.CreateDescriptorSetLayout(device, &core.DescriptorSetLayoutOptions{})
+	layout, _, err := loader.CreateDescriptorSetLayout(device, nil, &core.DescriptorSetLayoutOptions{})
 	require.NoError(t, err)
 	return layout
 }
@@ -235,7 +235,7 @@ func EasyDummyDevice(t *testing.T, ctrl *gomock.Controller, loader core.Loader1_
 			return core.VKSuccess, nil
 		})
 
-	device, _, err := loader.CreateDevice(EasyMockPhysicalDevice(ctrl, mockDriver), &core.DeviceOptions{
+	device, _, err := loader.CreateDevice(EasyMockPhysicalDevice(ctrl, mockDriver), nil, &core.DeviceOptions{
 		QueueFamilies: []*core.QueueFamilyOptions{
 			{
 				QueuePriorities: []float32{1},
@@ -256,7 +256,7 @@ func EasyDummyDeviceMemory(t *testing.T, device core.Device, size int) core.Devi
 			return core.VKSuccess, nil
 		})
 
-	memory, _, err := device.AllocateMemory(&core.DeviceMemoryOptions{
+	memory, _, err := device.AllocateMemory(nil, &core.DeviceMemoryOptions{
 		AllocationSize: size,
 	})
 	require.NoError(t, err)
@@ -273,7 +273,7 @@ func EasyDummyEvent(t *testing.T, loader core.Loader1_0, device core.Device) cor
 			return core.VKSuccess, nil
 		})
 
-	event, _, err := loader.CreateEvent(device, &core.EventOptions{})
+	event, _, err := loader.CreateEvent(device, nil, &core.EventOptions{})
 	require.NoError(t, err)
 
 	return event
@@ -288,7 +288,7 @@ func EasyDummyFence(t *testing.T, loader core.Loader1_0, device core.Device) cor
 			return core.VKSuccess, nil
 		})
 
-	fence, _, err := loader.CreateFence(device, &core.FenceOptions{})
+	fence, _, err := loader.CreateFence(device, nil, &core.FenceOptions{})
 	require.NoError(t, err)
 
 	return fence
@@ -303,7 +303,7 @@ func EasyDummyFramebuffer(t *testing.T, loader core.Loader1_0, device core.Devic
 			return core.VKSuccess, nil
 		})
 
-	framebuffer, _, err := loader.CreateFrameBuffer(device, &core.FramebufferOptions{})
+	framebuffer, _, err := loader.CreateFrameBuffer(device, nil, &core.FramebufferOptions{})
 	require.NoError(t, err)
 
 	return framebuffer
@@ -318,7 +318,7 @@ func EasyDummyGraphicsPipeline(t *testing.T, loader core.Loader1_0, device core.
 			return core.VKSuccess, nil
 		})
 
-	pipelines, _, err := loader.CreateGraphicsPipelines(device, nil, []*core.GraphicsPipelineOptions{{}})
+	pipelines, _, err := loader.CreateGraphicsPipelines(device, nil, nil, []*core.GraphicsPipelineOptions{{}})
 	require.NoError(t, err)
 
 	return pipelines[0]
@@ -334,7 +334,7 @@ func EasyDummyImage(t *testing.T, loader core.Loader1_0, device core.Device) cor
 			return core.VKSuccess, nil
 		})
 
-	image, _, err := loader.CreateImage(device, &core.ImageOptions{})
+	image, _, err := loader.CreateImage(device, nil, &core.ImageOptions{})
 	require.NoError(t, err)
 
 	return image
@@ -350,7 +350,7 @@ func EasyDummyInstance(t *testing.T, loader core.Loader1_0) core.Instance {
 			return core.VKSuccess, nil
 		})
 
-	instance, _, err := loader.CreateInstance(&core.InstanceOptions{})
+	instance, _, err := loader.CreateInstance(nil, &core.InstanceOptions{})
 	require.NoError(t, err)
 
 	return instance
@@ -390,7 +390,7 @@ func EasyDummyPipeline(t *testing.T, device core.Device, loader core.Loader1_0) 
 			return core.VKSuccess, nil
 		})
 
-	pipelines, _, err := loader.CreateGraphicsPipelines(device, nil, []*core.GraphicsPipelineOptions{
+	pipelines, _, err := loader.CreateGraphicsPipelines(device, nil, nil, []*core.GraphicsPipelineOptions{
 		{},
 	})
 	require.NoError(t, err)
@@ -406,7 +406,7 @@ func EasyDummyPipelineCache(t *testing.T, device core.Device, loader core.Loader
 			return core.VKSuccess, nil
 		})
 
-	pipelineCache, _, err := loader.CreatePipelineCache(device, &core.PipelineCacheOptions{})
+	pipelineCache, _, err := loader.CreatePipelineCache(device, nil, &core.PipelineCacheOptions{})
 	require.NoError(t, err)
 	return pipelineCache
 }
@@ -420,7 +420,7 @@ func EasyDummyQueryPool(t *testing.T, loader core.Loader1_0, device core.Device)
 			return core.VKSuccess, nil
 		})
 
-	queryPool, _, err := loader.CreateQueryPool(device, &core.QueryPoolOptions{})
+	queryPool, _, err := loader.CreateQueryPool(device, nil, &core.QueryPoolOptions{})
 	require.NoError(t, err)
 	return queryPool
 }
@@ -448,7 +448,7 @@ func EasyDummyRenderPass(t *testing.T, loader core.Loader1_0, device core.Device
 			return core.VKSuccess, nil
 		})
 
-	renderPass, _, err := loader.CreateRenderPass(device, &core.RenderPassOptions{})
+	renderPass, _, err := loader.CreateRenderPass(device, nil, &core.RenderPassOptions{})
 	require.NoError(t, err)
 
 	return renderPass
@@ -463,7 +463,7 @@ func EasyDummySemaphore(t *testing.T, loader core.Loader1_0, device core.Device)
 			return core.VKSuccess, nil
 		})
 
-	semaphore, _, err := loader.CreateSemaphore(device, &core.SemaphoreOptions{})
+	semaphore, _, err := loader.CreateSemaphore(device, nil, &core.SemaphoreOptions{})
 	require.NoError(t, err)
 
 	return semaphore

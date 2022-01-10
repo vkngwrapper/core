@@ -80,7 +80,7 @@ func (d *vulkanDevice) ResetFences(fences []Fence) (VkResult, error) {
 	return d.driver.VkResetFences(d.handle, Uint32(fenceCount), fencePtr)
 }
 
-func (d *vulkanDevice) AllocateMemory(o *DeviceMemoryOptions) (DeviceMemory, VkResult, error) {
+func (d *vulkanDevice) AllocateMemory(allocationCallbacks *AllocationCallbacks, o *DeviceMemoryOptions) (DeviceMemory, VkResult, error) {
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 

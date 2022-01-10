@@ -84,7 +84,7 @@ func TestVulkanLoader1_0_CreateInstance(t *testing.T) {
 			return core.VKSuccess, nil
 		})
 
-	instance, _, err := loader.CreateInstance(&core.InstanceOptions{
+	instance, _, err := loader.CreateInstance(nil, &core.InstanceOptions{
 		ApplicationName:    "test app",
 		ApplicationVersion: common.CreateVersion(2, 3, 4),
 		EngineName:         "test engine",
