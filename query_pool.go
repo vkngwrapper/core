@@ -21,7 +21,7 @@ func (p *vulkanQueryPool) Handle() VkQueryPool {
 	return p.handle
 }
 
-func (p *vulkanQueryPool) Destroy() {
+func (p *vulkanQueryPool) Destroy(callbacks *AllocationCallbacks) {
 	p.driver.VkDestroyQueryPool(p.device, p.handle, nil)
 }
 

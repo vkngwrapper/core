@@ -21,7 +21,7 @@ func (v *vulkanBufferView) Handle() VkBufferView {
 	return v.handle
 }
 
-func (v *vulkanBufferView) Destroy() {
+func (v *vulkanBufferView) Destroy(callbacks *AllocationCallbacks) {
 	v.driver.VkDestroyBufferView(v.device, v.handle, nil)
 }
 

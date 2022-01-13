@@ -26,7 +26,7 @@ func (d *vulkanDevice) Handle() VkDevice {
 	return d.handle
 }
 
-func (d *vulkanDevice) Destroy() {
+func (d *vulkanDevice) Destroy(callbacks *AllocationCallbacks) {
 	d.driver.VkDestroyDevice(d.handle, nil)
 }
 
@@ -102,10 +102,6 @@ func (d *vulkanDevice) AllocateMemory(allocationCallbacks *AllocationCallbacks, 
 		handle: deviceMemory,
 		size:   o.AllocationSize,
 	}, res, nil
-}
-
-func (d *vulkanDevice) FreeMemory(memory DeviceMemory) {
-	d.driver.VkFreeMemory(d.handle, memory.Handle(), nil)
 }
 
 func (d *vulkanDevice) UpdateDescriptorSets(writes []WriteDescriptorSetOptions, copies []CopyDescriptorSetOptions) error {

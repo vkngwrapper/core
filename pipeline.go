@@ -16,6 +16,6 @@ func (p *vulkanPipeline) Handle() VkPipeline {
 	return p.handle
 }
 
-func (p *vulkanPipeline) Destroy() {
+func (p *vulkanPipeline) Destroy(callbacks *AllocationCallbacks) {
 	p.driver.VkDestroyPipeline(p.device, p.handle, nil)
 }

@@ -22,7 +22,7 @@ func (f *vulkanFence) Handle() VkFence {
 	return f.handle
 }
 
-func (f *vulkanFence) Destroy() {
+func (f *vulkanFence) Destroy(callbacks *AllocationCallbacks) {
 	f.driver.VkDestroyFence(f.device, f.handle, nil)
 }
 

@@ -79,7 +79,7 @@ func (p *vulkanDescriptorPool) Handle() VkDescriptorPool {
 	return p.handle
 }
 
-func (p *vulkanDescriptorPool) Destroy() {
+func (p *vulkanDescriptorPool) Destroy(callbacks *AllocationCallbacks) {
 	p.driver.VkDestroyDescriptorPool(p.device, p.handle, nil)
 }
 

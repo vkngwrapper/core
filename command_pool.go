@@ -21,7 +21,7 @@ func (p *vulkanCommandPool) Handle() VkCommandPool {
 	return p.handle
 }
 
-func (p *vulkanCommandPool) Destroy() {
+func (p *vulkanCommandPool) Destroy(callbacks *AllocationCallbacks) {
 	p.driver.VkDestroyCommandPool(p.device, p.handle, nil)
 }
 

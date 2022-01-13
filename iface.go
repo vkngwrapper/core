@@ -10,14 +10,14 @@ import (
 
 type Buffer interface {
 	Handle() VkBuffer
-	Destroy()
+	Destroy(callbacks *AllocationCallbacks)
 	MemoryRequirements() *common.MemoryRequirements
 	BindBufferMemory(memory DeviceMemory, offset int) (VkResult, error)
 }
 
 type BufferView interface {
 	Handle() VkBufferView
-	Destroy()
+	Destroy(callbacks *AllocationCallbacks)
 }
 
 type CommandBuffer interface {
@@ -75,7 +75,7 @@ type CommandBuffer interface {
 
 type CommandPool interface {
 	Handle() VkCommandPool
-	Destroy()
+	Destroy(callbacks *AllocationCallbacks)
 	AllocateCommandBuffers(o *CommandBufferOptions) ([]CommandBuffer, VkResult, error)
 	FreeCommandBuffers(buffers []CommandBuffer)
 	Reset(flags CommandPoolResetFlags) (VkResult, error)
@@ -83,7 +83,7 @@ type CommandPool interface {
 
 type DescriptorPool interface {
 	Handle() VkDescriptorPool
-	Destroy()
+	Destroy(callbacks *AllocationCallbacks)
 	AllocateDescriptorSets(o *DescriptorSetOptions) ([]DescriptorSet, VkResult, error)
 	FreeDescriptorSets(sets []DescriptorSet) (VkResult, error)
 	Reset(flags DescriptorPoolResetFlags) (VkResult, error)
@@ -95,13 +95,14 @@ type DescriptorSet interface {
 
 type DescriptorSetLayout interface {
 	Handle() VkDescriptorSetLayout
-	Destroy()
+	Destroy(callbacks *AllocationCallbacks)
 }
 
 type DeviceMemory interface {
 	Handle() VkDeviceMemory
 	MapMemory(offset int, size int, flags MemoryMapFlags) (unsafe.Pointer, VkResult, error)
 	UnmapMemory()
+	Free(callbacks *AllocationCallbacks)
 	Commitment() int
 	Flush() (VkResult, error)
 	Invalidate() (VkResult, error)
@@ -109,14 +110,13 @@ type DeviceMemory interface {
 
 type Device interface {
 	Handle() VkDevice
-	Destroy()
+	Destroy(callbacks *AllocationCallbacks)
 	Driver() Driver
 	GetQueue(queueFamilyIndex int, queueIndex int) Queue
 	WaitForIdle() (VkResult, error)
 	WaitForFences(waitForAll bool, timeout time.Duration, fences []Fence) (VkResult, error)
 	ResetFences(fences []Fence) (VkResult, error)
 	AllocateMemory(allocationCallbacks *AllocationCallbacks, o *DeviceMemoryOptions) (DeviceMemory, VkResult, error)
-	FreeMemory(memory DeviceMemory)
 	UpdateDescriptorSets(writes []WriteDescriptorSetOptions, copies []CopyDescriptorSetOptions) error
 	FlushMappedMemoryRanges(ranges []*MappedMemoryRange) (VkResult, error)
 	InvalidateMappedMemoryRanges(ranges []*MappedMemoryRange) (VkResult, error)
@@ -124,7 +124,7 @@ type Device interface {
 
 type Event interface {
 	Handle() VkEvent
-	Destroy()
+	Destroy(callbacks *AllocationCallbacks)
 	Set() (VkResult, error)
 	Reset() (VkResult, error)
 	Status() (VkResult, error)
@@ -132,7 +132,7 @@ type Event interface {
 
 type Fence interface {
 	Handle() VkFence
-	Destroy()
+	Destroy(callbacks *AllocationCallbacks)
 	Wait(timeout time.Duration) (VkResult, error)
 	Reset() (VkResult, error)
 	Status() (VkResult, error)
@@ -140,12 +140,12 @@ type Fence interface {
 
 type Framebuffer interface {
 	Handle() VkFramebuffer
-	Destroy()
+	Destroy(callbacks *AllocationCallbacks)
 }
 
 type Image interface {
 	Handle() VkImage
-	Destroy()
+	Destroy(callbacks *AllocationCallbacks)
 	MemoryRequirements() *common.MemoryRequirements
 	BindImageMemory(memory DeviceMemory, offset int) (VkResult, error)
 	SubresourceLayout(subresource *common.ImageSubresource) *common.SubresourceLayout
@@ -154,12 +154,12 @@ type Image interface {
 
 type ImageView interface {
 	Handle() VkImageView
-	Destroy()
+	Destroy(callbacks *AllocationCallbacks)
 }
 
 type Instance interface {
 	Handle() VkInstance
-	Destroy()
+	Destroy(callbacks *AllocationCallbacks)
 	Driver() Driver
 	PhysicalDevices() ([]PhysicalDevice, VkResult, error)
 }
@@ -172,7 +172,7 @@ type Loader1_0 interface {
 	AvailableExtensionsForLayer(layerName string) (map[string]*common.ExtensionProperties, VkResult, error)
 	AvailableLayers() (map[string]*common.LayerProperties, VkResult, error)
 
-	CreateAllocationCallbacks(allocation AllocationFunction, reallocation ReallocationFunction, free FreeFunction, internalAllocation InternalAllocationNotification, internalFree InternalFreeNotification, userData interface{}) *AllocationCallbacks
+	CreateAllocationCallbacks(o *AllocationCallbackOptions) *AllocationCallbacks
 	CreateBuffer(device Device, allocationCallbacks *AllocationCallbacks, o *BufferOptions) (Buffer, VkResult, error)
 	CreateBufferView(device Device, allocationCallbacks *AllocationCallbacks, o *BufferViewOptions) (BufferView, VkResult, error)
 	CreateCommandPool(device Device, allocationCallbacks *AllocationCallbacks, o *CommandPoolOptions) (CommandPool, VkResult, error)
@@ -212,24 +212,24 @@ type PhysicalDevice interface {
 
 type Pipeline interface {
 	Handle() VkPipeline
-	Destroy()
+	Destroy(callbacks *AllocationCallbacks)
 }
 
 type PipelineCache interface {
 	Handle() VkPipelineCache
-	Destroy()
+	Destroy(callbacks *AllocationCallbacks)
 	CacheData() ([]byte, VkResult, error)
 	MergePipelineCaches(srcCaches []PipelineCache) (VkResult, error)
 }
 
 type PipelineLayout interface {
 	Handle() VkPipelineLayout
-	Destroy()
+	Destroy(callbacks *AllocationCallbacks)
 }
 
 type QueryPool interface {
 	Handle() VkQueryPool
-	Destroy()
+	Destroy(callbacks *AllocationCallbacks)
 	PopulateResults(firstQuery, queryCount int, resultSize, resultStride int, flags common.QueryResultFlags) ([]byte, VkResult, error)
 }
 
@@ -243,21 +243,21 @@ type Queue interface {
 
 type RenderPass interface {
 	Handle() VkRenderPass
-	Destroy()
+	Destroy(callbacks *AllocationCallbacks)
 	RenderAreaGranularity() common.Extent2D
 }
 
 type Semaphore interface {
 	Handle() VkSemaphore
-	Destroy()
+	Destroy(callbacks *AllocationCallbacks)
 }
 
 type ShaderModule interface {
 	Handle() VkShaderModule
-	Destroy()
+	Destroy(callbacks *AllocationCallbacks)
 }
 
 type Sampler interface {
 	Handle() VkSampler
-	Destroy()
+	Destroy(callbacks *AllocationCallbacks)
 }

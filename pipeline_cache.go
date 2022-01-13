@@ -21,7 +21,7 @@ func (c *vulkanPipelineCache) Handle() VkPipelineCache {
 	return c.handle
 }
 
-func (c *vulkanPipelineCache) Destroy() {
+func (c *vulkanPipelineCache) Destroy(callbacks *AllocationCallbacks) {
 	c.driver.VkDestroyPipelineCache(c.device, c.handle, nil)
 }
 

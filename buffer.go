@@ -49,22 +49,20 @@ func (o *BufferOptions) AllocForC(allocator *cgoparam.Allocator, next unsafe.Poi
 }
 
 type vulkanBuffer struct {
-	driver              Driver
-	device              VkDevice
-	handle              VkBuffer
-	allocationCallbacks *AllocationCallbacks
+	driver Driver
+	device VkDevice
+	handle VkBuffer
 }
 
 func (b *vulkanBuffer) Handle() VkBuffer {
 	return b.handle
 }
 
-func (b *vulkanBuffer) Destroy() {
+func (b *vulkanBuffer) Destroy(allocationCallbacks *AllocationCallbacks) {
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
-	b.driver.VkDestroyBuffer(b.device, b.handle, b.allocationCallbacks.BuildHandle(arena))
-	b.allocationCallbacks.EndReference()
+	b.driver.VkDestroyBuffer(b.device, b.handle, allocationCallbacks.Handle())
 }
 
 func (b *vulkanBuffer) MemoryRequirements() *common.MemoryRequirements {

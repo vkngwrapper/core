@@ -79,6 +79,6 @@ func (b *vulkanFramebuffer) Handle() VkFramebuffer {
 	return b.handle
 }
 
-func (b *vulkanFramebuffer) Destroy() {
+func (b *vulkanFramebuffer) Destroy(callbacks *AllocationCallbacks) {
 	b.driver.VkDestroyFramebuffer(b.device, b.handle, nil)
 }

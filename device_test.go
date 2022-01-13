@@ -300,41 +300,6 @@ func TestVulkanDevice_ResetFences(t *testing.T) {
 	require.NoError(t, err)
 }
 
-func TestVulkanDevice_AllocateAndFreeMemory(t *testing.T) {
-	ctrl := gomock.NewController(t)
-	defer ctrl.Finish()
-
-	mockDriver := mocks.NewMockDriver(ctrl)
-	loader, err := core.CreateLoaderFromDriver(mockDriver)
-	require.NoError(t, err)
-
-	device := mocks.EasyDummyDevice(t, ctrl, loader)
-	memoryHandle := mocks.NewFakeDeviceMemoryHandle()
-
-	mockDriver.EXPECT().VkAllocateMemory(mocks.Exactly(device.Handle()), gomock.Not(nil), nil, gomock.Not(nil)).DoAndReturn(
-		func(device core.VkDevice, pCreateInfo *core.VkMemoryAllocateInfo, pAllocator *core.VkAllocationCallbacks, pMemory *core.VkDeviceMemory) (core.VkResult, error) {
-			val := reflect.ValueOf(*pCreateInfo)
-			require.Equal(t, uint64(5), val.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO
-			require.True(t, val.FieldByName("pNext").IsNil())
-			require.Equal(t, uint64(7), val.FieldByName("allocationSize").Uint())
-			require.Equal(t, uint64(3), val.FieldByName("memoryTypeIndex").Uint())
-
-			*pMemory = memoryHandle
-			return core.VKSuccess, nil
-		})
-	mockDriver.EXPECT().VkFreeMemory(mocks.Exactly(device.Handle()), mocks.Exactly(memoryHandle), nil)
-
-	memory, _, err := device.AllocateMemory(nil, &core.DeviceMemoryOptions{
-		AllocationSize:  7,
-		MemoryTypeIndex: 3,
-	})
-	require.NoError(t, err)
-	require.NotNil(t, memory)
-	require.Same(t, memoryHandle, memory.Handle())
-
-	device.FreeMemory(memory)
-}
-
 func TestVulkanDevice_UpdateDescriptorSets_WriteImageInfo(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()

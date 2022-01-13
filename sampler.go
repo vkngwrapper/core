@@ -21,7 +21,7 @@ func (s *vulkanSampler) Handle() VkSampler {
 	return s.handle
 }
 
-func (s *vulkanSampler) Destroy() {
+func (s *vulkanSampler) Destroy(callbacks *AllocationCallbacks) {
 	s.driver.VkDestroySampler(s.device, s.handle, nil)
 }
 

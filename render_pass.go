@@ -20,7 +20,7 @@ func (p *vulkanRenderPass) Handle() VkRenderPass {
 	return p.handle
 }
 
-func (p *vulkanRenderPass) Destroy() {
+func (p *vulkanRenderPass) Destroy(callbacks *AllocationCallbacks) {
 	p.driver.VkDestroyRenderPass(p.device, p.handle, nil)
 }
 

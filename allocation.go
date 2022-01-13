@@ -51,7 +51,6 @@ VKAPI_ATTR void VKAPI_CALL internalFreeCallback(
 */
 import "C"
 import (
-	"github.com/CannibalVox/cgoparam"
 	"runtime/cgo"
 	"unsafe"
 )
@@ -98,6 +97,15 @@ type FreeFunction func(userData interface{}, memory unsafe.Pointer)
 type InternalAllocationNotification func(userData interface{}, size int, allocationType InternalAllocationType, allocationScope SystemAllocationScope)
 type InternalFreeNotification func(userData interface{}, size int, allocationType InternalAllocationType, allocationScope SystemAllocationScope)
 
+type AllocationCallbackOptions struct {
+	UserData           interface{}
+	Allocation         AllocationFunction
+	Reallocation       ReallocationFunction
+	Free               FreeFunction
+	InternalAllocation InternalAllocationNotification
+	InternalFree       InternalFreeNotification
+}
+
 type AllocationCallbacks struct {
 	userData           interface{}
 	allocation         AllocationFunction
@@ -106,74 +114,50 @@ type AllocationCallbacks struct {
 	internalAllocation InternalAllocationNotification
 	internalFree       InternalFreeNotification
 
-	thisHandle     cgo.Handle
-	wantsToDestroy bool
-	destroyed      bool
-	internalRefs   int
+	handle *VkAllocationCallbacks
 }
 
-func (c *AllocationCallbacks) Destroy() {
-	c.wantsToDestroy = true
-	if c.internalRefs == 0 {
-		c.destroyed = true
-		c.thisHandle.Delete()
-	}
-}
-
-func (c *AllocationCallbacks) BuildHandle(allocator *cgoparam.Allocator) *VkAllocationCallbacks {
-	if c == nil {
-		return nil
-	}
-	if c.destroyed {
-		return nil
-	}
-
-	outHandle := (*C.VkAllocationCallbacks)(allocator.Malloc(C.sizeof_struct_VkAllocationCallbacks))
-	outHandle.pUserData = unsafe.Pointer(c.thisHandle)
-	outHandle.pfnAllocation = nil
-	outHandle.pfnReallocation = nil
-	outHandle.pfnFree = nil
-	outHandle.pfnInternalAllocation = nil
-	outHandle.pfnInternalFree = nil
+func (c *AllocationCallbacks) initHandle() {
+	handle := (*C.VkAllocationCallbacks)(C.malloc(C.sizeof_struct_VkAllocationCallbacks))
+	handle.pUserData = unsafe.Pointer(cgo.NewHandle(c))
+	handle.pfnAllocation = nil
+	handle.pfnReallocation = nil
+	handle.pfnFree = nil
+	handle.pfnInternalAllocation = nil
+	handle.pfnInternalFree = nil
 
 	if c.allocation != nil {
-		outHandle.pfnAllocation = (C.PFN_vkAllocationFunction)(C.allocationCallback)
+		handle.pfnAllocation = (C.PFN_vkAllocationFunction)(C.allocationCallback)
 	}
 
 	if c.reallocation != nil {
-		outHandle.pfnReallocation = (C.PFN_vkReallocationFunction)(C.reallocationCallback)
+		handle.pfnReallocation = (C.PFN_vkReallocationFunction)(C.reallocationCallback)
 	}
 
 	if c.free != nil {
-		outHandle.pfnFree = (C.PFN_vkFreeFunction)(C.freeCallback)
+		handle.pfnFree = (C.PFN_vkFreeFunction)(C.freeCallback)
 	}
 
 	if c.internalAllocation != nil {
-		outHandle.pfnInternalAllocation = (C.PFN_vkInternalAllocationNotification)(C.internalAllocationCallback)
+		handle.pfnInternalAllocation = (C.PFN_vkInternalAllocationNotification)(C.internalAllocationCallback)
 	}
 
 	if c.internalFree != nil {
-		outHandle.pfnInternalFree = (C.PFN_vkInternalFreeNotification)(C.internalFreeCallback)
+		handle.pfnInternalFree = (C.PFN_vkInternalFreeNotification)(C.internalFreeCallback)
 	}
-
-	return (*VkAllocationCallbacks)(outHandle)
+	c.handle = (*VkAllocationCallbacks)(handle)
 }
 
-func (c *AllocationCallbacks) BeginReference() {
+func (c *AllocationCallbacks) Handle() *VkAllocationCallbacks {
 	if c == nil {
-		return
+		return nil
 	}
-	c.internalRefs += 1
+
+	return c.handle
 }
 
-func (c *AllocationCallbacks) EndReference() {
-	if c == nil {
-		return
-	}
-	c.internalRefs -= 1
-
-	if c.internalRefs == 0 && c.wantsToDestroy && !c.destroyed {
-		c.destroyed = true
-		c.thisHandle.Delete()
-	}
+func (c *AllocationCallbacks) Destroy() {
+	cgo.Handle(c.handle.pUserData).Delete()
+	C.free(unsafe.Pointer(c.handle))
+	c.handle = nil
 }

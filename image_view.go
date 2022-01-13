@@ -16,6 +16,6 @@ func (v *vulkanImageView) Handle() VkImageView {
 	return v.handle
 }
 
-func (v *vulkanImageView) Destroy() {
+func (v *vulkanImageView) Destroy(callbacks *AllocationCallbacks) {
 	v.driver.VkDestroyImageView(v.device, v.handle, nil)
 }

@@ -21,7 +21,7 @@ func (e *vulkanEvent) Handle() VkEvent {
 	return e.handle
 }
 
-func (e *vulkanEvent) Destroy() {
+func (e *vulkanEvent) Destroy(callbacks *AllocationCallbacks) {
 	e.driver.VkDestroyEvent(e.device, e.handle, nil)
 }
 

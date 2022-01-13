@@ -53,15 +53,15 @@ func (mr *MockBufferMockRecorder) BindBufferMemory(memory, offset interface{}) *
 }
 
 // Destroy mocks base method.
-func (m *MockBuffer) Destroy() {
+func (m *MockBuffer) Destroy(callbacks *core.AllocationCallbacks) {
 	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "Destroy")
+	m.ctrl.Call(m, "Destroy", callbacks)
 }
 
 // Destroy indicates an expected call of Destroy.
-func (mr *MockBufferMockRecorder) Destroy() *gomock.Call {
+func (mr *MockBufferMockRecorder) Destroy(callbacks interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Destroy", reflect.TypeOf((*MockBuffer)(nil).Destroy))
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Destroy", reflect.TypeOf((*MockBuffer)(nil).Destroy), callbacks)
 }
 
 // Handle mocks base method.
@@ -116,15 +116,15 @@ func (m *MockBufferView) EXPECT() *MockBufferViewMockRecorder {
 }
 
 // Destroy mocks base method.
-func (m *MockBufferView) Destroy() {
+func (m *MockBufferView) Destroy(callbacks *core.AllocationCallbacks) {
 	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "Destroy")
+	m.ctrl.Call(m, "Destroy", callbacks)
 }
 
 // Destroy indicates an expected call of Destroy.
-func (mr *MockBufferViewMockRecorder) Destroy() *gomock.Call {
+func (mr *MockBufferViewMockRecorder) Destroy(callbacks interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Destroy", reflect.TypeOf((*MockBufferView)(nil).Destroy))
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Destroy", reflect.TypeOf((*MockBufferView)(nil).Destroy), callbacks)
 }
 
 // Handle mocks base method.
@@ -807,15 +807,15 @@ func (mr *MockCommandPoolMockRecorder) AllocateCommandBuffers(o interface{}) *go
 }
 
 // Destroy mocks base method.
-func (m *MockCommandPool) Destroy() {
+func (m *MockCommandPool) Destroy(callbacks *core.AllocationCallbacks) {
 	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "Destroy")
+	m.ctrl.Call(m, "Destroy", callbacks)
 }
 
 // Destroy indicates an expected call of Destroy.
-func (mr *MockCommandPoolMockRecorder) Destroy() *gomock.Call {
+func (mr *MockCommandPoolMockRecorder) Destroy(callbacks interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Destroy", reflect.TypeOf((*MockCommandPool)(nil).Destroy))
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Destroy", reflect.TypeOf((*MockCommandPool)(nil).Destroy), callbacks)
 }
 
 // FreeCommandBuffers mocks base method.
@@ -899,15 +899,15 @@ func (mr *MockDescriptorPoolMockRecorder) AllocateDescriptorSets(o interface{}) 
 }
 
 // Destroy mocks base method.
-func (m *MockDescriptorPool) Destroy() {
+func (m *MockDescriptorPool) Destroy(callbacks *core.AllocationCallbacks) {
 	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "Destroy")
+	m.ctrl.Call(m, "Destroy", callbacks)
 }
 
 // Destroy indicates an expected call of Destroy.
-func (mr *MockDescriptorPoolMockRecorder) Destroy() *gomock.Call {
+func (mr *MockDescriptorPoolMockRecorder) Destroy(callbacks interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Destroy", reflect.TypeOf((*MockDescriptorPool)(nil).Destroy))
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Destroy", reflect.TypeOf((*MockDescriptorPool)(nil).Destroy), callbacks)
 }
 
 // FreeDescriptorSets mocks base method.
@@ -1015,15 +1015,15 @@ func (m *MockDescriptorSetLayout) EXPECT() *MockDescriptorSetLayoutMockRecorder 
 }
 
 // Destroy mocks base method.
-func (m *MockDescriptorSetLayout) Destroy() {
+func (m *MockDescriptorSetLayout) Destroy(callbacks *core.AllocationCallbacks) {
 	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "Destroy")
+	m.ctrl.Call(m, "Destroy", callbacks)
 }
 
 // Destroy indicates an expected call of Destroy.
-func (mr *MockDescriptorSetLayoutMockRecorder) Destroy() *gomock.Call {
+func (mr *MockDescriptorSetLayoutMockRecorder) Destroy(callbacks interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Destroy", reflect.TypeOf((*MockDescriptorSetLayout)(nil).Destroy))
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Destroy", reflect.TypeOf((*MockDescriptorSetLayout)(nil).Destroy), callbacks)
 }
 
 // Handle mocks base method.
@@ -1090,6 +1090,18 @@ func (m *MockDeviceMemory) Flush() (core.VkResult, error) {
 func (mr *MockDeviceMemoryMockRecorder) Flush() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Flush", reflect.TypeOf((*MockDeviceMemory)(nil).Flush))
+}
+
+// Free mocks base method.
+func (m *MockDeviceMemory) Free(callbacks *core.AllocationCallbacks) {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "Free", callbacks)
+}
+
+// Free indicates an expected call of Free.
+func (mr *MockDeviceMemoryMockRecorder) Free(callbacks interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Free", reflect.TypeOf((*MockDeviceMemory)(nil).Free), callbacks)
 }
 
 // Handle mocks base method.
@@ -1189,15 +1201,15 @@ func (mr *MockDeviceMockRecorder) AllocateMemory(allocationCallbacks, o interfac
 }
 
 // Destroy mocks base method.
-func (m *MockDevice) Destroy() {
+func (m *MockDevice) Destroy(callbacks *core.AllocationCallbacks) {
 	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "Destroy")
+	m.ctrl.Call(m, "Destroy", callbacks)
 }
 
 // Destroy indicates an expected call of Destroy.
-func (mr *MockDeviceMockRecorder) Destroy() *gomock.Call {
+func (mr *MockDeviceMockRecorder) Destroy(callbacks interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Destroy", reflect.TypeOf((*MockDevice)(nil).Destroy))
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Destroy", reflect.TypeOf((*MockDevice)(nil).Destroy), callbacks)
 }
 
 // Driver mocks base method.
@@ -1227,18 +1239,6 @@ func (m *MockDevice) FlushMappedMemoryRanges(ranges []*core.MappedMemoryRange) (
 func (mr *MockDeviceMockRecorder) FlushMappedMemoryRanges(ranges interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FlushMappedMemoryRanges", reflect.TypeOf((*MockDevice)(nil).FlushMappedMemoryRanges), ranges)
-}
-
-// FreeMemory mocks base method.
-func (m *MockDevice) FreeMemory(memory core.DeviceMemory) {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "FreeMemory", memory)
-}
-
-// FreeMemory indicates an expected call of FreeMemory.
-func (mr *MockDeviceMockRecorder) FreeMemory(memory interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FreeMemory", reflect.TypeOf((*MockDevice)(nil).FreeMemory), memory)
 }
 
 // GetQueue mocks base method.
@@ -1367,15 +1367,15 @@ func (m *MockEvent) EXPECT() *MockEventMockRecorder {
 }
 
 // Destroy mocks base method.
-func (m *MockEvent) Destroy() {
+func (m *MockEvent) Destroy(callbacks *core.AllocationCallbacks) {
 	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "Destroy")
+	m.ctrl.Call(m, "Destroy", callbacks)
 }
 
 // Destroy indicates an expected call of Destroy.
-func (mr *MockEventMockRecorder) Destroy() *gomock.Call {
+func (mr *MockEventMockRecorder) Destroy(callbacks interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Destroy", reflect.TypeOf((*MockEvent)(nil).Destroy))
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Destroy", reflect.TypeOf((*MockEvent)(nil).Destroy), callbacks)
 }
 
 // Handle mocks base method.
@@ -1461,15 +1461,15 @@ func (m *MockFence) EXPECT() *MockFenceMockRecorder {
 }
 
 // Destroy mocks base method.
-func (m *MockFence) Destroy() {
+func (m *MockFence) Destroy(callbacks *core.AllocationCallbacks) {
 	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "Destroy")
+	m.ctrl.Call(m, "Destroy", callbacks)
 }
 
 // Destroy indicates an expected call of Destroy.
-func (mr *MockFenceMockRecorder) Destroy() *gomock.Call {
+func (mr *MockFenceMockRecorder) Destroy(callbacks interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Destroy", reflect.TypeOf((*MockFence)(nil).Destroy))
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Destroy", reflect.TypeOf((*MockFence)(nil).Destroy), callbacks)
 }
 
 // Handle mocks base method.
@@ -1555,15 +1555,15 @@ func (m *MockFramebuffer) EXPECT() *MockFramebufferMockRecorder {
 }
 
 // Destroy mocks base method.
-func (m *MockFramebuffer) Destroy() {
+func (m *MockFramebuffer) Destroy(callbacks *core.AllocationCallbacks) {
 	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "Destroy")
+	m.ctrl.Call(m, "Destroy", callbacks)
 }
 
 // Destroy indicates an expected call of Destroy.
-func (mr *MockFramebufferMockRecorder) Destroy() *gomock.Call {
+func (mr *MockFramebufferMockRecorder) Destroy(callbacks interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Destroy", reflect.TypeOf((*MockFramebuffer)(nil).Destroy))
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Destroy", reflect.TypeOf((*MockFramebuffer)(nil).Destroy), callbacks)
 }
 
 // Handle mocks base method.
@@ -1619,15 +1619,15 @@ func (mr *MockImageMockRecorder) BindImageMemory(memory, offset interface{}) *go
 }
 
 // Destroy mocks base method.
-func (m *MockImage) Destroy() {
+func (m *MockImage) Destroy(callbacks *core.AllocationCallbacks) {
 	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "Destroy")
+	m.ctrl.Call(m, "Destroy", callbacks)
 }
 
 // Destroy indicates an expected call of Destroy.
-func (mr *MockImageMockRecorder) Destroy() *gomock.Call {
+func (mr *MockImageMockRecorder) Destroy(callbacks interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Destroy", reflect.TypeOf((*MockImage)(nil).Destroy))
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Destroy", reflect.TypeOf((*MockImage)(nil).Destroy), callbacks)
 }
 
 // Handle mocks base method.
@@ -1710,15 +1710,15 @@ func (m *MockImageView) EXPECT() *MockImageViewMockRecorder {
 }
 
 // Destroy mocks base method.
-func (m *MockImageView) Destroy() {
+func (m *MockImageView) Destroy(callbacks *core.AllocationCallbacks) {
 	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "Destroy")
+	m.ctrl.Call(m, "Destroy", callbacks)
 }
 
 // Destroy indicates an expected call of Destroy.
-func (mr *MockImageViewMockRecorder) Destroy() *gomock.Call {
+func (mr *MockImageViewMockRecorder) Destroy(callbacks interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Destroy", reflect.TypeOf((*MockImageView)(nil).Destroy))
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Destroy", reflect.TypeOf((*MockImageView)(nil).Destroy), callbacks)
 }
 
 // Handle mocks base method.
@@ -1759,15 +1759,15 @@ func (m *MockInstance) EXPECT() *MockInstanceMockRecorder {
 }
 
 // Destroy mocks base method.
-func (m *MockInstance) Destroy() {
+func (m *MockInstance) Destroy(callbacks *core.AllocationCallbacks) {
 	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "Destroy")
+	m.ctrl.Call(m, "Destroy", callbacks)
 }
 
 // Destroy indicates an expected call of Destroy.
-func (mr *MockInstanceMockRecorder) Destroy() *gomock.Call {
+func (mr *MockInstanceMockRecorder) Destroy(callbacks interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Destroy", reflect.TypeOf((*MockInstance)(nil).Destroy))
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Destroy", reflect.TypeOf((*MockInstance)(nil).Destroy), callbacks)
 }
 
 // Driver mocks base method.
@@ -1886,17 +1886,17 @@ func (mr *MockLoader1_0MockRecorder) AvailableLayers() *gomock.Call {
 }
 
 // CreateAllocationCallbacks mocks base method.
-func (m *MockLoader1_0) CreateAllocationCallbacks(allocation core.AllocationFunction, reallocation core.ReallocationFunction, free core.FreeFunction, internalAllocation core.InternalAllocationNotification, internalFree core.InternalFreeNotification, userData interface{}) *core.AllocationCallbacks {
+func (m *MockLoader1_0) CreateAllocationCallbacks(o *core.AllocationCallbackOptions) *core.AllocationCallbacks {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreateAllocationCallbacks", allocation, reallocation, free, internalAllocation, internalFree, userData)
+	ret := m.ctrl.Call(m, "CreateAllocationCallbacks", o)
 	ret0, _ := ret[0].(*core.AllocationCallbacks)
 	return ret0
 }
 
 // CreateAllocationCallbacks indicates an expected call of CreateAllocationCallbacks.
-func (mr *MockLoader1_0MockRecorder) CreateAllocationCallbacks(allocation, reallocation, free, internalAllocation, internalFree, userData interface{}) *gomock.Call {
+func (mr *MockLoader1_0MockRecorder) CreateAllocationCallbacks(o interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateAllocationCallbacks", reflect.TypeOf((*MockLoader1_0)(nil).CreateAllocationCallbacks), allocation, reallocation, free, internalAllocation, internalFree, userData)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateAllocationCallbacks", reflect.TypeOf((*MockLoader1_0)(nil).CreateAllocationCallbacks), o)
 }
 
 // CreateBuffer mocks base method.
@@ -2472,15 +2472,15 @@ func (m *MockPipeline) EXPECT() *MockPipelineMockRecorder {
 }
 
 // Destroy mocks base method.
-func (m *MockPipeline) Destroy() {
+func (m *MockPipeline) Destroy(callbacks *core.AllocationCallbacks) {
 	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "Destroy")
+	m.ctrl.Call(m, "Destroy", callbacks)
 }
 
 // Destroy indicates an expected call of Destroy.
-func (mr *MockPipelineMockRecorder) Destroy() *gomock.Call {
+func (mr *MockPipelineMockRecorder) Destroy(callbacks interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Destroy", reflect.TypeOf((*MockPipeline)(nil).Destroy))
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Destroy", reflect.TypeOf((*MockPipeline)(nil).Destroy), callbacks)
 }
 
 // Handle mocks base method.
@@ -2537,15 +2537,15 @@ func (mr *MockPipelineCacheMockRecorder) CacheData() *gomock.Call {
 }
 
 // Destroy mocks base method.
-func (m *MockPipelineCache) Destroy() {
+func (m *MockPipelineCache) Destroy(callbacks *core.AllocationCallbacks) {
 	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "Destroy")
+	m.ctrl.Call(m, "Destroy", callbacks)
 }
 
 // Destroy indicates an expected call of Destroy.
-func (mr *MockPipelineCacheMockRecorder) Destroy() *gomock.Call {
+func (mr *MockPipelineCacheMockRecorder) Destroy(callbacks interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Destroy", reflect.TypeOf((*MockPipelineCache)(nil).Destroy))
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Destroy", reflect.TypeOf((*MockPipelineCache)(nil).Destroy), callbacks)
 }
 
 // Handle mocks base method.
@@ -2601,15 +2601,15 @@ func (m *MockPipelineLayout) EXPECT() *MockPipelineLayoutMockRecorder {
 }
 
 // Destroy mocks base method.
-func (m *MockPipelineLayout) Destroy() {
+func (m *MockPipelineLayout) Destroy(callbacks *core.AllocationCallbacks) {
 	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "Destroy")
+	m.ctrl.Call(m, "Destroy", callbacks)
 }
 
 // Destroy indicates an expected call of Destroy.
-func (mr *MockPipelineLayoutMockRecorder) Destroy() *gomock.Call {
+func (mr *MockPipelineLayoutMockRecorder) Destroy(callbacks interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Destroy", reflect.TypeOf((*MockPipelineLayout)(nil).Destroy))
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Destroy", reflect.TypeOf((*MockPipelineLayout)(nil).Destroy), callbacks)
 }
 
 // Handle mocks base method.
@@ -2650,15 +2650,15 @@ func (m *MockQueryPool) EXPECT() *MockQueryPoolMockRecorder {
 }
 
 // Destroy mocks base method.
-func (m *MockQueryPool) Destroy() {
+func (m *MockQueryPool) Destroy(callbacks *core.AllocationCallbacks) {
 	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "Destroy")
+	m.ctrl.Call(m, "Destroy", callbacks)
 }
 
 // Destroy indicates an expected call of Destroy.
-func (mr *MockQueryPoolMockRecorder) Destroy() *gomock.Call {
+func (mr *MockQueryPoolMockRecorder) Destroy(callbacks interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Destroy", reflect.TypeOf((*MockQueryPool)(nil).Destroy))
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Destroy", reflect.TypeOf((*MockQueryPool)(nil).Destroy), callbacks)
 }
 
 // Handle mocks base method.
@@ -2811,15 +2811,15 @@ func (m *MockRenderPass) EXPECT() *MockRenderPassMockRecorder {
 }
 
 // Destroy mocks base method.
-func (m *MockRenderPass) Destroy() {
+func (m *MockRenderPass) Destroy(callbacks *core.AllocationCallbacks) {
 	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "Destroy")
+	m.ctrl.Call(m, "Destroy", callbacks)
 }
 
 // Destroy indicates an expected call of Destroy.
-func (mr *MockRenderPassMockRecorder) Destroy() *gomock.Call {
+func (mr *MockRenderPassMockRecorder) Destroy(callbacks interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Destroy", reflect.TypeOf((*MockRenderPass)(nil).Destroy))
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Destroy", reflect.TypeOf((*MockRenderPass)(nil).Destroy), callbacks)
 }
 
 // Handle mocks base method.
@@ -2874,15 +2874,15 @@ func (m *MockSemaphore) EXPECT() *MockSemaphoreMockRecorder {
 }
 
 // Destroy mocks base method.
-func (m *MockSemaphore) Destroy() {
+func (m *MockSemaphore) Destroy(callbacks *core.AllocationCallbacks) {
 	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "Destroy")
+	m.ctrl.Call(m, "Destroy", callbacks)
 }
 
 // Destroy indicates an expected call of Destroy.
-func (mr *MockSemaphoreMockRecorder) Destroy() *gomock.Call {
+func (mr *MockSemaphoreMockRecorder) Destroy(callbacks interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Destroy", reflect.TypeOf((*MockSemaphore)(nil).Destroy))
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Destroy", reflect.TypeOf((*MockSemaphore)(nil).Destroy), callbacks)
 }
 
 // Handle mocks base method.
@@ -2923,15 +2923,15 @@ func (m *MockShaderModule) EXPECT() *MockShaderModuleMockRecorder {
 }
 
 // Destroy mocks base method.
-func (m *MockShaderModule) Destroy() {
+func (m *MockShaderModule) Destroy(callbacks *core.AllocationCallbacks) {
 	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "Destroy")
+	m.ctrl.Call(m, "Destroy", callbacks)
 }
 
 // Destroy indicates an expected call of Destroy.
-func (mr *MockShaderModuleMockRecorder) Destroy() *gomock.Call {
+func (mr *MockShaderModuleMockRecorder) Destroy(callbacks interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Destroy", reflect.TypeOf((*MockShaderModule)(nil).Destroy))
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Destroy", reflect.TypeOf((*MockShaderModule)(nil).Destroy), callbacks)
 }
 
 // Handle mocks base method.
@@ -2972,15 +2972,15 @@ func (m *MockSampler) EXPECT() *MockSamplerMockRecorder {
 }
 
 // Destroy mocks base method.
-func (m *MockSampler) Destroy() {
+func (m *MockSampler) Destroy(callbacks *core.AllocationCallbacks) {
 	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "Destroy")
+	m.ctrl.Call(m, "Destroy", callbacks)
 }
 
 // Destroy indicates an expected call of Destroy.
-func (mr *MockSamplerMockRecorder) Destroy() *gomock.Call {
+func (mr *MockSamplerMockRecorder) Destroy(callbacks interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Destroy", reflect.TypeOf((*MockSampler)(nil).Destroy))
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Destroy", reflect.TypeOf((*MockSampler)(nil).Destroy), callbacks)
 }
 
 // Handle mocks base method.

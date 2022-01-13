@@ -61,6 +61,10 @@ func (m *vulkanDeviceMemory) UnmapMemory() {
 	m.driver.VkUnmapMemory(m.device, m.handle)
 }
 
+func (m *vulkanDeviceMemory) Free(allocationCallbacks *AllocationCallbacks) {
+	m.driver.VkFreeMemory(m.device, m.handle, allocationCallbacks.Handle())
+}
+
 func (m *vulkanDeviceMemory) Commitment() int {
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
