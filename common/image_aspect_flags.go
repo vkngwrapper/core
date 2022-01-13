@@ -5,7 +5,6 @@ package common
 #include "../vulkan/vulkan.h"
 */
 import "C"
-import "strings"
 
 type ImageAspectFlags int32
 
@@ -38,23 +37,5 @@ var imageAspectToString = map[ImageAspectFlags]string{
 }
 
 func (f ImageAspectFlags) String() string {
-	if f == 0 {
-		return "None"
-	}
-
-	var hasOne bool
-	var sb strings.Builder
-
-	for i := 0; i < 32; i++ {
-		checkBit := ImageAspectFlags(1 << i)
-		if (f & checkBit) != 0 {
-			if hasOne {
-				sb.WriteString("|")
-			}
-			sb.WriteString(imageAspectToString[checkBit])
-			hasOne = true
-		}
-	}
-
-	return sb.String()
+	return FlagsToString(f, imageAspectToString)
 }

@@ -5,7 +5,6 @@ package common
 #include "../vulkan/vulkan.h"
 */
 import "C"
-import "strings"
 
 type SampleCounts int32
 
@@ -30,28 +29,7 @@ var sampleCountsToString = map[SampleCounts]string{
 }
 
 func (c SampleCounts) String() string {
-	if c == 0 {
-		return "None"
-	}
-
-	var hasOne bool
-	var sb strings.Builder
-
-	for i := 0; i < 32; i++ {
-		checkBit := SampleCounts(1 << i)
-		if (c & checkBit) != 0 {
-			str, hasStr := sampleCountsToString[checkBit]
-			if hasStr {
-				if hasOne {
-					sb.WriteRune('|')
-				}
-				sb.WriteString(str)
-				hasOne = true
-			}
-		}
-	}
-
-	return sb.String()
+	return FlagsToString(c, sampleCountsToString)
 }
 
 var sampleCountsToCount = map[SampleCounts]int{

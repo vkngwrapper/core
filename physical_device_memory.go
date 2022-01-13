@@ -6,8 +6,8 @@ package core
 */
 import "C"
 import (
+	"github.com/CannibalVox/VKng/core/common"
 	"github.com/CannibalVox/cgoparam"
-	"strings"
 )
 
 type MemoryPropertyFlags int32
@@ -35,28 +35,7 @@ var memoryPropertyFlagsToString = map[MemoryPropertyFlags]string{
 }
 
 func (f MemoryPropertyFlags) String() string {
-	if f == 0 {
-		return "None"
-	}
-
-	var hasOne bool
-	var sb strings.Builder
-
-	for i := 0; i < 32; i++ {
-		checkBit := MemoryPropertyFlags(1 << i)
-		if (f & checkBit) != 0 {
-			str, hasStr := memoryPropertyFlagsToString[checkBit]
-			if hasStr {
-				if hasOne {
-					sb.WriteRune('|')
-				}
-				sb.WriteString(str)
-				hasOne = true
-			}
-		}
-	}
-
-	return sb.String()
+	return common.FlagsToString(f, memoryPropertyFlagsToString)
 }
 
 type MemoryType struct {
@@ -77,28 +56,7 @@ var memoryHeapFlagsToString = map[MemoryHeapFlags]string{
 }
 
 func (f MemoryHeapFlags) String() string {
-	if f == 0 {
-		return "None"
-	}
-
-	var hasOne bool
-	var sb strings.Builder
-
-	for i := 0; i < 32; i++ {
-		checkBit := MemoryHeapFlags(1 << i)
-		if (f & checkBit) != 0 {
-			str, hasStr := memoryHeapFlagsToString[checkBit]
-			if hasStr {
-				if hasOne {
-					sb.WriteRune('|')
-				}
-				sb.WriteString(str)
-				hasOne = true
-			}
-		}
-	}
-
-	return sb.String()
+	return common.FlagsToString(f, memoryHeapFlagsToString)
 }
 
 type MemoryHeap struct {

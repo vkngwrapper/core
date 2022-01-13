@@ -5,7 +5,6 @@ package common
 #include "../vulkan/vulkan.h"
 */
 import "C"
-import "strings"
 
 type StencilFaces int32
 
@@ -20,23 +19,5 @@ var stencilFacesToString = map[StencilFaces]string{
 }
 
 func (f StencilFaces) String() string {
-	if f == 0 {
-		return "None"
-	}
-
-	var hasOne bool
-	var sb strings.Builder
-
-	for i := 0; i < 32; i++ {
-		checkBit := StencilFaces(1 << i)
-		if (f & checkBit) != 0 {
-			if hasOne {
-				sb.WriteString("|")
-			}
-			sb.WriteString(stencilFacesToString[checkBit])
-			hasOne = true
-		}
-	}
-
-	return sb.String()
+	return FlagsToString(f, stencilFacesToString)
 }

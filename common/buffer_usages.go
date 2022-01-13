@@ -5,9 +5,8 @@ package common
 #include "../vulkan/vulkan.h"
 */
 import "C"
-import "strings"
 
-type BufferUsages int
+type BufferUsages int32
 
 const (
 	UsageTransferSrc                                BufferUsages = C.VK_BUFFER_USAGE_TRANSFER_SRC_BIT
@@ -48,26 +47,5 @@ var bufferUsageToString = map[BufferUsages]string{
 }
 
 func (u BufferUsages) String() string {
-	if u == 0 {
-		return "None"
-	}
-
-	var hasOne bool
-	var sb strings.Builder
-
-	for i := 0; i < 32; i++ {
-		checkBit := BufferUsages(1 << i)
-		if (u & checkBit) != 0 {
-			str, hasStr := bufferUsageToString[checkBit]
-			if hasStr {
-				if hasOne {
-					sb.WriteRune('|')
-				}
-				sb.WriteString(str)
-				hasOne = true
-			}
-		}
-	}
-
-	return sb.String()
+	return FlagsToString(u, bufferUsageToString)
 }

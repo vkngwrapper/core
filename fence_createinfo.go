@@ -8,7 +8,6 @@ import "C"
 import (
 	"github.com/CannibalVox/VKng/core/common"
 	"github.com/CannibalVox/cgoparam"
-	"strings"
 	"unsafe"
 )
 
@@ -23,28 +22,7 @@ var fenceCreateFlagsToString = map[FenceCreateFlags]string{
 }
 
 func (f FenceCreateFlags) String() string {
-	if f == 0 {
-		return "None"
-	}
-
-	var hasOne bool
-	var sb strings.Builder
-
-	for i := 0; i < 32; i++ {
-		checkBit := FenceCreateFlags(1 << i)
-		if (f & checkBit) != 0 {
-			str, hasStr := fenceCreateFlagsToString[checkBit]
-			if hasStr {
-				if hasOne {
-					sb.WriteRune('|')
-				}
-				sb.WriteString(str)
-				hasOne = true
-			}
-		}
-	}
-
-	return sb.String()
+	return common.FlagsToString(f, fenceCreateFlagsToString)
 }
 
 type FenceOptions struct {

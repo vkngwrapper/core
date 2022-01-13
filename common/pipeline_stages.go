@@ -5,7 +5,6 @@ package common
 #include "../vulkan/vulkan.h"
 */
 import "C"
-import "strings"
 
 type PipelineStages int32
 
@@ -69,25 +68,5 @@ var pipelineStageToString = map[PipelineStages]string{
 }
 
 func (s PipelineStages) String() string {
-	if s == 0 {
-		return "None (Khronos Extension)"
-	}
-
-	var hasOne bool
-	var sb strings.Builder
-	for i := 0; i < 32; i++ {
-		checkBit := PipelineStages(1 << i)
-		if (s & checkBit) != 0 {
-			str, hasStr := pipelineStageToString[checkBit]
-			if hasStr {
-				if hasOne {
-					sb.WriteRune('|')
-				}
-				sb.WriteString(str)
-				hasOne = true
-			}
-		}
-	}
-
-	return sb.String()
+	return FlagsToString(s, pipelineStageToString)
 }

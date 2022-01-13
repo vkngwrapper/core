@@ -9,7 +9,6 @@ import (
 	"github.com/CannibalVox/VKng/core/common"
 	"github.com/CannibalVox/cgoparam"
 	"github.com/cockroachdb/errors"
-	"strings"
 	"unsafe"
 )
 
@@ -670,28 +669,7 @@ var resetFlagsToString = map[CommandBufferResetFlags]string{
 }
 
 func (f CommandBufferResetFlags) String() string {
-	if f == 0 {
-		return "None"
-	}
-
-	var hasOne bool
-	var sb strings.Builder
-
-	for i := 0; i < 32; i++ {
-		checkBit := CommandBufferResetFlags(1 << i)
-		if (f & checkBit) != 0 {
-			str, hasStr := resetFlagsToString[checkBit]
-			if hasStr {
-				if hasOne {
-					sb.WriteRune('|')
-				}
-				sb.WriteString(str)
-				hasOne = true
-			}
-		}
-	}
-
-	return sb.String()
+	return common.FlagsToString(f, resetFlagsToString)
 }
 
 func (c *vulkanCommandBuffer) Reset(flags CommandBufferResetFlags) (VkResult, error) {

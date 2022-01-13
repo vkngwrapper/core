@@ -8,7 +8,6 @@ import "C"
 import (
 	"github.com/CannibalVox/VKng/core/common"
 	"github.com/CannibalVox/cgoparam"
-	"strings"
 	"unsafe"
 )
 
@@ -49,28 +48,7 @@ var eventFlagsToString = map[EventFlags]string{
 }
 
 func (f EventFlags) String() string {
-	if f == 0 {
-		return "None"
-	}
-
-	var hasOne bool
-	var sb strings.Builder
-
-	for i := 0; i < 32; i++ {
-		checkBit := EventFlags(1 << i)
-		if (f & checkBit) != 0 {
-			str, hasStr := eventFlagsToString[checkBit]
-			if hasStr {
-				if hasOne {
-					sb.WriteRune('|')
-				}
-				sb.WriteString(str)
-				hasOne = true
-			}
-		}
-	}
-
-	return sb.String()
+	return common.FlagsToString(f, eventFlagsToString)
 }
 
 type EventOptions struct {

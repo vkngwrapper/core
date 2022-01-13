@@ -5,9 +5,6 @@ package common
 #include "../vulkan/vulkan.h"
 */
 import "C"
-import (
-	"strings"
-)
 
 type QueueFlags int32
 
@@ -28,28 +25,7 @@ var queueFlagsToString = map[QueueFlags]string{
 }
 
 func (f QueueFlags) String() string {
-	if f == 0 {
-		return "None"
-	}
-
-	hasOne := false
-	var sb strings.Builder
-
-	for i := 0; i < 32; i++ {
-		shiftedBit := QueueFlags(1 << i)
-		if f&shiftedBit != 0 {
-			strVal, exists := queueFlagsToString[shiftedBit]
-			if exists {
-				if hasOne {
-					sb.WriteString("|")
-				}
-				sb.WriteString(strVal)
-				hasOne = true
-			}
-		}
-	}
-
-	return sb.String()
+	return FlagsToString(f, queueFlagsToString)
 }
 
 type QueueFamily struct {

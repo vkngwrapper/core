@@ -8,7 +8,6 @@ import "C"
 import (
 	"github.com/CannibalVox/VKng/core/common"
 	"github.com/CannibalVox/cgoparam"
-	"strings"
 	"unsafe"
 )
 
@@ -61,28 +60,7 @@ var pipelineFlagsToString = map[PipelineFlags]string{
 }
 
 func (f PipelineFlags) String() string {
-	if f == 0 {
-		return "None"
-	}
-
-	var hasOne bool
-	var sb strings.Builder
-
-	for i := 0; i < 32; i++ {
-		checkBit := PipelineFlags(1 << i)
-		if (f & checkBit) != 0 {
-			str, hasStr := pipelineFlagsToString[checkBit]
-			if hasStr {
-				if hasOne {
-					sb.WriteRune('|')
-				}
-				sb.WriteString(str)
-				hasOne = true
-			}
-		}
-	}
-
-	return sb.String()
+	return common.FlagsToString(f, pipelineFlagsToString)
 }
 
 type GraphicsPipelineOptions struct {

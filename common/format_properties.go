@@ -5,7 +5,6 @@ package common
 #include "../vulkan/vulkan.h"
 */
 import "C"
-import "strings"
 
 type FormatFeatures int32
 
@@ -70,25 +69,7 @@ var formatFeatureToString = map[FormatFeatures]string{
 }
 
 func (f FormatFeatures) String() string {
-	if f == 0 {
-		return "None"
-	}
-
-	var hasOne bool
-	var sb strings.Builder
-
-	for i := 0; i < 32; i++ {
-		checkBit := FormatFeatures(1 << i)
-		if (f & checkBit) != 0 {
-			if hasOne {
-				sb.WriteString("|")
-			}
-			sb.WriteString(formatFeatureToString[checkBit])
-			hasOne = true
-		}
-	}
-
-	return sb.String()
+	return FlagsToString(f, formatFeatureToString)
 }
 
 type FormatProperties struct {

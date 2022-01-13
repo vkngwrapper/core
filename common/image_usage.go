@@ -5,7 +5,6 @@ package common
 #include "../vulkan/vulkan.h"
 */
 import "C"
-import "strings"
 
 type ImageUsages int32
 
@@ -36,26 +35,5 @@ var imageUsageToString = map[ImageUsages]string{
 }
 
 func (u ImageUsages) String() string {
-	if u == 0 {
-		return "None"
-	}
-
-	hasOne := false
-	var sb strings.Builder
-
-	for i := 0; i < 32; i++ {
-		shiftedBit := ImageUsages(1 << i)
-		if u&shiftedBit != 0 {
-			strVal, exists := imageUsageToString[shiftedBit]
-			if exists {
-				if hasOne {
-					sb.WriteString("|")
-				}
-				sb.WriteString(strVal)
-				hasOne = true
-			}
-		}
-	}
-
-	return sb.String()
+	return FlagsToString(u, imageUsageToString)
 }

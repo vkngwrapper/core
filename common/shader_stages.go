@@ -5,7 +5,6 @@ package common
 #include "../vulkan/vulkan.h"
 */
 import "C"
-import "strings"
 
 type ShaderStages int32
 
@@ -46,23 +45,5 @@ var shaderStageToString = map[ShaderStages]string{
 }
 
 func (s ShaderStages) String() string {
-	if s == 0 {
-		return "None"
-	}
-
-	var hasOne bool
-	var sb strings.Builder
-
-	for i := 0; i < 32; i++ {
-		checkBit := ShaderStages(1 << i)
-		if (s & checkBit) != 0 {
-			if hasOne {
-				sb.WriteString("|")
-			}
-			sb.WriteString(shaderStageToString[s])
-			hasOne = true
-		}
-	}
-
-	return sb.String()
+	return FlagsToString(s, shaderStageToString)
 }
