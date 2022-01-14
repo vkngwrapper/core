@@ -22,7 +22,7 @@ func (s *vulkanSampler) Handle() VkSampler {
 }
 
 func (s *vulkanSampler) Destroy(callbacks *AllocationCallbacks) {
-	s.driver.VkDestroySampler(s.device, s.handle, nil)
+	s.driver.VkDestroySampler(s.device, s.handle, callbacks.Handle())
 }
 
 type SamplerFlags int32

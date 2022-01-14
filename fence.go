@@ -23,7 +23,7 @@ func (f *vulkanFence) Handle() VkFence {
 }
 
 func (f *vulkanFence) Destroy(callbacks *AllocationCallbacks) {
-	f.driver.VkDestroyFence(f.device, f.handle, nil)
+	f.driver.VkDestroyFence(f.device, f.handle, callbacks.Handle())
 }
 
 func (f *vulkanFence) Wait(timeout time.Duration) (VkResult, error) {

@@ -22,7 +22,7 @@ func (e *vulkanEvent) Handle() VkEvent {
 }
 
 func (e *vulkanEvent) Destroy(callbacks *AllocationCallbacks) {
-	e.driver.VkDestroyEvent(e.device, e.handle, nil)
+	e.driver.VkDestroyEvent(e.device, e.handle, callbacks.Handle())
 }
 
 func (e *vulkanEvent) Set() (VkResult, error) {

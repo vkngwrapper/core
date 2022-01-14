@@ -80,5 +80,5 @@ func (b *vulkanFramebuffer) Handle() VkFramebuffer {
 }
 
 func (b *vulkanFramebuffer) Destroy(callbacks *AllocationCallbacks) {
-	b.driver.VkDestroyFramebuffer(b.device, b.handle, nil)
+	b.driver.VkDestroyFramebuffer(b.device, b.handle, callbacks.Handle())
 }

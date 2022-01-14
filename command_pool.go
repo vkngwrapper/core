@@ -22,7 +22,7 @@ func (p *vulkanCommandPool) Handle() VkCommandPool {
 }
 
 func (p *vulkanCommandPool) Destroy(callbacks *AllocationCallbacks) {
-	p.driver.VkDestroyCommandPool(p.device, p.handle, nil)
+	p.driver.VkDestroyCommandPool(p.device, p.handle, callbacks.Handle())
 }
 
 func (p *vulkanCommandPool) FreeCommandBuffers(buffers []CommandBuffer) {

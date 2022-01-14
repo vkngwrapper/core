@@ -101,5 +101,5 @@ func (h *vulkanDescriptorSetLayout) Handle() VkDescriptorSetLayout {
 }
 
 func (h *vulkanDescriptorSetLayout) Destroy(callbacks *AllocationCallbacks) {
-	h.driver.VkDestroyDescriptorSetLayout(h.device, h.handle, nil)
+	h.driver.VkDestroyDescriptorSetLayout(h.device, h.handle, callbacks.Handle())
 }

@@ -17,5 +17,5 @@ func (s *vulkanSemaphore) Handle() VkSemaphore {
 }
 
 func (s *vulkanSemaphore) Destroy(callbacks *AllocationCallbacks) {
-	s.driver.VkDestroySemaphore(s.device, s.handle, nil)
+	s.driver.VkDestroySemaphore(s.device, s.handle, callbacks.Handle())
 }

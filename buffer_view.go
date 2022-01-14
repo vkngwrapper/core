@@ -22,7 +22,7 @@ func (v *vulkanBufferView) Handle() VkBufferView {
 }
 
 func (v *vulkanBufferView) Destroy(callbacks *AllocationCallbacks) {
-	v.driver.VkDestroyBufferView(v.device, v.handle, nil)
+	v.driver.VkDestroyBufferView(v.device, v.handle, callbacks.Handle())
 }
 
 type BufferViewOptions struct {

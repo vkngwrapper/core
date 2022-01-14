@@ -17,5 +17,5 @@ func (m *vulkanShaderModule) Handle() VkShaderModule {
 }
 
 func (m *vulkanShaderModule) Destroy(callbacks *AllocationCallbacks) {
-	m.driver.VkDestroyShaderModule(m.device, m.handle, nil)
+	m.driver.VkDestroyShaderModule(m.device, m.handle, callbacks.Handle())
 }

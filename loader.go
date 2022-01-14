@@ -211,7 +211,7 @@ func (l *VulkanLoader1_0) CreateInstance(allocationCallbacks *AllocationCallback
 
 	var instanceHandle VkInstance
 
-	res, err := l.driver.VkCreateInstance((*VkInstanceCreateInfo)(createInfo), (*VkAllocationCallbacks)(allocationCallbacks.Handle()), &instanceHandle)
+	res, err := l.driver.VkCreateInstance((*VkInstanceCreateInfo)(createInfo), allocationCallbacks.Handle(), &instanceHandle)
 	if err != nil {
 		return nil, res, err
 	}
@@ -237,7 +237,7 @@ func (l *VulkanLoader1_0) CreateDevice(physicalDevice PhysicalDevice, allocation
 	}
 
 	var deviceHandle VkDevice
-	res, err := physicalDevice.Driver().VkCreateDevice(physicalDevice.Handle(), (*VkDeviceCreateInfo)(createInfo), nil, &deviceHandle)
+	res, err := physicalDevice.Driver().VkCreateDevice(physicalDevice.Handle(), (*VkDeviceCreateInfo)(createInfo), allocationCallbacks.Handle(), &deviceHandle)
 	if err != nil {
 		return nil, res, err
 	}
@@ -260,7 +260,7 @@ func (l *VulkanLoader1_0) CreateShaderModule(device Device, allocationCallbacks 
 	}
 
 	var shaderModule VkShaderModule
-	res, err := device.Driver().VkCreateShaderModule(device.Handle(), (*VkShaderModuleCreateInfo)(createInfo), nil, &shaderModule)
+	res, err := device.Driver().VkCreateShaderModule(device.Handle(), (*VkShaderModuleCreateInfo)(createInfo), allocationCallbacks.Handle(), &shaderModule)
 	if err != nil {
 		return nil, res, err
 	}
@@ -279,7 +279,7 @@ func (l *VulkanLoader1_0) CreateImageView(device Device, allocationCallbacks *Al
 
 	var imageViewHandle VkImageView
 
-	res, err := device.Driver().VkCreateImageView(device.Handle(), (*VkImageViewCreateInfo)(createInfo), nil, &imageViewHandle)
+	res, err := device.Driver().VkCreateImageView(device.Handle(), (*VkImageViewCreateInfo)(createInfo), allocationCallbacks.Handle(), &imageViewHandle)
 	if err != nil {
 		return nil, res, err
 	}
@@ -298,7 +298,7 @@ func (l *VulkanLoader1_0) CreateSemaphore(device Device, allocationCallbacks *Al
 
 	var semaphoreHandle VkSemaphore
 
-	res, err := device.Driver().VkCreateSemaphore(device.Handle(), (*VkSemaphoreCreateInfo)(createInfo), nil, &semaphoreHandle)
+	res, err := device.Driver().VkCreateSemaphore(device.Handle(), (*VkSemaphoreCreateInfo)(createInfo), allocationCallbacks.Handle(), &semaphoreHandle)
 	if err != nil {
 		return nil, res, err
 	}
@@ -317,7 +317,7 @@ func (l *VulkanLoader1_0) CreateFence(device Device, allocationCallbacks *Alloca
 
 	var fenceHandle VkFence
 
-	res, err := device.Driver().VkCreateFence(device.Handle(), (*VkFenceCreateInfo)(createInfo), nil, &fenceHandle)
+	res, err := device.Driver().VkCreateFence(device.Handle(), (*VkFenceCreateInfo)(createInfo), allocationCallbacks.Handle(), &fenceHandle)
 	if err != nil {
 		return nil, res, err
 	}
@@ -355,7 +355,7 @@ func (l *VulkanLoader1_0) CreateDescriptorSetLayout(device Device, allocationCal
 
 	var descriptorSetLayout VkDescriptorSetLayout
 
-	res, err := device.Driver().VkCreateDescriptorSetLayout(device.Handle(), (*VkDescriptorSetLayoutCreateInfo)(createInfo), nil, &descriptorSetLayout)
+	res, err := device.Driver().VkCreateDescriptorSetLayout(device.Handle(), (*VkDescriptorSetLayoutCreateInfo)(createInfo), allocationCallbacks.Handle(), &descriptorSetLayout)
 	if err != nil {
 		return nil, res, err
 	}
@@ -378,7 +378,7 @@ func (l *VulkanLoader1_0) CreateDescriptorPool(device Device, allocationCallback
 
 	var descriptorPool VkDescriptorPool
 
-	res, err := device.Driver().VkCreateDescriptorPool(device.Handle(), (*VkDescriptorPoolCreateInfo)(createInfo), nil, &descriptorPool)
+	res, err := device.Driver().VkCreateDescriptorPool(device.Handle(), (*VkDescriptorPoolCreateInfo)(createInfo), allocationCallbacks.Handle(), &descriptorPool)
 	if err != nil {
 		return nil, res, err
 	}
@@ -400,7 +400,7 @@ func (l *VulkanLoader1_0) CreateCommandPool(device Device, allocationCallbacks *
 	}
 
 	var cmdPoolHandle VkCommandPool
-	res, err := device.Driver().VkCreateCommandPool(device.Handle(), (*VkCommandPoolCreateInfo)(createInfo), nil, &cmdPoolHandle)
+	res, err := device.Driver().VkCreateCommandPool(device.Handle(), (*VkCommandPoolCreateInfo)(createInfo), allocationCallbacks.Handle(), &cmdPoolHandle)
 	if err != nil {
 		return nil, res, err
 	}
@@ -418,7 +418,7 @@ func (l *VulkanLoader1_0) CreateEvent(device Device, allocationCallbacks *Alloca
 	}
 
 	var eventHandle VkEvent
-	res, err := device.Driver().VkCreateEvent(device.Handle(), (*VkEventCreateInfo)(createInfo), nil, &eventHandle)
+	res, err := device.Driver().VkCreateEvent(device.Handle(), (*VkEventCreateInfo)(createInfo), allocationCallbacks.Handle(), &eventHandle)
 	if err != nil {
 		return nil, res, err
 	}
@@ -437,7 +437,7 @@ func (l *VulkanLoader1_0) CreateFrameBuffer(device Device, allocationCallbacks *
 
 	var framebuffer VkFramebuffer
 
-	res, err := device.Driver().VkCreateFramebuffer(device.Handle(), (*VkFramebufferCreateInfo)(createInfo), nil, &framebuffer)
+	res, err := device.Driver().VkCreateFramebuffer(device.Handle(), (*VkFramebufferCreateInfo)(createInfo), allocationCallbacks.Handle(), &framebuffer)
 	if err != nil {
 		return nil, res, err
 	}
@@ -472,7 +472,7 @@ func (l *VulkanLoader1_0) CreateGraphicsPipelines(device Device, pipelineCache P
 		pipelineCacheHandle = pipelineCache.Handle()
 	}
 
-	res, err := device.Driver().VkCreateGraphicsPipelines(device.Handle(), pipelineCacheHandle, Uint32(pipelineCount), (*VkGraphicsPipelineCreateInfo)(pipelineCreateInfosPtrUnsafe), nil, pipelinePtr)
+	res, err := device.Driver().VkCreateGraphicsPipelines(device.Handle(), pipelineCacheHandle, Uint32(pipelineCount), (*VkGraphicsPipelineCreateInfo)(pipelineCreateInfosPtrUnsafe), allocationCallbacks.Handle(), pipelinePtr)
 	if err != nil {
 		return nil, res, err
 	}
@@ -513,7 +513,7 @@ func (l *VulkanLoader1_0) CreateComputePipelines(device Device, pipelineCache Pi
 		pipelineCacheHandle = pipelineCache.Handle()
 	}
 
-	res, err := device.Driver().VkCreateComputePipelines(device.Handle(), pipelineCacheHandle, Uint32(pipelineCount), (*VkComputePipelineCreateInfo)(pipelineCreateInfosPtrUnsafe), nil, pipelinePtr)
+	res, err := device.Driver().VkCreateComputePipelines(device.Handle(), pipelineCacheHandle, Uint32(pipelineCount), (*VkComputePipelineCreateInfo)(pipelineCreateInfosPtrUnsafe), allocationCallbacks.Handle(), pipelinePtr)
 	if err != nil {
 		return nil, res, err
 	}
@@ -537,7 +537,7 @@ func (l *VulkanLoader1_0) CreateImage(device Device, allocationCallbacks *Alloca
 	}
 
 	var image VkImage
-	res, err := device.Driver().VkCreateImage(device.Handle(), (*VkImageCreateInfo)(createInfo), nil, &image)
+	res, err := device.Driver().VkCreateImage(device.Handle(), (*VkImageCreateInfo)(createInfo), allocationCallbacks.Handle(), &image)
 	if err != nil {
 		return nil, res, err
 	}
@@ -555,7 +555,7 @@ func (l *VulkanLoader1_0) CreatePipelineCache(device Device, allocationCallbacks
 	}
 
 	var pipelineCache VkPipelineCache
-	res, err := device.Driver().VkCreatePipelineCache(device.Handle(), (*VkPipelineCacheCreateInfo)(createInfo), nil, &pipelineCache)
+	res, err := device.Driver().VkCreatePipelineCache(device.Handle(), (*VkPipelineCacheCreateInfo)(createInfo), allocationCallbacks.Handle(), &pipelineCache)
 	if err != nil {
 		return nil, res, err
 	}
@@ -573,7 +573,7 @@ func (l *VulkanLoader1_0) CreatePipelineLayout(device Device, allocationCallback
 	}
 
 	var pipelineLayout VkPipelineLayout
-	res, err := device.Driver().VkCreatePipelineLayout(device.Handle(), (*VkPipelineLayoutCreateInfo)(createInfo), nil, &pipelineLayout)
+	res, err := device.Driver().VkCreatePipelineLayout(device.Handle(), (*VkPipelineLayoutCreateInfo)(createInfo), allocationCallbacks.Handle(), &pipelineLayout)
 	if err != nil {
 		return nil, res, err
 	}
@@ -592,7 +592,7 @@ func (l *VulkanLoader1_0) CreateQueryPool(device Device, allocationCallbacks *Al
 
 	var queryPool VkQueryPool
 
-	res, err := device.Driver().VkCreateQueryPool(device.Handle(), (*VkQueryPoolCreateInfo)(createInfo), nil, &queryPool)
+	res, err := device.Driver().VkCreateQueryPool(device.Handle(), (*VkQueryPoolCreateInfo)(createInfo), allocationCallbacks.Handle(), &queryPool)
 	if err != nil {
 		return nil, res, err
 	}
@@ -612,7 +612,7 @@ func (l *VulkanLoader1_0) CreateRenderPass(device Device, allocationCallbacks *A
 
 	var renderPass VkRenderPass
 
-	res, err := device.Driver().VkCreateRenderPass(device.Handle(), (*VkRenderPassCreateInfo)(createInfo), nil, &renderPass)
+	res, err := device.Driver().VkCreateRenderPass(device.Handle(), (*VkRenderPassCreateInfo)(createInfo), allocationCallbacks.Handle(), &renderPass)
 	if err != nil {
 		return nil, res, err
 	}
@@ -631,7 +631,7 @@ func (l *VulkanLoader1_0) CreateSampler(device Device, allocationCallbacks *Allo
 
 	var sampler VkSampler
 
-	res, err := device.Driver().VkCreateSampler(device.Handle(), (*VkSamplerCreateInfo)(createInfo), nil, &sampler)
+	res, err := device.Driver().VkCreateSampler(device.Handle(), (*VkSamplerCreateInfo)(createInfo), allocationCallbacks.Handle(), &sampler)
 	if err != nil {
 		return nil, res, err
 	}

@@ -24,7 +24,7 @@ func (i *vulkanInstance) Handle() VkInstance {
 }
 
 func (i *vulkanInstance) Destroy(callbacks *AllocationCallbacks) {
-	i.driver.VkDestroyInstance(i.handle, nil)
+	i.driver.VkDestroyInstance(i.handle, callbacks.Handle())
 	i.driver.Destroy()
 }
 

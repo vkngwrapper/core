@@ -21,7 +21,7 @@ func (p *vulkanRenderPass) Handle() VkRenderPass {
 }
 
 func (p *vulkanRenderPass) Destroy(callbacks *AllocationCallbacks) {
-	p.driver.VkDestroyRenderPass(p.device, p.handle, nil)
+	p.driver.VkDestroyRenderPass(p.device, p.handle, callbacks.Handle())
 }
 
 func (p *vulkanRenderPass) RenderAreaGranularity() common.Extent2D {

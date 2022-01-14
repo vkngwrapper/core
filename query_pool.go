@@ -22,7 +22,7 @@ func (p *vulkanQueryPool) Handle() VkQueryPool {
 }
 
 func (p *vulkanQueryPool) Destroy(callbacks *AllocationCallbacks) {
-	p.driver.VkDestroyQueryPool(p.device, p.handle, nil)
+	p.driver.VkDestroyQueryPool(p.device, p.handle, callbacks.Handle())
 }
 
 func (p *vulkanQueryPool) PopulateResults(firstQuery, queryCount int, resultSize, resultStride int, flags common.QueryResultFlags) ([]byte, VkResult, error) {

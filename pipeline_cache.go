@@ -22,7 +22,7 @@ func (c *vulkanPipelineCache) Handle() VkPipelineCache {
 }
 
 func (c *vulkanPipelineCache) Destroy(callbacks *AllocationCallbacks) {
-	c.driver.VkDestroyPipelineCache(c.device, c.handle, nil)
+	c.driver.VkDestroyPipelineCache(c.device, c.handle, callbacks.Handle())
 }
 
 func (c *vulkanPipelineCache) CacheData() ([]byte, VkResult, error) {

@@ -27,7 +27,7 @@ func (d *vulkanDevice) Handle() VkDevice {
 }
 
 func (d *vulkanDevice) Destroy(callbacks *AllocationCallbacks) {
-	d.driver.VkDestroyDevice(d.handle, nil)
+	d.driver.VkDestroyDevice(d.handle, callbacks.Handle())
 }
 
 func (d *vulkanDevice) GetQueue(queueFamilyIndex int, queueIndex int) Queue {

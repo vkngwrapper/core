@@ -80,7 +80,7 @@ func (p *vulkanDescriptorPool) Handle() VkDescriptorPool {
 }
 
 func (p *vulkanDescriptorPool) Destroy(callbacks *AllocationCallbacks) {
-	p.driver.VkDestroyDescriptorPool(p.device, p.handle, nil)
+	p.driver.VkDestroyDescriptorPool(p.device, p.handle, callbacks.Handle())
 }
 
 func (p *vulkanDescriptorPool) AllocateDescriptorSets(o *DescriptorSetOptions) ([]DescriptorSet, VkResult, error) {

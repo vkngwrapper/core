@@ -27,7 +27,7 @@ func (i *vulkanImage) Handle() VkImage {
 }
 
 func (i *vulkanImage) Destroy(callbacks *AllocationCallbacks) {
-	i.driver.VkDestroyImage(i.device, i.handle, nil)
+	i.driver.VkDestroyImage(i.device, i.handle, callbacks.Handle())
 }
 
 func (i *vulkanImage) MemoryRequirements() *common.MemoryRequirements {
