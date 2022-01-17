@@ -7,6 +7,7 @@ package core
 import "C"
 import (
 	"github.com/CannibalVox/VKng/core/common"
+	driver3 "github.com/CannibalVox/VKng/core/driver"
 	"github.com/CannibalVox/cgoparam"
 	"github.com/cockroachdb/errors"
 	"unsafe"
@@ -77,7 +78,7 @@ func (o *DescriptorSetLayoutOptions) AllocForC(allocator *cgoparam.Allocator, ne
 				immutableSamplerSlice := ([]C.VkSampler)(unsafe.Slice(immutableSamplerPtr, samplerCount))
 
 				for samplerIndex := 0; samplerIndex < samplerCount; samplerIndex++ {
-					immutableSamplerSlice[samplerIndex] = C.VkSampler(o.Bindings[i].ImmutableSamplers[samplerIndex].Handle())
+					immutableSamplerSlice[samplerIndex] = C.VkSampler(unsafe.Pointer(o.Bindings[i].ImmutableSamplers[samplerIndex].Handle()))
 				}
 
 				bindingsSlice[i].pImmutableSamplers = immutableSamplerPtr
@@ -91,12 +92,12 @@ func (o *DescriptorSetLayoutOptions) AllocForC(allocator *cgoparam.Allocator, ne
 }
 
 type vulkanDescriptorSetLayout struct {
-	driver Driver
-	device VkDevice
-	handle VkDescriptorSetLayout
+	driver driver3.Driver
+	device driver3.VkDevice
+	handle driver3.VkDescriptorSetLayout
 }
 
-func (h *vulkanDescriptorSetLayout) Handle() VkDescriptorSetLayout {
+func (h *vulkanDescriptorSetLayout) Handle() driver3.VkDescriptorSetLayout {
 	return h.handle
 }
 

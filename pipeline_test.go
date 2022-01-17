@@ -5,6 +5,7 @@ import (
 	"encoding/binary"
 	"github.com/CannibalVox/VKng/core"
 	"github.com/CannibalVox/VKng/core/common"
+	"github.com/CannibalVox/VKng/core/driver"
 	"github.com/CannibalVox/VKng/core/mocks"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/require"
@@ -17,20 +18,20 @@ func TestVulkanLoader1_0_CreateGraphicsPipelines_EmptySuccess(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	driver := mocks.NewMockDriver(ctrl)
-	loader, err := core.CreateLoaderFromDriver(driver)
+	mockDriver := mocks.NewMockDriver(ctrl)
+	loader, err := core.CreateLoaderFromDriver(mockDriver)
 	require.NoError(t, err)
 
-	device := mocks.EasyMockDevice(ctrl, driver)
+	device := mocks.EasyMockDevice(ctrl, mockDriver)
 	layout := mocks.EasyMockPipelineLayout(ctrl)
 	renderPass := mocks.EasyMockRenderPass(ctrl)
 	pipelineHandle := mocks.NewFakePipeline()
 	basePipeline := mocks.EasyDummyPipeline(t, device, loader)
 
-	driver.EXPECT().VkCreateGraphicsPipelines(mocks.Exactly(device.Handle()), nil, core.Uint32(1), gomock.Not(nil), nil, gomock.Not(nil)).DoAndReturn(
-		func(device core.VkDevice, cache core.VkPipelineCache, createInfoCount core.Uint32, pCreateInfos *core.VkGraphicsPipelineCreateInfo, pAllocator *core.VkAllocationCallbacks, pGraphicsPipelines *core.VkPipeline) (core.VkResult, error) {
-			createInfos := reflect.ValueOf(([]core.VkGraphicsPipelineCreateInfo)(unsafe.Slice(pCreateInfos, 1)))
-			pipelines := ([]core.VkPipeline)(unsafe.Slice(pGraphicsPipelines, 1))
+	mockDriver.EXPECT().VkCreateGraphicsPipelines(mocks.Exactly(device.Handle()), nil, driver.Uint32(1), gomock.Not(nil), nil, gomock.Not(nil)).DoAndReturn(
+		func(device driver.VkDevice, cache driver.VkPipelineCache, createInfoCount driver.Uint32, pCreateInfos *driver.VkGraphicsPipelineCreateInfo, pAllocator *driver.VkAllocationCallbacks, pGraphicsPipelines *driver.VkPipeline) (common.VkResult, error) {
+			createInfos := reflect.ValueOf(([]driver.VkGraphicsPipelineCreateInfo)(unsafe.Slice(pCreateInfos, 1)))
+			pipelines := ([]driver.VkPipeline)(unsafe.Slice(pGraphicsPipelines, 1))
 			pipelines[0] = pipelineHandle
 
 			createInfo := createInfos.Index(0)
@@ -48,16 +49,16 @@ func TestVulkanLoader1_0_CreateGraphicsPipelines_EmptySuccess(t *testing.T) {
 			require.True(t, createInfo.FieldByName("pDepthStencilState").IsNil())
 			require.True(t, createInfo.FieldByName("pColorBlendState").IsNil())
 			require.True(t, createInfo.FieldByName("pDynamicState").IsNil())
-			actualLayout := (core.VkPipelineLayout)(unsafe.Pointer(createInfo.FieldByName("layout").Elem().UnsafeAddr()))
+			actualLayout := (driver.VkPipelineLayout)(unsafe.Pointer(createInfo.FieldByName("layout").Elem().UnsafeAddr()))
 			require.Same(t, layout.Handle(), actualLayout)
-			actualRenderPass := (core.VkRenderPass)(unsafe.Pointer(createInfo.FieldByName("renderPass").Elem().UnsafeAddr()))
+			actualRenderPass := (driver.VkRenderPass)(unsafe.Pointer(createInfo.FieldByName("renderPass").Elem().UnsafeAddr()))
 			require.Same(t, renderPass.Handle(), actualRenderPass)
 			require.Equal(t, uint64(1), createInfo.FieldByName("subpass").Uint())
-			actualBasePipeline := (core.VkPipeline)(unsafe.Pointer(createInfo.FieldByName("basePipelineHandle").Elem().UnsafeAddr()))
+			actualBasePipeline := (driver.VkPipeline)(unsafe.Pointer(createInfo.FieldByName("basePipelineHandle").Elem().UnsafeAddr()))
 			require.Same(t, basePipeline.Handle(), actualBasePipeline)
 			require.Equal(t, int64(3), createInfo.FieldByName("basePipelineIndex").Int())
 
-			return core.VKSuccess, nil
+			return common.VKSuccess, nil
 		})
 
 	pipelines, _, err := loader.CreateGraphicsPipelines(device, nil, nil, []*core.GraphicsPipelineOptions{
@@ -80,21 +81,21 @@ func TestVulkanLoader1_0_CreateGraphicsPipelines_ShaderStagesSuccess(t *testing.
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	driver := mocks.NewMockDriver(ctrl)
-	loader, err := core.CreateLoaderFromDriver(driver)
+	mockDriver := mocks.NewMockDriver(ctrl)
+	loader, err := core.CreateLoaderFromDriver(mockDriver)
 	require.NoError(t, err)
 
-	device := mocks.EasyMockDevice(ctrl, driver)
+	device := mocks.EasyMockDevice(ctrl, mockDriver)
 	layout := mocks.EasyMockPipelineLayout(ctrl)
 	renderPass := mocks.EasyMockRenderPass(ctrl)
 	pipelineHandle := mocks.NewFakePipeline()
 	shaderModule1 := mocks.EasyMockShaderModule(ctrl)
 	shaderModule2 := mocks.EasyMockShaderModule(ctrl)
 
-	driver.EXPECT().VkCreateGraphicsPipelines(mocks.Exactly(device.Handle()), nil, core.Uint32(1), gomock.Not(nil), nil, gomock.Not(nil)).DoAndReturn(
-		func(device core.VkDevice, cache core.VkPipelineCache, createInfoCount core.Uint32, pCreateInfos *core.VkGraphicsPipelineCreateInfo, pAllocator *core.VkAllocationCallbacks, pGraphicsPipelines *core.VkPipeline) (core.VkResult, error) {
-			createInfos := reflect.ValueOf(([]core.VkGraphicsPipelineCreateInfo)(unsafe.Slice(pCreateInfos, 1)))
-			pipelines := ([]core.VkPipeline)(unsafe.Slice(pGraphicsPipelines, 1))
+	mockDriver.EXPECT().VkCreateGraphicsPipelines(mocks.Exactly(device.Handle()), nil, driver.Uint32(1), gomock.Not(nil), nil, gomock.Not(nil)).DoAndReturn(
+		func(device driver.VkDevice, cache driver.VkPipelineCache, createInfoCount driver.Uint32, pCreateInfos *driver.VkGraphicsPipelineCreateInfo, pAllocator *driver.VkAllocationCallbacks, pGraphicsPipelines *driver.VkPipeline) (common.VkResult, error) {
+			createInfos := reflect.ValueOf(([]driver.VkGraphicsPipelineCreateInfo)(unsafe.Slice(pCreateInfos, 1)))
+			pipelines := ([]driver.VkPipeline)(unsafe.Slice(pGraphicsPipelines, 1))
 			pipelines[0] = pipelineHandle
 
 			createInfo := createInfos.Index(0)
@@ -102,18 +103,18 @@ func TestVulkanLoader1_0_CreateGraphicsPipelines_ShaderStagesSuccess(t *testing.
 			require.True(t, createInfo.FieldByName("pNext").IsNil())
 			require.Equal(t, uint64(2), createInfo.FieldByName("stageCount").Uint())
 
-			shaderPtr := (*core.VkPipelineShaderStageCreateInfo)(unsafe.Pointer(createInfo.FieldByName("pStages").Elem().UnsafeAddr()))
-			shaderSlice := reflect.ValueOf(([]core.VkPipelineShaderStageCreateInfo)(unsafe.Slice(shaderPtr, 2)))
+			shaderPtr := (*driver.VkPipelineShaderStageCreateInfo)(unsafe.Pointer(createInfo.FieldByName("pStages").Elem().UnsafeAddr()))
+			shaderSlice := reflect.ValueOf(([]driver.VkPipelineShaderStageCreateInfo)(unsafe.Slice(shaderPtr, 2)))
 
 			shader := shaderSlice.Index(0)
 			require.Equal(t, uint64(18), shader.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO
 			require.True(t, shader.FieldByName("pNext").IsNil())
 			require.Equal(t, uint64(1), shader.FieldByName("flags").Uint()) // VK_PIPELINE_SHADER_STAGE_CREATE_ALLOW_VARYING_SUBGROUP_SIZE_BIT_EXT
 			require.Equal(t, uint64(8), shader.FieldByName("stage").Uint()) // VK_SHADER_STAGE_GEOMETRY_BIT
-			module := (core.VkShaderModule)(unsafe.Pointer(shader.FieldByName("module").Elem().UnsafeAddr()))
+			module := (driver.VkShaderModule)(unsafe.Pointer(shader.FieldByName("module").Elem().UnsafeAddr()))
 			require.Same(t, shaderModule1.Handle(), module)
-			namePtr := (*core.Char)(unsafe.Pointer(shader.FieldByName("pName").Elem().UnsafeAddr()))
-			nameSlice := ([]core.Char)(unsafe.Slice(namePtr, 256))
+			namePtr := (*driver.Char)(unsafe.Pointer(shader.FieldByName("pName").Elem().UnsafeAddr()))
+			nameSlice := ([]driver.Char)(unsafe.Slice(namePtr, 256))
 			expectedName := "some shader 1"
 			for i, r := range expectedName {
 				require.Equal(t, r, rune(nameSlice[i]))
@@ -126,10 +127,10 @@ func TestVulkanLoader1_0_CreateGraphicsPipelines_ShaderStagesSuccess(t *testing.
 			require.True(t, shader.FieldByName("pNext").IsNil())
 			require.Equal(t, uint64(0), shader.FieldByName("flags").Uint())
 			require.Equal(t, uint64(16), shader.FieldByName("stage").Uint())
-			module = (core.VkShaderModule)(unsafe.Pointer(shader.FieldByName("module").Elem().UnsafeAddr()))
+			module = (driver.VkShaderModule)(unsafe.Pointer(shader.FieldByName("module").Elem().UnsafeAddr()))
 			require.Same(t, shaderModule2.Handle(), module)
-			namePtr = (*core.Char)(unsafe.Pointer(shader.FieldByName("pName").Elem().UnsafeAddr()))
-			nameSlice = ([]core.Char)(unsafe.Slice(namePtr, 256))
+			namePtr = (*driver.Char)(unsafe.Pointer(shader.FieldByName("pName").Elem().UnsafeAddr()))
+			nameSlice = ([]driver.Char)(unsafe.Slice(namePtr, 256))
 			expectedName = "another shader 2"
 			for i, r := range expectedName {
 				require.Equal(t, r, rune(nameSlice[i]))
@@ -138,8 +139,8 @@ func TestVulkanLoader1_0_CreateGraphicsPipelines_ShaderStagesSuccess(t *testing.
 
 			specInfo := shader.FieldByName("pSpecializationInfo").Elem()
 			require.Equal(t, uint64(2), specInfo.FieldByName("mapEntryCount").Uint())
-			mapEntryPtr := (*core.VkSpecializationMapEntry)(unsafe.Pointer(specInfo.FieldByName("pMapEntries").Elem().UnsafeAddr()))
-			mapEntrySlice := reflect.ValueOf(([]core.VkSpecializationMapEntry)(unsafe.Slice(mapEntryPtr, 2)))
+			mapEntryPtr := (*driver.VkSpecializationMapEntry)(unsafe.Pointer(specInfo.FieldByName("pMapEntries").Elem().UnsafeAddr()))
+			mapEntrySlice := reflect.ValueOf(([]driver.VkSpecializationMapEntry)(unsafe.Slice(mapEntryPtr, 2)))
 
 			firstEntryID := mapEntrySlice.Index(0).FieldByName("constantID").Uint()
 			secondEntryID := mapEntrySlice.Index(1).FieldByName("constantID").Uint()
@@ -181,7 +182,7 @@ func TestVulkanLoader1_0_CreateGraphicsPipelines_ShaderStagesSuccess(t *testing.
 			require.NoError(t, err)
 			require.Equal(t, float64(7.6), floatVal)
 
-			return core.VKSuccess, nil
+			return common.VKSuccess, nil
 		})
 
 	pipelines, _, err := loader.CreateGraphicsPipelines(device, nil, nil, []*core.GraphicsPipelineOptions{
@@ -216,11 +217,11 @@ func TestVulkanLoader1_0_CreateGraphicsPipelines_ShaderStagesFailure_InvalidSpec
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	driver := mocks.NewMockDriver(ctrl)
-	loader, err := core.CreateLoaderFromDriver(driver)
+	mockDriver := mocks.NewMockDriver(ctrl)
+	loader, err := core.CreateLoaderFromDriver(mockDriver)
 	require.NoError(t, err)
 
-	device := mocks.EasyMockDevice(ctrl, driver)
+	device := mocks.EasyMockDevice(ctrl, mockDriver)
 	layout := mocks.EasyMockPipelineLayout(ctrl)
 	renderPass := mocks.EasyMockRenderPass(ctrl)
 	shaderModule1 := mocks.EasyMockShaderModule(ctrl)
@@ -255,19 +256,19 @@ func TestVulkanLoader1_0_CreateGraphicsPipelines_VertexInputSuccess(t *testing.T
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	driver := mocks.NewMockDriver(ctrl)
-	loader, err := core.CreateLoaderFromDriver(driver)
+	mockDriver := mocks.NewMockDriver(ctrl)
+	loader, err := core.CreateLoaderFromDriver(mockDriver)
 	require.NoError(t, err)
 
-	device := mocks.EasyMockDevice(ctrl, driver)
+	device := mocks.EasyMockDevice(ctrl, mockDriver)
 	layout := mocks.EasyMockPipelineLayout(ctrl)
 	renderPass := mocks.EasyMockRenderPass(ctrl)
 	pipelineHandle := mocks.NewFakePipeline()
 
-	driver.EXPECT().VkCreateGraphicsPipelines(mocks.Exactly(device.Handle()), nil, core.Uint32(1), gomock.Not(nil), nil, gomock.Not(nil)).DoAndReturn(
-		func(device core.VkDevice, cache core.VkPipelineCache, createInfoCount core.Uint32, pCreateInfos *core.VkGraphicsPipelineCreateInfo, pAllocator *core.VkAllocationCallbacks, pGraphicsPipelines *core.VkPipeline) (core.VkResult, error) {
-			createInfos := reflect.ValueOf(([]core.VkGraphicsPipelineCreateInfo)(unsafe.Slice(pCreateInfos, 1)))
-			pipelines := ([]core.VkPipeline)(unsafe.Slice(pGraphicsPipelines, 1))
+	mockDriver.EXPECT().VkCreateGraphicsPipelines(mocks.Exactly(device.Handle()), nil, driver.Uint32(1), gomock.Not(nil), nil, gomock.Not(nil)).DoAndReturn(
+		func(device driver.VkDevice, cache driver.VkPipelineCache, createInfoCount driver.Uint32, pCreateInfos *driver.VkGraphicsPipelineCreateInfo, pAllocator *driver.VkAllocationCallbacks, pGraphicsPipelines *driver.VkPipeline) (common.VkResult, error) {
+			createInfos := reflect.ValueOf(([]driver.VkGraphicsPipelineCreateInfo)(unsafe.Slice(pCreateInfos, 1)))
+			pipelines := ([]driver.VkPipeline)(unsafe.Slice(pGraphicsPipelines, 1))
 			pipelines[0] = pipelineHandle
 
 			createInfo := createInfos.Index(0)
@@ -281,16 +282,16 @@ func TestVulkanLoader1_0_CreateGraphicsPipelines_VertexInputSuccess(t *testing.T
 			require.Equal(t, uint64(1), state.FieldByName("vertexBindingDescriptionCount").Uint())
 			require.Equal(t, uint64(2), state.FieldByName("vertexAttributeDescriptionCount").Uint())
 
-			bindingDescPtr := (*core.VkVertexInputBindingDescription)(unsafe.Pointer(state.FieldByName("pVertexBindingDescriptions").Elem().UnsafeAddr()))
-			bindingDescSlice := reflect.ValueOf(([]core.VkVertexInputBindingDescription)(unsafe.Slice(bindingDescPtr, 1)))
+			bindingDescPtr := (*driver.VkVertexInputBindingDescription)(unsafe.Pointer(state.FieldByName("pVertexBindingDescriptions").Elem().UnsafeAddr()))
+			bindingDescSlice := reflect.ValueOf(([]driver.VkVertexInputBindingDescription)(unsafe.Slice(bindingDescPtr, 1)))
 
 			binding := bindingDescSlice.Index(0)
 			require.Equal(t, uint64(17), binding.FieldByName("binding").Uint())
 			require.Equal(t, uint64(19), binding.FieldByName("stride").Uint())
 			require.Equal(t, uint64(1), binding.FieldByName("inputRate").Uint())
 
-			attDescPtr := (*core.VkVertexInputAttributeDescription)(unsafe.Pointer(state.FieldByName("pVertexAttributeDescriptions").Elem().UnsafeAddr()))
-			attDescSlice := reflect.ValueOf(([]core.VkVertexInputAttributeDescription)(unsafe.Slice(attDescPtr, 2)))
+			attDescPtr := (*driver.VkVertexInputAttributeDescription)(unsafe.Pointer(state.FieldByName("pVertexAttributeDescriptions").Elem().UnsafeAddr()))
+			attDescSlice := reflect.ValueOf(([]driver.VkVertexInputAttributeDescription)(unsafe.Slice(attDescPtr, 2)))
 
 			att := attDescSlice.Index(0)
 			require.Equal(t, uint64(1), att.FieldByName("location").Uint())
@@ -304,7 +305,7 @@ func TestVulkanLoader1_0_CreateGraphicsPipelines_VertexInputSuccess(t *testing.T
 			require.Equal(t, uint64(13), att.FieldByName("offset").Uint())
 			require.Equal(t, uint64(64), att.FieldByName("format").Uint())
 
-			return core.VKSuccess, nil
+			return common.VKSuccess, nil
 		})
 
 	pipelines, _, err := loader.CreateGraphicsPipelines(device, nil, nil, []*core.GraphicsPipelineOptions{
@@ -345,19 +346,19 @@ func TestVulkanLoader1_0_CreateGraphicsPipelines_InputAssemblySuccess(t *testing
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	driver := mocks.NewMockDriver(ctrl)
-	loader, err := core.CreateLoaderFromDriver(driver)
+	mockDriver := mocks.NewMockDriver(ctrl)
+	loader, err := core.CreateLoaderFromDriver(mockDriver)
 	require.NoError(t, err)
 
-	device := mocks.EasyMockDevice(ctrl, driver)
+	device := mocks.EasyMockDevice(ctrl, mockDriver)
 	layout := mocks.EasyMockPipelineLayout(ctrl)
 	renderPass := mocks.EasyMockRenderPass(ctrl)
 	pipelineHandle := mocks.NewFakePipeline()
 
-	driver.EXPECT().VkCreateGraphicsPipelines(mocks.Exactly(device.Handle()), nil, core.Uint32(1), gomock.Not(nil), nil, gomock.Not(nil)).DoAndReturn(
-		func(device core.VkDevice, cache core.VkPipelineCache, createInfoCount core.Uint32, pCreateInfos *core.VkGraphicsPipelineCreateInfo, pAllocator *core.VkAllocationCallbacks, pGraphicsPipelines *core.VkPipeline) (core.VkResult, error) {
-			createInfos := reflect.ValueOf(([]core.VkGraphicsPipelineCreateInfo)(unsafe.Slice(pCreateInfos, 1)))
-			pipelines := ([]core.VkPipeline)(unsafe.Slice(pGraphicsPipelines, 1))
+	mockDriver.EXPECT().VkCreateGraphicsPipelines(mocks.Exactly(device.Handle()), nil, driver.Uint32(1), gomock.Not(nil), nil, gomock.Not(nil)).DoAndReturn(
+		func(device driver.VkDevice, cache driver.VkPipelineCache, createInfoCount driver.Uint32, pCreateInfos *driver.VkGraphicsPipelineCreateInfo, pAllocator *driver.VkAllocationCallbacks, pGraphicsPipelines *driver.VkPipeline) (common.VkResult, error) {
+			createInfos := reflect.ValueOf(([]driver.VkGraphicsPipelineCreateInfo)(unsafe.Slice(pCreateInfos, 1)))
+			pipelines := ([]driver.VkPipeline)(unsafe.Slice(pGraphicsPipelines, 1))
 			pipelines[0] = pipelineHandle
 
 			createInfo := createInfos.Index(0)
@@ -368,7 +369,7 @@ func TestVulkanLoader1_0_CreateGraphicsPipelines_InputAssemblySuccess(t *testing
 			require.Equal(t, uint64(1), state.FieldByName("topology").Uint()) // VK_PRIMITIVE_TOPOLOGY_LINE_LIST
 			require.Equal(t, uint64(1), state.FieldByName("primitiveRestartEnable").Uint())
 
-			return core.VKSuccess, nil
+			return common.VKSuccess, nil
 		})
 
 	pipelines, _, err := loader.CreateGraphicsPipelines(device, nil, nil, []*core.GraphicsPipelineOptions{
@@ -390,19 +391,19 @@ func TestVulkanLoader1_0_CreateGraphicsPipelines_TessellationSuccess(t *testing.
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	driver := mocks.NewMockDriver(ctrl)
-	loader, err := core.CreateLoaderFromDriver(driver)
+	mockDriver := mocks.NewMockDriver(ctrl)
+	loader, err := core.CreateLoaderFromDriver(mockDriver)
 	require.NoError(t, err)
 
-	device := mocks.EasyMockDevice(ctrl, driver)
+	device := mocks.EasyMockDevice(ctrl, mockDriver)
 	layout := mocks.EasyMockPipelineLayout(ctrl)
 	renderPass := mocks.EasyMockRenderPass(ctrl)
 	pipelineHandle := mocks.NewFakePipeline()
 
-	driver.EXPECT().VkCreateGraphicsPipelines(mocks.Exactly(device.Handle()), nil, core.Uint32(1), gomock.Not(nil), nil, gomock.Not(nil)).DoAndReturn(
-		func(device core.VkDevice, cache core.VkPipelineCache, createInfoCount core.Uint32, pCreateInfos *core.VkGraphicsPipelineCreateInfo, pAllocator *core.VkAllocationCallbacks, pGraphicsPipelines *core.VkPipeline) (core.VkResult, error) {
-			createInfos := reflect.ValueOf(([]core.VkGraphicsPipelineCreateInfo)(unsafe.Slice(pCreateInfos, 1)))
-			pipelines := ([]core.VkPipeline)(unsafe.Slice(pGraphicsPipelines, 1))
+	mockDriver.EXPECT().VkCreateGraphicsPipelines(mocks.Exactly(device.Handle()), nil, driver.Uint32(1), gomock.Not(nil), nil, gomock.Not(nil)).DoAndReturn(
+		func(device driver.VkDevice, cache driver.VkPipelineCache, createInfoCount driver.Uint32, pCreateInfos *driver.VkGraphicsPipelineCreateInfo, pAllocator *driver.VkAllocationCallbacks, pGraphicsPipelines *driver.VkPipeline) (common.VkResult, error) {
+			createInfos := reflect.ValueOf(([]driver.VkGraphicsPipelineCreateInfo)(unsafe.Slice(pCreateInfos, 1)))
+			pipelines := ([]driver.VkPipeline)(unsafe.Slice(pGraphicsPipelines, 1))
 			pipelines[0] = pipelineHandle
 
 			createInfo := createInfos.Index(0)
@@ -413,7 +414,7 @@ func TestVulkanLoader1_0_CreateGraphicsPipelines_TessellationSuccess(t *testing.
 			require.Equal(t, uint64(0), state.FieldByName("flags").Uint())
 			require.Equal(t, uint64(3), state.FieldByName("patchControlPoints").Uint())
 
-			return core.VKSuccess, nil
+			return common.VKSuccess, nil
 		})
 
 	pipelines, _, err := loader.CreateGraphicsPipelines(device, nil, nil, []*core.GraphicsPipelineOptions{
@@ -434,19 +435,19 @@ func TestVulkanLoader1_0_CreateGraphicsPipelines_ViewportSuccess(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	driver := mocks.NewMockDriver(ctrl)
-	loader, err := core.CreateLoaderFromDriver(driver)
+	mockDriver := mocks.NewMockDriver(ctrl)
+	loader, err := core.CreateLoaderFromDriver(mockDriver)
 	require.NoError(t, err)
 
-	device := mocks.EasyMockDevice(ctrl, driver)
+	device := mocks.EasyMockDevice(ctrl, mockDriver)
 	layout := mocks.EasyMockPipelineLayout(ctrl)
 	renderPass := mocks.EasyMockRenderPass(ctrl)
 	pipelineHandle := mocks.NewFakePipeline()
 
-	driver.EXPECT().VkCreateGraphicsPipelines(mocks.Exactly(device.Handle()), nil, core.Uint32(1), gomock.Not(nil), nil, gomock.Not(nil)).DoAndReturn(
-		func(device core.VkDevice, cache core.VkPipelineCache, createInfoCount core.Uint32, pCreateInfos *core.VkGraphicsPipelineCreateInfo, pAllocator *core.VkAllocationCallbacks, pGraphicsPipelines *core.VkPipeline) (core.VkResult, error) {
-			createInfos := reflect.ValueOf(([]core.VkGraphicsPipelineCreateInfo)(unsafe.Slice(pCreateInfos, 1)))
-			pipelines := ([]core.VkPipeline)(unsafe.Slice(pGraphicsPipelines, 1))
+	mockDriver.EXPECT().VkCreateGraphicsPipelines(mocks.Exactly(device.Handle()), nil, driver.Uint32(1), gomock.Not(nil), nil, gomock.Not(nil)).DoAndReturn(
+		func(device driver.VkDevice, cache driver.VkPipelineCache, createInfoCount driver.Uint32, pCreateInfos *driver.VkGraphicsPipelineCreateInfo, pAllocator *driver.VkAllocationCallbacks, pGraphicsPipelines *driver.VkPipeline) (common.VkResult, error) {
+			createInfos := reflect.ValueOf(([]driver.VkGraphicsPipelineCreateInfo)(unsafe.Slice(pCreateInfos, 1)))
+			pipelines := ([]driver.VkPipeline)(unsafe.Slice(pGraphicsPipelines, 1))
 			pipelines[0] = pipelineHandle
 
 			createInfo := createInfos.Index(0)
@@ -457,8 +458,8 @@ func TestVulkanLoader1_0_CreateGraphicsPipelines_ViewportSuccess(t *testing.T) {
 			require.Equal(t, uint64(1), state.FieldByName("viewportCount").Uint())
 			require.Equal(t, uint64(2), state.FieldByName("scissorCount").Uint())
 
-			viewportPtr := (*core.VkViewport)(unsafe.Pointer(state.FieldByName("pViewports").Elem().UnsafeAddr()))
-			viewportSlice := reflect.ValueOf(([]core.VkViewport)(unsafe.Slice(viewportPtr, 1)))
+			viewportPtr := (*driver.VkViewport)(unsafe.Pointer(state.FieldByName("pViewports").Elem().UnsafeAddr()))
+			viewportSlice := reflect.ValueOf(([]driver.VkViewport)(unsafe.Slice(viewportPtr, 1)))
 
 			viewport := viewportSlice.Index(0)
 			require.Equal(t, float64(1), viewport.FieldByName("x").Float())
@@ -468,8 +469,8 @@ func TestVulkanLoader1_0_CreateGraphicsPipelines_ViewportSuccess(t *testing.T) {
 			require.Equal(t, float64(11), viewport.FieldByName("minDepth").Float())
 			require.Equal(t, float64(13), viewport.FieldByName("maxDepth").Float())
 
-			scissorPtr := (*core.VkRect2D)(unsafe.Pointer(state.FieldByName("pScissors").Elem().UnsafeAddr()))
-			scissorSlice := reflect.ValueOf(([]core.VkRect2D)(unsafe.Slice(scissorPtr, 2)))
+			scissorPtr := (*driver.VkRect2D)(unsafe.Pointer(state.FieldByName("pScissors").Elem().UnsafeAddr()))
+			scissorSlice := reflect.ValueOf(([]driver.VkRect2D)(unsafe.Slice(scissorPtr, 2)))
 
 			scissor := scissorSlice.Index(0)
 			scissorOffset := scissor.FieldByName("offset")
@@ -487,7 +488,7 @@ func TestVulkanLoader1_0_CreateGraphicsPipelines_ViewportSuccess(t *testing.T) {
 			require.Equal(t, uint64(41), scissorExtent.FieldByName("width").Uint())
 			require.Equal(t, uint64(43), scissorExtent.FieldByName("height").Uint())
 
-			return core.VKSuccess, nil
+			return common.VKSuccess, nil
 		})
 
 	pipelines, _, err := loader.CreateGraphicsPipelines(device, nil, nil, []*core.GraphicsPipelineOptions{
@@ -527,19 +528,19 @@ func TestVulkanLoader1_0_CreateGraphicsPipelines_RasterizationSuccess(t *testing
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	driver := mocks.NewMockDriver(ctrl)
-	loader, err := core.CreateLoaderFromDriver(driver)
+	mockDriver := mocks.NewMockDriver(ctrl)
+	loader, err := core.CreateLoaderFromDriver(mockDriver)
 	require.NoError(t, err)
 
-	device := mocks.EasyMockDevice(ctrl, driver)
+	device := mocks.EasyMockDevice(ctrl, mockDriver)
 	layout := mocks.EasyMockPipelineLayout(ctrl)
 	renderPass := mocks.EasyMockRenderPass(ctrl)
 	pipelineHandle := mocks.NewFakePipeline()
 
-	driver.EXPECT().VkCreateGraphicsPipelines(mocks.Exactly(device.Handle()), nil, core.Uint32(1), gomock.Not(nil), nil, gomock.Not(nil)).DoAndReturn(
-		func(device core.VkDevice, cache core.VkPipelineCache, createInfoCount core.Uint32, pCreateInfos *core.VkGraphicsPipelineCreateInfo, pAllocator *core.VkAllocationCallbacks, pGraphicsPipelines *core.VkPipeline) (core.VkResult, error) {
-			createInfos := reflect.ValueOf(([]core.VkGraphicsPipelineCreateInfo)(unsafe.Slice(pCreateInfos, 1)))
-			pipelines := ([]core.VkPipeline)(unsafe.Slice(pGraphicsPipelines, 1))
+	mockDriver.EXPECT().VkCreateGraphicsPipelines(mocks.Exactly(device.Handle()), nil, driver.Uint32(1), gomock.Not(nil), nil, gomock.Not(nil)).DoAndReturn(
+		func(device driver.VkDevice, cache driver.VkPipelineCache, createInfoCount driver.Uint32, pCreateInfos *driver.VkGraphicsPipelineCreateInfo, pAllocator *driver.VkAllocationCallbacks, pGraphicsPipelines *driver.VkPipeline) (common.VkResult, error) {
+			createInfos := reflect.ValueOf(([]driver.VkGraphicsPipelineCreateInfo)(unsafe.Slice(pCreateInfos, 1)))
+			pipelines := ([]driver.VkPipeline)(unsafe.Slice(pGraphicsPipelines, 1))
 			pipelines[0] = pipelineHandle
 
 			createInfo := createInfos.Index(0)
@@ -558,7 +559,7 @@ func TestVulkanLoader1_0_CreateGraphicsPipelines_RasterizationSuccess(t *testing
 			require.InDelta(t, float64(4.5), state.FieldByName("depthBiasSlopeFactor").Float(), 0.0001)
 			require.InDelta(t, float64(5.6), state.FieldByName("lineWidth").Float(), 0.0001)
 
-			return core.VKSuccess, nil
+			return common.VKSuccess, nil
 		})
 
 	pipelines, _, err := loader.CreateGraphicsPipelines(device, nil, nil, []*core.GraphicsPipelineOptions{
@@ -591,19 +592,19 @@ func TestVulkanLoader1_0_CreateGraphicsPipelines_MultisampleSuccess(t *testing.T
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	driver := mocks.NewMockDriver(ctrl)
-	loader, err := core.CreateLoaderFromDriver(driver)
+	mockDriver := mocks.NewMockDriver(ctrl)
+	loader, err := core.CreateLoaderFromDriver(mockDriver)
 	require.NoError(t, err)
 
-	device := mocks.EasyMockDevice(ctrl, driver)
+	device := mocks.EasyMockDevice(ctrl, mockDriver)
 	layout := mocks.EasyMockPipelineLayout(ctrl)
 	renderPass := mocks.EasyMockRenderPass(ctrl)
 	pipelineHandle := mocks.NewFakePipeline()
 
-	driver.EXPECT().VkCreateGraphicsPipelines(mocks.Exactly(device.Handle()), nil, core.Uint32(1), gomock.Not(nil), nil, gomock.Not(nil)).DoAndReturn(
-		func(device core.VkDevice, cache core.VkPipelineCache, createInfoCount core.Uint32, pCreateInfos *core.VkGraphicsPipelineCreateInfo, pAllocator *core.VkAllocationCallbacks, pGraphicsPipelines *core.VkPipeline) (core.VkResult, error) {
-			createInfos := reflect.ValueOf(([]core.VkGraphicsPipelineCreateInfo)(unsafe.Slice(pCreateInfos, 1)))
-			pipelines := ([]core.VkPipeline)(unsafe.Slice(pGraphicsPipelines, 1))
+	mockDriver.EXPECT().VkCreateGraphicsPipelines(mocks.Exactly(device.Handle()), nil, driver.Uint32(1), gomock.Not(nil), nil, gomock.Not(nil)).DoAndReturn(
+		func(device driver.VkDevice, cache driver.VkPipelineCache, createInfoCount driver.Uint32, pCreateInfos *driver.VkGraphicsPipelineCreateInfo, pAllocator *driver.VkAllocationCallbacks, pGraphicsPipelines *driver.VkPipeline) (common.VkResult, error) {
+			createInfos := reflect.ValueOf(([]driver.VkGraphicsPipelineCreateInfo)(unsafe.Slice(pCreateInfos, 1)))
+			pipelines := ([]driver.VkPipeline)(unsafe.Slice(pGraphicsPipelines, 1))
 			pipelines[0] = pipelineHandle
 
 			createInfo := createInfos.Index(0)
@@ -617,12 +618,12 @@ func TestVulkanLoader1_0_CreateGraphicsPipelines_MultisampleSuccess(t *testing.T
 			require.Equal(t, uint64(1), state.FieldByName("alphaToCoverageEnable").Uint())
 			require.Equal(t, uint64(1), state.FieldByName("alphaToOneEnable").Uint())
 
-			sampleMaskPtr := (*core.VkSampleMask)(unsafe.Pointer(state.FieldByName("pSampleMask").Elem().UnsafeAddr()))
-			sampleMaskSlice := reflect.ValueOf(([]core.VkSampleMask)(unsafe.Slice(sampleMaskPtr, 2)))
+			sampleMaskPtr := (*driver.VkSampleMask)(unsafe.Pointer(state.FieldByName("pSampleMask").Elem().UnsafeAddr()))
+			sampleMaskSlice := reflect.ValueOf(([]driver.VkSampleMask)(unsafe.Slice(sampleMaskPtr, 2)))
 			require.Equal(t, uint64(1), sampleMaskSlice.Index(0).Uint())
 			require.Equal(t, uint64(3), sampleMaskSlice.Index(1).Uint())
 
-			return core.VKSuccess, nil
+			return common.VKSuccess, nil
 		})
 
 	pipelines, _, err := loader.CreateGraphicsPipelines(device, nil, nil, []*core.GraphicsPipelineOptions{
@@ -648,19 +649,19 @@ func TestVulkanLoader1_0_CreateGraphicsPipelines_MultisampleSuccess_NoSampleMask
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	driver := mocks.NewMockDriver(ctrl)
-	loader, err := core.CreateLoaderFromDriver(driver)
+	mockDriver := mocks.NewMockDriver(ctrl)
+	loader, err := core.CreateLoaderFromDriver(mockDriver)
 	require.NoError(t, err)
 
-	device := mocks.EasyMockDevice(ctrl, driver)
+	device := mocks.EasyMockDevice(ctrl, mockDriver)
 	layout := mocks.EasyMockPipelineLayout(ctrl)
 	renderPass := mocks.EasyMockRenderPass(ctrl)
 	pipelineHandle := mocks.NewFakePipeline()
 
-	driver.EXPECT().VkCreateGraphicsPipelines(mocks.Exactly(device.Handle()), nil, core.Uint32(1), gomock.Not(nil), nil, gomock.Not(nil)).DoAndReturn(
-		func(device core.VkDevice, cache core.VkPipelineCache, createInfoCount core.Uint32, pCreateInfos *core.VkGraphicsPipelineCreateInfo, pAllocator *core.VkAllocationCallbacks, pGraphicsPipelines *core.VkPipeline) (core.VkResult, error) {
-			createInfos := reflect.ValueOf(([]core.VkGraphicsPipelineCreateInfo)(unsafe.Slice(pCreateInfos, 1)))
-			pipelines := ([]core.VkPipeline)(unsafe.Slice(pGraphicsPipelines, 1))
+	mockDriver.EXPECT().VkCreateGraphicsPipelines(mocks.Exactly(device.Handle()), nil, driver.Uint32(1), gomock.Not(nil), nil, gomock.Not(nil)).DoAndReturn(
+		func(device driver.VkDevice, cache driver.VkPipelineCache, createInfoCount driver.Uint32, pCreateInfos *driver.VkGraphicsPipelineCreateInfo, pAllocator *driver.VkAllocationCallbacks, pGraphicsPipelines *driver.VkPipeline) (common.VkResult, error) {
+			createInfos := reflect.ValueOf(([]driver.VkGraphicsPipelineCreateInfo)(unsafe.Slice(pCreateInfos, 1)))
+			pipelines := ([]driver.VkPipeline)(unsafe.Slice(pGraphicsPipelines, 1))
 			pipelines[0] = pipelineHandle
 
 			createInfo := createInfos.Index(0)
@@ -675,7 +676,7 @@ func TestVulkanLoader1_0_CreateGraphicsPipelines_MultisampleSuccess_NoSampleMask
 			require.Equal(t, uint64(1), state.FieldByName("alphaToOneEnable").Uint())
 			require.True(t, state.FieldByName("pSampleMask").IsNil())
 
-			return core.VKSuccess, nil
+			return common.VKSuccess, nil
 		})
 
 	pipelines, _, err := loader.CreateGraphicsPipelines(device, nil, nil, []*core.GraphicsPipelineOptions{
@@ -728,19 +729,19 @@ func TestVulkanLoader1_0_CreateGraphicsPipelines_DepthStencilSuccess(t *testing.
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	driver := mocks.NewMockDriver(ctrl)
-	loader, err := core.CreateLoaderFromDriver(driver)
+	mockDriver := mocks.NewMockDriver(ctrl)
+	loader, err := core.CreateLoaderFromDriver(mockDriver)
 	require.NoError(t, err)
 
-	device := mocks.EasyMockDevice(ctrl, driver)
+	device := mocks.EasyMockDevice(ctrl, mockDriver)
 	layout := mocks.EasyMockPipelineLayout(ctrl)
 	renderPass := mocks.EasyMockRenderPass(ctrl)
 	pipelineHandle := mocks.NewFakePipeline()
 
-	driver.EXPECT().VkCreateGraphicsPipelines(mocks.Exactly(device.Handle()), nil, core.Uint32(1), gomock.Not(nil), nil, gomock.Not(nil)).DoAndReturn(
-		func(device core.VkDevice, cache core.VkPipelineCache, createInfoCount core.Uint32, pCreateInfos *core.VkGraphicsPipelineCreateInfo, pAllocator *core.VkAllocationCallbacks, pGraphicsPipelines *core.VkPipeline) (core.VkResult, error) {
-			createInfos := reflect.ValueOf(([]core.VkGraphicsPipelineCreateInfo)(unsafe.Slice(pCreateInfos, 1)))
-			pipelines := ([]core.VkPipeline)(unsafe.Slice(pGraphicsPipelines, 1))
+	mockDriver.EXPECT().VkCreateGraphicsPipelines(mocks.Exactly(device.Handle()), nil, driver.Uint32(1), gomock.Not(nil), nil, gomock.Not(nil)).DoAndReturn(
+		func(device driver.VkDevice, cache driver.VkPipelineCache, createInfoCount driver.Uint32, pCreateInfos *driver.VkGraphicsPipelineCreateInfo, pAllocator *driver.VkAllocationCallbacks, pGraphicsPipelines *driver.VkPipeline) (common.VkResult, error) {
+			createInfos := reflect.ValueOf(([]driver.VkGraphicsPipelineCreateInfo)(unsafe.Slice(pCreateInfos, 1)))
+			pipelines := ([]driver.VkPipeline)(unsafe.Slice(pGraphicsPipelines, 1))
 			pipelines[0] = pipelineHandle
 
 			createInfo := createInfos.Index(0)
@@ -774,7 +775,7 @@ func TestVulkanLoader1_0_CreateGraphicsPipelines_DepthStencilSuccess(t *testing.
 			require.Equal(t, uint64(13), backState.FieldByName("writeMask").Uint())
 			require.Equal(t, uint64(17), backState.FieldByName("reference").Uint())
 
-			return core.VKSuccess, nil
+			return common.VKSuccess, nil
 		})
 
 	pipelines, _, err := loader.CreateGraphicsPipelines(device, nil, nil, []*core.GraphicsPipelineOptions{
@@ -819,19 +820,19 @@ func TestVulkanLoader1_0_CreateGraphicsPipelines_ColorBlendSuccess(t *testing.T)
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	driver := mocks.NewMockDriver(ctrl)
-	loader, err := core.CreateLoaderFromDriver(driver)
+	mockDriver := mocks.NewMockDriver(ctrl)
+	loader, err := core.CreateLoaderFromDriver(mockDriver)
 	require.NoError(t, err)
 
-	device := mocks.EasyMockDevice(ctrl, driver)
+	device := mocks.EasyMockDevice(ctrl, mockDriver)
 	layout := mocks.EasyMockPipelineLayout(ctrl)
 	renderPass := mocks.EasyMockRenderPass(ctrl)
 	pipelineHandle := mocks.NewFakePipeline()
 
-	driver.EXPECT().VkCreateGraphicsPipelines(mocks.Exactly(device.Handle()), nil, core.Uint32(1), gomock.Not(nil), nil, gomock.Not(nil)).DoAndReturn(
-		func(device core.VkDevice, cache core.VkPipelineCache, createInfoCount core.Uint32, pCreateInfos *core.VkGraphicsPipelineCreateInfo, pAllocator *core.VkAllocationCallbacks, pGraphicsPipelines *core.VkPipeline) (core.VkResult, error) {
-			createInfos := reflect.ValueOf(([]core.VkGraphicsPipelineCreateInfo)(unsafe.Slice(pCreateInfos, 1)))
-			pipelines := ([]core.VkPipeline)(unsafe.Slice(pGraphicsPipelines, 1))
+	mockDriver.EXPECT().VkCreateGraphicsPipelines(mocks.Exactly(device.Handle()), nil, driver.Uint32(1), gomock.Not(nil), nil, gomock.Not(nil)).DoAndReturn(
+		func(device driver.VkDevice, cache driver.VkPipelineCache, createInfoCount driver.Uint32, pCreateInfos *driver.VkGraphicsPipelineCreateInfo, pAllocator *driver.VkAllocationCallbacks, pGraphicsPipelines *driver.VkPipeline) (common.VkResult, error) {
+			createInfos := reflect.ValueOf(([]driver.VkGraphicsPipelineCreateInfo)(unsafe.Slice(pCreateInfos, 1)))
+			pipelines := ([]driver.VkPipeline)(unsafe.Slice(pGraphicsPipelines, 1))
 			pipelines[0] = pipelineHandle
 
 			createInfo := createInfos.Index(0)
@@ -843,8 +844,8 @@ func TestVulkanLoader1_0_CreateGraphicsPipelines_ColorBlendSuccess(t *testing.T)
 			require.Equal(t, uint64(12), state.FieldByName("logicOp").Uint()) // VK_LOGIC_OP_COPY_INVERTED
 			require.Equal(t, uint64(2), state.FieldByName("attachmentCount").Uint())
 
-			attachmentsPtr := (*core.VkPipelineColorBlendAttachmentState)(unsafe.Pointer(state.FieldByName("pAttachments").Elem().UnsafeAddr()))
-			attachmentsSlice := reflect.ValueOf(([]core.VkPipelineColorBlendAttachmentState)(unsafe.Slice(attachmentsPtr, 2)))
+			attachmentsPtr := (*driver.VkPipelineColorBlendAttachmentState)(unsafe.Pointer(state.FieldByName("pAttachments").Elem().UnsafeAddr()))
+			attachmentsSlice := reflect.ValueOf(([]driver.VkPipelineColorBlendAttachmentState)(unsafe.Slice(attachmentsPtr, 2)))
 
 			attachment := attachmentsSlice.Index(0)
 			require.Equal(t, uint64(1), attachment.FieldByName("blendEnable").Uint())
@@ -872,7 +873,7 @@ func TestVulkanLoader1_0_CreateGraphicsPipelines_ColorBlendSuccess(t *testing.T)
 			require.InDelta(t, 3.4, constants.Index(2).Float(), 0.0001)
 			require.InDelta(t, 4.5, constants.Index(3).Float(), 0.0001)
 
-			return core.VKSuccess, nil
+			return common.VKSuccess, nil
 		})
 
 	pipelines, _, err := loader.CreateGraphicsPipelines(device, nil, nil, []*core.GraphicsPipelineOptions{
@@ -917,19 +918,19 @@ func TestVulkanLoader1_0_CreateGraphicsPipelines_DynamicStateSuccess(t *testing.
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	driver := mocks.NewMockDriver(ctrl)
-	loader, err := core.CreateLoaderFromDriver(driver)
+	mockDriver := mocks.NewMockDriver(ctrl)
+	loader, err := core.CreateLoaderFromDriver(mockDriver)
 	require.NoError(t, err)
 
-	device := mocks.EasyMockDevice(ctrl, driver)
+	device := mocks.EasyMockDevice(ctrl, mockDriver)
 	layout := mocks.EasyMockPipelineLayout(ctrl)
 	renderPass := mocks.EasyMockRenderPass(ctrl)
 	pipelineHandle := mocks.NewFakePipeline()
 
-	driver.EXPECT().VkCreateGraphicsPipelines(mocks.Exactly(device.Handle()), nil, core.Uint32(1), gomock.Not(nil), nil, gomock.Not(nil)).DoAndReturn(
-		func(device core.VkDevice, cache core.VkPipelineCache, createInfoCount core.Uint32, pCreateInfos *core.VkGraphicsPipelineCreateInfo, pAllocator *core.VkAllocationCallbacks, pGraphicsPipelines *core.VkPipeline) (core.VkResult, error) {
-			createInfos := reflect.ValueOf(([]core.VkGraphicsPipelineCreateInfo)(unsafe.Slice(pCreateInfos, 1)))
-			pipelines := ([]core.VkPipeline)(unsafe.Slice(pGraphicsPipelines, 1))
+	mockDriver.EXPECT().VkCreateGraphicsPipelines(mocks.Exactly(device.Handle()), nil, driver.Uint32(1), gomock.Not(nil), nil, gomock.Not(nil)).DoAndReturn(
+		func(device driver.VkDevice, cache driver.VkPipelineCache, createInfoCount driver.Uint32, pCreateInfos *driver.VkGraphicsPipelineCreateInfo, pAllocator *driver.VkAllocationCallbacks, pGraphicsPipelines *driver.VkPipeline) (common.VkResult, error) {
+			createInfos := reflect.ValueOf(([]driver.VkGraphicsPipelineCreateInfo)(unsafe.Slice(pCreateInfos, 1)))
+			pipelines := ([]driver.VkPipeline)(unsafe.Slice(pGraphicsPipelines, 1))
 			pipelines[0] = pipelineHandle
 
 			createInfo := createInfos.Index(0)
@@ -939,13 +940,13 @@ func TestVulkanLoader1_0_CreateGraphicsPipelines_DynamicStateSuccess(t *testing.
 			require.Equal(t, uint64(0), state.FieldByName("flags").Uint())
 			require.Equal(t, uint64(2), state.FieldByName("dynamicStateCount").Uint())
 
-			statesPtr := (*core.VkDynamicState)(unsafe.Pointer(state.FieldByName("pDynamicStates").Elem().UnsafeAddr()))
-			statesSlice := reflect.ValueOf(([]core.VkDynamicState)(unsafe.Slice(statesPtr, 2)))
+			statesPtr := (*driver.VkDynamicState)(unsafe.Pointer(state.FieldByName("pDynamicStates").Elem().UnsafeAddr()))
+			statesSlice := reflect.ValueOf(([]driver.VkDynamicState)(unsafe.Slice(statesPtr, 2)))
 
 			require.Equal(t, uint64(5), statesSlice.Index(0).Uint())          // VK_DYNAMIC_STATE_DEPTH_BOUNDS
 			require.Equal(t, uint64(1000267000), statesSlice.Index(1).Uint()) // VK_DYNAMIC_STATE_CULL_MODE_EXT
 
-			return core.VKSuccess, nil
+			return common.VKSuccess, nil
 		})
 
 	pipelines, _, err := loader.CreateGraphicsPipelines(device, nil, nil, []*core.GraphicsPipelineOptions{
@@ -968,20 +969,20 @@ func TestVulkanLoader1_0_CreateComputePipelines_EmptySuccess(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	driver := mocks.NewMockDriver(ctrl)
-	loader, err := core.CreateLoaderFromDriver(driver)
+	mockDriver := mocks.NewMockDriver(ctrl)
+	loader, err := core.CreateLoaderFromDriver(mockDriver)
 	require.NoError(t, err)
 
-	device := mocks.EasyMockDevice(ctrl, driver)
+	device := mocks.EasyMockDevice(ctrl, mockDriver)
 	layout := mocks.EasyMockPipelineLayout(ctrl)
 	shaderModule := mocks.EasyMockShaderModule(ctrl)
 	pipelineHandle := mocks.NewFakePipeline()
 	basePipeline := mocks.EasyDummyPipeline(t, device, loader)
 
-	driver.EXPECT().VkCreateComputePipelines(mocks.Exactly(device.Handle()), nil, core.Uint32(1), gomock.Not(nil), nil, gomock.Not(nil)).DoAndReturn(
-		func(device core.VkDevice, cache core.VkPipelineCache, createInfoCount core.Uint32, pCreateInfos *core.VkComputePipelineCreateInfo, pAllocator *core.VkAllocationCallbacks, pGraphicsPipelines *core.VkPipeline) (core.VkResult, error) {
-			createInfos := reflect.ValueOf(([]core.VkComputePipelineCreateInfo)(unsafe.Slice(pCreateInfos, 1)))
-			pipelines := ([]core.VkPipeline)(unsafe.Slice(pGraphicsPipelines, 1))
+	mockDriver.EXPECT().VkCreateComputePipelines(mocks.Exactly(device.Handle()), nil, driver.Uint32(1), gomock.Not(nil), nil, gomock.Not(nil)).DoAndReturn(
+		func(device driver.VkDevice, cache driver.VkPipelineCache, createInfoCount driver.Uint32, pCreateInfos *driver.VkComputePipelineCreateInfo, pAllocator *driver.VkAllocationCallbacks, pGraphicsPipelines *driver.VkPipeline) (common.VkResult, error) {
+			createInfos := reflect.ValueOf(([]driver.VkComputePipelineCreateInfo)(unsafe.Slice(pCreateInfos, 1)))
+			pipelines := ([]driver.VkPipeline)(unsafe.Slice(pGraphicsPipelines, 1))
 			pipelines[0] = pipelineHandle
 
 			createInfo := createInfos.Index(0)
@@ -993,10 +994,10 @@ func TestVulkanLoader1_0_CreateComputePipelines_EmptySuccess(t *testing.T) {
 
 			require.Equal(t, uint64(1), shader.FieldByName("flags").Uint())    // VK_PIPELINE_SHADER_STAGE_CREATE_ALLOW_VARYING_SUBGROUP_SIZE_BIT_EXT
 			require.Equal(t, uint64(0x20), shader.FieldByName("stage").Uint()) // VK_SHADER_STAGE_COMPUTE_BIT
-			module := (core.VkShaderModule)(unsafe.Pointer(shader.FieldByName("module").Elem().UnsafeAddr()))
+			module := (driver.VkShaderModule)(unsafe.Pointer(shader.FieldByName("module").Elem().UnsafeAddr()))
 			require.Same(t, shaderModule.Handle(), module)
-			namePtr := (*core.Char)(unsafe.Pointer(shader.FieldByName("pName").Elem().UnsafeAddr()))
-			nameSlice := ([]core.Char)(unsafe.Slice(namePtr, 256))
+			namePtr := (*driver.Char)(unsafe.Pointer(shader.FieldByName("pName").Elem().UnsafeAddr()))
+			nameSlice := ([]driver.Char)(unsafe.Slice(namePtr, 256))
 			expectedName := "some compute shader"
 			for i, r := range expectedName {
 				require.Equal(t, r, rune(nameSlice[i]))
@@ -1005,8 +1006,8 @@ func TestVulkanLoader1_0_CreateComputePipelines_EmptySuccess(t *testing.T) {
 
 			specInfo := shader.FieldByName("pSpecializationInfo").Elem()
 			require.Equal(t, uint64(2), specInfo.FieldByName("mapEntryCount").Uint())
-			mapEntryPtr := (*core.VkSpecializationMapEntry)(unsafe.Pointer(specInfo.FieldByName("pMapEntries").Elem().UnsafeAddr()))
-			mapEntrySlice := reflect.ValueOf(([]core.VkSpecializationMapEntry)(unsafe.Slice(mapEntryPtr, 2)))
+			mapEntryPtr := (*driver.VkSpecializationMapEntry)(unsafe.Pointer(specInfo.FieldByName("pMapEntries").Elem().UnsafeAddr()))
+			mapEntrySlice := reflect.ValueOf(([]driver.VkSpecializationMapEntry)(unsafe.Slice(mapEntryPtr, 2)))
 
 			firstEntryID := mapEntrySlice.Index(0).FieldByName("constantID").Uint()
 			secondEntryID := mapEntrySlice.Index(1).FieldByName("constantID").Uint()
@@ -1048,13 +1049,13 @@ func TestVulkanLoader1_0_CreateComputePipelines_EmptySuccess(t *testing.T) {
 			require.NoError(t, err)
 			require.Equal(t, float64(7.6), floatVal)
 
-			actualLayout := (core.VkPipelineLayout)(unsafe.Pointer(createInfo.FieldByName("layout").Elem().UnsafeAddr()))
+			actualLayout := (driver.VkPipelineLayout)(unsafe.Pointer(createInfo.FieldByName("layout").Elem().UnsafeAddr()))
 			require.Same(t, layout.Handle(), actualLayout)
-			actualBasePipeline := (core.VkPipeline)(unsafe.Pointer(createInfo.FieldByName("basePipelineHandle").Elem().UnsafeAddr()))
+			actualBasePipeline := (driver.VkPipeline)(unsafe.Pointer(createInfo.FieldByName("basePipelineHandle").Elem().UnsafeAddr()))
 			require.Same(t, basePipeline.Handle(), actualBasePipeline)
 			require.Equal(t, int64(3), createInfo.FieldByName("basePipelineIndex").Int())
 
-			return core.VKSuccess, nil
+			return common.VKSuccess, nil
 		})
 
 	pipelines, _, err := loader.CreateComputePipelines(device, nil, nil, []*core.ComputePipelineOptions{

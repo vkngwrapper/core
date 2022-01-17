@@ -2,6 +2,8 @@ package core_test
 
 import (
 	"github.com/CannibalVox/VKng/core"
+	"github.com/CannibalVox/VKng/core/common"
+	"github.com/CannibalVox/VKng/core/driver"
 	"github.com/CannibalVox/VKng/core/mocks"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/require"
@@ -13,15 +15,15 @@ func TestVulkanLoader1_0_CreateSemaphore(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	driver := mocks.NewMockDriver(ctrl)
-	loader, err := core.CreateLoaderFromDriver(driver)
+	mockDriver := mocks.NewMockDriver(ctrl)
+	loader, err := core.CreateLoaderFromDriver(mockDriver)
 	require.NoError(t, err)
 
-	device := mocks.EasyMockDevice(ctrl, driver)
+	device := mocks.EasyMockDevice(ctrl, mockDriver)
 	semaphoreHandle := mocks.NewFakeSemaphore()
 
-	driver.EXPECT().VkCreateSemaphore(mocks.Exactly(device.Handle()), gomock.Not(nil), nil, gomock.Not(nil)).DoAndReturn(
-		func(device core.VkDevice, pCreateInfo *core.VkSemaphoreCreateInfo, pAllocator *core.VkAllocationCallbacks, pSemaphore *core.VkSemaphore) (core.VkResult, error) {
+	mockDriver.EXPECT().VkCreateSemaphore(mocks.Exactly(device.Handle()), gomock.Not(nil), nil, gomock.Not(nil)).DoAndReturn(
+		func(device driver.VkDevice, pCreateInfo *driver.VkSemaphoreCreateInfo, pAllocator *driver.VkAllocationCallbacks, pSemaphore *driver.VkSemaphore) (common.VkResult, error) {
 			*pSemaphore = semaphoreHandle
 			val := reflect.ValueOf(*pCreateInfo)
 
@@ -29,7 +31,7 @@ func TestVulkanLoader1_0_CreateSemaphore(t *testing.T) {
 			require.True(t, val.FieldByName("pNext").IsNil())
 			require.Equal(t, uint64(0), val.FieldByName("flags").Uint())
 
-			return core.VKSuccess, nil
+			return common.VKSuccess, nil
 		})
 
 	semaphore, _, err := loader.CreateSemaphore(device, nil, &core.SemaphoreOptions{})

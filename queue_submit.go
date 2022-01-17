@@ -7,6 +7,7 @@ package core
 import "C"
 import (
 	"github.com/CannibalVox/VKng/core/common"
+	"github.com/CannibalVox/VKng/core/driver"
 	"github.com/CannibalVox/cgoparam"
 	"github.com/cockroachdb/errors"
 	"unsafe"
@@ -68,7 +69,7 @@ func (o *SubmitOptions) populate(allocator *cgoparam.Allocator, createInfo *C.Vk
 	createInfo.pCommandBuffers = nil
 	if commandBufferCount > 0 {
 		commandBufferPtrUnsafe := allocator.Malloc(commandBufferCount * int(unsafe.Sizeof([1]C.VkCommandBuffer{})))
-		commandBufferSlice := ([]VkCommandBuffer)(unsafe.Slice((*VkCommandBuffer)(commandBufferPtrUnsafe), commandBufferCount))
+		commandBufferSlice := ([]driver.VkCommandBuffer)(unsafe.Slice((*driver.VkCommandBuffer)(commandBufferPtrUnsafe), commandBufferCount))
 
 		for i := 0; i < commandBufferCount; i++ {
 			commandBufferSlice[i] = o.CommandBuffers[i].Handle()
@@ -90,7 +91,7 @@ func (o *SubmitOptions) AllocForC(allocator *cgoparam.Allocator, next unsafe.Poi
 	return unsafe.Pointer(createInfo), nil
 }
 
-func (q *vulkanQueue) SubmitToQueue(fence Fence, o []*SubmitOptions) (VkResult, error) {
+func (q *vulkanQueue) SubmitToQueue(fence Fence, o []*SubmitOptions) (common.VkResult, error) {
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
@@ -101,19 +102,19 @@ func (q *vulkanQueue) SubmitToQueue(fence Fence, o []*SubmitOptions) (VkResult, 
 	for i := 0; i < submitCount; i++ {
 		next, err := common.AllocNext(arena, o[i])
 		if err != nil {
-			return VKErrorUnknown, err
+			return common.VKErrorUnknown, err
 		}
 
 		err = o[i].populate(arena, &(createInfoSlice[i]), next)
 		if err != nil {
-			return VKErrorUnknown, err
+			return common.VKErrorUnknown, err
 		}
 	}
 
-	var fenceHandle VkFence = nil
+	var fenceHandle driver.VkFence = nil
 	if fence != nil {
 		fenceHandle = fence.Handle()
 	}
 
-	return q.Driver().VkQueueSubmit(q.Handle(), Uint32(submitCount), (*VkSubmitInfo)(createInfoPtrUnsafe), fenceHandle)
+	return q.Driver().VkQueueSubmit(q.Handle(), driver.Uint32(submitCount), (*driver.VkSubmitInfo)(createInfoPtrUnsafe), fenceHandle)
 }

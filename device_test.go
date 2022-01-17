@@ -3,6 +3,7 @@ package core_test
 import (
 	"github.com/CannibalVox/VKng/core"
 	"github.com/CannibalVox/VKng/core/common"
+	"github.com/CannibalVox/VKng/core/driver"
 	"github.com/CannibalVox/VKng/core/mocks"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/require"
@@ -25,7 +26,7 @@ func TestVulkanLoader1_0_CreateDevice_Success(t *testing.T) {
 
 	mockDriver.EXPECT().CreateDeviceDriver(gomock.Any()).Return(mockDriver, nil)
 	mockDriver.EXPECT().VkCreateDevice(mocks.Exactly(mockPhysicalDevice.Handle()), gomock.Not(nil), nil, gomock.Not(nil)).DoAndReturn(
-		func(physicalDevice core.VkPhysicalDevice, pCreateInfo *core.VkDeviceCreateInfo, pAllocator *core.VkAllocationCallbacks, pDevice *core.VkDevice) (core.VkResult, error) {
+		func(physicalDevice driver.VkPhysicalDevice, pCreateInfo *driver.VkDeviceCreateInfo, pAllocator *driver.VkAllocationCallbacks, pDevice *driver.VkDevice) (common.VkResult, error) {
 			v := reflect.ValueOf(*pCreateInfo)
 
 			require.Equal(t, uint64(3), v.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO
@@ -41,13 +42,13 @@ func TestVulkanLoader1_0_CreateDevice_Success(t *testing.T) {
 			require.Equal(t, uint64(1), featuresV.FieldByName("tessellationShader").Uint())
 			require.Equal(t, uint64(0), featuresV.FieldByName("samplerAnisotropy").Uint())
 
-			extensionNamePtr := (**core.Char)(unsafe.Pointer(v.FieldByName("ppEnabledExtensionNames").Elem().UnsafeAddr()))
-			extensionNameSlice := ([]*core.Char)(unsafe.Slice(extensionNamePtr, 3))
+			extensionNamePtr := (**driver.Char)(unsafe.Pointer(v.FieldByName("ppEnabledExtensionNames").Elem().UnsafeAddr()))
+			extensionNameSlice := ([]*driver.Char)(unsafe.Slice(extensionNamePtr, 3))
 
 			var extensionNames []string
 			for _, extensionNameBytes := range extensionNameSlice {
 				var extensionNameRunes []rune
-				extensionNameByteSlice := ([]core.Char)(unsafe.Slice(extensionNameBytes, 1<<30))
+				extensionNameByteSlice := ([]driver.Char)(unsafe.Slice(extensionNameBytes, 1<<30))
 				for _, nameByte := range extensionNameByteSlice {
 					if nameByte == 0 {
 						break
@@ -61,13 +62,13 @@ func TestVulkanLoader1_0_CreateDevice_Success(t *testing.T) {
 
 			require.ElementsMatch(t, []string{"A", "B", "C"}, extensionNames)
 
-			layerNamePtr := (**core.Char)(unsafe.Pointer(v.FieldByName("ppEnabledLayerNames").Elem().UnsafeAddr()))
-			layerNameSlice := ([]*core.Char)(unsafe.Slice(layerNamePtr, 2))
+			layerNamePtr := (**driver.Char)(unsafe.Pointer(v.FieldByName("ppEnabledLayerNames").Elem().UnsafeAddr()))
+			layerNameSlice := ([]*driver.Char)(unsafe.Slice(layerNamePtr, 2))
 
 			var layerNames []string
 			for _, layerNameBytes := range layerNameSlice {
 				var layerNameRunes []rune
-				layerNameByteSlice := ([]core.Char)(unsafe.Slice(layerNameBytes, 1<<30))
+				layerNameByteSlice := ([]driver.Char)(unsafe.Slice(layerNameBytes, 1<<30))
 				for _, nameByte := range layerNameByteSlice {
 					if nameByte == 0 {
 						break
@@ -81,8 +82,8 @@ func TestVulkanLoader1_0_CreateDevice_Success(t *testing.T) {
 
 			require.ElementsMatch(t, []string{"D", "E"}, layerNames)
 
-			queueCreateInfoPtr := (*core.VkDeviceQueueCreateInfo)(unsafe.Pointer(v.FieldByName("pQueueCreateInfos").Elem().UnsafeAddr()))
-			queueCreateInfoSlice := ([]core.VkDeviceQueueCreateInfo)(unsafe.Slice(queueCreateInfoPtr, 2))
+			queueCreateInfoPtr := (*driver.VkDeviceQueueCreateInfo)(unsafe.Pointer(v.FieldByName("pQueueCreateInfos").Elem().UnsafeAddr()))
+			queueCreateInfoSlice := ([]driver.VkDeviceQueueCreateInfo)(unsafe.Slice(queueCreateInfoPtr, 2))
 
 			queueInfoV := reflect.ValueOf(queueCreateInfoSlice[0])
 			require.Equal(t, uint64(2), queueInfoV.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO
@@ -109,7 +110,7 @@ func TestVulkanLoader1_0_CreateDevice_Success(t *testing.T) {
 			require.Equal(t, float32(0.5), prioritySlice[0])
 
 			*pDevice = deviceHandle
-			return core.VKSuccess, nil
+			return common.VKSuccess, nil
 		})
 
 	device, _, err := loader.CreateDevice(mockPhysicalDevice, nil, &core.DeviceOptions{
@@ -198,8 +199,8 @@ func TestDevice_GetQueue(t *testing.T) {
 	device := mocks.EasyDummyDevice(t, ctrl, loader)
 	queueHandle := mocks.NewFakeQueue()
 
-	mockDriver.EXPECT().VkGetDeviceQueue(mocks.Exactly(device.Handle()), core.Uint32(1), core.Uint32(2), gomock.Not(nil)).DoAndReturn(
-		func(device core.VkDevice, queueFamilyIndex, queueIndex core.Uint32, pQueue *core.VkQueue) {
+	mockDriver.EXPECT().VkGetDeviceQueue(mocks.Exactly(device.Handle()), driver.Uint32(1), driver.Uint32(2), gomock.Not(nil)).DoAndReturn(
+		func(device driver.VkDevice, queueFamilyIndex, queueIndex driver.Uint32, pQueue *driver.VkQueue) {
 			*pQueue = queueHandle
 		})
 
@@ -220,13 +221,13 @@ func TestDevice_WaitForFences_Timeout(t *testing.T) {
 	fence1 := mocks.EasyDummyFence(t, loader, device)
 	fence2 := mocks.EasyDummyFence(t, loader, device)
 
-	mockDriver.EXPECT().VkWaitForFences(mocks.Exactly(device.Handle()), core.Uint32(2), gomock.Not(nil), core.VkBool32(1), core.Uint64(1)).DoAndReturn(
-		func(device core.VkDevice, fenceCount core.Uint32, pFences *core.VkFence, waitAll core.VkBool32, timeout core.Uint64) (core.VkResult, error) {
-			fenceSlice := ([]core.VkFence)(unsafe.Slice(pFences, 2))
+	mockDriver.EXPECT().VkWaitForFences(mocks.Exactly(device.Handle()), driver.Uint32(2), gomock.Not(nil), driver.VkBool32(1), driver.Uint64(1)).DoAndReturn(
+		func(device driver.VkDevice, fenceCount driver.Uint32, pFences *driver.VkFence, waitAll driver.VkBool32, timeout driver.Uint64) (common.VkResult, error) {
+			fenceSlice := ([]driver.VkFence)(unsafe.Slice(pFences, 2))
 			require.Same(t, fence1.Handle(), fenceSlice[0])
 			require.Same(t, fence2.Handle(), fenceSlice[1])
 
-			return core.VKSuccess, nil
+			return common.VKSuccess, nil
 		})
 
 	_, err = device.WaitForFences(true, time.Nanosecond, []core.Fence{
@@ -246,12 +247,12 @@ func TestDevice_WaitForFences_NoTimeout(t *testing.T) {
 	device := mocks.EasyDummyDevice(t, ctrl, loader)
 	fence1 := mocks.EasyDummyFence(t, loader, device)
 
-	mockDriver.EXPECT().VkWaitForFences(mocks.Exactly(device.Handle()), core.Uint32(1), gomock.Not(nil), core.VkBool32(0), core.Uint64(0xffffffffffffffff)).DoAndReturn(
-		func(device core.VkDevice, fenceCount core.Uint32, pFences *core.VkFence, waitAll core.VkBool32, timeout core.Uint64) (core.VkResult, error) {
-			fenceSlice := ([]core.VkFence)(unsafe.Slice(pFences, 1))
+	mockDriver.EXPECT().VkWaitForFences(mocks.Exactly(device.Handle()), driver.Uint32(1), gomock.Not(nil), driver.VkBool32(0), driver.Uint64(0xffffffffffffffff)).DoAndReturn(
+		func(device driver.VkDevice, fenceCount driver.Uint32, pFences *driver.VkFence, waitAll driver.VkBool32, timeout driver.Uint64) (common.VkResult, error) {
+			fenceSlice := ([]driver.VkFence)(unsafe.Slice(pFences, 1))
 			require.Same(t, fence1.Handle(), fenceSlice[0])
 
-			return core.VKSuccess, nil
+			return common.VKSuccess, nil
 		})
 
 	_, err = device.WaitForFences(false, common.NoTimeout, []core.Fence{
@@ -270,7 +271,7 @@ func TestDevice_WaitForIdle(t *testing.T) {
 
 	device := mocks.EasyDummyDevice(t, ctrl, loader)
 
-	mockDriver.EXPECT().VkDeviceWaitIdle(mocks.Exactly(device.Handle())).Return(core.VKSuccess, nil)
+	mockDriver.EXPECT().VkDeviceWaitIdle(mocks.Exactly(device.Handle())).Return(common.VKSuccess, nil)
 	_, err = device.WaitForIdle()
 	require.NoError(t, err)
 }
@@ -287,13 +288,13 @@ func TestVulkanDevice_ResetFences(t *testing.T) {
 	fence1 := mocks.EasyDummyFence(t, loader, device)
 	fence2 := mocks.EasyDummyFence(t, loader, device)
 
-	mockDriver.EXPECT().VkResetFences(mocks.Exactly(device.Handle()), core.Uint32(2), gomock.Not(nil)).DoAndReturn(
-		func(device core.VkDevice, fenceCount core.Uint32, pFence *core.VkFence) (core.VkResult, error) {
-			fences := ([]core.VkFence)(unsafe.Slice(pFence, 2))
+	mockDriver.EXPECT().VkResetFences(mocks.Exactly(device.Handle()), driver.Uint32(2), gomock.Not(nil)).DoAndReturn(
+		func(device driver.VkDevice, fenceCount driver.Uint32, pFence *driver.VkFence) (common.VkResult, error) {
+			fences := ([]driver.VkFence)(unsafe.Slice(pFence, 2))
 
 			require.Same(t, fence1.Handle(), fences[0])
 			require.Same(t, fence2.Handle(), fences[1])
-			return core.VKSuccess, nil
+			return common.VKSuccess, nil
 		})
 
 	_, err = device.ResetFences([]core.Fence{fence1, fence2})
@@ -315,14 +316,14 @@ func TestVulkanDevice_UpdateDescriptorSets_WriteImageInfo(t *testing.T) {
 	imageView1 := mocks.EasyMockImageView(ctrl)
 	imageView2 := mocks.EasyMockImageView(ctrl)
 
-	mockDriver.EXPECT().VkUpdateDescriptorSets(mocks.Exactly(device.Handle()), core.Uint32(1), gomock.Not(nil), core.Uint32(0), nil).DoAndReturn(
-		func(device core.VkDevice, descriptorWriteCount core.Uint32, pDescriptorWrites *core.VkWriteDescriptorSet, descriptorCopyCount core.Uint32, pDescriptorCopies *core.VkCopyDescriptorSet) error {
-			writeSlice := ([]core.VkWriteDescriptorSet)(unsafe.Slice(pDescriptorWrites, 1))
+	mockDriver.EXPECT().VkUpdateDescriptorSets(mocks.Exactly(device.Handle()), driver.Uint32(1), gomock.Not(nil), driver.Uint32(0), nil).DoAndReturn(
+		func(device driver.VkDevice, descriptorWriteCount driver.Uint32, pDescriptorWrites *driver.VkWriteDescriptorSet, descriptorCopyCount driver.Uint32, pDescriptorCopies *driver.VkCopyDescriptorSet) error {
+			writeSlice := ([]driver.VkWriteDescriptorSet)(unsafe.Slice(pDescriptorWrites, 1))
 			writeVal := reflect.ValueOf(writeSlice[0])
 
 			require.Equal(t, uint64(35), writeVal.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET
 			require.True(t, writeVal.FieldByName("pNext").IsNil())
-			require.Same(t, destDescriptor.Handle(), core.VkDescriptorSet(unsafe.Pointer(writeVal.FieldByName("dstSet").Elem().UnsafeAddr())))
+			require.Same(t, destDescriptor.Handle(), driver.VkDescriptorSet(unsafe.Pointer(writeVal.FieldByName("dstSet").Elem().UnsafeAddr())))
 			require.Equal(t, uint64(1), writeVal.FieldByName("dstBinding").Uint())
 			require.Equal(t, uint64(2), writeVal.FieldByName("dstArrayElement").Uint())
 			require.Equal(t, uint64(2), writeVal.FieldByName("descriptorCount").Uint())
@@ -330,19 +331,19 @@ func TestVulkanDevice_UpdateDescriptorSets_WriteImageInfo(t *testing.T) {
 			require.True(t, writeVal.FieldByName("pBufferInfo").IsNil())
 			require.True(t, writeVal.FieldByName("pTexelBufferView").IsNil())
 
-			imageInfoPtr := (*core.VkDescriptorImageInfo)(unsafe.Pointer(writeVal.FieldByName("pImageInfo").Elem().UnsafeAddr()))
-			imageInfoSlice := ([]core.VkDescriptorImageInfo)(unsafe.Slice(imageInfoPtr, 2))
+			imageInfoPtr := (*driver.VkDescriptorImageInfo)(unsafe.Pointer(writeVal.FieldByName("pImageInfo").Elem().UnsafeAddr()))
+			imageInfoSlice := ([]driver.VkDescriptorImageInfo)(unsafe.Slice(imageInfoPtr, 2))
 
 			require.Len(t, imageInfoSlice, 2)
 
 			imageInfoVal := reflect.ValueOf(imageInfoSlice[0])
-			require.Same(t, sampler1.Handle(), (core.VkSampler)(unsafe.Pointer(imageInfoVal.FieldByName("sampler").Elem().UnsafeAddr())))
-			require.Same(t, imageView1.Handle(), (core.VkImageView)(unsafe.Pointer(imageInfoVal.FieldByName("imageView").Elem().UnsafeAddr())))
+			require.Same(t, sampler1.Handle(), (driver.VkSampler)(unsafe.Pointer(imageInfoVal.FieldByName("sampler").Elem().UnsafeAddr())))
+			require.Same(t, imageView1.Handle(), (driver.VkImageView)(unsafe.Pointer(imageInfoVal.FieldByName("imageView").Elem().UnsafeAddr())))
 			require.Equal(t, uint64(3), imageInfoVal.FieldByName("imageLayout").Uint()) // VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL
 
 			imageInfoVal = reflect.ValueOf(imageInfoSlice[1])
-			require.Same(t, sampler2.Handle(), (core.VkSampler)(unsafe.Pointer(imageInfoVal.FieldByName("sampler").Elem().UnsafeAddr())))
-			require.Same(t, imageView2.Handle(), (core.VkImageView)(unsafe.Pointer(imageInfoVal.FieldByName("imageView").Elem().UnsafeAddr())))
+			require.Same(t, sampler2.Handle(), (driver.VkSampler)(unsafe.Pointer(imageInfoVal.FieldByName("sampler").Elem().UnsafeAddr())))
+			require.Same(t, imageView2.Handle(), (driver.VkImageView)(unsafe.Pointer(imageInfoVal.FieldByName("imageView").Elem().UnsafeAddr())))
 			require.Equal(t, uint64(8), imageInfoVal.FieldByName("imageLayout").Uint()) // VK_IMAGE_LAYOUT_PREINITIALIZED
 
 			return nil
@@ -384,14 +385,14 @@ func TestVulkanDevice_UpdateDescriptorSets_WriteBufferInfo(t *testing.T) {
 	buffer1 := mocks.EasyMockBuffer(ctrl)
 	buffer2 := mocks.EasyMockBuffer(ctrl)
 
-	mockDriver.EXPECT().VkUpdateDescriptorSets(mocks.Exactly(device.Handle()), core.Uint32(1), gomock.Not(nil), core.Uint32(0), nil).DoAndReturn(
-		func(device core.VkDevice, descriptorWriteCount core.Uint32, pDescriptorWrites *core.VkWriteDescriptorSet, descriptorCopyCount core.Uint32, pDescriptorCopies *core.VkCopyDescriptorSet) error {
-			writeSlice := ([]core.VkWriteDescriptorSet)(unsafe.Slice(pDescriptorWrites, 1))
+	mockDriver.EXPECT().VkUpdateDescriptorSets(mocks.Exactly(device.Handle()), driver.Uint32(1), gomock.Not(nil), driver.Uint32(0), nil).DoAndReturn(
+		func(device driver.VkDevice, descriptorWriteCount driver.Uint32, pDescriptorWrites *driver.VkWriteDescriptorSet, descriptorCopyCount driver.Uint32, pDescriptorCopies *driver.VkCopyDescriptorSet) error {
+			writeSlice := ([]driver.VkWriteDescriptorSet)(unsafe.Slice(pDescriptorWrites, 1))
 			writeVal := reflect.ValueOf(writeSlice[0])
 
 			require.Equal(t, uint64(35), writeVal.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET
 			require.True(t, writeVal.FieldByName("pNext").IsNil())
-			require.Same(t, destDescriptor.Handle(), core.VkDescriptorSet(unsafe.Pointer(writeVal.FieldByName("dstSet").Elem().UnsafeAddr())))
+			require.Same(t, destDescriptor.Handle(), driver.VkDescriptorSet(unsafe.Pointer(writeVal.FieldByName("dstSet").Elem().UnsafeAddr())))
 			require.Equal(t, uint64(1), writeVal.FieldByName("dstBinding").Uint())
 			require.Equal(t, uint64(3), writeVal.FieldByName("dstArrayElement").Uint())
 			require.Equal(t, uint64(2), writeVal.FieldByName("descriptorCount").Uint())
@@ -399,18 +400,18 @@ func TestVulkanDevice_UpdateDescriptorSets_WriteBufferInfo(t *testing.T) {
 			require.True(t, writeVal.FieldByName("pImageInfo").IsNil())
 			require.True(t, writeVal.FieldByName("pTexelBufferView").IsNil())
 
-			bufferInfoPtr := (*core.VkDescriptorBufferInfo)(unsafe.Pointer(writeVal.FieldByName("pBufferInfo").Elem().UnsafeAddr()))
-			bufferInfoSlice := ([]core.VkDescriptorBufferInfo)(unsafe.Slice(bufferInfoPtr, 2))
+			bufferInfoPtr := (*driver.VkDescriptorBufferInfo)(unsafe.Pointer(writeVal.FieldByName("pBufferInfo").Elem().UnsafeAddr()))
+			bufferInfoSlice := ([]driver.VkDescriptorBufferInfo)(unsafe.Slice(bufferInfoPtr, 2))
 
 			require.Len(t, bufferInfoSlice, 2)
 
 			bufferInfoVal := reflect.ValueOf(bufferInfoSlice[0])
-			require.Same(t, buffer1.Handle(), (core.VkBuffer)(unsafe.Pointer(bufferInfoVal.FieldByName("buffer").Elem().UnsafeAddr())))
+			require.Same(t, buffer1.Handle(), (driver.VkBuffer)(unsafe.Pointer(bufferInfoVal.FieldByName("buffer").Elem().UnsafeAddr())))
 			require.Equal(t, uint64(7), bufferInfoVal.FieldByName("offset").Uint())
 			require.Equal(t, uint64(11), bufferInfoVal.FieldByName("_range").Uint())
 
 			bufferInfoVal = reflect.ValueOf(bufferInfoSlice[1])
-			require.Same(t, buffer2.Handle(), (core.VkBuffer)(unsafe.Pointer(bufferInfoVal.FieldByName("buffer").Elem().UnsafeAddr())))
+			require.Same(t, buffer2.Handle(), (driver.VkBuffer)(unsafe.Pointer(bufferInfoVal.FieldByName("buffer").Elem().UnsafeAddr())))
 			require.Equal(t, uint64(13), bufferInfoVal.FieldByName("offset").Uint())
 			require.Equal(t, uint64(17), bufferInfoVal.FieldByName("_range").Uint())
 
@@ -454,14 +455,14 @@ func TestVulkanDevice_UpdateDescriptorSets_TexelBufferView(t *testing.T) {
 	bufferView1 := mocks.EasyMockBufferView(ctrl)
 	bufferView2 := mocks.EasyMockBufferView(ctrl)
 
-	mockDriver.EXPECT().VkUpdateDescriptorSets(mocks.Exactly(device.Handle()), core.Uint32(1), gomock.Not(nil), core.Uint32(0), nil).DoAndReturn(
-		func(device core.VkDevice, descriptorWriteCount core.Uint32, pDescriptorWrites *core.VkWriteDescriptorSet, descriptorCopyCount core.Uint32, pDescriptorCopies *core.VkCopyDescriptorSet) error {
-			writeSlice := ([]core.VkWriteDescriptorSet)(unsafe.Slice(pDescriptorWrites, 1))
+	mockDriver.EXPECT().VkUpdateDescriptorSets(mocks.Exactly(device.Handle()), driver.Uint32(1), gomock.Not(nil), driver.Uint32(0), nil).DoAndReturn(
+		func(device driver.VkDevice, descriptorWriteCount driver.Uint32, pDescriptorWrites *driver.VkWriteDescriptorSet, descriptorCopyCount driver.Uint32, pDescriptorCopies *driver.VkCopyDescriptorSet) error {
+			writeSlice := ([]driver.VkWriteDescriptorSet)(unsafe.Slice(pDescriptorWrites, 1))
 			writeVal := reflect.ValueOf(writeSlice[0])
 
 			require.Equal(t, uint64(35), writeVal.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET
 			require.True(t, writeVal.FieldByName("pNext").IsNil())
-			require.Same(t, destDescriptor.Handle(), core.VkDescriptorSet(unsafe.Pointer(writeVal.FieldByName("dstSet").Elem().UnsafeAddr())))
+			require.Same(t, destDescriptor.Handle(), driver.VkDescriptorSet(unsafe.Pointer(writeVal.FieldByName("dstSet").Elem().UnsafeAddr())))
 			require.Equal(t, uint64(1), writeVal.FieldByName("dstBinding").Uint())
 			require.Equal(t, uint64(3), writeVal.FieldByName("dstArrayElement").Uint())
 			require.Equal(t, uint64(2), writeVal.FieldByName("descriptorCount").Uint())
@@ -469,13 +470,13 @@ func TestVulkanDevice_UpdateDescriptorSets_TexelBufferView(t *testing.T) {
 			require.True(t, writeVal.FieldByName("pImageInfo").IsNil())
 			require.True(t, writeVal.FieldByName("pBufferInfo").IsNil())
 
-			bufferInfoPtr := (*core.VkBufferView)(unsafe.Pointer(writeVal.FieldByName("pTexelBufferView").Elem().UnsafeAddr()))
-			bufferInfoSlice := ([]core.VkBufferView)(unsafe.Slice(bufferInfoPtr, 2))
+			bufferInfoPtr := (*driver.VkBufferView)(unsafe.Pointer(writeVal.FieldByName("pTexelBufferView").Elem().UnsafeAddr()))
+			bufferInfoSlice := ([]driver.VkBufferView)(unsafe.Slice(bufferInfoPtr, 2))
 
 			require.Len(t, bufferInfoSlice, 2)
 
-			require.Same(t, bufferView1.Handle(), (core.VkBufferView)(unsafe.Pointer(bufferInfoSlice[0])))
-			require.Same(t, bufferView2.Handle(), (core.VkBufferView)(unsafe.Pointer(bufferInfoSlice[1])))
+			require.Same(t, bufferView1.Handle(), (driver.VkBufferView)(unsafe.Pointer(bufferInfoSlice[0])))
+			require.Same(t, bufferView2.Handle(), (driver.VkBufferView)(unsafe.Pointer(bufferInfoSlice[1])))
 
 			return nil
 		})
@@ -506,17 +507,17 @@ func TestVulkanDevice_UpdateDescriptorSets_Copy(t *testing.T) {
 	srcDescriptor := mocks.EasyMockDescriptorSet(ctrl)
 	destDescriptor := mocks.EasyMockDescriptorSet(ctrl)
 
-	mockDriver.EXPECT().VkUpdateDescriptorSets(mocks.Exactly(device.Handle()), core.Uint32(0), nil, core.Uint32(1), gomock.Not(nil)).DoAndReturn(
-		func(device core.VkDevice, descriptorWriteCount core.Uint32, pDescriptorWrites *core.VkWriteDescriptorSet, descriptorCopyCount core.Uint32, pDescriptorCopies *core.VkCopyDescriptorSet) error {
-			copySlice := ([]core.VkCopyDescriptorSet)(unsafe.Slice(pDescriptorCopies, 1))
+	mockDriver.EXPECT().VkUpdateDescriptorSets(mocks.Exactly(device.Handle()), driver.Uint32(0), nil, driver.Uint32(1), gomock.Not(nil)).DoAndReturn(
+		func(device driver.VkDevice, descriptorWriteCount driver.Uint32, pDescriptorWrites *driver.VkWriteDescriptorSet, descriptorCopyCount driver.Uint32, pDescriptorCopies *driver.VkCopyDescriptorSet) error {
+			copySlice := ([]driver.VkCopyDescriptorSet)(unsafe.Slice(pDescriptorCopies, 1))
 			copyVal := reflect.ValueOf(copySlice[0])
 
 			require.Equal(t, uint64(36), copyVal.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_COPY_DESCRIPTOR_SET
 			require.True(t, copyVal.FieldByName("pNext").IsNil())
-			require.Same(t, srcDescriptor.Handle(), (core.VkDescriptorSet)(unsafe.Pointer(copyVal.FieldByName("srcSet").Elem().UnsafeAddr())))
+			require.Same(t, srcDescriptor.Handle(), (driver.VkDescriptorSet)(unsafe.Pointer(copyVal.FieldByName("srcSet").Elem().UnsafeAddr())))
 			require.Equal(t, uint64(3), copyVal.FieldByName("srcBinding").Uint())
 			require.Equal(t, uint64(5), copyVal.FieldByName("srcArrayElement").Uint())
-			require.Same(t, destDescriptor.Handle(), (core.VkDescriptorSet)(unsafe.Pointer(copyVal.FieldByName("dstSet").Elem().UnsafeAddr())))
+			require.Same(t, destDescriptor.Handle(), (driver.VkDescriptorSet)(unsafe.Pointer(copyVal.FieldByName("dstSet").Elem().UnsafeAddr())))
 			require.Equal(t, uint64(7), copyVal.FieldByName("dstBinding").Uint())
 			require.Equal(t, uint64(11), copyVal.FieldByName("dstArrayElement").Uint())
 			require.Equal(t, uint64(13), copyVal.FieldByName("descriptorCount").Uint())
@@ -715,25 +716,25 @@ func TestVulkanDevice_FlushMappedMemoryRanges(t *testing.T) {
 	mem1 := mocks.EasyMockDeviceMemory(ctrl)
 	mem2 := mocks.EasyMockDeviceMemory(ctrl)
 
-	mockDriver.EXPECT().VkFlushMappedMemoryRanges(mocks.Exactly(device.Handle()), core.Uint32(2), gomock.Not(nil)).DoAndReturn(
-		func(device core.VkDevice, rangeCount core.Uint32, pRanges *core.VkMappedMemoryRange) (core.VkResult, error) {
-			val := reflect.ValueOf([]core.VkMappedMemoryRange(unsafe.Slice(pRanges, 2)))
+	mockDriver.EXPECT().VkFlushMappedMemoryRanges(mocks.Exactly(device.Handle()), driver.Uint32(2), gomock.Not(nil)).DoAndReturn(
+		func(device driver.VkDevice, rangeCount driver.Uint32, pRanges *driver.VkMappedMemoryRange) (common.VkResult, error) {
+			val := reflect.ValueOf([]driver.VkMappedMemoryRange(unsafe.Slice(pRanges, 2)))
 
 			r := val.Index(0)
 			require.Equal(t, uint64(6), r.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_MAPPED_MEMORY_RANGE
 			require.True(t, r.FieldByName("pNext").IsNil())
-			require.Same(t, mem1.Handle(), core.VkDeviceMemory(unsafe.Pointer(r.FieldByName("memory").Elem().UnsafeAddr())))
+			require.Same(t, mem1.Handle(), driver.VkDeviceMemory(unsafe.Pointer(r.FieldByName("memory").Elem().UnsafeAddr())))
 			require.Equal(t, uint64(1), r.FieldByName("offset").Uint())
 			require.Equal(t, uint64(3), r.FieldByName("size").Uint())
 
 			r = val.Index(1)
 			require.Equal(t, uint64(6), r.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_MAPPED_MEMORY_RANGE
 			require.True(t, r.FieldByName("pNext").IsNil())
-			require.Same(t, mem2.Handle(), core.VkDeviceMemory(unsafe.Pointer(r.FieldByName("memory").Elem().UnsafeAddr())))
+			require.Same(t, mem2.Handle(), driver.VkDeviceMemory(unsafe.Pointer(r.FieldByName("memory").Elem().UnsafeAddr())))
 			require.Equal(t, uint64(5), r.FieldByName("offset").Uint())
 			require.Equal(t, uint64(7), r.FieldByName("size").Uint())
 
-			return core.VKSuccess, nil
+			return common.VKSuccess, nil
 		})
 
 	_, err = device.FlushMappedMemoryRanges([]*core.MappedMemoryRange{
@@ -763,25 +764,25 @@ func TestVulkanDevice_InvalidateMappedMemoryRanges(t *testing.T) {
 	mem1 := mocks.EasyMockDeviceMemory(ctrl)
 	mem2 := mocks.EasyMockDeviceMemory(ctrl)
 
-	mockDriver.EXPECT().VkInvalidateMappedMemoryRanges(mocks.Exactly(device.Handle()), core.Uint32(2), gomock.Not(nil)).DoAndReturn(
-		func(device core.VkDevice, rangeCount core.Uint32, pRanges *core.VkMappedMemoryRange) (core.VkResult, error) {
-			val := reflect.ValueOf([]core.VkMappedMemoryRange(unsafe.Slice(pRanges, 2)))
+	mockDriver.EXPECT().VkInvalidateMappedMemoryRanges(mocks.Exactly(device.Handle()), driver.Uint32(2), gomock.Not(nil)).DoAndReturn(
+		func(device driver.VkDevice, rangeCount driver.Uint32, pRanges *driver.VkMappedMemoryRange) (common.VkResult, error) {
+			val := reflect.ValueOf([]driver.VkMappedMemoryRange(unsafe.Slice(pRanges, 2)))
 
 			r := val.Index(0)
 			require.Equal(t, uint64(6), r.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_MAPPED_MEMORY_RANGE
 			require.True(t, r.FieldByName("pNext").IsNil())
-			require.Same(t, mem1.Handle(), core.VkDeviceMemory(unsafe.Pointer(r.FieldByName("memory").Elem().UnsafeAddr())))
+			require.Same(t, mem1.Handle(), driver.VkDeviceMemory(unsafe.Pointer(r.FieldByName("memory").Elem().UnsafeAddr())))
 			require.Equal(t, uint64(1), r.FieldByName("offset").Uint())
 			require.Equal(t, uint64(3), r.FieldByName("size").Uint())
 
 			r = val.Index(1)
 			require.Equal(t, uint64(6), r.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_MAPPED_MEMORY_RANGE
 			require.True(t, r.FieldByName("pNext").IsNil())
-			require.Same(t, mem2.Handle(), core.VkDeviceMemory(unsafe.Pointer(r.FieldByName("memory").Elem().UnsafeAddr())))
+			require.Same(t, mem2.Handle(), driver.VkDeviceMemory(unsafe.Pointer(r.FieldByName("memory").Elem().UnsafeAddr())))
 			require.Equal(t, uint64(5), r.FieldByName("offset").Uint())
 			require.Equal(t, uint64(7), r.FieldByName("size").Uint())
 
-			return core.VKSuccess, nil
+			return common.VKSuccess, nil
 		})
 
 	_, err = device.InvalidateMappedMemoryRanges([]*core.MappedMemoryRange{

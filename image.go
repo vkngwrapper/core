@@ -7,22 +7,23 @@ package core
 import "C"
 import (
 	"github.com/CannibalVox/VKng/core/common"
+	"github.com/CannibalVox/VKng/core/driver"
 	"github.com/CannibalVox/cgoparam"
 	"github.com/cockroachdb/errors"
 	"unsafe"
 )
 
 type vulkanImage struct {
-	driver Driver
-	handle VkImage
-	device VkDevice
+	driver driver.Driver
+	handle driver.VkImage
+	device driver.VkDevice
 }
 
-func CreateImageFromHandles(handle VkImage, device VkDevice, driver Driver) Image {
+func CreateImageFromHandles(handle driver.VkImage, device driver.VkDevice, driver driver.Driver) Image {
 	return &vulkanImage{handle: handle, device: device, driver: driver}
 }
 
-func (i *vulkanImage) Handle() VkImage {
+func (i *vulkanImage) Handle() driver.VkImage {
 	return i.handle
 }
 
@@ -36,7 +37,7 @@ func (i *vulkanImage) MemoryRequirements() *common.MemoryRequirements {
 
 	memRequirementsUnsafe := arena.Malloc(C.sizeof_struct_VkMemoryRequirements)
 
-	i.driver.VkGetImageMemoryRequirements(i.device, i.handle, (*VkMemoryRequirements)(memRequirementsUnsafe))
+	i.driver.VkGetImageMemoryRequirements(i.device, i.handle, (*driver.VkMemoryRequirements)(memRequirementsUnsafe))
 
 	memRequirements := (*C.VkMemoryRequirements)(memRequirementsUnsafe)
 
@@ -47,15 +48,15 @@ func (i *vulkanImage) MemoryRequirements() *common.MemoryRequirements {
 	}
 }
 
-func (i *vulkanImage) BindImageMemory(memory DeviceMemory, offset int) (VkResult, error) {
+func (i *vulkanImage) BindImageMemory(memory DeviceMemory, offset int) (common.VkResult, error) {
 	if memory == nil {
-		return VKErrorUnknown, errors.New("received nil DeviceMemory")
+		return common.VKErrorUnknown, errors.New("received nil DeviceMemory")
 	}
 	if offset < 0 {
-		return VKErrorUnknown, errors.New("received negative offset")
+		return common.VKErrorUnknown, errors.New("received negative offset")
 	}
 
-	return i.driver.VkBindImageMemory(i.device, i.handle, memory.Handle(), VkDeviceSize(offset))
+	return i.driver.VkBindImageMemory(i.device, i.handle, memory.Handle(), driver.VkDeviceSize(offset))
 }
 
 func (i *vulkanImage) SubresourceLayout(subresource *common.ImageSubresource) *common.SubresourceLayout {
@@ -69,7 +70,7 @@ func (i *vulkanImage) SubresourceLayout(subresource *common.ImageSubresource) *c
 	subresourcePtr.mipLevel = C.uint32_t(subresource.MipLevel)
 	subresourcePtr.arrayLayer = C.uint32_t(subresource.ArrayLayer)
 
-	i.driver.VkGetImageSubresourceLayout(i.device, i.handle, (*VkImageSubresource)(subresourcePtr), (*VkSubresourceLayout)(subresourceLayoutUnsafe))
+	i.driver.VkGetImageSubresourceLayout(i.device, i.handle, (*driver.VkImageSubresource)(unsafe.Pointer(subresourcePtr)), (*driver.VkSubresourceLayout)(subresourceLayoutUnsafe))
 
 	subresourceLayout := (*C.VkSubresourceLayout)(subresourceLayoutUnsafe)
 	return &common.SubresourceLayout{

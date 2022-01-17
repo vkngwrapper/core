@@ -1,10 +1,10 @@
-package core
+package driver
 
 import "C"
 
 /*
-#include "driver_func_ptrs.h"
-#include "driver_func_ptrs_def.h"
+#include "func_ptrs.h"
+#include "func_ptrs_def.h"
 
 PFN_vkVoidFunction instance_proc_addr(DriverFuncPtrs *funcPtrs, VkInstance instance, const char *procName) {
 	PFN_vkGetInstanceProcAddr procAddr = funcPtrs->vkGetInstanceProcAddr;
@@ -49,7 +49,7 @@ func createVulkanDriver(funcPtrs *C.DriverFuncPtrs, instance VkInstance, device 
 	return driver, nil
 }
 
-func createDriverFromProcAddr(procAddr unsafe.Pointer) (*vulkanDriver, error) {
+func CreateDriverFromProcAddr(procAddr unsafe.Pointer) (*vulkanDriver, error) {
 	baseFuncPtr := (C.PFN_vkGetInstanceProcAddr)(procAddr)
 	funcPtrs := (*C.DriverFuncPtrs)(C.malloc(C.sizeof_struct_DriverFuncPtrs))
 	C.driverFuncPtrs_populate(baseFuncPtr, funcPtrs)

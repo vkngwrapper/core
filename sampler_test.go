@@ -3,6 +3,7 @@ package core_test
 import (
 	"github.com/CannibalVox/VKng/core"
 	"github.com/CannibalVox/VKng/core/common"
+	"github.com/CannibalVox/VKng/core/driver"
 	"github.com/CannibalVox/VKng/core/mocks"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/require"
@@ -14,15 +15,15 @@ func TestVulkanLoader1_0_CreateSampler(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	driver := mocks.NewMockDriver(ctrl)
-	loader, err := core.CreateLoaderFromDriver(driver)
+	mockDriver := mocks.NewMockDriver(ctrl)
+	loader, err := core.CreateLoaderFromDriver(mockDriver)
 	require.NoError(t, err)
 
-	device := mocks.EasyMockDevice(ctrl, driver)
+	device := mocks.EasyMockDevice(ctrl, mockDriver)
 	samplerHandle := mocks.NewFakeSamplerHandle()
 
-	driver.EXPECT().VkCreateSampler(mocks.Exactly(device.Handle()), gomock.Not(nil), nil, gomock.Not(nil)).DoAndReturn(
-		func(device core.VkDevice, pCreateInfo *core.VkSamplerCreateInfo, pAllocator *core.VkAllocationCallbacks, pSampler *core.VkSampler) (core.VkResult, error) {
+	mockDriver.EXPECT().VkCreateSampler(mocks.Exactly(device.Handle()), gomock.Not(nil), nil, gomock.Not(nil)).DoAndReturn(
+		func(device driver.VkDevice, pCreateInfo *driver.VkSamplerCreateInfo, pAllocator *driver.VkAllocationCallbacks, pSampler *driver.VkSampler) (common.VkResult, error) {
 			*pSampler = samplerHandle
 
 			val := reflect.ValueOf(*pCreateInfo)
@@ -45,7 +46,7 @@ func TestVulkanLoader1_0_CreateSampler(t *testing.T) {
 			require.Equal(t, uint64(2), val.FieldByName("borderColor").Uint())             // VK_BORDER_COLOR_FLOAT_OPAQUE_BLACK
 			require.Equal(t, uint64(1), val.FieldByName("unnormalizedCoordinates").Uint()) // VK_TRUE
 
-			return core.VKSuccess, nil
+			return common.VKSuccess, nil
 		})
 
 	sampler, _, err := loader.CreateSampler(device, nil, &core.SamplerOptions{

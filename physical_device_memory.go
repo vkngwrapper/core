@@ -7,6 +7,7 @@ package core
 import "C"
 import (
 	"github.com/CannibalVox/VKng/core/common"
+	"github.com/CannibalVox/VKng/core/driver"
 	"github.com/CannibalVox/cgoparam"
 )
 
@@ -75,7 +76,7 @@ func (d *vulkanPhysicalDevice) MemoryProperties() *PhysicalDeviceMemoryPropertie
 
 	propsUnsafe := allocator.Malloc(C.sizeof_struct_VkPhysicalDeviceMemoryProperties)
 
-	d.driver.VkGetPhysicalDeviceMemoryProperties(d.handle, (*VkPhysicalDeviceMemoryProperties)(propsUnsafe))
+	d.driver.VkGetPhysicalDeviceMemoryProperties(d.handle, (*driver.VkPhysicalDeviceMemoryProperties)(propsUnsafe))
 
 	props := (*C.VkPhysicalDeviceMemoryProperties)(propsUnsafe)
 

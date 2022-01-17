@@ -1,7 +1,7 @@
 package mocks
 
 import (
-	"github.com/CannibalVox/VKng/core"
+	"github.com/CannibalVox/VKng/core/driver"
 	"math/rand"
 	"unsafe"
 )
@@ -10,102 +10,102 @@ func fakePointer() unsafe.Pointer {
 	return unsafe.Pointer(uintptr(rand.Int()))
 }
 
-func NewFakeBufferHandle() core.VkBuffer {
-	return core.VkBuffer(fakePointer())
+func NewFakeBufferHandle() driver.VkBuffer {
+	return driver.VkBuffer(fakePointer())
 }
 
-func NewFakeBufferViewHandle() core.VkBufferView {
-	return core.VkBufferView(fakePointer())
+func NewFakeBufferViewHandle() driver.VkBufferView {
+	return driver.VkBufferView(fakePointer())
 }
 
-func NewFakeCommandBufferHandle() core.VkCommandBuffer {
-	return core.VkCommandBuffer(fakePointer())
+func NewFakeCommandBufferHandle() driver.VkCommandBuffer {
+	return driver.VkCommandBuffer(fakePointer())
 }
 
-func NewFakeCommandPoolHandle() core.VkCommandPool {
-	return core.VkCommandPool(fakePointer())
+func NewFakeCommandPoolHandle() driver.VkCommandPool {
+	return driver.VkCommandPool(fakePointer())
 }
 
-func NewFakeDescriptorPool() core.VkDescriptorPool {
-	return core.VkDescriptorPool(fakePointer())
+func NewFakeDescriptorPool() driver.VkDescriptorPool {
+	return driver.VkDescriptorPool(fakePointer())
 }
 
-func NewFakeDescriptorSet() core.VkDescriptorSet {
-	return core.VkDescriptorSet(fakePointer())
+func NewFakeDescriptorSet() driver.VkDescriptorSet {
+	return driver.VkDescriptorSet(fakePointer())
 }
 
-func NewFakeDescriptorSetLayout() core.VkDescriptorSetLayout {
-	return core.VkDescriptorSetLayout(fakePointer())
+func NewFakeDescriptorSetLayout() driver.VkDescriptorSetLayout {
+	return driver.VkDescriptorSetLayout(fakePointer())
 }
 
-func NewFakeDeviceHandle() core.VkDevice {
-	return core.VkDevice(fakePointer())
+func NewFakeDeviceHandle() driver.VkDevice {
+	return driver.VkDevice(fakePointer())
 }
 
-func NewFakeDeviceMemoryHandle() core.VkDeviceMemory {
-	return core.VkDeviceMemory(fakePointer())
+func NewFakeDeviceMemoryHandle() driver.VkDeviceMemory {
+	return driver.VkDeviceMemory(fakePointer())
 }
 
-func NewFakeEventHandle() core.VkEvent {
-	return core.VkEvent(fakePointer())
+func NewFakeEventHandle() driver.VkEvent {
+	return driver.VkEvent(fakePointer())
 }
 
-func NewFakeFenceHandle() core.VkFence {
-	return core.VkFence(fakePointer())
+func NewFakeFenceHandle() driver.VkFence {
+	return driver.VkFence(fakePointer())
 }
 
-func NewFakeFramebufferHandle() core.VkFramebuffer {
-	return core.VkFramebuffer(fakePointer())
+func NewFakeFramebufferHandle() driver.VkFramebuffer {
+	return driver.VkFramebuffer(fakePointer())
 }
 
-func NewFakeImageHandle() core.VkImage {
-	return core.VkImage(fakePointer())
+func NewFakeImageHandle() driver.VkImage {
+	return driver.VkImage(fakePointer())
 }
 
-func NewFakeImageViewHandle() core.VkImageView {
-	return core.VkImageView(fakePointer())
+func NewFakeImageViewHandle() driver.VkImageView {
+	return driver.VkImageView(fakePointer())
 }
 
-func NewFakeInstanceHandle() core.VkInstance {
-	return core.VkInstance(fakePointer())
+func NewFakeInstanceHandle() driver.VkInstance {
+	return driver.VkInstance(fakePointer())
 }
 
-func NewFakePhysicalDeviceHandle() core.VkPhysicalDevice {
-	return core.VkPhysicalDevice(fakePointer())
+func NewFakePhysicalDeviceHandle() driver.VkPhysicalDevice {
+	return driver.VkPhysicalDevice(fakePointer())
 }
 
-func NewFakePipeline() core.VkPipeline {
-	return core.VkPipeline(fakePointer())
+func NewFakePipeline() driver.VkPipeline {
+	return driver.VkPipeline(fakePointer())
 }
 
-func NewFakePipelineCache() core.VkPipelineCache {
-	return core.VkPipelineCache(fakePointer())
+func NewFakePipelineCache() driver.VkPipelineCache {
+	return driver.VkPipelineCache(fakePointer())
 }
 
-func NewFakePipelineLayout() core.VkPipelineLayout {
-	return core.VkPipelineLayout(fakePointer())
+func NewFakePipelineLayout() driver.VkPipelineLayout {
+	return driver.VkPipelineLayout(fakePointer())
 }
 
-func NewFakeQueryPool() core.VkQueryPool {
-	return core.VkQueryPool(fakePointer())
+func NewFakeQueryPool() driver.VkQueryPool {
+	return driver.VkQueryPool(fakePointer())
 }
 
-func NewFakeQueue() core.VkQueue {
-	return core.VkQueue(fakePointer())
+func NewFakeQueue() driver.VkQueue {
+	return driver.VkQueue(fakePointer())
 }
 
-func NewFakeRenderPassHandle() core.VkRenderPass {
-	return core.VkRenderPass(fakePointer())
+func NewFakeRenderPassHandle() driver.VkRenderPass {
+	return driver.VkRenderPass(fakePointer())
 }
 
-func NewFakeSamplerHandle() core.VkSampler {
-	return core.VkSampler(fakePointer())
+func NewFakeSamplerHandle() driver.VkSampler {
+	return driver.VkSampler(fakePointer())
 }
 
-func NewFakeSemaphore() core.VkSemaphore {
-	return core.VkSemaphore(fakePointer())
+func NewFakeSemaphore() driver.VkSemaphore {
+	return driver.VkSemaphore(fakePointer())
 }
 
-func NewFakeShaderModule() core.VkShaderModule {
-	return core.VkShaderModule(fakePointer())
+func NewFakeShaderModule() driver.VkShaderModule {
+	return driver.VkShaderModule(fakePointer())
 }

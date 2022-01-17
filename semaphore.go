@@ -5,14 +5,17 @@ package core
 #include "vulkan/vulkan.h"
 */
 import "C"
+import (
+	driver3 "github.com/CannibalVox/VKng/core/driver"
+)
 
 type vulkanSemaphore struct {
-	driver Driver
-	device VkDevice
-	handle VkSemaphore
+	driver driver3.Driver
+	device driver3.VkDevice
+	handle driver3.VkSemaphore
 }
 
-func (s *vulkanSemaphore) Handle() VkSemaphore {
+func (s *vulkanSemaphore) Handle() driver3.VkSemaphore {
 	return s.handle
 }
 

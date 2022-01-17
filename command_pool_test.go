@@ -3,6 +3,7 @@ package core_test
 import (
 	"github.com/CannibalVox/VKng/core"
 	"github.com/CannibalVox/VKng/core/common"
+	"github.com/CannibalVox/VKng/core/driver"
 	"github.com/CannibalVox/VKng/core/mocks"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/require"
@@ -22,7 +23,7 @@ func TestCommandPoolCreateBasic(t *testing.T) {
 	device := mocks.EasyMockDevice(ctrl, mockDriver)
 
 	mockDriver.EXPECT().VkCreateCommandPool(mocks.Exactly(device.Handle()), gomock.Not(nil), nil, gomock.Not(nil)).DoAndReturn(
-		func(device core.VkDevice, createInfo *core.VkCommandPoolCreateInfo, allocator *core.VkAllocationCallbacks, commandPool *core.VkCommandPool) (core.VkResult, error) {
+		func(device driver.VkDevice, createInfo *driver.VkCommandPoolCreateInfo, allocator *driver.VkAllocationCallbacks, commandPool *driver.VkCommandPool) (common.VkResult, error) {
 			val := reflect.ValueOf(*createInfo)
 			require.Equal(t, uint64(39), val.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO
 			require.True(t, val.FieldByName("pNext").IsNil())
@@ -31,7 +32,7 @@ func TestCommandPoolCreateBasic(t *testing.T) {
 
 			*commandPool = expectedPoolHandle
 
-			return core.VKSuccess, nil
+			return common.VKSuccess, nil
 		})
 
 	loader, err := core.CreateLoaderFromDriver(mockDriver)
@@ -43,7 +44,7 @@ func TestCommandPoolCreateBasic(t *testing.T) {
 		GraphicsQueueFamily: &graphicsFamily,
 	})
 	require.NoError(t, err)
-	require.Equal(t, core.VKSuccess, res)
+	require.Equal(t, common.VKSuccess, res)
 	require.NotNil(t, pool)
 	require.Same(t, expectedPoolHandle, pool.Handle())
 }
@@ -63,7 +64,7 @@ func TestCommandPoolNullQueue(t *testing.T) {
 		Flags: core.CommandPoolResetBuffer,
 	})
 	require.Error(t, err)
-	require.Equal(t, core.VKErrorUnknown, res)
+	require.Equal(t, common.VKErrorUnknown, res)
 	require.Nil(t, pool)
 }
 
@@ -82,19 +83,19 @@ func TestCommandBufferSingleAllocateFree(t *testing.T) {
 	bufferHandle := mocks.NewFakeCommandBufferHandle()
 
 	mockDriver.EXPECT().VkAllocateCommandBuffers(mocks.Exactly(mockDevice.Handle()), gomock.Not(nil), gomock.Not(nil)).DoAndReturn(
-		func(device core.VkDevice, createInfo *core.VkCommandBufferAllocateInfo, commandBuffers *core.VkCommandBuffer) (core.VkResult, error) {
+		func(device driver.VkDevice, createInfo *driver.VkCommandBufferAllocateInfo, commandBuffers *driver.VkCommandBuffer) (common.VkResult, error) {
 			val := reflect.ValueOf(*createInfo)
 			require.Equal(t, uint64(40), val.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO
 			require.True(t, val.FieldByName("pNext").IsNil())
 			require.Equal(t, uint64(0), val.FieldByName("level").Uint()) //VK_COMMAND_BUFFER_LEVEL_PRIMARY
 			require.Equal(t, uint64(1), val.FieldByName("commandBufferCount").Uint())
 
-			require.Same(t, commandPool.Handle(), core.VkCommandPool(unsafe.Pointer(val.FieldByName("commandPool").Elem().UnsafeAddr())))
+			require.Same(t, commandPool.Handle(), driver.VkCommandPool(unsafe.Pointer(val.FieldByName("commandPool").Elem().UnsafeAddr())))
 
-			bufferSlice := ([]core.VkCommandBuffer)(unsafe.Slice(commandBuffers, 1))
+			bufferSlice := ([]driver.VkCommandBuffer)(unsafe.Slice(commandBuffers, 1))
 			bufferSlice[0] = bufferHandle
 
-			return core.VKSuccess, nil
+			return common.VKSuccess, nil
 		})
 
 	buffers, res, err := commandPool.AllocateCommandBuffers(&core.CommandBufferOptions{
@@ -103,13 +104,13 @@ func TestCommandBufferSingleAllocateFree(t *testing.T) {
 	})
 
 	require.NoError(t, err)
-	require.Equal(t, core.VKSuccess, res)
+	require.Equal(t, common.VKSuccess, res)
 	require.Len(t, buffers, 1)
 	require.Same(t, buffers[0].Handle(), bufferHandle)
 
-	mockDriver.EXPECT().VkFreeCommandBuffers(mocks.Exactly(mockDevice.Handle()), mocks.Exactly(commandPool.Handle()), core.Uint32(1), gomock.Not(nil)).DoAndReturn(
-		func(device core.VkDevice, commandPool core.VkCommandPool, bufferCount core.Uint32, buffers *core.VkCommandBuffer) error {
-			slice := ([]core.VkCommandBuffer)(unsafe.Slice(buffers, 1))
+	mockDriver.EXPECT().VkFreeCommandBuffers(mocks.Exactly(mockDevice.Handle()), mocks.Exactly(commandPool.Handle()), driver.Uint32(1), gomock.Not(nil)).DoAndReturn(
+		func(device driver.VkDevice, commandPool driver.VkCommandPool, bufferCount driver.Uint32, buffers *driver.VkCommandBuffer) error {
+			slice := ([]driver.VkCommandBuffer)(unsafe.Slice(buffers, 1))
 			require.Same(t, bufferHandle, slice[0])
 
 			return nil
@@ -130,28 +131,28 @@ func TestCommandBufferMultiAllocateFree(t *testing.T) {
 
 	commandPool := mocks.EasyDummyCommandPool(t, loader, mockDevice)
 
-	bufferHandles := []core.VkCommandBuffer{
+	bufferHandles := []driver.VkCommandBuffer{
 		mocks.NewFakeCommandBufferHandle(),
 		mocks.NewFakeCommandBufferHandle(),
 		mocks.NewFakeCommandBufferHandle(),
 	}
 
 	mockDriver.EXPECT().VkAllocateCommandBuffers(mocks.Exactly(mockDevice.Handle()), gomock.Not(nil), gomock.Not(nil)).DoAndReturn(
-		func(device core.VkDevice, createInfo *core.VkCommandBufferAllocateInfo, commandBuffers *core.VkCommandBuffer) (core.VkResult, error) {
+		func(device driver.VkDevice, createInfo *driver.VkCommandBufferAllocateInfo, commandBuffers *driver.VkCommandBuffer) (common.VkResult, error) {
 			val := reflect.ValueOf(*createInfo)
 			require.Equal(t, uint64(40), val.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO
 			require.True(t, val.FieldByName("pNext").IsNil())
 			require.Equal(t, uint64(1), val.FieldByName("level").Uint()) //VK_COMMAND_BUFFER_LEVEL_SECONDARY
 			require.Equal(t, uint64(3), val.FieldByName("commandBufferCount").Uint())
 
-			require.Same(t, commandPool.Handle(), core.VkCommandPool(unsafe.Pointer(val.FieldByName("commandPool").Elem().UnsafeAddr())))
+			require.Same(t, commandPool.Handle(), driver.VkCommandPool(unsafe.Pointer(val.FieldByName("commandPool").Elem().UnsafeAddr())))
 
-			bufferSlice := ([]core.VkCommandBuffer)(unsafe.Slice(commandBuffers, 3))
+			bufferSlice := ([]driver.VkCommandBuffer)(unsafe.Slice(commandBuffers, 3))
 			bufferSlice[0] = bufferHandles[0]
 			bufferSlice[1] = bufferHandles[1]
 			bufferSlice[2] = bufferHandles[2]
 
-			return core.VKSuccess, nil
+			return common.VKSuccess, nil
 		})
 
 	buffers, res, err := commandPool.AllocateCommandBuffers(&core.CommandBufferOptions{
@@ -160,16 +161,16 @@ func TestCommandBufferMultiAllocateFree(t *testing.T) {
 	})
 
 	require.NoError(t, err)
-	require.Equal(t, core.VKSuccess, res)
+	require.Equal(t, common.VKSuccess, res)
 	require.Len(t, buffers, 3)
 
 	require.Same(t, bufferHandles[0], buffers[0].Handle())
 	require.Same(t, bufferHandles[1], buffers[1].Handle())
 	require.Same(t, bufferHandles[2], buffers[2].Handle())
 
-	mockDriver.EXPECT().VkFreeCommandBuffers(mocks.Exactly(mockDevice.Handle()), mocks.Exactly(commandPool.Handle()), core.Uint32(3), gomock.Not(nil)).DoAndReturn(
-		func(device core.VkDevice, commandPool core.VkCommandPool, bufferCount core.Uint32, buffers *core.VkCommandBuffer) {
-			slice := ([]core.VkCommandBuffer)(unsafe.Slice(buffers, 3))
+	mockDriver.EXPECT().VkFreeCommandBuffers(mocks.Exactly(mockDevice.Handle()), mocks.Exactly(commandPool.Handle()), driver.Uint32(3), gomock.Not(nil)).DoAndReturn(
+		func(device driver.VkDevice, commandPool driver.VkCommandPool, bufferCount driver.Uint32, buffers *driver.VkCommandBuffer) {
+			slice := ([]driver.VkCommandBuffer)(unsafe.Slice(buffers, 3))
 			require.Same(t, bufferHandles[0], slice[0])
 			require.Same(t, bufferHandles[1], slice[1])
 			require.Same(t, bufferHandles[2], slice[2])
@@ -191,8 +192,8 @@ func TestVulkanCommandPool_Reset(t *testing.T) {
 	commandPool := mocks.EasyDummyCommandPool(t, loader, mockDevice)
 
 	mockDriver.EXPECT().VkResetCommandPool(mocks.Exactly(mockDevice.Handle()), mocks.Exactly(commandPool.Handle()),
-		core.VkCommandPoolResetFlags(1), // VK_COMMAND_POOL_RESET_RELEASE_RESOURCES_BIT
-	).Return(core.VKSuccess, nil)
+		driver.VkCommandPoolResetFlags(1), // VK_COMMAND_POOL_RESET_RELEASE_RESOURCES_BIT
+	).Return(common.VKSuccess, nil)
 
 	_, err = commandPool.Reset(core.CommandPoolResetReleaseResources)
 	require.NoError(t, err)

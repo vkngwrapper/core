@@ -1,7 +1,7 @@
-package core
+package driver
 
 /*
-#include "driver_func_ptrs.h"
+#include "func_ptrs.h"
 */
 import "C"
 

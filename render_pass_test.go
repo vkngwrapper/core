@@ -3,6 +3,7 @@ package core_test
 import (
 	"github.com/CannibalVox/VKng/core"
 	"github.com/CannibalVox/VKng/core/common"
+	"github.com/CannibalVox/VKng/core/driver"
 	"github.com/CannibalVox/VKng/core/mocks"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/require"
@@ -15,15 +16,15 @@ func TestVulkanLoader1_0_CreateRenderPass_Success(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	driver := mocks.NewMockDriver(ctrl)
-	loader, err := core.CreateLoaderFromDriver(driver)
+	mockDriver := mocks.NewMockDriver(ctrl)
+	loader, err := core.CreateLoaderFromDriver(mockDriver)
 	require.NoError(t, err)
 
-	device := mocks.EasyMockDevice(ctrl, driver)
+	device := mocks.EasyMockDevice(ctrl, mockDriver)
 	renderPassHandle := mocks.NewFakeRenderPassHandle()
 
-	driver.EXPECT().VkCreateRenderPass(mocks.Exactly(device.Handle()), gomock.Not(nil), nil, gomock.Not(nil)).DoAndReturn(
-		func(deviceHandle core.VkDevice, pCreateInfo *core.VkRenderPassCreateInfo, pAllocator *core.VkAllocationCallbacks, pRenderPass *core.VkRenderPass) (core.VkResult, error) {
+	mockDriver.EXPECT().VkCreateRenderPass(mocks.Exactly(device.Handle()), gomock.Not(nil), nil, gomock.Not(nil)).DoAndReturn(
+		func(deviceHandle driver.VkDevice, pCreateInfo *driver.VkRenderPassCreateInfo, pAllocator *driver.VkAllocationCallbacks, pRenderPass *driver.VkRenderPass) (common.VkResult, error) {
 			*pRenderPass = renderPassHandle
 
 			val := reflect.ValueOf(*pCreateInfo)
@@ -35,8 +36,8 @@ func TestVulkanLoader1_0_CreateRenderPass_Success(t *testing.T) {
 			require.Equal(t, uint64(1), val.FieldByName("subpassCount").Uint())
 			require.Equal(t, uint64(3), val.FieldByName("dependencyCount").Uint())
 
-			attachmentsPtr := (*core.VkAttachmentDescription)(unsafe.Pointer(val.FieldByName("pAttachments").Elem().UnsafeAddr()))
-			attachmentsSlice := reflect.ValueOf(([]core.VkAttachmentDescription)(unsafe.Slice(attachmentsPtr, 2)))
+			attachmentsPtr := (*driver.VkAttachmentDescription)(unsafe.Pointer(val.FieldByName("pAttachments").Elem().UnsafeAddr()))
+			attachmentsSlice := reflect.ValueOf(([]driver.VkAttachmentDescription)(unsafe.Slice(attachmentsPtr, 2)))
 
 			attachment := attachmentsSlice.Index(0)
 			require.Equal(t, uint64(1), attachment.FieldByName("flags").Uint())                // VK_ATTACHMENT_DESCRIPTION_MAY_ALIAS_BIT
@@ -60,8 +61,8 @@ func TestVulkanLoader1_0_CreateRenderPass_Success(t *testing.T) {
 			require.Equal(t, uint64(1), attachment.FieldByName("initialLayout").Uint())    // VK_IMAGE_LAYOUT_GENERAL
 			require.Equal(t, uint64(2), attachment.FieldByName("finalLayout").Uint())      // VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL
 
-			subpassesPtr := (*core.VkSubpassDescription)(unsafe.Pointer(val.FieldByName("pSubpasses").Elem().UnsafeAddr()))
-			subpassesSlice := reflect.ValueOf(([]core.VkSubpassDescription)(unsafe.Slice(subpassesPtr, 1)))
+			subpassesPtr := (*driver.VkSubpassDescription)(unsafe.Pointer(val.FieldByName("pSubpasses").Elem().UnsafeAddr()))
+			subpassesSlice := reflect.ValueOf(([]driver.VkSubpassDescription)(unsafe.Slice(subpassesPtr, 1)))
 
 			subpass := subpassesSlice.Index(0)
 			require.Equal(t, uint64(8), subpass.FieldByName("flags").Uint())             // VK_SUBPASS_DESCRIPTION_SHADER_RESOLVE_BIT_QCOM
@@ -70,15 +71,15 @@ func TestVulkanLoader1_0_CreateRenderPass_Success(t *testing.T) {
 			require.Equal(t, uint64(2), subpass.FieldByName("colorAttachmentCount").Uint())
 			require.Equal(t, uint64(1), subpass.FieldByName("preserveAttachmentCount").Uint())
 
-			inputAttachmentPtr := (*core.VkAttachmentReference)(unsafe.Pointer(subpass.FieldByName("pInputAttachments").Elem().UnsafeAddr()))
-			inputAttachmentSlice := reflect.ValueOf(([]core.VkAttachmentReference)(unsafe.Slice(inputAttachmentPtr, 1)))
+			inputAttachmentPtr := (*driver.VkAttachmentReference)(unsafe.Pointer(subpass.FieldByName("pInputAttachments").Elem().UnsafeAddr()))
+			inputAttachmentSlice := reflect.ValueOf(([]driver.VkAttachmentReference)(unsafe.Slice(inputAttachmentPtr, 1)))
 
 			attach := inputAttachmentSlice.Index(0)
 			require.Equal(t, uint64(0), attach.FieldByName("attachment").Uint())
 			require.Equal(t, uint64(1), attach.FieldByName("layout").Uint()) // VK_IMAGE_LAYOUT_GENERAL
 
-			colorAttachmentPtr := (*core.VkAttachmentReference)(unsafe.Pointer(subpass.FieldByName("pColorAttachments").Elem().UnsafeAddr()))
-			colorAttachmentSlice := reflect.ValueOf(([]core.VkAttachmentReference)(unsafe.Slice(colorAttachmentPtr, 2)))
+			colorAttachmentPtr := (*driver.VkAttachmentReference)(unsafe.Pointer(subpass.FieldByName("pColorAttachments").Elem().UnsafeAddr()))
+			colorAttachmentSlice := reflect.ValueOf(([]driver.VkAttachmentReference)(unsafe.Slice(colorAttachmentPtr, 2)))
 
 			attach = colorAttachmentSlice.Index(0)
 			require.Equal(t, uint64(1), attach.FieldByName("attachment").Uint())
@@ -88,8 +89,8 @@ func TestVulkanLoader1_0_CreateRenderPass_Success(t *testing.T) {
 			require.Equal(t, uint64(2), attach.FieldByName("attachment").Uint())
 			require.Equal(t, uint64(3), attach.FieldByName("layout").Uint()) // VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL
 
-			resolveAttachmentPtr := (*core.VkAttachmentReference)(unsafe.Pointer(subpass.FieldByName("pResolveAttachments").Elem().UnsafeAddr()))
-			resolveAttachmentSlice := reflect.ValueOf(([]core.VkAttachmentReference)(unsafe.Slice(resolveAttachmentPtr, 2)))
+			resolveAttachmentPtr := (*driver.VkAttachmentReference)(unsafe.Pointer(subpass.FieldByName("pResolveAttachments").Elem().UnsafeAddr()))
+			resolveAttachmentSlice := reflect.ValueOf(([]driver.VkAttachmentReference)(unsafe.Slice(resolveAttachmentPtr, 2)))
 
 			attach = resolveAttachmentSlice.Index(0)
 			require.Equal(t, uint64(3), attach.FieldByName("attachment").Uint())
@@ -99,16 +100,16 @@ func TestVulkanLoader1_0_CreateRenderPass_Success(t *testing.T) {
 			require.Equal(t, uint64(5), attach.FieldByName("attachment").Uint())
 			require.Equal(t, uint64(1000117001), attach.FieldByName("layout").Uint()) // VK_IMAGE_LAYOUT_DEPTH_ATTACHMENT_STENCIL_READ_ONLY_OPTIMAL
 
-			attach = reflect.ValueOf((*core.VkAttachmentReference)(unsafe.Pointer(subpass.FieldByName("pDepthStencilAttachment").Elem().UnsafeAddr()))).Elem()
+			attach = reflect.ValueOf((*driver.VkAttachmentReference)(unsafe.Pointer(subpass.FieldByName("pDepthStencilAttachment").Elem().UnsafeAddr()))).Elem()
 			require.Equal(t, uint64(11), attach.FieldByName("attachment").Uint())
 			require.Equal(t, uint64(6), attach.FieldByName("layout").Uint()) // VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL
 
-			preservePtr := (*core.Uint32)(unsafe.Pointer(subpass.FieldByName("pPreserveAttachments").Elem().UnsafeAddr()))
-			preserveSlice := reflect.ValueOf(([]core.Uint32)(unsafe.Slice(preservePtr, 1)))
+			preservePtr := (*driver.Uint32)(unsafe.Pointer(subpass.FieldByName("pPreserveAttachments").Elem().UnsafeAddr()))
+			preserveSlice := reflect.ValueOf(([]driver.Uint32)(unsafe.Slice(preservePtr, 1)))
 			require.Equal(t, uint64(17), preserveSlice.Index(0).Uint())
 
-			dependencyPtr := (*core.VkSubpassDependency)(unsafe.Pointer(val.FieldByName("pDependencies").Elem().UnsafeAddr()))
-			dependencySlice := reflect.ValueOf(([]core.VkSubpassDependency)(unsafe.Slice(dependencyPtr, 3)))
+			dependencyPtr := (*driver.VkSubpassDependency)(unsafe.Pointer(val.FieldByName("pDependencies").Elem().UnsafeAddr()))
+			dependencySlice := reflect.ValueOf(([]driver.VkSubpassDependency)(unsafe.Slice(dependencyPtr, 3)))
 
 			dependency := dependencySlice.Index(0)
 			require.Equal(t, uint64(4), dependency.FieldByName("dependencyFlags").Uint()) // VK_DEPENDENCY_DEVICE_GROUP_BIT
@@ -137,7 +138,7 @@ func TestVulkanLoader1_0_CreateRenderPass_Success(t *testing.T) {
 			require.Equal(t, uint64(0x00000400), dependency.FieldByName("srcAccessMask").Uint()) // VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT
 			require.Equal(t, uint64(2), dependency.FieldByName("dstAccessMask").Uint())          // VK_ACCESS_INDEX_READ_BIT
 
-			return core.VKSuccess, nil
+			return common.VKSuccess, nil
 		})
 
 	renderPass, _, err := loader.CreateRenderPass(device, nil, &core.RenderPassOptions{
@@ -242,15 +243,15 @@ func TestVulkanLoader1_0_CreateRenderPass_SuccessNoNonColorAttachments(t *testin
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	driver := mocks.NewMockDriver(ctrl)
-	loader, err := core.CreateLoaderFromDriver(driver)
+	mockDriver := mocks.NewMockDriver(ctrl)
+	loader, err := core.CreateLoaderFromDriver(mockDriver)
 	require.NoError(t, err)
 
-	device := mocks.EasyMockDevice(ctrl, driver)
+	device := mocks.EasyMockDevice(ctrl, mockDriver)
 	renderPassHandle := mocks.NewFakeRenderPassHandle()
 
-	driver.EXPECT().VkCreateRenderPass(mocks.Exactly(device.Handle()), gomock.Not(nil), nil, gomock.Not(nil)).DoAndReturn(
-		func(deviceHandle core.VkDevice, pCreateInfo *core.VkRenderPassCreateInfo, pAllocator *core.VkAllocationCallbacks, pRenderPass *core.VkRenderPass) (core.VkResult, error) {
+	mockDriver.EXPECT().VkCreateRenderPass(mocks.Exactly(device.Handle()), gomock.Not(nil), nil, gomock.Not(nil)).DoAndReturn(
+		func(deviceHandle driver.VkDevice, pCreateInfo *driver.VkRenderPassCreateInfo, pAllocator *driver.VkAllocationCallbacks, pRenderPass *driver.VkRenderPass) (common.VkResult, error) {
 			*pRenderPass = renderPassHandle
 
 			val := reflect.ValueOf(*pCreateInfo)
@@ -262,8 +263,8 @@ func TestVulkanLoader1_0_CreateRenderPass_SuccessNoNonColorAttachments(t *testin
 			require.Equal(t, uint64(1), val.FieldByName("subpassCount").Uint())
 			require.Equal(t, uint64(3), val.FieldByName("dependencyCount").Uint())
 
-			attachmentsPtr := (*core.VkAttachmentDescription)(unsafe.Pointer(val.FieldByName("pAttachments").Elem().UnsafeAddr()))
-			attachmentsSlice := reflect.ValueOf(([]core.VkAttachmentDescription)(unsafe.Slice(attachmentsPtr, 2)))
+			attachmentsPtr := (*driver.VkAttachmentDescription)(unsafe.Pointer(val.FieldByName("pAttachments").Elem().UnsafeAddr()))
+			attachmentsSlice := reflect.ValueOf(([]driver.VkAttachmentDescription)(unsafe.Slice(attachmentsPtr, 2)))
 
 			attachment := attachmentsSlice.Index(0)
 			require.Equal(t, uint64(1), attachment.FieldByName("flags").Uint())                // VK_ATTACHMENT_DESCRIPTION_MAY_ALIAS_BIT
@@ -287,8 +288,8 @@ func TestVulkanLoader1_0_CreateRenderPass_SuccessNoNonColorAttachments(t *testin
 			require.Equal(t, uint64(1), attachment.FieldByName("initialLayout").Uint())    // VK_IMAGE_LAYOUT_GENERAL
 			require.Equal(t, uint64(2), attachment.FieldByName("finalLayout").Uint())      // VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL
 
-			subpassesPtr := (*core.VkSubpassDescription)(unsafe.Pointer(val.FieldByName("pSubpasses").Elem().UnsafeAddr()))
-			subpassesSlice := reflect.ValueOf(([]core.VkSubpassDescription)(unsafe.Slice(subpassesPtr, 1)))
+			subpassesPtr := (*driver.VkSubpassDescription)(unsafe.Pointer(val.FieldByName("pSubpasses").Elem().UnsafeAddr()))
+			subpassesSlice := reflect.ValueOf(([]driver.VkSubpassDescription)(unsafe.Slice(subpassesPtr, 1)))
 
 			subpass := subpassesSlice.Index(0)
 			require.Equal(t, uint64(8), subpass.FieldByName("flags").Uint())             // VK_SUBPASS_DESCRIPTION_SHADER_RESOLVE_BIT_QCOM
@@ -297,15 +298,15 @@ func TestVulkanLoader1_0_CreateRenderPass_SuccessNoNonColorAttachments(t *testin
 			require.Equal(t, uint64(2), subpass.FieldByName("colorAttachmentCount").Uint())
 			require.Equal(t, uint64(1), subpass.FieldByName("preserveAttachmentCount").Uint())
 
-			inputAttachmentPtr := (*core.VkAttachmentReference)(unsafe.Pointer(subpass.FieldByName("pInputAttachments").Elem().UnsafeAddr()))
-			inputAttachmentSlice := reflect.ValueOf(([]core.VkAttachmentReference)(unsafe.Slice(inputAttachmentPtr, 1)))
+			inputAttachmentPtr := (*driver.VkAttachmentReference)(unsafe.Pointer(subpass.FieldByName("pInputAttachments").Elem().UnsafeAddr()))
+			inputAttachmentSlice := reflect.ValueOf(([]driver.VkAttachmentReference)(unsafe.Slice(inputAttachmentPtr, 1)))
 
 			attach := inputAttachmentSlice.Index(0)
 			require.Equal(t, uint64(0), attach.FieldByName("attachment").Uint())
 			require.Equal(t, uint64(1), attach.FieldByName("layout").Uint()) // VK_IMAGE_LAYOUT_GENERAL
 
-			colorAttachmentPtr := (*core.VkAttachmentReference)(unsafe.Pointer(subpass.FieldByName("pColorAttachments").Elem().UnsafeAddr()))
-			colorAttachmentSlice := reflect.ValueOf(([]core.VkAttachmentReference)(unsafe.Slice(colorAttachmentPtr, 2)))
+			colorAttachmentPtr := (*driver.VkAttachmentReference)(unsafe.Pointer(subpass.FieldByName("pColorAttachments").Elem().UnsafeAddr()))
+			colorAttachmentSlice := reflect.ValueOf(([]driver.VkAttachmentReference)(unsafe.Slice(colorAttachmentPtr, 2)))
 
 			attach = colorAttachmentSlice.Index(0)
 			require.Equal(t, uint64(1), attach.FieldByName("attachment").Uint())
@@ -318,12 +319,12 @@ func TestVulkanLoader1_0_CreateRenderPass_SuccessNoNonColorAttachments(t *testin
 			require.True(t, subpass.FieldByName("pResolveAttachments").IsNil())
 			require.True(t, subpass.FieldByName("pDepthStencilAttachment").IsNil())
 
-			preservePtr := (*core.Uint32)(unsafe.Pointer(subpass.FieldByName("pPreserveAttachments").Elem().UnsafeAddr()))
-			preserveSlice := reflect.ValueOf(([]core.Uint32)(unsafe.Slice(preservePtr, 1)))
+			preservePtr := (*driver.Uint32)(unsafe.Pointer(subpass.FieldByName("pPreserveAttachments").Elem().UnsafeAddr()))
+			preserveSlice := reflect.ValueOf(([]driver.Uint32)(unsafe.Slice(preservePtr, 1)))
 			require.Equal(t, uint64(17), preserveSlice.Index(0).Uint())
 
-			dependencyPtr := (*core.VkSubpassDependency)(unsafe.Pointer(val.FieldByName("pDependencies").Elem().UnsafeAddr()))
-			dependencySlice := reflect.ValueOf(([]core.VkSubpassDependency)(unsafe.Slice(dependencyPtr, 3)))
+			dependencyPtr := (*driver.VkSubpassDependency)(unsafe.Pointer(val.FieldByName("pDependencies").Elem().UnsafeAddr()))
+			dependencySlice := reflect.ValueOf(([]driver.VkSubpassDependency)(unsafe.Slice(dependencyPtr, 3)))
 
 			dependency := dependencySlice.Index(0)
 			require.Equal(t, uint64(4), dependency.FieldByName("dependencyFlags").Uint()) // VK_DEPENDENCY_DEVICE_GROUP_BIT
@@ -352,7 +353,7 @@ func TestVulkanLoader1_0_CreateRenderPass_SuccessNoNonColorAttachments(t *testin
 			require.Equal(t, uint64(0x00000400), dependency.FieldByName("srcAccessMask").Uint()) // VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT
 			require.Equal(t, uint64(2), dependency.FieldByName("dstAccessMask").Uint())          // VK_ACCESS_INDEX_READ_BIT
 
-			return core.VKSuccess, nil
+			return common.VKSuccess, nil
 		})
 
 	renderPass, _, err := loader.CreateRenderPass(device, nil, &core.RenderPassOptions{
@@ -554,15 +555,15 @@ func TestVulkanRenderPass_RenderAreaGranularity(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	driver := mocks.NewMockDriver(ctrl)
-	loader, err := core.CreateLoaderFromDriver(driver)
+	mockDriver := mocks.NewMockDriver(ctrl)
+	loader, err := core.CreateLoaderFromDriver(mockDriver)
 	require.NoError(t, err)
 
-	device := mocks.EasyMockDevice(ctrl, driver)
+	device := mocks.EasyMockDevice(ctrl, mockDriver)
 	renderPass := mocks.EasyDummyRenderPass(t, loader, device)
 
-	driver.EXPECT().VkGetRenderAreaGranularity(mocks.Exactly(device.Handle()), mocks.Exactly(renderPass.Handle()), gomock.Not(nil)).DoAndReturn(
-		func(device core.VkDevice, renderPass core.VkRenderPass, pGranularity *core.VkExtent2D) {
+	mockDriver.EXPECT().VkGetRenderAreaGranularity(mocks.Exactly(device.Handle()), mocks.Exactly(renderPass.Handle()), gomock.Not(nil)).DoAndReturn(
+		func(device driver.VkDevice, renderPass driver.VkRenderPass, pGranularity *driver.VkExtent2D) {
 			val := reflect.ValueOf(pGranularity).Elem()
 
 			*(*uint32)(unsafe.Pointer(val.FieldByName("width").UnsafeAddr())) = uint32(1)

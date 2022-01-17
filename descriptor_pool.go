@@ -7,6 +7,7 @@ package core
 import "C"
 import (
 	"github.com/CannibalVox/VKng/core/common"
+	driver3 "github.com/CannibalVox/VKng/core/driver"
 	"github.com/CannibalVox/cgoparam"
 	"unsafe"
 )
@@ -70,12 +71,12 @@ func (o *DescriptorPoolOptions) AllocForC(allocator *cgoparam.Allocator, next un
 }
 
 type vulkanDescriptorPool struct {
-	driver Driver
-	handle VkDescriptorPool
-	device VkDevice
+	driver driver3.Driver
+	handle driver3.VkDescriptorPool
+	device driver3.VkDevice
 }
 
-func (p *vulkanDescriptorPool) Handle() VkDescriptorPool {
+func (p *vulkanDescriptorPool) Handle() driver3.VkDescriptorPool {
 	return p.handle
 }
 
@@ -83,7 +84,7 @@ func (p *vulkanDescriptorPool) Destroy(callbacks *AllocationCallbacks) {
 	p.driver.VkDestroyDescriptorPool(p.device, p.handle, callbacks.Handle())
 }
 
-func (p *vulkanDescriptorPool) AllocateDescriptorSets(o *DescriptorSetOptions) ([]DescriptorSet, VkResult, error) {
+func (p *vulkanDescriptorPool) AllocateDescriptorSets(o *DescriptorSetOptions) ([]DescriptorSet, common.VkResult, error) {
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
@@ -91,19 +92,19 @@ func (p *vulkanDescriptorPool) AllocateDescriptorSets(o *DescriptorSetOptions) (
 
 	createInfo, err := common.AllocOptions(arena, o)
 	if err != nil {
-		return nil, VKErrorUnknown, err
+		return nil, common.VKErrorUnknown, err
 	}
 
 	setCount := len(o.AllocationLayouts)
-	descriptorSets := (*VkDescriptorSet)(arena.Malloc(setCount * int(unsafe.Sizeof([1]C.VkDescriptorSet{}))))
+	descriptorSets := (*driver3.VkDescriptorSet)(arena.Malloc(setCount * int(unsafe.Sizeof([1]C.VkDescriptorSet{}))))
 
-	res, err := p.driver.VkAllocateDescriptorSets(p.device, (*VkDescriptorSetAllocateInfo)(createInfo), descriptorSets)
+	res, err := p.driver.VkAllocateDescriptorSets(p.device, (*driver3.VkDescriptorSetAllocateInfo)(createInfo), descriptorSets)
 	if err != nil {
 		return nil, res, err
 	}
 
 	var sets []DescriptorSet
-	descriptorSetSlice := ([]VkDescriptorSet)(unsafe.Slice(descriptorSets, setCount))
+	descriptorSetSlice := ([]driver3.VkDescriptorSet)(unsafe.Slice(descriptorSets, setCount))
 	for i := 0; i < setCount; i++ {
 		sets = append(sets, &vulkanDescriptorSet{handle: descriptorSetSlice[i]})
 	}
@@ -111,7 +112,7 @@ func (p *vulkanDescriptorPool) AllocateDescriptorSets(o *DescriptorSetOptions) (
 	return sets, res, nil
 }
 
-func (p *vulkanDescriptorPool) FreeDescriptorSets(sets []DescriptorSet) (VkResult, error) {
+func (p *vulkanDescriptorPool) FreeDescriptorSets(sets []DescriptorSet) (common.VkResult, error) {
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
@@ -123,11 +124,11 @@ func (p *vulkanDescriptorPool) FreeDescriptorSets(sets []DescriptorSet) (VkResul
 		descriptorSlice[i] = (C.VkDescriptorSet)(unsafe.Pointer(sets[i].Handle()))
 	}
 
-	return p.driver.VkFreeDescriptorSets(p.device, p.handle, Uint32(setCount), (*VkDescriptorSet)(descriptorsPtrUnsafe))
+	return p.driver.VkFreeDescriptorSets(p.device, p.handle, driver3.Uint32(setCount), (*driver3.VkDescriptorSet)(descriptorsPtrUnsafe))
 }
 
 type DescriptorPoolResetFlags int32
 
-func (p *vulkanDescriptorPool) Reset(flags DescriptorPoolResetFlags) (VkResult, error) {
-	return p.driver.VkResetDescriptorPool(p.device, p.handle, VkDescriptorPoolResetFlags(flags))
+func (p *vulkanDescriptorPool) Reset(flags DescriptorPoolResetFlags) (common.VkResult, error) {
+	return p.driver.VkResetDescriptorPool(p.device, p.handle, driver3.VkDescriptorPoolResetFlags(flags))
 }

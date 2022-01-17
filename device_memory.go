@@ -7,6 +7,7 @@ package core
 import "C"
 import (
 	"github.com/CannibalVox/VKng/core/common"
+	"github.com/CannibalVox/VKng/core/driver"
 	"github.com/CannibalVox/cgoparam"
 	"unsafe"
 )
@@ -36,20 +37,20 @@ func (o *DeviceMemoryOptions) AllocForC(allocator *cgoparam.Allocator, next unsa
 }
 
 type vulkanDeviceMemory struct {
-	driver Driver
-	device VkDevice
-	handle VkDeviceMemory
+	driver driver.Driver
+	device driver.VkDevice
+	handle driver.VkDeviceMemory
 
 	size int
 }
 
-func (m *vulkanDeviceMemory) Handle() VkDeviceMemory {
+func (m *vulkanDeviceMemory) Handle() driver.VkDeviceMemory {
 	return m.handle
 }
 
-func (m *vulkanDeviceMemory) MapMemory(offset int, size int, flags MemoryMapFlags) (unsafe.Pointer, VkResult, error) {
+func (m *vulkanDeviceMemory) MapMemory(offset int, size int, flags MemoryMapFlags) (unsafe.Pointer, common.VkResult, error) {
 	var data unsafe.Pointer
-	res, err := m.driver.VkMapMemory(m.device, m.handle, VkDeviceSize(offset), VkDeviceSize(size), VkMemoryMapFlags(flags), &data)
+	res, err := m.driver.VkMapMemory(m.device, m.handle, driver.VkDeviceSize(offset), driver.VkDeviceSize(size), driver.VkMemoryMapFlags(flags), &data)
 	if err != nil {
 		return nil, res, err
 	}
@@ -69,37 +70,37 @@ func (m *vulkanDeviceMemory) Commitment() int {
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
-	committedMemoryPtr := (*VkDeviceSize)(arena.Malloc(8))
+	committedMemoryPtr := (*driver.VkDeviceSize)(arena.Malloc(8))
 
 	m.driver.VkGetDeviceMemoryCommitment(m.device, m.handle, committedMemoryPtr)
 
 	return int(*committedMemoryPtr)
 }
 
-func (m *vulkanDeviceMemory) Flush() (VkResult, error) {
+func (m *vulkanDeviceMemory) Flush() (common.VkResult, error) {
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
 	mappedRange := (*C.VkMappedMemoryRange)(arena.Malloc(C.sizeof_struct_VkMappedMemoryRange))
 	mappedRange.sType = C.VK_STRUCTURE_TYPE_MAPPED_MEMORY_RANGE
 	mappedRange.pNext = nil
-	mappedRange.memory = C.VkDeviceMemory(m.handle)
+	mappedRange.memory = C.VkDeviceMemory(unsafe.Pointer(m.handle))
 	mappedRange.offset = 0
 	mappedRange.size = C.VkDeviceSize(m.size)
 
-	return m.driver.VkFlushMappedMemoryRanges(m.device, Uint32(1), (*VkMappedMemoryRange)(mappedRange))
+	return m.driver.VkFlushMappedMemoryRanges(m.device, driver.Uint32(1), (*driver.VkMappedMemoryRange)(unsafe.Pointer(mappedRange)))
 }
 
-func (m *vulkanDeviceMemory) Invalidate() (VkResult, error) {
+func (m *vulkanDeviceMemory) Invalidate() (common.VkResult, error) {
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
 	mappedRange := (*C.VkMappedMemoryRange)(arena.Malloc(C.sizeof_struct_VkMappedMemoryRange))
 	mappedRange.sType = C.VK_STRUCTURE_TYPE_MAPPED_MEMORY_RANGE
 	mappedRange.pNext = nil
-	mappedRange.memory = C.VkDeviceMemory(m.handle)
+	mappedRange.memory = C.VkDeviceMemory(unsafe.Pointer(m.handle))
 	mappedRange.offset = 0
 	mappedRange.size = C.VkDeviceSize(m.size)
 
-	return m.driver.VkInvalidateMappedMemoryRanges(m.device, Uint32(1), (*VkMappedMemoryRange)(mappedRange))
+	return m.driver.VkInvalidateMappedMemoryRanges(m.device, driver.Uint32(1), (*driver.VkMappedMemoryRange)(unsafe.Pointer(mappedRange)))
 }

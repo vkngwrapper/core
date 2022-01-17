@@ -5,6 +5,7 @@ import (
 	"encoding/binary"
 	"github.com/CannibalVox/VKng/core"
 	"github.com/CannibalVox/VKng/core/common"
+	"github.com/CannibalVox/VKng/core/driver"
 	"github.com/CannibalVox/VKng/core/mocks"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/require"
@@ -17,15 +18,15 @@ func TestVulkanLoader1_0_CreateQueryPool(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	driver := mocks.NewMockDriver(ctrl)
-	loader, err := core.CreateLoaderFromDriver(driver)
+	mockDriver := mocks.NewMockDriver(ctrl)
+	loader, err := core.CreateLoaderFromDriver(mockDriver)
 	require.NoError(t, err)
 
-	device := mocks.EasyMockDevice(ctrl, driver)
+	device := mocks.EasyMockDevice(ctrl, mockDriver)
 	poolHandle := mocks.NewFakeQueryPool()
 
-	driver.EXPECT().VkCreateQueryPool(mocks.Exactly(device.Handle()), gomock.Not(nil), nil, gomock.Not(nil)).DoAndReturn(
-		func(device core.VkDevice, pCreateInfo *core.VkQueryPoolCreateInfo, pAllocator *core.VkAllocationCallbacks, pQueryPool *core.VkQueryPool) (core.VkResult, error) {
+	mockDriver.EXPECT().VkCreateQueryPool(mocks.Exactly(device.Handle()), gomock.Not(nil), nil, gomock.Not(nil)).DoAndReturn(
+		func(device driver.VkDevice, pCreateInfo *driver.VkQueryPoolCreateInfo, pAllocator *driver.VkAllocationCallbacks, pQueryPool *driver.VkQueryPool) (common.VkResult, error) {
 			val := reflect.ValueOf(*pCreateInfo)
 			require.Equal(t, uint64(11), val.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_QUERY_POOL_CREATE_INFO
 			require.True(t, val.FieldByName("pNext").IsNil())
@@ -35,7 +36,7 @@ func TestVulkanLoader1_0_CreateQueryPool(t *testing.T) {
 			require.Equal(t, uint64(0x10), val.FieldByName("pipelineStatistics").Uint()) // VK_QUERY_PIPELINE_STATISTIC_GEOMETRY_SHADER_PRIMITIVES_BIT
 
 			*pQueryPool = poolHandle
-			return core.VKSuccess, nil
+			return common.VKSuccess, nil
 		})
 
 	queryPool, _, err := loader.CreateQueryPool(device, nil, &core.QueryPoolOptions{
@@ -52,30 +53,30 @@ func TestVulkanQueryPool_PopulateResults(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	driver := mocks.NewMockDriver(ctrl)
-	loader, err := core.CreateLoaderFromDriver(driver)
+	mockDriver := mocks.NewMockDriver(ctrl)
+	loader, err := core.CreateLoaderFromDriver(mockDriver)
 	require.NoError(t, err)
 
-	device := mocks.EasyMockDevice(ctrl, driver)
+	device := mocks.EasyMockDevice(ctrl, mockDriver)
 	queryPool := mocks.EasyDummyQueryPool(t, loader, device)
 
-	driver.EXPECT().VkGetQueryPoolResults(
+	mockDriver.EXPECT().VkGetQueryPoolResults(
 		mocks.Exactly(device.Handle()),
 		mocks.Exactly(queryPool.Handle()),
-		core.Uint32(1),
-		core.Uint32(3),
-		core.Size(40),
+		driver.Uint32(1),
+		driver.Uint32(3),
+		driver.Size(40),
 		gomock.Not(nil),
-		core.VkDeviceSize(8),
-		core.VkQueryResultFlags(8), // VK_QUERY_RESULT_PARTIAL_BIT
+		driver.VkDeviceSize(8),
+		driver.VkQueryResultFlags(8), // VK_QUERY_RESULT_PARTIAL_BIT
 	).DoAndReturn(
-		func(device core.VkDevice,
-			queryPool core.VkQueryPool,
-			firstQuery, queryCount core.Uint32,
-			dataSize core.Size,
+		func(device driver.VkDevice,
+			queryPool driver.VkQueryPool,
+			firstQuery, queryCount driver.Uint32,
+			dataSize driver.Size,
 			pData unsafe.Pointer,
-			stride core.VkDeviceSize,
-			flags core.VkQueryResultFlags) (core.VkResult, error) {
+			stride driver.VkDeviceSize,
+			flags driver.VkQueryResultFlags) (common.VkResult, error) {
 
 			data := ([]uint64)(unsafe.Slice((*uint64)(pData), 5))
 			data[0] = 1
@@ -84,7 +85,7 @@ func TestVulkanQueryPool_PopulateResults(t *testing.T) {
 			data[3] = 8
 			data[4] = 13
 
-			return core.VKSuccess, nil
+			return common.VKSuccess, nil
 		})
 
 	results, _, err := queryPool.PopulateResults(1, 3, 40, 8, common.QueryResultPartial)

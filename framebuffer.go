@@ -7,6 +7,7 @@ package core
 import "C"
 import (
 	"github.com/CannibalVox/VKng/core/common"
+	driver3 "github.com/CannibalVox/VKng/core/driver"
 	"github.com/CannibalVox/cgoparam"
 	"unsafe"
 )
@@ -70,12 +71,12 @@ func (o *FramebufferOptions) AllocForC(allocator *cgoparam.Allocator, next unsaf
 }
 
 type vulkanFramebuffer struct {
-	driver Driver
-	device VkDevice
-	handle VkFramebuffer
+	driver driver3.Driver
+	device driver3.VkDevice
+	handle driver3.VkFramebuffer
 }
 
-func (b *vulkanFramebuffer) Handle() VkFramebuffer {
+func (b *vulkanFramebuffer) Handle() driver3.VkFramebuffer {
 	return b.handle
 }
 

@@ -7,24 +7,25 @@ package core
 import "C"
 import (
 	"github.com/CannibalVox/VKng/core/common"
+	"github.com/CannibalVox/VKng/core/driver"
 	"github.com/CannibalVox/cgoparam"
 	"unsafe"
 )
 
 type vulkanQueue struct {
-	driver Driver
-	handle VkQueue
+	driver driver.Driver
+	handle driver.VkQueue
 }
 
-func (q *vulkanQueue) Handle() VkQueue {
+func (q *vulkanQueue) Handle() driver.VkQueue {
 	return q.handle
 }
 
-func (q *vulkanQueue) Driver() Driver {
+func (q *vulkanQueue) Driver() driver.Driver {
 	return q.driver
 }
 
-func (q *vulkanQueue) WaitForIdle() (VkResult, error) {
+func (q *vulkanQueue) WaitForIdle() (common.VkResult, error) {
 	return q.driver.VkQueueWaitIdle(q.handle)
 }
 
@@ -55,7 +56,7 @@ type SparseMemoryBind struct {
 func (b *SparseMemoryBind) populate(bind *C.VkSparseMemoryBind) {
 	bind.resourceOffset = C.VkDeviceSize(b.ResourceOffset)
 	bind.size = C.VkDeviceSize(b.Size)
-	bind.memory = C.VkDeviceMemory(b.Memory.Handle())
+	bind.memory = C.VkDeviceMemory(unsafe.Pointer(b.Memory.Handle()))
 	bind.memoryOffset = C.VkDeviceSize(b.MemoryOffset)
 	bind.flags = C.VkSparseMemoryBindFlags(b.Flags)
 }
@@ -123,7 +124,7 @@ func (b *BindSparseOptions) populate(allocator *cgoparam.Allocator, createInfo *
 		waitSemaphoreSlice := ([]C.VkSemaphore)(unsafe.Slice(waitSemaphorePtr, waitSemaphoreCount))
 
 		for i := 0; i < waitSemaphoreCount; i++ {
-			waitSemaphoreSlice[i] = C.VkSemaphore(b.WaitSemaphores[i].Handle())
+			waitSemaphoreSlice[i] = C.VkSemaphore(unsafe.Pointer(b.WaitSemaphores[i].Handle()))
 		}
 
 		createInfo.pWaitSemaphores = waitSemaphorePtr
@@ -134,7 +135,7 @@ func (b *BindSparseOptions) populate(allocator *cgoparam.Allocator, createInfo *
 		bufferBindSlice := ([]C.VkSparseBufferMemoryBindInfo)(unsafe.Slice(bufferBindPtr, bufferBindCount))
 
 		for i := 0; i < bufferBindCount; i++ {
-			bufferBindSlice[i].buffer = C.VkBuffer(b.BufferBinds[i].Buffer.Handle())
+			bufferBindSlice[i].buffer = C.VkBuffer(unsafe.Pointer(b.BufferBinds[i].Buffer.Handle()))
 			bindCount := len(b.BufferBinds[i].Binds)
 			bufferBindSlice[i].bindCount = C.uint32_t(bindCount)
 			bufferBindSlice[i].pBinds = nil
@@ -158,7 +159,7 @@ func (b *BindSparseOptions) populate(allocator *cgoparam.Allocator, createInfo *
 		imageOpaqueBindSlice := ([]C.VkSparseImageOpaqueMemoryBindInfo)(unsafe.Slice(imageOpaqueBindPtr, imageOpaqueBindCount))
 
 		for i := 0; i < imageOpaqueBindCount; i++ {
-			imageOpaqueBindSlice[i].image = C.VkImage(b.ImageOpaqueBinds[i].Image.Handle())
+			imageOpaqueBindSlice[i].image = C.VkImage(unsafe.Pointer(b.ImageOpaqueBinds[i].Image.Handle()))
 			bindCount := len(b.ImageOpaqueBinds[i].Binds)
 			imageOpaqueBindSlice[i].bindCount = C.uint32_t(bindCount)
 			imageOpaqueBindSlice[i].pBinds = nil
@@ -182,7 +183,7 @@ func (b *BindSparseOptions) populate(allocator *cgoparam.Allocator, createInfo *
 		imageBindSlice := ([]C.VkSparseImageMemoryBindInfo)(unsafe.Slice(imageBindPtr, imageBindCount))
 
 		for i := 0; i < imageBindCount; i++ {
-			imageBindSlice[i].image = C.VkImage(b.ImageBinds[i].Image.Handle())
+			imageBindSlice[i].image = C.VkImage(unsafe.Pointer(b.ImageBinds[i].Image.Handle()))
 			bindCount := len(b.ImageBinds[i].Binds)
 			imageBindSlice[i].bindCount = C.uint32_t(bindCount)
 			imageBindSlice[i].pBinds = nil
@@ -201,7 +202,7 @@ func (b *BindSparseOptions) populate(allocator *cgoparam.Allocator, createInfo *
 					bindSlice[j].extent.width = C.uint32_t(b.ImageBinds[i].Binds[j].Extent.Width)
 					bindSlice[j].extent.height = C.uint32_t(b.ImageBinds[i].Binds[j].Extent.Height)
 					bindSlice[j].extent.depth = C.uint32_t(b.ImageBinds[i].Binds[j].Extent.Depth)
-					bindSlice[j].memory = C.VkDeviceMemory(b.ImageBinds[i].Binds[j].Memory.Handle())
+					bindSlice[j].memory = C.VkDeviceMemory(unsafe.Pointer(b.ImageBinds[i].Binds[j].Memory.Handle()))
 					bindSlice[j].memoryOffset = C.VkDeviceSize(b.ImageBinds[i].Binds[j].MemoryOffset)
 					bindSlice[j].flags = C.VkSparseMemoryBindFlags(b.ImageBinds[i].Binds[j].Flags)
 				}
@@ -218,7 +219,7 @@ func (b *BindSparseOptions) populate(allocator *cgoparam.Allocator, createInfo *
 		signalSemaphoreSlice := ([]C.VkSemaphore)(unsafe.Slice(signalSemaphorePtr, signalSemaphoreCount))
 
 		for i := 0; i < signalSemaphoreCount; i++ {
-			signalSemaphoreSlice[i] = C.VkSemaphore(b.SignalSemaphores[i].Handle())
+			signalSemaphoreSlice[i] = C.VkSemaphore(unsafe.Pointer(b.SignalSemaphores[i].Handle()))
 		}
 
 		createInfo.pSignalSemaphores = signalSemaphorePtr
@@ -238,11 +239,11 @@ func (b *BindSparseOptions) AllocForC(allocator *cgoparam.Allocator, next unsafe
 	return unsafe.Pointer(createInfo), nil
 }
 
-func (q *vulkanQueue) BindSparse(fence Fence, bindInfos []*BindSparseOptions) (VkResult, error) {
+func (q *vulkanQueue) BindSparse(fence Fence, bindInfos []*BindSparseOptions) (common.VkResult, error) {
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
-	var fenceHandle VkFence
+	var fenceHandle driver.VkFence
 	if fence != nil {
 		fenceHandle = fence.Handle()
 	}
@@ -254,14 +255,14 @@ func (q *vulkanQueue) BindSparse(fence Fence, bindInfos []*BindSparseOptions) (V
 	for i := 0; i < bindInfoCount; i++ {
 		next, err := common.AllocNext(arena, bindInfos[i])
 		if err != nil {
-			return VKErrorUnknown, err
+			return common.VKErrorUnknown, err
 		}
 
 		err = bindInfos[i].populate(arena, &bindInfoSlice[i], next)
 		if err != nil {
-			return VKErrorUnknown, err
+			return common.VKErrorUnknown, err
 		}
 	}
 
-	return q.driver.VkQueueBindSparse(q.handle, Uint32(bindInfoCount), (*VkBindSparseInfo)(bindInfoPtr), fenceHandle)
+	return q.driver.VkQueueBindSparse(q.handle, driver.Uint32(bindInfoCount), (*driver.VkBindSparseInfo)(unsafe.Pointer(bindInfoPtr)), fenceHandle)
 }

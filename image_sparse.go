@@ -7,6 +7,7 @@ package core
 import "C"
 import (
 	"github.com/CannibalVox/VKng/core/common"
+	"github.com/CannibalVox/VKng/core/driver"
 	"github.com/CannibalVox/cgoparam"
 	"unsafe"
 )
@@ -49,7 +50,7 @@ func (i *vulkanImage) SparseMemoryRequirements() []SparseImageMemoryRequirements
 
 	requirementsCount := (*C.uint32_t)(arena.Malloc(4))
 
-	i.driver.VkGetImageSparseMemoryRequirements(i.device, i.handle, (*Uint32)(requirementsCount), nil)
+	i.driver.VkGetImageSparseMemoryRequirements(i.device, i.handle, (*driver.Uint32)(requirementsCount), nil)
 
 	if *requirementsCount == 0 {
 		return nil
@@ -57,7 +58,7 @@ func (i *vulkanImage) SparseMemoryRequirements() []SparseImageMemoryRequirements
 
 	requirementsPtr := (*C.VkSparseImageMemoryRequirements)(arena.Malloc(int(*requirementsCount) * C.sizeof_struct_VkSparseImageMemoryRequirements))
 
-	i.driver.VkGetImageSparseMemoryRequirements(i.device, i.handle, (*Uint32)(requirementsCount), (*VkSparseImageMemoryRequirements)(requirementsPtr))
+	i.driver.VkGetImageSparseMemoryRequirements(i.device, i.handle, (*driver.Uint32)(unsafe.Pointer(requirementsCount)), (*driver.VkSparseImageMemoryRequirements)(unsafe.Pointer(requirementsPtr)))
 
 	requirementsSlice := ([]C.VkSparseImageMemoryRequirements)(unsafe.Slice(requirementsPtr, int(*requirementsCount)))
 

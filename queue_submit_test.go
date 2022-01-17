@@ -3,6 +3,7 @@ package core_test
 import (
 	"github.com/CannibalVox/VKng/core"
 	"github.com/CannibalVox/VKng/core/common"
+	"github.com/CannibalVox/VKng/core/driver"
 	"github.com/CannibalVox/VKng/core/mocks"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/require"
@@ -34,9 +35,9 @@ func TestSubmitToQueue_SignalSuccess(t *testing.T) {
 	signalSemaphore2 := mocks.EasyDummySemaphore(t, loader, mockDevice)
 	signalSemaphore3 := mocks.EasyDummySemaphore(t, loader, mockDevice)
 
-	mockDriver.EXPECT().VkQueueSubmit(mocks.Exactly(queue.Handle()), core.Uint32(1), gomock.Not(nil), mocks.Exactly(fence.Handle())).DoAndReturn(
-		func(queue core.VkQueue, submitCount core.Uint32, pSubmits *core.VkSubmitInfo, fence core.VkFence) (core.VkResult, error) {
-			submitSlices := ([]core.VkSubmitInfo)(unsafe.Slice(pSubmits, int(submitCount)))
+	mockDriver.EXPECT().VkQueueSubmit(mocks.Exactly(queue.Handle()), driver.Uint32(1), gomock.Not(nil), mocks.Exactly(fence.Handle())).DoAndReturn(
+		func(queue driver.VkQueue, submitCount driver.Uint32, pSubmits *driver.VkSubmitInfo, fence driver.VkFence) (common.VkResult, error) {
+			submitSlices := ([]driver.VkSubmitInfo)(unsafe.Slice(pSubmits, int(submitCount)))
 
 			for _, submit := range submitSlices {
 				v := reflect.ValueOf(submit)
@@ -47,30 +48,30 @@ func TestSubmitToQueue_SignalSuccess(t *testing.T) {
 				require.Equal(t, uint64(3), v.FieldByName("signalSemaphoreCount").Uint())
 
 				waitSemaphorePtr := unsafe.Pointer(v.FieldByName("pWaitSemaphores").Elem().UnsafeAddr())
-				waitSemaphoreSlice := ([]core.VkSemaphore)(unsafe.Slice((*core.VkSemaphore)(waitSemaphorePtr), 2))
+				waitSemaphoreSlice := ([]driver.VkSemaphore)(unsafe.Slice((*driver.VkSemaphore)(waitSemaphorePtr), 2))
 
 				require.Same(t, waitSemaphore1.Handle(), waitSemaphoreSlice[0])
 				require.Same(t, waitSemaphore2.Handle(), waitSemaphoreSlice[1])
 
 				waitDstStageMaskPtr := unsafe.Pointer(v.FieldByName("pWaitDstStageMask").Elem().UnsafeAddr())
-				waitDstStageMaskSlice := ([]core.VkPipelineStageFlags)(unsafe.Slice((*core.VkPipelineStageFlags)(waitDstStageMaskPtr), 2))
+				waitDstStageMaskSlice := ([]driver.VkPipelineStageFlags)(unsafe.Slice((*driver.VkPipelineStageFlags)(waitDstStageMaskPtr), 2))
 
-				require.ElementsMatch(t, []core.VkPipelineStageFlags{8, 128}, waitDstStageMaskSlice)
+				require.ElementsMatch(t, []driver.VkPipelineStageFlags{8, 128}, waitDstStageMaskSlice)
 
 				commandBufferPtr := unsafe.Pointer(v.FieldByName("pCommandBuffers").Elem().UnsafeAddr())
-				commandBufferSlice := ([]core.VkCommandBuffer)(unsafe.Slice((*core.VkCommandBuffer)(commandBufferPtr), 1))
+				commandBufferSlice := ([]driver.VkCommandBuffer)(unsafe.Slice((*driver.VkCommandBuffer)(commandBufferPtr), 1))
 
 				require.Same(t, buffer.Handle(), commandBufferSlice[0])
 
 				signalSemaphorePtr := unsafe.Pointer(v.FieldByName("pSignalSemaphores").Elem().UnsafeAddr())
-				signalSemaphoreSlice := ([]core.VkSemaphore)(unsafe.Slice((*core.VkSemaphore)(signalSemaphorePtr), 3))
+				signalSemaphoreSlice := ([]driver.VkSemaphore)(unsafe.Slice((*driver.VkSemaphore)(signalSemaphorePtr), 3))
 
 				require.Same(t, signalSemaphore1.Handle(), signalSemaphoreSlice[0])
 				require.Same(t, signalSemaphore2.Handle(), signalSemaphoreSlice[1])
 				require.Same(t, signalSemaphore3.Handle(), signalSemaphoreSlice[2])
 			}
 
-			return core.VKSuccess, nil
+			return common.VKSuccess, nil
 		})
 
 	_, err = queue.SubmitToQueue(fence, []*core.SubmitOptions{
@@ -98,9 +99,9 @@ func TestSubmitToQueue_NoSignalSuccess(t *testing.T) {
 	pool := mocks.EasyDummyCommandPool(t, loader, mockDevice)
 	buffer := mocks.EasyDummyCommandBuffer(t, mockDevice, pool)
 
-	mockDriver.EXPECT().VkQueueSubmit(mocks.Exactly(queue.Handle()), core.Uint32(1), gomock.Not(nil), nil).DoAndReturn(
-		func(queue core.VkQueue, submitCount core.Uint32, pSubmits *core.VkSubmitInfo, fence core.VkFence) (core.VkResult, error) {
-			submitSlices := ([]core.VkSubmitInfo)(unsafe.Slice(pSubmits, int(submitCount)))
+	mockDriver.EXPECT().VkQueueSubmit(mocks.Exactly(queue.Handle()), driver.Uint32(1), gomock.Not(nil), nil).DoAndReturn(
+		func(queue driver.VkQueue, submitCount driver.Uint32, pSubmits *driver.VkSubmitInfo, fence driver.VkFence) (common.VkResult, error) {
+			submitSlices := ([]driver.VkSubmitInfo)(unsafe.Slice(pSubmits, int(submitCount)))
 
 			for _, submit := range submitSlices {
 				v := reflect.ValueOf(submit)
@@ -115,12 +116,12 @@ func TestSubmitToQueue_NoSignalSuccess(t *testing.T) {
 				require.True(t, v.FieldByName("pSignalSemaphores").IsNil())
 
 				commandBufferPtr := unsafe.Pointer(v.FieldByName("pCommandBuffers").Elem().UnsafeAddr())
-				commandBufferSlice := ([]core.VkCommandBuffer)(unsafe.Slice((*core.VkCommandBuffer)(commandBufferPtr), 1))
+				commandBufferSlice := ([]driver.VkCommandBuffer)(unsafe.Slice((*driver.VkCommandBuffer)(commandBufferPtr), 1))
 
 				require.Same(t, buffer.Handle(), commandBufferSlice[0])
 			}
 
-			return core.VKSuccess, nil
+			return common.VKSuccess, nil
 		})
 
 	_, err = queue.SubmitToQueue(nil, []*core.SubmitOptions{

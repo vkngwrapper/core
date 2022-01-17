@@ -7,22 +7,22 @@ package core
 import "C"
 import (
 	"github.com/CannibalVox/VKng/core/common"
+	"github.com/CannibalVox/VKng/core/driver"
 	"github.com/CannibalVox/cgoparam"
 	"time"
 	"unsafe"
 )
 
-type DeviceHandle C.VkDevice
 type vulkanDevice struct {
-	driver Driver
-	handle VkDevice
+	driver driver.Driver
+	handle driver.VkDevice
 }
 
-func (d *vulkanDevice) Driver() Driver {
+func (d *vulkanDevice) Driver() driver.Driver {
 	return d.driver
 }
 
-func (d *vulkanDevice) Handle() VkDevice {
+func (d *vulkanDevice) Handle() driver.VkDevice {
 	return d.handle
 }
 
@@ -31,27 +31,27 @@ func (d *vulkanDevice) Destroy(callbacks *AllocationCallbacks) {
 }
 
 func (d *vulkanDevice) GetQueue(queueFamilyIndex int, queueIndex int) Queue {
-	var queueHandle VkQueue
+	var queueHandle driver.VkQueue
 
-	d.driver.VkGetDeviceQueue(d.handle, Uint32(queueFamilyIndex), Uint32(queueIndex), &queueHandle)
+	d.driver.VkGetDeviceQueue(d.handle, driver.Uint32(queueFamilyIndex), driver.Uint32(queueIndex), &queueHandle)
 
 	return &vulkanQueue{driver: d.driver, handle: queueHandle}
 }
 
-func (d *vulkanDevice) WaitForIdle() (VkResult, error) {
+func (d *vulkanDevice) WaitForIdle() (common.VkResult, error) {
 	return d.driver.VkDeviceWaitIdle(d.handle)
 }
 
-func (d *vulkanDevice) WaitForFences(waitForAll bool, timeout time.Duration, fences []Fence) (VkResult, error) {
+func (d *vulkanDevice) WaitForFences(waitForAll bool, timeout time.Duration, fences []Fence) (common.VkResult, error) {
 	allocator := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(allocator)
 
 	fenceCount := len(fences)
 	fenceUnsafePtr := allocator.Malloc(fenceCount * int(unsafe.Sizeof([1]C.VkFence{})))
 
-	fencePtr := (*VkFence)(fenceUnsafePtr)
+	fencePtr := (*driver.VkFence)(fenceUnsafePtr)
 
-	fenceSlice := ([]VkFence)(unsafe.Slice(fencePtr, fenceCount))
+	fenceSlice := ([]driver.VkFence)(unsafe.Slice(fencePtr, fenceCount))
 	for i := 0; i < fenceCount; i++ {
 		fenceSlice[i] = fences[i].Handle()
 	}
@@ -61,37 +61,37 @@ func (d *vulkanDevice) WaitForFences(waitForAll bool, timeout time.Duration, fen
 		waitAllConst = C.VK_TRUE
 	}
 
-	return d.driver.VkWaitForFences(d.handle, Uint32(fenceCount), fencePtr, VkBool32(waitAllConst), Uint64(common.TimeoutNanoseconds(timeout)))
+	return d.driver.VkWaitForFences(d.handle, driver.Uint32(fenceCount), fencePtr, driver.VkBool32(waitAllConst), driver.Uint64(common.TimeoutNanoseconds(timeout)))
 }
 
-func (d *vulkanDevice) ResetFences(fences []Fence) (VkResult, error) {
+func (d *vulkanDevice) ResetFences(fences []Fence) (common.VkResult, error) {
 	allocator := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(allocator)
 
 	fenceCount := len(fences)
 	fenceUnsafePtr := allocator.Malloc(fenceCount * int(unsafe.Sizeof([1]C.VkFence{})))
 
-	fencePtr := (*VkFence)(fenceUnsafePtr)
-	fenceSlice := ([]VkFence)(unsafe.Slice(fencePtr, fenceCount))
+	fencePtr := (*driver.VkFence)(fenceUnsafePtr)
+	fenceSlice := ([]driver.VkFence)(unsafe.Slice(fencePtr, fenceCount))
 	for i := 0; i < fenceCount; i++ {
 		fenceSlice[i] = fences[i].Handle()
 	}
 
-	return d.driver.VkResetFences(d.handle, Uint32(fenceCount), fencePtr)
+	return d.driver.VkResetFences(d.handle, driver.Uint32(fenceCount), fencePtr)
 }
 
-func (d *vulkanDevice) AllocateMemory(allocationCallbacks *AllocationCallbacks, o *DeviceMemoryOptions) (DeviceMemory, VkResult, error) {
+func (d *vulkanDevice) AllocateMemory(allocationCallbacks *AllocationCallbacks, o *DeviceMemoryOptions) (DeviceMemory, common.VkResult, error) {
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
 	createInfo, err := common.AllocOptions(arena, o)
 	if err != nil {
-		return nil, VKErrorUnknown, err
+		return nil, common.VKErrorUnknown, err
 	}
 
-	var deviceMemory VkDeviceMemory
+	var deviceMemory driver.VkDeviceMemory
 
-	res, err := d.driver.VkAllocateMemory(d.handle, (*VkMemoryAllocateInfo)(createInfo), nil, &deviceMemory)
+	res, err := d.driver.VkAllocateMemory(d.handle, (*driver.VkMemoryAllocateInfo)(createInfo), nil, &deviceMemory)
 	if err != nil {
 		return nil, res, err
 	}
@@ -146,7 +146,7 @@ func (d *vulkanDevice) UpdateDescriptorSets(writes []WriteDescriptorSetOptions, 
 		}
 	}
 
-	d.driver.VkUpdateDescriptorSets(d.handle, Uint32(writeCount), (*VkWriteDescriptorSet)(writePtr), Uint32(copyCount), (*VkCopyDescriptorSet)(copyPtr))
+	d.driver.VkUpdateDescriptorSets(d.handle, driver.Uint32(writeCount), (*driver.VkWriteDescriptorSet)(writePtr), driver.Uint32(copyCount), (*driver.VkCopyDescriptorSet)(copyPtr))
 	return nil
 }
 
@@ -161,7 +161,7 @@ type MappedMemoryRange struct {
 func (r *MappedMemoryRange) populate(mappedRange *C.VkMappedMemoryRange, next unsafe.Pointer) error {
 	mappedRange.sType = C.VK_STRUCTURE_TYPE_MAPPED_MEMORY_RANGE
 	mappedRange.pNext = next
-	mappedRange.memory = C.VkDeviceMemory(r.Memory.Handle())
+	mappedRange.memory = C.VkDeviceMemory(unsafe.Pointer(r.Memory.Handle()))
 	mappedRange.offset = C.VkDeviceSize(r.Offset)
 	mappedRange.size = C.VkDeviceSize(r.Size)
 
@@ -174,7 +174,7 @@ func (r *MappedMemoryRange) AllocForC(allocator *cgoparam.Allocator, next unsafe
 	return unsafe.Pointer(createInfo), err
 }
 
-func (d *vulkanDevice) FlushMappedMemoryRanges(ranges []*MappedMemoryRange) (VkResult, error) {
+func (d *vulkanDevice) FlushMappedMemoryRanges(ranges []*MappedMemoryRange) (common.VkResult, error) {
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
@@ -185,19 +185,19 @@ func (d *vulkanDevice) FlushMappedMemoryRanges(ranges []*MappedMemoryRange) (VkR
 	for rangeIndex, memRange := range ranges {
 		next, err := common.AllocNext(arena, memRange)
 		if err != nil {
-			return VKErrorUnknown, err
+			return common.VKErrorUnknown, err
 		}
 
 		err = memRange.populate(&createInfoSlice[rangeIndex], next)
 		if err != nil {
-			return VKErrorUnknown, err
+			return common.VKErrorUnknown, err
 		}
 	}
 
-	return d.driver.VkFlushMappedMemoryRanges(d.handle, Uint32(rangeCount), (*VkMappedMemoryRange)(createInfos))
+	return d.driver.VkFlushMappedMemoryRanges(d.handle, driver.Uint32(rangeCount), (*driver.VkMappedMemoryRange)(unsafe.Pointer(createInfos)))
 }
 
-func (d *vulkanDevice) InvalidateMappedMemoryRanges(ranges []*MappedMemoryRange) (VkResult, error) {
+func (d *vulkanDevice) InvalidateMappedMemoryRanges(ranges []*MappedMemoryRange) (common.VkResult, error) {
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
@@ -208,14 +208,14 @@ func (d *vulkanDevice) InvalidateMappedMemoryRanges(ranges []*MappedMemoryRange)
 	for rangeIndex, memRange := range ranges {
 		next, err := common.AllocNext(arena, memRange)
 		if err != nil {
-			return VKErrorUnknown, err
+			return common.VKErrorUnknown, err
 		}
 
 		err = memRange.populate(&createInfoSlice[rangeIndex], next)
 		if err != nil {
-			return VKErrorUnknown, err
+			return common.VKErrorUnknown, err
 		}
 	}
 
-	return d.driver.VkInvalidateMappedMemoryRanges(d.handle, Uint32(rangeCount), (*VkMappedMemoryRange)(createInfos))
+	return d.driver.VkInvalidateMappedMemoryRanges(d.handle, driver.Uint32(rangeCount), (*driver.VkMappedMemoryRange)(unsafe.Pointer(createInfos)))
 }

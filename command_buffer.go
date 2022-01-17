@@ -7,35 +7,36 @@ package core
 import "C"
 import (
 	"github.com/CannibalVox/VKng/core/common"
+	"github.com/CannibalVox/VKng/core/driver"
 	"github.com/CannibalVox/cgoparam"
 	"github.com/cockroachdb/errors"
 	"unsafe"
 )
 
 type vulkanCommandBuffer struct {
-	driver Driver
-	device VkDevice
-	pool   VkCommandPool
-	handle VkCommandBuffer
+	driver driver.Driver
+	device driver.VkDevice
+	pool   driver.VkCommandPool
+	handle driver.VkCommandBuffer
 }
 
-func (c *vulkanCommandBuffer) Handle() VkCommandBuffer {
+func (c *vulkanCommandBuffer) Handle() driver.VkCommandBuffer {
 	return c.handle
 }
 
-func (c *vulkanCommandBuffer) Begin(o *BeginOptions) (VkResult, error) {
+func (c *vulkanCommandBuffer) Begin(o *BeginOptions) (common.VkResult, error) {
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
 	createInfo, err := common.AllocOptions(arena, o)
 	if err != nil {
-		return VKErrorUnknown, err
+		return common.VKErrorUnknown, err
 	}
 
-	return c.driver.VkBeginCommandBuffer(c.handle, (*VkCommandBufferBeginInfo)(createInfo))
+	return c.driver.VkBeginCommandBuffer(c.handle, (*driver.VkCommandBufferBeginInfo)(createInfo))
 }
 
-func (c *vulkanCommandBuffer) End() (VkResult, error) {
+func (c *vulkanCommandBuffer) End() (common.VkResult, error) {
 	return c.driver.VkEndCommandBuffer(c.handle)
 }
 
@@ -48,7 +49,7 @@ func (c *vulkanCommandBuffer) CmdBeginRenderPass(contents SubpassContents, o *Re
 		return err
 	}
 
-	c.driver.VkCmdBeginRenderPass(c.handle, (*VkRenderPassBeginInfo)(createInfo), VkSubpassContents(contents))
+	c.driver.VkCmdBeginRenderPass(c.handle, (*driver.VkRenderPassBeginInfo)(createInfo), driver.VkSubpassContents(contents))
 	return nil
 }
 
@@ -57,15 +58,15 @@ func (c *vulkanCommandBuffer) CmdEndRenderPass() {
 }
 
 func (c *vulkanCommandBuffer) CmdBindPipeline(bindPoint common.PipelineBindPoint, pipeline Pipeline) {
-	c.driver.VkCmdBindPipeline(c.handle, VkPipelineBindPoint(bindPoint), pipeline.Handle())
+	c.driver.VkCmdBindPipeline(c.handle, driver.VkPipelineBindPoint(bindPoint), pipeline.Handle())
 }
 
 func (c *vulkanCommandBuffer) CmdDraw(vertexCount, instanceCount int, firstVertex, firstInstance uint32) {
-	c.driver.VkCmdDraw(c.handle, Uint32(vertexCount), Uint32(instanceCount), Uint32(firstVertex), Uint32(firstInstance))
+	c.driver.VkCmdDraw(c.handle, driver.Uint32(vertexCount), driver.Uint32(instanceCount), driver.Uint32(firstVertex), driver.Uint32(firstInstance))
 }
 
 func (c *vulkanCommandBuffer) CmdDrawIndexed(indexCount, instanceCount int, firstIndex uint32, vertexOffset int, firstInstance uint32) {
-	c.driver.VkCmdDrawIndexed(c.handle, Uint32(indexCount), Uint32(instanceCount), Uint32(firstIndex), Int32(vertexOffset), Uint32(firstInstance))
+	c.driver.VkCmdDrawIndexed(c.handle, driver.Uint32(indexCount), driver.Uint32(instanceCount), driver.Uint32(firstIndex), driver.Int32(vertexOffset), driver.Uint32(firstInstance))
 }
 
 func (c *vulkanCommandBuffer) CmdBindVertexBuffers(buffers []Buffer, bufferOffsets []int) {
@@ -77,22 +78,22 @@ func (c *vulkanCommandBuffer) CmdBindVertexBuffers(buffers []Buffer, bufferOffse
 	bufferArrayUnsafe := allocator.Malloc(bufferCount * int(unsafe.Sizeof([1]C.VkBuffer{})))
 	offsetArrayUnsafe := allocator.Malloc(bufferCount * int(unsafe.Sizeof(C.VkDeviceSize(0))))
 
-	bufferArrayPtr := (*VkBuffer)(bufferArrayUnsafe)
-	offsetArrayPtr := (*VkDeviceSize)(offsetArrayUnsafe)
+	bufferArrayPtr := (*driver.VkBuffer)(bufferArrayUnsafe)
+	offsetArrayPtr := (*driver.VkDeviceSize)(offsetArrayUnsafe)
 
-	bufferArraySlice := ([]VkBuffer)(unsafe.Slice(bufferArrayPtr, bufferCount))
-	offsetArraySlice := ([]VkDeviceSize)(unsafe.Slice(offsetArrayPtr, bufferCount))
+	bufferArraySlice := ([]driver.VkBuffer)(unsafe.Slice(bufferArrayPtr, bufferCount))
+	offsetArraySlice := ([]driver.VkDeviceSize)(unsafe.Slice(offsetArrayPtr, bufferCount))
 
 	for i := 0; i < bufferCount; i++ {
 		bufferArraySlice[i] = buffers[i].Handle()
-		offsetArraySlice[i] = VkDeviceSize(bufferOffsets[i])
+		offsetArraySlice[i] = driver.VkDeviceSize(bufferOffsets[i])
 	}
 
-	c.driver.VkCmdBindVertexBuffers(c.handle, Uint32(0), Uint32(bufferCount), bufferArrayPtr, offsetArrayPtr)
+	c.driver.VkCmdBindVertexBuffers(c.handle, driver.Uint32(0), driver.Uint32(bufferCount), bufferArrayPtr, offsetArrayPtr)
 }
 
 func (c *vulkanCommandBuffer) CmdBindIndexBuffer(buffer Buffer, offset int, indexType common.IndexType) {
-	c.driver.VkCmdBindIndexBuffer(c.handle, buffer.Handle(), VkDeviceSize(offset), VkIndexType(indexType))
+	c.driver.VkCmdBindIndexBuffer(c.handle, buffer.Handle(), driver.VkDeviceSize(offset), driver.VkIndexType(indexType))
 }
 
 func (c *vulkanCommandBuffer) CmdBindDescriptorSets(bindPoint common.PipelineBindPoint, layout PipelineLayout, sets []DescriptorSet, dynamicOffsets []int) {
@@ -123,13 +124,13 @@ func (c *vulkanCommandBuffer) CmdBindDescriptorSets(bindPoint common.PipelineBin
 	}
 
 	c.driver.VkCmdBindDescriptorSets(c.handle,
-		VkPipelineBindPoint(bindPoint),
+		driver.VkPipelineBindPoint(bindPoint),
 		layout.Handle(),
-		Uint32(0),
-		Uint32(setCount),
-		(*VkDescriptorSet)(setPtr),
-		Uint32(dynamicOffsetCount),
-		(*Uint32)(dynamicOffsetPtr))
+		driver.Uint32(0),
+		driver.Uint32(setCount),
+		(*driver.VkDescriptorSet)(setPtr),
+		driver.Uint32(dynamicOffsetCount),
+		(*driver.Uint32)(dynamicOffsetPtr))
 }
 
 func (c *vulkanCommandBuffer) CmdPipelineBarrier(srcStageMask, dstStageMask common.PipelineStages, dependencies common.DependencyFlags, memoryBarriers []*MemoryBarrierOptions, bufferMemoryBarriers []*BufferMemoryBarrierOptions, imageMemoryBarriers []*ImageMemoryBarrierOptions) error {
@@ -195,7 +196,7 @@ func (c *vulkanCommandBuffer) CmdPipelineBarrier(srcStageMask, dstStageMask comm
 		}
 	}
 
-	c.driver.VkCmdPipelineBarrier(c.handle, VkPipelineStageFlags(srcStageMask), VkPipelineStageFlags(dstStageMask), VkDependencyFlags(dependencies), Uint32(barrierCount), (*VkMemoryBarrier)(barrierPtr), Uint32(bufferBarrierCount), (*VkBufferMemoryBarrier)(bufferBarrierPtr), Uint32(imageBarrierCount), (*VkImageMemoryBarrier)(imageBarrierPtr))
+	c.driver.VkCmdPipelineBarrier(c.handle, driver.VkPipelineStageFlags(srcStageMask), driver.VkPipelineStageFlags(dstStageMask), driver.VkDependencyFlags(dependencies), driver.Uint32(barrierCount), (*driver.VkMemoryBarrier)(unsafe.Pointer(barrierPtr)), driver.Uint32(bufferBarrierCount), (*driver.VkBufferMemoryBarrier)(unsafe.Pointer(bufferBarrierPtr)), driver.Uint32(imageBarrierCount), (*driver.VkImageMemoryBarrier)(unsafe.Pointer(imageBarrierPtr)))
 	return nil
 }
 
@@ -218,7 +219,7 @@ func (c *vulkanCommandBuffer) CmdCopyBufferToImage(buffer Buffer, image Image, l
 		}
 	}
 
-	c.driver.VkCmdCopyBufferToImage(c.handle, buffer.Handle(), image.Handle(), VkImageLayout(layout), Uint32(regionCount), (*VkBufferImageCopy)(regionPtr))
+	c.driver.VkCmdCopyBufferToImage(c.handle, buffer.Handle(), image.Handle(), driver.VkImageLayout(layout), driver.Uint32(regionCount), (*driver.VkBufferImageCopy)(unsafe.Pointer(regionPtr)))
 	return nil
 }
 
@@ -239,13 +240,13 @@ func (c *vulkanCommandBuffer) CmdBlitImage(sourceImage Image, sourceImageLayout 
 
 	c.driver.VkCmdBlitImage(
 		c.handle,
-		VkImage(sourceImage.Handle()),
-		VkImageLayout(sourceImageLayout),
-		VkImage(destinationImage.Handle()),
-		VkImageLayout(destinationImageLayout),
-		Uint32(regionCount),
-		(*VkImageBlit)(regionPtr),
-		VkFilter(filter))
+		driver.VkImage(sourceImage.Handle()),
+		driver.VkImageLayout(sourceImageLayout),
+		driver.VkImage(destinationImage.Handle()),
+		driver.VkImageLayout(destinationImageLayout),
+		driver.Uint32(regionCount),
+		(*driver.VkImageBlit)(unsafe.Pointer(regionPtr)),
+		driver.VkFilter(filter))
 	return nil
 }
 
@@ -255,7 +256,7 @@ func (c *vulkanCommandBuffer) CmdPushConstants(layout PipelineLayout, stageFlags
 
 	valueBytesPtr := alloc.CBytes(valueBytes)
 
-	c.driver.VkCmdPushConstants(c.handle, layout.Handle(), VkShaderStageFlags(stageFlags), Uint32(offset), Uint32(len(valueBytes)), valueBytesPtr)
+	c.driver.VkCmdPushConstants(c.handle, layout.Handle(), driver.VkShaderStageFlags(stageFlags), driver.Uint32(offset), driver.Uint32(len(valueBytes)), valueBytesPtr)
 }
 
 func (c *vulkanCommandBuffer) CmdSetViewport(viewports []common.Viewport) {
@@ -280,7 +281,7 @@ func (c *vulkanCommandBuffer) CmdSetViewport(viewports []common.Viewport) {
 		}
 	}
 
-	c.driver.VkCmdSetViewport(c.handle, Uint32(0), Uint32(viewportCount), (*VkViewport)(viewportPtr))
+	c.driver.VkCmdSetViewport(c.handle, driver.Uint32(0), driver.Uint32(viewportCount), (*driver.VkViewport)(unsafe.Pointer(viewportPtr)))
 }
 
 func (c *vulkanCommandBuffer) CmdSetScissor(scissors []common.Rect2D) {
@@ -303,11 +304,11 @@ func (c *vulkanCommandBuffer) CmdSetScissor(scissors []common.Rect2D) {
 		}
 	}
 
-	c.driver.VkCmdSetScissor(c.handle, Uint32(0), Uint32(scissorCount), (*VkRect2D)(scissorPtr))
+	c.driver.VkCmdSetScissor(c.handle, driver.Uint32(0), driver.Uint32(scissorCount), (*driver.VkRect2D)(unsafe.Pointer(scissorPtr)))
 }
 
 func (c *vulkanCommandBuffer) CmdNextSubpass(contents SubpassContents) {
-	c.driver.VkCmdNextSubpass(c.handle, VkSubpassContents(contents))
+	c.driver.VkCmdNextSubpass(c.handle, driver.VkSubpassContents(contents))
 }
 
 func (c *vulkanCommandBuffer) CmdWaitEvents(events []Event, srcStageMask common.PipelineStages, dstStageMask common.PipelineStages, memoryBarriers []*MemoryBarrierOptions, bufferMemoryBarriers []*BufferMemoryBarrierOptions, imageMemoryBarriers []*ImageMemoryBarrierOptions) error {
@@ -329,7 +330,7 @@ func (c *vulkanCommandBuffer) CmdWaitEvents(events []Event, srcStageMask common.
 		eventSlice := ([]C.VkEvent)(unsafe.Slice(eventPtr, eventCount))
 
 		for i := 0; i < eventCount; i++ {
-			eventSlice[i] = C.VkEvent(events[i].Handle())
+			eventSlice[i] = C.VkEvent(unsafe.Pointer(events[i].Handle()))
 		}
 	}
 
@@ -384,12 +385,12 @@ func (c *vulkanCommandBuffer) CmdWaitEvents(events []Event, srcStageMask common.
 		}
 	}
 
-	c.driver.VkCmdWaitEvents(c.handle, Uint32(eventCount), (*VkEvent)(eventPtr), VkPipelineStageFlags(srcStageMask), VkPipelineStageFlags(dstStageMask), Uint32(barrierCount), (*VkMemoryBarrier)(barrierPtr), Uint32(bufferBarrierCount), (*VkBufferMemoryBarrier)(bufferBarrierPtr), Uint32(imageBarrierCount), (*VkImageMemoryBarrier)(imageBarrierPtr))
+	c.driver.VkCmdWaitEvents(c.handle, driver.Uint32(eventCount), (*driver.VkEvent)(unsafe.Pointer(eventPtr)), driver.VkPipelineStageFlags(srcStageMask), driver.VkPipelineStageFlags(dstStageMask), driver.Uint32(barrierCount), (*driver.VkMemoryBarrier)(unsafe.Pointer(barrierPtr)), driver.Uint32(bufferBarrierCount), (*driver.VkBufferMemoryBarrier)(unsafe.Pointer(bufferBarrierPtr)), driver.Uint32(imageBarrierCount), (*driver.VkImageMemoryBarrier)(unsafe.Pointer(imageBarrierPtr)))
 	return nil
 }
 
 func (c *vulkanCommandBuffer) CmdSetEvent(event Event, stageMask common.PipelineStages) {
-	c.driver.VkCmdSetEvent(c.handle, event.Handle(), VkPipelineStageFlags(stageMask))
+	c.driver.VkCmdSetEvent(c.handle, event.Handle(), driver.VkPipelineStageFlags(stageMask))
 }
 
 func (c *vulkanCommandBuffer) CmdClearColorImage(image Image, imageLayout common.ImageLayout, color ClearColorValue, ranges []common.ImageSubresourceRange) {
@@ -418,23 +419,23 @@ func (c *vulkanCommandBuffer) CmdClearColorImage(image Image, imageLayout common
 		color.populateColorUnion(pColor)
 	}
 
-	c.driver.VkCmdClearColorImage(c.handle, image.Handle(), VkImageLayout(imageLayout), (*VkClearColorValue)(pColor), Uint32(rangeCount), (*VkImageSubresourceRange)(pRanges))
+	c.driver.VkCmdClearColorImage(c.handle, image.Handle(), driver.VkImageLayout(imageLayout), (*driver.VkClearColorValue)(unsafe.Pointer(pColor)), driver.Uint32(rangeCount), (*driver.VkImageSubresourceRange)(unsafe.Pointer(pRanges)))
 }
 
 func (c *vulkanCommandBuffer) CmdResetQueryPool(queryPool QueryPool, startQuery, queryCount int) {
-	c.driver.VkCmdResetQueryPool(c.handle, queryPool.Handle(), Uint32(startQuery), Uint32(queryCount))
+	c.driver.VkCmdResetQueryPool(c.handle, queryPool.Handle(), driver.Uint32(startQuery), driver.Uint32(queryCount))
 }
 
 func (c *vulkanCommandBuffer) CmdBeginQuery(queryPool QueryPool, query int, flags common.QueryControlFlags) {
-	c.driver.VkCmdBeginQuery(c.handle, queryPool.Handle(), Uint32(query), VkQueryControlFlags(flags))
+	c.driver.VkCmdBeginQuery(c.handle, queryPool.Handle(), driver.Uint32(query), driver.VkQueryControlFlags(flags))
 }
 
 func (c *vulkanCommandBuffer) CmdEndQuery(queryPool QueryPool, query int) {
-	c.driver.VkCmdEndQuery(c.handle, queryPool.Handle(), Uint32(query))
+	c.driver.VkCmdEndQuery(c.handle, queryPool.Handle(), driver.Uint32(query))
 }
 
 func (c *vulkanCommandBuffer) CmdCopyQueryPoolResults(queryPool QueryPool, firstQuery, queryCount int, dstBuffer Buffer, dstOffset, stride int, flags common.QueryResultFlags) {
-	c.driver.VkCmdCopyQueryPoolResults(c.handle, queryPool.Handle(), Uint32(firstQuery), Uint32(queryCount), dstBuffer.Handle(), VkDeviceSize(dstOffset), VkDeviceSize(stride), VkQueryResultFlags(flags))
+	c.driver.VkCmdCopyQueryPoolResults(c.handle, queryPool.Handle(), driver.Uint32(firstQuery), driver.Uint32(queryCount), dstBuffer.Handle(), driver.VkDeviceSize(dstOffset), driver.VkDeviceSize(stride), driver.VkQueryResultFlags(flags))
 }
 
 func (c *vulkanCommandBuffer) CmdExecuteCommands(commandBuffers []CommandBuffer) {
@@ -446,10 +447,10 @@ func (c *vulkanCommandBuffer) CmdExecuteCommands(commandBuffers []CommandBuffer)
 	commandBufferSlice := ([]C.VkCommandBuffer)(unsafe.Slice(commandBufferPtr, bufferCount))
 
 	for i := 0; i < bufferCount; i++ {
-		commandBufferSlice[i] = C.VkCommandBuffer(commandBuffers[i].Handle())
+		commandBufferSlice[i] = C.VkCommandBuffer(unsafe.Pointer(commandBuffers[i].Handle()))
 	}
 
-	c.driver.VkCmdExecuteCommands(c.handle, Uint32(bufferCount), (*VkCommandBuffer)(commandBufferPtr))
+	c.driver.VkCmdExecuteCommands(c.handle, driver.Uint32(bufferCount), (*driver.VkCommandBuffer)(unsafe.Pointer(commandBufferPtr)))
 }
 
 type ClearAttachment struct {
@@ -491,7 +492,7 @@ func (c *vulkanCommandBuffer) CmdClearAttachments(attachments []ClearAttachment,
 		rectsSlice[i].rect.offset.y = C.int32_t(rects[i].Rect.Offset.Y)
 	}
 
-	c.driver.VkCmdClearAttachments(c.handle, Uint32(attachmentCount), (*VkClearAttachment)(attachmentsPtr), Uint32(rectsCount), (*VkClearRect)(rectsPtr))
+	c.driver.VkCmdClearAttachments(c.handle, driver.Uint32(attachmentCount), (*driver.VkClearAttachment)(unsafe.Pointer(attachmentsPtr)), driver.Uint32(rectsCount), (*driver.VkClearRect)(unsafe.Pointer(rectsPtr)))
 }
 
 func (c *vulkanCommandBuffer) CmdClearDepthStencilImage(image Image, imageLayout common.ImageLayout, depthStencil *ClearValueDepthStencil, ranges []common.ImageSubresourceRange) {
@@ -514,7 +515,7 @@ func (c *vulkanCommandBuffer) CmdClearDepthStencilImage(image Image, imageLayout
 	depthStencilPtr.depth = C.float(depthStencil.Depth)
 	depthStencilPtr.stencil = C.uint32_t(depthStencil.Stencil)
 
-	c.driver.VkCmdClearDepthStencilImage(c.handle, image.Handle(), VkImageLayout(imageLayout), (*VkClearDepthStencilValue)(depthStencilPtr), Uint32(rangeCount), (*VkImageSubresourceRange)(rangePtr))
+	c.driver.VkCmdClearDepthStencilImage(c.handle, image.Handle(), driver.VkImageLayout(imageLayout), (*driver.VkClearDepthStencilValue)(unsafe.Pointer(depthStencilPtr)), driver.Uint32(rangeCount), (*driver.VkImageSubresourceRange)(unsafe.Pointer(rangePtr)))
 }
 
 func (c *vulkanCommandBuffer) CmdCopyImageToBuffer(srcImage Image, srcImageLayout common.ImageLayout, dstBuffer Buffer, regions []BufferImageCopy) error {
@@ -532,33 +533,33 @@ func (c *vulkanCommandBuffer) CmdCopyImageToBuffer(srcImage Image, srcImageLayou
 		}
 	}
 
-	c.driver.VkCmdCopyImageToBuffer(c.handle, srcImage.Handle(), VkImageLayout(srcImageLayout), dstBuffer.Handle(), Uint32(regionCount), (*VkBufferImageCopy)(regionPtr))
+	c.driver.VkCmdCopyImageToBuffer(c.handle, srcImage.Handle(), driver.VkImageLayout(srcImageLayout), dstBuffer.Handle(), driver.Uint32(regionCount), (*driver.VkBufferImageCopy)(unsafe.Pointer(regionPtr)))
 
 	return nil
 }
 
 func (c *vulkanCommandBuffer) CmdDispatch(groupCountX, groupCountY, groupCountZ int) {
-	c.driver.VkCmdDispatch(c.handle, Uint32(groupCountX), Uint32(groupCountY), Uint32(groupCountZ))
+	c.driver.VkCmdDispatch(c.handle, driver.Uint32(groupCountX), driver.Uint32(groupCountY), driver.Uint32(groupCountZ))
 }
 
 func (c *vulkanCommandBuffer) CmdDispatchIndirect(buffer Buffer, offset int) {
-	c.driver.VkCmdDispatchIndirect(c.handle, buffer.Handle(), VkDeviceSize(offset))
+	c.driver.VkCmdDispatchIndirect(c.handle, buffer.Handle(), driver.VkDeviceSize(offset))
 }
 
 func (c *vulkanCommandBuffer) CmdDrawIndexedIndirect(buffer Buffer, offset int, drawCount, stride int) {
-	c.driver.VkCmdDrawIndexedIndirect(c.handle, buffer.Handle(), VkDeviceSize(offset), Uint32(drawCount), Uint32(stride))
+	c.driver.VkCmdDrawIndexedIndirect(c.handle, buffer.Handle(), driver.VkDeviceSize(offset), driver.Uint32(drawCount), driver.Uint32(stride))
 }
 
 func (c *vulkanCommandBuffer) CmdDrawIndirect(buffer Buffer, offset int, drawCount, stride int) {
-	c.driver.VkCmdDrawIndirect(c.handle, buffer.Handle(), VkDeviceSize(offset), Uint32(drawCount), Uint32(stride))
+	c.driver.VkCmdDrawIndirect(c.handle, buffer.Handle(), driver.VkDeviceSize(offset), driver.Uint32(drawCount), driver.Uint32(stride))
 }
 
 func (c *vulkanCommandBuffer) CmdFillBuffer(dstBuffer Buffer, dstOffset int, size int, data uint32) {
-	c.driver.VkCmdFillBuffer(c.handle, dstBuffer.Handle(), VkDeviceSize(dstOffset), VkDeviceSize(size), Uint32(data))
+	c.driver.VkCmdFillBuffer(c.handle, dstBuffer.Handle(), driver.VkDeviceSize(dstOffset), driver.VkDeviceSize(size), driver.Uint32(data))
 }
 
 func (c *vulkanCommandBuffer) CmdResetEvent(event Event, stageMask common.PipelineStages) {
-	c.driver.VkCmdResetEvent(c.handle, event.Handle(), VkPipelineStageFlags(stageMask))
+	c.driver.VkCmdResetEvent(c.handle, event.Handle(), driver.VkPipelineStageFlags(stageMask))
 }
 
 type ImageResolve struct {
@@ -601,7 +602,7 @@ func (c *vulkanCommandBuffer) CmdResolveImage(srcImage Image, srcImageLayout com
 		regionSlice[i].extent.depth = C.uint32_t(regions[i].Extent.Depth)
 	}
 
-	c.driver.VkCmdResolveImage(c.handle, srcImage.Handle(), VkImageLayout(srcImageLayout), dstImage.Handle(), VkImageLayout(dstImageLayout), Uint32(regionCount), (*VkImageResolve)(regionsPtr))
+	c.driver.VkCmdResolveImage(c.handle, srcImage.Handle(), driver.VkImageLayout(srcImageLayout), dstImage.Handle(), driver.VkImageLayout(dstImageLayout), driver.Uint32(regionCount), (*driver.VkImageResolve)(unsafe.Pointer(regionsPtr)))
 }
 
 func (c *vulkanCommandBuffer) CmdSetBlendConstants(blendConstants [4]float32) {
@@ -615,31 +616,31 @@ func (c *vulkanCommandBuffer) CmdSetBlendConstants(blendConstants [4]float32) {
 		constsSlice[i] = C.float(blendConstants[i])
 	}
 
-	c.driver.VkCmdSetBlendConstants(c.handle, (*Float)(constsPtr))
+	c.driver.VkCmdSetBlendConstants(c.handle, (*driver.Float)(constsPtr))
 }
 
 func (c *vulkanCommandBuffer) CmdSetDepthBias(depthBiasConstantFactor, depthBiasClamp, depthBiasSlopeFactor float32) {
-	c.driver.VkCmdSetDepthBias(c.handle, Float(depthBiasConstantFactor), Float(depthBiasClamp), Float(depthBiasSlopeFactor))
+	c.driver.VkCmdSetDepthBias(c.handle, driver.Float(depthBiasConstantFactor), driver.Float(depthBiasClamp), driver.Float(depthBiasSlopeFactor))
 }
 
 func (c *vulkanCommandBuffer) CmdSetDepthBounds(min, max float32) {
-	c.driver.VkCmdSetDepthBounds(c.handle, Float(min), Float(max))
+	c.driver.VkCmdSetDepthBounds(c.handle, driver.Float(min), driver.Float(max))
 }
 
 func (c *vulkanCommandBuffer) CmdSetLineWidth(lineWidth float32) {
-	c.driver.VkCmdSetLineWidth(c.handle, Float(lineWidth))
+	c.driver.VkCmdSetLineWidth(c.handle, driver.Float(lineWidth))
 }
 
 func (c *vulkanCommandBuffer) CmdSetStencilCompareMask(faceMask common.StencilFaces, compareMask uint32) {
-	c.driver.VkCmdSetStencilCompareMask(c.handle, VkStencilFaceFlags(faceMask), Uint32(compareMask))
+	c.driver.VkCmdSetStencilCompareMask(c.handle, driver.VkStencilFaceFlags(faceMask), driver.Uint32(compareMask))
 }
 
 func (c *vulkanCommandBuffer) CmdSetStencilReference(faceMask common.StencilFaces, reference uint32) {
-	c.driver.VkCmdSetStencilReference(c.handle, VkStencilFaceFlags(faceMask), Uint32(reference))
+	c.driver.VkCmdSetStencilReference(c.handle, driver.VkStencilFaceFlags(faceMask), driver.Uint32(reference))
 }
 
 func (c *vulkanCommandBuffer) CmdSetStencilWriteMask(faceMask common.StencilFaces, writeMask uint32) {
-	c.driver.VkCmdSetStencilWriteMask(c.handle, VkStencilFaceFlags(faceMask), Uint32(writeMask))
+	c.driver.VkCmdSetStencilWriteMask(c.handle, driver.VkStencilFaceFlags(faceMask), driver.Uint32(writeMask))
 }
 
 func (c *vulkanCommandBuffer) CmdUpdateBuffer(dstBuffer Buffer, dstOffset int, dataSize int, data []byte) {
@@ -651,11 +652,11 @@ func (c *vulkanCommandBuffer) CmdUpdateBuffer(dstBuffer Buffer, dstOffset int, d
 	dataSlice := ([]byte)(unsafe.Slice((*byte)(dataPtr), size))
 	copy(dataSlice, data)
 
-	c.driver.VkCmdUpdateBuffer(c.handle, dstBuffer.Handle(), VkDeviceSize(dstOffset), VkDeviceSize(dataSize), dataPtr)
+	c.driver.VkCmdUpdateBuffer(c.handle, dstBuffer.Handle(), driver.VkDeviceSize(dstOffset), driver.VkDeviceSize(dataSize), dataPtr)
 }
 
 func (c *vulkanCommandBuffer) CmdWriteTimestamp(pipelineStage common.PipelineStages, queryPool QueryPool, query int) {
-	c.driver.VkCmdWriteTimestamp(c.handle, VkPipelineStageFlags(pipelineStage), queryPool.Handle(), Uint32(query))
+	c.driver.VkCmdWriteTimestamp(c.handle, driver.VkPipelineStageFlags(pipelineStage), queryPool.Handle(), driver.Uint32(query))
 }
 
 type CommandBufferResetFlags int32
@@ -672,8 +673,8 @@ func (f CommandBufferResetFlags) String() string {
 	return common.FlagsToString(f, resetFlagsToString)
 }
 
-func (c *vulkanCommandBuffer) Reset(flags CommandBufferResetFlags) (VkResult, error) {
-	return c.driver.VkResetCommandBuffer(c.handle, VkCommandBufferResetFlags(flags))
+func (c *vulkanCommandBuffer) Reset(flags CommandBufferResetFlags) (common.VkResult, error) {
+	return c.driver.VkResetCommandBuffer(c.handle, driver.VkCommandBufferResetFlags(flags))
 }
 
 type CommandBufferOptions struct {

@@ -7,6 +7,7 @@ package core
 import "C"
 import (
 	"github.com/CannibalVox/VKng/core/common"
+	"github.com/CannibalVox/VKng/core/driver"
 	"github.com/CannibalVox/cgoparam"
 	"github.com/cockroachdb/errors"
 	"unsafe"
@@ -49,10 +50,10 @@ func (o *DescriptorSetOptions) MustBeRootOptions() bool {
 }
 
 type vulkanDescriptorSet struct {
-	handle VkDescriptorSet
+	handle driver.VkDescriptorSet
 }
 
-func (s *vulkanDescriptorSet) Handle() VkDescriptorSet {
+func (s *vulkanDescriptorSet) Handle() driver.VkDescriptorSet {
 	return s.handle
 }
 

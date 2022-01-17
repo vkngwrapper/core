@@ -5,14 +5,17 @@ package core
 #include "vulkan/vulkan.h"
 */
 import "C"
+import (
+	driver3 "github.com/CannibalVox/VKng/core/driver"
+)
 
 type vulkanImageView struct {
-	driver Driver
-	handle VkImageView
-	device VkDevice
+	driver driver3.Driver
+	handle driver3.VkImageView
+	device driver3.VkDevice
 }
 
-func (v *vulkanImageView) Handle() VkImageView {
+func (v *vulkanImageView) Handle() driver3.VkImageView {
 	return v.handle
 }
 

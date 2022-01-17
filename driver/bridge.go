@@ -1,4 +1,4 @@
-package core
+package driver
 
 /*
 #cgo windows LDFLAGS: -lvulkan
@@ -7,38 +7,39 @@ package core
 */
 import "C"
 import (
+	"github.com/CannibalVox/VKng/core/common"
 	"unsafe"
 )
 
-func (l *vulkanDriver) VkEnumerateInstanceExtensionProperties(pLayerName *Char, pPropertyCount *Uint32, pProperties *VkExtensionProperties) (VkResult, error) {
-	res := VkResult(C.cgoEnumerateInstanceExtensionProperties(l.funcPtrs.vkEnumerateInstanceExtensionProperties,
+func (l *vulkanDriver) VkEnumerateInstanceExtensionProperties(pLayerName *Char, pPropertyCount *Uint32, pProperties *VkExtensionProperties) (common.VkResult, error) {
+	res := common.VkResult(C.cgoEnumerateInstanceExtensionProperties(l.funcPtrs.vkEnumerateInstanceExtensionProperties,
 		(*C.char)(pLayerName),
 		(*C.uint32_t)(pPropertyCount),
 		(*C.VkExtensionProperties)(pProperties)))
 	return res, res.ToError()
 }
 
-func (l *vulkanDriver) VkEnumerateInstanceLayerProperties(pPropertyCount *Uint32, pProperties *VkLayerProperties) (VkResult, error) {
-	res := VkResult(C.cgoEnumerateInstanceLayerProperties(l.funcPtrs.vkEnumerateInstanceLayerProperties,
+func (l *vulkanDriver) VkEnumerateInstanceLayerProperties(pPropertyCount *Uint32, pProperties *VkLayerProperties) (common.VkResult, error) {
+	res := common.VkResult(C.cgoEnumerateInstanceLayerProperties(l.funcPtrs.vkEnumerateInstanceLayerProperties,
 		(*C.uint32_t)(pPropertyCount),
 		(*C.VkLayerProperties)(pProperties)))
 	return res, res.ToError()
 }
 
-func (l *vulkanDriver) VkCreateInstance(pCreateInfo *VkInstanceCreateInfo, pAllocator *VkAllocationCallbacks, pInstance *VkInstance) (VkResult, error) {
-	res := VkResult(C.cgoCreateInstance(l.funcPtrs.vkCreateInstance,
+func (l *vulkanDriver) VkCreateInstance(pCreateInfo *VkInstanceCreateInfo, pAllocator *VkAllocationCallbacks, pInstance *VkInstance) (common.VkResult, error) {
+	res := common.VkResult(C.cgoCreateInstance(l.funcPtrs.vkCreateInstance,
 		(*C.VkInstanceCreateInfo)(pCreateInfo),
 		(*C.VkAllocationCallbacks)(pAllocator),
 		(*C.VkInstance)(pInstance)))
 	return res, res.ToError()
 }
 
-func (l *vulkanDriver) VkEnumeratePhysicalDevices(instance VkInstance, pPhysicalDeviceCount *Uint32, pPhysicalDevices *VkPhysicalDevice) (VkResult, error) {
+func (l *vulkanDriver) VkEnumeratePhysicalDevices(instance VkInstance, pPhysicalDeviceCount *Uint32, pPhysicalDevices *VkPhysicalDevice) (common.VkResult, error) {
 	if l.instance == nil {
 		panic("attempted to call instance driver function on a basic driver")
 	}
 
-	res := VkResult(C.cgoEnumeratePhysicalDevices(l.funcPtrs.vkEnumeratePhysicalDevices,
+	res := common.VkResult(C.cgoEnumeratePhysicalDevices(l.funcPtrs.vkEnumeratePhysicalDevices,
 		(C.VkInstance)(instance),
 		(*C.uint32_t)(pPhysicalDeviceCount),
 		(*C.VkPhysicalDevice)(pPhysicalDevices)))
@@ -76,12 +77,12 @@ func (l *vulkanDriver) VkGetPhysicalDeviceFormatProperties(physicalDevice VkPhys
 		(*C.VkFormatProperties)(pFormatProperties))
 }
 
-func (l *vulkanDriver) VkGetPhysicalDeviceImageFormatProperties(physicalDevice VkPhysicalDevice, format VkFormat, t VkImageType, tiling VkImageTiling, usage VkImageUsageFlags, flags VkImageCreateFlags, pImageFormatProperties *VkImageFormatProperties) (VkResult, error) {
+func (l *vulkanDriver) VkGetPhysicalDeviceImageFormatProperties(physicalDevice VkPhysicalDevice, format VkFormat, t VkImageType, tiling VkImageTiling, usage VkImageUsageFlags, flags VkImageCreateFlags, pImageFormatProperties *VkImageFormatProperties) (common.VkResult, error) {
 	if l.instance == nil {
 		panic("attempted to call instance driver function on a basic driver")
 	}
 
-	res := VkResult(C.cgoGetPhysicalDeviceImageFormatProperties(l.funcPtrs.vkGetPhysicalDeviceImageFormatProperties,
+	res := common.VkResult(C.cgoGetPhysicalDeviceImageFormatProperties(l.funcPtrs.vkGetPhysicalDeviceImageFormatProperties,
 		(C.VkPhysicalDevice)(physicalDevice),
 		(C.VkFormat)(format),
 		(C.VkImageType)(t),
@@ -123,12 +124,12 @@ func (l *vulkanDriver) VkGetPhysicalDeviceMemoryProperties(physicalDevice VkPhys
 		(*C.VkPhysicalDeviceMemoryProperties)(pMemoryProperties))
 }
 
-func (l *vulkanDriver) VkEnumerateDeviceExtensionProperties(physicalDevice VkPhysicalDevice, pLayerName *Char, pPropertyCount *Uint32, pProperties *VkExtensionProperties) (VkResult, error) {
+func (l *vulkanDriver) VkEnumerateDeviceExtensionProperties(physicalDevice VkPhysicalDevice, pLayerName *Char, pPropertyCount *Uint32, pProperties *VkExtensionProperties) (common.VkResult, error) {
 	if l.instance == nil {
 		panic("attempted to call instance driver function on a basic driver")
 	}
 
-	res := VkResult(C.cgoEnumerateDeviceExtensionProperties(l.funcPtrs.vkEnumerateDeviceExtensionProperties,
+	res := common.VkResult(C.cgoEnumerateDeviceExtensionProperties(l.funcPtrs.vkEnumerateDeviceExtensionProperties,
 		(C.VkPhysicalDevice)(physicalDevice),
 		(*C.char)(pLayerName),
 		(*C.uint32_t)(pPropertyCount),
@@ -136,12 +137,12 @@ func (l *vulkanDriver) VkEnumerateDeviceExtensionProperties(physicalDevice VkPhy
 	return res, res.ToError()
 }
 
-func (l *vulkanDriver) VkEnumerateDeviceLayerProperties(physicalDevice VkPhysicalDevice, pPropertyCount *Uint32, pProperties *VkLayerProperties) (VkResult, error) {
+func (l *vulkanDriver) VkEnumerateDeviceLayerProperties(physicalDevice VkPhysicalDevice, pPropertyCount *Uint32, pProperties *VkLayerProperties) (common.VkResult, error) {
 	if l.instance == nil {
 		panic("attempted to call instance driver function on a basic driver")
 	}
 
-	res := VkResult(C.cgoEnumerateDeviceLayerProperties(l.funcPtrs.vkEnumerateDeviceLayerProperties,
+	res := common.VkResult(C.cgoEnumerateDeviceLayerProperties(l.funcPtrs.vkEnumerateDeviceLayerProperties,
 		(C.VkPhysicalDevice)(physicalDevice),
 		(*C.uint32_t)(pPropertyCount),
 		(*C.VkLayerProperties)(pProperties)))
@@ -164,12 +165,12 @@ func (l *vulkanDriver) VkGetPhysicalDeviceSparseImageFormatProperties(physicalDe
 		(*C.VkSparseImageFormatProperties)(pProperties))
 }
 
-func (l *vulkanDriver) VkCreateDevice(physicalDevice VkPhysicalDevice, pCreateInfo *VkDeviceCreateInfo, pAllocator *VkAllocationCallbacks, pDevice *VkDevice) (VkResult, error) {
+func (l *vulkanDriver) VkCreateDevice(physicalDevice VkPhysicalDevice, pCreateInfo *VkDeviceCreateInfo, pAllocator *VkAllocationCallbacks, pDevice *VkDevice) (common.VkResult, error) {
 	if l.instance == nil {
 		panic("attempted to call instance driver function on a basic driver")
 	}
 
-	res := VkResult(C.cgoCreateDevice(l.funcPtrs.vkCreateDevice,
+	res := common.VkResult(C.cgoCreateDevice(l.funcPtrs.vkCreateDevice,
 		(C.VkPhysicalDevice)(physicalDevice),
 		(*C.VkDeviceCreateInfo)(pCreateInfo),
 		(*C.VkAllocationCallbacks)(pAllocator),
@@ -199,12 +200,12 @@ func (l *vulkanDriver) VkGetDeviceQueue(device VkDevice, queueFamilyIndex Uint32
 		(*C.VkQueue)(pQueue))
 }
 
-func (l *vulkanDriver) VkQueueSubmit(queue VkQueue, submitCount Uint32, pSubmits *VkSubmitInfo, fence VkFence) (VkResult, error) {
+func (l *vulkanDriver) VkQueueSubmit(queue VkQueue, submitCount Uint32, pSubmits *VkSubmitInfo, fence VkFence) (common.VkResult, error) {
 	if l.device == nil {
 		panic("attempted device driver function on a non-device driver")
 	}
 
-	res := VkResult(C.cgoQueueSubmit(l.funcPtrs.vkQueueSubmit,
+	res := common.VkResult(C.cgoQueueSubmit(l.funcPtrs.vkQueueSubmit,
 		(C.VkQueue)(queue),
 		(C.uint32_t)(submitCount),
 		(*C.VkSubmitInfo)(pSubmits),
@@ -212,32 +213,32 @@ func (l *vulkanDriver) VkQueueSubmit(queue VkQueue, submitCount Uint32, pSubmits
 	return res, res.ToError()
 }
 
-func (l *vulkanDriver) VkQueueWaitIdle(queue VkQueue) (VkResult, error) {
+func (l *vulkanDriver) VkQueueWaitIdle(queue VkQueue) (common.VkResult, error) {
 	if l.device == nil {
 		panic("attempted device driver function on a non-device driver")
 	}
 
-	res := VkResult(C.cgoQueueWaitIdle(l.funcPtrs.vkQueueWaitIdle,
+	res := common.VkResult(C.cgoQueueWaitIdle(l.funcPtrs.vkQueueWaitIdle,
 		(C.VkQueue)(queue)))
 	return res, res.ToError()
 }
 
-func (l *vulkanDriver) VkDeviceWaitIdle(device VkDevice) (VkResult, error) {
+func (l *vulkanDriver) VkDeviceWaitIdle(device VkDevice) (common.VkResult, error) {
 	if l.device == nil {
 		panic("attempted device driver function on a non-device driver")
 	}
 
-	res := VkResult(C.cgoDeviceWaitIdle(l.funcPtrs.vkDeviceWaitIdle,
+	res := common.VkResult(C.cgoDeviceWaitIdle(l.funcPtrs.vkDeviceWaitIdle,
 		(C.VkDevice)(device)))
 	return res, res.ToError()
 }
 
-func (l *vulkanDriver) VkAllocateMemory(device VkDevice, pAllocateInfo *VkMemoryAllocateInfo, pAllocator *VkAllocationCallbacks, pMemory *VkDeviceMemory) (VkResult, error) {
+func (l *vulkanDriver) VkAllocateMemory(device VkDevice, pAllocateInfo *VkMemoryAllocateInfo, pAllocator *VkAllocationCallbacks, pMemory *VkDeviceMemory) (common.VkResult, error) {
 	if l.device == nil {
 		panic("attempted device driver function on a non-device driver")
 	}
 
-	res := VkResult(C.cgoAllocateMemory(l.funcPtrs.vkAllocateMemory,
+	res := common.VkResult(C.cgoAllocateMemory(l.funcPtrs.vkAllocateMemory,
 		(C.VkDevice)(device),
 		(*C.VkMemoryAllocateInfo)(pAllocateInfo),
 		(*C.VkAllocationCallbacks)(pAllocator),
@@ -256,12 +257,12 @@ func (l *vulkanDriver) VkFreeMemory(device VkDevice, memory VkDeviceMemory, pAll
 		(*C.VkAllocationCallbacks)(pAllocator))
 }
 
-func (l *vulkanDriver) VkMapMemory(device VkDevice, memory VkDeviceMemory, offset VkDeviceSize, size VkDeviceSize, flags VkMemoryMapFlags, ppData *unsafe.Pointer) (VkResult, error) {
+func (l *vulkanDriver) VkMapMemory(device VkDevice, memory VkDeviceMemory, offset VkDeviceSize, size VkDeviceSize, flags VkMemoryMapFlags, ppData *unsafe.Pointer) (common.VkResult, error) {
 	if l.device == nil {
 		panic("attempted device driver function on a non-device driver")
 	}
 
-	res := VkResult(C.cgoMapMemory(l.funcPtrs.vkMapMemory,
+	res := common.VkResult(C.cgoMapMemory(l.funcPtrs.vkMapMemory,
 		(C.VkDevice)(device),
 		(C.VkDeviceMemory)(memory),
 		(C.VkDeviceSize)(offset),
@@ -281,24 +282,24 @@ func (l *vulkanDriver) VkUnmapMemory(device VkDevice, memory VkDeviceMemory) {
 		(C.VkDeviceMemory)(memory))
 }
 
-func (l *vulkanDriver) VkFlushMappedMemoryRanges(device VkDevice, memoryRangeCount Uint32, pMemoryRanges *VkMappedMemoryRange) (VkResult, error) {
+func (l *vulkanDriver) VkFlushMappedMemoryRanges(device VkDevice, memoryRangeCount Uint32, pMemoryRanges *VkMappedMemoryRange) (common.VkResult, error) {
 	if l.device == nil {
 		panic("attempted device driver function on a non-device driver")
 	}
 
-	res := VkResult(C.cgoFlushMappedMemoryRanges(l.funcPtrs.vkFlushMappedMemoryRanges,
+	res := common.VkResult(C.cgoFlushMappedMemoryRanges(l.funcPtrs.vkFlushMappedMemoryRanges,
 		(C.VkDevice)(device),
 		(C.uint32_t)(memoryRangeCount),
 		(*C.VkMappedMemoryRange)(pMemoryRanges)))
 	return res, res.ToError()
 }
 
-func (l *vulkanDriver) VkInvalidateMappedMemoryRanges(device VkDevice, memoryRangeCount Uint32, pMemoryRanges *VkMappedMemoryRange) (VkResult, error) {
+func (l *vulkanDriver) VkInvalidateMappedMemoryRanges(device VkDevice, memoryRangeCount Uint32, pMemoryRanges *VkMappedMemoryRange) (common.VkResult, error) {
 	if l.device == nil {
 		panic("attempted device driver function on a non-device driver")
 	}
 
-	res := VkResult(C.cgoInvalidateMappedMemoryRanges(l.funcPtrs.vkInvalidateMappedMemoryRanges,
+	res := common.VkResult(C.cgoInvalidateMappedMemoryRanges(l.funcPtrs.vkInvalidateMappedMemoryRanges,
 		(C.VkDevice)(device),
 		(C.uint32_t)(memoryRangeCount),
 		(*C.VkMappedMemoryRange)(pMemoryRanges)))
@@ -316,12 +317,12 @@ func (l *vulkanDriver) VkGetDeviceMemoryCommitment(device VkDevice, memory VkDev
 		(*C.VkDeviceSize)(pCommittedMemoryInBytes))
 }
 
-func (l *vulkanDriver) VkBindBufferMemory(device VkDevice, buffer VkBuffer, memory VkDeviceMemory, memoryOffset VkDeviceSize) (VkResult, error) {
+func (l *vulkanDriver) VkBindBufferMemory(device VkDevice, buffer VkBuffer, memory VkDeviceMemory, memoryOffset VkDeviceSize) (common.VkResult, error) {
 	if l.device == nil {
 		panic("attempted device driver function on a non-device driver")
 	}
 
-	res := VkResult(C.cgoBindBufferMemory(l.funcPtrs.vkBindBufferMemory,
+	res := common.VkResult(C.cgoBindBufferMemory(l.funcPtrs.vkBindBufferMemory,
 		(C.VkDevice)(device),
 		(C.VkBuffer)(buffer),
 		(C.VkDeviceMemory)(memory),
@@ -329,12 +330,12 @@ func (l *vulkanDriver) VkBindBufferMemory(device VkDevice, buffer VkBuffer, memo
 	return res, res.ToError()
 }
 
-func (l *vulkanDriver) VkBindImageMemory(device VkDevice, image VkImage, memory VkDeviceMemory, memoryOffset VkDeviceSize) (VkResult, error) {
+func (l *vulkanDriver) VkBindImageMemory(device VkDevice, image VkImage, memory VkDeviceMemory, memoryOffset VkDeviceSize) (common.VkResult, error) {
 	if l.device == nil {
 		panic("attempted device driver function on a non-device driver")
 	}
 
-	res := VkResult(C.cgoBindImageMemory(l.funcPtrs.vkBindImageMemory,
+	res := common.VkResult(C.cgoBindImageMemory(l.funcPtrs.vkBindImageMemory,
 		(C.VkDevice)(device),
 		(C.VkImage)(image),
 		(C.VkDeviceMemory)(memory),
@@ -376,12 +377,12 @@ func (l *vulkanDriver) VkGetImageSparseMemoryRequirements(device VkDevice, image
 		(*C.VkSparseImageMemoryRequirements)(pSparseMemoryRequirements))
 }
 
-func (l *vulkanDriver) VkQueueBindSparse(queue VkQueue, bindInfoCount Uint32, pBindInfo *VkBindSparseInfo, fence VkFence) (VkResult, error) {
+func (l *vulkanDriver) VkQueueBindSparse(queue VkQueue, bindInfoCount Uint32, pBindInfo *VkBindSparseInfo, fence VkFence) (common.VkResult, error) {
 	if l.device == nil {
 		panic("attempted device driver function on a non-device driver")
 	}
 
-	res := VkResult(C.cgoQueueBindSparse(l.funcPtrs.vkQueueBindSparse,
+	res := common.VkResult(C.cgoQueueBindSparse(l.funcPtrs.vkQueueBindSparse,
 		(C.VkQueue)(queue),
 		(C.uint32_t)(bindInfoCount),
 		(*C.VkBindSparseInfo)(pBindInfo),
@@ -389,12 +390,12 @@ func (l *vulkanDriver) VkQueueBindSparse(queue VkQueue, bindInfoCount Uint32, pB
 	return res, res.ToError()
 }
 
-func (l *vulkanDriver) VkCreateFence(device VkDevice, pCreateInfo *VkFenceCreateInfo, pAllocator *VkAllocationCallbacks, pFence *VkFence) (VkResult, error) {
+func (l *vulkanDriver) VkCreateFence(device VkDevice, pCreateInfo *VkFenceCreateInfo, pAllocator *VkAllocationCallbacks, pFence *VkFence) (common.VkResult, error) {
 	if l.device == nil {
 		panic("attempted device driver function on a non-device driver")
 	}
 
-	res := VkResult(C.cgoCreateFence(l.funcPtrs.vkCreateFence,
+	res := common.VkResult(C.cgoCreateFence(l.funcPtrs.vkCreateFence,
 		(C.VkDevice)(device),
 		(*C.VkFenceCreateInfo)(pCreateInfo),
 		(*C.VkAllocationCallbacks)(pAllocator),
@@ -413,35 +414,35 @@ func (l *vulkanDriver) VkDestroyFence(device VkDevice, fence VkFence, pAllocator
 		(*C.VkAllocationCallbacks)(pAllocator))
 }
 
-func (l *vulkanDriver) VkResetFences(device VkDevice, fenceCount Uint32, pFences *VkFence) (VkResult, error) {
+func (l *vulkanDriver) VkResetFences(device VkDevice, fenceCount Uint32, pFences *VkFence) (common.VkResult, error) {
 	if l.device == nil {
 		panic("attempted device driver function on a non-device driver")
 	}
 
-	res := VkResult(C.cgoResetFences(l.funcPtrs.vkResetFences,
+	res := common.VkResult(C.cgoResetFences(l.funcPtrs.vkResetFences,
 		(C.VkDevice)(device),
 		(C.uint32_t)(fenceCount),
 		(*C.VkFence)(pFences)))
 	return res, res.ToError()
 }
 
-func (l *vulkanDriver) VkGetFenceStatus(device VkDevice, fence VkFence) (VkResult, error) {
+func (l *vulkanDriver) VkGetFenceStatus(device VkDevice, fence VkFence) (common.VkResult, error) {
 	if l.device == nil {
 		panic("attempted device driver function on a non-device driver")
 	}
 
-	res := VkResult(C.cgoGetFenceStatus(l.funcPtrs.vkGetFenceStatus,
+	res := common.VkResult(C.cgoGetFenceStatus(l.funcPtrs.vkGetFenceStatus,
 		(C.VkDevice)(device),
 		(C.VkFence)(fence)))
 	return res, res.ToError()
 }
 
-func (l *vulkanDriver) VkWaitForFences(device VkDevice, fenceCount Uint32, pFences *VkFence, waitAll VkBool32, timeout Uint64) (VkResult, error) {
+func (l *vulkanDriver) VkWaitForFences(device VkDevice, fenceCount Uint32, pFences *VkFence, waitAll VkBool32, timeout Uint64) (common.VkResult, error) {
 	if l.device == nil {
 		panic("attempted device driver function on a non-device driver")
 	}
 
-	res := VkResult(C.cgoWaitForFences(l.funcPtrs.vkWaitForFences,
+	res := common.VkResult(C.cgoWaitForFences(l.funcPtrs.vkWaitForFences,
 		(C.VkDevice)(device),
 		(C.uint32_t)(fenceCount),
 		(*C.VkFence)(pFences),
@@ -450,12 +451,12 @@ func (l *vulkanDriver) VkWaitForFences(device VkDevice, fenceCount Uint32, pFenc
 	return res, res.ToError()
 }
 
-func (l *vulkanDriver) VkCreateSemaphore(device VkDevice, pCreateInfo *VkSemaphoreCreateInfo, pAllocator *VkAllocationCallbacks, pSemaphore *VkSemaphore) (VkResult, error) {
+func (l *vulkanDriver) VkCreateSemaphore(device VkDevice, pCreateInfo *VkSemaphoreCreateInfo, pAllocator *VkAllocationCallbacks, pSemaphore *VkSemaphore) (common.VkResult, error) {
 	if l.device == nil {
 		panic("attempted device driver function on a non-device driver")
 	}
 
-	res := VkResult(C.cgoCreateSemaphore(l.funcPtrs.vkCreateSemaphore,
+	res := common.VkResult(C.cgoCreateSemaphore(l.funcPtrs.vkCreateSemaphore,
 		(C.VkDevice)(device),
 		(*C.VkSemaphoreCreateInfo)(pCreateInfo),
 		(*C.VkAllocationCallbacks)(pAllocator),
@@ -474,12 +475,12 @@ func (l *vulkanDriver) VkDestroySemaphore(device VkDevice, semaphore VkSemaphore
 		(*C.VkAllocationCallbacks)(pAllocator))
 }
 
-func (l *vulkanDriver) VkCreateEvent(device VkDevice, pCreateInfo *VkEventCreateInfo, pAllocator *VkAllocationCallbacks, pEvent *VkEvent) (VkResult, error) {
+func (l *vulkanDriver) VkCreateEvent(device VkDevice, pCreateInfo *VkEventCreateInfo, pAllocator *VkAllocationCallbacks, pEvent *VkEvent) (common.VkResult, error) {
 	if l.device == nil {
 		panic("attempted device driver function on a non-device driver")
 	}
 
-	res := VkResult(C.cgoCreateEvent(l.funcPtrs.vkCreateEvent,
+	res := common.VkResult(C.cgoCreateEvent(l.funcPtrs.vkCreateEvent,
 		(C.VkDevice)(device),
 		(*C.VkEventCreateInfo)(pCreateInfo),
 		(*C.VkAllocationCallbacks)(pAllocator),
@@ -498,45 +499,45 @@ func (l *vulkanDriver) VkDestroyEvent(device VkDevice, event VkEvent, pAllocator
 		(*C.VkAllocationCallbacks)(pAllocator))
 }
 
-func (l *vulkanDriver) VkGetEventStatus(device VkDevice, event VkEvent) (VkResult, error) {
+func (l *vulkanDriver) VkGetEventStatus(device VkDevice, event VkEvent) (common.VkResult, error) {
 	if l.device == nil {
 		panic("attempted device driver function on a non-device driver")
 	}
 
-	res := VkResult(C.cgoGetEventStatus(l.funcPtrs.vkGetEventStatus,
+	res := common.VkResult(C.cgoGetEventStatus(l.funcPtrs.vkGetEventStatus,
 		(C.VkDevice)(device),
 		(C.VkEvent)(event)))
 	return res, res.ToError()
 }
 
-func (l *vulkanDriver) VkSetEvent(device VkDevice, event VkEvent) (VkResult, error) {
+func (l *vulkanDriver) VkSetEvent(device VkDevice, event VkEvent) (common.VkResult, error) {
 	if l.device == nil {
 		panic("attempted device driver function on a non-device driver")
 	}
 
-	res := VkResult(C.cgoSetEvent(l.funcPtrs.vkSetEvent,
+	res := common.VkResult(C.cgoSetEvent(l.funcPtrs.vkSetEvent,
 		(C.VkDevice)(device),
 		(C.VkEvent)(event)))
 	return res, res.ToError()
 }
 
-func (l *vulkanDriver) VkResetEvent(device VkDevice, event VkEvent) (VkResult, error) {
+func (l *vulkanDriver) VkResetEvent(device VkDevice, event VkEvent) (common.VkResult, error) {
 	if l.device == nil {
 		panic("attempted device driver function on a non-device driver")
 	}
 
-	res := VkResult(C.cgoResetEvent(l.funcPtrs.vkResetEvent,
+	res := common.VkResult(C.cgoResetEvent(l.funcPtrs.vkResetEvent,
 		(C.VkDevice)(device),
 		(C.VkEvent)(event)))
 	return res, res.ToError()
 }
 
-func (l *vulkanDriver) VkCreateQueryPool(device VkDevice, pCreateInfo *VkQueryPoolCreateInfo, pAllocator *VkAllocationCallbacks, pQueryPool *VkQueryPool) (VkResult, error) {
+func (l *vulkanDriver) VkCreateQueryPool(device VkDevice, pCreateInfo *VkQueryPoolCreateInfo, pAllocator *VkAllocationCallbacks, pQueryPool *VkQueryPool) (common.VkResult, error) {
 	if l.device == nil {
 		panic("attempted device driver function on a non-device driver")
 	}
 
-	res := VkResult(C.cgoCreateQueryPool(l.funcPtrs.vkCreateQueryPool,
+	res := common.VkResult(C.cgoCreateQueryPool(l.funcPtrs.vkCreateQueryPool,
 		(C.VkDevice)(device),
 		(*C.VkQueryPoolCreateInfo)(pCreateInfo),
 		(*C.VkAllocationCallbacks)(pAllocator),
@@ -555,12 +556,12 @@ func (l *vulkanDriver) VkDestroyQueryPool(device VkDevice, queryPool VkQueryPool
 		(*C.VkAllocationCallbacks)(pAllocator))
 }
 
-func (l *vulkanDriver) VkGetQueryPoolResults(device VkDevice, queryPool VkQueryPool, firstQuery Uint32, queryCount Uint32, dataSize Size, pData unsafe.Pointer, stride VkDeviceSize, flags VkQueryResultFlags) (VkResult, error) {
+func (l *vulkanDriver) VkGetQueryPoolResults(device VkDevice, queryPool VkQueryPool, firstQuery Uint32, queryCount Uint32, dataSize Size, pData unsafe.Pointer, stride VkDeviceSize, flags VkQueryResultFlags) (common.VkResult, error) {
 	if l.device == nil {
 		panic("attempted device driver function on a non-device driver")
 	}
 
-	res := VkResult(C.cgoGetQueryPoolResults(l.funcPtrs.vkGetQueryPoolResults,
+	res := common.VkResult(C.cgoGetQueryPoolResults(l.funcPtrs.vkGetQueryPoolResults,
 		(C.VkDevice)(device),
 		(C.VkQueryPool)(queryPool),
 		(C.uint32_t)(firstQuery),
@@ -572,12 +573,12 @@ func (l *vulkanDriver) VkGetQueryPoolResults(device VkDevice, queryPool VkQueryP
 	return res, res.ToError()
 }
 
-func (l *vulkanDriver) VkCreateBuffer(device VkDevice, pCreateInfo *VkBufferCreateInfo, pAllocator *VkAllocationCallbacks, pBuffer *VkBuffer) (VkResult, error) {
+func (l *vulkanDriver) VkCreateBuffer(device VkDevice, pCreateInfo *VkBufferCreateInfo, pAllocator *VkAllocationCallbacks, pBuffer *VkBuffer) (common.VkResult, error) {
 	if l.device == nil {
 		panic("attempted device driver function on a non-device driver")
 	}
 
-	res := VkResult(C.cgoCreateBuffer(l.funcPtrs.vkCreateBuffer,
+	res := common.VkResult(C.cgoCreateBuffer(l.funcPtrs.vkCreateBuffer,
 		(C.VkDevice)(device),
 		(*C.VkBufferCreateInfo)(pCreateInfo),
 		(*C.VkAllocationCallbacks)(pAllocator),
@@ -596,12 +597,12 @@ func (l *vulkanDriver) VkDestroyBuffer(device VkDevice, buffer VkBuffer, pAlloca
 		(*C.VkAllocationCallbacks)(pAllocator))
 }
 
-func (l *vulkanDriver) VkCreateBufferView(device VkDevice, pCreateInfo *VkBufferViewCreateInfo, pAllocator *VkAllocationCallbacks, pView *VkBufferView) (VkResult, error) {
+func (l *vulkanDriver) VkCreateBufferView(device VkDevice, pCreateInfo *VkBufferViewCreateInfo, pAllocator *VkAllocationCallbacks, pView *VkBufferView) (common.VkResult, error) {
 	if l.device == nil {
 		panic("attempted device driver function on a non-device driver")
 	}
 
-	res := VkResult(C.cgoCreateBufferView(l.funcPtrs.vkCreateBufferView,
+	res := common.VkResult(C.cgoCreateBufferView(l.funcPtrs.vkCreateBufferView,
 		(C.VkDevice)(device),
 		(*C.VkBufferViewCreateInfo)(pCreateInfo),
 		(*C.VkAllocationCallbacks)(pAllocator),
@@ -620,12 +621,12 @@ func (l *vulkanDriver) VkDestroyBufferView(device VkDevice, bufferView VkBufferV
 		(*C.VkAllocationCallbacks)(pAllocator))
 }
 
-func (l *vulkanDriver) VkCreateImage(device VkDevice, pCreateInfo *VkImageCreateInfo, pAllocator *VkAllocationCallbacks, pImage *VkImage) (VkResult, error) {
+func (l *vulkanDriver) VkCreateImage(device VkDevice, pCreateInfo *VkImageCreateInfo, pAllocator *VkAllocationCallbacks, pImage *VkImage) (common.VkResult, error) {
 	if l.device == nil {
 		panic("attempted device driver function on a non-device driver")
 	}
 
-	res := VkResult(C.cgoCreateImage(l.funcPtrs.vkCreateImage,
+	res := common.VkResult(C.cgoCreateImage(l.funcPtrs.vkCreateImage,
 		(C.VkDevice)(device),
 		(*C.VkImageCreateInfo)(pCreateInfo),
 		(*C.VkAllocationCallbacks)(pAllocator),
@@ -656,12 +657,12 @@ func (l *vulkanDriver) VkGetImageSubresourceLayout(device VkDevice, image VkImag
 		(*C.VkSubresourceLayout)(pLayout))
 }
 
-func (l *vulkanDriver) VkCreateImageView(device VkDevice, pCreateInfo *VkImageViewCreateInfo, pAllocator *VkAllocationCallbacks, pView *VkImageView) (VkResult, error) {
+func (l *vulkanDriver) VkCreateImageView(device VkDevice, pCreateInfo *VkImageViewCreateInfo, pAllocator *VkAllocationCallbacks, pView *VkImageView) (common.VkResult, error) {
 	if l.device == nil {
 		panic("attempted device driver function on a non-device driver")
 	}
 
-	res := VkResult(C.cgoCreateImageView(l.funcPtrs.vkCreateImageView,
+	res := common.VkResult(C.cgoCreateImageView(l.funcPtrs.vkCreateImageView,
 		(C.VkDevice)(device),
 		(*C.VkImageViewCreateInfo)(pCreateInfo),
 		(*C.VkAllocationCallbacks)(pAllocator),
@@ -680,12 +681,12 @@ func (l *vulkanDriver) VkDestroyImageView(device VkDevice, imageView VkImageView
 		(*C.VkAllocationCallbacks)(pAllocator))
 }
 
-func (l *vulkanDriver) VkCreateShaderModule(device VkDevice, pCreateInfo *VkShaderModuleCreateInfo, pAllocator *VkAllocationCallbacks, pShaderModule *VkShaderModule) (VkResult, error) {
+func (l *vulkanDriver) VkCreateShaderModule(device VkDevice, pCreateInfo *VkShaderModuleCreateInfo, pAllocator *VkAllocationCallbacks, pShaderModule *VkShaderModule) (common.VkResult, error) {
 	if l.device == nil {
 		panic("attempted device driver function on a non-device driver")
 	}
 
-	res := VkResult(C.cgoCreateShaderModule(l.funcPtrs.vkCreateShaderModule,
+	res := common.VkResult(C.cgoCreateShaderModule(l.funcPtrs.vkCreateShaderModule,
 		(C.VkDevice)(device),
 		(*C.VkShaderModuleCreateInfo)(pCreateInfo),
 		(*C.VkAllocationCallbacks)(pAllocator),
@@ -704,12 +705,12 @@ func (l *vulkanDriver) VkDestroyShaderModule(device VkDevice, shaderModule VkSha
 		(*C.VkAllocationCallbacks)(pAllocator))
 }
 
-func (l *vulkanDriver) VkCreatePipelineCache(device VkDevice, pCreateInfo *VkPipelineCacheCreateInfo, pAllocator *VkAllocationCallbacks, pPipelineCache *VkPipelineCache) (VkResult, error) {
+func (l *vulkanDriver) VkCreatePipelineCache(device VkDevice, pCreateInfo *VkPipelineCacheCreateInfo, pAllocator *VkAllocationCallbacks, pPipelineCache *VkPipelineCache) (common.VkResult, error) {
 	if l.device == nil {
 		panic("attempted device driver function on a non-device driver")
 	}
 
-	res := VkResult(C.cgoCreatePipelineCache(l.funcPtrs.vkCreatePipelineCache,
+	res := common.VkResult(C.cgoCreatePipelineCache(l.funcPtrs.vkCreatePipelineCache,
 		(C.VkDevice)(device),
 		(*C.VkPipelineCacheCreateInfo)(pCreateInfo),
 		(*C.VkAllocationCallbacks)(pAllocator),
@@ -728,12 +729,12 @@ func (l *vulkanDriver) VkDestroyPipelineCache(device VkDevice, pipelineCache VkP
 		(*C.VkAllocationCallbacks)(pAllocator))
 }
 
-func (l *vulkanDriver) VkGetPipelineCacheData(device VkDevice, pipelineCache VkPipelineCache, pDataSize *Size, pData unsafe.Pointer) (VkResult, error) {
+func (l *vulkanDriver) VkGetPipelineCacheData(device VkDevice, pipelineCache VkPipelineCache, pDataSize *Size, pData unsafe.Pointer) (common.VkResult, error) {
 	if l.device == nil {
 		panic("attempted device driver function on a non-device driver")
 	}
 
-	res := VkResult(C.cgoGetPipelineCacheData(l.funcPtrs.vkGetPipelineCacheData,
+	res := common.VkResult(C.cgoGetPipelineCacheData(l.funcPtrs.vkGetPipelineCacheData,
 		(C.VkDevice)(device),
 		(C.VkPipelineCache)(pipelineCache),
 		(*C.size_t)(pDataSize),
@@ -741,12 +742,12 @@ func (l *vulkanDriver) VkGetPipelineCacheData(device VkDevice, pipelineCache VkP
 	return res, res.ToError()
 }
 
-func (l *vulkanDriver) VkMergePipelineCaches(device VkDevice, dstCache VkPipelineCache, srcCacheCount Uint32, pSrcCaches *VkPipelineCache) (VkResult, error) {
+func (l *vulkanDriver) VkMergePipelineCaches(device VkDevice, dstCache VkPipelineCache, srcCacheCount Uint32, pSrcCaches *VkPipelineCache) (common.VkResult, error) {
 	if l.device == nil {
 		panic("attempted device driver function on a non-device driver")
 	}
 
-	res := VkResult(C.cgoMergePipelineCaches(l.funcPtrs.vkMergePipelineCaches,
+	res := common.VkResult(C.cgoMergePipelineCaches(l.funcPtrs.vkMergePipelineCaches,
 		(C.VkDevice)(device),
 		(C.VkPipelineCache)(dstCache),
 		(C.uint32_t)(srcCacheCount),
@@ -754,12 +755,12 @@ func (l *vulkanDriver) VkMergePipelineCaches(device VkDevice, dstCache VkPipelin
 	return res, res.ToError()
 }
 
-func (l *vulkanDriver) VkCreateGraphicsPipelines(device VkDevice, pipelineCache VkPipelineCache, createInfoCount Uint32, pCreateInfos *VkGraphicsPipelineCreateInfo, pAllocator *VkAllocationCallbacks, pPipelines *VkPipeline) (VkResult, error) {
+func (l *vulkanDriver) VkCreateGraphicsPipelines(device VkDevice, pipelineCache VkPipelineCache, createInfoCount Uint32, pCreateInfos *VkGraphicsPipelineCreateInfo, pAllocator *VkAllocationCallbacks, pPipelines *VkPipeline) (common.VkResult, error) {
 	if l.device == nil {
 		panic("attempted device driver function on a non-device driver")
 	}
 
-	res := VkResult(C.cgoCreateGraphicsPipelines(l.funcPtrs.vkCreateGraphicsPipelines,
+	res := common.VkResult(C.cgoCreateGraphicsPipelines(l.funcPtrs.vkCreateGraphicsPipelines,
 		(C.VkDevice)(device),
 		(C.VkPipelineCache)(pipelineCache),
 		(C.uint32_t)(createInfoCount),
@@ -769,12 +770,12 @@ func (l *vulkanDriver) VkCreateGraphicsPipelines(device VkDevice, pipelineCache 
 	return res, res.ToError()
 }
 
-func (l *vulkanDriver) VkCreateComputePipelines(device VkDevice, pipelineCache VkPipelineCache, createInfoCount Uint32, pCreateInfos *VkComputePipelineCreateInfo, pAllocator *VkAllocationCallbacks, pPipelines *VkPipeline) (VkResult, error) {
+func (l *vulkanDriver) VkCreateComputePipelines(device VkDevice, pipelineCache VkPipelineCache, createInfoCount Uint32, pCreateInfos *VkComputePipelineCreateInfo, pAllocator *VkAllocationCallbacks, pPipelines *VkPipeline) (common.VkResult, error) {
 	if l.device == nil {
 		panic("attempted device driver function on a non-device driver")
 	}
 
-	res := VkResult(C.cgoCreateComputePipelines(l.funcPtrs.vkCreateComputePipelines,
+	res := common.VkResult(C.cgoCreateComputePipelines(l.funcPtrs.vkCreateComputePipelines,
 		(C.VkDevice)(device),
 		(C.VkPipelineCache)(pipelineCache),
 		(C.uint32_t)(createInfoCount),
@@ -795,12 +796,12 @@ func (l *vulkanDriver) VkDestroyPipeline(device VkDevice, pipeline VkPipeline, p
 		(*C.VkAllocationCallbacks)(pAllocator))
 }
 
-func (l *vulkanDriver) VkCreatePipelineLayout(device VkDevice, pCreateInfo *VkPipelineLayoutCreateInfo, pAllocator *VkAllocationCallbacks, pPipelineLayout *VkPipelineLayout) (VkResult, error) {
+func (l *vulkanDriver) VkCreatePipelineLayout(device VkDevice, pCreateInfo *VkPipelineLayoutCreateInfo, pAllocator *VkAllocationCallbacks, pPipelineLayout *VkPipelineLayout) (common.VkResult, error) {
 	if l.device == nil {
 		panic("attempted device driver function on a non-device driver")
 	}
 
-	res := VkResult(C.cgoCreatePipelineLayout(l.funcPtrs.vkCreatePipelineLayout,
+	res := common.VkResult(C.cgoCreatePipelineLayout(l.funcPtrs.vkCreatePipelineLayout,
 		(C.VkDevice)(device),
 		(*C.VkPipelineLayoutCreateInfo)(pCreateInfo),
 		(*C.VkAllocationCallbacks)(pAllocator),
@@ -819,12 +820,12 @@ func (l *vulkanDriver) VkDestroyPipelineLayout(device VkDevice, pipelineLayout V
 		(*C.VkAllocationCallbacks)(pAllocator))
 }
 
-func (l *vulkanDriver) VkCreateSampler(device VkDevice, pCreateInfo *VkSamplerCreateInfo, pAllocator *VkAllocationCallbacks, pSampler *VkSampler) (VkResult, error) {
+func (l *vulkanDriver) VkCreateSampler(device VkDevice, pCreateInfo *VkSamplerCreateInfo, pAllocator *VkAllocationCallbacks, pSampler *VkSampler) (common.VkResult, error) {
 	if l.device == nil {
 		panic("attempted device driver function on a non-device driver")
 	}
 
-	res := VkResult(C.cgoCreateSampler(l.funcPtrs.vkCreateSampler,
+	res := common.VkResult(C.cgoCreateSampler(l.funcPtrs.vkCreateSampler,
 		(C.VkDevice)(device),
 		(*C.VkSamplerCreateInfo)(pCreateInfo),
 		(*C.VkAllocationCallbacks)(pAllocator),
@@ -843,12 +844,12 @@ func (l *vulkanDriver) VkDestroySampler(device VkDevice, sampler VkSampler, pAll
 		(*C.VkAllocationCallbacks)(pAllocator))
 }
 
-func (l *vulkanDriver) VkCreateDescriptorSetLayout(device VkDevice, pCreateInfo *VkDescriptorSetLayoutCreateInfo, pAllocator *VkAllocationCallbacks, pSetLayout *VkDescriptorSetLayout) (VkResult, error) {
+func (l *vulkanDriver) VkCreateDescriptorSetLayout(device VkDevice, pCreateInfo *VkDescriptorSetLayoutCreateInfo, pAllocator *VkAllocationCallbacks, pSetLayout *VkDescriptorSetLayout) (common.VkResult, error) {
 	if l.device == nil {
 		panic("attempted device driver function on a non-device driver")
 	}
 
-	res := VkResult(C.cgoCreateDescriptorSetLayout(l.funcPtrs.vkCreateDescriptorSetLayout,
+	res := common.VkResult(C.cgoCreateDescriptorSetLayout(l.funcPtrs.vkCreateDescriptorSetLayout,
 		(C.VkDevice)(device),
 		(*C.VkDescriptorSetLayoutCreateInfo)(pCreateInfo),
 		(*C.VkAllocationCallbacks)(pAllocator),
@@ -867,12 +868,12 @@ func (l *vulkanDriver) VkDestroyDescriptorSetLayout(device VkDevice, descriptorS
 		(*C.VkAllocationCallbacks)(pAllocator))
 }
 
-func (l *vulkanDriver) VkCreateDescriptorPool(device VkDevice, pCreateInfo *VkDescriptorPoolCreateInfo, pAllocator *VkAllocationCallbacks, pDescriptorPool *VkDescriptorPool) (VkResult, error) {
+func (l *vulkanDriver) VkCreateDescriptorPool(device VkDevice, pCreateInfo *VkDescriptorPoolCreateInfo, pAllocator *VkAllocationCallbacks, pDescriptorPool *VkDescriptorPool) (common.VkResult, error) {
 	if l.device == nil {
 		panic("attempted device driver function on a non-device driver")
 	}
 
-	res := VkResult(C.cgoCreateDescriptorPool(l.funcPtrs.vkCreateDescriptorPool,
+	res := common.VkResult(C.cgoCreateDescriptorPool(l.funcPtrs.vkCreateDescriptorPool,
 		(C.VkDevice)(device),
 		(*C.VkDescriptorPoolCreateInfo)(pCreateInfo),
 		(*C.VkAllocationCallbacks)(pAllocator),
@@ -891,36 +892,36 @@ func (l *vulkanDriver) VkDestroyDescriptorPool(device VkDevice, descriptorPool V
 		(*C.VkAllocationCallbacks)(pAllocator))
 }
 
-func (l *vulkanDriver) VkResetDescriptorPool(device VkDevice, descriptorPool VkDescriptorPool, flags VkDescriptorPoolResetFlags) (VkResult, error) {
+func (l *vulkanDriver) VkResetDescriptorPool(device VkDevice, descriptorPool VkDescriptorPool, flags VkDescriptorPoolResetFlags) (common.VkResult, error) {
 	if l.device == nil {
 		panic("attempted device driver function on a non-device driver")
 	}
 
-	res := VkResult(C.cgoResetDescriptorPool(l.funcPtrs.vkResetDescriptorPool,
+	res := common.VkResult(C.cgoResetDescriptorPool(l.funcPtrs.vkResetDescriptorPool,
 		(C.VkDevice)(device),
 		(C.VkDescriptorPool)(descriptorPool),
 		(C.VkDescriptorPoolResetFlags)(flags)))
 	return res, res.ToError()
 }
 
-func (l *vulkanDriver) VkAllocateDescriptorSets(device VkDevice, pAllocateInfo *VkDescriptorSetAllocateInfo, pDescriptorSets *VkDescriptorSet) (VkResult, error) {
+func (l *vulkanDriver) VkAllocateDescriptorSets(device VkDevice, pAllocateInfo *VkDescriptorSetAllocateInfo, pDescriptorSets *VkDescriptorSet) (common.VkResult, error) {
 	if l.device == nil {
 		panic("attempted device driver function on a non-device driver")
 	}
 
-	res := VkResult(C.cgoAllocateDescriptorSets(l.funcPtrs.vkAllocateDescriptorSets,
+	res := common.VkResult(C.cgoAllocateDescriptorSets(l.funcPtrs.vkAllocateDescriptorSets,
 		(C.VkDevice)(device),
 		(*C.VkDescriptorSetAllocateInfo)(pAllocateInfo),
 		(*C.VkDescriptorSet)(pDescriptorSets)))
 	return res, res.ToError()
 }
 
-func (l *vulkanDriver) VkFreeDescriptorSets(device VkDevice, descriptorPool VkDescriptorPool, descriptorSetCount Uint32, pDescriptorSets *VkDescriptorSet) (VkResult, error) {
+func (l *vulkanDriver) VkFreeDescriptorSets(device VkDevice, descriptorPool VkDescriptorPool, descriptorSetCount Uint32, pDescriptorSets *VkDescriptorSet) (common.VkResult, error) {
 	if l.device == nil {
 		panic("attempted device driver function on a non-device driver")
 	}
 
-	res := VkResult(C.cgoFreeDescriptorSets(l.funcPtrs.vkFreeDescriptorSets,
+	res := common.VkResult(C.cgoFreeDescriptorSets(l.funcPtrs.vkFreeDescriptorSets,
 		(C.VkDevice)(device),
 		(C.VkDescriptorPool)(descriptorPool),
 		(C.uint32_t)(descriptorSetCount),
@@ -941,12 +942,12 @@ func (l *vulkanDriver) VkUpdateDescriptorSets(device VkDevice, descriptorWriteCo
 		(*C.VkCopyDescriptorSet)(pDescriptorCopies))
 }
 
-func (l *vulkanDriver) VkCreateFramebuffer(device VkDevice, pCreateInfo *VkFramebufferCreateInfo, pAllocator *VkAllocationCallbacks, pFramebuffer *VkFramebuffer) (VkResult, error) {
+func (l *vulkanDriver) VkCreateFramebuffer(device VkDevice, pCreateInfo *VkFramebufferCreateInfo, pAllocator *VkAllocationCallbacks, pFramebuffer *VkFramebuffer) (common.VkResult, error) {
 	if l.device == nil {
 		panic("attempted device driver function on a non-device driver")
 	}
 
-	res := VkResult(C.cgoCreateFramebuffer(l.funcPtrs.vkCreateFramebuffer,
+	res := common.VkResult(C.cgoCreateFramebuffer(l.funcPtrs.vkCreateFramebuffer,
 		(C.VkDevice)(device),
 		(*C.VkFramebufferCreateInfo)(pCreateInfo),
 		(*C.VkAllocationCallbacks)(pAllocator),
@@ -965,12 +966,12 @@ func (l *vulkanDriver) VkDestroyFramebuffer(device VkDevice, framebuffer VkFrame
 		(*C.VkAllocationCallbacks)(pAllocator))
 }
 
-func (l *vulkanDriver) VkCreateRenderPass(device VkDevice, pCreateInfo *VkRenderPassCreateInfo, pAllocator *VkAllocationCallbacks, pRenderPass *VkRenderPass) (VkResult, error) {
+func (l *vulkanDriver) VkCreateRenderPass(device VkDevice, pCreateInfo *VkRenderPassCreateInfo, pAllocator *VkAllocationCallbacks, pRenderPass *VkRenderPass) (common.VkResult, error) {
 	if l.device == nil {
 		panic("attempted device driver function on a non-device driver")
 	}
 
-	res := VkResult(C.cgoCreateRenderPass(l.funcPtrs.vkCreateRenderPass,
+	res := common.VkResult(C.cgoCreateRenderPass(l.funcPtrs.vkCreateRenderPass,
 		(C.VkDevice)(device),
 		(*C.VkRenderPassCreateInfo)(pCreateInfo),
 		(*C.VkAllocationCallbacks)(pAllocator),
@@ -1000,12 +1001,12 @@ func (l *vulkanDriver) VkGetRenderAreaGranularity(device VkDevice, renderPass Vk
 		(*C.VkExtent2D)(pGranularity))
 }
 
-func (l *vulkanDriver) VkCreateCommandPool(device VkDevice, pCreateInfo *VkCommandPoolCreateInfo, pAllocator *VkAllocationCallbacks, pCommandPool *VkCommandPool) (VkResult, error) {
+func (l *vulkanDriver) VkCreateCommandPool(device VkDevice, pCreateInfo *VkCommandPoolCreateInfo, pAllocator *VkAllocationCallbacks, pCommandPool *VkCommandPool) (common.VkResult, error) {
 	if l.device == nil {
 		panic("attempted device driver function on a non-device driver")
 	}
 
-	res := VkResult(C.cgoCreateCommandPool(l.funcPtrs.vkCreateCommandPool,
+	res := common.VkResult(C.cgoCreateCommandPool(l.funcPtrs.vkCreateCommandPool,
 		(C.VkDevice)(device),
 		(*C.VkCommandPoolCreateInfo)(pCreateInfo),
 		(*C.VkAllocationCallbacks)(pAllocator),
@@ -1024,24 +1025,24 @@ func (l *vulkanDriver) VkDestroyCommandPool(device VkDevice, commandPool VkComma
 		(*C.VkAllocationCallbacks)(pAllocator))
 }
 
-func (l *vulkanDriver) VkResetCommandPool(device VkDevice, commandPool VkCommandPool, flags VkCommandPoolResetFlags) (VkResult, error) {
+func (l *vulkanDriver) VkResetCommandPool(device VkDevice, commandPool VkCommandPool, flags VkCommandPoolResetFlags) (common.VkResult, error) {
 	if l.device == nil {
 		panic("attempted device driver function on a non-device driver")
 	}
 
-	res := VkResult(C.cgoResetCommandPool(l.funcPtrs.vkResetCommandPool,
+	res := common.VkResult(C.cgoResetCommandPool(l.funcPtrs.vkResetCommandPool,
 		(C.VkDevice)(device),
 		(C.VkCommandPool)(commandPool),
 		(C.VkCommandPoolResetFlags)(flags)))
 	return res, res.ToError()
 }
 
-func (l *vulkanDriver) VkAllocateCommandBuffers(device VkDevice, pAllocateInfo *VkCommandBufferAllocateInfo, pCommandBuffers *VkCommandBuffer) (VkResult, error) {
+func (l *vulkanDriver) VkAllocateCommandBuffers(device VkDevice, pAllocateInfo *VkCommandBufferAllocateInfo, pCommandBuffers *VkCommandBuffer) (common.VkResult, error) {
 	if l.device == nil {
 		panic("attempted device driver function on a non-device driver")
 	}
 
-	res := VkResult(C.cgoAllocateCommandBuffers(l.funcPtrs.vkAllocateCommandBuffers,
+	res := common.VkResult(C.cgoAllocateCommandBuffers(l.funcPtrs.vkAllocateCommandBuffers,
 		(C.VkDevice)(device),
 		(*C.VkCommandBufferAllocateInfo)(pAllocateInfo),
 		(*C.VkCommandBuffer)(pCommandBuffers)))
@@ -1060,33 +1061,33 @@ func (l *vulkanDriver) VkFreeCommandBuffers(device VkDevice, commandPool VkComma
 		(*C.VkCommandBuffer)(pCommandBuffers))
 }
 
-func (l *vulkanDriver) VkBeginCommandBuffer(commandBuffer VkCommandBuffer, pBeginInfo *VkCommandBufferBeginInfo) (VkResult, error) {
+func (l *vulkanDriver) VkBeginCommandBuffer(commandBuffer VkCommandBuffer, pBeginInfo *VkCommandBufferBeginInfo) (common.VkResult, error) {
 	if l.device == nil {
 		panic("attempted device driver function on a non-device driver")
 	}
 
-	res := VkResult(C.cgoBeginCommandBuffer(l.funcPtrs.vkBeginCommandBuffer,
+	res := common.VkResult(C.cgoBeginCommandBuffer(l.funcPtrs.vkBeginCommandBuffer,
 		(C.VkCommandBuffer)(commandBuffer),
 		(*C.VkCommandBufferBeginInfo)(pBeginInfo)))
 	return res, res.ToError()
 }
 
-func (l *vulkanDriver) VkEndCommandBuffer(commandBuffer VkCommandBuffer) (VkResult, error) {
+func (l *vulkanDriver) VkEndCommandBuffer(commandBuffer VkCommandBuffer) (common.VkResult, error) {
 	if l.device == nil {
 		panic("attempted device driver function on a non-device driver")
 	}
 
-	res := VkResult(C.cgoEndCommandBuffer(l.funcPtrs.vkEndCommandBuffer,
+	res := common.VkResult(C.cgoEndCommandBuffer(l.funcPtrs.vkEndCommandBuffer,
 		(C.VkCommandBuffer)(commandBuffer)))
 	return res, res.ToError()
 }
 
-func (l *vulkanDriver) VkResetCommandBuffer(commandBuffer VkCommandBuffer, flags VkCommandBufferResetFlags) (VkResult, error) {
+func (l *vulkanDriver) VkResetCommandBuffer(commandBuffer VkCommandBuffer, flags VkCommandBufferResetFlags) (common.VkResult, error) {
 	if l.device == nil {
 		panic("attempted device driver function on a non-device driver")
 	}
 
-	res := VkResult(C.cgoResetCommandBuffer(l.funcPtrs.vkResetCommandBuffer,
+	res := common.VkResult(C.cgoResetCommandBuffer(l.funcPtrs.vkResetCommandBuffer,
 		(C.VkCommandBuffer)(commandBuffer),
 		(C.VkCommandBufferResetFlags)(flags)))
 	return res, res.ToError()
@@ -1652,23 +1653,23 @@ func (l *vulkanDriver) VkCmdExecuteCommands(commandBuffer VkCommandBuffer, comma
 		(*C.VkCommandBuffer)(pCommandBuffers))
 }
 
-func (l *vulkanDriver) VkEnumerateInstanceVersion(pApiVersion *Uint32) (VkResult, error) {
+func (l *vulkanDriver) VkEnumerateInstanceVersion(pApiVersion *Uint32) (common.VkResult, error) {
 	if l.funcPtrs.vkEnumerateInstanceVersion == nil {
 		panic("attempted to call method 'vkEnumerateInstanceVersion' which is not present on this driver")
 	}
 
-	res := VkResult(C.cgoEnumerateInstanceVersion(l.funcPtrs.vkEnumerateInstanceVersion,
+	res := common.VkResult(C.cgoEnumerateInstanceVersion(l.funcPtrs.vkEnumerateInstanceVersion,
 		(*C.uint32_t)(pApiVersion)))
 
 	return res, res.ToError()
 }
 
-func (l *vulkanDriver) VkEnumeratePhysicalDeviceGroups(instance VkInstance, pPhysicalDeviceGroupCount *Uint32, pPhysicalDeviceGroupProperties *VkPhysicalDeviceGroupProperties) (VkResult, error) {
+func (l *vulkanDriver) VkEnumeratePhysicalDeviceGroups(instance VkInstance, pPhysicalDeviceGroupCount *Uint32, pPhysicalDeviceGroupProperties *VkPhysicalDeviceGroupProperties) (common.VkResult, error) {
 	if l.funcPtrs.vkEnumeratePhysicalDeviceGroups == nil {
 		panic("attempted to call method 'vkEnumeratePhysicalDeviceGroups' which is not present on this driver")
 	}
 
-	res := VkResult(C.cgoEnumeratePhysicalDeviceGroups(l.funcPtrs.vkEnumeratePhysicalDeviceGroups,
+	res := common.VkResult(C.cgoEnumeratePhysicalDeviceGroups(l.funcPtrs.vkEnumeratePhysicalDeviceGroups,
 		C.VkInstance(instance),
 		(*C.uint32_t)(pPhysicalDeviceGroupCount),
 		(*C.VkPhysicalDeviceGroupProperties)(pPhysicalDeviceGroupProperties)))
@@ -1707,12 +1708,12 @@ func (l *vulkanDriver) VkGetPhysicalDeviceFormatProperties2(physicalDevice VkPhy
 		(*C.VkFormatProperties2)(pFormatProperties))
 }
 
-func (l *vulkanDriver) VkGetPhysicalDeviceImageFormatProperties2(physicalDevice VkPhysicalDevice, pImageFormatInfo *VkPhysicalDeviceImageFormatInfo2, pImageFormatProperties *VkImageFormatProperties2) (VkResult, error) {
+func (l *vulkanDriver) VkGetPhysicalDeviceImageFormatProperties2(physicalDevice VkPhysicalDevice, pImageFormatInfo *VkPhysicalDeviceImageFormatInfo2, pImageFormatProperties *VkImageFormatProperties2) (common.VkResult, error) {
 	if l.funcPtrs.vkGetPhysicalDeviceImageFormatProperties2 == nil {
 		panic("attempted to call method 'vkGetPhysicalDeviceImageFormatProperties2' which is not present on this driver")
 	}
 
-	res := VkResult(C.cgoGetPhysicalDeviceImageFormatProperties2(l.funcPtrs.vkGetPhysicalDeviceImageFormatProperties2,
+	res := common.VkResult(C.cgoGetPhysicalDeviceImageFormatProperties2(l.funcPtrs.vkGetPhysicalDeviceImageFormatProperties2,
 		C.VkPhysicalDevice(physicalDevice),
 		(*C.VkPhysicalDeviceImageFormatInfo2)(pImageFormatInfo),
 		(*C.VkImageFormatProperties2)(pImageFormatProperties)))
@@ -1786,12 +1787,12 @@ func (l *vulkanDriver) VkGetPhysicalDeviceExternalSemaphoreProperties(physicalDe
 		(*C.VkExternalSemaphoreProperties)(pExternalSemaphoreProperties))
 }
 
-func (l *vulkanDriver) VkBindBufferMemory2(device VkDevice, bindInfoCount Uint32, pBindInfos *VkBindBufferMemoryInfo) (VkResult, error) {
+func (l *vulkanDriver) VkBindBufferMemory2(device VkDevice, bindInfoCount Uint32, pBindInfos *VkBindBufferMemoryInfo) (common.VkResult, error) {
 	if l.funcPtrs.vkBindBufferMemory2 == nil {
 		panic("attempted to call method 'vkBindBufferMemory2' which is not present on this driver")
 	}
 
-	res := VkResult(C.cgoBindBufferMemory2(l.funcPtrs.vkBindBufferMemory2,
+	res := common.VkResult(C.cgoBindBufferMemory2(l.funcPtrs.vkBindBufferMemory2,
 		C.VkDevice(device),
 		C.uint32_t(bindInfoCount),
 		(*C.VkBindBufferMemoryInfo)(pBindInfos)))
@@ -1799,12 +1800,12 @@ func (l *vulkanDriver) VkBindBufferMemory2(device VkDevice, bindInfoCount Uint32
 	return res, res.ToError()
 }
 
-func (l *vulkanDriver) VkBindImageMemory2(device VkDevice, bindInfoCount Uint32, pBindInfos *VkBindImageMemoryInfo) (VkResult, error) {
+func (l *vulkanDriver) VkBindImageMemory2(device VkDevice, bindInfoCount Uint32, pBindInfos *VkBindImageMemoryInfo) (common.VkResult, error) {
 	if l.funcPtrs.vkBindImageMemory2 == nil {
 		panic("attempted to call method 'vkBindImageMemory2' which is not present on this driver")
 	}
 
-	res := VkResult(C.cgoBindImageMemory2(l.funcPtrs.vkBindImageMemory2,
+	res := common.VkResult(C.cgoBindImageMemory2(l.funcPtrs.vkBindImageMemory2,
 		C.VkDevice(device),
 		C.uint32_t(bindInfoCount),
 		(*C.VkBindImageMemoryInfo)(pBindInfos)))
@@ -1906,12 +1907,12 @@ func (l *vulkanDriver) VkGetDeviceQueue2(device VkDevice, pQueueInfo *VkDeviceQu
 		(*C.VkQueue)(pQueue))
 }
 
-func (l *vulkanDriver) VkCreateSamplerYcbcrConversion(device VkDevice, pCreateInfo *VkSamplerYcbcrConversionCreateInfo, pAllocator *VkAllocationCallbacks, pYcbcrConversion *VkSamplerYcbcrConversion) (VkResult, error) {
+func (l *vulkanDriver) VkCreateSamplerYcbcrConversion(device VkDevice, pCreateInfo *VkSamplerYcbcrConversionCreateInfo, pAllocator *VkAllocationCallbacks, pYcbcrConversion *VkSamplerYcbcrConversion) (common.VkResult, error) {
 	if l.funcPtrs.vkCreateSamplerYcbcrConversion == nil {
 		panic("attempted to call method 'vkCreateSamplerYcbcrConversion' which is not present on this driver")
 	}
 
-	res := VkResult(C.cgoCreateSamplerYcbcrConversion(l.funcPtrs.vkCreateSamplerYcbcrConversion,
+	res := common.VkResult(C.cgoCreateSamplerYcbcrConversion(l.funcPtrs.vkCreateSamplerYcbcrConversion,
 		C.VkDevice(device),
 		(*C.VkSamplerYcbcrConversionCreateInfo)(pCreateInfo),
 		(*C.VkAllocationCallbacks)(pAllocator),
@@ -1931,12 +1932,12 @@ func (l *vulkanDriver) VkDestroySamplerYcbcrConversion(device VkDevice, ycbcrCon
 		(*C.VkAllocationCallbacks)(pAllocator))
 }
 
-func (l *vulkanDriver) VkCreateDescriptorUpdateTemplate(device VkDevice, pCreateInfo *VkDescriptorUpdateTemplateCreateInfo, pAllocator *VkAllocationCallbacks, pDescriptorUpdateTemplate *VkDescriptorUpdateTemplate) (VkResult, error) {
+func (l *vulkanDriver) VkCreateDescriptorUpdateTemplate(device VkDevice, pCreateInfo *VkDescriptorUpdateTemplateCreateInfo, pAllocator *VkAllocationCallbacks, pDescriptorUpdateTemplate *VkDescriptorUpdateTemplate) (common.VkResult, error) {
 	if l.funcPtrs.vkCreateDescriptorUpdateTemplate == nil {
 		panic("attempted to call method 'vkCreateDescriptorUpdateTemplate' which is not present on this driver")
 	}
 
-	res := VkResult(C.cgoCreateDescriptorUpdateTemplate(l.funcPtrs.vkCreateDescriptorUpdateTemplate,
+	res := common.VkResult(C.cgoCreateDescriptorUpdateTemplate(l.funcPtrs.vkCreateDescriptorUpdateTemplate,
 		C.VkDevice(device),
 		(*C.VkDescriptorUpdateTemplateCreateInfo)(pCreateInfo),
 		(*C.VkAllocationCallbacks)(pAllocator),
@@ -2008,12 +2009,12 @@ func (l *vulkanDriver) VkCmdDrawIndexedIndirectCount(commandBuffer VkCommandBuff
 		C.uint32_t(stride))
 }
 
-func (l *vulkanDriver) VkCreateRenderPass2(device VkDevice, pCreateInfo *VkRenderPassCreateInfo2, pAllocator *VkAllocationCallbacks, pRenderPass *VkRenderPass) (VkResult, error) {
+func (l *vulkanDriver) VkCreateRenderPass2(device VkDevice, pCreateInfo *VkRenderPassCreateInfo2, pAllocator *VkAllocationCallbacks, pRenderPass *VkRenderPass) (common.VkResult, error) {
 	if l.funcPtrs.vkCreateRenderPass2 == nil {
 		panic("attempted to call method 'vkCreateRenderPass2' which is not present on this driver")
 	}
 
-	res := VkResult(C.cgoCreateRenderPass2(l.funcPtrs.vkCreateRenderPass2,
+	res := common.VkResult(C.cgoCreateRenderPass2(l.funcPtrs.vkCreateRenderPass2,
 		C.VkDevice(device),
 		(*C.VkRenderPassCreateInfo2)(pCreateInfo),
 		(*C.VkAllocationCallbacks)(pAllocator),
@@ -2066,12 +2067,12 @@ func (l *vulkanDriver) VkResetQueryPool(device VkDevice, queryPool VkQueryPool, 
 		C.uint32_t(queryCount))
 }
 
-func (l *vulkanDriver) VkGetSemaphoreCounterValue(device VkDevice, semaphore VkSemaphore, pValue *Uint64) (VkResult, error) {
+func (l *vulkanDriver) VkGetSemaphoreCounterValue(device VkDevice, semaphore VkSemaphore, pValue *Uint64) (common.VkResult, error) {
 	if l.funcPtrs.vkGetSemaphoreCounterValue == nil {
 		panic("attempted to call method 'vkGetSemaphoreCounterValue' which is not present on this driver")
 	}
 
-	res := VkResult(C.cgoGetSemaphoreCounterValue(l.funcPtrs.vkGetSemaphoreCounterValue,
+	res := common.VkResult(C.cgoGetSemaphoreCounterValue(l.funcPtrs.vkGetSemaphoreCounterValue,
 		C.VkDevice(device),
 		C.VkSemaphore(semaphore),
 		(*C.uint64_t)(pValue)))
@@ -2079,12 +2080,12 @@ func (l *vulkanDriver) VkGetSemaphoreCounterValue(device VkDevice, semaphore VkS
 	return res, res.ToError()
 }
 
-func (l *vulkanDriver) VkWaitSemaphores(device VkDevice, pWaitInfo *VkSemaphoreWaitInfo, timeout Uint64) (VkResult, error) {
+func (l *vulkanDriver) VkWaitSemaphores(device VkDevice, pWaitInfo *VkSemaphoreWaitInfo, timeout Uint64) (common.VkResult, error) {
 	if l.funcPtrs.vkWaitSemaphores == nil {
 		panic("attempted to call method 'vkWaitSemaphores' which is not present on this driver")
 	}
 
-	res := VkResult(C.cgoWaitSemaphores(l.funcPtrs.vkWaitSemaphores,
+	res := common.VkResult(C.cgoWaitSemaphores(l.funcPtrs.vkWaitSemaphores,
 		C.VkDevice(device),
 		(*C.VkSemaphoreWaitInfo)(pWaitInfo),
 		C.uint64_t(timeout)))
@@ -2092,12 +2093,12 @@ func (l *vulkanDriver) VkWaitSemaphores(device VkDevice, pWaitInfo *VkSemaphoreW
 	return res, res.ToError()
 }
 
-func (l *vulkanDriver) VkSignalSemaphore(device VkDevice, pSignalInfo *VkSemaphoreSignalInfo) (VkResult, error) {
+func (l *vulkanDriver) VkSignalSemaphore(device VkDevice, pSignalInfo *VkSemaphoreSignalInfo) (common.VkResult, error) {
 	if l.funcPtrs.vkSignalSemaphore == nil {
 		panic("attempted to call method 'vkSignalSemaphore' which is not present on this driver")
 	}
 
-	res := VkResult(C.cgoSignalSemaphore(l.funcPtrs.vkSignalSemaphore,
+	res := common.VkResult(C.cgoSignalSemaphore(l.funcPtrs.vkSignalSemaphore,
 		C.VkDevice(device),
 		(*C.VkSemaphoreSignalInfo)(pSignalInfo)))
 

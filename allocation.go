@@ -51,6 +51,7 @@ VKAPI_ATTR void VKAPI_CALL internalFreeCallback(
 */
 import "C"
 import (
+	"github.com/CannibalVox/VKng/core/driver"
 	"runtime/cgo"
 	"unsafe"
 )
@@ -114,7 +115,7 @@ type AllocationCallbacks struct {
 	internalAllocation InternalAllocationNotification
 	internalFree       InternalFreeNotification
 
-	handle *VkAllocationCallbacks
+	handle *C.VkAllocationCallbacks
 }
 
 func (c *AllocationCallbacks) initHandle() {
@@ -145,15 +146,15 @@ func (c *AllocationCallbacks) initHandle() {
 	if c.internalFree != nil {
 		handle.pfnInternalFree = (C.PFN_vkInternalFreeNotification)(C.internalFreeCallback)
 	}
-	c.handle = (*VkAllocationCallbacks)(handle)
+	c.handle = handle
 }
 
-func (c *AllocationCallbacks) Handle() *VkAllocationCallbacks {
+func (c *AllocationCallbacks) Handle() *driver.VkAllocationCallbacks {
 	if c == nil {
 		return nil
 	}
 
-	return c.handle
+	return (*driver.VkAllocationCallbacks)(unsafe.Pointer(c.handle))
 }
 
 func (c *AllocationCallbacks) Destroy() {

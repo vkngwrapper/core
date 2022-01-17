@@ -255,8 +255,8 @@ func (o *ComputePipelineOptions) populate(allocator *cgoparam.Allocator, createI
 		return err
 	}
 
-	createInfo.layout = C.VkPipelineLayout(o.Layout.Handle())
-	createInfo.basePipelineHandle = C.VkPipeline(o.BasePipeline.Handle())
+	createInfo.layout = C.VkPipelineLayout(unsafe.Pointer(o.Layout.Handle()))
+	createInfo.basePipelineHandle = C.VkPipeline(unsafe.Pointer(o.BasePipeline.Handle()))
 	createInfo.basePipelineIndex = C.int32_t(o.BasePipelineIndex)
 
 	return nil

@@ -6,20 +6,22 @@ package core
 */
 import "C"
 import (
+	"github.com/CannibalVox/VKng/core/common"
+	driver3 "github.com/CannibalVox/VKng/core/driver"
 	"github.com/CannibalVox/cgoparam"
 	"unsafe"
 )
 
 type vulkanInstance struct {
-	driver Driver
-	handle VkInstance
+	driver driver3.Driver
+	handle driver3.VkInstance
 }
 
-func (i *vulkanInstance) Driver() Driver {
+func (i *vulkanInstance) Driver() driver3.Driver {
 	return i.driver
 }
 
-func (i *vulkanInstance) Handle() VkInstance {
+func (i *vulkanInstance) Handle() driver3.VkInstance {
 	return i.handle
 }
 
@@ -28,11 +30,11 @@ func (i *vulkanInstance) Destroy(callbacks *AllocationCallbacks) {
 	i.driver.Destroy()
 }
 
-func (i *vulkanInstance) PhysicalDevices() ([]PhysicalDevice, VkResult, error) {
+func (i *vulkanInstance) PhysicalDevices() ([]PhysicalDevice, common.VkResult, error) {
 	allocator := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(allocator)
 
-	count := (*Uint32)(allocator.Malloc(int(unsafe.Sizeof(Uint32(0)))))
+	count := (*driver3.Uint32)(allocator.Malloc(int(unsafe.Sizeof(driver3.Uint32(0)))))
 
 	res, err := i.driver.VkEnumeratePhysicalDevices(i.handle, count, nil)
 	if err != nil {
@@ -43,10 +45,10 @@ func (i *vulkanInstance) PhysicalDevices() ([]PhysicalDevice, VkResult, error) {
 		return nil, res, nil
 	}
 
-	allocatedHandles := allocator.Malloc(int(uintptr(*count) * unsafe.Sizeof([1]VkPhysicalDevice{})))
+	allocatedHandles := allocator.Malloc(int(uintptr(*count) * unsafe.Sizeof([1]driver3.VkPhysicalDevice{})))
 
-	deviceHandles := ([]VkPhysicalDevice)(unsafe.Slice((*VkPhysicalDevice)(allocatedHandles), int(*count)))
-	res, err = i.driver.VkEnumeratePhysicalDevices(i.handle, count, (*VkPhysicalDevice)(allocatedHandles))
+	deviceHandles := ([]driver3.VkPhysicalDevice)(unsafe.Slice((*driver3.VkPhysicalDevice)(allocatedHandles), int(*count)))
+	res, err = i.driver.VkEnumeratePhysicalDevices(i.handle, count, (*driver3.VkPhysicalDevice)(allocatedHandles))
 	if err != nil {
 		return nil, res, err
 	}

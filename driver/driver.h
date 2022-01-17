@@ -1,4 +1,4 @@
-#include "driver_func_ptrs.h"
+#include "func_ptrs.h"
 
 VkResult cgoCreateInstance(PFN_vkCreateInstance fn, VkInstanceCreateInfo *pCreateInfo, VkAllocationCallbacks *pAllocator, VkInstance *pInstance) {
     return fn(pCreateInfo, pAllocator, pInstance);

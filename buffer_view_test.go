@@ -3,6 +3,7 @@ package core_test
 import (
 	"github.com/CannibalVox/VKng/core"
 	"github.com/CannibalVox/VKng/core/common"
+	"github.com/CannibalVox/VKng/core/driver"
 	"github.com/CannibalVox/VKng/core/mocks"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/require"
@@ -25,13 +26,13 @@ func TestVulkanLoader1_0_CreateBufferView(t *testing.T) {
 	expectedBufferView := mocks.NewFakeBufferViewHandle()
 
 	mockDriver.EXPECT().VkCreateBufferView(mocks.Exactly(device.Handle()), gomock.Not(nil), nil, gomock.Not(nil)).DoAndReturn(
-		func(device core.VkDevice, pCreateInfo *core.VkBufferViewCreateInfo, pAllocator *core.VkAllocationCallbacks, pBufferView *core.VkBufferView) (core.VkResult, error) {
+		func(device driver.VkDevice, pCreateInfo *driver.VkBufferViewCreateInfo, pAllocator *driver.VkAllocationCallbacks, pBufferView *driver.VkBufferView) (common.VkResult, error) {
 			v := reflect.ValueOf(*pCreateInfo)
 			require.Equal(t, v.FieldByName("sType").Uint(), uint64(13)) // VK_STRUCTURE_TYPE_BUFFER_VIEW_CREATE_INFO
 			require.True(t, v.FieldByName("pNext").IsNil())
 			require.Equal(t, v.FieldByName("flags").Uint(), uint64(0))
 
-			actualBuffer := (core.VkBuffer)(unsafe.Pointer(v.FieldByName("buffer").Elem().UnsafeAddr()))
+			actualBuffer := (driver.VkBuffer)(unsafe.Pointer(v.FieldByName("buffer").Elem().UnsafeAddr()))
 			require.Equal(t, actualBuffer, buffer.Handle())
 
 			require.Equal(t, v.FieldByName("format").Uint(), uint64(103)) // VK_FORMAT_R32G32_SFLOAT
@@ -39,7 +40,7 @@ func TestVulkanLoader1_0_CreateBufferView(t *testing.T) {
 			require.Equal(t, v.FieldByName("_range").Uint(), uint64(7))
 
 			*pBufferView = expectedBufferView
-			return core.VKSuccess, nil
+			return common.VKSuccess, nil
 		})
 
 	bufferView, res, err := loader.CreateBufferView(device, nil, &core.BufferViewOptions{
@@ -49,7 +50,7 @@ func TestVulkanLoader1_0_CreateBufferView(t *testing.T) {
 		Range:  7,
 	})
 
-	require.Equal(t, res, core.VKSuccess)
+	require.Equal(t, res, common.VKSuccess)
 	require.NoError(t, err)
 	require.Same(t, expectedBufferView, bufferView.Handle())
 }

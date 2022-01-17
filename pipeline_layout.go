@@ -7,6 +7,7 @@ package core
 import "C"
 import (
 	"github.com/CannibalVox/VKng/core/common"
+	driver3 "github.com/CannibalVox/VKng/core/driver"
 	"github.com/CannibalVox/cgoparam"
 	"unsafe"
 )
@@ -58,12 +59,12 @@ func (o *PipelineLayoutOptions) AllocForC(allocator *cgoparam.Allocator, next un
 }
 
 type vulkanPipelineLayout struct {
-	driver Driver
-	device VkDevice
-	handle VkPipelineLayout
+	driver driver3.Driver
+	device driver3.VkDevice
+	handle driver3.VkPipelineLayout
 }
 
-func (l *vulkanPipelineLayout) Handle() VkPipelineLayout {
+func (l *vulkanPipelineLayout) Handle() driver3.VkPipelineLayout {
 	return l.handle
 }
 

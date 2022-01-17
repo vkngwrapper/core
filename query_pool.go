@@ -7,17 +7,18 @@ package core
 import "C"
 import (
 	"github.com/CannibalVox/VKng/core/common"
+	driver3 "github.com/CannibalVox/VKng/core/driver"
 	"github.com/CannibalVox/cgoparam"
 	"unsafe"
 )
 
 type vulkanQueryPool struct {
-	driver Driver
-	handle VkQueryPool
-	device VkDevice
+	driver driver3.Driver
+	handle driver3.VkQueryPool
+	device driver3.VkDevice
 }
 
-func (p *vulkanQueryPool) Handle() VkQueryPool {
+func (p *vulkanQueryPool) Handle() driver3.VkQueryPool {
 	return p.handle
 }
 
@@ -25,7 +26,7 @@ func (p *vulkanQueryPool) Destroy(callbacks *AllocationCallbacks) {
 	p.driver.VkDestroyQueryPool(p.device, p.handle, callbacks.Handle())
 }
 
-func (p *vulkanQueryPool) PopulateResults(firstQuery, queryCount int, resultSize, resultStride int, flags common.QueryResultFlags) ([]byte, VkResult, error) {
+func (p *vulkanQueryPool) PopulateResults(firstQuery, queryCount int, resultSize, resultStride int, flags common.QueryResultFlags) ([]byte, common.VkResult, error) {
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
@@ -33,7 +34,7 @@ func (p *vulkanQueryPool) PopulateResults(firstQuery, queryCount int, resultSize
 
 	inPointer := arena.Malloc(resultSize)
 
-	res, err := p.driver.VkGetQueryPoolResults(p.device, p.handle, Uint32(firstQuery), Uint32(queryCount), Size(resultSize), inPointer, VkDeviceSize(resultStride), VkQueryResultFlags(flags))
+	res, err := p.driver.VkGetQueryPoolResults(p.device, p.handle, driver3.Uint32(firstQuery), driver3.Uint32(queryCount), driver3.Size(resultSize), inPointer, driver3.VkDeviceSize(resultStride), driver3.VkQueryResultFlags(flags))
 	if err != nil {
 		return nil, res, err
 	}

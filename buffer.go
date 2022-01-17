@@ -7,6 +7,7 @@ package core
 import "C"
 import (
 	"github.com/CannibalVox/VKng/core/common"
+	driver3 "github.com/CannibalVox/VKng/core/driver"
 	"github.com/CannibalVox/cgoparam"
 	"github.com/cockroachdb/errors"
 	"unsafe"
@@ -49,12 +50,12 @@ func (o *BufferOptions) AllocForC(allocator *cgoparam.Allocator, next unsafe.Poi
 }
 
 type vulkanBuffer struct {
-	driver Driver
-	device VkDevice
-	handle VkBuffer
+	driver driver3.Driver
+	device driver3.VkDevice
+	handle driver3.VkBuffer
 }
 
-func (b *vulkanBuffer) Handle() VkBuffer {
+func (b *vulkanBuffer) Handle() driver3.VkBuffer {
 	return b.handle
 }
 
@@ -71,7 +72,7 @@ func (b *vulkanBuffer) MemoryRequirements() *common.MemoryRequirements {
 
 	requirementsUnsafe := allocator.Malloc(C.sizeof_struct_VkMemoryRequirements)
 
-	b.driver.VkGetBufferMemoryRequirements(b.device, b.handle, (*VkMemoryRequirements)(requirementsUnsafe))
+	b.driver.VkGetBufferMemoryRequirements(b.device, b.handle, (*driver3.VkMemoryRequirements)(requirementsUnsafe))
 
 	requirements := (*C.VkMemoryRequirements)(requirementsUnsafe)
 
@@ -82,10 +83,10 @@ func (b *vulkanBuffer) MemoryRequirements() *common.MemoryRequirements {
 	}
 }
 
-func (b *vulkanBuffer) BindBufferMemory(memory DeviceMemory, offset int) (VkResult, error) {
+func (b *vulkanBuffer) BindBufferMemory(memory DeviceMemory, offset int) (common.VkResult, error) {
 	if memory == nil {
-		return VKErrorUnknown, errors.New("received nil DeviceMemory")
+		return common.VKErrorUnknown, errors.New("received nil DeviceMemory")
 	}
 
-	return b.driver.VkBindBufferMemory(b.device, b.handle, memory.Handle(), VkDeviceSize(offset))
+	return b.driver.VkBindBufferMemory(b.device, b.handle, memory.Handle(), driver3.VkDeviceSize(offset))
 }

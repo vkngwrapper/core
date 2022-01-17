@@ -7,6 +7,7 @@ package core
 import "C"
 import (
 	"github.com/CannibalVox/VKng/core/common"
+	"github.com/CannibalVox/VKng/core/driver"
 	"github.com/CannibalVox/cgoparam"
 	"unsafe"
 )
@@ -32,7 +33,7 @@ func (c *vulkanCommandBuffer) CmdCopyBuffer(srcBuffer Buffer, dstBuffer Buffer, 
 		copyRegionSlice[i].size = C.VkDeviceSize(copyRegions[i].Size)
 	}
 
-	c.driver.VkCmdCopyBuffer(c.handle, srcBuffer.Handle(), dstBuffer.Handle(), Uint32(copyRegionCount), (*VkBufferCopy)(copyRegionUnsafe))
+	c.driver.VkCmdCopyBuffer(c.handle, srcBuffer.Handle(), dstBuffer.Handle(), driver.Uint32(copyRegionCount), (*driver.VkBufferCopy)(copyRegionUnsafe))
 	return nil
 }
 
@@ -77,6 +78,6 @@ func (c *vulkanCommandBuffer) CmdCopyImage(srcImage Image, srcImageLayout common
 		copyRegionSlice[i].extent.depth = C.uint32_t(regions[i].Extent.Depth)
 	}
 
-	c.driver.VkCmdCopyImage(c.handle, srcImage.Handle(), VkImageLayout(srcImageLayout), dstImage.Handle(), VkImageLayout(dstImageLayout), Uint32(copyRegionCount), (*VkImageCopy)(copyRegionUnsafe))
+	c.driver.VkCmdCopyImage(c.handle, srcImage.Handle(), driver.VkImageLayout(srcImageLayout), dstImage.Handle(), driver.VkImageLayout(dstImageLayout), driver.Uint32(copyRegionCount), (*driver.VkImageCopy)(copyRegionUnsafe))
 	return nil
 }

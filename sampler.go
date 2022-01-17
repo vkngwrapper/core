@@ -7,17 +7,18 @@ package core
 import "C"
 import (
 	"github.com/CannibalVox/VKng/core/common"
+	driver3 "github.com/CannibalVox/VKng/core/driver"
 	"github.com/CannibalVox/cgoparam"
 	"unsafe"
 )
 
 type vulkanSampler struct {
-	device VkDevice
-	driver Driver
-	handle VkSampler
+	device driver3.VkDevice
+	driver driver3.Driver
+	handle driver3.VkSampler
 }
 
-func (s *vulkanSampler) Handle() VkSampler {
+func (s *vulkanSampler) Handle() driver3.VkSampler {
 	return s.handle
 }
 

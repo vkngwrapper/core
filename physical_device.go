@@ -7,6 +7,7 @@ package core
 import "C"
 import (
 	"github.com/CannibalVox/VKng/core/common"
+	"github.com/CannibalVox/VKng/core/driver"
 	"github.com/CannibalVox/cgoparam"
 	"github.com/cockroachdb/errors"
 	"github.com/google/uuid"
@@ -14,15 +15,15 @@ import (
 )
 
 type vulkanPhysicalDevice struct {
-	driver Driver
-	handle VkPhysicalDevice
+	driver driver.Driver
+	handle driver.VkPhysicalDevice
 }
 
-func (d *vulkanPhysicalDevice) Handle() VkPhysicalDevice {
+func (d *vulkanPhysicalDevice) Handle() driver.VkPhysicalDevice {
 	return d.handle
 }
 
-func (d *vulkanPhysicalDevice) Driver() Driver {
+func (d *vulkanPhysicalDevice) Driver() driver.Driver {
 	return d.driver
 }
 
@@ -30,7 +31,7 @@ func (d *vulkanPhysicalDevice) QueueFamilyProperties() []*common.QueueFamily {
 	allocator := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(allocator)
 
-	count := (*Uint32)(allocator.Malloc(int(unsafe.Sizeof(C.uint32_t(0)))))
+	count := (*driver.Uint32)(allocator.Malloc(int(unsafe.Sizeof(C.uint32_t(0)))))
 	d.driver.VkGetPhysicalDeviceQueueFamilyProperties(d.handle, count, nil)
 
 	if *count == 0 {
@@ -42,7 +43,7 @@ func (d *vulkanPhysicalDevice) QueueFamilyProperties() []*common.QueueFamily {
 	allocatedHandles := allocator.Malloc(goCount * int(unsafe.Sizeof(C.VkQueueFamilyProperties{})))
 	familyProperties := ([]C.VkQueueFamilyProperties)(unsafe.Slice((*C.VkQueueFamilyProperties)(allocatedHandles), int(*count)))
 
-	d.driver.VkGetPhysicalDeviceQueueFamilyProperties(d.handle, count, (*VkQueueFamilyProperties)(allocatedHandles))
+	d.driver.VkGetPhysicalDeviceQueueFamilyProperties(d.handle, count, (*driver.VkQueueFamilyProperties)(allocatedHandles))
 
 	var queueFamilies []*common.QueueFamily
 	for i := 0; i < goCount; i++ {
@@ -67,7 +68,7 @@ func (d *vulkanPhysicalDevice) Properties() *common.PhysicalDeviceProperties {
 
 	propertiesUnsafe := allocator.Malloc(int(unsafe.Sizeof([1]C.VkPhysicalDeviceProperties{})))
 
-	d.driver.VkGetPhysicalDeviceProperties(d.handle, (*VkPhysicalDeviceProperties)(propertiesUnsafe))
+	d.driver.VkGetPhysicalDeviceProperties(d.handle, (*driver.VkPhysicalDeviceProperties)(propertiesUnsafe))
 
 	return createPhysicalDeviceProperties((*C.VkPhysicalDeviceProperties)(propertiesUnsafe))
 }
@@ -78,17 +79,17 @@ func (d *vulkanPhysicalDevice) Features() *common.PhysicalDeviceFeatures {
 
 	featuresUnsafe := allocator.Malloc(int(unsafe.Sizeof([1]C.VkPhysicalDeviceFeatures{})))
 
-	d.driver.VkGetPhysicalDeviceFeatures(d.handle, (*VkPhysicalDeviceFeatures)(featuresUnsafe))
+	d.driver.VkGetPhysicalDeviceFeatures(d.handle, (*driver.VkPhysicalDeviceFeatures)(featuresUnsafe))
 
 	return createPhysicalDeviceFeatures((*C.VkPhysicalDeviceFeatures)(featuresUnsafe))
 }
 
-func (d *vulkanPhysicalDevice) attemptAvailableExtensions(layerNamePtr *Char) (map[string]*common.ExtensionProperties, VkResult, error) {
+func (d *vulkanPhysicalDevice) attemptAvailableExtensions(layerNamePtr *driver.Char) (map[string]*common.ExtensionProperties, common.VkResult, error) {
 	allocator := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(allocator)
 
 	extensionCountPtr := allocator.Malloc(int(unsafe.Sizeof(C.uint32_t(0))))
-	extensionCount := (*Uint32)(extensionCountPtr)
+	extensionCount := (*driver.Uint32)(extensionCountPtr)
 
 	res, err := d.driver.VkEnumerateDeviceExtensionProperties(d.handle, nil, extensionCount, nil)
 
@@ -99,7 +100,7 @@ func (d *vulkanPhysicalDevice) attemptAvailableExtensions(layerNamePtr *Char) (m
 	extensionTotal := int(*extensionCount)
 	extensionsPtr := allocator.Malloc(extensionTotal * C.sizeof_struct_VkExtensionProperties)
 
-	res, err = d.driver.VkEnumerateDeviceExtensionProperties(d.handle, nil, extensionCount, (*VkExtensionProperties)(extensionsPtr))
+	res, err = d.driver.VkEnumerateDeviceExtensionProperties(d.handle, nil, extensionCount, (*driver.VkExtensionProperties)(extensionsPtr))
 	if err != nil {
 		return nil, res, err
 	}
@@ -125,42 +126,42 @@ func (d *vulkanPhysicalDevice) attemptAvailableExtensions(layerNamePtr *Char) (m
 	return retVal, res, nil
 }
 
-func (d *vulkanPhysicalDevice) AvailableExtensions() (map[string]*common.ExtensionProperties, VkResult, error) {
+func (d *vulkanPhysicalDevice) AvailableExtensions() (map[string]*common.ExtensionProperties, common.VkResult, error) {
 	// There may be a race condition that adds new available extensions between getting the
 	// extension count & pulling the extensions, in which case, attemptAvailableExtensions will return
 	// VK_INCOMPLETE.  In this case, we should try again.
 	var layers map[string]*common.ExtensionProperties
-	var result VkResult
+	var result common.VkResult
 	var err error
-	for doWhile := true; doWhile; doWhile = (result == VKIncomplete) {
+	for doWhile := true; doWhile; doWhile = (result == common.VKIncomplete) {
 		layers, result, err = d.attemptAvailableExtensions(nil)
 	}
 	return layers, result, err
 }
 
-func (d *vulkanPhysicalDevice) AvailableExtensionsForLayer(layerName string) (map[string]*common.ExtensionProperties, VkResult, error) {
+func (d *vulkanPhysicalDevice) AvailableExtensionsForLayer(layerName string) (map[string]*common.ExtensionProperties, common.VkResult, error) {
 	// There may be a race condition that adds new available extensions between getting the
 	// extension count & pulling the extensions, in which case, attemptAvailableExtensions will return
 	// VK_INCOMPLETE.  In this case, we should try again.
 	var layers map[string]*common.ExtensionProperties
-	var result VkResult
+	var result common.VkResult
 	var err error
 	allocator := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(allocator)
 
-	layerNamePtr := (*Char)(allocator.CString(layerName))
-	for doWhile := true; doWhile; doWhile = (result == VKIncomplete) {
+	layerNamePtr := (*driver.Char)(allocator.CString(layerName))
+	for doWhile := true; doWhile; doWhile = (result == common.VKIncomplete) {
 		layers, result, err = d.attemptAvailableExtensions(layerNamePtr)
 	}
 	return layers, result, err
 }
 
-func (d *vulkanPhysicalDevice) attemptAvailableLayers() (map[string]*common.LayerProperties, VkResult, error) {
+func (d *vulkanPhysicalDevice) attemptAvailableLayers() (map[string]*common.LayerProperties, common.VkResult, error) {
 	allocator := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(allocator)
 
 	layerCountPtr := allocator.Malloc(int(unsafe.Sizeof(C.uint32_t(0))))
-	layerCount := (*Uint32)(layerCountPtr)
+	layerCount := (*driver.Uint32)(layerCountPtr)
 
 	res, err := d.driver.VkEnumerateDeviceLayerProperties(d.handle, layerCount, nil)
 
@@ -171,8 +172,8 @@ func (d *vulkanPhysicalDevice) attemptAvailableLayers() (map[string]*common.Laye
 	layerTotal := int(*layerCount)
 	layersPtr := allocator.Malloc(layerTotal * C.sizeof_struct_VkLayerProperties)
 
-	res, err = d.driver.VkEnumerateDeviceLayerProperties(d.handle, layerCount, (*VkLayerProperties)(layersPtr))
-	if err != nil || res == VKIncomplete {
+	res, err = d.driver.VkEnumerateDeviceLayerProperties(d.handle, layerCount, (*driver.VkLayerProperties)(layersPtr))
+	if err != nil || res == common.VKIncomplete {
 		return nil, res, err
 	}
 
@@ -201,14 +202,14 @@ func (d *vulkanPhysicalDevice) attemptAvailableLayers() (map[string]*common.Laye
 	return retVal, res, nil
 }
 
-func (d *vulkanPhysicalDevice) AvailableLayers() (map[string]*common.LayerProperties, VkResult, error) {
+func (d *vulkanPhysicalDevice) AvailableLayers() (map[string]*common.LayerProperties, common.VkResult, error) {
 	// There may be a race condition that adds new available extensions between getting the
 	// extension count & pulling the extensions, in which case, attemptAvailableExtensions will return
 	// VK_INCOMPLETE.  In this case, we should try again.
 	var layers map[string]*common.LayerProperties
-	var result VkResult
+	var result common.VkResult
 	var err error
-	for doWhile := true; doWhile; doWhile = (result == VKIncomplete) {
+	for doWhile := true; doWhile; doWhile = (result == common.VKIncomplete) {
 		layers, result, err = d.attemptAvailableLayers()
 	}
 	return layers, result, err
@@ -220,7 +221,7 @@ func (d *vulkanPhysicalDevice) FormatProperties(format common.DataFormat) *commo
 
 	properties := (*C.VkFormatProperties)(allocator.Malloc(C.sizeof_struct_VkFormatProperties))
 
-	d.driver.VkGetPhysicalDeviceFormatProperties(d.handle, VkFormat(format), (*VkFormatProperties)(properties))
+	d.driver.VkGetPhysicalDeviceFormatProperties(d.handle, driver.VkFormat(format), (*driver.VkFormatProperties)(unsafe.Pointer(properties)))
 
 	return &common.FormatProperties{
 		LinearTilingFeatures:  common.FormatFeatures(properties.linearTilingFeatures),
@@ -229,13 +230,13 @@ func (d *vulkanPhysicalDevice) FormatProperties(format common.DataFormat) *commo
 	}
 }
 
-func (d *vulkanPhysicalDevice) ImageFormatProperties(format common.DataFormat, imageType common.ImageType, tiling common.ImageTiling, usages common.ImageUsages, flags ImageFlags) (*common.ImageFormatProperties, VkResult, error) {
+func (d *vulkanPhysicalDevice) ImageFormatProperties(format common.DataFormat, imageType common.ImageType, tiling common.ImageTiling, usages common.ImageUsages, flags ImageFlags) (*common.ImageFormatProperties, common.VkResult, error) {
 	allocator := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(allocator)
 
 	properties := (*C.VkImageFormatProperties)(allocator.Malloc(C.sizeof_struct_VkImageFormatProperties))
 
-	res, err := d.driver.VkGetPhysicalDeviceImageFormatProperties(d.handle, VkFormat(format), VkImageType(imageType), VkImageTiling(tiling), VkImageUsageFlags(usages), VkImageCreateFlags(flags), (*VkImageFormatProperties)(properties))
+	res, err := d.driver.VkGetPhysicalDeviceImageFormatProperties(d.handle, driver.VkFormat(format), driver.VkImageType(imageType), driver.VkImageTiling(tiling), driver.VkImageUsageFlags(usages), driver.VkImageCreateFlags(flags), (*driver.VkImageFormatProperties)(unsafe.Pointer(properties)))
 	if err != nil {
 		return nil, res, err
 	}

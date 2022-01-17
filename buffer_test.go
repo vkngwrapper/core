@@ -3,6 +3,7 @@ package core_test
 import (
 	"github.com/CannibalVox/VKng/core"
 	"github.com/CannibalVox/VKng/core/common"
+	"github.com/CannibalVox/VKng/core/driver"
 	"github.com/CannibalVox/VKng/core/mocks"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/require"
@@ -24,7 +25,7 @@ func TestBuffer_Create_NilIndices(t *testing.T) {
 	expectedBuffer := mocks.NewFakeBufferHandle()
 
 	mockDriver.EXPECT().VkCreateBuffer(mocks.Exactly(device.Handle()), gomock.Not(nil), nil, gomock.Not(nil)).DoAndReturn(
-		func(device core.VkDevice, createInfo *core.VkBufferCreateInfo, allocator *core.VkAllocationCallbacks, buffer *core.VkBuffer) (core.VkResult, error) {
+		func(device driver.VkDevice, createInfo *driver.VkBufferCreateInfo, allocator *driver.VkAllocationCallbacks, buffer *driver.VkBuffer) (common.VkResult, error) {
 			v := reflect.ValueOf(*createInfo)
 			require.Equal(t, v.FieldByName("sType").Uint(), uint64(12)) //VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO
 			require.True(t, v.FieldByName("pNext").IsNil())
@@ -38,7 +39,7 @@ func TestBuffer_Create_NilIndices(t *testing.T) {
 
 			*buffer = expectedBuffer
 
-			return core.VKSuccess, nil
+			return common.VKSuccess, nil
 		})
 
 	buffer, res, err := loader.CreateBuffer(device, nil, &core.BufferOptions{
@@ -48,7 +49,7 @@ func TestBuffer_Create_NilIndices(t *testing.T) {
 		QueueFamilyIndices: []int{},
 	})
 
-	require.Equal(t, res, core.VKSuccess)
+	require.Equal(t, res, common.VKSuccess)
 	require.NoError(t, err)
 	require.Same(t, expectedBuffer, buffer.Handle())
 }
@@ -66,7 +67,7 @@ func TestBasicBuffer_Create_QueueFamilyIndices(t *testing.T) {
 	expectedBuffer := mocks.NewFakeBufferHandle()
 
 	mockDriver.EXPECT().VkCreateBuffer(mocks.Exactly(device.Handle()), gomock.Not(nil), nil, gomock.Not(nil)).DoAndReturn(
-		func(device core.VkDevice, createInfo *core.VkBufferCreateInfo, allocator *core.VkAllocationCallbacks, buffer *core.VkBuffer) (core.VkResult, error) {
+		func(device driver.VkDevice, createInfo *driver.VkBufferCreateInfo, allocator *driver.VkAllocationCallbacks, buffer *driver.VkBuffer) (common.VkResult, error) {
 			v := reflect.ValueOf(*createInfo)
 			require.Equal(t, v.FieldByName("sType").Uint(), uint64(12)) //VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO
 			require.True(t, v.FieldByName("pNext").IsNil())
@@ -79,12 +80,12 @@ func TestBasicBuffer_Create_QueueFamilyIndices(t *testing.T) {
 			require.False(t, indicesVal.IsNil())
 
 			indicesPtrUnsafe := unsafe.Pointer(indicesVal.Elem().UnsafeAddr())
-			indicesSlice := ([]core.Uint32)(unsafe.Slice((*core.Uint32)(indicesPtrUnsafe), 4))
-			require.Equal(t, []core.Uint32{1, 2, 3, 4}, indicesSlice)
+			indicesSlice := ([]driver.Uint32)(unsafe.Slice((*driver.Uint32)(indicesPtrUnsafe), 4))
+			require.Equal(t, []driver.Uint32{1, 2, 3, 4}, indicesSlice)
 
 			*buffer = expectedBuffer
 
-			return core.VKSuccess, nil
+			return common.VKSuccess, nil
 		})
 
 	buffer, res, err := loader.CreateBuffer(device, nil, &core.BufferOptions{
@@ -94,7 +95,7 @@ func TestBasicBuffer_Create_QueueFamilyIndices(t *testing.T) {
 		QueueFamilyIndices: []int{1, 2, 3, 4},
 	})
 
-	require.Equal(t, res, core.VKSuccess)
+	require.Equal(t, res, common.VKSuccess)
 	require.NoError(t, err)
 	require.Same(t, expectedBuffer, buffer.Handle())
 
@@ -112,7 +113,7 @@ func TestBuffer_MemoryRequirements(t *testing.T) {
 	buffer := mocks.EasyDummyBuffer(t, loader, device)
 
 	mockDriver.EXPECT().VkGetBufferMemoryRequirements(mocks.Exactly(device.Handle()), mocks.Exactly(buffer.Handle()), gomock.Not(nil)).DoAndReturn(
-		func(device core.VkDevice, buffer core.VkBuffer, requirements *core.VkMemoryRequirements) {
+		func(device driver.VkDevice, buffer driver.VkBuffer, requirements *driver.VkMemoryRequirements) {
 			v := reflect.ValueOf(requirements).Elem()
 			*(*uint64)(unsafe.Pointer(v.FieldByName("size").UnsafeAddr())) = 5
 			*(*uint64)(unsafe.Pointer(v.FieldByName("alignment").UnsafeAddr())) = 8
@@ -138,7 +139,7 @@ func TestBuffer_BindBufferMemory_Success(t *testing.T) {
 	buffer := mocks.EasyDummyBuffer(t, loader, device)
 	memory := mocks.EasyMockDeviceMemory(ctrl)
 
-	mockDriver.EXPECT().VkBindBufferMemory(mocks.Exactly(device.Handle()), mocks.Exactly(buffer.Handle()), mocks.Exactly(memory.Handle()), core.VkDeviceSize(3)).Return(core.VKSuccess, nil)
+	mockDriver.EXPECT().VkBindBufferMemory(mocks.Exactly(device.Handle()), mocks.Exactly(buffer.Handle()), mocks.Exactly(memory.Handle()), driver.VkDeviceSize(3)).Return(common.VKSuccess, nil)
 	_, err = buffer.BindBufferMemory(memory, 3)
 	require.NoError(t, err)
 }

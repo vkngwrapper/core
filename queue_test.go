@@ -3,6 +3,7 @@ package core_test
 import (
 	"github.com/CannibalVox/VKng/core"
 	"github.com/CannibalVox/VKng/core/common"
+	"github.com/CannibalVox/VKng/core/driver"
 	"github.com/CannibalVox/VKng/core/mocks"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/require"
@@ -22,7 +23,7 @@ func TestVulkanQueue_WaitForIdle(t *testing.T) {
 	device := mocks.EasyDummyDevice(t, ctrl, loader)
 	queue := mocks.EasyDummyQueue(device)
 
-	driver.EXPECT().VkQueueWaitIdle(mocks.Exactly(queue.Handle())).Return(core.VKSuccess, nil)
+	driver.EXPECT().VkQueueWaitIdle(mocks.Exactly(queue.Handle())).Return(common.VKSuccess, nil)
 
 	_, err = queue.WaitForIdle()
 	require.NoError(t, err)
@@ -32,8 +33,8 @@ func TestVulkanQueue_BindSparse(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	driver := mocks.NewMockDriver(ctrl)
-	loader, err := core.CreateLoaderFromDriver(driver)
+	mockDriver := mocks.NewMockDriver(ctrl)
+	loader, err := core.CreateLoaderFromDriver(mockDriver)
 	require.NoError(t, err)
 
 	device := mocks.EasyDummyDevice(t, ctrl, loader)
@@ -51,9 +52,9 @@ func TestVulkanQueue_BindSparse(t *testing.T) {
 	memory3 := mocks.EasyMockDeviceMemory(ctrl)
 	memory4 := mocks.EasyMockDeviceMemory(ctrl)
 
-	driver.EXPECT().VkQueueBindSparse(mocks.Exactly(queue.Handle()), core.Uint32(1), gomock.Not(nil), nil).DoAndReturn(
-		func(queue core.VkQueue, bindInfoCount core.Uint32, pBindInfo *core.VkBindSparseInfo, fence core.VkFence) (core.VkResult, error) {
-			bindSlice := ([]core.VkBindSparseInfo)(unsafe.Slice(pBindInfo, 1))
+	mockDriver.EXPECT().VkQueueBindSparse(mocks.Exactly(queue.Handle()), driver.Uint32(1), gomock.Not(nil), nil).DoAndReturn(
+		func(queue driver.VkQueue, bindInfoCount driver.Uint32, pBindInfo *driver.VkBindSparseInfo, fence driver.VkFence) (common.VkResult, error) {
+			bindSlice := ([]driver.VkBindSparseInfo)(unsafe.Slice(pBindInfo, 1))
 			val := reflect.ValueOf(bindSlice).Index(0)
 
 			// Root
@@ -66,35 +67,35 @@ func TestVulkanQueue_BindSparse(t *testing.T) {
 			require.Equal(t, uint64(1), val.FieldByName("imageBindCount").Uint())
 
 			// Wait Semaphores
-			waitSemaphorePtr := (*core.VkSemaphore)(unsafe.Pointer(val.FieldByName("pWaitSemaphores").Elem().UnsafeAddr()))
-			waitSemaphoreSlice := ([]core.VkSemaphore)(unsafe.Slice(waitSemaphorePtr, 1))
+			waitSemaphorePtr := (*driver.VkSemaphore)(unsafe.Pointer(val.FieldByName("pWaitSemaphores").Elem().UnsafeAddr()))
+			waitSemaphoreSlice := ([]driver.VkSemaphore)(unsafe.Slice(waitSemaphorePtr, 1))
 
 			require.Same(t, semaphore1.Handle(), waitSemaphoreSlice[0])
 
 			// Signal Semaphores
-			signalSemaphorePtr := (*core.VkSemaphore)(unsafe.Pointer(val.FieldByName("pSignalSemaphores").Elem().UnsafeAddr()))
-			signalSemaphoreSlice := ([]core.VkSemaphore)(unsafe.Slice(signalSemaphorePtr, 2))
+			signalSemaphorePtr := (*driver.VkSemaphore)(unsafe.Pointer(val.FieldByName("pSignalSemaphores").Elem().UnsafeAddr()))
+			signalSemaphoreSlice := ([]driver.VkSemaphore)(unsafe.Slice(signalSemaphorePtr, 2))
 
 			require.Same(t, semaphore2.Handle(), signalSemaphoreSlice[0])
 			require.Same(t, semaphore3.Handle(), signalSemaphoreSlice[1])
 
 			// Sparse buffer memory bind
-			bufferBindsPtr := (*core.VkSparseBufferMemoryBindInfo)(unsafe.Pointer(val.FieldByName("pBufferBinds").Elem().UnsafeAddr()))
-			bufferBindsSlice := ([]core.VkSparseBufferMemoryBindInfo)(unsafe.Slice(bufferBindsPtr, 1))
+			bufferBindsPtr := (*driver.VkSparseBufferMemoryBindInfo)(unsafe.Pointer(val.FieldByName("pBufferBinds").Elem().UnsafeAddr()))
+			bufferBindsSlice := ([]driver.VkSparseBufferMemoryBindInfo)(unsafe.Slice(bufferBindsPtr, 1))
 			val = reflect.ValueOf(bufferBindsSlice).Index(0)
-			bufferHandle := (core.VkBuffer)(unsafe.Pointer(val.FieldByName("buffer").Elem().UnsafeAddr()))
+			bufferHandle := (driver.VkBuffer)(unsafe.Pointer(val.FieldByName("buffer").Elem().UnsafeAddr()))
 			require.Same(t, buffer.Handle(), bufferHandle)
 
 			require.Equal(t, uint64(2), val.FieldByName("bindCount").Uint())
-			bindsPtr := (*core.VkSparseMemoryBind)(unsafe.Pointer(val.FieldByName("pBinds").Elem().UnsafeAddr()))
-			bindsSlice := ([]core.VkSparseMemoryBind)(unsafe.Slice(bindsPtr, 2))
+			bindsPtr := (*driver.VkSparseMemoryBind)(unsafe.Pointer(val.FieldByName("pBinds").Elem().UnsafeAddr()))
+			bindsSlice := ([]driver.VkSparseMemoryBind)(unsafe.Slice(bindsPtr, 2))
 
 			val = reflect.ValueOf(bindsSlice).Index(0)
 			require.Equal(t, uint64(1), val.FieldByName("resourceOffset").Uint())
 			require.Equal(t, uint64(3), val.FieldByName("size").Uint())
 			require.Equal(t, uint64(5), val.FieldByName("memoryOffset").Uint())
 			require.Equal(t, uint64(1), val.FieldByName("flags").Uint()) // VK_SPARSE_MEMORY_BIND_METADATA_BIT
-			memHandle := (core.VkDeviceMemory)(unsafe.Pointer(val.FieldByName("memory").Elem().UnsafeAddr()))
+			memHandle := (driver.VkDeviceMemory)(unsafe.Pointer(val.FieldByName("memory").Elem().UnsafeAddr()))
 			require.Same(t, memory1.Handle(), memHandle)
 
 			val = reflect.ValueOf(bindsSlice).Index(1)
@@ -102,15 +103,15 @@ func TestVulkanQueue_BindSparse(t *testing.T) {
 			require.Equal(t, uint64(11), val.FieldByName("size").Uint())
 			require.Equal(t, uint64(13), val.FieldByName("memoryOffset").Uint())
 			require.Equal(t, uint64(0), val.FieldByName("flags").Uint())
-			memHandle = (core.VkDeviceMemory)(unsafe.Pointer(val.FieldByName("memory").Elem().UnsafeAddr()))
+			memHandle = (driver.VkDeviceMemory)(unsafe.Pointer(val.FieldByName("memory").Elem().UnsafeAddr()))
 			require.Same(t, memory2.Handle(), memHandle)
 
 			// Sparse image opaque memory bind
 
-			imageOpaqueBindsPtr := (*core.VkSparseImageOpaqueMemoryBindInfo)(unsafe.Pointer(reflect.ValueOf(bindSlice).Index(0).FieldByName("pImageOpaqueBinds").Elem().UnsafeAddr()))
-			imageOpaqueBindsSlice := ([]core.VkSparseImageOpaqueMemoryBindInfo)(unsafe.Slice(imageOpaqueBindsPtr, 1))
+			imageOpaqueBindsPtr := (*driver.VkSparseImageOpaqueMemoryBindInfo)(unsafe.Pointer(reflect.ValueOf(bindSlice).Index(0).FieldByName("pImageOpaqueBinds").Elem().UnsafeAddr()))
+			imageOpaqueBindsSlice := ([]driver.VkSparseImageOpaqueMemoryBindInfo)(unsafe.Slice(imageOpaqueBindsPtr, 1))
 			val = reflect.ValueOf(imageOpaqueBindsSlice).Index(0)
-			imageHandle := (core.VkImage)(unsafe.Pointer(val.FieldByName("image").Elem().UnsafeAddr()))
+			imageHandle := (driver.VkImage)(unsafe.Pointer(val.FieldByName("image").Elem().UnsafeAddr()))
 			require.Same(t, image1.Handle(), imageHandle)
 
 			require.Equal(t, uint64(1), val.FieldByName("bindCount").Uint())
@@ -120,15 +121,15 @@ func TestVulkanQueue_BindSparse(t *testing.T) {
 			require.Equal(t, uint64(19), val.FieldByName("size").Uint())
 			require.Equal(t, uint64(23), val.FieldByName("memoryOffset").Uint())
 			require.Equal(t, uint64(0), val.FieldByName("flags").Uint())
-			memHandle = (core.VkDeviceMemory)(unsafe.Pointer(val.FieldByName("memory").Elem().UnsafeAddr()))
+			memHandle = (driver.VkDeviceMemory)(unsafe.Pointer(val.FieldByName("memory").Elem().UnsafeAddr()))
 			require.Same(t, memory3.Handle(), memHandle)
 
 			// Sparse image memory bind
 
-			imageBindsPtr := (*core.VkSparseImageMemoryBindInfo)(unsafe.Pointer(reflect.ValueOf(bindSlice).Index(0).FieldByName("pImageBinds").Elem().UnsafeAddr()))
-			imageBindsSlice := ([]core.VkSparseImageMemoryBindInfo)(unsafe.Slice(imageBindsPtr, 1))
+			imageBindsPtr := (*driver.VkSparseImageMemoryBindInfo)(unsafe.Pointer(reflect.ValueOf(bindSlice).Index(0).FieldByName("pImageBinds").Elem().UnsafeAddr()))
+			imageBindsSlice := ([]driver.VkSparseImageMemoryBindInfo)(unsafe.Slice(imageBindsPtr, 1))
 			val = reflect.ValueOf(imageBindsSlice).Index(0)
-			imageHandle = (core.VkImage)(unsafe.Pointer(val.FieldByName("image").Elem().UnsafeAddr()))
+			imageHandle = (driver.VkImage)(unsafe.Pointer(val.FieldByName("image").Elem().UnsafeAddr()))
 			require.Same(t, image2.Handle(), imageHandle)
 
 			require.Equal(t, uint64(1), val.FieldByName("bindCount").Uint())
@@ -143,11 +144,11 @@ func TestVulkanQueue_BindSparse(t *testing.T) {
 			require.Equal(t, uint64(47), val.FieldByName("extent").FieldByName("width").Uint())
 			require.Equal(t, uint64(53), val.FieldByName("extent").FieldByName("height").Uint())
 			require.Equal(t, uint64(59), val.FieldByName("extent").FieldByName("depth").Uint())
-			require.Same(t, memory4.Handle(), (core.VkDeviceMemory)(unsafe.Pointer(val.FieldByName("memory").Elem().UnsafeAddr())))
+			require.Same(t, memory4.Handle(), (driver.VkDeviceMemory)(unsafe.Pointer(val.FieldByName("memory").Elem().UnsafeAddr())))
 			require.Equal(t, uint64(61), val.FieldByName("memoryOffset").Uint())
 			require.Equal(t, uint64(1), val.FieldByName("flags").Uint()) // VK_SPARSE_MEMORY_BIND_METADATA_BIT
 
-			return core.VKSuccess, nil
+			return common.VKSuccess, nil
 		})
 
 	_, err = queue.BindSparse(nil, []*core.BindSparseOptions{

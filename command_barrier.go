@@ -55,7 +55,7 @@ func (o *BufferMemoryBarrierOptions) populate(createInfo *C.VkBufferMemoryBarrie
 	createInfo.dstAccessMask = C.VkAccessFlags(o.DstAccessMask)
 	createInfo.srcQueueFamilyIndex = C.uint32_t(o.SrcQueueFamilyIndex)
 	createInfo.dstQueueFamilyIndex = C.uint32_t(o.DstQueueFamilyIndex)
-	createInfo.buffer = C.VkBuffer(o.Buffer.Handle())
+	createInfo.buffer = C.VkBuffer(unsafe.Pointer(o.Buffer.Handle()))
 	createInfo.offset = C.VkDeviceSize(o.Offset)
 	createInfo.size = C.VkDeviceSize(o.Size)
 
@@ -93,7 +93,7 @@ func (o *ImageMemoryBarrierOptions) populate(createInfo *C.VkImageMemoryBarrier,
 	createInfo.newLayout = C.VkImageLayout(o.NewLayout)
 	createInfo.srcQueueFamilyIndex = C.uint32_t(o.SrcQueueFamilyIndex)
 	createInfo.dstQueueFamilyIndex = C.uint32_t(o.DstQueueFamilyIndex)
-	createInfo.image = C.VkImage(o.Image.Handle())
+	createInfo.image = C.VkImage(unsafe.Pointer(o.Image.Handle()))
 	createInfo.subresourceRange.aspectMask = C.VkImageAspectFlags(o.SubresourceRange.AspectMask)
 	createInfo.subresourceRange.baseMipLevel = C.uint32_t(o.SubresourceRange.BaseMipLevel)
 	createInfo.subresourceRange.levelCount = C.uint32_t(o.SubresourceRange.LevelCount)

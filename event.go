@@ -7,17 +7,18 @@ package core
 import "C"
 import (
 	"github.com/CannibalVox/VKng/core/common"
+	driver3 "github.com/CannibalVox/VKng/core/driver"
 	"github.com/CannibalVox/cgoparam"
 	"unsafe"
 )
 
 type vulkanEvent struct {
-	handle VkEvent
-	device VkDevice
-	driver Driver
+	handle driver3.VkEvent
+	device driver3.VkDevice
+	driver driver3.Driver
 }
 
-func (e *vulkanEvent) Handle() VkEvent {
+func (e *vulkanEvent) Handle() driver3.VkEvent {
 	return e.handle
 }
 
@@ -25,15 +26,15 @@ func (e *vulkanEvent) Destroy(callbacks *AllocationCallbacks) {
 	e.driver.VkDestroyEvent(e.device, e.handle, callbacks.Handle())
 }
 
-func (e *vulkanEvent) Set() (VkResult, error) {
+func (e *vulkanEvent) Set() (common.VkResult, error) {
 	return e.driver.VkSetEvent(e.device, e.handle)
 }
 
-func (e *vulkanEvent) Reset() (VkResult, error) {
+func (e *vulkanEvent) Reset() (common.VkResult, error) {
 	return e.driver.VkResetEvent(e.device, e.handle)
 }
 
-func (e *vulkanEvent) Status() (VkResult, error) {
+func (e *vulkanEvent) Status() (common.VkResult, error) {
 	return e.driver.VkGetEventStatus(e.device, e.handle)
 }
 

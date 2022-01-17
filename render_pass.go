@@ -7,16 +7,18 @@ package core
 import "C"
 import (
 	"github.com/CannibalVox/VKng/core/common"
+	"github.com/CannibalVox/VKng/core/driver"
 	"github.com/CannibalVox/cgoparam"
+	"unsafe"
 )
 
 type vulkanRenderPass struct {
-	driver Driver
-	device VkDevice
-	handle VkRenderPass
+	driver driver.Driver
+	device driver.VkDevice
+	handle driver.VkRenderPass
 }
 
-func (p *vulkanRenderPass) Handle() VkRenderPass {
+func (p *vulkanRenderPass) Handle() driver.VkRenderPass {
 	return p.handle
 }
 
@@ -30,7 +32,7 @@ func (p *vulkanRenderPass) RenderAreaGranularity() common.Extent2D {
 
 	extentPtr := (*C.VkExtent2D)(arena.Malloc(C.sizeof_struct_VkExtent2D))
 
-	p.driver.VkGetRenderAreaGranularity(p.device, p.handle, (*VkExtent2D)(extentPtr))
+	p.driver.VkGetRenderAreaGranularity(p.device, p.handle, (*driver.VkExtent2D)(unsafe.Pointer(extentPtr)))
 
 	return common.Extent2D{
 		Width:  int(extentPtr.width),
