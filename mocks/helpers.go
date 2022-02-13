@@ -182,7 +182,7 @@ func EasyDummyCommandPool(t *testing.T, loader core.Loader1_0, device core.Devic
 	return pool
 }
 
-func EasyDummyCommandBuffer(t *testing.T, device core.Device, commandPool core.CommandPool) core.CommandBuffer {
+func EasyDummyCommandBuffer(t *testing.T, loader core.Loader1_0, device core.Device) core.CommandBuffer {
 	mockDriver := device.Driver().(*MockDriver)
 
 	mockDriver.EXPECT().VkAllocateCommandBuffers(gomock.Any(), gomock.Any(), gomock.Any()).Do(
@@ -190,7 +190,7 @@ func EasyDummyCommandBuffer(t *testing.T, device core.Device, commandPool core.C
 			*pCommandBuffers = NewFakeCommandBufferHandle()
 		})
 
-	buffers, _, err := commandPool.AllocateCommandBuffers(&core.CommandBufferOptions{
+	buffers, _, err := loader.AllocateCommandBuffers(&core.CommandBufferOptions{
 		BufferCount: 1,
 	})
 	require.NoError(t, err)
@@ -249,7 +249,7 @@ func EasyDummyDevice(t *testing.T, ctrl *gomock.Controller, loader core.Loader1_
 	return device
 }
 
-func EasyDummyDeviceMemory(t *testing.T, device core.Device, size int) core.DeviceMemory {
+func EasyDummyDeviceMemory(t *testing.T, loader core.Loader1_0, device core.Device, size int) core.DeviceMemory {
 	mockDriver := device.Driver().(*MockDriver)
 
 	mockDriver.EXPECT().VkAllocateMemory(device.Handle(), gomock.Not(nil), nil, gomock.Not(nil)).DoAndReturn(
@@ -258,7 +258,7 @@ func EasyDummyDeviceMemory(t *testing.T, device core.Device, size int) core.Devi
 			return common.VKSuccess, nil
 		})
 
-	memory, _, err := device.AllocateMemory(nil, &core.DeviceMemoryOptions{
+	memory, _, err := loader.AllocateMemory(device, nil, &core.DeviceMemoryOptions{
 		AllocationSize: size,
 	})
 	require.NoError(t, err)
