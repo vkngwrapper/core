@@ -5,7 +5,7 @@ import (
 	"unsafe"
 )
 
-//go:generate mockgen -source iface.go -destination ./mocks/driver.go -package=mocks
+//go:generate mockgen -source iface.go -destination ./mocks/driver.go
 
 type Driver interface {
 	Destroy()

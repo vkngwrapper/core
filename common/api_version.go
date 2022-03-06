@@ -42,6 +42,22 @@ func (v APIVersion) IsAtLeast(otherVersion APIVersion) bool {
 	return v >= otherVersion
 }
 
+func (v APIVersion) Min(otherVersion APIVersion) APIVersion {
+	if otherVersion < v {
+		return otherVersion
+	}
+
+	return v
+}
+
+func (v APIVersion) Max(otherVersion APIVersion) APIVersion {
+	if otherVersion > v {
+		return otherVersion
+	}
+
+	return v
+}
+
 func (v APIVersion) MatchesMajorVersion(otherVersion APIVersion) bool {
 	return v.Variant() == otherVersion.Variant() && v.Major() == otherVersion.Major()
 }
