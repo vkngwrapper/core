@@ -6,7 +6,7 @@ package core1_0
 */
 import "C"
 import (
-	"github.com/CannibalVox/VKng/core"
+	"github.com/CannibalVox/VKng/core/common"
 	"github.com/CannibalVox/cgoparam"
 	"unsafe"
 )
@@ -21,7 +21,7 @@ type DeviceMemoryOptions struct {
 	AllocationSize  int
 	MemoryTypeIndex int
 
-	core.HaveNext
+	common.HaveNext
 }
 
 func (o *DeviceMemoryOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
@@ -36,4 +36,27 @@ func (o *DeviceMemoryOptions) PopulateCPointer(allocator *cgoparam.Allocator, pr
 	createInfo.pNext = next
 
 	return unsafe.Pointer(createInfo), nil
+}
+
+type MappedMemoryRange struct {
+	Memory DeviceMemory
+	Offset int
+	Size   int
+
+	common.HaveNext
+}
+
+func (r MappedMemoryRange) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+	if preallocatedPointer == unsafe.Pointer(nil) {
+		preallocatedPointer = allocator.Malloc(C.sizeof_struct_VkMappedMemoryRange)
+	}
+
+	mappedRange := (*C.VkMappedMemoryRange)(preallocatedPointer)
+	mappedRange.sType = C.VK_STRUCTURE_TYPE_MAPPED_MEMORY_RANGE
+	mappedRange.pNext = next
+	mappedRange.memory = C.VkDeviceMemory(unsafe.Pointer(r.Memory.Handle()))
+	mappedRange.offset = C.VkDeviceSize(r.Offset)
+	mappedRange.size = C.VkDeviceSize(r.Size)
+
+	return preallocatedPointer, nil
 }

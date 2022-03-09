@@ -11,6 +11,25 @@ import (
 	"unsafe"
 )
 
+type ClearAttachment struct {
+	AspectMask      common.ImageAspectFlags
+	ColorAttachment int
+	ClearValue      common.ClearValue
+}
+
+func (c ClearAttachment) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer) (unsafe.Pointer, error) {
+	if preallocatedPointer == unsafe.Pointer(nil) {
+		preallocatedPointer = allocator.Malloc(C.sizeof_struct_VkClearAttachment)
+	}
+
+	clearAttachment := (*C.VkClearAttachment)(preallocatedPointer)
+	clearAttachment.aspectMask = C.VkImageAspectFlags(c.AspectMask)
+	clearAttachment.colorAttachment = C.uint32_t(c.ColorAttachment)
+	c.ClearValue.PopulateValueUnion(unsafe.Pointer(&clearAttachment.clearValue))
+
+	return preallocatedPointer, nil
+}
+
 type ClearRect struct {
 	Rect           common.Rect2D
 	BaseArrayLayer int

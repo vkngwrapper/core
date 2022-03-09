@@ -8,40 +8,43 @@ import "C"
 import (
 	"bytes"
 	"encoding/binary"
-	"github.com/CannibalVox/VKng/core"
 	"github.com/CannibalVox/VKng/core/common"
 	"github.com/CannibalVox/cgoparam"
 	"github.com/cockroachdb/errors"
 	"unsafe"
 )
 
-type ShaderStageFlags int32
-
 const (
-	ShaderStageAllowVaryingSubgroupSizeEXT = C.VK_PIPELINE_SHADER_STAGE_CREATE_ALLOW_VARYING_SUBGROUP_SIZE_BIT_EXT
-	ShaderStageRequireFullSubgroupsEXT     = C.VK_PIPELINE_SHADER_STAGE_CREATE_REQUIRE_FULL_SUBGROUPS_BIT_EXT
+	StageVertex                 common.ShaderStages = C.VK_SHADER_STAGE_VERTEX_BIT
+	StageTessellationControl    common.ShaderStages = C.VK_SHADER_STAGE_TESSELLATION_CONTROL_BIT
+	StageTessellationEvaluation common.ShaderStages = C.VK_SHADER_STAGE_TESSELLATION_EVALUATION_BIT
+	StageGeometry               common.ShaderStages = C.VK_SHADER_STAGE_GEOMETRY_BIT
+	StageFragment               common.ShaderStages = C.VK_SHADER_STAGE_FRAGMENT_BIT
+	StageCompute                common.ShaderStages = C.VK_SHADER_STAGE_COMPUTE_BIT
+	StageAllGraphics            common.ShaderStages = C.VK_SHADER_STAGE_ALL_GRAPHICS
+	StageAll                    common.ShaderStages = C.VK_SHADER_STAGE_ALL
 )
 
-var shaderStageFlagsToString = map[ShaderStageFlags]string{
-	ShaderStageAllowVaryingSubgroupSizeEXT: "Allow Varying Subgroup Size (Extension)",
-	ShaderStageRequireFullSubgroupsEXT:     "Require Full Subgroups (Extension)",
+func init() {
+	StageVertex.Register("Vertex")
+	StageTessellationControl.Register("Tessellation Control")
+	StageTessellationEvaluation.Register("Tessellation Evaluation")
+	StageGeometry.Register("Geometry")
+	StageFragment.Register("Fragment")
+	StageCompute.Register("Compute")
 }
 
-func (f ShaderStageFlags) String() string {
-	return common.FlagsToString(f, shaderStageFlagsToString)
-}
-
-type ShaderStage struct {
-	Flags              ShaderStageFlags
+type ShaderStageOptions struct {
+	Flags              common.ShaderStageCreateFlags
 	Name               string
 	Stage              common.ShaderStages
 	Shader             ShaderModule
 	SpecializationInfo map[uint32]interface{}
 
-	core.HaveNext
+	common.HaveNext
 }
 
-func (s ShaderStage) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (s ShaderStageOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == unsafe.Pointer(nil) {
 		preallocatedPointer = allocator.Malloc(C.sizeof_struct_VkPipelineShaderStageCreateInfo)
 	}

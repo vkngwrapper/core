@@ -6,30 +6,15 @@ package core1_0
 */
 import "C"
 import (
-	"github.com/CannibalVox/VKng/core"
 	"github.com/CannibalVox/VKng/core/common"
 	"github.com/CannibalVox/cgoparam"
 	"unsafe"
 )
 
-type EventFlags int32
-
-const (
-	EventDeviceOnlyKHR EventFlags = C.VK_EVENT_CREATE_DEVICE_ONLY_BIT_KHR
-)
-
-var eventFlagsToString = map[EventFlags]string{
-	EventDeviceOnlyKHR: "Device Only (Khronos Extension)",
-}
-
-func (f EventFlags) String() string {
-	return common.FlagsToString(f, eventFlagsToString)
-}
-
 type EventOptions struct {
-	Flags EventFlags
+	Flags common.EventCreateFlags
 
-	core.HaveNext
+	common.HaveNext
 }
 
 func (o *EventOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {

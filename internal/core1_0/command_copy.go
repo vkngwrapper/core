@@ -6,7 +6,6 @@ package core1_0
 */
 import "C"
 import (
-	"github.com/CannibalVox/VKng/core"
 	"github.com/CannibalVox/VKng/core/common"
 	"github.com/CannibalVox/VKng/core/core1_0"
 	"github.com/CannibalVox/VKng/core/driver"
@@ -18,7 +17,7 @@ func (c *VulkanCommandBuffer) CmdCopyBuffer(srcBuffer core1_0.Buffer, dstBuffer 
 	allocator := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(allocator)
 
-	copyRegionPtr, err := core.AllocSlice[C.VkCommandBuffer, core1_0.BufferCopy](allocator, copyRegions)
+	copyRegionPtr, err := common.AllocSlice[C.VkCommandBuffer, core1_0.BufferCopy](allocator, copyRegions)
 	if err != nil {
 		return err
 	}
@@ -32,7 +31,7 @@ func (c *VulkanCommandBuffer) CmdCopyImage(srcImage core1_0.Image, srcImageLayou
 	defer cgoparam.ReturnAlloc(allocator)
 
 	copyRegionCount := len(regions)
-	copyRegionUnsafe, err := core.AllocSlice[C.VkImageCopy, core1_0.ImageCopy](allocator, regions)
+	copyRegionUnsafe, err := common.AllocSlice[C.VkImageCopy, core1_0.ImageCopy](allocator, regions)
 	if err != nil {
 		return err
 	}

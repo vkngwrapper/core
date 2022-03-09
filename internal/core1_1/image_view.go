@@ -5,8 +5,12 @@ package core1_1
 #include "vulkan/vulkan.h"
 */
 import "C"
-import "github.com/CannibalVox/VKng/core/core1_0"
+import (
+	"github.com/CannibalVox/VKng/core/driver"
+)
 
 type VulkanImageView struct {
-	core1_0.ImageView
+	Driver          driver.Driver
+	ImageViewHandle driver.VkImageView
+	Device          driver.VkDevice
 }

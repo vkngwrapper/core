@@ -1,8 +1,8 @@
 package core1_0
 
 import (
-	"github.com/CannibalVox/VKng/core"
 	"github.com/CannibalVox/VKng/core/common"
+	"github.com/CannibalVox/VKng/core/core1_1"
 	"github.com/CannibalVox/VKng/core/driver"
 	"time"
 	"unsafe"
@@ -12,6 +12,8 @@ import (
 
 type Buffer interface {
 	Handle() driver.VkBuffer
+
+	Core1_1() core1_1.Buffer
 
 	Destroy(callbacks *driver.AllocationCallbacks)
 	MemoryRequirements() *MemoryRequirements
@@ -33,9 +35,9 @@ type CommandBuffer interface {
 	Free()
 	Begin(o *BeginOptions) (common.VkResult, error)
 	End() (common.VkResult, error)
-	Reset(flags core.CommandBufferResetFlags) (common.VkResult, error)
+	Reset(flags common.CommandBufferResetFlags) (common.VkResult, error)
 
-	CmdBeginRenderPass(contents core.SubpassContents, o *RenderPassBeginOptions) error
+	CmdBeginRenderPass(contents common.SubpassContents, o *RenderPassBeginOptions) error
 	CmdEndRenderPass()
 	CmdBindPipeline(bindPoint common.PipelineBindPoint, pipeline Pipeline)
 	CmdDraw(vertexCount, instanceCount int, firstVertex, firstInstance uint32)
@@ -51,17 +53,17 @@ type CommandBuffer interface {
 	CmdSetViewport(viewports []common.Viewport)
 	CmdSetScissor(scissors []common.Rect2D)
 	CmdCopyImage(srcImage Image, srcImageLayout common.ImageLayout, dstImage Image, dstImageLayout common.ImageLayout, regions []ImageCopy) error
-	CmdNextSubpass(contents core.SubpassContents)
+	CmdNextSubpass(contents common.SubpassContents)
 	CmdWaitEvents(events []Event, srcStageMask common.PipelineStages, dstStageMask common.PipelineStages, memoryBarriers []MemoryBarrierOptions, bufferMemoryBarriers []BufferMemoryBarrierOptions, imageMemoryBarriers []ImageMemoryBarrierOptions) error
 	CmdSetEvent(event Event, stageMask common.PipelineStages)
-	CmdClearColorImage(image Image, imageLayout common.ImageLayout, color core.ClearColorValue, ranges []common.ImageSubresourceRange)
+	CmdClearColorImage(image Image, imageLayout common.ImageLayout, color common.ClearColorValue, ranges []common.ImageSubresourceRange)
 	CmdResetQueryPool(queryPool QueryPool, startQuery, queryCount int)
 	CmdBeginQuery(queryPool QueryPool, query int, flags common.QueryControlFlags)
 	CmdEndQuery(queryPool QueryPool, query int)
-	CmdCopyQueryPoolResults(queryPool QueryPool, firstQuery, queryCount int, dstBuffer Buffer, dstOffset, stride int, flags QueryResultFlags)
+	CmdCopyQueryPoolResults(queryPool QueryPool, firstQuery, queryCount int, dstBuffer Buffer, dstOffset, stride int, flags common.QueryResultFlags)
 	CmdExecuteCommands(commandBuffers []CommandBuffer)
 	CmdClearAttachments(attachments []ClearAttachment, rects []ClearRect) error
-	CmdClearDepthStencilImage(image Image, imageLayout common.ImageLayout, depthStencil *core.ClearValueDepthStencil, ranges []common.ImageSubresourceRange)
+	CmdClearDepthStencilImage(image Image, imageLayout common.ImageLayout, depthStencil *common.ClearValueDepthStencil, ranges []common.ImageSubresourceRange)
 	CmdCopyImageToBuffer(srcImage Image, srcImageLayout common.ImageLayout, dstBuffer Buffer, regions []BufferImageCopy) error
 	CmdDispatch(groupCountX, groupCountY, groupCountZ int)
 	CmdDispatchIndirect(buffer Buffer, offset int)
@@ -88,7 +90,7 @@ type CommandPool interface {
 	APIVersion() common.APIVersion
 
 	Destroy(callbacks *driver.AllocationCallbacks)
-	Reset(flags core.CommandPoolResetFlags) (common.VkResult, error)
+	Reset(flags common.CommandPoolResetFlags) (common.VkResult, error)
 }
 
 type DescriptorPool interface {
@@ -98,7 +100,7 @@ type DescriptorPool interface {
 	APIVersion() common.APIVersion
 
 	Destroy(callbacks *driver.AllocationCallbacks)
-	Reset(flags DescriptorPoolResetFlags) (common.VkResult, error)
+	Reset(flags common.DescriptorPoolResetFlags) (common.VkResult, error)
 }
 
 type DescriptorSet interface {
@@ -196,7 +198,7 @@ type PhysicalDevice interface {
 	Driver() driver.Driver
 	APIVersion() common.APIVersion
 
-	QueueFamilyProperties() []*common.QueueFamily
+	QueueFamilyProperties() []*QueueFamily
 	Properties() *PhysicalDeviceProperties
 	Features() *PhysicalDeviceFeatures
 	AvailableExtensions() (map[string]*common.ExtensionProperties, common.VkResult, error)
@@ -204,7 +206,7 @@ type PhysicalDevice interface {
 	AvailableLayers() (map[string]*common.LayerProperties, common.VkResult, error)
 	MemoryProperties() *PhysicalDeviceMemoryProperties
 	FormatProperties(format common.DataFormat) *FormatProperties
-	ImageFormatProperties(format common.DataFormat, imageType common.ImageType, tiling common.ImageTiling, usages common.ImageUsages, flags ImageFlags) (*ImageFormatProperties, common.VkResult, error)
+	ImageFormatProperties(format common.DataFormat, imageType common.ImageType, tiling common.ImageTiling, usages common.ImageUsages, flags common.ImageCreateFlags) (*ImageFormatProperties, common.VkResult, error)
 }
 
 type Pipeline interface {
@@ -229,7 +231,7 @@ type QueryPool interface {
 	Handle() driver.VkQueryPool
 	Destroy(callbacks *driver.AllocationCallbacks)
 
-	PopulateResults(firstQuery, queryCount int, resultSize, resultStride int, flags QueryResultFlags) ([]byte, common.VkResult, error)
+	PopulateResults(firstQuery, queryCount int, resultSize, resultStride int, flags common.QueryResultFlags) ([]byte, common.VkResult, error)
 }
 
 type Queue interface {

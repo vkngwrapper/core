@@ -6,30 +6,23 @@ package core1_0
 */
 import "C"
 import (
-	"github.com/CannibalVox/VKng/core"
 	"github.com/CannibalVox/VKng/core/common"
 	"github.com/CannibalVox/cgoparam"
 	"unsafe"
 )
 
-type FenceCreateFlags int32
-
 const (
-	FenceSignaled FenceCreateFlags = C.VK_FENCE_CREATE_SIGNALED_BIT
+	FenceCreateSignaled common.FenceCreateFlags = C.VK_FENCE_CREATE_SIGNALED_BIT
 )
 
-var fenceCreateFlagsToString = map[FenceCreateFlags]string{
-	FenceSignaled: "Signaled",
-}
-
-func (f FenceCreateFlags) String() string {
-	return common.FlagsToString(f, fenceCreateFlagsToString)
+func init() {
+	FenceCreateSignaled.Register("Signaled")
 }
 
 type FenceOptions struct {
-	Flags FenceCreateFlags
+	Flags common.FenceCreateFlags
 
-	core.HaveNext
+	common.HaveNext
 }
 
 func (o *FenceOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {

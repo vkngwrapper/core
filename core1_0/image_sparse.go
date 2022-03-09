@@ -9,28 +9,32 @@ import (
 	"github.com/CannibalVox/VKng/core/common"
 )
 
-type SparseImageFormatFlags int32
-
 const (
-	SparseImageFormatSingleMipTail        SparseImageFormatFlags = C.VK_SPARSE_IMAGE_FORMAT_SINGLE_MIPTAIL_BIT
-	SparseImageFormatAlignedMipSize       SparseImageFormatFlags = C.VK_SPARSE_IMAGE_FORMAT_ALIGNED_MIP_SIZE_BIT
-	SparseImageFormatNonstandardBlockSize SparseImageFormatFlags = C.VK_SPARSE_IMAGE_FORMAT_NONSTANDARD_BLOCK_SIZE_BIT
+	SparseImageFormatSingleMipTail        common.SparseImageFormatFlags = C.VK_SPARSE_IMAGE_FORMAT_SINGLE_MIPTAIL_BIT
+	SparseImageFormatAlignedMipSize       common.SparseImageFormatFlags = C.VK_SPARSE_IMAGE_FORMAT_ALIGNED_MIP_SIZE_BIT
+	SparseImageFormatNonstandardBlockSize common.SparseImageFormatFlags = C.VK_SPARSE_IMAGE_FORMAT_NONSTANDARD_BLOCK_SIZE_BIT
+
+	AspectColor    common.ImageAspectFlags = C.VK_IMAGE_ASPECT_COLOR_BIT
+	AspectDepth    common.ImageAspectFlags = C.VK_IMAGE_ASPECT_DEPTH_BIT
+	AspectStencil  common.ImageAspectFlags = C.VK_IMAGE_ASPECT_STENCIL_BIT
+	AspectMetadata common.ImageAspectFlags = C.VK_IMAGE_ASPECT_METADATA_BIT
 )
 
-var sparseImageFormatFlagsToString = map[SparseImageFormatFlags]string{
-	SparseImageFormatSingleMipTail:        "Single Mip Tail",
-	SparseImageFormatAlignedMipSize:       "Aligned Mip Size",
-	SparseImageFormatNonstandardBlockSize: "Nonstandard Block Size",
-}
+func init() {
+	AspectColor.Register("Color")
+	AspectDepth.Register("Depth")
+	AspectStencil.Register("Stencil")
+	AspectMetadata.Register("Metadata")
 
-func (f SparseImageFormatFlags) String() string {
-	return common.FlagsToString(f, sparseImageFormatFlagsToString)
+	SparseImageFormatSingleMipTail.Register("Single Mip Tail")
+	SparseImageFormatAlignedMipSize.Register("Aligned Mip Size")
+	SparseImageFormatNonstandardBlockSize.Register("Nonstandard Block Size")
 }
 
 type SparseImageFormatProperties struct {
 	AspectMask       common.ImageAspectFlags
 	ImageGranularity common.Extent3D
-	Flags            SparseImageFormatFlags
+	Flags            common.SparseImageFormatFlags
 }
 
 type SparseImageMemoryRequirements struct {

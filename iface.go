@@ -1,4 +1,4 @@
-package loader
+package core
 
 /*
 #include <stdlib.h>
@@ -12,11 +12,13 @@ import (
 	"unsafe"
 )
 
-//go:generate mockgen -source ./iface.go -destination ../mocks/loader_mocks.go -package mocks
+//go:generate mockgen -source ./iface.go -destination mocks/loader_mocks.go -package mocks
 
 type Loader interface {
 	Driver() driver.Driver
 	Version() common.APIVersion
+
+	Core1_1() Loader1_1
 
 	AvailableExtensions() (map[string]*common.ExtensionProperties, common.VkResult, error)
 	AvailableExtensionsForLayer(layerName string) (map[string]*common.ExtensionProperties, common.VkResult, error)
@@ -51,8 +53,6 @@ type Loader interface {
 }
 
 type Loader1_1 interface {
-	Loader
-
 	SomeOneOneMethod()
 }
 

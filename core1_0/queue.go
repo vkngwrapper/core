@@ -6,24 +6,17 @@ package core1_0
 */
 import "C"
 import (
-	"github.com/CannibalVox/VKng/core"
 	"github.com/CannibalVox/VKng/core/common"
 	"github.com/CannibalVox/cgoparam"
 	"unsafe"
 )
 
-type SparseMemoryBindFlags int32
-
 const (
-	SparseMemoryBindMetadata SparseMemoryBindFlags = C.VK_SPARSE_MEMORY_BIND_METADATA_BIT
+	SparseMemoryBindMetadata common.SparseMemoryBindFlags = C.VK_SPARSE_MEMORY_BIND_METADATA_BIT
 )
 
-var sparseMemoryBindFlagsToString = map[SparseMemoryBindFlags]string{
-	SparseMemoryBindMetadata: "Metadata",
-}
-
-func (f SparseMemoryBindFlags) String() string {
-	return common.FlagsToString(f, sparseMemoryBindFlagsToString)
+func init() {
+	SparseMemoryBindMetadata.Register("Metadata")
 }
 
 type SparseMemoryBind struct {
@@ -33,7 +26,7 @@ type SparseMemoryBind struct {
 	Memory       DeviceMemory
 	MemoryOffset int
 
-	Flags SparseMemoryBindFlags
+	Flags common.SparseMemoryBindFlags
 }
 
 func (b SparseMemoryBind) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer) (unsafe.Pointer, error) {
@@ -69,7 +62,7 @@ type SparseImageMemoryBind struct {
 	Memory       DeviceMemory
 	MemoryOffset int
 
-	Flags SparseMemoryBindFlags
+	Flags common.SparseMemoryBindFlags
 }
 
 type SparseImageMemoryBindInfo struct {
@@ -85,7 +78,7 @@ type BindSparseOptions struct {
 	ImageOpaqueBinds []SparseImageOpaqueMemoryBindInfo
 	ImageBinds       []SparseImageMemoryBindInfo
 
-	core.HaveNext
+	common.HaveNext
 }
 
 func (b BindSparseOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
@@ -136,7 +129,7 @@ func (b BindSparseOptions) PopulateCPointer(allocator *cgoparam.Allocator, preal
 			bufferBindSlice[i].pBinds = nil
 
 			if bindCount > 0 {
-				bufferBindSlice[i].pBinds, err = core.AllocSlice[C.VkSparseMemoryBind, SparseMemoryBind](allocator, b.BufferBinds[i].Binds)
+				bufferBindSlice[i].pBinds, err = common.AllocSlice[C.VkSparseMemoryBind, SparseMemoryBind](allocator, b.BufferBinds[i].Binds)
 				if err != nil {
 					return nil, err
 				}
@@ -157,7 +150,7 @@ func (b BindSparseOptions) PopulateCPointer(allocator *cgoparam.Allocator, preal
 			imageOpaqueBindSlice[i].pBinds = nil
 
 			if bindCount > 0 {
-				imageOpaqueBindSlice[i].pBinds, err = core.AllocSlice[C.VkSparseMemoryBind, SparseMemoryBind](allocator, b.ImageOpaqueBinds[i].Binds)
+				imageOpaqueBindSlice[i].pBinds, err = common.AllocSlice[C.VkSparseMemoryBind, SparseMemoryBind](allocator, b.ImageOpaqueBinds[i].Binds)
 				if err != nil {
 					return nil, err
 				}

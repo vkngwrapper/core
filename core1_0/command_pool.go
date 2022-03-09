@@ -6,34 +6,31 @@ package core1_0
 */
 import "C"
 import (
-	"github.com/CannibalVox/VKng/core"
 	"github.com/CannibalVox/VKng/core/common"
 	"github.com/CannibalVox/cgoparam"
 	"github.com/cockroachdb/errors"
 	"unsafe"
 )
 
-type CommandPoolFlags int32
-
 const (
-	CommandPoolTransient   CommandPoolFlags = C.VK_COMMAND_POOL_CREATE_TRANSIENT_BIT
-	CommandPoolResetBuffer CommandPoolFlags = C.VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT
+	CommandPoolResetReleaseResources common.CommandPoolResetFlags = C.VK_COMMAND_POOL_RESET_RELEASE_RESOURCES_BIT
+
+	CommandPoolCreateTransient   common.CommandPoolCreateFlags = C.VK_COMMAND_POOL_CREATE_TRANSIENT_BIT
+	CommandPoolCreateResetBuffer common.CommandPoolCreateFlags = C.VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT
 )
 
-var commandPoolToString = map[CommandPoolFlags]string{
-	CommandPoolTransient:   "Transient",
-	CommandPoolResetBuffer: "Reset Command Buffer",
-}
+func init() {
+	CommandPoolResetReleaseResources.Register("Release Resources")
 
-func (f CommandPoolFlags) String() string {
-	return common.FlagsToString(f, commandPoolToString)
+	CommandPoolCreateTransient.Register("Transient")
+	CommandPoolCreateResetBuffer.Register("Reset Command Buffer")
 }
 
 type CommandPoolOptions struct {
 	GraphicsQueueFamily *int
-	Flags               CommandPoolFlags
+	Flags               common.CommandPoolCreateFlags
 
-	core.HaveNext
+	common.HaveNext
 }
 
 func (o CommandPoolOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {

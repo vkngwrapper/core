@@ -6,7 +6,6 @@ package core1_0
 */
 import "C"
 import (
-	"github.com/CannibalVox/VKng/core"
 	"github.com/CannibalVox/VKng/core/common"
 	"github.com/CannibalVox/cgoparam"
 	"unsafe"
@@ -16,7 +15,7 @@ type MemoryBarrierOptions struct {
 	SrcAccessMask common.AccessFlags
 	DstAccessMask common.AccessFlags
 
-	core.HaveNext
+	common.HaveNext
 }
 
 func (o MemoryBarrierOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
@@ -44,7 +43,7 @@ type BufferMemoryBarrierOptions struct {
 	Offset int
 	Size   int
 
-	core.HaveNext
+	common.HaveNext
 }
 
 func (o BufferMemoryBarrierOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
@@ -78,7 +77,7 @@ type ImageMemoryBarrierOptions struct {
 	Image            Image
 	SubresourceRange common.ImageSubresourceRange
 
-	core.HaveNext
+	common.HaveNext
 }
 
 func (o ImageMemoryBarrierOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {

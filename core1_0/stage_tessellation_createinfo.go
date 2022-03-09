@@ -6,7 +6,7 @@ package core1_0
 */
 import "C"
 import (
-	"github.com/CannibalVox/VKng/core"
+	"github.com/CannibalVox/VKng/core/common"
 	"github.com/CannibalVox/cgoparam"
 	"unsafe"
 )
@@ -14,7 +14,7 @@ import (
 type TessellationOptions struct {
 	PatchControlPoints uint32
 
-	core.HaveNext
+	common.HaveNext
 }
 
 func (o TessellationOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatePointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {

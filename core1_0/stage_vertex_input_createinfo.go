@@ -6,30 +6,23 @@ package core1_0
 */
 import "C"
 import (
-	"github.com/CannibalVox/VKng/core"
 	"github.com/CannibalVox/VKng/core/common"
 	"github.com/CannibalVox/cgoparam"
 	"unsafe"
 )
 
-type InputRate int32
-
 const (
-	RateVertex   InputRate = C.VK_VERTEX_INPUT_RATE_VERTEX
-	RateInstance InputRate = C.VK_VERTEX_INPUT_RATE_INSTANCE
+	RateVertex   common.InputRate = C.VK_VERTEX_INPUT_RATE_VERTEX
+	RateInstance common.InputRate = C.VK_VERTEX_INPUT_RATE_INSTANCE
 )
 
-var inputRateToString = map[InputRate]string{
-	RateVertex:   "Vertex",
-	RateInstance: "Instance",
-}
-
-func (r InputRate) String() string {
-	return inputRateToString[r]
+func init() {
+	RateVertex.Register("Vertex")
+	RateInstance.Register("Instance")
 }
 
 type VertexBindingDescription struct {
-	InputRate InputRate
+	InputRate common.InputRate
 	Binding   int
 	Stride    int
 }
@@ -45,7 +38,7 @@ type VertexInputOptions struct {
 	VertexBindingDescriptions   []VertexBindingDescription
 	VertexAttributeDescriptions []VertexAttributeDescription
 
-	core.HaveNext
+	common.HaveNext
 }
 
 func (o VertexInputOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {

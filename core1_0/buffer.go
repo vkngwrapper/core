@@ -6,11 +6,40 @@ package core1_0
 */
 import "C"
 import (
-	"github.com/CannibalVox/VKng/core"
 	"github.com/CannibalVox/VKng/core/common"
 	"github.com/CannibalVox/cgoparam"
 	"unsafe"
 )
+
+const (
+	UsageTransferSrc        common.BufferUsages = C.VK_BUFFER_USAGE_TRANSFER_SRC_BIT
+	UsageTransferDst        common.BufferUsages = C.VK_BUFFER_USAGE_TRANSFER_DST_BIT
+	UsageUniformTexelBuffer common.BufferUsages = C.VK_BUFFER_USAGE_UNIFORM_TEXEL_BUFFER_BIT
+	UsageStorageTexelBuffer common.BufferUsages = C.VK_BUFFER_USAGE_STORAGE_TEXEL_BUFFER_BIT
+	UsageUniformBuffer      common.BufferUsages = C.VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT
+	UsageStorageBuffer      common.BufferUsages = C.VK_BUFFER_USAGE_STORAGE_BUFFER_BIT
+	UsageIndexBuffer        common.BufferUsages = C.VK_BUFFER_USAGE_INDEX_BUFFER_BIT
+	UsageVertexBuffer       common.BufferUsages = C.VK_BUFFER_USAGE_VERTEX_BUFFER_BIT
+	UsageIndirectBuffer     common.BufferUsages = C.VK_BUFFER_USAGE_INDIRECT_BUFFER_BIT
+
+	SharingExclusive  common.SharingMode = C.VK_SHARING_MODE_EXCLUSIVE
+	SharingConcurrent common.SharingMode = C.VK_SHARING_MODE_CONCURRENT
+)
+
+func init() {
+	UsageTransferSrc.Register("Transfer Source")
+	UsageTransferDst.Register("Transfer Destination")
+	UsageUniformTexelBuffer.Register("Uniform Texel Buffer")
+	UsageStorageTexelBuffer.Register("Storage Texel Buffer")
+	UsageUniformBuffer.Register("Uniform Buffer")
+	UsageStorageBuffer.Register("Storage Buffer")
+	UsageIndexBuffer.Register("Index Buffer")
+	UsageVertexBuffer.Register("Vertex Buffer")
+	UsageIndirectBuffer.Register("Indirect Buffer")
+
+	SharingExclusive.Register("Exclusive")
+	SharingConcurrent.Register("Concurrent")
+}
 
 type BufferOptions struct {
 	BufferSize         int
@@ -18,7 +47,7 @@ type BufferOptions struct {
 	SharingMode        common.SharingMode
 	QueueFamilyIndices []int
 
-	core.HaveNext
+	common.HaveNext
 }
 
 func (o BufferOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {

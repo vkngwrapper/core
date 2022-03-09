@@ -6,37 +6,40 @@ package core1_0
 */
 import "C"
 import (
-	"github.com/CannibalVox/VKng/core"
 	"github.com/CannibalVox/VKng/core/common"
 	"github.com/CannibalVox/cgoparam"
 	"unsafe"
 )
 
-type PolygonMode int32
-
 const (
-	PolygonModeFill            PolygonMode = C.VK_POLYGON_MODE_FILL
-	PolygonModeLine            PolygonMode = C.VK_POLYGON_MODE_LINE
-	PolygonModePoint           PolygonMode = C.VK_POLYGON_MODE_POINT
-	PolygonModeFillRectangleNV PolygonMode = C.VK_POLYGON_MODE_FILL_RECTANGLE_NV
+	PolygonModeFill  common.PolygonMode = C.VK_POLYGON_MODE_FILL
+	PolygonModeLine  common.PolygonMode = C.VK_POLYGON_MODE_LINE
+	PolygonModePoint common.PolygonMode = C.VK_POLYGON_MODE_POINT
+
+	CullFront common.CullModes = C.VK_CULL_MODE_FRONT_BIT
+	CullBack  common.CullModes = C.VK_CULL_MODE_BACK_BIT
+
+	FrontFaceCounterClockwise common.FrontFace = C.VK_FRONT_FACE_COUNTER_CLOCKWISE
+	FrontFaceClockwise        common.FrontFace = C.VK_FRONT_FACE_CLOCKWISE
 )
 
-var polygonModeToString = map[PolygonMode]string{
-	PolygonModeFill:            "Fill",
-	PolygonModeLine:            "Line",
-	PolygonModePoint:           "Point",
-	PolygonModeFillRectangleNV: "Fill Rectangle (Nvidia Extension)",
-}
+func init() {
+	PolygonModeFill.Register("Fill")
+	PolygonModeLine.Register("Line")
+	PolygonModePoint.Register("Point")
 
-func (m PolygonMode) String() string {
-	return polygonModeToString[m]
+	CullFront.Register("Front")
+	CullBack.Register("Back")
+
+	FrontFaceCounterClockwise.Register("Counter-Clockwise")
+	FrontFaceClockwise.Register("Clockwise")
 }
 
 type RasterizationOptions struct {
 	DepthClamp        bool
 	RasterizerDiscard bool
 
-	PolygonMode PolygonMode
+	PolygonMode common.PolygonMode
 	CullMode    common.CullModes
 	FrontFace   common.FrontFace
 
@@ -47,7 +50,7 @@ type RasterizationOptions struct {
 
 	LineWidth float32
 
-	core.HaveNext
+	common.HaveNext
 }
 
 func (o RasterizationOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {

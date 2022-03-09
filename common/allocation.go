@@ -7,8 +7,6 @@ package common
 import "C"
 import "unsafe"
 
-type SystemAllocationScope int32
-
 const (
 	SystemAllocationScopeCommand  SystemAllocationScope = C.VK_SYSTEM_ALLOCATION_SCOPE_COMMAND
 	SystemAllocationScopeObject   SystemAllocationScope = C.VK_SYSTEM_ALLOCATION_SCOPE_OBJECT
@@ -25,22 +23,12 @@ var systemAllocationScopeToString = map[SystemAllocationScope]string{
 	SystemAllocationScopeInstance: "Instance Scope",
 }
 
-func (s SystemAllocationScope) String() string {
-	return systemAllocationScopeToString[s]
-}
-
-type InternalAllocationType int32
-
 const (
 	InternalAllocationExecutable = C.VK_INTERNAL_ALLOCATION_TYPE_EXECUTABLE
 )
 
 var internalAllocationTypeToString = map[InternalAllocationType]string{
 	InternalAllocationExecutable: "Executable Allocation",
-}
-
-func (t InternalAllocationType) String() string {
-	return internalAllocationTypeToString[t]
 }
 
 type AllocationFunction func(userData interface{}, size int, alignment int, allocationScope SystemAllocationScope) unsafe.Pointer

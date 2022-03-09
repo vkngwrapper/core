@@ -7,7 +7,6 @@ package core1_0
 import "C"
 import (
 	"github.com/CannibalVox/VKng/core/common"
-	"github.com/CannibalVox/VKng/core/core1_0"
 	"github.com/CannibalVox/VKng/core/driver"
 )
 
@@ -39,6 +38,6 @@ func (p *VulkanDescriptorPool) Destroy(callbacks *driver.AllocationCallbacks) {
 	p.DeviceDriver.VkDestroyDescriptorPool(p.Device, p.DescriptorPoolHandle, callbacks.Handle())
 }
 
-func (p *VulkanDescriptorPool) Reset(flags core1_0.DescriptorPoolResetFlags) (common.VkResult, error) {
+func (p *VulkanDescriptorPool) Reset(flags common.DescriptorPoolResetFlags) (common.VkResult, error) {
 	return p.DeviceDriver.VkResetDescriptorPool(p.Device, p.DescriptorPoolHandle, driver.VkDescriptorPoolResetFlags(flags))
 }

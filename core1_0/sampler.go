@@ -6,30 +6,71 @@ package core1_0
 */
 import "C"
 import (
-	"github.com/CannibalVox/VKng/core"
 	"github.com/CannibalVox/VKng/core/common"
 	"github.com/CannibalVox/cgoparam"
 	"unsafe"
 )
 
-type SamplerFlags int32
-
 const (
-	SamplerSubsampledEXT                     = C.VK_SAMPLER_CREATE_SUBSAMPLED_BIT_EXT
-	SamplerSubsampledCoarseReconstructionEXT = C.VK_SAMPLER_CREATE_SUBSAMPLED_COARSE_RECONSTRUCTION_BIT_EXT
+	BorderColorFloatTransparentBlack common.BorderColor = C.VK_BORDER_COLOR_FLOAT_TRANSPARENT_BLACK
+	BorderColorIntTransparentBlack   common.BorderColor = C.VK_BORDER_COLOR_INT_TRANSPARENT_BLACK
+	BorderColorFloatOpaqueBlack      common.BorderColor = C.VK_BORDER_COLOR_FLOAT_OPAQUE_BLACK
+	BorderColorIntOpaqueBlack        common.BorderColor = C.VK_BORDER_COLOR_INT_OPAQUE_BLACK
+	BorderColorFloatOpaqueWhite      common.BorderColor = C.VK_BORDER_COLOR_FLOAT_OPAQUE_WHITE
+	BorderColorIntOpaqueWhite        common.BorderColor = C.VK_BORDER_COLOR_INT_OPAQUE_WHITE
+
+	CompareNever          common.CompareOp = C.VK_COMPARE_OP_NEVER
+	CompareLess           common.CompareOp = C.VK_COMPARE_OP_LESS
+	CompareEqual          common.CompareOp = C.VK_COMPARE_OP_EQUAL
+	CompareLessOrEqual    common.CompareOp = C.VK_COMPARE_OP_LESS_OR_EQUAL
+	CompareGreater        common.CompareOp = C.VK_COMPARE_OP_GREATER
+	CompareNotEqual       common.CompareOp = C.VK_COMPARE_OP_NOT_EQUAL
+	CompareGreaterOrEqual common.CompareOp = C.VK_COMPARE_OP_GREATER_OR_EQUAL
+	CompareAlways         common.CompareOp = C.VK_COMPARE_OP_ALWAYS
+
+	FilterNearest common.Filter = C.VK_FILTER_NEAREST
+	FilterLinear  common.Filter = C.VK_FILTER_LINEAR
+
+	MipmapNearest common.MipmapMode = C.VK_SAMPLER_MIPMAP_MODE_NEAREST
+	MipmapLinear  common.MipmapMode = C.VK_SAMPLER_MIPMAP_MODE_LINEAR
+
+	SamplerAddressModeRepeat         common.SamplerAddressMode = C.VK_SAMPLER_ADDRESS_MODE_REPEAT
+	SamplerAddressModeMirroredRepeat common.SamplerAddressMode = C.VK_SAMPLER_ADDRESS_MODE_MIRRORED_REPEAT
+	SamplerAddressModeClampToEdge    common.SamplerAddressMode = C.VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE
+	SamplerAddressModeClampToBorder  common.SamplerAddressMode = C.VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER
 )
 
-var samplerFlagsToString = map[SamplerFlags]string{
-	SamplerSubsampledEXT:                     "Subsampled (Extension)",
-	SamplerSubsampledCoarseReconstructionEXT: "Subsampled Coarse Reconstruction (Extension)",
-}
+func init() {
+	BorderColorFloatTransparentBlack.Register("Transparent Black - Float")
+	BorderColorIntTransparentBlack.Register("Transparent Black - Int")
+	BorderColorFloatOpaqueBlack.Register("Opaque Black - Float")
+	BorderColorIntOpaqueBlack.Register("Opaque Black - Int")
+	BorderColorFloatOpaqueWhite.Register("Opaque White - Float")
+	BorderColorIntOpaqueWhite.Register("Opaque White - Int")
 
-func (f SamplerFlags) String() string {
-	return common.FlagsToString(f, samplerFlagsToString)
+	CompareNever.Register("Never")
+	CompareLess.Register("Less Than")
+	CompareEqual.Register("Equal")
+	CompareLessOrEqual.Register("Less Than Or Equal")
+	CompareGreater.Register("Greater Than")
+	CompareNotEqual.Register("Not Equal")
+	CompareGreaterOrEqual.Register("Greater Than Or Equal")
+	CompareAlways.Register("Always")
+
+	FilterNearest.Register("Nearest")
+	FilterLinear.Register("Linear")
+
+	MipmapNearest.Register("Nearest")
+	MipmapLinear.Register("Linear")
+
+	SamplerAddressModeRepeat.Register("Repeat")
+	SamplerAddressModeMirroredRepeat.Register("Mirrored Repeat")
+	SamplerAddressModeClampToEdge.Register("Clamp to Edge")
+	SamplerAddressModeClampToBorder.Register("Clamp to Border")
 }
 
 type SamplerOptions struct {
-	Flags        SamplerFlags
+	Flags        common.SamplerCreateFlags
 	MagFilter    common.Filter
 	MinFilter    common.Filter
 	MipmapMode   common.MipmapMode
@@ -50,7 +91,7 @@ type SamplerOptions struct {
 	BorderColor             common.BorderColor
 	UnnormalizedCoordinates bool
 
-	core.HaveNext
+	common.HaveNext
 }
 
 func (o *SamplerOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {

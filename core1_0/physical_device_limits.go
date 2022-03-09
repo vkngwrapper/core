@@ -2,7 +2,7 @@ package core1_0
 
 /*
 #include <stdlib.h>
-#include "../vulkan/vulkan.h"
+#include "vulkan/vulkan.h"
 */
 import "C"
 import "github.com/CannibalVox/VKng/core/common"

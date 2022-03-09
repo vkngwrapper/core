@@ -6,54 +6,97 @@ package core1_0
 */
 import "C"
 import (
-	"github.com/CannibalVox/VKng/core"
 	"github.com/CannibalVox/VKng/core/common"
 	"github.com/CannibalVox/cgoparam"
 	"unsafe"
 )
 
-type ImageFlags int32
-
 const (
-	ImageSparseBinding                     ImageFlags = C.VK_IMAGE_CREATE_SPARSE_BINDING_BIT
-	ImageSparseAliased                     ImageFlags = C.VK_IMAGE_CREATE_SPARSE_ALIASED_BIT
-	ImageMutableFormat                     ImageFlags = C.VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT
-	ImageCubeCompatible                    ImageFlags = C.VK_IMAGE_CREATE_CUBE_COMPATIBLE_BIT
-	ImageAlias                             ImageFlags = C.VK_IMAGE_CREATE_ALIAS_BIT
-	ImageSplitInstanceBindRegions          ImageFlags = C.VK_IMAGE_CREATE_SPLIT_INSTANCE_BIND_REGIONS_BIT
-	Image2DArrayCompatible                 ImageFlags = C.VK_IMAGE_CREATE_2D_ARRAY_COMPATIBLE_BIT
-	ImageBlockTexelViewCompatible          ImageFlags = C.VK_IMAGE_CREATE_BLOCK_TEXEL_VIEW_COMPATIBLE_BIT
-	ImageExtendedUsage                     ImageFlags = C.VK_IMAGE_CREATE_EXTENDED_USAGE_BIT
-	ImageProtected                         ImageFlags = C.VK_IMAGE_CREATE_PROTECTED_BIT
-	ImageDisjoint                          ImageFlags = C.VK_IMAGE_CREATE_DISJOINT_BIT
-	ImageCornerSampledNV                   ImageFlags = C.VK_IMAGE_CREATE_CORNER_SAMPLED_BIT_NV
-	ImageSampleLocationsCompatibleDepthEXT ImageFlags = C.VK_IMAGE_CREATE_SAMPLE_LOCATIONS_COMPATIBLE_DEPTH_BIT_EXT
-	ImageSubsampledEXT                     ImageFlags = C.VK_IMAGE_CREATE_SUBSAMPLED_BIT_EXT
+	ImageCreateSparseBinding   common.ImageCreateFlags = C.VK_IMAGE_CREATE_SPARSE_BINDING_BIT
+	ImageCreateSparseResidency common.ImageCreateFlags = C.VK_IMAGE_CREATE_SPARSE_RESIDENCY_BIT
+	ImageCreateSparseAliased   common.ImageCreateFlags = C.VK_IMAGE_CREATE_SPARSE_ALIASED_BIT
+	ImageCreateMutableFormat   common.ImageCreateFlags = C.VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT
+	ImageCreateCubeCompatible  common.ImageCreateFlags = C.VK_IMAGE_CREATE_CUBE_COMPATIBLE_BIT
+
+	ImageLayoutUndefined                     common.ImageLayout = C.VK_IMAGE_LAYOUT_UNDEFINED
+	ImageLayoutGeneral                       common.ImageLayout = C.VK_IMAGE_LAYOUT_GENERAL
+	ImageLayoutColorAttachmentOptimal        common.ImageLayout = C.VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL
+	ImageLayoutDepthStencilAttachmentOptimal common.ImageLayout = C.VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL
+	ImageLayoutDepthStencilReadOnlyOptimal   common.ImageLayout = C.VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL
+	ImageLayoutShaderReadOnlyOptimal         common.ImageLayout = C.VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL
+	ImageLayoutTransferSrcOptimal            common.ImageLayout = C.VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL
+	ImageLayoutTransferDstOptimal            common.ImageLayout = C.VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL
+	ImageLayoutPreInitialized                common.ImageLayout = C.VK_IMAGE_LAYOUT_PREINITIALIZED
+
+	ImageTilingOptimal common.ImageTiling = C.VK_IMAGE_TILING_OPTIMAL
+	ImageTilingLinear  common.ImageTiling = C.VK_IMAGE_TILING_LINEAR
+
+	ImageType1D common.ImageType = C.VK_IMAGE_TYPE_1D
+	ImageType2D common.ImageType = C.VK_IMAGE_TYPE_2D
+	ImageType3D common.ImageType = C.VK_IMAGE_TYPE_3D
+
+	ImageUsageTransferSrc            common.ImageUsages = C.VK_IMAGE_USAGE_TRANSFER_SRC_BIT
+	ImageUsageTransferDst            common.ImageUsages = C.VK_IMAGE_USAGE_TRANSFER_DST_BIT
+	ImageUsageSampled                common.ImageUsages = C.VK_IMAGE_USAGE_SAMPLED_BIT
+	ImageUsageStorage                common.ImageUsages = C.VK_IMAGE_USAGE_STORAGE_BIT
+	ImageUsageColorAttachment        common.ImageUsages = C.VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT
+	ImageUsageDepthStencilAttachment common.ImageUsages = C.VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT
+	ImageUsageTransientAttachment    common.ImageUsages = C.VK_IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT
+	ImageUsageInputAttachment        common.ImageUsages = C.VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT
+
+	Samples1  common.SampleCounts = C.VK_SAMPLE_COUNT_1_BIT
+	Samples2  common.SampleCounts = C.VK_SAMPLE_COUNT_2_BIT
+	Samples4  common.SampleCounts = C.VK_SAMPLE_COUNT_4_BIT
+	Samples8  common.SampleCounts = C.VK_SAMPLE_COUNT_8_BIT
+	Samples16 common.SampleCounts = C.VK_SAMPLE_COUNT_16_BIT
+	Samples32 common.SampleCounts = C.VK_SAMPLE_COUNT_32_BIT
+	Samples64 common.SampleCounts = C.VK_SAMPLE_COUNT_64_BIT
 )
 
-var imageFlagsToString = map[ImageFlags]string{
-	ImageSparseBinding:                     "Sparse Binding",
-	ImageSparseAliased:                     "Sparse Aliased",
-	ImageMutableFormat:                     "Mutable Format",
-	ImageCubeCompatible:                    "Cube Compatible",
-	ImageAlias:                             "Alias",
-	ImageSplitInstanceBindRegions:          "Split Instance Bind Regions",
-	Image2DArrayCompatible:                 "2D Array Compatible",
-	ImageBlockTexelViewCompatible:          "Block Texel View Compatible",
-	ImageExtendedUsage:                     "Extended Usage",
-	ImageProtected:                         "Protected",
-	ImageDisjoint:                          "Disjoint",
-	ImageCornerSampledNV:                   "Corner Sampled (Nvidia Extension)",
-	ImageSampleLocationsCompatibleDepthEXT: "Sample Locations Compatible Depth (Extension)",
-	ImageSubsampledEXT:                     "Subsampled (Extension)",
-}
+func init() {
+	ImageCreateSparseBinding.Register("Sparse Binding")
+	ImageCreateSparseResidency.Register("Sparse Residency")
+	ImageCreateSparseAliased.Register("Sparse Aliased")
+	ImageCreateMutableFormat.Register("Mutable Format")
+	ImageCreateCubeCompatible.Register("Cube Compatible")
 
-func (f ImageFlags) String() string {
-	return common.FlagsToString(f, imageFlagsToString)
+	ImageLayoutUndefined.Register("Undefined")
+	ImageLayoutGeneral.Register("General")
+	ImageLayoutColorAttachmentOptimal.Register("Color Attachment")
+	ImageLayoutDepthStencilAttachmentOptimal.Register("Depth & Stencil Attachment")
+	ImageLayoutDepthStencilReadOnlyOptimal.Register("Depth & Stencil Read-Only")
+	ImageLayoutShaderReadOnlyOptimal.Register("Shader Read-Only")
+	ImageLayoutTransferSrcOptimal.Register("Transfer Source")
+	ImageLayoutTransferDstOptimal.Register("Transfer Destination")
+	ImageLayoutPreInitialized.Register("Pre-Initialized")
+
+	ImageTilingOptimal.Register("Optimal")
+	ImageTilingLinear.Register("Linear")
+
+	ImageType1D.Register("1D")
+	ImageType2D.Register("2D")
+	ImageType3D.Register("3D")
+
+	ImageUsageTransferSrc.Register("Transfer Source")
+	ImageUsageTransferDst.Register("Transfer Destination")
+	ImageUsageSampled.Register("Sampled")
+	ImageUsageStorage.Register("Storage")
+	ImageUsageColorAttachment.Register("Color Attachment")
+	ImageUsageDepthStencilAttachment.Register("Depth Stencil Attachment")
+	ImageUsageTransientAttachment.Register("Transient Attachment")
+	ImageUsageInputAttachment.Register("Input Attachment")
+
+	Samples1.RegisterSamples("1 Samples", 1)
+	Samples2.RegisterSamples("2 Samples", 2)
+	Samples4.RegisterSamples("4 Samples", 4)
+	Samples8.RegisterSamples("8 Samples", 8)
+	Samples16.RegisterSamples("16 Samples", 16)
+	Samples32.RegisterSamples("32 Samples", 32)
+	Samples64.RegisterSamples("64 Samples", 64)
 }
 
 type ImageOptions struct {
-	Flags     ImageFlags
+	Flags     common.ImageCreateFlags
 	ImageType common.ImageType
 	Format    common.DataFormat
 	Extent    common.Extent3D
@@ -70,7 +113,7 @@ type ImageOptions struct {
 
 	InitialLayout common.ImageLayout
 
-	core.HaveNext
+	common.HaveNext
 }
 
 func (o *ImageOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {

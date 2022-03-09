@@ -7,7 +7,6 @@ package core1_0
 import "C"
 import (
 	"github.com/CannibalVox/VKng/core/common"
-	"github.com/CannibalVox/VKng/core/core1_0"
 	"github.com/CannibalVox/VKng/core/driver"
 	"github.com/CannibalVox/cgoparam"
 	"unsafe"
@@ -29,7 +28,7 @@ func (p *VulkanQueryPool) Destroy(callbacks *driver.AllocationCallbacks) {
 	p.Driver.VkDestroyQueryPool(p.Device, p.QueryPoolHandle, callbacks.Handle())
 }
 
-func (p *VulkanQueryPool) PopulateResults(firstQuery, queryCount int, resultSize, resultStride int, flags core1_0.QueryResultFlags) ([]byte, common.VkResult, error) {
+func (p *VulkanQueryPool) PopulateResults(firstQuery, queryCount int, resultSize, resultStride int, flags common.QueryResultFlags) ([]byte, common.VkResult, error) {
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 

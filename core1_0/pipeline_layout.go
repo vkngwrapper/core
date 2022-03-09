@@ -6,7 +6,6 @@ package core1_0
 */
 import "C"
 import (
-	"github.com/CannibalVox/VKng/core"
 	"github.com/CannibalVox/VKng/core/common"
 	"github.com/CannibalVox/cgoparam"
 	"unsafe"
@@ -16,7 +15,7 @@ type PipelineLayoutOptions struct {
 	SetLayouts         []DescriptorSetLayout
 	PushConstantRanges []common.PushConstantRange
 
-	core.HaveNext
+	common.HaveNext
 }
 
 func (o *PipelineLayoutOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {

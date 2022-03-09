@@ -42,7 +42,7 @@ func (i *VulkanImage) SparseMemoryRequirements() []core1_0.SparseImageMemoryRequ
 					Height: int(inReq.formatProperties.imageGranularity.height),
 					Depth:  int(inReq.formatProperties.imageGranularity.depth),
 				},
-				Flags: core1_0.SparseImageFormatFlags(inReq.formatProperties.flags),
+				Flags: common.SparseImageFormatFlags(inReq.formatProperties.flags),
 			},
 			ImageMipTailFirstLod: int(inReq.imageMipTailFirstLod),
 			ImageMipTailOffset:   int(inReq.imageMipTailOffset),

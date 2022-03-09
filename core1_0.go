@@ -1,4 +1,4 @@
-package loader
+package core
 
 /*
 #include <stdlib.h>
@@ -6,7 +6,6 @@ package loader
 */
 import "C"
 import (
-	"github.com/CannibalVox/VKng/core"
 	"github.com/CannibalVox/VKng/core/common"
 	"github.com/CannibalVox/VKng/core/core1_0"
 	"github.com/CannibalVox/VKng/core/driver"
@@ -18,14 +17,25 @@ import (
 
 type VulkanLoader1_0 struct {
 	driver driver.Driver
+
+	loader1_1 Loader1_1
 }
 
 func NewLoader(
 	driver driver.Driver,
 ) *VulkanLoader1_0 {
 
+	var loader1_1 Loader1_1
+
+	if driver.Version().IsAtLeast(common.Vulkan1_1) {
+		loader1_1 = &VulkanLoader1_1{
+			driver: driver,
+		}
+	}
+
 	return &VulkanLoader1_0{
-		driver: driver,
+		driver:    driver,
+		loader1_1: loader1_1,
 	}
 }
 
@@ -35,6 +45,10 @@ func (l *VulkanLoader1_0) Version() common.APIVersion {
 
 func (l *VulkanLoader1_0) Driver() driver.Driver {
 	return l.driver
+}
+
+func (l *VulkanLoader1_0) Core1_1() Loader1_1 {
+	return l.loader1_1
 }
 
 func (l *VulkanLoader1_0) attemptAvailableExtensions(layerName *driver.Char) (map[string]*common.ExtensionProperties, common.VkResult, error) {
@@ -83,7 +97,7 @@ func (l *VulkanLoader1_0) AvailableExtensions() (map[string]*common.ExtensionPro
 	var layers map[string]*common.ExtensionProperties
 	var result common.VkResult
 	var err error
-	for doWhile := true; doWhile; doWhile = (result == common.VKIncomplete) {
+	for doWhile := true; doWhile; doWhile = (result == core1_0.VKIncomplete) {
 		layers, result, err = l.attemptAvailableExtensions(nil)
 	}
 	return layers, result, err
@@ -100,7 +114,7 @@ func (l *VulkanLoader1_0) AvailableExtensionsForLayer(layerName string) (map[str
 	defer cgoparam.ReturnAlloc(allocator)
 
 	layerNamePtr := (*driver.Char)(allocator.CString(layerName))
-	for doWhile := true; doWhile; doWhile = (result == common.VKIncomplete) {
+	for doWhile := true; doWhile; doWhile = (result == core1_0.VKIncomplete) {
 		layers, result, err = l.attemptAvailableExtensions(layerNamePtr)
 	}
 	return layers, result, err
@@ -154,7 +168,7 @@ func (l *VulkanLoader1_0) AvailableLayers() (map[string]*common.LayerProperties,
 	var layers map[string]*common.LayerProperties
 	var result common.VkResult
 	var err error
-	for doWhile := true; doWhile; doWhile = (result == common.VKIncomplete) {
+	for doWhile := true; doWhile; doWhile = (result == core1_0.VKIncomplete) {
 		layers, result, err = l.attemptAvailableLayers()
 	}
 	return layers, result, err
@@ -164,9 +178,9 @@ func (l *VulkanLoader1_0) CreateBufferView(device core1_0.Device, allocationCall
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
-	createInfo, err := core.AllocOptions(arena, options)
+	createInfo, err := common.AllocOptions(arena, options)
 	if err != nil {
-		return nil, common.VKErrorUnknown, err
+		return nil, core1_0.VKErrorUnknown, err
 	}
 
 	var bufferViewHandle driver.VkBufferView
@@ -188,9 +202,9 @@ func (l *VulkanLoader1_0) CreateInstance(allocationCallbacks *driver.AllocationC
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
-	createInfo, err := core.AllocOptions(arena, options)
+	createInfo, err := common.AllocOptions(arena, options)
 	if err != nil {
-		return nil, common.VKErrorUnknown, err
+		return nil, core1_0.VKErrorUnknown, err
 	}
 
 	var instanceHandle driver.VkInstance
@@ -202,7 +216,7 @@ func (l *VulkanLoader1_0) CreateInstance(allocationCallbacks *driver.AllocationC
 
 	instanceDriver, err := l.driver.CreateInstanceDriver((driver.VkInstance)(instanceHandle))
 	if err != nil {
-		return nil, common.VKErrorUnknown, err
+		return nil, core1_0.VKErrorUnknown, err
 	}
 
 	return &internal1_0.VulkanInstance{
@@ -216,9 +230,9 @@ func (l *VulkanLoader1_0) CreateDevice(physicalDevice core1_0.PhysicalDevice, al
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
-	createInfo, err := core.AllocOptions(arena, options)
+	createInfo, err := common.AllocOptions(arena, options)
 	if err != nil {
-		return nil, common.VKErrorUnknown, err
+		return nil, core1_0.VKErrorUnknown, err
 	}
 
 	var deviceHandle driver.VkDevice
@@ -229,7 +243,7 @@ func (l *VulkanLoader1_0) CreateDevice(physicalDevice core1_0.PhysicalDevice, al
 
 	deviceDriver, err := physicalDevice.Driver().CreateDeviceDriver(deviceHandle)
 	if err != nil {
-		return nil, common.VKErrorUnknown, err
+		return nil, core1_0.VKErrorUnknown, err
 	}
 
 	return &internal1_0.VulkanDevice{
@@ -243,9 +257,9 @@ func (l *VulkanLoader1_0) CreateShaderModule(device core1_0.Device, allocationCa
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
-	createInfo, err := core.AllocOptions(arena, o)
+	createInfo, err := common.AllocOptions(arena, o)
 	if err != nil {
-		return nil, common.VKErrorUnknown, err
+		return nil, core1_0.VKErrorUnknown, err
 	}
 
 	var shaderModuleHandle driver.VkShaderModule
@@ -267,9 +281,9 @@ func (l *VulkanLoader1_0) CreateImageView(device core1_0.Device, allocationCallb
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
-	createInfo, err := core.AllocOptions(arena, o)
+	createInfo, err := common.AllocOptions(arena, o)
 	if err != nil {
-		return nil, common.VKErrorUnknown, err
+		return nil, core1_0.VKErrorUnknown, err
 	}
 
 	var imageViewHandle driver.VkImageView
@@ -292,9 +306,9 @@ func (l *VulkanLoader1_0) CreateSemaphore(device core1_0.Device, allocationCallb
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
-	createInfo, err := core.AllocOptions(arena, o)
+	createInfo, err := common.AllocOptions(arena, o)
 	if err != nil {
-		return nil, common.VKErrorUnknown, err
+		return nil, core1_0.VKErrorUnknown, err
 	}
 
 	var semaphoreHandle driver.VkSemaphore
@@ -317,9 +331,9 @@ func (l *VulkanLoader1_0) CreateFence(device core1_0.Device, allocationCallbacks
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
-	createInfo, err := core.AllocOptions(arena, o)
+	createInfo, err := common.AllocOptions(arena, o)
 	if err != nil {
-		return nil, common.VKErrorUnknown, err
+		return nil, core1_0.VKErrorUnknown, err
 	}
 
 	var fenceHandle driver.VkFence
@@ -342,9 +356,9 @@ func (l *VulkanLoader1_0) CreateBuffer(device core1_0.Device, allocationCallback
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
-	createInfo, err := core.AllocOptions(arena, o)
+	createInfo, err := common.AllocOptions(arena, o)
 	if err != nil {
-		return nil, common.VKErrorUnknown, err
+		return nil, core1_0.VKErrorUnknown, err
 	}
 
 	var bufferHandle driver.VkBuffer
@@ -367,9 +381,9 @@ func (l *VulkanLoader1_0) CreateDescriptorSetLayout(device core1_0.Device, alloc
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
-	createInfo, err := core.AllocOptions(arena, o)
+	createInfo, err := common.AllocOptions(arena, o)
 	if err != nil {
-		return nil, common.VKErrorUnknown, err
+		return nil, core1_0.VKErrorUnknown, err
 	}
 
 	var descriptorSetLayoutHandle driver.VkDescriptorSetLayout
@@ -392,9 +406,9 @@ func (l *VulkanLoader1_0) CreateDescriptorPool(device core1_0.Device, allocation
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
-	createInfo, err := core.AllocOptions(arena, o)
+	createInfo, err := common.AllocOptions(arena, o)
 	if err != nil {
-		return nil, common.VKErrorUnknown, err
+		return nil, core1_0.VKErrorUnknown, err
 	}
 
 	var descriptorPoolHandle driver.VkDescriptorPool
@@ -417,9 +431,9 @@ func (l *VulkanLoader1_0) CreateCommandPool(device core1_0.Device, allocationCal
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
-	createInfo, err := core.AllocOptions(arena, o)
+	createInfo, err := common.AllocOptions(arena, o)
 	if err != nil {
-		return nil, common.VKErrorUnknown, err
+		return nil, core1_0.VKErrorUnknown, err
 	}
 
 	var cmdPoolHandle driver.VkCommandPool
@@ -441,9 +455,9 @@ func (l *VulkanLoader1_0) CreateEvent(device core1_0.Device, allocationCallbacks
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
-	createInfo, err := core.AllocOptions(arena, o)
+	createInfo, err := common.AllocOptions(arena, o)
 	if err != nil {
-		return nil, common.VKErrorUnknown, err
+		return nil, core1_0.VKErrorUnknown, err
 	}
 
 	var eventHandle driver.VkEvent
@@ -465,9 +479,9 @@ func (l *VulkanLoader1_0) CreateFrameBuffer(device core1_0.Device, allocationCal
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
-	createInfo, err := core.AllocOptions(arena, o)
+	createInfo, err := common.AllocOptions(arena, o)
 	if err != nil {
-		return nil, common.VKErrorUnknown, err
+		return nil, core1_0.VKErrorUnknown, err
 	}
 
 	var framebufferHandle driver.VkFramebuffer
@@ -492,9 +506,9 @@ func (l *VulkanLoader1_0) CreateGraphicsPipelines(device core1_0.Device, pipelin
 
 	pipelineCount := len(o)
 
-	pipelineCreateInfosPtr, err := core.AllocOptionSlice[C.VkGraphicsPipelineCreateInfo, core1_0.GraphicsPipelineOptions](arena, o)
+	pipelineCreateInfosPtr, err := common.AllocOptionSlice[C.VkGraphicsPipelineCreateInfo, core1_0.GraphicsPipelineOptions](arena, o)
 	if err != nil {
-		return nil, common.VKErrorUnknown, err
+		return nil, core1_0.VKErrorUnknown, err
 	}
 
 	pipelinePtr := (*driver.VkPipeline)(arena.Malloc(pipelineCount * int(unsafe.Sizeof([1]driver.VkPipeline{}))))
@@ -530,9 +544,9 @@ func (l *VulkanLoader1_0) CreateComputePipelines(device core1_0.Device, pipeline
 
 	pipelineCount := len(o)
 
-	pipelineCreateInfosPtr, err := core.AllocOptionSlice[C.VkComputePipelineCreateInfo, core1_0.ComputePipelineOptions](arena, o)
+	pipelineCreateInfosPtr, err := common.AllocOptionSlice[C.VkComputePipelineCreateInfo, core1_0.ComputePipelineOptions](arena, o)
 	if err != nil {
-		return nil, common.VKErrorUnknown, err
+		return nil, core1_0.VKErrorUnknown, err
 	}
 
 	pipelinePtr := (*driver.VkPipeline)(arena.Malloc(pipelineCount * int(unsafe.Sizeof([1]driver.VkPipeline{}))))
@@ -566,9 +580,9 @@ func (l *VulkanLoader1_0) CreateImage(device core1_0.Device, allocationCallbacks
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
-	createInfo, err := core.AllocOptions(arena, o)
+	createInfo, err := common.AllocOptions(arena, o)
 	if err != nil {
-		return nil, common.VKErrorUnknown, err
+		return nil, core1_0.VKErrorUnknown, err
 	}
 
 	var imageHandle driver.VkImage
@@ -590,9 +604,9 @@ func (l *VulkanLoader1_0) CreatePipelineCache(device core1_0.Device, allocationC
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
-	createInfo, err := core.AllocOptions(arena, o)
+	createInfo, err := common.AllocOptions(arena, o)
 	if err != nil {
-		return nil, common.VKErrorUnknown, err
+		return nil, core1_0.VKErrorUnknown, err
 	}
 
 	var pipelineCacheHandle driver.VkPipelineCache
@@ -614,9 +628,9 @@ func (l *VulkanLoader1_0) CreatePipelineLayout(device core1_0.Device, allocation
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
-	createInfo, err := core.AllocOptions(arena, o)
+	createInfo, err := common.AllocOptions(arena, o)
 	if err != nil {
-		return nil, common.VKErrorUnknown, err
+		return nil, core1_0.VKErrorUnknown, err
 	}
 
 	var pipelineLayoutHandle driver.VkPipelineLayout
@@ -638,9 +652,9 @@ func (l *VulkanLoader1_0) CreateQueryPool(device core1_0.Device, allocationCallb
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
-	createInfo, err := core.AllocOptions(arena, o)
+	createInfo, err := common.AllocOptions(arena, o)
 	if err != nil {
-		return nil, common.VKErrorUnknown, err
+		return nil, core1_0.VKErrorUnknown, err
 	}
 
 	var queryPoolHandle driver.VkQueryPool
@@ -663,9 +677,9 @@ func (l *VulkanLoader1_0) CreateRenderPass(device core1_0.Device, allocationCall
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
-	createInfo, err := core.AllocOptions(arena, o)
+	createInfo, err := common.AllocOptions(arena, o)
 	if err != nil {
-		return nil, common.VKErrorUnknown, err
+		return nil, core1_0.VKErrorUnknown, err
 	}
 
 	var renderPassHandle driver.VkRenderPass
@@ -688,9 +702,9 @@ func (l *VulkanLoader1_0) CreateSampler(device core1_0.Device, allocationCallbac
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
-	createInfo, err := core.AllocOptions(arena, o)
+	createInfo, err := common.AllocOptions(arena, o)
 	if err != nil {
-		return nil, common.VKErrorUnknown, err
+		return nil, core1_0.VKErrorUnknown, err
 	}
 
 	var samplerHandle driver.VkSampler
@@ -754,12 +768,12 @@ func (l *VulkanLoader1_0) AllocateCommandBuffers(o *core1_0.CommandBufferOptions
 	defer cgoparam.ReturnAlloc(arena)
 
 	if o.CommandPool == nil {
-		return nil, common.VKErrorUnknown, errors.New("no command pool provided to allocate from")
+		return nil, core1_0.VKErrorUnknown, errors.New("no command pool provided to allocate from")
 	}
 
-	createInfo, err := core.AllocOptions(arena, o)
+	createInfo, err := common.AllocOptions(arena, o)
 	if err != nil {
-		return nil, common.VKErrorUnknown, err
+		return nil, core1_0.VKErrorUnknown, err
 	}
 
 	device := o.CommandPool.Device()
@@ -792,12 +806,12 @@ func (l *VulkanLoader1_0) AllocateDescriptorSets(o *core1_0.DescriptorSetOptions
 	defer cgoparam.ReturnAlloc(arena)
 
 	if o.DescriptorPool == nil {
-		return nil, common.VKErrorUnknown, errors.New("no descriptor pool provided to allocate from")
+		return nil, core1_0.VKErrorUnknown, errors.New("no descriptor pool provided to allocate from")
 	}
 
-	createInfo, err := core.AllocOptions(arena, o)
+	createInfo, err := common.AllocOptions(arena, o)
 	if err != nil {
-		return nil, common.VKErrorUnknown, err
+		return nil, core1_0.VKErrorUnknown, err
 	}
 
 	device := o.DescriptorPool.DeviceHandle()

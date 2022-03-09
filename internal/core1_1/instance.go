@@ -6,9 +6,10 @@ package core1_1
 */
 import "C"
 import (
-	"github.com/CannibalVox/VKng/core/core1_0"
+	"github.com/CannibalVox/VKng/core/driver"
 )
 
 type VulkanInstance struct {
-	core1_0.Instance
+	InstanceDriver driver.Driver
+	InstanceHandle driver.VkInstance
 }

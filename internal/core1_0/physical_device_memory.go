@@ -6,6 +6,7 @@ package core1_0
 */
 import "C"
 import (
+	"github.com/CannibalVox/VKng/core/common"
 	"github.com/CannibalVox/VKng/core/core1_0"
 	"github.com/CannibalVox/VKng/core/driver"
 	"github.com/CannibalVox/cgoparam"
@@ -27,17 +28,17 @@ func (d *VulkanPhysicalDevice) MemoryProperties() *core1_0.PhysicalDeviceMemoryP
 
 	for i := 0; i < typeCount; i++ {
 		t := props.memoryTypes[i]
-		outProps.MemoryTypes = append(outProps.MemoryTypes, core1_0.MemoryType{
-			Properties: core1_0.MemoryPropertyFlags(t.propertyFlags),
+		outProps.MemoryTypes = append(outProps.MemoryTypes, common.MemoryType{
+			Properties: common.MemoryProperties(t.propertyFlags),
 			HeapIndex:  int(t.heapIndex),
 		})
 	}
 
 	for i := 0; i < heapCount; i++ {
 		heap := props.memoryHeaps[i]
-		outProps.MemoryHeaps = append(outProps.MemoryHeaps, core1_0.MemoryHeap{
+		outProps.MemoryHeaps = append(outProps.MemoryHeaps, common.MemoryHeap{
 			Size:  uint64(heap.size),
-			Flags: core1_0.MemoryHeapFlags(heap.flags),
+			Flags: common.MemoryHeapFlags(heap.flags),
 		})
 	}
 

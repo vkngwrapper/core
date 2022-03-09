@@ -6,100 +6,60 @@ package common
 */
 import "C"
 
-type ObjectType int32
-
 const (
-	UsageUnknown                       ObjectType = C.VK_OBJECT_TYPE_UNKNOWN
-	UsageInstance                      ObjectType = C.VK_OBJECT_TYPE_INSTANCE
-	UsagePhysicalDevice                ObjectType = C.VK_OBJECT_TYPE_PHYSICAL_DEVICE
-	UsageDevice                        ObjectType = C.VK_OBJECT_TYPE_DEVICE
-	UsageQueue                         ObjectType = C.VK_OBJECT_TYPE_QUEUE
-	UsageSemaphore                     ObjectType = C.VK_OBJECT_TYPE_SEMAPHORE
-	UsageCommandBuffer                 ObjectType = C.VK_OBJECT_TYPE_COMMAND_BUFFER
-	UsageFence                         ObjectType = C.VK_OBJECT_TYPE_FENCE
-	UsageDeviceMemory                  ObjectType = C.VK_OBJECT_TYPE_DEVICE_MEMORY
-	UsageBuffer                        ObjectType = C.VK_OBJECT_TYPE_BUFFER
-	UsageImage                         ObjectType = C.VK_OBJECT_TYPE_IMAGE
-	UsageEvent                         ObjectType = C.VK_OBJECT_TYPE_EVENT
-	UsageQueryPool                     ObjectType = C.VK_OBJECT_TYPE_QUERY_POOL
-	UsageBufferView                    ObjectType = C.VK_OBJECT_TYPE_BUFFER_VIEW
-	UsageImageView                     ObjectType = C.VK_OBJECT_TYPE_IMAGE_VIEW
-	UsageShaderModule                  ObjectType = C.VK_OBJECT_TYPE_SHADER_MODULE
-	UsagePipelineCache                 ObjectType = C.VK_OBJECT_TYPE_PIPELINE_CACHE
-	UsagePipelineLayout                ObjectType = C.VK_OBJECT_TYPE_PIPELINE_LAYOUT
-	UsageRenderPass                    ObjectType = C.VK_OBJECT_TYPE_RENDER_PASS
-	UsagePipeline                      ObjectType = C.VK_OBJECT_TYPE_PIPELINE
-	UsageDescriptorSetLayout           ObjectType = C.VK_OBJECT_TYPE_DESCRIPTOR_SET_LAYOUT
-	UsageSampler                       ObjectType = C.VK_OBJECT_TYPE_SAMPLER
-	UsageDescriptorPool                ObjectType = C.VK_OBJECT_TYPE_DESCRIPTOR_POOL
-	UsageDescriptorSet                 ObjectType = C.VK_OBJECT_TYPE_DESCRIPTOR_SET
-	UsageFramebuffer                   ObjectType = C.VK_OBJECT_TYPE_FRAMEBUFFER
-	UsageCommandPool                   ObjectType = C.VK_OBJECT_TYPE_COMMAND_POOL
-	UsageSamplerYCbCrConversion        ObjectType = C.VK_OBJECT_TYPE_SAMPLER_YCBCR_CONVERSION
-	UsageDescriptorUpdateTemplate      ObjectType = C.VK_OBJECT_TYPE_DESCRIPTOR_UPDATE_TEMPLATE
-	UsageSurfaceKHR                    ObjectType = C.VK_OBJECT_TYPE_SURFACE_KHR
-	UsageSwapchainKHR                  ObjectType = C.VK_OBJECT_TYPE_SWAPCHAIN_KHR
-	UsageDisplayKHR                    ObjectType = C.VK_OBJECT_TYPE_DISPLAY_KHR
-	UsageDisplayModeKHR                ObjectType = C.VK_OBJECT_TYPE_DISPLAY_MODE_KHR
-	UsageDebugReportCallbackEXT        ObjectType = C.VK_OBJECT_TYPE_DEBUG_REPORT_CALLBACK_EXT
-	UsageCUModuleNVX                   ObjectType = C.VK_OBJECT_TYPE_CU_MODULE_NVX
-	UsageCUFunctionNVX                 ObjectType = C.VK_OBJECT_TYPE_CU_FUNCTION_NVX
-	UsageDebugUtilsMessengerEXT        ObjectType = C.VK_OBJECT_TYPE_DEBUG_UTILS_MESSENGER_EXT
-	UsageAccelerationStructureKHR      ObjectType = C.VK_OBJECT_TYPE_ACCELERATION_STRUCTURE_KHR
-	UsageValidationCacheEXT            ObjectType = C.VK_OBJECT_TYPE_VALIDATION_CACHE_EXT
-	UsageAccelerationStructureNV       ObjectType = C.VK_OBJECT_TYPE_ACCELERATION_STRUCTURE_NV
-	UsagePerformanceConfigurationIntel ObjectType = C.VK_OBJECT_TYPE_PERFORMANCE_CONFIGURATION_INTEL
-	UsageDeferredOperationKHR          ObjectType = C.VK_OBJECT_TYPE_DEFERRED_OPERATION_KHR
-	UsageIndirectCommandsLayoutNV      ObjectType = C.VK_OBJECT_TYPE_INDIRECT_COMMANDS_LAYOUT_NV
-	UsagePrivateDataSlotEXT            ObjectType = C.VK_OBJECT_TYPE_PRIVATE_DATA_SLOT_EXT
+	ObjectTypeUnknown             ObjectType = C.VK_OBJECT_TYPE_UNKNOWN
+	ObjectTypeInstance            ObjectType = C.VK_OBJECT_TYPE_INSTANCE
+	ObjectTypePhysicalDevice      ObjectType = C.VK_OBJECT_TYPE_PHYSICAL_DEVICE
+	ObjectTypeDevice              ObjectType = C.VK_OBJECT_TYPE_DEVICE
+	ObjectTypeQueue               ObjectType = C.VK_OBJECT_TYPE_QUEUE
+	ObjectTypeSemaphore           ObjectType = C.VK_OBJECT_TYPE_SEMAPHORE
+	ObjectTypeCommandBuffer       ObjectType = C.VK_OBJECT_TYPE_COMMAND_BUFFER
+	ObjectTypeFence               ObjectType = C.VK_OBJECT_TYPE_FENCE
+	ObjectTypeDeviceMemory        ObjectType = C.VK_OBJECT_TYPE_DEVICE_MEMORY
+	ObjectTypeBuffer              ObjectType = C.VK_OBJECT_TYPE_BUFFER
+	ObjectTypeImage               ObjectType = C.VK_OBJECT_TYPE_IMAGE
+	ObjectTypeEvent               ObjectType = C.VK_OBJECT_TYPE_EVENT
+	ObjectTypeQueryPool           ObjectType = C.VK_OBJECT_TYPE_QUERY_POOL
+	ObjectTypeBufferView          ObjectType = C.VK_OBJECT_TYPE_BUFFER_VIEW
+	ObjectTypeImageView           ObjectType = C.VK_OBJECT_TYPE_IMAGE_VIEW
+	ObjectTypeShaderModule        ObjectType = C.VK_OBJECT_TYPE_SHADER_MODULE
+	ObjectTypePipelineCache       ObjectType = C.VK_OBJECT_TYPE_PIPELINE_CACHE
+	ObjectTypePipelineLayout      ObjectType = C.VK_OBJECT_TYPE_PIPELINE_LAYOUT
+	ObjectTypeRenderPass          ObjectType = C.VK_OBJECT_TYPE_RENDER_PASS
+	ObjectTypePipeline            ObjectType = C.VK_OBJECT_TYPE_PIPELINE
+	ObjectTypeDescriptorSetLayout ObjectType = C.VK_OBJECT_TYPE_DESCRIPTOR_SET_LAYOUT
+	ObjectTypeSampler             ObjectType = C.VK_OBJECT_TYPE_SAMPLER
+	ObjectTypeDescriptorPool      ObjectType = C.VK_OBJECT_TYPE_DESCRIPTOR_POOL
+	ObjectTypeDescriptorSet       ObjectType = C.VK_OBJECT_TYPE_DESCRIPTOR_SET
+	ObjectTypeFramebuffer         ObjectType = C.VK_OBJECT_TYPE_FRAMEBUFFER
+	ObjectTypeCommandPool         ObjectType = C.VK_OBJECT_TYPE_COMMAND_POOL
 )
 
-var vkObjectTypeToString = map[ObjectType]string{
-	UsageUnknown:                       "Unknown",
-	UsageInstance:                      "Instance",
-	UsagePhysicalDevice:                "Physical Device",
-	UsageDevice:                        "Device",
-	UsageQueue:                         "Queue",
-	UsageSemaphore:                     "Semaphore",
-	UsageCommandBuffer:                 "Command Buffer",
-	UsageFence:                         "Fence",
-	UsageDeviceMemory:                  "Device Memory",
-	UsageBuffer:                        "Buffer",
-	UsageImage:                         "Image",
-	UsageEvent:                         "Event",
-	UsageQueryPool:                     "Query Pool",
-	UsageBufferView:                    "Buffer View",
-	UsageImageView:                     "Image View",
-	UsageShaderModule:                  "Shader Module",
-	UsagePipelineCache:                 "Pipeline Cache",
-	UsagePipelineLayout:                "Pipeline Layout",
-	UsageRenderPass:                    "Render Pass",
-	UsagePipeline:                      "Pipeline",
-	UsageDescriptorSetLayout:           "Descriptor Set Layout",
-	UsageSampler:                       "Sampler",
-	UsageDescriptorPool:                "Descriptor Pool",
-	UsageDescriptorSet:                 "Descriptor Set",
-	UsageFramebuffer:                   "Framebuffer",
-	UsageCommandPool:                   "Command Pool",
-	UsageSamplerYCbCrConversion:        "Sampler YCbCr Conversion",
-	UsageDescriptorUpdateTemplate:      "Descriptor Update Template",
-	UsageSurfaceKHR:                    "Surface (Khronos Extension)",
-	UsageSwapchainKHR:                  "Swapchain (Khronos Extension)",
-	UsageDisplayKHR:                    "Display (Khronos Extension)",
-	UsageDisplayModeKHR:                "Display Mode (Khronos Extension)",
-	UsageDebugReportCallbackEXT:        "Debug Report Callback (Extension)",
-	UsageCUModuleNVX:                   "CU Module (Nvidia Experimental Extension)",
-	UsageCUFunctionNVX:                 "CU Function (Nvidia Experimental Extension)",
-	UsageDebugUtilsMessengerEXT:        "Debug Utils Messenger (Extension)",
-	UsageAccelerationStructureKHR:      "Acceleration Structure (Khronos Extension)",
-	UsageValidationCacheEXT:            "Validation Cache (Extension)",
-	UsageAccelerationStructureNV:       "Acceleration Structure (Nvidia Extension)",
-	UsagePerformanceConfigurationIntel: "Performance Configuration (Intel Extension)",
-	UsageDeferredOperationKHR:          "Deferred Operation (Khronos Extension)",
-	UsageIndirectCommandsLayoutNV:      "Indirect Commands Layout (Nvidia Extension)",
-	UsagePrivateDataSlotEXT:            "Private Data Slot (Extension)",
-}
-
-func (t ObjectType) String() string {
-	return vkObjectTypeToString[t]
+func init() {
+	ObjectTypeUnknown.Register("Unknown")
+	ObjectTypeInstance.Register("Instance")
+	ObjectTypePhysicalDevice.Register("Physical Device")
+	ObjectTypeDevice.Register("Device")
+	ObjectTypeQueue.Register("Queue")
+	ObjectTypeSemaphore.Register("Semaphore")
+	ObjectTypeCommandBuffer.Register("Command Buffer")
+	ObjectTypeFence.Register("Fence")
+	ObjectTypeDeviceMemory.Register("Device Memory")
+	ObjectTypeBuffer.Register("Buffer")
+	ObjectTypeImage.Register("Image")
+	ObjectTypeEvent.Register("Event")
+	ObjectTypeQueryPool.Register("Query Pool")
+	ObjectTypeBufferView.Register("Buffer View")
+	ObjectTypeImageView.Register("Image View")
+	ObjectTypeShaderModule.Register("Shader Module")
+	ObjectTypePipelineCache.Register("Pipeline Cache")
+	ObjectTypePipelineLayout.Register("Pipeline Layout")
+	ObjectTypeRenderPass.Register("Render Pass")
+	ObjectTypePipeline.Register("Pipeline")
+	ObjectTypeDescriptorSetLayout.Register("Descriptor Set Layout")
+	ObjectTypeSampler.Register("Sampler")
+	ObjectTypeDescriptorPool.Register("Descriptor Pool")
+	ObjectTypeDescriptorSet.Register("Descriptor Set")
+	ObjectTypeFramebuffer.Register("Framebuffer")
+	ObjectTypeCommandPool.Register("Command Pool")
 }

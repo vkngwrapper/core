@@ -6,20 +6,29 @@ package core1_0
 */
 import "C"
 import (
-	"github.com/CannibalVox/VKng/core"
 	"github.com/CannibalVox/VKng/core/common"
 	"github.com/CannibalVox/cgoparam"
 	"unsafe"
 )
+
+const (
+	SubpassContentsInline                  common.SubpassContents = C.VK_SUBPASS_CONTENTS_INLINE
+	SubpassContentsSecondaryCommandBuffers common.SubpassContents = C.VK_SUBPASS_CONTENTS_SECONDARY_COMMAND_BUFFERS
+)
+
+func init() {
+	SubpassContentsInline.Register("Inline")
+	SubpassContentsSecondaryCommandBuffers.Register("Secondary Command Buffers")
+}
 
 type RenderPassBeginOptions struct {
 	RenderPass  RenderPass
 	Framebuffer Framebuffer
 
 	RenderArea  common.Rect2D
-	ClearValues []core.ClearValue
+	ClearValues []common.ClearValue
 
-	core.HaveNext
+	common.HaveNext
 }
 
 func (o RenderPassBeginOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {

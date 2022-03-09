@@ -5,10 +5,12 @@ package core1_1
 #include "vulkan/vulkan.h"
 */
 import "C"
-import internal_core1_0 "github.com/CannibalVox/VKng/core/internal/core1_0"
+import (
+	"github.com/CannibalVox/VKng/core/driver"
+)
 
 type VulkanCommandPool struct {
-	internal_core1_0.VulkanCommandPool
+	DeviceDriver      driver.Driver
+	CommandPoolHandle driver.VkCommandPool
+	DeviceHandle      driver.VkDevice
 }
-
-func PromoteCommandPool()

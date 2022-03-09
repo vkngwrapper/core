@@ -5,8 +5,12 @@ package core1_1
 #include "vulkan/vulkan.h"
 */
 import "C"
-import "github.com/CannibalVox/VKng/core/core1_0"
+import (
+	"github.com/CannibalVox/VKng/core/driver"
+)
 
 type VulkanPipelineLayout struct {
-	core1_0.PipelineLayout
+	Driver               driver.Driver
+	Device               driver.VkDevice
+	PipelineLayoutHandle driver.VkPipelineLayout
 }

@@ -189,7 +189,7 @@ func TestVulkanLoader1_0_CreateGraphicsPipelines_ShaderStagesSuccess(t *testing.
 		{
 			Layout:     layout,
 			RenderPass: renderPass,
-			ShaderStages: []*core.ShaderStage{
+			ShaderStages: []*core.ShaderStageOptions{
 				{
 					Flags:  core.ShaderStageAllowVaryingSubgroupSizeEXT,
 					Name:   "some shader 1",
@@ -231,7 +231,7 @@ func TestVulkanLoader1_0_CreateGraphicsPipelines_ShaderStagesFailure_InvalidSpec
 		{
 			Layout:     layout,
 			RenderPass: renderPass,
-			ShaderStages: []*core.ShaderStage{
+			ShaderStages: []*core.ShaderStageOptions{
 				{
 					Flags:  core.ShaderStageAllowVaryingSubgroupSizeEXT,
 					Name:   "some shader 1",
@@ -1061,7 +1061,7 @@ func TestVulkanLoader1_0_CreateComputePipelines_EmptySuccess(t *testing.T) {
 	pipelines, _, err := loader.CreateComputePipelines(device, nil, nil, []*core.ComputePipelineOptions{
 		{
 			Flags: core.PipelineLibraryKHR,
-			Shader: core.ShaderStage{
+			Shader: core.ShaderStageOptions{
 				Flags:  core.ShaderStageAllowVaryingSubgroupSizeEXT,
 				Name:   "some compute shader",
 				Stage:  common.StageCompute,

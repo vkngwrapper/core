@@ -6,7 +6,6 @@ package core1_0
 */
 import "C"
 import (
-	"github.com/CannibalVox/VKng/core"
 	"github.com/CannibalVox/VKng/core/common"
 	"github.com/CannibalVox/VKng/core/core1_0"
 	"github.com/CannibalVox/VKng/core/driver"
@@ -43,9 +42,9 @@ func (c *VulkanCommandBuffer) Begin(o *core1_0.BeginOptions) (common.VkResult, e
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
-	createInfo, err := core.AllocOptions(arena, o)
+	createInfo, err := common.AllocOptions(arena, o)
 	if err != nil {
-		return common.VKErrorUnknown, err
+		return core1_0.VKErrorUnknown, err
 	}
 
 	return c.DeviceDriver.VkBeginCommandBuffer(c.CommandBufferHandle, (*driver.VkCommandBufferBeginInfo)(createInfo))
@@ -55,11 +54,11 @@ func (c *VulkanCommandBuffer) End() (common.VkResult, error) {
 	return c.DeviceDriver.VkEndCommandBuffer(c.CommandBufferHandle)
 }
 
-func (c *VulkanCommandBuffer) CmdBeginRenderPass(contents core.SubpassContents, o *core1_0.RenderPassBeginOptions) error {
+func (c *VulkanCommandBuffer) CmdBeginRenderPass(contents common.SubpassContents, o *core1_0.RenderPassBeginOptions) error {
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
-	createInfo, err := core.AllocOptions(arena, o)
+	createInfo, err := common.AllocOptions(arena, o)
 	if err != nil {
 		return err
 	}
@@ -162,21 +161,21 @@ func (c *VulkanCommandBuffer) CmdPipelineBarrier(srcStageMask, dstStageMask comm
 	var imageBarrierPtr *C.VkImageMemoryBarrier
 
 	if barrierCount > 0 {
-		barrierPtr, err = core.AllocOptionSlice[C.VkMemoryBarrier, core1_0.MemoryBarrierOptions](arena, memoryBarriers)
+		barrierPtr, err = common.AllocOptionSlice[C.VkMemoryBarrier, core1_0.MemoryBarrierOptions](arena, memoryBarriers)
 		if err != nil {
 			return err
 		}
 	}
 
 	if bufferBarrierCount > 0 {
-		bufferBarrierPtr, err = core.AllocOptionSlice[C.VkBufferMemoryBarrier, core1_0.BufferMemoryBarrierOptions](arena, bufferMemoryBarriers)
+		bufferBarrierPtr, err = common.AllocOptionSlice[C.VkBufferMemoryBarrier, core1_0.BufferMemoryBarrierOptions](arena, bufferMemoryBarriers)
 		if err != nil {
 			return err
 		}
 	}
 
 	if imageBarrierCount > 0 {
-		imageBarrierPtr, err = core.AllocOptionSlice[C.VkImageMemoryBarrier, core1_0.ImageMemoryBarrierOptions](arena, imageMemoryBarriers)
+		imageBarrierPtr, err = common.AllocOptionSlice[C.VkImageMemoryBarrier, core1_0.ImageMemoryBarrierOptions](arena, imageMemoryBarriers)
 		if err != nil {
 			return err
 		}
@@ -195,7 +194,7 @@ func (c *VulkanCommandBuffer) CmdCopyBufferToImage(buffer core1_0.Buffer, image 
 	var regionPtr *C.VkBufferImageCopy
 
 	if regionCount > 0 {
-		regionPtr, err = core.AllocSlice[C.VkBufferImageCopy, core1_0.BufferImageCopy](arena, regions)
+		regionPtr, err = common.AllocSlice[C.VkBufferImageCopy, core1_0.BufferImageCopy](arena, regions)
 		if err != nil {
 			return err
 		}
@@ -211,7 +210,7 @@ func (c *VulkanCommandBuffer) CmdBlitImage(sourceImage core1_0.Image, sourceImag
 
 	regionCount := len(regions)
 
-	regionPtr, err := core.AllocSlice[C.VkImageBlit, core1_0.ImageBlit](allocator, regions)
+	regionPtr, err := common.AllocSlice[C.VkImageBlit, core1_0.ImageBlit](allocator, regions)
 	if err != nil {
 		return err
 	}
@@ -285,7 +284,7 @@ func (c *VulkanCommandBuffer) CmdSetScissor(scissors []common.Rect2D) {
 	c.DeviceDriver.VkCmdSetScissor(c.CommandBufferHandle, driver.Uint32(0), driver.Uint32(scissorCount), (*driver.VkRect2D)(unsafe.Pointer(scissorPtr)))
 }
 
-func (c *VulkanCommandBuffer) CmdNextSubpass(contents core.SubpassContents) {
+func (c *VulkanCommandBuffer) CmdNextSubpass(contents common.SubpassContents) {
 	c.DeviceDriver.VkCmdNextSubpass(c.CommandBufferHandle, driver.VkSubpassContents(contents))
 }
 
@@ -314,21 +313,21 @@ func (c *VulkanCommandBuffer) CmdWaitEvents(events []core1_0.Event, srcStageMask
 	}
 
 	if barrierCount > 0 {
-		barrierPtr, err = core.AllocOptionSlice[C.VkMemoryBarrier, core1_0.MemoryBarrierOptions](arena, memoryBarriers)
+		barrierPtr, err = common.AllocOptionSlice[C.VkMemoryBarrier, core1_0.MemoryBarrierOptions](arena, memoryBarriers)
 		if err != nil {
 			return err
 		}
 	}
 
 	if bufferBarrierCount > 0 {
-		bufferBarrierPtr, err = core.AllocOptionSlice[C.VkBufferMemoryBarrier, core1_0.BufferMemoryBarrierOptions](arena, bufferMemoryBarriers)
+		bufferBarrierPtr, err = common.AllocOptionSlice[C.VkBufferMemoryBarrier, core1_0.BufferMemoryBarrierOptions](arena, bufferMemoryBarriers)
 		if err != nil {
 			return err
 		}
 	}
 
 	if imageBarrierCount > 0 {
-		imageBarrierPtr, err = core.AllocOptionSlice[C.VkImageMemoryBarrier, core1_0.ImageMemoryBarrierOptions](arena, imageMemoryBarriers)
+		imageBarrierPtr, err = common.AllocOptionSlice[C.VkImageMemoryBarrier, core1_0.ImageMemoryBarrierOptions](arena, imageMemoryBarriers)
 		if err != nil {
 			return err
 		}
@@ -342,7 +341,7 @@ func (c *VulkanCommandBuffer) CmdSetEvent(event core1_0.Event, stageMask common.
 	c.DeviceDriver.VkCmdSetEvent(c.CommandBufferHandle, event.Handle(), driver.VkPipelineStageFlags(stageMask))
 }
 
-func (c *VulkanCommandBuffer) CmdClearColorImage(image core1_0.Image, imageLayout common.ImageLayout, color core.ClearColorValue, ranges []common.ImageSubresourceRange) {
+func (c *VulkanCommandBuffer) CmdClearColorImage(image core1_0.Image, imageLayout common.ImageLayout, color common.ClearColorValue, ranges []common.ImageSubresourceRange) {
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
@@ -383,7 +382,7 @@ func (c *VulkanCommandBuffer) CmdEndQuery(queryPool core1_0.QueryPool, query int
 	c.DeviceDriver.VkCmdEndQuery(c.CommandBufferHandle, queryPool.Handle(), driver.Uint32(query))
 }
 
-func (c *VulkanCommandBuffer) CmdCopyQueryPoolResults(queryPool core1_0.QueryPool, firstQuery, queryCount int, dstBuffer core1_0.Buffer, dstOffset, stride int, flags core1_0.QueryResultFlags) {
+func (c *VulkanCommandBuffer) CmdCopyQueryPoolResults(queryPool core1_0.QueryPool, firstQuery, queryCount int, dstBuffer core1_0.Buffer, dstOffset, stride int, flags common.QueryResultFlags) {
 	c.DeviceDriver.VkCmdCopyQueryPoolResults(c.CommandBufferHandle, queryPool.Handle(), driver.Uint32(firstQuery), driver.Uint32(queryCount), dstBuffer.Handle(), driver.VkDeviceSize(dstOffset), driver.VkDeviceSize(stride), driver.VkQueryResultFlags(flags))
 }
 
@@ -407,13 +406,13 @@ func (c *VulkanCommandBuffer) CmdClearAttachments(attachments []core1_0.ClearAtt
 	defer cgoparam.ReturnAlloc(arena)
 
 	attachmentCount := len(attachments)
-	attachmentsPtr, err := core.AllocSlice[C.VkClearAttachment, core1_0.ClearAttachment](arena, attachments)
+	attachmentsPtr, err := common.AllocSlice[C.VkClearAttachment, core1_0.ClearAttachment](arena, attachments)
 	if err != nil {
 		return err
 	}
 
 	rectsCount := len(rects)
-	rectsPtr, err := core.AllocSlice[C.VkClearRect, core1_0.ClearRect](arena, rects)
+	rectsPtr, err := common.AllocSlice[C.VkClearRect, core1_0.ClearRect](arena, rects)
 	if err != nil {
 		return err
 	}
@@ -422,7 +421,7 @@ func (c *VulkanCommandBuffer) CmdClearAttachments(attachments []core1_0.ClearAtt
 	return nil
 }
 
-func (c *VulkanCommandBuffer) CmdClearDepthStencilImage(image core1_0.Image, imageLayout common.ImageLayout, depthStencil *core.ClearValueDepthStencil, ranges []common.ImageSubresourceRange) {
+func (c *VulkanCommandBuffer) CmdClearDepthStencilImage(image core1_0.Image, imageLayout common.ImageLayout, depthStencil *common.ClearValueDepthStencil, ranges []common.ImageSubresourceRange) {
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
@@ -450,7 +449,7 @@ func (c *VulkanCommandBuffer) CmdCopyImageToBuffer(srcImage core1_0.Image, srcIm
 	defer cgoparam.ReturnAlloc(arena)
 
 	regionCount := len(regions)
-	regionPtr, err := core.AllocSlice[C.VkBufferImageCopy, core1_0.BufferImageCopy](arena, regions)
+	regionPtr, err := common.AllocSlice[C.VkBufferImageCopy, core1_0.BufferImageCopy](arena, regions)
 	if err != nil {
 		return err
 	}
@@ -489,7 +488,7 @@ func (c *VulkanCommandBuffer) CmdResolveImage(srcImage core1_0.Image, srcImageLa
 	defer cgoparam.ReturnAlloc(arena)
 
 	regionCount := len(regions)
-	regionsPtr, err := core.AllocSlice[C.VkImageResolve, core1_0.ImageResolve](arena, regions)
+	regionsPtr, err := common.AllocSlice[C.VkImageResolve, core1_0.ImageResolve](arena, regions)
 	if err != nil {
 		return err
 	}
@@ -552,7 +551,7 @@ func (c *VulkanCommandBuffer) CmdWriteTimestamp(pipelineStage common.PipelineSta
 	c.DeviceDriver.VkCmdWriteTimestamp(c.CommandBufferHandle, driver.VkPipelineStageFlags(pipelineStage), queryPool.Handle(), driver.Uint32(query))
 }
 
-func (c *VulkanCommandBuffer) Reset(flags core.CommandBufferResetFlags) (common.VkResult, error) {
+func (c *VulkanCommandBuffer) Reset(flags common.CommandBufferResetFlags) (common.VkResult, error) {
 	return c.DeviceDriver.VkResetCommandBuffer(c.CommandBufferHandle, driver.VkCommandBufferResetFlags(flags))
 }
 

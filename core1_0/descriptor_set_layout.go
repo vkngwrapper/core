@@ -6,29 +6,38 @@ package core1_0
 */
 import "C"
 import (
-	"github.com/CannibalVox/VKng/core"
 	"github.com/CannibalVox/VKng/core/common"
 	"github.com/CannibalVox/cgoparam"
 	"github.com/cockroachdb/errors"
 	"unsafe"
 )
 
-type DescriptorSetLayoutFlags int32
-
 const (
-	DescriptorSetLayoutUpdateAfterBindPool DescriptorSetLayoutFlags = C.VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT
-	DescriptorSetLayoutPushDescriptorKHR   DescriptorSetLayoutFlags = C.VK_DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR
-	DescriptorSetLayoutHostOnlyPoolValve   DescriptorSetLayoutFlags = C.VK_DESCRIPTOR_SET_LAYOUT_CREATE_HOST_ONLY_POOL_BIT_VALVE
+	DescriptorSampler              common.DescriptorType = C.VK_DESCRIPTOR_TYPE_SAMPLER
+	DescriptorCombinedImageSampler common.DescriptorType = C.VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER
+	DescriptorSampledImage         common.DescriptorType = C.VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE
+	DescriptorStorageImage         common.DescriptorType = C.VK_DESCRIPTOR_TYPE_STORAGE_IMAGE
+	DescriptorUniformTexelBuffer   common.DescriptorType = C.VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER
+	DescriptorStorageTexelBuffer   common.DescriptorType = C.VK_DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER
+	DescriptorUniformBuffer        common.DescriptorType = C.VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER
+	DescriptorStorageBuffer        common.DescriptorType = C.VK_DESCRIPTOR_TYPE_STORAGE_BUFFER
+	DescriptorUniformBufferDynamic common.DescriptorType = C.VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC
+	DescriptorStorageBufferDynamic common.DescriptorType = C.VK_DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC
+	DescriptorInputAttachment      common.DescriptorType = C.VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT
 )
 
-var descriptorSetLayoutFlagsToString = map[DescriptorSetLayoutFlags]string{
-	DescriptorSetLayoutUpdateAfterBindPool: "Update After Bind Pool",
-	DescriptorSetLayoutPushDescriptorKHR:   "Push Descriptor (Khronos Extension)",
-	DescriptorSetLayoutHostOnlyPoolValve:   "Host-Only Pool (Valve Extension)",
-}
-
-func (f DescriptorSetLayoutFlags) String() string {
-	return common.FlagsToString(f, descriptorSetLayoutFlagsToString)
+func init() {
+	DescriptorSampler.Register("Sampler")
+	DescriptorCombinedImageSampler.Register("Combined Image Sampler")
+	DescriptorSampledImage.Register("Sampled Image")
+	DescriptorStorageImage.Register("Storage Image")
+	DescriptorUniformTexelBuffer.Register("Uniform Texel Buffer")
+	DescriptorStorageTexelBuffer.Register("Storage Texel Buffer")
+	DescriptorUniformBuffer.Register("Uniform Buffer")
+	DescriptorStorageBuffer.Register("Storage Buffer")
+	DescriptorUniformBufferDynamic.Register("Uniform Buffer Dynamic")
+	DescriptorStorageBufferDynamic.Register("Storage Buffer Dynamic")
+	DescriptorInputAttachment.Register("Input Attachment")
 }
 
 type DescriptorLayoutBinding struct {
@@ -41,10 +50,10 @@ type DescriptorLayoutBinding struct {
 }
 
 type DescriptorSetLayoutOptions struct {
-	Flags    DescriptorSetLayoutFlags
+	Flags    common.DescriptorSetLayoutCreateFlags
 	Bindings []*DescriptorLayoutBinding
 
-	core.HaveNext
+	common.HaveNext
 }
 
 func (o *DescriptorSetLayoutOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {

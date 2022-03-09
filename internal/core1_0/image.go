@@ -22,10 +22,6 @@ type VulkanImage struct {
 	MaximumAPIVersion common.APIVersion
 }
 
-func CreateImageFromHandles(handle driver.VkImage, device driver.VkDevice, driver driver.Driver) *VulkanImage {
-	return &VulkanImage{ImageHandle: handle, Device: device, Driver: driver}
-}
-
 func (i *VulkanImage) Handle() driver.VkImage {
 	return i.ImageHandle
 }
@@ -53,10 +49,10 @@ func (i *VulkanImage) MemoryRequirements() *core1_0.MemoryRequirements {
 
 func (i *VulkanImage) BindImageMemory(memory core1_0.DeviceMemory, offset int) (common.VkResult, error) {
 	if memory == nil {
-		return common.VKErrorUnknown, errors.New("received nil DeviceMemory")
+		return core1_0.VKErrorUnknown, errors.New("received nil DeviceMemory")
 	}
 	if offset < 0 {
-		return common.VKErrorUnknown, errors.New("received negative offset")
+		return core1_0.VKErrorUnknown, errors.New("received negative offset")
 	}
 
 	return i.Driver.VkBindImageMemory(i.Device, i.ImageHandle, memory.Handle(), driver.VkDeviceSize(offset))

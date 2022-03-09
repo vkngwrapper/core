@@ -6,13 +6,13 @@ package core1_0
 */
 import "C"
 import (
-	"github.com/CannibalVox/VKng/core"
+	"github.com/CannibalVox/VKng/core/common"
 	"github.com/CannibalVox/cgoparam"
 	"unsafe"
 )
 
 type SemaphoreOptions struct {
-	core.HaveNext
+	common.HaveNext
 }
 
 func (o *SemaphoreOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {

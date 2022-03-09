@@ -6,29 +6,17 @@ package core1_0
 */
 import "C"
 import (
-	"github.com/CannibalVox/VKng/core"
 	"github.com/CannibalVox/VKng/core/common"
 	"github.com/CannibalVox/cgoparam"
 	"unsafe"
 )
 
-type DescriptorPoolResetFlags int32
-type DescriptorPoolFlags int32
-
 const (
-	DescriptorPoolFreeDescriptorSet DescriptorPoolFlags = C.VK_DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT
-	DescriptorPoolUpdateAfterBind   DescriptorPoolFlags = C.VK_DESCRIPTOR_POOL_CREATE_UPDATE_AFTER_BIND_BIT
-	DescriptorPoolHostOnlyValve     DescriptorPoolFlags = C.VK_DESCRIPTOR_POOL_CREATE_HOST_ONLY_BIT_VALVE
+	DescriptorPoolCreateFreeDescriptorSet common.DescriptorPoolCreateFlags = C.VK_DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT
 )
 
-var descriptorPoolFlagsToString = map[DescriptorPoolFlags]string{
-	DescriptorPoolFreeDescriptorSet: "Free Descriptor Set",
-	DescriptorPoolUpdateAfterBind:   "Update After Bind",
-	DescriptorPoolHostOnlyValve:     "Host-Only (Valve)",
-}
-
-func (f DescriptorPoolFlags) String() string {
-	return common.FlagsToString(f, descriptorPoolFlagsToString)
+func init() {
+	DescriptorPoolCreateFreeDescriptorSet.Register("Free Descriptor Set")
 }
 
 type PoolSize struct {
@@ -37,12 +25,12 @@ type PoolSize struct {
 }
 
 type DescriptorPoolOptions struct {
-	Flags DescriptorPoolFlags
+	Flags common.DescriptorPoolCreateFlags
 
 	MaxSets   int
 	PoolSizes []PoolSize
 
-	core.HaveNext
+	common.HaveNext
 }
 
 func (o DescriptorPoolOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {

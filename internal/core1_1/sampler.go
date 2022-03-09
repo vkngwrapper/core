@@ -1,7 +1,11 @@
 package core1_1
 
-import "github.com/CannibalVox/VKng/core/core1_0"
+import (
+	"github.com/CannibalVox/VKng/core/driver"
+)
 
 type VulkanSampler struct {
-	core1_0.Sampler
+	Device        driver.VkDevice
+	Driver        driver.Driver
+	SamplerHandle driver.VkSampler
 }

@@ -6,7 +6,6 @@ package core1_0
 */
 import "C"
 import (
-	"github.com/CannibalVox/VKng/core"
 	"github.com/CannibalVox/VKng/core/common"
 	"github.com/CannibalVox/VKng/core/core1_0"
 	"github.com/CannibalVox/VKng/core/driver"
@@ -92,14 +91,14 @@ func (d *VulkanDevice) UpdateDescriptorSets(writes []core1_0.WriteDescriptorSetO
 	var copyPtr *C.VkCopyDescriptorSet
 
 	if writeCount > 0 {
-		writePtr, err = core.AllocOptionSlice[C.VkWriteDescriptorSet, core1_0.WriteDescriptorSetOptions](arena, writes)
+		writePtr, err = common.AllocOptionSlice[C.VkWriteDescriptorSet, core1_0.WriteDescriptorSetOptions](arena, writes)
 		if err != nil {
 			return err
 		}
 	}
 
 	if copyCount > 0 {
-		copyPtr, err = core.AllocOptionSlice[C.VkCopyDescriptorSet, core1_0.CopyDescriptorSetOptions](arena, copies)
+		copyPtr, err = common.AllocOptionSlice[C.VkCopyDescriptorSet, core1_0.CopyDescriptorSetOptions](arena, copies)
 		if err != nil {
 			return err
 		}
@@ -114,9 +113,9 @@ func (d *VulkanDevice) FlushMappedMemoryRanges(ranges []core1_0.MappedMemoryRang
 	defer cgoparam.ReturnAlloc(arena)
 
 	rangeCount := len(ranges)
-	createInfos, err := core.AllocOptionSlice[C.VkMappedMemoryRange, core1_0.MappedMemoryRange](arena, ranges)
+	createInfos, err := common.AllocOptionSlice[C.VkMappedMemoryRange, core1_0.MappedMemoryRange](arena, ranges)
 	if err != nil {
-		return common.VKErrorUnknown, err
+		return core1_0.VKErrorUnknown, err
 	}
 
 	return d.DeviceDriver.VkFlushMappedMemoryRanges(d.DeviceHandle, driver.Uint32(rangeCount), (*driver.VkMappedMemoryRange)(unsafe.Pointer(createInfos)))
@@ -127,9 +126,9 @@ func (d *VulkanDevice) InvalidateMappedMemoryRanges(ranges []core1_0.MappedMemor
 	defer cgoparam.ReturnAlloc(arena)
 
 	rangeCount := len(ranges)
-	createInfos, err := core.AllocOptionSlice[C.VkMappedMemoryRange, core1_0.MappedMemoryRange](arena, ranges)
+	createInfos, err := common.AllocOptionSlice[C.VkMappedMemoryRange, core1_0.MappedMemoryRange](arena, ranges)
 	if err != nil {
-		return common.VKErrorUnknown, err
+		return core1_0.VKErrorUnknown, err
 	}
 
 	return d.DeviceDriver.VkInvalidateMappedMemoryRanges(d.DeviceHandle, driver.Uint32(rangeCount), (*driver.VkMappedMemoryRange)(unsafe.Pointer(createInfos)))
@@ -153,9 +152,9 @@ func (d *VulkanDevice) AllocateMemory(allocationCallbacks *driver.AllocationCall
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
-	createInfo, err := core.AllocOptions(arena, o)
+	createInfo, err := common.AllocOptions(arena, o)
 	if err != nil {
-		return nil, common.VKErrorUnknown, err
+		return nil, core1_0.VKErrorUnknown, err
 	}
 
 	var deviceMemoryHandle driver.VkDeviceMemory

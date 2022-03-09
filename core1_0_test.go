@@ -1,7 +1,6 @@
-package loader_test
+package core_test
 
 import (
-	"github.com/CannibalVox/VKng/core"
 	"github.com/CannibalVox/VKng/core/common"
 	"github.com/CannibalVox/VKng/core/driver"
 	"github.com/CannibalVox/VKng/core/mocks"
@@ -25,7 +24,7 @@ func TestVulkanLoader1_0_AvailableExtensions(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockDriver := mocks.NewMockDriver(ctrl)
-	loader, err := core.CreateLoaderFromDriver(mockDriver)
+	loader, err := CreateLoaderFromDriver(mockDriver)
 	require.NoError(t, err)
 
 	mockDriver.EXPECT().VkEnumerateInstanceExtensionProperties(nil, gomock.Not(nil), nil).DoAndReturn(
@@ -74,7 +73,7 @@ func TestVulkanLoader1_0_AvailableExtensions_Incomplete(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockDriver := mocks.NewMockDriver(ctrl)
-	loader, err := core.CreateLoaderFromDriver(mockDriver)
+	loader, err := CreateLoaderFromDriver(mockDriver)
 	require.NoError(t, err)
 
 	mockDriver.EXPECT().VkEnumerateInstanceExtensionProperties(nil, gomock.Not(nil), nil).DoAndReturn(
@@ -132,7 +131,7 @@ func TestVulkanLoader1_0_AvailableLayers(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockDriver := mocks.NewMockDriver(ctrl)
-	loader, err := core.CreateLoaderFromDriver(mockDriver)
+	loader, err := CreateLoaderFromDriver(mockDriver)
 	require.NoError(t, err)
 
 	mockDriver.EXPECT().VkEnumerateInstanceLayerProperties(gomock.Not(nil), gomock.Not(nil)).DoAndReturn(
@@ -191,7 +190,7 @@ func TestVulkanLoader1_0_AvailableLayers_Incomplete(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockDriver := mocks.NewMockDriver(ctrl)
-	loader, err := core.CreateLoaderFromDriver(mockDriver)
+	loader, err := CreateLoaderFromDriver(mockDriver)
 	require.NoError(t, err)
 
 	mockDriver.EXPECT().VkEnumerateInstanceLayerProperties(gomock.Not(nil), gomock.Not(nil)).DoAndReturn(

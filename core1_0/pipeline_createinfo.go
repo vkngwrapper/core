@@ -2,72 +2,31 @@ package core1_0
 
 /*
 #include <stdlib.h>
-#include "../vulkan/vulkan.h"
+#include "vulkan/vulkan.h"
 */
 import "C"
 import (
-	"github.com/CannibalVox/VKng/core"
 	"github.com/CannibalVox/VKng/core/common"
 	"github.com/CannibalVox/cgoparam"
 	"unsafe"
 )
 
-type PipelineFlags int32
-
 const (
-	PipelineDisableOptimization                         = C.VK_PIPELINE_CREATE_DISABLE_OPTIMIZATION_BIT
-	PipelineAllowDerivatives                            = C.VK_PIPELINE_CREATE_ALLOW_DERIVATIVES_BIT
-	PipelineDerivative                                  = C.VK_PIPELINE_CREATE_DERIVATIVE_BIT
-	PipelineViewIndexFromDeviceIndex                    = C.VK_PIPELINE_CREATE_VIEW_INDEX_FROM_DEVICE_INDEX_BIT
-	PipelineDispatchBase                                = C.VK_PIPELINE_CREATE_DISPATCH_BASE_BIT
-	PipelineRayTracingNoNullAnyHitShadersKHR            = C.VK_PIPELINE_CREATE_RAY_TRACING_NO_NULL_ANY_HIT_SHADERS_BIT_KHR
-	PipelineRayTracingNoNullClosestHitShadersKHR        = C.VK_PIPELINE_CREATE_RAY_TRACING_NO_NULL_CLOSEST_HIT_SHADERS_BIT_KHR
-	PipelineRayTracingNoNullMissShadersKHR              = C.VK_PIPELINE_CREATE_RAY_TRACING_NO_NULL_MISS_SHADERS_BIT_KHR
-	PipelineRayTracingNoNullIntersectionShadersKHR      = C.VK_PIPELINE_CREATE_RAY_TRACING_NO_NULL_INTERSECTION_SHADERS_BIT_KHR
-	PipelineRayTracingSkipTrianglesKHR                  = C.VK_PIPELINE_CREATE_RAY_TRACING_SKIP_TRIANGLES_BIT_KHR
-	PipelineRayTracingSkipAABBsKHR                      = C.VK_PIPELINE_CREATE_RAY_TRACING_SKIP_AABBS_BIT_KHR
-	PipelineRayTracingShaderGroupHandleCaptureReplayKHR = C.VK_PIPELINE_CREATE_RAY_TRACING_SHADER_GROUP_HANDLE_CAPTURE_REPLAY_BIT_KHR
-	PipelineDeferCompileNV                              = C.VK_PIPELINE_CREATE_DEFER_COMPILE_BIT_NV
-	PipelineCaptureStatisticsKHR                        = C.VK_PIPELINE_CREATE_CAPTURE_STATISTICS_BIT_KHR
-	PipelineCaptureInternalRepresentationsKHR           = C.VK_PIPELINE_CREATE_CAPTURE_INTERNAL_REPRESENTATIONS_BIT_KHR
-	PipelineIndirectBindableNV                          = C.VK_PIPELINE_CREATE_INDIRECT_BINDABLE_BIT_NV
-	PipelineLibraryKHR                                  = C.VK_PIPELINE_CREATE_LIBRARY_BIT_KHR
-	PipelineFailOnPipelineRequiredEXT                   = C.VK_PIPELINE_CREATE_FAIL_ON_PIPELINE_COMPILE_REQUIRED_BIT_EXT
-	PipelineEarlyReturnOnFailureEXT                     = C.VK_PIPELINE_CREATE_EARLY_RETURN_ON_FAILURE_BIT_EXT
-	PipelineRayTracingAllowMotionNV                     = C.VK_PIPELINE_CREATE_RAY_TRACING_ALLOW_MOTION_BIT_NV
+	PipelineCreateDisableOptimization common.PipelineCreateFlags = C.VK_PIPELINE_CREATE_DISABLE_OPTIMIZATION_BIT
+	PipelineCreateAllowDerivatives    common.PipelineCreateFlags = C.VK_PIPELINE_CREATE_ALLOW_DERIVATIVES_BIT
+	PipelineCreateDerivative          common.PipelineCreateFlags = C.VK_PIPELINE_CREATE_DERIVATIVE_BIT
 )
 
-var pipelineFlagsToString = map[PipelineFlags]string{
-	PipelineDisableOptimization:                         "Disable Optimization",
-	PipelineAllowDerivatives:                            "Allow Derivatives",
-	PipelineDerivative:                                  "Derivative",
-	PipelineViewIndexFromDeviceIndex:                    "View Index From Device Index",
-	PipelineDispatchBase:                                "Dispatch Base",
-	PipelineRayTracingNoNullAnyHitShadersKHR:            "Ray Tracing: No Null, Any Hit Shaders (Khronos Extension)",
-	PipelineRayTracingNoNullClosestHitShadersKHR:        "Ray Tracing: No Null, Closest Hit Shaders (Khronos Extension)",
-	PipelineRayTracingNoNullMissShadersKHR:              "Ray Tracing: No Null, Miss Shaders (Khronos Extension)",
-	PipelineRayTracingNoNullIntersectionShadersKHR:      "Ray Tracing: No Null, Intersection Shaders (Khronos Extension)",
-	PipelineRayTracingSkipTrianglesKHR:                  "Ray Tracing: Skip Triangles (Khronos Extension)",
-	PipelineRayTracingSkipAABBsKHR:                      "Ray Tracing: Skip AABBs (Khronos Extension)",
-	PipelineRayTracingShaderGroupHandleCaptureReplayKHR: "Ray Tracing: Shader Group Handle Capture/Replay (Khronos Extension)",
-	PipelineDeferCompileNV:                              "Defer Compile (Nvidia Extension)",
-	PipelineCaptureStatisticsKHR:                        "Capture Statistics (Khronos Extension)",
-	PipelineCaptureInternalRepresentationsKHR:           "Capture Internal Representations (Khronos Extension)",
-	PipelineIndirectBindableNV:                          "Indirect Bindable (Nvidia Extension)",
-	PipelineLibraryKHR:                                  "Library (Khronos Extension)",
-	PipelineFailOnPipelineRequiredEXT:                   "Fail On Pipeline Required (Extension)",
-	PipelineEarlyReturnOnFailureEXT:                     "Early Return On Failure (Extension)",
-	PipelineRayTracingAllowMotionNV:                     "Ray Tracing: Allow Motion (Nvidia Extension)",
-}
-
-func (f PipelineFlags) String() string {
-	return common.FlagsToString(f, pipelineFlagsToString)
+func init() {
+	PipelineCreateDisableOptimization.Register("Disable Optimization")
+	PipelineCreateAllowDerivatives.Register("Allow Derivatives")
+	PipelineCreateDerivative.Register("Derivative")
 }
 
 type GraphicsPipelineOptions struct {
-	Flags PipelineFlags
+	Flags common.PipelineCreateFlags
 
-	ShaderStages  []ShaderStage
+	ShaderStages  []ShaderStageOptions
 	VertexInput   *VertexInputOptions
 	InputAssembly *InputAssemblyOptions
 	Tessellation  *TessellationOptions
@@ -85,7 +44,7 @@ type GraphicsPipelineOptions struct {
 	BasePipeline      Pipeline
 	BasePipelineIndex int
 
-	core.HaveNext
+	common.HaveNext
 }
 
 func (o GraphicsPipelineOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
@@ -129,14 +88,14 @@ func (o GraphicsPipelineOptions) PopulateCPointer(allocator *cgoparam.Allocator,
 
 	if stageCount > 0 {
 		var err error
-		createInfo.pStages, err = core.AllocOptionSlice[C.VkPipelineShaderStageCreateInfo, ShaderStage](allocator, o.ShaderStages)
+		createInfo.pStages, err = common.AllocOptionSlice[C.VkPipelineShaderStageCreateInfo, ShaderStageOptions](allocator, o.ShaderStages)
 		if err != nil {
 			return nil, err
 		}
 	}
 
 	if o.VertexInput != nil {
-		vertInput, err := core.AllocOptions(allocator, o.VertexInput)
+		vertInput, err := common.AllocOptions(allocator, o.VertexInput)
 		if err != nil {
 			return nil, err
 		}
@@ -145,7 +104,7 @@ func (o GraphicsPipelineOptions) PopulateCPointer(allocator *cgoparam.Allocator,
 	}
 
 	if o.InputAssembly != nil {
-		inputAss, err := core.AllocOptions(allocator, o.InputAssembly)
+		inputAss, err := common.AllocOptions(allocator, o.InputAssembly)
 		if err != nil {
 			return nil, err
 		}
@@ -154,7 +113,7 @@ func (o GraphicsPipelineOptions) PopulateCPointer(allocator *cgoparam.Allocator,
 	}
 
 	if o.Tessellation != nil {
-		tessellation, err := core.AllocOptions(allocator, o.Tessellation)
+		tessellation, err := common.AllocOptions(allocator, o.Tessellation)
 		if err != nil {
 			return nil, err
 		}
@@ -163,7 +122,7 @@ func (o GraphicsPipelineOptions) PopulateCPointer(allocator *cgoparam.Allocator,
 	}
 
 	if o.Viewport != nil {
-		viewport, err := core.AllocOptions(allocator, o.Viewport)
+		viewport, err := common.AllocOptions(allocator, o.Viewport)
 		if err != nil {
 			return nil, err
 		}
@@ -172,7 +131,7 @@ func (o GraphicsPipelineOptions) PopulateCPointer(allocator *cgoparam.Allocator,
 	}
 
 	if o.Rasterization != nil {
-		rasterization, err := core.AllocOptions(allocator, o.Rasterization)
+		rasterization, err := common.AllocOptions(allocator, o.Rasterization)
 		if err != nil {
 			return nil, err
 		}
@@ -181,7 +140,7 @@ func (o GraphicsPipelineOptions) PopulateCPointer(allocator *cgoparam.Allocator,
 	}
 
 	if o.Multisample != nil {
-		multisample, err := core.AllocOptions(allocator, o.Multisample)
+		multisample, err := common.AllocOptions(allocator, o.Multisample)
 		if err != nil {
 			return nil, err
 		}
@@ -190,7 +149,7 @@ func (o GraphicsPipelineOptions) PopulateCPointer(allocator *cgoparam.Allocator,
 	}
 
 	if o.DepthStencil != nil {
-		depthStencil, err := core.AllocOptions(allocator, o.DepthStencil)
+		depthStencil, err := common.AllocOptions(allocator, o.DepthStencil)
 		if err != nil {
 			return nil, err
 		}
@@ -199,7 +158,7 @@ func (o GraphicsPipelineOptions) PopulateCPointer(allocator *cgoparam.Allocator,
 	}
 
 	if o.ColorBlend != nil {
-		colorBlend, err := core.AllocOptions(allocator, o.ColorBlend)
+		colorBlend, err := common.AllocOptions(allocator, o.ColorBlend)
 		if err != nil {
 			return nil, err
 		}
@@ -208,7 +167,7 @@ func (o GraphicsPipelineOptions) PopulateCPointer(allocator *cgoparam.Allocator,
 	}
 
 	if o.DynamicState != nil {
-		dynamicState, err := core.AllocOptions(allocator, o.DynamicState)
+		dynamicState, err := common.AllocOptions(allocator, o.DynamicState)
 		if err != nil {
 			return nil, err
 		}
@@ -220,14 +179,14 @@ func (o GraphicsPipelineOptions) PopulateCPointer(allocator *cgoparam.Allocator,
 }
 
 type ComputePipelineOptions struct {
-	Flags  PipelineFlags
-	Shader ShaderStage
+	Flags  common.PipelineCreateFlags
+	Shader ShaderStageOptions
 	Layout PipelineLayout
 
 	BasePipeline      Pipeline
 	BasePipelineIndex int
 
-	core.HaveNext
+	common.HaveNext
 }
 
 func (o ComputePipelineOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
@@ -240,7 +199,7 @@ func (o ComputePipelineOptions) PopulateCPointer(allocator *cgoparam.Allocator, 
 	createInfo.pNext = next
 	createInfo.flags = C.VkPipelineCreateFlags(o.Flags)
 
-	_, err := core.AllocOptions(allocator, &o.Shader, unsafe.Pointer(&createInfo.stage))
+	_, err := common.AllocOptions(allocator, &o.Shader, unsafe.Pointer(&createInfo.stage))
 	if err != nil {
 		return nil, err
 	}

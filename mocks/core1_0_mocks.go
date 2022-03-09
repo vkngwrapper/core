@@ -9,9 +9,9 @@ import (
 	time "time"
 	unsafe "unsafe"
 
-	core "github.com/CannibalVox/VKng/core"
 	common "github.com/CannibalVox/VKng/core/common"
 	core1_0 "github.com/CannibalVox/VKng/core/core1_0"
+	core1_1 "github.com/CannibalVox/VKng/core/core1_1"
 	driver "github.com/CannibalVox/VKng/core/driver"
 	gomock "github.com/golang/mock/gomock"
 )
@@ -52,6 +52,20 @@ func (m *MockBuffer) BindBufferMemory(memory core1_0.DeviceMemory, offset int) (
 func (mr *MockBufferMockRecorder) BindBufferMemory(memory, offset interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "BindBufferMemory", reflect.TypeOf((*MockBuffer)(nil).BindBufferMemory), memory, offset)
+}
+
+// Core1_1 mocks base method.
+func (m *MockBuffer) Core1_1() core1_1.Buffer {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Core1_1")
+	ret0, _ := ret[0].(core1_1.Buffer)
+	return ret0
+}
+
+// Core1_1 indicates an expected call of Core1_1.
+func (mr *MockBufferMockRecorder) Core1_1() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Core1_1", reflect.TypeOf((*MockBuffer)(nil).Core1_1))
 }
 
 // Destroy mocks base method.
@@ -194,7 +208,7 @@ func (mr *MockCommandBufferMockRecorder) CmdBeginQuery(queryPool, query, flags i
 }
 
 // CmdBeginRenderPass mocks base method.
-func (m *MockCommandBuffer) CmdBeginRenderPass(contents core.SubpassContents, o *core1_0.RenderPassBeginOptions) error {
+func (m *MockCommandBuffer) CmdBeginRenderPass(contents common.SubpassContents, o *core1_0.RenderPassBeginOptions) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CmdBeginRenderPass", contents, o)
 	ret0, _ := ret[0].(error)
@@ -284,7 +298,7 @@ func (mr *MockCommandBufferMockRecorder) CmdClearAttachments(attachments, rects 
 }
 
 // CmdClearColorImage mocks base method.
-func (m *MockCommandBuffer) CmdClearColorImage(image core1_0.Image, imageLayout common.ImageLayout, color core.ClearColorValue, ranges []common.ImageSubresourceRange) {
+func (m *MockCommandBuffer) CmdClearColorImage(image core1_0.Image, imageLayout common.ImageLayout, color common.ClearColorValue, ranges []common.ImageSubresourceRange) {
 	m.ctrl.T.Helper()
 	m.ctrl.Call(m, "CmdClearColorImage", image, imageLayout, color, ranges)
 }
@@ -296,7 +310,7 @@ func (mr *MockCommandBufferMockRecorder) CmdClearColorImage(image, imageLayout, 
 }
 
 // CmdClearDepthStencilImage mocks base method.
-func (m *MockCommandBuffer) CmdClearDepthStencilImage(image core1_0.Image, imageLayout common.ImageLayout, depthStencil *core.ClearValueDepthStencil, ranges []common.ImageSubresourceRange) {
+func (m *MockCommandBuffer) CmdClearDepthStencilImage(image core1_0.Image, imageLayout common.ImageLayout, depthStencil *common.ClearValueDepthStencil, ranges []common.ImageSubresourceRange) {
 	m.ctrl.T.Helper()
 	m.ctrl.Call(m, "CmdClearDepthStencilImage", image, imageLayout, depthStencil, ranges)
 }
@@ -364,7 +378,7 @@ func (mr *MockCommandBufferMockRecorder) CmdCopyImageToBuffer(srcImage, srcImage
 }
 
 // CmdCopyQueryPoolResults mocks base method.
-func (m *MockCommandBuffer) CmdCopyQueryPoolResults(queryPool core1_0.QueryPool, firstQuery, queryCount int, dstBuffer core1_0.Buffer, dstOffset, stride int, flags core1_0.QueryResultFlags) {
+func (m *MockCommandBuffer) CmdCopyQueryPoolResults(queryPool core1_0.QueryPool, firstQuery, queryCount int, dstBuffer core1_0.Buffer, dstOffset, stride int, flags common.QueryResultFlags) {
 	m.ctrl.T.Helper()
 	m.ctrl.Call(m, "CmdCopyQueryPoolResults", queryPool, firstQuery, queryCount, dstBuffer, dstOffset, stride, flags)
 }
@@ -496,7 +510,7 @@ func (mr *MockCommandBufferMockRecorder) CmdFillBuffer(dstBuffer, dstOffset, siz
 }
 
 // CmdNextSubpass mocks base method.
-func (m *MockCommandBuffer) CmdNextSubpass(contents core.SubpassContents) {
+func (m *MockCommandBuffer) CmdNextSubpass(contents common.SubpassContents) {
 	m.ctrl.T.Helper()
 	m.ctrl.Call(m, "CmdNextSubpass", contents)
 }
@@ -813,7 +827,7 @@ func (mr *MockCommandBufferMockRecorder) Handle() *gomock.Call {
 }
 
 // Reset mocks base method.
-func (m *MockCommandBuffer) Reset(flags core.CommandBufferResetFlags) (common.VkResult, error) {
+func (m *MockCommandBuffer) Reset(flags common.CommandBufferResetFlags) (common.VkResult, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Reset", flags)
 	ret0, _ := ret[0].(common.VkResult)
@@ -919,7 +933,7 @@ func (mr *MockCommandPoolMockRecorder) Handle() *gomock.Call {
 }
 
 // Reset mocks base method.
-func (m *MockCommandPool) Reset(flags core.CommandPoolResetFlags) (common.VkResult, error) {
+func (m *MockCommandPool) Reset(flags common.CommandPoolResetFlags) (common.VkResult, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Reset", flags)
 	ret0, _ := ret[0].(common.VkResult)
@@ -1025,7 +1039,7 @@ func (mr *MockDescriptorPoolMockRecorder) Handle() *gomock.Call {
 }
 
 // Reset mocks base method.
-func (m *MockDescriptorPool) Reset(flags core1_0.DescriptorPoolResetFlags) (common.VkResult, error) {
+func (m *MockDescriptorPool) Reset(flags common.DescriptorPoolResetFlags) (common.VkResult, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Reset", flags)
 	ret0, _ := ret[0].(common.VkResult)
@@ -2152,7 +2166,7 @@ func (mr *MockPhysicalDeviceMockRecorder) Handle() *gomock.Call {
 }
 
 // ImageFormatProperties mocks base method.
-func (m *MockPhysicalDevice) ImageFormatProperties(format common.DataFormat, imageType common.ImageType, tiling common.ImageTiling, usages common.ImageUsages, flags core1_0.ImageFlags) (*core1_0.ImageFormatProperties, common.VkResult, error) {
+func (m *MockPhysicalDevice) ImageFormatProperties(format common.DataFormat, imageType common.ImageType, tiling common.ImageTiling, usages common.ImageUsages, flags common.ImageCreateFlags) (*core1_0.ImageFormatProperties, common.VkResult, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ImageFormatProperties", format, imageType, tiling, usages, flags)
 	ret0, _ := ret[0].(*core1_0.ImageFormatProperties)
@@ -2196,10 +2210,10 @@ func (mr *MockPhysicalDeviceMockRecorder) Properties() *gomock.Call {
 }
 
 // QueueFamilyProperties mocks base method.
-func (m *MockPhysicalDevice) QueueFamilyProperties() []*common.QueueFamily {
+func (m *MockPhysicalDevice) QueueFamilyProperties() []*core1_0.QueueFamily {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "QueueFamilyProperties")
-	ret0, _ := ret[0].([]*common.QueueFamily)
+	ret0, _ := ret[0].([]*core1_0.QueueFamily)
 	return ret0
 }
 
@@ -2437,7 +2451,7 @@ func (mr *MockQueryPoolMockRecorder) Handle() *gomock.Call {
 }
 
 // PopulateResults mocks base method.
-func (m *MockQueryPool) PopulateResults(firstQuery, queryCount, resultSize, resultStride int, flags core1_0.QueryResultFlags) ([]byte, common.VkResult, error) {
+func (m *MockQueryPool) PopulateResults(firstQuery, queryCount, resultSize, resultStride int, flags common.QueryResultFlags) ([]byte, common.VkResult, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "PopulateResults", firstQuery, queryCount, resultSize, resultStride, flags)
 	ret0, _ := ret[0].([]byte)

@@ -5,8 +5,12 @@ package core1_1
 #include "vulkan/vulkan.h"
 */
 import "C"
-import "github.com/CannibalVox/VKng/core/core1_0"
+import (
+	"github.com/CannibalVox/VKng/core/driver"
+)
 
 type VulkanSemaphore struct {
-	core1_0.Semaphore
+	Driver          driver.Driver
+	Device          driver.VkDevice
+	SemaphoreHandle driver.VkSemaphore
 }

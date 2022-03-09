@@ -35,7 +35,7 @@ func (d *VulkanPhysicalDevice) APIVersion() common.APIVersion {
 	return d.MaximumVersion
 }
 
-func (d *VulkanPhysicalDevice) QueueFamilyProperties() []*common.QueueFamily {
+func (d *VulkanPhysicalDevice) QueueFamilyProperties() []*core1_0.QueueFamily {
 	allocator := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(allocator)
 
@@ -53,9 +53,9 @@ func (d *VulkanPhysicalDevice) QueueFamilyProperties() []*common.QueueFamily {
 
 	d.InstanceDriver.VkGetPhysicalDeviceQueueFamilyProperties(d.PhysicalDeviceHandle, count, (*driver.VkQueueFamilyProperties)(allocatedHandles))
 
-	var queueFamilies []*common.QueueFamily
+	var queueFamilies []*core1_0.QueueFamily
 	for i := 0; i < goCount; i++ {
-		queueFamilies = append(queueFamilies, &common.QueueFamily{
+		queueFamilies = append(queueFamilies, &core1_0.QueueFamily{
 			Flags:              common.QueueFlags(familyProperties[i].queueFlags),
 			QueueCount:         uint32(familyProperties[i].queueCount),
 			TimestampValidBits: uint32(familyProperties[i].timestampValidBits),
@@ -134,7 +134,7 @@ func (d *VulkanPhysicalDevice) AvailableExtensions() (map[string]*common.Extensi
 	var layers map[string]*common.ExtensionProperties
 	var result common.VkResult
 	var err error
-	for doWhile := true; doWhile; doWhile = (result == common.VKIncomplete) {
+	for doWhile := true; doWhile; doWhile = (result == core1_0.VKIncomplete) {
 		layers, result, err = d.attemptAvailableExtensions(nil)
 	}
 	return layers, result, err
@@ -151,7 +151,7 @@ func (d *VulkanPhysicalDevice) AvailableExtensionsForLayer(layerName string) (ma
 	defer cgoparam.ReturnAlloc(allocator)
 
 	layerNamePtr := (*driver.Char)(allocator.CString(layerName))
-	for doWhile := true; doWhile; doWhile = (result == common.VKIncomplete) {
+	for doWhile := true; doWhile; doWhile = (result == core1_0.VKIncomplete) {
 		layers, result, err = d.attemptAvailableExtensions(layerNamePtr)
 	}
 	return layers, result, err
@@ -174,7 +174,7 @@ func (d *VulkanPhysicalDevice) attemptAvailableLayers() (map[string]*common.Laye
 	layersPtr := allocator.Malloc(layerTotal * C.sizeof_struct_VkLayerProperties)
 
 	res, err = d.InstanceDriver.VkEnumerateDeviceLayerProperties(d.PhysicalDeviceHandle, layerCount, (*driver.VkLayerProperties)(layersPtr))
-	if err != nil || res == common.VKIncomplete {
+	if err != nil || res == core1_0.VKIncomplete {
 		return nil, res, err
 	}
 
@@ -210,7 +210,7 @@ func (d *VulkanPhysicalDevice) AvailableLayers() (map[string]*common.LayerProper
 	var layers map[string]*common.LayerProperties
 	var result common.VkResult
 	var err error
-	for doWhile := true; doWhile; doWhile = (result == common.VKIncomplete) {
+	for doWhile := true; doWhile; doWhile = (result == core1_0.VKIncomplete) {
 		layers, result, err = d.attemptAvailableLayers()
 	}
 	return layers, result, err
@@ -225,13 +225,13 @@ func (d *VulkanPhysicalDevice) FormatProperties(format common.DataFormat) *core1
 	d.InstanceDriver.VkGetPhysicalDeviceFormatProperties(d.PhysicalDeviceHandle, driver.VkFormat(format), (*driver.VkFormatProperties)(unsafe.Pointer(properties)))
 
 	return &core1_0.FormatProperties{
-		LinearTilingFeatures:  core1_0.FormatFeatures(properties.linearTilingFeatures),
-		OptimalTilingFeatures: core1_0.FormatFeatures(properties.optimalTilingFeatures),
-		BufferFeatures:        core1_0.FormatFeatures(properties.bufferFeatures),
+		LinearTilingFeatures:  common.FormatFeatures(properties.linearTilingFeatures),
+		OptimalTilingFeatures: common.FormatFeatures(properties.optimalTilingFeatures),
+		BufferFeatures:        common.FormatFeatures(properties.bufferFeatures),
 	}
 }
 
-func (d *VulkanPhysicalDevice) ImageFormatProperties(format common.DataFormat, imageType common.ImageType, tiling common.ImageTiling, usages common.ImageUsages, flags core1_0.ImageFlags) (*core1_0.ImageFormatProperties, common.VkResult, error) {
+func (d *VulkanPhysicalDevice) ImageFormatProperties(format common.DataFormat, imageType common.ImageType, tiling common.ImageTiling, usages common.ImageUsages, flags common.ImageCreateFlags) (*core1_0.ImageFormatProperties, common.VkResult, error) {
 	allocator := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(allocator)
 
@@ -464,7 +464,7 @@ func createPhysicalDeviceProperties(p *C.VkPhysicalDeviceProperties) *core1_0.Ph
 	}
 
 	return &core1_0.PhysicalDeviceProperties{
-		Type: core1_0.PhysicalDeviceType(p.deviceType),
+		Type: common.PhysicalDeviceType(p.deviceType),
 		Name: C.GoString((*C.char)(&p.deviceName[0])),
 
 		APIVersion:    common.APIVersion(p.apiVersion),

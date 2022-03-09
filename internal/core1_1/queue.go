@@ -5,8 +5,11 @@ package core1_1
 #include "vulkan/vulkan.h"
 */
 import "C"
-import "github.com/CannibalVox/VKng/core/core1_0"
+import (
+	"github.com/CannibalVox/VKng/core/driver"
+)
 
 type VulkanQueue struct {
-	core1_0.Queue
+	DeviceDriver driver.Driver
+	QueueHandle  driver.VkQueue
 }

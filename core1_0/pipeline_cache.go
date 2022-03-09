@@ -6,31 +6,16 @@ package core1_0
 */
 import "C"
 import (
-	"github.com/CannibalVox/VKng/core"
 	"github.com/CannibalVox/VKng/core/common"
 	"github.com/CannibalVox/cgoparam"
 	"unsafe"
 )
 
-type PipelineCacheFlags int32
-
-const (
-	PipelineCacheExternallySynchronized PipelineCacheFlags = C.VK_PIPELINE_CACHE_CREATE_EXTERNALLY_SYNCHRONIZED_BIT_EXT
-)
-
-var pipelineCacheFlagsToString = map[PipelineCacheFlags]string{
-	PipelineCacheExternallySynchronized: "Externally Synchronized",
-}
-
-func (f PipelineCacheFlags) String() string {
-	return common.FlagsToString(f, pipelineCacheFlagsToString)
-}
-
 type PipelineCacheOptions struct {
-	Flags       PipelineCacheFlags
+	Flags       common.PipelineCacheCreateFlags
 	InitialData []byte
 
-	core.HaveNext
+	common.HaveNext
 }
 
 func (o *PipelineCacheOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {

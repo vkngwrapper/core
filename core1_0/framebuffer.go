@@ -6,29 +6,14 @@ package core1_0
 */
 import "C"
 import (
-	"github.com/CannibalVox/VKng/core"
 	"github.com/CannibalVox/VKng/core/common"
 	"github.com/CannibalVox/cgoparam"
 	"unsafe"
 )
 
-type FramebufferFlags int32
-
-const (
-	FramebufferCreateImageless FramebufferFlags = C.VK_FRAMEBUFFER_CREATE_IMAGELESS_BIT
-)
-
-var framebufferFlagsToString = map[FramebufferFlags]string{
-	FramebufferCreateImageless: "Create Imageless",
-}
-
-func (f FramebufferFlags) String() string {
-	return common.FlagsToString(f, framebufferFlagsToString)
-}
-
 type FramebufferOptions struct {
 	Attachments []ImageView
-	Flags       FramebufferFlags
+	Flags       common.FramebufferCreateFlags
 
 	Width  int
 	Height int
@@ -36,7 +21,7 @@ type FramebufferOptions struct {
 
 	RenderPass RenderPass
 
-	core.HaveNext
+	common.HaveNext
 }
 
 func (o *FramebufferOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {

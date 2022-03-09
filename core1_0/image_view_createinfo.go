@@ -6,38 +6,64 @@ package core1_0
 */
 import "C"
 import (
-	"github.com/CannibalVox/VKng/core"
 	"github.com/CannibalVox/VKng/core/common"
 	"github.com/CannibalVox/cgoparam"
 	"unsafe"
 )
 
-type ImageViewFlags int32
-
 const (
-	ImageViewCreateFragmentDensityMapDynamicEXT  ImageViewFlags = C.VK_IMAGE_VIEW_CREATE_FRAGMENT_DENSITY_MAP_DYNAMIC_BIT_EXT
-	ImageViewCreateFragmentDensityMapDeferredEXT ImageViewFlags = C.VK_IMAGE_VIEW_CREATE_FRAGMENT_DENSITY_MAP_DEFERRED_BIT_EXT
+	SwizzleIdentity common.ComponentSwizzle = C.VK_COMPONENT_SWIZZLE_IDENTITY
+	SwizzleZero     common.ComponentSwizzle = C.VK_COMPONENT_SWIZZLE_ZERO
+	SwizzleOne      common.ComponentSwizzle = C.VK_COMPONENT_SWIZZLE_ONE
+	SwizzleRed      common.ComponentSwizzle = C.VK_COMPONENT_SWIZZLE_R
+	SwizzleGreen    common.ComponentSwizzle = C.VK_COMPONENT_SWIZZLE_G
+	SwizzleBlue     common.ComponentSwizzle = C.VK_COMPONENT_SWIZZLE_B
+	SwizzleAlpha    common.ComponentSwizzle = C.VK_COMPONENT_SWIZZLE_A
+
+	ViewType1D        common.ImageViewType = C.VK_IMAGE_VIEW_TYPE_1D
+	ViewType2D        common.ImageViewType = C.VK_IMAGE_VIEW_TYPE_2D
+	ViewType3D        common.ImageViewType = C.VK_IMAGE_VIEW_TYPE_3D
+	ViewTypeCube      common.ImageViewType = C.VK_IMAGE_VIEW_TYPE_CUBE
+	ViewType1DArray   common.ImageViewType = C.VK_IMAGE_VIEW_TYPE_1D_ARRAY
+	ViewType2DArray   common.ImageViewType = C.VK_IMAGE_VIEW_TYPE_2D_ARRAY
+	ViewTypeCubeArray common.ImageViewType = C.VK_IMAGE_VIEW_TYPE_CUBE_ARRAY
 )
 
-var imageViewFlagsToString = map[ImageViewFlags]string{
-	ImageViewCreateFragmentDensityMapDynamicEXT:  "Create Fragment Density Map - Dynamic (Extension)",
-	ImageViewCreateFragmentDensityMapDeferredEXT: "Create Fragment Density Map - Deferred (Extension)",
+func init() {
+	SwizzleIdentity.Register("Identity")
+	SwizzleZero.Register("Zero")
+	SwizzleOne.Register("One")
+	SwizzleRed.Register("Red")
+	SwizzleGreen.Register("Green")
+	SwizzleBlue.Register("Blue")
+	SwizzleAlpha.Register("Alpha")
+
+	ViewType1D.Register("1D")
+	ViewType2D.Register("2D")
+	ViewType3D.Register("3D")
+	ViewTypeCube.Register("Cube")
+	ViewType1DArray.Register("1D Array")
+	ViewType2DArray.Register("2D Array")
+	ViewTypeCubeArray.Register("Cube Array")
 }
 
-func (f ImageViewFlags) String() string {
-	return common.FlagsToString(f, imageViewFlagsToString)
+type ComponentMapping struct {
+	R common.ComponentSwizzle
+	G common.ComponentSwizzle
+	B common.ComponentSwizzle
+	A common.ComponentSwizzle
 }
 
 type ImageViewOptions struct {
 	Image Image
 
-	Flags            ImageViewFlags
+	Flags            common.ImageViewCreateFlags
 	ViewType         common.ImageViewType
 	Format           common.DataFormat
-	Components       common.ComponentMapping
+	Components       ComponentMapping
 	SubresourceRange common.ImageSubresourceRange
 
-	core.HaveNext
+	common.HaveNext
 }
 
 func (o *ImageViewOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {

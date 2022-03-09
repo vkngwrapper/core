@@ -7,11 +7,32 @@ package core1_0
 import "C"
 
 import (
-	"github.com/CannibalVox/VKng/core"
 	"github.com/CannibalVox/VKng/core/common"
 	"github.com/CannibalVox/cgoparam"
 	"unsafe"
 )
+
+const (
+	StencilKeep              common.StencilOp = C.VK_STENCIL_OP_KEEP
+	StencilZero              common.StencilOp = C.VK_STENCIL_OP_ZERO
+	StencilReplace           common.StencilOp = C.VK_STENCIL_OP_REPLACE
+	StencilIncrementAndClamp common.StencilOp = C.VK_STENCIL_OP_INCREMENT_AND_CLAMP
+	StencilDecrementAndClamp common.StencilOp = C.VK_STENCIL_OP_DECREMENT_AND_CLAMP
+	StencilInvert            common.StencilOp = C.VK_STENCIL_OP_INVERT
+	StencilIncrementAndWrap  common.StencilOp = C.VK_STENCIL_OP_INCREMENT_AND_WRAP
+	StencilDecrementAndWrap  common.StencilOp = C.VK_STENCIL_OP_DECREMENT_AND_WRAP
+)
+
+func init() {
+	StencilKeep.Register("Keep")
+	StencilZero.Register("Zero")
+	StencilReplace.Register("Replace")
+	StencilIncrementAndClamp.Register("Increment and Clamp")
+	StencilDecrementAndClamp.Register("Decrement and Clamp")
+	StencilInvert.Register("Invert")
+	StencilIncrementAndWrap.Register("Increment and Wrap")
+	StencilDecrementAndWrap.Register("Decrement and Wrap")
+}
 
 type StencilOpState struct {
 	FailOp      common.StencilOp
@@ -39,7 +60,7 @@ type DepthStencilOptions struct {
 	MinDepthBounds float32
 	MaxDepthBounds float32
 
-	core.HaveNext
+	common.HaveNext
 }
 
 func (o DepthStencilOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {

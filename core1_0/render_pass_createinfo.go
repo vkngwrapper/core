@@ -6,45 +6,44 @@ package core1_0
 */
 import "C"
 import (
-	"github.com/CannibalVox/VKng/core"
 	"github.com/CannibalVox/VKng/core/common"
 	"github.com/CannibalVox/cgoparam"
 	"github.com/cockroachdb/errors"
 	"unsafe"
 )
 
-type RenderPassFlags int32
-
 const (
-	RenderPassCreateTransformBitQCOM RenderPassFlags = C.VK_RENDER_PASS_CREATE_TRANSFORM_BIT_QCOM
+	AttachmentMayAlias common.AttachmentDescriptionFlags = C.VK_ATTACHMENT_DESCRIPTION_MAY_ALIAS_BIT
+
+	LoadOpLoad     common.AttachmentLoadOp = C.VK_ATTACHMENT_LOAD_OP_LOAD
+	LoadOpClear    common.AttachmentLoadOp = C.VK_ATTACHMENT_LOAD_OP_CLEAR
+	LoadOpDontCare common.AttachmentLoadOp = C.VK_ATTACHMENT_LOAD_OP_DONT_CARE
+
+	StoreOpStore    common.AttachmentStoreOp = C.VK_ATTACHMENT_STORE_OP_STORE
+	StoreOpDontCare common.AttachmentStoreOp = C.VK_ATTACHMENT_STORE_OP_DONT_CARE
+
+	DependencyByRegion common.DependencyFlags = C.VK_DEPENDENCY_BY_REGION_BIT
+
+	BindGraphics common.PipelineBindPoint = C.VK_PIPELINE_BIND_POINT_GRAPHICS
+	BindCompute  common.PipelineBindPoint = C.VK_PIPELINE_BIND_POINT_COMPUTE
+
+	SubpassExternal = int(C.VK_SUBPASS_EXTERNAL)
 )
 
-var renderPassFlagsToString = map[RenderPassFlags]string{
-	RenderPassCreateTransformBitQCOM: "Create Transform Bit (Qualcomm)",
-}
+func init() {
+	AttachmentMayAlias.Register("May Alias")
 
-func (f RenderPassFlags) String() string {
-	return common.FlagsToString(f, renderPassFlagsToString)
-}
+	LoadOpLoad.Register("Load")
+	LoadOpClear.Register("Clear")
+	LoadOpDontCare.Register("Don't Care")
 
-type SubPassFlags int32
+	StoreOpStore.Register("Store")
+	StoreOpDontCare.Register("Don't Care")
 
-const (
-	SubPassPerViewAttributesNVX    = C.VK_SUBPASS_DESCRIPTION_PER_VIEW_ATTRIBUTES_BIT_NVX
-	SubPassPerViewPositionXOnlyNVX = C.VK_SUBPASS_DESCRIPTION_PER_VIEW_POSITION_X_ONLY_BIT_NVX
-	SubPassFragmentRegionQCOM      = C.VK_SUBPASS_DESCRIPTION_FRAGMENT_REGION_BIT_QCOM
-	SubPassShaderResolveQCOM       = C.VK_SUBPASS_DESCRIPTION_SHADER_RESOLVE_BIT_QCOM
-)
+	DependencyByRegion.Register("By Region")
 
-var subPassFlagsToString = map[SubPassFlags]string{
-	SubPassPerViewAttributesNVX:    "Per-View Attributes (NVidia Experimental)",
-	SubPassPerViewPositionXOnlyNVX: "Per-View Position X Only (NVidia Experimental)",
-	SubPassFragmentRegionQCOM:      "Fragment Region (Qualcomm)",
-	SubPassShaderResolveQCOM:       "Shader Resolve (Qualcomm)",
-}
-
-func (f SubPassFlags) String() string {
-	return common.FlagsToString(f, subPassFlagsToString)
+	BindGraphics.Register("Graphics")
+	BindCompute.Register("Compute")
 }
 
 type AttachmentDescription struct {
@@ -61,8 +60,6 @@ type AttachmentDescription struct {
 	FinalLayout   common.ImageLayout
 }
 
-const SubpassExternal = int(C.VK_SUBPASS_EXTERNAL)
-
 type SubPassDependency struct {
 	Flags common.DependencyFlags
 
@@ -77,7 +74,7 @@ type SubPassDependency struct {
 }
 
 type SubPass struct {
-	Flags     SubPassFlags
+	Flags     common.SubPassFlags
 	BindPoint common.PipelineBindPoint
 
 	InputAttachments           []common.AttachmentReference
@@ -88,12 +85,12 @@ type SubPass struct {
 }
 
 type RenderPassOptions struct {
-	Flags               RenderPassFlags
+	Flags               common.RenderPassCreateFlags
 	Attachments         []AttachmentDescription
 	SubPasses           []SubPass
 	SubPassDependencies []SubPassDependency
 
-	core.HaveNext
+	common.HaveNext
 }
 
 func (o *RenderPassOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {

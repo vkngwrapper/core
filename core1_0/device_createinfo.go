@@ -6,7 +6,7 @@ package core1_0
 */
 import "C"
 import (
-	"github.com/CannibalVox/VKng/core"
+	"github.com/CannibalVox/VKng/core/common"
 	"github.com/CannibalVox/cgoparam"
 	"github.com/cockroachdb/errors"
 	"unsafe"
@@ -23,7 +23,7 @@ type DeviceOptions struct {
 	ExtensionNames  []string
 	LayerNames      []string
 
-	core.HaveNext
+	common.HaveNext
 }
 
 func (o *DeviceOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {

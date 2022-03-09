@@ -6,7 +6,6 @@ package core1_0
 */
 import "C"
 import (
-	"github.com/CannibalVox/VKng/core"
 	"github.com/CannibalVox/VKng/core/common"
 	"github.com/CannibalVox/cgoparam"
 	"github.com/cockroachdb/errors"
@@ -18,7 +17,7 @@ type DescriptorSetOptions struct {
 
 	AllocationLayouts []DescriptorSetLayout
 
-	core.HaveNext
+	common.HaveNext
 }
 
 func (o DescriptorSetOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
@@ -72,7 +71,7 @@ type WriteDescriptorSetOptions struct {
 	BufferInfo      []DescriptorBufferInfo
 	TexelBufferView []BufferView
 
-	core.HaveNext
+	common.HaveNext
 }
 
 type WriteDescriptorSetExtensionSource interface {
@@ -193,7 +192,7 @@ type CopyDescriptorSetOptions struct {
 
 	Count int
 
-	core.HaveNext
+	common.HaveNext
 }
 
 func (o CopyDescriptorSetOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {

@@ -6,7 +6,6 @@ package core1_0
 */
 import "C"
 import (
-	"github.com/CannibalVox/VKng/core"
 	"github.com/CannibalVox/VKng/core/common"
 	"github.com/CannibalVox/cgoparam"
 	"unsafe"
@@ -16,7 +15,7 @@ type ViewportOptions struct {
 	Viewports []common.Viewport
 	Scissors  []common.Rect2D
 
-	core.HaveNext
+	common.HaveNext
 }
 
 func (o ViewportOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {

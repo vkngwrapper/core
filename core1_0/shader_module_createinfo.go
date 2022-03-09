@@ -6,7 +6,7 @@ package core1_0
 */
 import "C"
 import (
-	"github.com/CannibalVox/VKng/core"
+	"github.com/CannibalVox/VKng/core/common"
 	"github.com/CannibalVox/cgoparam"
 	"github.com/cockroachdb/errors"
 	"unsafe"
@@ -15,7 +15,7 @@ import (
 type ShaderModuleOptions struct {
 	SpirVByteCode []uint32
 
-	core.HaveNext
+	common.HaveNext
 }
 
 func (o ShaderModuleOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
