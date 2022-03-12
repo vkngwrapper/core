@@ -131,6 +131,20 @@ func (m *MockBufferView) EXPECT() *MockBufferViewMockRecorder {
 	return m.recorder
 }
 
+// Core1_1 mocks base method.
+func (m *MockBufferView) Core1_1() core1_1.BufferView {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Core1_1")
+	ret0, _ := ret[0].(core1_1.BufferView)
+	return ret0
+}
+
+// Core1_1 indicates an expected call of Core1_1.
+func (mr *MockBufferViewMockRecorder) Core1_1() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Core1_1", reflect.TypeOf((*MockBufferView)(nil).Core1_1))
+}
+
 // Destroy mocks base method.
 func (m *MockBufferView) Destroy(callbacks *driver.AllocationCallbacks) {
 	m.ctrl.T.Helper()
@@ -757,6 +771,20 @@ func (mr *MockCommandBufferMockRecorder) CommandPoolHandle() *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CommandPoolHandle", reflect.TypeOf((*MockCommandBuffer)(nil).CommandPoolHandle))
 }
 
+// Core1_1 mocks base method.
+func (m *MockCommandBuffer) Core1_1() core1_1.CommandBuffer {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Core1_1")
+	ret0, _ := ret[0].(core1_1.CommandBuffer)
+	return ret0
+}
+
+// Core1_1 indicates an expected call of Core1_1.
+func (mr *MockCommandBufferMockRecorder) Core1_1() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Core1_1", reflect.TypeOf((*MockCommandBuffer)(nil).Core1_1))
+}
+
 // DeviceHandle mocks base method.
 func (m *MockCommandBuffer) DeviceHandle() driver.VkDevice {
 	m.ctrl.T.Helper()
@@ -878,6 +906,20 @@ func (mr *MockCommandPoolMockRecorder) APIVersion() *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "APIVersion", reflect.TypeOf((*MockCommandPool)(nil).APIVersion))
 }
 
+// Core1_1 mocks base method.
+func (m *MockCommandPool) Core1_1() core1_1.CommandPool {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Core1_1")
+	ret0, _ := ret[0].(core1_1.CommandPool)
+	return ret0
+}
+
+// Core1_1 indicates an expected call of Core1_1.
+func (mr *MockCommandPoolMockRecorder) Core1_1() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Core1_1", reflect.TypeOf((*MockCommandPool)(nil).Core1_1))
+}
+
 // Destroy mocks base method.
 func (m *MockCommandPool) Destroy(callbacks *driver.AllocationCallbacks) {
 	m.ctrl.T.Helper()
@@ -984,6 +1026,20 @@ func (mr *MockDescriptorPoolMockRecorder) APIVersion() *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "APIVersion", reflect.TypeOf((*MockDescriptorPool)(nil).APIVersion))
 }
 
+// Core1_1 mocks base method.
+func (m *MockDescriptorPool) Core1_1() core1_1.DescriptorPool {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Core1_1")
+	ret0, _ := ret[0].(core1_1.DescriptorPool)
+	return ret0
+}
+
+// Core1_1 indicates an expected call of Core1_1.
+func (mr *MockDescriptorPoolMockRecorder) Core1_1() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Core1_1", reflect.TypeOf((*MockDescriptorPool)(nil).Core1_1))
+}
+
 // Destroy mocks base method.
 func (m *MockDescriptorPool) Destroy(callbacks *driver.AllocationCallbacks) {
 	m.ctrl.T.Helper()
@@ -1074,6 +1130,20 @@ func NewMockDescriptorSet(ctrl *gomock.Controller) *MockDescriptorSet {
 // EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockDescriptorSet) EXPECT() *MockDescriptorSetMockRecorder {
 	return m.recorder
+}
+
+// Core1_1 mocks base method.
+func (m *MockDescriptorSet) Core1_1() core1_1.DescriptorSet {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Core1_1")
+	ret0, _ := ret[0].(core1_1.DescriptorSet)
+	return ret0
+}
+
+// Core1_1 indicates an expected call of Core1_1.
+func (mr *MockDescriptorSetMockRecorder) Core1_1() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Core1_1", reflect.TypeOf((*MockDescriptorSet)(nil).Core1_1))
 }
 
 // DeviceHandle mocks base method.
@@ -1170,6 +1240,20 @@ func (m *MockDescriptorSetLayout) EXPECT() *MockDescriptorSetLayoutMockRecorder 
 	return m.recorder
 }
 
+// Core1_1 mocks base method.
+func (m *MockDescriptorSetLayout) Core1_1() core1_1.DescriptorSetLayout {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Core1_1")
+	ret0, _ := ret[0].(core1_1.DescriptorSetLayout)
+	return ret0
+}
+
+// Core1_1 indicates an expected call of Core1_1.
+func (mr *MockDescriptorSetLayoutMockRecorder) Core1_1() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Core1_1", reflect.TypeOf((*MockDescriptorSetLayout)(nil).Core1_1))
+}
+
 // Destroy mocks base method.
 func (m *MockDescriptorSetLayout) Destroy(callbacks *driver.AllocationCallbacks) {
 	m.ctrl.T.Helper()
@@ -1231,6 +1315,20 @@ func (m *MockDeviceMemory) Commitment() int {
 func (mr *MockDeviceMemoryMockRecorder) Commitment() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Commitment", reflect.TypeOf((*MockDeviceMemory)(nil).Commitment))
+}
+
+// Core1_1 mocks base method.
+func (m *MockDeviceMemory) Core1_1() core1_1.DeviceMemory {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Core1_1")
+	ret0, _ := ret[0].(core1_1.DeviceMemory)
+	return ret0
+}
+
+// Core1_1 indicates an expected call of Core1_1.
+func (mr *MockDeviceMemoryMockRecorder) Core1_1() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Core1_1", reflect.TypeOf((*MockDeviceMemory)(nil).Core1_1))
 }
 
 // DeviceHandle mocks base method.
@@ -1396,6 +1494,20 @@ func (m *MockDevice) AllocateMemory(allocationCallbacks *driver.AllocationCallba
 func (mr *MockDeviceMockRecorder) AllocateMemory(allocationCallbacks, o interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AllocateMemory", reflect.TypeOf((*MockDevice)(nil).AllocateMemory), allocationCallbacks, o)
+}
+
+// Core1_1 mocks base method.
+func (m *MockDevice) Core1_1() core1_1.Device {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Core1_1")
+	ret0, _ := ret[0].(core1_1.Device)
+	return ret0
+}
+
+// Core1_1 indicates an expected call of Core1_1.
+func (mr *MockDeviceMockRecorder) Core1_1() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Core1_1", reflect.TypeOf((*MockDevice)(nil).Core1_1))
 }
 
 // Destroy mocks base method.
@@ -1576,6 +1688,20 @@ func (m *MockEvent) EXPECT() *MockEventMockRecorder {
 	return m.recorder
 }
 
+// Core1_1 mocks base method.
+func (m *MockEvent) Core1_1() core1_1.Event {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Core1_1")
+	ret0, _ := ret[0].(core1_1.Event)
+	return ret0
+}
+
+// Core1_1 indicates an expected call of Core1_1.
+func (mr *MockEventMockRecorder) Core1_1() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Core1_1", reflect.TypeOf((*MockEvent)(nil).Core1_1))
+}
+
 // Destroy mocks base method.
 func (m *MockEvent) Destroy(callbacks *driver.AllocationCallbacks) {
 	m.ctrl.T.Helper()
@@ -1668,6 +1794,20 @@ func NewMockFence(ctrl *gomock.Controller) *MockFence {
 // EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockFence) EXPECT() *MockFenceMockRecorder {
 	return m.recorder
+}
+
+// Core1_1 mocks base method.
+func (m *MockFence) Core1_1() core1_1.Fence {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Core1_1")
+	ret0, _ := ret[0].(core1_1.Fence)
+	return ret0
+}
+
+// Core1_1 indicates an expected call of Core1_1.
+func (mr *MockFenceMockRecorder) Core1_1() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Core1_1", reflect.TypeOf((*MockFence)(nil).Core1_1))
 }
 
 // Destroy mocks base method.
@@ -1764,6 +1904,20 @@ func (m *MockFramebuffer) EXPECT() *MockFramebufferMockRecorder {
 	return m.recorder
 }
 
+// Core1_1 mocks base method.
+func (m *MockFramebuffer) Core1_1() core1_1.Framebuffer {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Core1_1")
+	ret0, _ := ret[0].(core1_1.Framebuffer)
+	return ret0
+}
+
+// Core1_1 indicates an expected call of Core1_1.
+func (mr *MockFramebufferMockRecorder) Core1_1() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Core1_1", reflect.TypeOf((*MockFramebuffer)(nil).Core1_1))
+}
+
 // Destroy mocks base method.
 func (m *MockFramebuffer) Destroy(callbacks *driver.AllocationCallbacks) {
 	m.ctrl.T.Helper()
@@ -1826,6 +1980,20 @@ func (m *MockImage) BindImageMemory(memory core1_0.DeviceMemory, offset int) (co
 func (mr *MockImageMockRecorder) BindImageMemory(memory, offset interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "BindImageMemory", reflect.TypeOf((*MockImage)(nil).BindImageMemory), memory, offset)
+}
+
+// Core1_1 mocks base method.
+func (m *MockImage) Core1_1() core1_1.Image {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Core1_1")
+	ret0, _ := ret[0].(core1_1.Image)
+	return ret0
+}
+
+// Core1_1 indicates an expected call of Core1_1.
+func (mr *MockImageMockRecorder) Core1_1() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Core1_1", reflect.TypeOf((*MockImage)(nil).Core1_1))
 }
 
 // Destroy mocks base method.
@@ -1919,6 +2087,20 @@ func (m *MockImageView) EXPECT() *MockImageViewMockRecorder {
 	return m.recorder
 }
 
+// Core1_1 mocks base method.
+func (m *MockImageView) Core1_1() core1_1.ImageView {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Core1_1")
+	ret0, _ := ret[0].(core1_1.ImageView)
+	return ret0
+}
+
+// Core1_1 indicates an expected call of Core1_1.
+func (mr *MockImageViewMockRecorder) Core1_1() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Core1_1", reflect.TypeOf((*MockImageView)(nil).Core1_1))
+}
+
 // Destroy mocks base method.
 func (m *MockImageView) Destroy(callbacks *driver.AllocationCallbacks) {
 	m.ctrl.T.Helper()
@@ -1966,6 +2148,20 @@ func NewMockInstance(ctrl *gomock.Controller) *MockInstance {
 // EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockInstance) EXPECT() *MockInstanceMockRecorder {
 	return m.recorder
+}
+
+// Core1_1 mocks base method.
+func (m *MockInstance) Core1_1() core1_1.Instance {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Core1_1")
+	ret0, _ := ret[0].(core1_1.Instance)
+	return ret0
+}
+
+// Core1_1 indicates an expected call of Core1_1.
+func (mr *MockInstanceMockRecorder) Core1_1() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Core1_1", reflect.TypeOf((*MockInstance)(nil).Core1_1))
 }
 
 // Destroy mocks base method.
@@ -2109,6 +2305,20 @@ func (mr *MockPhysicalDeviceMockRecorder) AvailableLayers() *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AvailableLayers", reflect.TypeOf((*MockPhysicalDevice)(nil).AvailableLayers))
 }
 
+// Core1_1 mocks base method.
+func (m *MockPhysicalDevice) Core1_1() core1_1.PhysicalDevice {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Core1_1")
+	ret0, _ := ret[0].(core1_1.PhysicalDevice)
+	return ret0
+}
+
+// Core1_1 indicates an expected call of Core1_1.
+func (mr *MockPhysicalDeviceMockRecorder) Core1_1() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Core1_1", reflect.TypeOf((*MockPhysicalDevice)(nil).Core1_1))
+}
+
 // Driver mocks base method.
 func (m *MockPhysicalDevice) Driver() driver.Driver {
 	m.ctrl.T.Helper()
@@ -2246,6 +2456,20 @@ func (m *MockPipeline) EXPECT() *MockPipelineMockRecorder {
 	return m.recorder
 }
 
+// Core1_1 mocks base method.
+func (m *MockPipeline) Core1_1() core1_1.Pipeline {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Core1_1")
+	ret0, _ := ret[0].(core1_1.Pipeline)
+	return ret0
+}
+
+// Core1_1 indicates an expected call of Core1_1.
+func (mr *MockPipelineMockRecorder) Core1_1() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Core1_1", reflect.TypeOf((*MockPipeline)(nil).Core1_1))
+}
+
 // Destroy mocks base method.
 func (m *MockPipeline) Destroy(callbacks *driver.AllocationCallbacks) {
 	m.ctrl.T.Helper()
@@ -2309,6 +2533,20 @@ func (m *MockPipelineCache) CacheData() ([]byte, common.VkResult, error) {
 func (mr *MockPipelineCacheMockRecorder) CacheData() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CacheData", reflect.TypeOf((*MockPipelineCache)(nil).CacheData))
+}
+
+// Core1_1 mocks base method.
+func (m *MockPipelineCache) Core1_1() core1_1.PipelineCache {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Core1_1")
+	ret0, _ := ret[0].(core1_1.PipelineCache)
+	return ret0
+}
+
+// Core1_1 indicates an expected call of Core1_1.
+func (mr *MockPipelineCacheMockRecorder) Core1_1() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Core1_1", reflect.TypeOf((*MockPipelineCache)(nil).Core1_1))
 }
 
 // Destroy mocks base method.
@@ -2375,6 +2613,20 @@ func (m *MockPipelineLayout) EXPECT() *MockPipelineLayoutMockRecorder {
 	return m.recorder
 }
 
+// Core1_1 mocks base method.
+func (m *MockPipelineLayout) Core1_1() core1_1.PipelineLayout {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Core1_1")
+	ret0, _ := ret[0].(core1_1.PipelineLayout)
+	return ret0
+}
+
+// Core1_1 indicates an expected call of Core1_1.
+func (mr *MockPipelineLayoutMockRecorder) Core1_1() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Core1_1", reflect.TypeOf((*MockPipelineLayout)(nil).Core1_1))
+}
+
 // Destroy mocks base method.
 func (m *MockPipelineLayout) Destroy(callbacks *driver.AllocationCallbacks) {
 	m.ctrl.T.Helper()
@@ -2422,6 +2674,20 @@ func NewMockQueryPool(ctrl *gomock.Controller) *MockQueryPool {
 // EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockQueryPool) EXPECT() *MockQueryPoolMockRecorder {
 	return m.recorder
+}
+
+// Core1_1 mocks base method.
+func (m *MockQueryPool) Core1_1() core1_1.QueryPool {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Core1_1")
+	ret0, _ := ret[0].(core1_1.QueryPool)
+	return ret0
+}
+
+// Core1_1 indicates an expected call of Core1_1.
+func (mr *MockQueryPoolMockRecorder) Core1_1() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Core1_1", reflect.TypeOf((*MockQueryPool)(nil).Core1_1))
 }
 
 // Destroy mocks base method.
@@ -2502,6 +2768,20 @@ func (m *MockQueue) BindSparse(fence core1_0.Fence, bindInfos []core1_0.BindSpar
 func (mr *MockQueueMockRecorder) BindSparse(fence, bindInfos interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "BindSparse", reflect.TypeOf((*MockQueue)(nil).BindSparse), fence, bindInfos)
+}
+
+// Core1_1 mocks base method.
+func (m *MockQueue) Core1_1() core1_1.Queue {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Core1_1")
+	ret0, _ := ret[0].(core1_1.Queue)
+	return ret0
+}
+
+// Core1_1 indicates an expected call of Core1_1.
+func (mr *MockQueueMockRecorder) Core1_1() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Core1_1", reflect.TypeOf((*MockQueue)(nil).Core1_1))
 }
 
 // Driver mocks base method.
@@ -2585,6 +2865,20 @@ func (m *MockRenderPass) EXPECT() *MockRenderPassMockRecorder {
 	return m.recorder
 }
 
+// Core1_1 mocks base method.
+func (m *MockRenderPass) Core1_1() core1_1.RenderPass {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Core1_1")
+	ret0, _ := ret[0].(core1_1.RenderPass)
+	return ret0
+}
+
+// Core1_1 indicates an expected call of Core1_1.
+func (mr *MockRenderPassMockRecorder) Core1_1() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Core1_1", reflect.TypeOf((*MockRenderPass)(nil).Core1_1))
+}
+
 // Destroy mocks base method.
 func (m *MockRenderPass) Destroy(callbacks *driver.AllocationCallbacks) {
 	m.ctrl.T.Helper()
@@ -2625,6 +2919,69 @@ func (mr *MockRenderPassMockRecorder) RenderAreaGranularity() *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RenderAreaGranularity", reflect.TypeOf((*MockRenderPass)(nil).RenderAreaGranularity))
 }
 
+// MockSampler is a mock of Sampler interface.
+type MockSampler struct {
+	ctrl     *gomock.Controller
+	recorder *MockSamplerMockRecorder
+}
+
+// MockSamplerMockRecorder is the mock recorder for MockSampler.
+type MockSamplerMockRecorder struct {
+	mock *MockSampler
+}
+
+// NewMockSampler creates a new mock instance.
+func NewMockSampler(ctrl *gomock.Controller) *MockSampler {
+	mock := &MockSampler{ctrl: ctrl}
+	mock.recorder = &MockSamplerMockRecorder{mock}
+	return mock
+}
+
+// EXPECT returns an object that allows the caller to indicate expected use.
+func (m *MockSampler) EXPECT() *MockSamplerMockRecorder {
+	return m.recorder
+}
+
+// Core1_1 mocks base method.
+func (m *MockSampler) Core1_1() core1_1.Sampler {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Core1_1")
+	ret0, _ := ret[0].(core1_1.Sampler)
+	return ret0
+}
+
+// Core1_1 indicates an expected call of Core1_1.
+func (mr *MockSamplerMockRecorder) Core1_1() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Core1_1", reflect.TypeOf((*MockSampler)(nil).Core1_1))
+}
+
+// Destroy mocks base method.
+func (m *MockSampler) Destroy(callbacks *driver.AllocationCallbacks) {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "Destroy", callbacks)
+}
+
+// Destroy indicates an expected call of Destroy.
+func (mr *MockSamplerMockRecorder) Destroy(callbacks interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Destroy", reflect.TypeOf((*MockSampler)(nil).Destroy), callbacks)
+}
+
+// Handle mocks base method.
+func (m *MockSampler) Handle() driver.VkSampler {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Handle")
+	ret0, _ := ret[0].(driver.VkSampler)
+	return ret0
+}
+
+// Handle indicates an expected call of Handle.
+func (mr *MockSamplerMockRecorder) Handle() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Handle", reflect.TypeOf((*MockSampler)(nil).Handle))
+}
+
 // MockSemaphore is a mock of Semaphore interface.
 type MockSemaphore struct {
 	ctrl     *gomock.Controller
@@ -2646,6 +3003,20 @@ func NewMockSemaphore(ctrl *gomock.Controller) *MockSemaphore {
 // EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockSemaphore) EXPECT() *MockSemaphoreMockRecorder {
 	return m.recorder
+}
+
+// Core1_1 mocks base method.
+func (m *MockSemaphore) Core1_1() core1_1.Semaphore {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Core1_1")
+	ret0, _ := ret[0].(core1_1.Semaphore)
+	return ret0
+}
+
+// Core1_1 indicates an expected call of Core1_1.
+func (mr *MockSemaphoreMockRecorder) Core1_1() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Core1_1", reflect.TypeOf((*MockSemaphore)(nil).Core1_1))
 }
 
 // Destroy mocks base method.
@@ -2697,6 +3068,20 @@ func (m *MockShaderModule) EXPECT() *MockShaderModuleMockRecorder {
 	return m.recorder
 }
 
+// Core1_1 mocks base method.
+func (m *MockShaderModule) Core1_1() core1_1.ShaderModule {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Core1_1")
+	ret0, _ := ret[0].(core1_1.ShaderModule)
+	return ret0
+}
+
+// Core1_1 indicates an expected call of Core1_1.
+func (mr *MockShaderModuleMockRecorder) Core1_1() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Core1_1", reflect.TypeOf((*MockShaderModule)(nil).Core1_1))
+}
+
 // Destroy mocks base method.
 func (m *MockShaderModule) Destroy(callbacks *driver.AllocationCallbacks) {
 	m.ctrl.T.Helper()
@@ -2721,53 +3106,4 @@ func (m *MockShaderModule) Handle() driver.VkShaderModule {
 func (mr *MockShaderModuleMockRecorder) Handle() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Handle", reflect.TypeOf((*MockShaderModule)(nil).Handle))
-}
-
-// MockSampler is a mock of Sampler interface.
-type MockSampler struct {
-	ctrl     *gomock.Controller
-	recorder *MockSamplerMockRecorder
-}
-
-// MockSamplerMockRecorder is the mock recorder for MockSampler.
-type MockSamplerMockRecorder struct {
-	mock *MockSampler
-}
-
-// NewMockSampler creates a new mock instance.
-func NewMockSampler(ctrl *gomock.Controller) *MockSampler {
-	mock := &MockSampler{ctrl: ctrl}
-	mock.recorder = &MockSamplerMockRecorder{mock}
-	return mock
-}
-
-// EXPECT returns an object that allows the caller to indicate expected use.
-func (m *MockSampler) EXPECT() *MockSamplerMockRecorder {
-	return m.recorder
-}
-
-// Destroy mocks base method.
-func (m *MockSampler) Destroy(callbacks *driver.AllocationCallbacks) {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "Destroy", callbacks)
-}
-
-// Destroy indicates an expected call of Destroy.
-func (mr *MockSamplerMockRecorder) Destroy(callbacks interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Destroy", reflect.TypeOf((*MockSampler)(nil).Destroy), callbacks)
-}
-
-// Handle mocks base method.
-func (m *MockSampler) Handle() driver.VkSampler {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Handle")
-	ret0, _ := ret[0].(driver.VkSampler)
-	return ret0
-}
-
-// Handle indicates an expected call of Handle.
-func (mr *MockSamplerMockRecorder) Handle() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Handle", reflect.TypeOf((*MockSampler)(nil).Handle))
 }

@@ -8,6 +8,7 @@ import "C"
 import (
 	"github.com/CannibalVox/VKng/core/common"
 	"github.com/CannibalVox/VKng/core/core1_0"
+	"github.com/CannibalVox/VKng/core/core1_1"
 	"github.com/CannibalVox/VKng/core/driver"
 	"github.com/CannibalVox/cgoparam"
 	"github.com/cockroachdb/errors"
@@ -20,7 +21,7 @@ type VulkanPhysicalDevice struct {
 	PhysicalDeviceHandle driver.VkPhysicalDevice
 	MaximumVersion       common.APIVersion
 
-	DeviceProperties *core1_0.PhysicalDeviceProperties
+	PhysicalDevice1_1 core1_1.PhysicalDevice
 }
 
 func (d *VulkanPhysicalDevice) Handle() driver.VkPhysicalDevice {
@@ -33,6 +34,10 @@ func (d *VulkanPhysicalDevice) Driver() driver.Driver {
 
 func (d *VulkanPhysicalDevice) APIVersion() common.APIVersion {
 	return d.MaximumVersion
+}
+
+func (d *VulkanPhysicalDevice) Core1_1() core1_1.PhysicalDevice {
+	return d.PhysicalDevice1_1
 }
 
 func (d *VulkanPhysicalDevice) QueueFamilyProperties() []*core1_0.QueueFamily {
@@ -71,7 +76,14 @@ func (d *VulkanPhysicalDevice) QueueFamilyProperties() []*core1_0.QueueFamily {
 }
 
 func (d *VulkanPhysicalDevice) Properties() *core1_0.PhysicalDeviceProperties {
-	return d.DeviceProperties
+	allocator := cgoparam.GetAlloc()
+	defer cgoparam.ReturnAlloc(allocator)
+
+	propertiesUnsafe := allocator.Malloc(int(unsafe.Sizeof([1]C.VkPhysicalDeviceProperties{})))
+
+	d.InstanceDriver.VkGetPhysicalDeviceProperties(d.PhysicalDeviceHandle, (*driver.VkPhysicalDeviceProperties)(propertiesUnsafe))
+
+	return createPhysicalDeviceProperties((*C.VkPhysicalDeviceProperties)(propertiesUnsafe))
 }
 
 func (d *VulkanPhysicalDevice) Features() *core1_0.PhysicalDeviceFeatures {

@@ -8,6 +8,7 @@ import "C"
 import (
 	"github.com/CannibalVox/VKng/core/common"
 	"github.com/CannibalVox/VKng/core/core1_0"
+	"github.com/CannibalVox/VKng/core/core1_1"
 	"github.com/CannibalVox/VKng/core/driver"
 	"github.com/CannibalVox/cgoparam"
 	"unsafe"
@@ -19,10 +20,16 @@ type VulkanPipelineCache struct {
 	PipelineCacheHandle driver.VkPipelineCache
 
 	MaximumAPIVersion common.APIVersion
+
+	PipelineCache1_1 core1_1.PipelineCache
 }
 
 func (c *VulkanPipelineCache) Handle() driver.VkPipelineCache {
 	return c.PipelineCacheHandle
+}
+
+func (c *VulkanPipelineCache) Core1_1() core1_1.PipelineCache {
+	return c.PipelineCache1_1
 }
 
 func (c *VulkanPipelineCache) Destroy(callbacks *driver.AllocationCallbacks) {

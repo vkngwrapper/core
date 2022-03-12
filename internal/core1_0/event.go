@@ -7,6 +7,7 @@ package core1_0
 import "C"
 import (
 	"github.com/CannibalVox/VKng/core/common"
+	"github.com/CannibalVox/VKng/core/core1_1"
 	"github.com/CannibalVox/VKng/core/driver"
 )
 
@@ -16,10 +17,16 @@ type VulkanEvent struct {
 	Driver      driver.Driver
 
 	MaximumAPIVersion common.APIVersion
+
+	Event1_1 core1_1.Event
 }
 
 func (e *VulkanEvent) Handle() driver.VkEvent {
 	return e.EventHandle
+}
+
+func (e *VulkanEvent) Core1_1() core1_1.Event {
+	return e.Event1_1
 }
 
 func (e *VulkanEvent) Destroy(callbacks *driver.AllocationCallbacks) {

@@ -7,6 +7,7 @@ package core1_0
 import "C"
 import (
 	"github.com/CannibalVox/VKng/core/common"
+	"github.com/CannibalVox/VKng/core/core1_1"
 	"github.com/CannibalVox/VKng/core/driver"
 	"github.com/CannibalVox/cgoparam"
 	"unsafe"
@@ -18,10 +19,16 @@ type VulkanQueryPool struct {
 	Device          driver.VkDevice
 
 	MaximumAPIVersion common.APIVersion
+
+	QueryPool1_1 core1_1.QueryPool
 }
 
 func (p *VulkanQueryPool) Handle() driver.VkQueryPool {
 	return p.QueryPoolHandle
+}
+
+func (p *VulkanQueryPool) Core1_1() core1_1.QueryPool {
+	return p.QueryPool1_1
 }
 
 func (p *VulkanQueryPool) Destroy(callbacks *driver.AllocationCallbacks) {

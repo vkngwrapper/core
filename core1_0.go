@@ -10,6 +10,7 @@ import (
 	"github.com/CannibalVox/VKng/core/core1_0"
 	"github.com/CannibalVox/VKng/core/driver"
 	internal1_0 "github.com/CannibalVox/VKng/core/internal/core1_0"
+	internal1_1 "github.com/CannibalVox/VKng/core/internal/core1_1"
 	"github.com/CannibalVox/cgoparam"
 	"github.com/cockroachdb/errors"
 	"unsafe"
@@ -190,12 +191,23 @@ func (l *VulkanLoader1_0) CreateBufferView(device core1_0.Device, allocationCall
 		return nil, res, err
 	}
 
-	return &internal1_0.VulkanBufferView{
+	version := device.APIVersion()
+	bufferView := &internal1_0.VulkanBufferView{
 		Driver:            device.Driver(),
 		Device:            device.Handle(),
 		BufferViewHandle:  bufferViewHandle,
-		MaximumAPIVersion: device.APIVersion(),
-	}, res, nil
+		MaximumAPIVersion: version,
+	}
+
+	if version.IsAtLeast(common.Vulkan1_1) {
+		bufferView.BufferView1_1 = &internal1_1.VulkanBufferView{
+			Driver:           device.Driver(),
+			Device:           device.Handle(),
+			BufferViewHandle: bufferViewHandle,
+		}
+	}
+
+	return bufferView, res, nil
 }
 
 func (l *VulkanLoader1_0) CreateInstance(allocationCallbacks *driver.AllocationCallbacks, options *core1_0.InstanceOptions) (core1_0.Instance, common.VkResult, error) {
@@ -219,11 +231,22 @@ func (l *VulkanLoader1_0) CreateInstance(allocationCallbacks *driver.AllocationC
 		return nil, core1_0.VKErrorUnknown, err
 	}
 
-	return &internal1_0.VulkanInstance{
+	version := l.Version().Min(options.VulkanVersion)
+
+	instance := &internal1_0.VulkanInstance{
 		InstanceDriver: instanceDriver,
 		InstanceHandle: instanceHandle,
-		MaximumVersion: l.Version().Min(options.VulkanVersion),
-	}, res, nil
+		MaximumVersion: version,
+	}
+
+	if version.IsAtLeast(common.Vulkan1_1) {
+		instance.Instance1_1 = &internal1_1.VulkanInstance{
+			InstanceDriver: instanceDriver,
+			InstanceHandle: instanceHandle,
+		}
+	}
+
+	return instance, res, nil
 }
 
 func (l *VulkanLoader1_0) CreateDevice(physicalDevice core1_0.PhysicalDevice, allocationCallbacks *driver.AllocationCallbacks, options *core1_0.DeviceOptions) (core1_0.Device, common.VkResult, error) {
@@ -246,11 +269,22 @@ func (l *VulkanLoader1_0) CreateDevice(physicalDevice core1_0.PhysicalDevice, al
 		return nil, core1_0.VKErrorUnknown, err
 	}
 
-	return &internal1_0.VulkanDevice{
+	version := physicalDevice.APIVersion()
+
+	device := &internal1_0.VulkanDevice{
 		DeviceDriver:      deviceDriver,
 		DeviceHandle:      deviceHandle,
-		MaximumAPIVersion: physicalDevice.APIVersion(),
-	}, res, nil
+		MaximumAPIVersion: version,
+	}
+
+	if version.IsAtLeast(common.Vulkan1_1) {
+		device.Device1_1 = &internal1_1.VulkanDevice{
+			DeviceDriver: deviceDriver,
+			DeviceHandle: deviceHandle,
+		}
+	}
+
+	return device, res, nil
 }
 
 func (l *VulkanLoader1_0) CreateShaderModule(device core1_0.Device, allocationCallbacks *driver.AllocationCallbacks, o *core1_0.ShaderModuleOptions) (core1_0.ShaderModule, common.VkResult, error) {
@@ -268,13 +302,25 @@ func (l *VulkanLoader1_0) CreateShaderModule(device core1_0.Device, allocationCa
 		return nil, res, err
 	}
 
-	return &internal1_0.VulkanShaderModule{
+	version := device.APIVersion()
+
+	shaderModule := &internal1_0.VulkanShaderModule{
 		Driver:             device.Driver(),
 		ShaderModuleHandle: shaderModuleHandle,
 		Device:             device.Handle(),
 
-		MaximumAPIVersion: device.APIVersion(),
-	}, res, nil
+		MaximumAPIVersion: version,
+	}
+
+	if version.IsAtLeast(common.Vulkan1_1) {
+		shaderModule.ShaderModule1_1 = &internal1_1.VulkanShaderModule{
+			Driver:             device.Driver(),
+			ShaderModuleHandle: shaderModuleHandle,
+			Device:             device.Handle(),
+		}
+	}
+
+	return shaderModule, res, nil
 }
 
 func (l *VulkanLoader1_0) CreateImageView(device core1_0.Device, allocationCallbacks *driver.AllocationCallbacks, o *core1_0.ImageViewOptions) (core1_0.ImageView, common.VkResult, error) {
@@ -293,13 +339,24 @@ func (l *VulkanLoader1_0) CreateImageView(device core1_0.Device, allocationCallb
 		return nil, res, err
 	}
 
-	return &internal1_0.VulkanImageView{
+	version := device.APIVersion()
+	imageView := &internal1_0.VulkanImageView{
 		Driver:          device.Driver(),
 		ImageViewHandle: imageViewHandle,
 		Device:          device.Handle(),
 
-		MaximumAPIVersion: device.APIVersion(),
-	}, res, nil
+		MaximumAPIVersion: version,
+	}
+
+	if version.IsAtLeast(common.Vulkan1_1) {
+		imageView.ImageView1_1 = &internal1_1.VulkanImageView{
+			Driver:          device.Driver(),
+			ImageViewHandle: imageViewHandle,
+			Device:          device.Handle(),
+		}
+	}
+
+	return imageView, res, nil
 }
 
 func (l *VulkanLoader1_0) CreateSemaphore(device core1_0.Device, allocationCallbacks *driver.AllocationCallbacks, o *core1_0.SemaphoreOptions) (core1_0.Semaphore, common.VkResult, error) {
@@ -318,13 +375,24 @@ func (l *VulkanLoader1_0) CreateSemaphore(device core1_0.Device, allocationCallb
 		return nil, res, err
 	}
 
-	return &internal1_0.VulkanSemaphore{
+	version := device.APIVersion()
+	semaphore := &internal1_0.VulkanSemaphore{
 		Driver:          device.Driver(),
 		Device:          device.Handle(),
 		SemaphoreHandle: semaphoreHandle,
 
-		MaximumAPIVersion: device.APIVersion(),
-	}, res, nil
+		MaximumAPIVersion: version,
+	}
+
+	if version.IsAtLeast(common.Vulkan1_1) {
+		semaphore.Semaphore1_1 = &internal1_1.VulkanSemaphore{
+			Driver:          device.Driver(),
+			Device:          device.Handle(),
+			SemaphoreHandle: semaphoreHandle,
+		}
+	}
+
+	return semaphore, res, nil
 }
 
 func (l *VulkanLoader1_0) CreateFence(device core1_0.Device, allocationCallbacks *driver.AllocationCallbacks, o *core1_0.FenceOptions) (core1_0.Fence, common.VkResult, error) {
@@ -343,13 +411,24 @@ func (l *VulkanLoader1_0) CreateFence(device core1_0.Device, allocationCallbacks
 		return nil, res, err
 	}
 
-	return &internal1_0.VulkanFence{
+	version := device.APIVersion()
+	fence := &internal1_0.VulkanFence{
 		Driver:      device.Driver(),
 		Device:      device.Handle(),
 		FenceHandle: fenceHandle,
 
-		MaximumAPIVersion: device.APIVersion(),
-	}, res, nil
+		MaximumAPIVersion: version,
+	}
+
+	if version.IsAtLeast(common.Vulkan1_1) {
+		fence.Fence1_1 = &internal1_1.VulkanFence{
+			Driver:      device.Driver(),
+			Device:      device.Handle(),
+			FenceHandle: fenceHandle,
+		}
+	}
+
+	return fence, res, nil
 }
 
 func (l *VulkanLoader1_0) CreateBuffer(device core1_0.Device, allocationCallbacks *driver.AllocationCallbacks, o *core1_0.BufferOptions) (core1_0.Buffer, common.VkResult, error) {
@@ -368,13 +447,24 @@ func (l *VulkanLoader1_0) CreateBuffer(device core1_0.Device, allocationCallback
 		return nil, res, err
 	}
 
-	return &internal1_0.VulkanBuffer{
+	version := device.APIVersion()
+	buffer := &internal1_0.VulkanBuffer{
 		Driver:       device.Driver(),
 		BufferHandle: bufferHandle,
 		Device:       device.Handle(),
 
-		MaximumAPIVersion: device.APIVersion(),
-	}, res, nil
+		MaximumAPIVersion: version,
+	}
+
+	if version.IsAtLeast(common.Vulkan1_1) {
+		buffer.Buffer1_1 = &internal1_1.VulkanBuffer{
+			Driver:       device.Driver(),
+			BufferHandle: bufferHandle,
+			Device:       device.Handle(),
+		}
+	}
+
+	return buffer, res, nil
 }
 
 func (l *VulkanLoader1_0) CreateDescriptorSetLayout(device core1_0.Device, allocationCallbacks *driver.AllocationCallbacks, o *core1_0.DescriptorSetLayoutOptions) (core1_0.DescriptorSetLayout, common.VkResult, error) {
@@ -393,13 +483,24 @@ func (l *VulkanLoader1_0) CreateDescriptorSetLayout(device core1_0.Device, alloc
 		return nil, res, err
 	}
 
-	return &internal1_0.VulkanDescriptorSetLayout{
+	version := device.APIVersion()
+	descriptorSetLayout := &internal1_0.VulkanDescriptorSetLayout{
 		Driver:                    device.Driver(),
 		Device:                    device.Handle(),
 		DescriptorSetLayoutHandle: descriptorSetLayoutHandle,
 
-		MaximumAPIVersion: device.APIVersion(),
-	}, res, nil
+		MaximumAPIVersion: version,
+	}
+
+	if version.IsAtLeast(common.Vulkan1_1) {
+		descriptorSetLayout.DescriptorSetLayout1_1 = &internal1_1.VulkanDescriptorSetLayout{
+			Driver:                    device.Driver(),
+			Device:                    device.Handle(),
+			DescriptorSetLayoutHandle: descriptorSetLayoutHandle,
+		}
+	}
+
+	return descriptorSetLayout, res, nil
 }
 
 func (l *VulkanLoader1_0) CreateDescriptorPool(device core1_0.Device, allocationCallbacks *driver.AllocationCallbacks, o *core1_0.DescriptorPoolOptions) (core1_0.DescriptorPool, common.VkResult, error) {
@@ -418,13 +519,22 @@ func (l *VulkanLoader1_0) CreateDescriptorPool(device core1_0.Device, allocation
 		return nil, res, err
 	}
 
-	return &internal1_0.VulkanDescriptorPool{
+	version := device.APIVersion()
+	descriptorPool := &internal1_0.VulkanDescriptorPool{
 		DeviceDriver:         device.Driver(),
 		DescriptorPoolHandle: descriptorPoolHandle,
 		Device:               device.Handle(),
 
-		MaximumAPIVersion: device.APIVersion(),
-	}, res, nil
+		MaximumAPIVersion: version,
+	}
+
+	if version.IsAtLeast(common.Vulkan1_1) {
+		descriptorPool.DescriptorPool1_1 = &internal1_1.VulkanDescriptorPool{
+			DeviceDriver: device.Driver(),
+		}
+	}
+
+	return descriptorPool, res, nil
 }
 
 func (l *VulkanLoader1_0) CreateCommandPool(device core1_0.Device, allocationCallbacks *driver.AllocationCallbacks, o *core1_0.CommandPoolOptions) (core1_0.CommandPool, common.VkResult, error) {
@@ -442,13 +552,24 @@ func (l *VulkanLoader1_0) CreateCommandPool(device core1_0.Device, allocationCal
 		return nil, res, err
 	}
 
-	return &internal1_0.VulkanCommandPool{
+	version := device.APIVersion()
+	commandPool := &internal1_0.VulkanCommandPool{
 		DeviceDriver:      device.Driver(),
 		CommandPoolHandle: cmdPoolHandle,
 		DeviceHandle:      device.Handle(),
 
-		MaximumAPIVersion: device.APIVersion(),
-	}, res, nil
+		MaximumAPIVersion: version,
+	}
+
+	if version.IsAtLeast(common.Vulkan1_1) {
+		commandPool.CommandPool1_1 = &internal1_1.VulkanCommandPool{
+			DeviceDriver:      device.Driver(),
+			CommandPoolHandle: cmdPoolHandle,
+			DeviceHandle:      device.Handle(),
+		}
+	}
+
+	return commandPool, res, nil
 }
 
 func (l *VulkanLoader1_0) CreateEvent(device core1_0.Device, allocationCallbacks *driver.AllocationCallbacks, o *core1_0.EventOptions) (core1_0.Event, common.VkResult, error) {
@@ -466,13 +587,24 @@ func (l *VulkanLoader1_0) CreateEvent(device core1_0.Device, allocationCallbacks
 		return nil, res, err
 	}
 
-	return &internal1_0.VulkanEvent{
+	version := device.APIVersion()
+	event := &internal1_0.VulkanEvent{
 		Driver:      device.Driver(),
 		EventHandle: eventHandle,
 		Device:      device.Handle(),
 
-		MaximumAPIVersion: device.APIVersion(),
-	}, res, nil
+		MaximumAPIVersion: version,
+	}
+
+	if version.IsAtLeast(common.Vulkan1_1) {
+		event.Event1_1 = &internal1_1.VulkanEvent{
+			Driver:      device.Driver(),
+			EventHandle: eventHandle,
+			Device:      device.Handle(),
+		}
+	}
+
+	return event, res, nil
 }
 
 func (l *VulkanLoader1_0) CreateFrameBuffer(device core1_0.Device, allocationCallbacks *driver.AllocationCallbacks, o *core1_0.FramebufferOptions) (core1_0.Framebuffer, common.VkResult, error) {
@@ -491,13 +623,24 @@ func (l *VulkanLoader1_0) CreateFrameBuffer(device core1_0.Device, allocationCal
 		return nil, res, err
 	}
 
-	return &internal1_0.VulkanFramebuffer{
+	version := device.APIVersion()
+	framebuffer := &internal1_0.VulkanFramebuffer{
 		Driver:            device.Driver(),
 		Device:            device.Handle(),
 		FramebufferHandle: framebufferHandle,
 
-		MaximumAPIVersion: device.APIVersion(),
-	}, res, nil
+		MaximumAPIVersion: version,
+	}
+
+	if version.IsAtLeast(common.Vulkan1_1) {
+		framebuffer.Framebuffer1_1 = &internal1_1.VulkanFramebuffer{
+			Driver:            device.Driver(),
+			Device:            device.Handle(),
+			FramebufferHandle: framebufferHandle,
+		}
+	}
+
+	return framebuffer, res, nil
 }
 
 func (l *VulkanLoader1_0) CreateGraphicsPipelines(device core1_0.Device, pipelineCache core1_0.PipelineCache, allocationCallbacks *driver.AllocationCallbacks, o []core1_0.GraphicsPipelineOptions) ([]core1_0.Pipeline, common.VkResult, error) {
@@ -525,14 +668,25 @@ func (l *VulkanLoader1_0) CreateGraphicsPipelines(device core1_0.Device, pipelin
 
 	var output []core1_0.Pipeline
 	pipelineSlice := ([]driver.VkPipeline)(unsafe.Slice(pipelinePtr, pipelineCount))
+	version := device.APIVersion()
 	for i := 0; i < pipelineCount; i++ {
-		output = append(output, &internal1_0.VulkanPipeline{
+		pipeline := &internal1_0.VulkanPipeline{
 			Driver:         device.Driver(),
 			Device:         device.Handle(),
 			PipelineHandle: pipelineSlice[i],
 
-			MaximumAPIVersion: device.APIVersion(),
-		})
+			MaximumAPIVersion: version,
+		}
+
+		if version.IsAtLeast(common.Vulkan1_1) {
+			pipeline.Pipeline1_1 = &internal1_1.VulkanPipeline{
+				Driver:         device.Driver(),
+				Device:         device.Handle(),
+				PipelineHandle: pipelineSlice[i],
+			}
+		}
+
+		output = append(output, pipeline)
 	}
 
 	return output, res, nil
@@ -563,14 +717,25 @@ func (l *VulkanLoader1_0) CreateComputePipelines(device core1_0.Device, pipeline
 
 	var output []core1_0.Pipeline
 	pipelineSlice := ([]driver.VkPipeline)(unsafe.Slice(pipelinePtr, pipelineCount))
+	version := device.APIVersion()
 	for i := 0; i < pipelineCount; i++ {
-		output = append(output, &internal1_0.VulkanPipeline{
+		pipeline := &internal1_0.VulkanPipeline{
 			Driver:         device.Driver(),
 			Device:         device.Handle(),
 			PipelineHandle: pipelineSlice[i],
 
-			MaximumAPIVersion: device.APIVersion(),
-		})
+			MaximumAPIVersion: version,
+		}
+
+		if version.IsAtLeast(common.Vulkan1_1) {
+			pipeline.Pipeline1_1 = &internal1_1.VulkanPipeline{
+				Driver:         device.Driver(),
+				Device:         device.Handle(),
+				PipelineHandle: pipelineSlice[i],
+			}
+		}
+
+		output = append(output, pipeline)
 	}
 
 	return output, res, nil
@@ -591,13 +756,24 @@ func (l *VulkanLoader1_0) CreateImage(device core1_0.Device, allocationCallbacks
 		return nil, res, err
 	}
 
-	return &internal1_0.VulkanImage{
+	version := device.APIVersion()
+	image := &internal1_0.VulkanImage{
 		Device:      device.Handle(),
 		ImageHandle: imageHandle,
 		Driver:      device.Driver(),
 
-		MaximumAPIVersion: device.APIVersion(),
-	}, res, nil
+		MaximumAPIVersion: version,
+	}
+
+	if version.IsAtLeast(common.Vulkan1_1) {
+		image.Image1_1 = &internal1_1.VulkanImage{
+			Device:      device.Handle(),
+			ImageHandle: imageHandle,
+			Driver:      device.Driver(),
+		}
+	}
+
+	return image, res, nil
 }
 
 func (l *VulkanLoader1_0) CreatePipelineCache(device core1_0.Device, allocationCallbacks *driver.AllocationCallbacks, o *core1_0.PipelineCacheOptions) (core1_0.PipelineCache, common.VkResult, error) {
@@ -615,13 +791,24 @@ func (l *VulkanLoader1_0) CreatePipelineCache(device core1_0.Device, allocationC
 		return nil, res, err
 	}
 
-	return &internal1_0.VulkanPipelineCache{
+	version := device.APIVersion()
+	pipelineCache := &internal1_0.VulkanPipelineCache{
 		Driver:              device.Driver(),
 		PipelineCacheHandle: pipelineCacheHandle,
 		Device:              device.Handle(),
 
-		MaximumAPIVersion: device.APIVersion(),
-	}, res, nil
+		MaximumAPIVersion: version,
+	}
+
+	if version.IsAtLeast(common.Vulkan1_1) {
+		pipelineCache.PipelineCache1_1 = &internal1_1.VulkanPipelineCache{
+			Driver:              device.Driver(),
+			PipelineCacheHandle: pipelineCacheHandle,
+			Device:              device.Handle(),
+		}
+	}
+
+	return pipelineCache, res, nil
 }
 
 func (l *VulkanLoader1_0) CreatePipelineLayout(device core1_0.Device, allocationCallbacks *driver.AllocationCallbacks, o *core1_0.PipelineLayoutOptions) (core1_0.PipelineLayout, common.VkResult, error) {
@@ -639,13 +826,24 @@ func (l *VulkanLoader1_0) CreatePipelineLayout(device core1_0.Device, allocation
 		return nil, res, err
 	}
 
-	return &internal1_0.VulkanPipelineLayout{
+	version := device.APIVersion()
+	pipelineLayout := &internal1_0.VulkanPipelineLayout{
 		Driver:               device.Driver(),
 		PipelineLayoutHandle: pipelineLayoutHandle,
 		Device:               device.Handle(),
 
-		MaximumAPIVersion: device.APIVersion(),
-	}, res, nil
+		MaximumAPIVersion: version,
+	}
+
+	if version.IsAtLeast(common.Vulkan1_1) {
+		pipelineLayout.PipelineLayout1_1 = &internal1_1.VulkanPipelineLayout{
+			Driver:               device.Driver(),
+			PipelineLayoutHandle: pipelineLayoutHandle,
+			Device:               device.Handle(),
+		}
+	}
+
+	return pipelineLayout, res, nil
 }
 
 func (l *VulkanLoader1_0) CreateQueryPool(device core1_0.Device, allocationCallbacks *driver.AllocationCallbacks, o *core1_0.QueryPoolOptions) (core1_0.QueryPool, common.VkResult, error) {
@@ -664,13 +862,24 @@ func (l *VulkanLoader1_0) CreateQueryPool(device core1_0.Device, allocationCallb
 		return nil, res, err
 	}
 
-	return &internal1_0.VulkanQueryPool{
+	version := device.APIVersion()
+	queryPool := &internal1_0.VulkanQueryPool{
 		Driver:          device.Driver(),
 		Device:          device.Handle(),
 		QueryPoolHandle: queryPoolHandle,
 
-		MaximumAPIVersion: device.APIVersion(),
-	}, res, nil
+		MaximumAPIVersion: version,
+	}
+
+	if version.IsAtLeast(common.Vulkan1_1) {
+		queryPool.QueryPool1_1 = &internal1_1.VulkanQueryPool{
+			Driver:          device.Driver(),
+			Device:          device.Handle(),
+			QueryPoolHandle: queryPoolHandle,
+		}
+	}
+
+	return queryPool, res, nil
 }
 
 func (l *VulkanLoader1_0) CreateRenderPass(device core1_0.Device, allocationCallbacks *driver.AllocationCallbacks, o *core1_0.RenderPassOptions) (core1_0.RenderPass, common.VkResult, error) {
@@ -689,13 +898,24 @@ func (l *VulkanLoader1_0) CreateRenderPass(device core1_0.Device, allocationCall
 		return nil, res, err
 	}
 
-	return &internal1_0.VulkanRenderPass{
+	version := device.APIVersion()
+	renderPass := &internal1_0.VulkanRenderPass{
 		Driver:           device.Driver(),
 		Device:           device.Handle(),
 		RenderPassHandle: renderPassHandle,
 
-		MaximumAPIVersion: device.APIVersion(),
-	}, res, nil
+		MaximumAPIVersion: version,
+	}
+
+	if version.IsAtLeast(common.Vulkan1_1) {
+		renderPass.RenderPass1_1 = &internal1_1.VulkanRenderPass{
+			Driver:           device.Driver(),
+			Device:           device.Handle(),
+			RenderPassHandle: renderPassHandle,
+		}
+	}
+
+	return renderPass, res, nil
 }
 
 func (l *VulkanLoader1_0) CreateSampler(device core1_0.Device, allocationCallbacks *driver.AllocationCallbacks, o *core1_0.SamplerOptions) (core1_0.Sampler, common.VkResult, error) {
@@ -714,13 +934,24 @@ func (l *VulkanLoader1_0) CreateSampler(device core1_0.Device, allocationCallbac
 		return nil, res, err
 	}
 
-	return &internal1_0.VulkanSampler{
+	version := device.APIVersion()
+	sampler := &internal1_0.VulkanSampler{
 		SamplerHandle: samplerHandle,
 		Driver:        device.Driver(),
 		Device:        device.Handle(),
 
-		MaximumAPIVersion: device.APIVersion(),
-	}, res, nil
+		MaximumAPIVersion: version,
+	}
+
+	if version.IsAtLeast(common.Vulkan1_1) {
+		sampler.Sampler1_1 = &internal1_1.VulkanSampler{
+			Driver:        device.Driver(),
+			Device:        device.Handle(),
+			SamplerHandle: samplerHandle,
+		}
+	}
+
+	return sampler, res, nil
 }
 
 // Free a slice of command buffers which should all have the same device/driver/pool
@@ -788,14 +1019,28 @@ func (l *VulkanLoader1_0) AllocateCommandBuffers(o *core1_0.CommandBufferOptions
 
 	commandBufferArray := ([]driver.VkCommandBuffer)(unsafe.Slice(commandBufferPtr, o.BufferCount))
 	var result []core1_0.CommandBuffer
-	for i := 0; i < o.BufferCount; i++ {
-		result = append(result, &internal1_0.VulkanCommandBuffer{
-			DeviceDriver: o.CommandPool.Driver(),
-			CommandPool:  o.CommandPool.Handle(),
-			Device:       device, CommandBufferHandle: commandBufferArray[i],
 
-			MaximumAPIVersion: o.CommandPool.APIVersion(),
-		})
+	version := o.CommandPool.APIVersion()
+	for i := 0; i < o.BufferCount; i++ {
+		commandBuffer := &internal1_0.VulkanCommandBuffer{
+			DeviceDriver:        o.CommandPool.Driver(),
+			CommandPool:         o.CommandPool.Handle(),
+			Device:              device,
+			CommandBufferHandle: commandBufferArray[i],
+
+			MaximumAPIVersion: version,
+		}
+
+		if version.IsAtLeast(common.Vulkan1_1) {
+			commandBuffer.CommandBuffer1_1 = &internal1_1.VulkanCommandBuffer{
+				DeviceDriver:        o.CommandPool.Driver(),
+				CommandPool:         o.CommandPool.Handle(),
+				Device:              device,
+				CommandBufferHandle: commandBufferArray[i],
+			}
+		}
+
+		result = append(result, commandBuffer)
 	}
 
 	return result, res, nil
@@ -826,16 +1071,28 @@ func (l *VulkanLoader1_0) AllocateDescriptorSets(o *core1_0.DescriptorSetOptions
 	}
 
 	var sets []core1_0.DescriptorSet
+	version := o.DescriptorPool.APIVersion()
 	descriptorSetSlice := ([]driver.VkDescriptorSet)(unsafe.Slice(descriptorSets, setCount))
 	for i := 0; i < setCount; i++ {
-		sets = append(sets, &internal1_0.VulkanDescriptorSet{
+		descriptorSet := &internal1_0.VulkanDescriptorSet{
 			DescriptorSetHandle: descriptorSetSlice[i],
 			DeviceDriver:        poolDriver,
 			Device:              device,
 			DescriptorPool:      o.DescriptorPool.Handle(),
 
-			MaximumAPIVersion: o.DescriptorPool.APIVersion(),
-		})
+			MaximumAPIVersion: version,
+		}
+
+		if version.IsAtLeast(common.Vulkan1_1) {
+			descriptorSet.DescriptorSet1_1 = &internal1_1.VulkanDescriptorSet{
+				DescriptorSetHandle: descriptorSetSlice[i],
+				DeviceDriver:        poolDriver,
+				Device:              device,
+				DescriptorPool:      o.DescriptorPool.Handle(),
+			}
+		}
+
+		sets = append(sets, descriptorSet)
 	}
 
 	return sets, res, nil

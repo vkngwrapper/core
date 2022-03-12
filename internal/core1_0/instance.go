@@ -8,7 +8,9 @@ import "C"
 import (
 	"github.com/CannibalVox/VKng/core/common"
 	"github.com/CannibalVox/VKng/core/core1_0"
+	"github.com/CannibalVox/VKng/core/core1_1"
 	"github.com/CannibalVox/VKng/core/driver"
+	internal1_1 "github.com/CannibalVox/VKng/core/internal/core1_1"
 	"github.com/CannibalVox/cgoparam"
 	"unsafe"
 )
@@ -17,6 +19,8 @@ type VulkanInstance struct {
 	InstanceDriver driver.Driver
 	InstanceHandle driver.VkInstance
 	MaximumVersion common.APIVersion
+
+	Instance1_1 core1_1.Instance
 }
 
 func (i *VulkanInstance) Driver() driver.Driver {
@@ -25,6 +29,10 @@ func (i *VulkanInstance) Driver() driver.Driver {
 
 func (i *VulkanInstance) Handle() driver.VkInstance {
 	return i.InstanceHandle
+}
+
+func (i *VulkanInstance) Core1_1() core1_1.Instance {
+	return i.Instance1_1
 }
 
 func (i *VulkanInstance) Destroy(callbacks *driver.AllocationCallbacks) {
@@ -64,12 +72,21 @@ func (i *VulkanInstance) PhysicalDevices() ([]core1_0.PhysicalDevice, common.VkR
 
 		properties := createPhysicalDeviceProperties((*C.VkPhysicalDeviceProperties)(propertiesUnsafe))
 
-		devices = append(devices, &VulkanPhysicalDevice{
+		version := i.MaximumVersion.Min(properties.APIVersion)
+		physicalDevice := &VulkanPhysicalDevice{
 			InstanceDriver:       i.InstanceDriver,
 			PhysicalDeviceHandle: deviceHandles[ind],
-			DeviceProperties:     properties,
-			MaximumVersion:       i.MaximumVersion.Min(properties.APIVersion),
-		})
+			MaximumVersion:       version,
+		}
+
+		if version.IsAtLeast(common.Vulkan1_1) {
+			physicalDevice.PhysicalDevice1_1 = &internal1_1.VulkanPhysicalDevice{
+				InstanceDriver:       i.InstanceDriver,
+				PhysicalDeviceHandle: deviceHandles[ind],
+			}
+		}
+
+		devices = append(devices, physicalDevice)
 	}
 
 	return devices, res, nil

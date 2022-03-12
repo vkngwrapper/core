@@ -7,6 +7,7 @@ package core1_0
 import "C"
 import (
 	"github.com/CannibalVox/VKng/core/common"
+	"github.com/CannibalVox/VKng/core/core1_1"
 	"github.com/CannibalVox/VKng/core/driver"
 	"github.com/CannibalVox/cgoparam"
 	"time"
@@ -19,10 +20,16 @@ type VulkanFence struct {
 	FenceHandle driver.VkFence
 
 	MaximumAPIVersion common.APIVersion
+
+	Fence1_1 core1_1.Fence
 }
 
 func (f *VulkanFence) Handle() driver.VkFence {
 	return f.FenceHandle
+}
+
+func (f *VulkanFence) Core1_1() core1_1.Fence {
+	return f.Fence1_1
 }
 
 func (f *VulkanFence) Destroy(callbacks *driver.AllocationCallbacks) {

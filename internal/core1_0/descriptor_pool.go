@@ -7,6 +7,7 @@ package core1_0
 import "C"
 import (
 	"github.com/CannibalVox/VKng/core/common"
+	"github.com/CannibalVox/VKng/core/core1_1"
 	"github.com/CannibalVox/VKng/core/driver"
 )
 
@@ -16,6 +17,8 @@ type VulkanDescriptorPool struct {
 	Device               driver.VkDevice
 
 	MaximumAPIVersion common.APIVersion
+
+	DescriptorPool1_1 core1_1.DescriptorPool
 }
 
 func (p *VulkanDescriptorPool) Handle() driver.VkDescriptorPool {
@@ -32,6 +35,10 @@ func (p *VulkanDescriptorPool) Driver() driver.Driver {
 
 func (p *VulkanDescriptorPool) APIVersion() common.APIVersion {
 	return p.MaximumAPIVersion
+}
+
+func (p *VulkanDescriptorPool) Core1_1() core1_1.DescriptorPool {
+	return p.DescriptorPool1_1
 }
 
 func (p *VulkanDescriptorPool) Destroy(callbacks *driver.AllocationCallbacks) {

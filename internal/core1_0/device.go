@@ -8,7 +8,9 @@ import "C"
 import (
 	"github.com/CannibalVox/VKng/core/common"
 	"github.com/CannibalVox/VKng/core/core1_0"
+	"github.com/CannibalVox/VKng/core/core1_1"
 	"github.com/CannibalVox/VKng/core/driver"
+	internal1_1 "github.com/CannibalVox/VKng/core/internal/core1_1"
 	"github.com/CannibalVox/cgoparam"
 	"time"
 	"unsafe"
@@ -19,6 +21,8 @@ type VulkanDevice struct {
 	DeviceHandle driver.VkDevice
 
 	MaximumAPIVersion common.APIVersion
+
+	Device1_1 core1_1.Device
 }
 
 func (d *VulkanDevice) Driver() driver.Driver {
@@ -31,6 +35,10 @@ func (d *VulkanDevice) Handle() driver.VkDevice {
 
 func (d *VulkanDevice) APIVersion() common.APIVersion {
 	return d.MaximumAPIVersion
+}
+
+func (d *VulkanDevice) Core1_1() core1_1.Device {
+	return d.Device1_1
 }
 
 func (d *VulkanDevice) Destroy(callbacks *driver.AllocationCallbacks) {
@@ -140,12 +148,21 @@ func (d *VulkanDevice) GetQueue(queueFamilyIndex int, queueIndex int) core1_0.Qu
 
 	d.DeviceDriver.VkGetDeviceQueue(d.DeviceHandle, driver.Uint32(queueFamilyIndex), driver.Uint32(queueIndex), &queueHandle)
 
-	return &VulkanQueue{
+	queue := &VulkanQueue{
 		DeviceDriver: d.DeviceDriver,
 		QueueHandle:  queueHandle,
 
 		MaximumAPIVersion: d.MaximumAPIVersion,
 	}
+
+	if d.MaximumAPIVersion.IsAtLeast(common.Vulkan1_1) {
+		queue.Queue1_1 = &internal1_1.VulkanQueue{
+			DeviceDriver: d.DeviceDriver,
+			QueueHandle:  queueHandle,
+		}
+	}
+
+	return queue
 }
 
 func (d *VulkanDevice) AllocateMemory(allocationCallbacks *driver.AllocationCallbacks, o *core1_0.DeviceMemoryOptions) (core1_0.DeviceMemory, common.VkResult, error) {
@@ -167,14 +184,24 @@ func (d *VulkanDevice) AllocateMemory(allocationCallbacks *driver.AllocationCall
 		return nil, res, err
 	}
 
-	return &VulkanDeviceMemory{
+	deviceMemory := &VulkanDeviceMemory{
 		DeviceDriver:       deviceDriver,
 		Device:             deviceHandle,
 		DeviceMemoryHandle: deviceMemoryHandle,
 
 		MaximumAPIVersion: d.MaximumAPIVersion,
 		size:              o.AllocationSize,
-	}, res, nil
+	}
+
+	if d.MaximumAPIVersion.IsAtLeast(common.Vulkan1_1) {
+		deviceMemory.DeviceMemory1_1 = &internal1_1.VulkanDeviceMemory{
+			DeviceDriver:       deviceDriver,
+			Device:             deviceHandle,
+			DeviceMemoryHandle: deviceMemoryHandle,
+		}
+	}
+
+	return deviceMemory, res, nil
 }
 
 func (d *VulkanDevice) FreeMemory(deviceMemory core1_0.DeviceMemory, allocationCallbacks *driver.AllocationCallbacks) {
