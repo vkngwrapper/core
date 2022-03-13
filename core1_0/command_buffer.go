@@ -13,7 +13,7 @@ import (
 )
 
 const (
-	ResetReleaseResources common.CommandBufferResetFlags = C.VK_COMMAND_BUFFER_RESET_RELEASE_RESOURCES_BIT
+	CommandBufferResetReleaseResources common.CommandBufferResetFlags = C.VK_COMMAND_BUFFER_RESET_RELEASE_RESOURCES_BIT
 
 	LevelPrimary   common.CommandBufferLevel = C.VK_COMMAND_BUFFER_LEVEL_PRIMARY
 	LevelSecondary common.CommandBufferLevel = C.VK_COMMAND_BUFFER_LEVEL_SECONDARY
@@ -26,7 +26,7 @@ const (
 )
 
 func init() {
-	ResetReleaseResources.Register("Reset Release Resources")
+	CommandBufferResetReleaseResources.Register("Reset Release Resources")
 
 	LevelPrimary.Register("Primary")
 	LevelSecondary.Register("Secondary")

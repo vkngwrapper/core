@@ -3,8 +3,10 @@ package core1_0_test
 import (
 	"github.com/CannibalVox/VKng/core"
 	"github.com/CannibalVox/VKng/core/common"
+	"github.com/CannibalVox/VKng/core/core1_0"
 	"github.com/CannibalVox/VKng/core/driver"
-	"github.com/CannibalVox/VKng/core/internal/universal"
+	mock_driver "github.com/CannibalVox/VKng/core/driver/mocks"
+	internal_mocks "github.com/CannibalVox/VKng/core/internal/mocks"
 	"github.com/CannibalVox/VKng/core/mocks"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/require"
@@ -17,9 +19,9 @@ func TestDescriptorPool_Create(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockDriver := mocks.NewMockDriver(ctrl)
+	mockDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_0)
 	mockDevice := mocks.EasyMockDevice(ctrl, mockDriver)
-	loader, err := universal.CreateLoaderFromDriver(mockDriver)
+	loader, err := core.CreateLoaderFromDriver(mockDriver)
 	require.NoError(t, err)
 
 	expectedHandle := mocks.NewFakeDescriptorPool()
@@ -29,7 +31,7 @@ func TestDescriptorPool_Create(t *testing.T) {
 			v := reflect.ValueOf(*pCreateInfo)
 			require.Equal(t, uint64(33), v.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO
 			require.True(t, v.FieldByName("pNext").IsNil())
-			require.Equal(t, uint64(2), v.FieldByName("flags").Uint()) // VK_DESCRIPTOR_POOL_CREATE_UPDATE_AFTER_BIND_BIT
+			require.Equal(t, uint64(1), v.FieldByName("flags").Uint()) // VK_DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT
 			require.Equal(t, uint64(3), v.FieldByName("maxSets").Uint())
 			require.Equal(t, uint64(2), v.FieldByName("poolSizeCount").Uint())
 
@@ -45,23 +47,23 @@ func TestDescriptorPool_Create(t *testing.T) {
 				sizeCounts = append(sizeCounts, poolSizeVal.FieldByName("descriptorCount").Uint())
 			}
 
-			require.ElementsMatch(t, []uint64{1, 1000351000}, sizeTypes)
+			require.ElementsMatch(t, []uint64{1, 6}, sizeTypes)
 			require.ElementsMatch(t, []uint64{4, 5}, sizeCounts)
 
 			*pDescriptorPool = expectedHandle
-			return common.VKSuccess, nil
+			return core1_0.VKSuccess, nil
 		})
 
-	pool, _, err := loader.CreateDescriptorPool(mockDevice, nil, &core.DescriptorPoolOptions{
-		Flags:   DescriptorPoolUpdateAfterBind,
+	pool, _, err := loader.CreateDescriptorPool(mockDevice, nil, &core1_0.DescriptorPoolOptions{
+		Flags:   core1_0.DescriptorPoolCreateFreeDescriptorSet,
 		MaxSets: 3,
-		PoolSizes: []PoolSize{
+		PoolSizes: []core1_0.PoolSize{
 			{
-				Type:            common.DescriptorCombinedImageSampler,
+				Type:            core1_0.DescriptorCombinedImageSampler,
 				DescriptorCount: 5,
 			},
 			{
-				Type:            common.DescriptorMutableValve,
+				Type:            core1_0.DescriptorUniformBuffer,
 				DescriptorCount: 4,
 			},
 		},
@@ -75,15 +77,15 @@ func TestDescriptorPool_AllocAndFree_Single(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockDriver := mocks.NewMockDriver(ctrl)
+	mockDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_0)
 	loader, err := core.CreateLoaderFromDriver(mockDriver)
 	require.NoError(t, err)
 
 	mockDevice := mocks.EasyMockDevice(ctrl, mockDriver)
-	pool := mocks.EasyDummyDescriptorPool(t, loader, mockDevice)
+	pool := internal_mocks.EasyDummyDescriptorPool(t, loader, mockDevice)
 
 	setHandle := mocks.NewFakeDescriptorSet()
-	layout := mocks.EasyDummyDescriptorSetLayout(t, loader, mockDevice)
+	layout := internal_mocks.EasyDummyDescriptorSetLayout(t, loader, mockDevice)
 
 	mockDriver.EXPECT().VkAllocateDescriptorSets(mocks.Exactly(mockDevice.Handle()), gomock.Not(nil), gomock.Not(nil)).DoAndReturn(
 		func(device driver.VkDevice, pAllocateInfo *driver.VkDescriptorSetAllocateInfo, pSets *driver.VkDescriptorSet) (common.VkResult, error) {
@@ -105,7 +107,7 @@ func TestDescriptorPool_AllocAndFree_Single(t *testing.T) {
 			setSlice := ([]driver.VkDescriptorSet)(unsafe.Slice(pSets, 1))
 			setSlice[0] = setHandle
 
-			return common.VKSuccess, nil
+			return core1_0.VKSuccess, nil
 		})
 
 	mockDriver.EXPECT().VkFreeDescriptorSets(mocks.Exactly(mockDevice.Handle()), mocks.Exactly(pool.Handle()), driver.Uint32(1), gomock.Not(nil)).DoAndReturn(
@@ -113,18 +115,19 @@ func TestDescriptorPool_AllocAndFree_Single(t *testing.T) {
 			setSlice := ([]driver.VkDescriptorSet)(unsafe.Slice(pSets, 1))
 			require.Same(t, setHandle, setSlice[0])
 
-			return common.VKSuccess, nil
+			return core1_0.VKSuccess, nil
 		})
 
-	sets, _, err := pool.AllocateDescriptorSets(&core.DescriptorSetOptions{
-		AllocationLayouts: []core.DescriptorSetLayout{layout},
+	sets, _, err := loader.AllocateDescriptorSets(&core1_0.DescriptorSetOptions{
+		DescriptorPool:    pool,
+		AllocationLayouts: []core1_0.DescriptorSetLayout{layout},
 	})
 	require.NoError(t, err)
 
 	require.Len(t, sets, 1)
 	require.Same(t, setHandle, sets[0].Handle())
 
-	_, err = pool.FreeDescriptorSets(sets)
+	_, err = loader.FreeDescriptorSets(sets)
 	require.NoError(t, err)
 }
 
@@ -132,19 +135,19 @@ func TestDescriptorPool_AllocAndFree_Multi(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockDriver := mocks.NewMockDriver(ctrl)
+	mockDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_0)
 	loader, err := core.CreateLoaderFromDriver(mockDriver)
 	require.NoError(t, err)
 
 	mockDevice := mocks.EasyMockDevice(ctrl, mockDriver)
-	pool := mocks.EasyDummyDescriptorPool(t, loader, mockDevice)
+	pool := internal_mocks.EasyDummyDescriptorPool(t, loader, mockDevice)
 
 	setHandle1 := mocks.NewFakeDescriptorSet()
 	setHandle2 := mocks.NewFakeDescriptorSet()
 	setHandle3 := mocks.NewFakeDescriptorSet()
-	layout1 := mocks.EasyDummyDescriptorSetLayout(t, loader, mockDevice)
-	layout2 := mocks.EasyDummyDescriptorSetLayout(t, loader, mockDevice)
-	layout3 := mocks.EasyDummyDescriptorSetLayout(t, loader, mockDevice)
+	layout1 := internal_mocks.EasyDummyDescriptorSetLayout(t, loader, mockDevice)
+	layout2 := internal_mocks.EasyDummyDescriptorSetLayout(t, loader, mockDevice)
+	layout3 := internal_mocks.EasyDummyDescriptorSetLayout(t, loader, mockDevice)
 
 	mockDriver.EXPECT().VkAllocateDescriptorSets(mocks.Exactly(mockDevice.Handle()), gomock.Not(nil), gomock.Not(nil)).DoAndReturn(
 		func(device driver.VkDevice, pAllocateInfo *driver.VkDescriptorSetAllocateInfo, pSets *driver.VkDescriptorSet) (common.VkResult, error) {
@@ -170,7 +173,7 @@ func TestDescriptorPool_AllocAndFree_Multi(t *testing.T) {
 			setSlice[1] = setHandle2
 			setSlice[2] = setHandle3
 
-			return common.VKSuccess, nil
+			return core1_0.VKSuccess, nil
 		})
 
 	mockDriver.EXPECT().VkFreeDescriptorSets(mocks.Exactly(mockDevice.Handle()), mocks.Exactly(pool.Handle()), driver.Uint32(3), gomock.Not(nil)).DoAndReturn(
@@ -180,11 +183,12 @@ func TestDescriptorPool_AllocAndFree_Multi(t *testing.T) {
 			require.Same(t, setHandle2, setSlice[1])
 			require.Same(t, setHandle3, setSlice[2])
 
-			return common.VKSuccess, nil
+			return core1_0.VKSuccess, nil
 		})
 
-	sets, _, err := pool.AllocateDescriptorSets(&core.DescriptorSetOptions{
-		AllocationLayouts: []core.DescriptorSetLayout{layout1, layout2, layout3},
+	sets, _, err := loader.AllocateDescriptorSets(&core1_0.DescriptorSetOptions{
+		DescriptorPool:    pool,
+		AllocationLayouts: []core1_0.DescriptorSetLayout{layout1, layout2, layout3},
 	})
 	require.NoError(t, err)
 
@@ -193,7 +197,7 @@ func TestDescriptorPool_AllocAndFree_Multi(t *testing.T) {
 	require.Same(t, setHandle2, sets[1].Handle())
 	require.Same(t, setHandle3, sets[2].Handle())
 
-	_, err = pool.FreeDescriptorSets(sets)
+	_, err = loader.FreeDescriptorSets(sets)
 	require.NoError(t, err)
 }
 
@@ -201,14 +205,14 @@ func TestVulkanDescriptorPool_Reset(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockDriver := mocks.NewMockDriver(ctrl)
+	mockDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_0)
 	loader, err := core.CreateLoaderFromDriver(mockDriver)
 	require.NoError(t, err)
 
 	mockDevice := mocks.EasyMockDevice(ctrl, mockDriver)
-	pool := mocks.EasyDummyDescriptorPool(t, loader, mockDevice)
+	pool := internal_mocks.EasyDummyDescriptorPool(t, loader, mockDevice)
 
-	mockDriver.EXPECT().VkResetDescriptorPool(mocks.Exactly(mockDevice.Handle()), mocks.Exactly(pool.Handle()), driver.VkDescriptorPoolResetFlags(3)).Return(common.VKSuccess, nil)
+	mockDriver.EXPECT().VkResetDescriptorPool(mocks.Exactly(mockDevice.Handle()), mocks.Exactly(pool.Handle()), driver.VkDescriptorPoolResetFlags(3)).Return(core1_0.VKSuccess, nil)
 
 	_, err = pool.Reset(3)
 	require.NoError(t, err)

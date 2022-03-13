@@ -3,8 +3,10 @@ package core1_0_test
 import (
 	"github.com/CannibalVox/VKng/core"
 	"github.com/CannibalVox/VKng/core/common"
+	"github.com/CannibalVox/VKng/core/core1_0"
 	"github.com/CannibalVox/VKng/core/driver"
-	"github.com/CannibalVox/VKng/core/internal/universal"
+	mock_driver "github.com/CannibalVox/VKng/core/driver/mocks"
+	internal_mocks "github.com/CannibalVox/VKng/core/internal/mocks"
 	"github.com/CannibalVox/VKng/core/mocks"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/require"
@@ -17,24 +19,24 @@ func TestSubmitToQueue_SignalSuccess(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockDriver := mocks.NewMockDriver(ctrl)
-	loader, err := universal.CreateLoaderFromDriver(mockDriver)
+	mockDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_0)
+	loader, err := core.CreateLoaderFromDriver(mockDriver)
 	require.NoError(t, err)
 
-	mockDevice := mocks.EasyDummyDevice(t, ctrl, loader)
-	queue := mocks.EasyDummyQueue(mockDevice)
+	mockDevice := internal_mocks.EasyDummyDevice(t, ctrl, loader)
+	queue := internal_mocks.EasyDummyQueue(mockDevice)
 
-	fence := mocks.EasyDummyFence(t, loader, mockDevice)
+	fence := internal_mocks.EasyDummyFence(t, loader, mockDevice)
 
-	pool := mocks.EasyDummyCommandPool(t, loader, mockDevice)
-	buffer := mocks.EasyDummyCommandBuffer(t, mockDevice, pool)
+	pool := internal_mocks.EasyDummyCommandPool(t, loader, mockDevice)
+	buffer := internal_mocks.EasyDummyCommandBuffer(t, loader, mockDevice, pool)
 
-	waitSemaphore1 := mocks.EasyDummySemaphore(t, loader, mockDevice)
-	waitSemaphore2 := mocks.EasyDummySemaphore(t, loader, mockDevice)
+	waitSemaphore1 := internal_mocks.EasyDummySemaphore(t, loader, mockDevice)
+	waitSemaphore2 := internal_mocks.EasyDummySemaphore(t, loader, mockDevice)
 
-	signalSemaphore1 := mocks.EasyDummySemaphore(t, loader, mockDevice)
-	signalSemaphore2 := mocks.EasyDummySemaphore(t, loader, mockDevice)
-	signalSemaphore3 := mocks.EasyDummySemaphore(t, loader, mockDevice)
+	signalSemaphore1 := internal_mocks.EasyDummySemaphore(t, loader, mockDevice)
+	signalSemaphore2 := internal_mocks.EasyDummySemaphore(t, loader, mockDevice)
+	signalSemaphore3 := internal_mocks.EasyDummySemaphore(t, loader, mockDevice)
 
 	mockDriver.EXPECT().VkQueueSubmit(mocks.Exactly(queue.Handle()), driver.Uint32(1), gomock.Not(nil), mocks.Exactly(fence.Handle())).DoAndReturn(
 		func(queue driver.VkQueue, submitCount driver.Uint32, pSubmits *driver.VkSubmitInfo, fence driver.VkFence) (common.VkResult, error) {
@@ -72,15 +74,15 @@ func TestSubmitToQueue_SignalSuccess(t *testing.T) {
 				require.Same(t, signalSemaphore3.Handle(), signalSemaphoreSlice[2])
 			}
 
-			return common.VKSuccess, nil
+			return core1_0.VKSuccess, nil
 		})
 
-	_, err = queue.SubmitToQueue(fence, []*core.SubmitOptions{
+	_, err = queue.SubmitToQueue(fence, []core1_0.SubmitOptions{
 		{
-			CommandBuffers:   []core.CommandBuffer{buffer},
-			WaitSemaphores:   []core.Semaphore{waitSemaphore1, waitSemaphore2},
-			WaitDstStages:    []common.PipelineStages{common.PipelineStageVertexShader, common.PipelineStageFragmentShader},
-			SignalSemaphores: []core.Semaphore{signalSemaphore1, signalSemaphore2, signalSemaphore3},
+			CommandBuffers:   []core1_0.CommandBuffer{buffer},
+			WaitSemaphores:   []core1_0.Semaphore{waitSemaphore1, waitSemaphore2},
+			WaitDstStages:    []common.PipelineStages{core1_0.PipelineStageVertexShader, core1_0.PipelineStageFragmentShader},
+			SignalSemaphores: []core1_0.Semaphore{signalSemaphore1, signalSemaphore2, signalSemaphore3},
 		},
 	})
 	require.NoError(t, err)
@@ -90,15 +92,15 @@ func TestSubmitToQueue_NoSignalSuccess(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockDriver := mocks.NewMockDriver(ctrl)
-	loader, err := universal.CreateLoaderFromDriver(mockDriver)
+	mockDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_0)
+	loader, err := core.CreateLoaderFromDriver(mockDriver)
 	require.NoError(t, err)
 
-	mockDevice := mocks.EasyDummyDevice(t, ctrl, loader)
-	queue := mocks.EasyDummyQueue(mockDevice)
+	mockDevice := internal_mocks.EasyDummyDevice(t, ctrl, loader)
+	queue := internal_mocks.EasyDummyQueue(mockDevice)
 
-	pool := mocks.EasyDummyCommandPool(t, loader, mockDevice)
-	buffer := mocks.EasyDummyCommandBuffer(t, mockDevice, pool)
+	pool := internal_mocks.EasyDummyCommandPool(t, loader, mockDevice)
+	buffer := internal_mocks.EasyDummyCommandBuffer(t, loader, mockDevice, pool)
 
 	mockDriver.EXPECT().VkQueueSubmit(mocks.Exactly(queue.Handle()), driver.Uint32(1), gomock.Not(nil), nil).DoAndReturn(
 		func(queue driver.VkQueue, submitCount driver.Uint32, pSubmits *driver.VkSubmitInfo, fence driver.VkFence) (common.VkResult, error) {
@@ -122,15 +124,15 @@ func TestSubmitToQueue_NoSignalSuccess(t *testing.T) {
 				require.Same(t, buffer.Handle(), commandBufferSlice[0])
 			}
 
-			return common.VKSuccess, nil
+			return core1_0.VKSuccess, nil
 		})
 
-	_, err = queue.SubmitToQueue(nil, []*core.SubmitOptions{
+	_, err = queue.SubmitToQueue(nil, []core1_0.SubmitOptions{
 		{
-			CommandBuffers:   []core.CommandBuffer{buffer},
-			WaitSemaphores:   []core.Semaphore{},
+			CommandBuffers:   []core1_0.CommandBuffer{buffer},
+			WaitSemaphores:   []core1_0.Semaphore{},
 			WaitDstStages:    []common.PipelineStages{},
-			SignalSemaphores: []core.Semaphore{},
+			SignalSemaphores: []core1_0.Semaphore{},
 		},
 	})
 	require.NoError(t, err)
@@ -140,25 +142,25 @@ func TestSubmitToQueue_MismatchWaitSemaphores(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockDriver := mocks.NewMockDriver(ctrl)
-	loader, err := universal.CreateLoaderFromDriver(mockDriver)
+	mockDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_0)
+	loader, err := core.CreateLoaderFromDriver(mockDriver)
 	require.NoError(t, err)
 
-	mockDevice := mocks.EasyDummyDevice(t, ctrl, loader)
-	queue := mocks.EasyDummyQueue(mockDevice)
+	mockDevice := internal_mocks.EasyDummyDevice(t, ctrl, loader)
+	queue := internal_mocks.EasyDummyQueue(mockDevice)
 
-	pool := mocks.EasyDummyCommandPool(t, loader, mockDevice)
-	buffer := mocks.EasyDummyCommandBuffer(t, mockDevice, pool)
+	pool := internal_mocks.EasyDummyCommandPool(t, loader, mockDevice)
+	buffer := internal_mocks.EasyDummyCommandBuffer(t, loader, mockDevice, pool)
 
-	waitSemaphore1 := mocks.EasyDummySemaphore(t, loader, mockDevice)
-	waitSemaphore2 := mocks.EasyDummySemaphore(t, loader, mockDevice)
+	waitSemaphore1 := internal_mocks.EasyDummySemaphore(t, loader, mockDevice)
+	waitSemaphore2 := internal_mocks.EasyDummySemaphore(t, loader, mockDevice)
 
-	_, err = queue.SubmitToQueue(nil, []*core.SubmitOptions{
+	_, err = queue.SubmitToQueue(nil, []core1_0.SubmitOptions{
 		{
-			CommandBuffers:   []core.CommandBuffer{buffer},
-			WaitSemaphores:   []core.Semaphore{waitSemaphore1, waitSemaphore2},
-			WaitDstStages:    []common.PipelineStages{common.PipelineStageFragmentShader},
-			SignalSemaphores: []core.Semaphore{},
+			CommandBuffers:   []core1_0.CommandBuffer{buffer},
+			WaitSemaphores:   []core1_0.Semaphore{waitSemaphore1, waitSemaphore2},
+			WaitDstStages:    []common.PipelineStages{core1_0.PipelineStageFragmentShader},
+			SignalSemaphores: []core1_0.Semaphore{},
 		},
 	})
 	require.EqualError(t, err, "attempted to submit with 2 wait semaphores but 1 dst stages- these should match")

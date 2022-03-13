@@ -3,7 +3,10 @@ package core1_0_test
 import (
 	"github.com/CannibalVox/VKng/core"
 	"github.com/CannibalVox/VKng/core/common"
+	"github.com/CannibalVox/VKng/core/core1_0"
 	"github.com/CannibalVox/VKng/core/driver"
+	mock_driver "github.com/CannibalVox/VKng/core/driver/mocks"
+	internal_mocks "github.com/CannibalVox/VKng/core/internal/mocks"
 	"github.com/CannibalVox/VKng/core/mocks"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/require"
@@ -17,11 +20,11 @@ func TestVulkanLoader1_0_CreateFence(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockDriver := mocks.NewMockDriver(ctrl)
+	mockDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_0)
 	loader, err := core.CreateLoaderFromDriver(mockDriver)
 	require.NoError(t, err)
 
-	device := mocks.EasyDummyDevice(t, ctrl, loader)
+	device := internal_mocks.EasyDummyDevice(t, ctrl, loader)
 	fenceHandle := mocks.NewFakeFenceHandle()
 
 	mockDriver.EXPECT().VkCreateFence(mocks.Exactly(device.Handle()), gomock.Not(nil), nil, gomock.Not(nil)).DoAndReturn(
@@ -33,11 +36,11 @@ func TestVulkanLoader1_0_CreateFence(t *testing.T) {
 			require.Equal(t, uint64(1), val.FieldByName("flags").Uint()) // VK_FENCE_CREATE_SIGNALED_BIT
 
 			*pFence = fenceHandle
-			return common.VKSuccess, nil
+			return core1_0.VKSuccess, nil
 		})
 
-	fence, _, err := loader.CreateFence(device, nil, &core.FenceOptions{
-		Flags: core.FenceSignaled,
+	fence, _, err := loader.CreateFence(device, nil, &core1_0.FenceOptions{
+		Flags: core1_0.FenceCreateSignaled,
 	})
 	require.NoError(t, err)
 	require.NotNil(t, fence)
@@ -48,19 +51,19 @@ func TestVulkanFence_Wait(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockDriver := mocks.NewMockDriver(ctrl)
+	mockDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_0)
 	loader, err := core.CreateLoaderFromDriver(mockDriver)
 	require.NoError(t, err)
 
 	device := mocks.EasyMockDevice(ctrl, mockDriver)
-	fence := mocks.EasyDummyFence(t, loader, device)
+	fence := internal_mocks.EasyDummyFence(t, loader, device)
 
 	mockDriver.EXPECT().VkWaitForFences(mocks.Exactly(device.Handle()), driver.Uint32(1), gomock.Not(nil), driver.VkBool32(1), driver.Uint64(60000000000)).DoAndReturn(
 		func(device driver.VkDevice, fenceCount driver.Uint32, pFences *driver.VkFence, waitAll driver.VkBool32, timeout driver.Uint64) (common.VkResult, error) {
 			fenceSlice := ([]driver.VkFence)(unsafe.Slice(pFences, 1))
 			require.Same(t, fence.Handle(), fenceSlice[0])
 
-			return common.VKSuccess, nil
+			return core1_0.VKSuccess, nil
 		})
 
 	_, err = fence.Wait(time.Minute)
@@ -71,19 +74,19 @@ func TestVulkanFence_Reset(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockDriver := mocks.NewMockDriver(ctrl)
+	mockDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_0)
 	loader, err := core.CreateLoaderFromDriver(mockDriver)
 	require.NoError(t, err)
 
 	device := mocks.EasyMockDevice(ctrl, mockDriver)
-	fence := mocks.EasyDummyFence(t, loader, device)
+	fence := internal_mocks.EasyDummyFence(t, loader, device)
 
 	mockDriver.EXPECT().VkResetFences(mocks.Exactly(device.Handle()), driver.Uint32(1), gomock.Not(nil)).DoAndReturn(
 		func(device driver.VkDevice, fenceCount driver.Uint32, pFence *driver.VkFence) (common.VkResult, error) {
 			fences := ([]driver.VkFence)(unsafe.Slice(pFence, 1))
 			require.Same(t, fence.Handle(), fences[0])
 
-			return common.VKSuccess, nil
+			return core1_0.VKSuccess, nil
 		})
 
 	_, err = fence.Reset()
@@ -94,16 +97,16 @@ func TestVulkanFence_Status(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockDriver := mocks.NewMockDriver(ctrl)
+	mockDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_0)
 	loader, err := core.CreateLoaderFromDriver(mockDriver)
 	require.NoError(t, err)
 
 	device := mocks.EasyMockDevice(ctrl, mockDriver)
-	fence := mocks.EasyDummyFence(t, loader, device)
+	fence := internal_mocks.EasyDummyFence(t, loader, device)
 
-	mockDriver.EXPECT().VkGetFenceStatus(mocks.Exactly(device.Handle()), mocks.Exactly(fence.Handle())).Return(common.VKNotReady, nil)
+	mockDriver.EXPECT().VkGetFenceStatus(mocks.Exactly(device.Handle()), mocks.Exactly(fence.Handle())).Return(core1_0.VKNotReady, nil)
 
 	res, err := fence.Status()
 	require.NoError(t, err)
-	require.Equal(t, common.VKNotReady, res)
+	require.Equal(t, core1_0.VKNotReady, res)
 }

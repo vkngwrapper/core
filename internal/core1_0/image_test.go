@@ -3,7 +3,10 @@ package core1_0_test
 import (
 	"github.com/CannibalVox/VKng/core"
 	"github.com/CannibalVox/VKng/core/common"
+	"github.com/CannibalVox/VKng/core/core1_0"
 	"github.com/CannibalVox/VKng/core/driver"
+	mock_driver "github.com/CannibalVox/VKng/core/driver/mocks"
+	internal_mocks "github.com/CannibalVox/VKng/core/internal/mocks"
 	"github.com/CannibalVox/VKng/core/mocks"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/require"
@@ -16,7 +19,7 @@ func TestVulkanLoader1_0_CreateImage(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockDriver := mocks.NewMockDriver(ctrl)
+	mockDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_0)
 	loader, err := core.CreateLoaderFromDriver(mockDriver)
 	require.NoError(t, err)
 
@@ -30,9 +33,9 @@ func TestVulkanLoader1_0_CreateImage(t *testing.T) {
 			val := reflect.ValueOf(*pCreateInfo)
 			require.Equal(t, uint64(14), val.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO
 			require.True(t, val.FieldByName("pNext").IsNil())
-			require.Equal(t, uint64(0x00000800), val.FieldByName("flags").Uint())
-			require.Equal(t, uint64(1), val.FieldByName("imageType").Uint()) // VK_IMAGE_TYPE_2D
-			require.Equal(t, uint64(59), val.FieldByName("format").Uint())   // VK_FORMAT_A2R10G10B10_SNORM_PACK32
+			require.Equal(t, uint64(0x00000010), val.FieldByName("flags").Uint()) // VK_IMAGE_CREATE_CUBE_COMPATIBLE_BIT
+			require.Equal(t, uint64(1), val.FieldByName("imageType").Uint())      // VK_IMAGE_TYPE_2D
+			require.Equal(t, uint64(59), val.FieldByName("format").Uint())        // VK_FORMAT_A2R10G10B10_SNORM_PACK32
 			require.Equal(t, uint64(7), val.FieldByName("mipLevels").Uint())
 			require.Equal(t, uint64(11), val.FieldByName("arrayLayers").Uint())
 			require.Equal(t, uint64(16), val.FieldByName("samples").Uint())    // VK_SAMPLE_COUNT_16_BIT
@@ -40,7 +43,7 @@ func TestVulkanLoader1_0_CreateImage(t *testing.T) {
 			require.Equal(t, uint64(1), val.FieldByName("usage").Uint())       // VK_IMAGE_USAGE_TRANSFER_SRC_BIT
 			require.Equal(t, uint64(1), val.FieldByName("sharingMode").Uint()) // VK_SHARING_MODE_CONCURRENT
 			require.Equal(t, uint64(3), val.FieldByName("queueFamilyIndexCount").Uint())
-			require.Equal(t, uint64(1000117001), val.FieldByName("initialLayout").Uint()) // VK_IMAGE_LAYOUT_DEPTH_ATTACHMENT_STENCIL_READ_ONLY_OPTIMAL
+			require.Equal(t, uint64(6), val.FieldByName("initialLayout").Uint()) // VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL
 
 			extent := val.FieldByName("extent")
 			require.Equal(t, uint64(1), extent.FieldByName("width").Uint())
@@ -52,13 +55,13 @@ func TestVulkanLoader1_0_CreateImage(t *testing.T) {
 
 			require.Equal(t, []driver.Uint32{13, 17, 19}, indicesSlice)
 
-			return common.VKSuccess, nil
+			return core1_0.VKSuccess, nil
 		})
 
-	image, _, err := loader.CreateImage(device, nil, &core.ImageOptions{
-		Flags:     core.ImageProtected,
-		ImageType: common.ImageType2D,
-		Format:    common.FormatA2R10G10B10SignedNormalized,
+	image, _, err := loader.CreateImage(device, nil, &core1_0.ImageOptions{
+		Flags:     core1_0.ImageCreateCubeCompatible,
+		ImageType: core1_0.ImageType2D,
+		Format:    core1_0.DataFormatA2R10G10B10SignedNormalized,
 		Extent: common.Extent3D{
 			Width:  1,
 			Height: 3,
@@ -66,12 +69,12 @@ func TestVulkanLoader1_0_CreateImage(t *testing.T) {
 		},
 		MipLevels:     7,
 		ArrayLayers:   11,
-		Samples:       common.Samples16,
-		Tiling:        common.ImageTilingLinear,
-		Usage:         common.ImageUsageTransferSrc,
-		SharingMode:   common.SharingConcurrent,
+		Samples:       core1_0.Samples16,
+		Tiling:        core1_0.ImageTilingLinear,
+		Usage:         core1_0.ImageUsageTransferSrc,
+		SharingMode:   core1_0.SharingConcurrent,
 		QueueFamilies: []uint32{13, 17, 19},
-		InitialLayout: common.LayoutDepthAttachmentStencilReadOnlyOptimal,
+		InitialLayout: core1_0.ImageLayoutTransferSrcOptimal,
 	})
 	require.NoError(t, err)
 	require.NotNil(t, image)
@@ -82,12 +85,12 @@ func TestVulkanImage_MemoryRequirements(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockDriver := mocks.NewMockDriver(ctrl)
+	mockDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_0)
 	loader, err := core.CreateLoaderFromDriver(mockDriver)
 	require.NoError(t, err)
 
 	device := mocks.EasyMockDevice(ctrl, mockDriver)
-	image := mocks.EasyDummyImage(t, loader, device)
+	image := internal_mocks.EasyDummyImage(t, loader, device)
 
 	mockDriver.EXPECT().VkGetImageMemoryRequirements(mocks.Exactly(device.Handle()), mocks.Exactly(image.Handle()), gomock.Not(nil)).DoAndReturn(
 		func(device driver.VkDevice, image driver.VkImage, pRequirements *driver.VkMemoryRequirements) {
@@ -109,15 +112,15 @@ func TestVulkanImage_BindImageMemory(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockDriver := mocks.NewMockDriver(ctrl)
+	mockDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_0)
 	loader, err := core.CreateLoaderFromDriver(mockDriver)
 	require.NoError(t, err)
 
 	device := mocks.EasyMockDevice(ctrl, mockDriver)
 	memory := mocks.EasyMockDeviceMemory(ctrl)
-	image := mocks.EasyDummyImage(t, loader, device)
+	image := internal_mocks.EasyDummyImage(t, loader, device)
 
-	mockDriver.EXPECT().VkBindImageMemory(mocks.Exactly(device.Handle()), mocks.Exactly(image.Handle()), memory.Handle(), driver.VkDeviceSize(3)).Return(common.VKSuccess, nil)
+	mockDriver.EXPECT().VkBindImageMemory(mocks.Exactly(device.Handle()), mocks.Exactly(image.Handle()), memory.Handle(), driver.VkDeviceSize(3)).Return(core1_0.VKSuccess, nil)
 
 	_, err = image.BindImageMemory(memory, 3)
 	require.NoError(t, err)
@@ -127,18 +130,18 @@ func TestVulkanImage_SubresourceLayout(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockDriver := mocks.NewMockDriver(ctrl)
+	mockDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_0)
 	loader, err := core.CreateLoaderFromDriver(mockDriver)
 	require.NoError(t, err)
 
 	device := mocks.EasyMockDevice(ctrl, mockDriver)
-	image := mocks.EasyDummyImage(t, loader, device)
+	image := internal_mocks.EasyDummyImage(t, loader, device)
 
 	mockDriver.EXPECT().VkGetImageSubresourceLayout(mocks.Exactly(device.Handle()), mocks.Exactly(image.Handle()), gomock.Not(nil), gomock.Not(nil)).DoAndReturn(
 		func(device driver.VkDevice, image driver.VkImage, pSubresource *driver.VkImageSubresource, pLayout *driver.VkSubresourceLayout) {
 			val := reflect.ValueOf(pSubresource).Elem()
 
-			require.Equal(t, uint64(0x00000200), val.FieldByName("aspectMask").Uint())
+			require.Equal(t, uint64(0x00000002), val.FieldByName("aspectMask").Uint()) // VK_IMAGE_ASPECT_DEPTH_BIT
 			require.Equal(t, uint64(1), val.FieldByName("mipLevel").Uint())
 			require.Equal(t, uint64(3), val.FieldByName("arrayLayer").Uint())
 
@@ -151,7 +154,7 @@ func TestVulkanImage_SubresourceLayout(t *testing.T) {
 		})
 
 	layout := image.SubresourceLayout(&common.ImageSubresource{
-		AspectMask: common.AspectMemoryPlane2EXT,
+		AspectMask: core1_0.AspectDepth,
 		MipLevel:   1,
 		ArrayLayer: 3,
 	})
@@ -167,12 +170,12 @@ func TestVulkanImage_SparseMemoryRequirements(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockDriver := mocks.NewMockDriver(ctrl)
+	mockDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_0)
 	loader, err := core.CreateLoaderFromDriver(mockDriver)
 	require.NoError(t, err)
 
 	device := mocks.EasyMockDevice(ctrl, mockDriver)
-	image := mocks.EasyDummyImage(t, loader, device)
+	image := internal_mocks.EasyDummyImage(t, loader, device)
 
 	mockDriver.EXPECT().VkGetImageSparseMemoryRequirements(mocks.Exactly(device.Handle()), mocks.Exactly(image.Handle()), gomock.Not(nil), nil).DoAndReturn(
 		func(device driver.VkDevice, image driver.VkImage, pReqCount *driver.Uint32, pRequirements *driver.VkSparseImageMemoryRequirements) {
@@ -212,12 +215,12 @@ func TestVulkanImage_SparseMemoryRequirements(t *testing.T) {
 		})
 
 	reqs := image.SparseMemoryRequirements()
-	require.Equal(t, []core.SparseImageMemoryRequirements{
+	require.Equal(t, []core1_0.SparseImageMemoryRequirements{
 		{
-			FormatProperties: core.SparseImageFormatProperties{
-				AspectMask:       common.AspectColor,
+			FormatProperties: core1_0.SparseImageFormatProperties{
+				AspectMask:       core1_0.AspectColor,
 				ImageGranularity: common.Extent3D{1, 3, 5},
-				Flags:            core.SparseImageFormatNonstandardBlockSize,
+				Flags:            core1_0.SparseImageFormatNonstandardBlockSize,
 			},
 			ImageMipTailFirstLod: 7,
 			ImageMipTailOffset:   11,
@@ -225,10 +228,10 @@ func TestVulkanImage_SparseMemoryRequirements(t *testing.T) {
 			ImageMipTailStride:   17,
 		},
 		{
-			FormatProperties: core.SparseImageFormatProperties{
-				AspectMask:       common.AspectDepth,
+			FormatProperties: core1_0.SparseImageFormatProperties{
+				AspectMask:       core1_0.AspectDepth,
 				ImageGranularity: common.Extent3D{19, 23, 29},
-				Flags:            core.SparseImageFormatAlignedMipSize,
+				Flags:            core1_0.SparseImageFormatAlignedMipSize,
 			},
 			ImageMipTailFirstLod: 31,
 			ImageMipTailOffset:   37,

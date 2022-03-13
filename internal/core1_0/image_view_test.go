@@ -3,7 +3,10 @@ package core1_0_test
 import (
 	"github.com/CannibalVox/VKng/core"
 	"github.com/CannibalVox/VKng/core/common"
+	"github.com/CannibalVox/VKng/core/core1_0"
 	"github.com/CannibalVox/VKng/core/driver"
+	mock_driver "github.com/CannibalVox/VKng/core/driver/mocks"
+	internal_mocks "github.com/CannibalVox/VKng/core/internal/mocks"
 	"github.com/CannibalVox/VKng/core/mocks"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/require"
@@ -16,11 +19,11 @@ func TestVulkanLoader1_0_CreateImageView(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockDriver := mocks.NewMockDriver(ctrl)
+	mockDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_0)
 	loader, err := core.CreateLoaderFromDriver(mockDriver)
 	require.NoError(t, err)
 
-	device := mocks.EasyDummyDevice(t, ctrl, loader)
+	device := internal_mocks.EasyDummyDevice(t, ctrl, loader)
 	imageViewHandle := mocks.NewFakeImageViewHandle()
 	image := mocks.EasyMockImage(ctrl)
 
@@ -29,7 +32,7 @@ func TestVulkanLoader1_0_CreateImageView(t *testing.T) {
 			val := reflect.ValueOf(*pCreateInfo)
 			require.Equal(t, uint64(15), val.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO
 			require.True(t, val.FieldByName("pNext").IsNil())
-			require.Equal(t, uint64(2), val.FieldByName("flags").Uint()) // VK_IMAGE_VIEW_CREATE_FRAGMENT_DENSITY_MAP_DEFERRED_BIT_EXT
+			require.Equal(t, uint64(0), val.FieldByName("flags").Uint())
 			require.Same(t, image.Handle(), (driver.VkImage)(unsafe.Pointer(val.FieldByName("image").Elem().UnsafeAddr())))
 			require.Equal(t, uint64(1), val.FieldByName("viewType").Uint()) // VK_IMAGE_VIEW_TYPE_2D
 			require.Equal(t, uint64(67), val.FieldByName("format").Uint())  // VK_FORMAT_A2B10G10R10_SSCALED_PACK32
@@ -48,26 +51,26 @@ func TestVulkanLoader1_0_CreateImageView(t *testing.T) {
 			require.Equal(t, uint64(3), subresource.FieldByName("aspectMask").Uint()) // VK_IMAGE_ASPECT_COLOR_BIT | VK_IMAGE_ASPECT_DEPTH_BIT
 
 			*pImageView = imageViewHandle
-			return common.VKSuccess, nil
+			return core1_0.VKSuccess, nil
 		})
 
-	imageView, _, err := loader.CreateImageView(device, nil, &core.ImageViewOptions{
+	imageView, _, err := loader.CreateImageView(device, nil, &core1_0.ImageViewOptions{
 		Image:    image,
-		ViewType: common.ViewType2D,
-		Format:   common.FormatA2B10G10R10SignedScaled,
-		Flags:    core.ImageViewCreateFragmentDensityMapDeferredEXT,
-		Components: common.ComponentMapping{
-			A: common.SwizzleAlpha,
-			R: common.SwizzleRed,
-			G: common.SwizzleGreen,
-			B: common.SwizzleBlue,
+		ViewType: core1_0.ViewType2D,
+		Format:   core1_0.DataFormatA2B10G10R10SignedScaled,
+		Flags:    0,
+		Components: core1_0.ComponentMapping{
+			A: core1_0.SwizzleAlpha,
+			R: core1_0.SwizzleRed,
+			G: core1_0.SwizzleGreen,
+			B: core1_0.SwizzleBlue,
 		},
 		SubresourceRange: common.ImageSubresourceRange{
 			BaseMipLevel:   1,
 			LevelCount:     2,
 			BaseArrayLayer: 3,
 			LayerCount:     5,
-			AspectMask:     common.AspectColor | common.AspectDepth,
+			AspectMask:     core1_0.AspectColor | core1_0.AspectDepth,
 		},
 	})
 	require.NoError(t, err)

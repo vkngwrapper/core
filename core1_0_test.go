@@ -1,9 +1,11 @@
 package core_test
 
 import (
+	"github.com/CannibalVox/VKng/core"
 	"github.com/CannibalVox/VKng/core/common"
+	"github.com/CannibalVox/VKng/core/core1_0"
 	"github.com/CannibalVox/VKng/core/driver"
-	"github.com/CannibalVox/VKng/core/mocks"
+	mock_driver "github.com/CannibalVox/VKng/core/driver/mocks"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/require"
 	"reflect"
@@ -23,15 +25,15 @@ func TestVulkanLoader1_0_AvailableExtensions(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockDriver := mocks.NewMockDriver(ctrl)
-	loader, err := CreateLoaderFromDriver(mockDriver)
+	mockDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_0)
+	loader, err := core.CreateLoaderFromDriver(mockDriver)
 	require.NoError(t, err)
 
 	mockDriver.EXPECT().VkEnumerateInstanceExtensionProperties(nil, gomock.Not(nil), nil).DoAndReturn(
 		func(pLayerName *driver.Char, pPropertyCount *driver.Uint32, pProperties *driver.VkExtensionProperties) (common.VkResult, error) {
 			*pPropertyCount = 2
 
-			return common.VKSuccess, nil
+			return core1_0.VKSuccess, nil
 		})
 
 	mockDriver.EXPECT().VkEnumerateInstanceExtensionProperties(nil, gomock.Not(nil), gomock.Not(nil)).DoAndReturn(
@@ -50,7 +52,7 @@ func TestVulkanLoader1_0_AvailableExtensions(t *testing.T) {
 			extensionName = ([]driver.Char)(unsafe.Slice((*driver.Char)(unsafe.Pointer(extension.FieldByName("extensionName").UnsafeAddr())), 256))
 			strToCharSlice("extension A", extensionName)
 
-			return common.VKSuccess, nil
+			return core1_0.VKSuccess, nil
 		})
 
 	extensions, _, err := loader.AvailableExtensions()
@@ -72,25 +74,25 @@ func TestVulkanLoader1_0_AvailableExtensions_Incomplete(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockDriver := mocks.NewMockDriver(ctrl)
-	loader, err := CreateLoaderFromDriver(mockDriver)
+	mockDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_0)
+	loader, err := core.CreateLoaderFromDriver(mockDriver)
 	require.NoError(t, err)
 
 	mockDriver.EXPECT().VkEnumerateInstanceExtensionProperties(nil, gomock.Not(nil), nil).DoAndReturn(
 		func(pLayerName *driver.Char, pPropertyCount *driver.Uint32, pProperties *driver.VkExtensionProperties) (common.VkResult, error) {
 			*pPropertyCount = 2
 
-			return common.VKSuccess, nil
+			return core1_0.VKSuccess, nil
 		})
 	mockDriver.EXPECT().VkEnumerateInstanceExtensionProperties(nil, gomock.Not(nil), gomock.Not(nil)).DoAndReturn(
 		func(pLayerName *driver.Char, pPropertyCount *driver.Uint32, pProperties *driver.VkExtensionProperties) (common.VkResult, error) {
-			return common.VKIncomplete, nil
+			return core1_0.VKIncomplete, nil
 		})
 	mockDriver.EXPECT().VkEnumerateInstanceExtensionProperties(nil, gomock.Not(nil), nil).DoAndReturn(
 		func(pLayerName *driver.Char, pPropertyCount *driver.Uint32, pProperties *driver.VkExtensionProperties) (common.VkResult, error) {
 			*pPropertyCount = 2
 
-			return common.VKSuccess, nil
+			return core1_0.VKSuccess, nil
 		})
 	mockDriver.EXPECT().VkEnumerateInstanceExtensionProperties(nil, gomock.Not(nil), gomock.Not(nil)).DoAndReturn(
 		func(pLayerName *driver.Char, pPropertyCount *driver.Uint32, pProperties *driver.VkExtensionProperties) (common.VkResult, error) {
@@ -108,7 +110,7 @@ func TestVulkanLoader1_0_AvailableExtensions_Incomplete(t *testing.T) {
 			extensionName = ([]driver.Char)(unsafe.Slice((*driver.Char)(unsafe.Pointer(extension.FieldByName("extensionName").UnsafeAddr())), 256))
 			strToCharSlice("extension A", extensionName)
 
-			return common.VKSuccess, nil
+			return core1_0.VKSuccess, nil
 		})
 
 	extensions, _, err := loader.AvailableExtensions()
@@ -130,15 +132,15 @@ func TestVulkanLoader1_0_AvailableLayers(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockDriver := mocks.NewMockDriver(ctrl)
-	loader, err := CreateLoaderFromDriver(mockDriver)
+	mockDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_0)
+	loader, err := core.CreateLoaderFromDriver(mockDriver)
 	require.NoError(t, err)
 
 	mockDriver.EXPECT().VkEnumerateInstanceLayerProperties(gomock.Not(nil), gomock.Not(nil)).DoAndReturn(
 		func(pPropertyCount *driver.Uint32, pProperties *driver.VkLayerProperties) (common.VkResult, error) {
 			*pPropertyCount = 2
 
-			return common.VKSuccess, nil
+			return core1_0.VKSuccess, nil
 		})
 	mockDriver.EXPECT().VkEnumerateInstanceLayerProperties(gomock.Not(nil), gomock.Not(nil)).DoAndReturn(
 		func(pPropertyCount *driver.Uint32, pProperties *driver.VkLayerProperties) (common.VkResult, error) {
@@ -163,7 +165,7 @@ func TestVulkanLoader1_0_AvailableLayers(t *testing.T) {
 			layerDesc = ([]driver.Char)(unsafe.Slice((*driver.Char)(unsafe.Pointer(layer.FieldByName("description").UnsafeAddr())), 256))
 			strToCharSlice("a bad layer", layerDesc)
 
-			return common.VKSuccess, nil
+			return core1_0.VKSuccess, nil
 		})
 
 	layers, _, err := loader.AvailableLayers()
@@ -189,25 +191,25 @@ func TestVulkanLoader1_0_AvailableLayers_Incomplete(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockDriver := mocks.NewMockDriver(ctrl)
-	loader, err := CreateLoaderFromDriver(mockDriver)
+	mockDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_0)
+	loader, err := core.CreateLoaderFromDriver(mockDriver)
 	require.NoError(t, err)
 
 	mockDriver.EXPECT().VkEnumerateInstanceLayerProperties(gomock.Not(nil), gomock.Not(nil)).DoAndReturn(
 		func(pPropertyCount *driver.Uint32, pProperties *driver.VkLayerProperties) (common.VkResult, error) {
 			*pPropertyCount = 2
 
-			return common.VKSuccess, nil
+			return core1_0.VKSuccess, nil
 		})
 	mockDriver.EXPECT().VkEnumerateInstanceLayerProperties(gomock.Not(nil), gomock.Not(nil)).DoAndReturn(
 		func(pPropertyCount *driver.Uint32, pProperties *driver.VkLayerProperties) (common.VkResult, error) {
-			return common.VKIncomplete, nil
+			return core1_0.VKIncomplete, nil
 		})
 	mockDriver.EXPECT().VkEnumerateInstanceLayerProperties(gomock.Not(nil), gomock.Not(nil)).DoAndReturn(
 		func(pPropertyCount *driver.Uint32, pProperties *driver.VkLayerProperties) (common.VkResult, error) {
 			*pPropertyCount = 2
 
-			return common.VKSuccess, nil
+			return core1_0.VKSuccess, nil
 		})
 	mockDriver.EXPECT().VkEnumerateInstanceLayerProperties(gomock.Not(nil), gomock.Not(nil)).DoAndReturn(
 		func(pPropertyCount *driver.Uint32, pProperties *driver.VkLayerProperties) (common.VkResult, error) {
@@ -232,7 +234,7 @@ func TestVulkanLoader1_0_AvailableLayers_Incomplete(t *testing.T) {
 			layerDesc = ([]driver.Char)(unsafe.Slice((*driver.Char)(unsafe.Pointer(layer.FieldByName("description").UnsafeAddr())), 256))
 			strToCharSlice("a bad layer", layerDesc)
 
-			return common.VKSuccess, nil
+			return core1_0.VKSuccess, nil
 		})
 
 	layers, _, err := loader.AvailableLayers()

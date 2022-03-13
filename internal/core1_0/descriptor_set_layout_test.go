@@ -3,7 +3,9 @@ package core1_0_test
 import (
 	"github.com/CannibalVox/VKng/core"
 	"github.com/CannibalVox/VKng/core/common"
+	"github.com/CannibalVox/VKng/core/core1_0"
 	"github.com/CannibalVox/VKng/core/driver"
+	mock_driver "github.com/CannibalVox/VKng/core/driver/mocks"
 	"github.com/CannibalVox/VKng/core/mocks"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/require"
@@ -16,7 +18,7 @@ func TestDescriptorSetLayout_Create_SingleBinding(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockDriver := mocks.NewMockDriver(ctrl)
+	mockDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_0)
 	loader, err := core.CreateLoaderFromDriver(mockDriver)
 	require.NoError(t, err)
 
@@ -28,7 +30,7 @@ func TestDescriptorSetLayout_Create_SingleBinding(t *testing.T) {
 			v := reflect.ValueOf(*pCreateInfo)
 			require.Equal(t, uint64(32), v.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO
 			require.True(t, v.FieldByName("pNext").IsNil())
-			require.Equal(t, uint64(4), v.FieldByName("flags").Uint()) // VK_DESCRIPTOR_SET_LAYOUT_CREATE_HOST_ONLY_POOL_BIT_VALVE
+			require.Equal(t, uint64(0), v.FieldByName("flags").Uint())
 			require.Equal(t, uint64(1), v.FieldByName("bindingCount").Uint())
 
 			bindingsPtr := (*driver.VkDescriptorSetLayoutBinding)(unsafe.Pointer(v.FieldByName("pBindings").Elem().UnsafeAddr()))
@@ -42,17 +44,17 @@ func TestDescriptorSetLayout_Create_SingleBinding(t *testing.T) {
 			require.True(t, bindingV.FieldByName("pImmutableSamplers").IsNil())
 
 			*pDescriptorSetLayout = layoutHandle
-			return common.VKSuccess, nil
+			return core1_0.VKSuccess, nil
 		})
 
-	layout, _, err := loader.CreateDescriptorSetLayout(mockDevice, nil, &core.DescriptorSetLayoutOptions{
-		Flags: core.DescriptorSetLayoutHostOnlyPoolValve,
-		Bindings: []*core.DescriptorLayoutBinding{
+	layout, _, err := loader.CreateDescriptorSetLayout(mockDevice, nil, &core1_0.DescriptorSetLayoutOptions{
+		Flags: 0,
+		Bindings: []core1_0.DescriptorLayoutBinding{
 			{
 				Binding:         3,
-				DescriptorType:  common.DescriptorStorageBuffer,
+				DescriptorType:  core1_0.DescriptorStorageBuffer,
 				DescriptorCount: 1,
-				StageFlags:      common.StageGeometry,
+				StageFlags:      core1_0.StageGeometry,
 			},
 		},
 	})
@@ -66,7 +68,7 @@ func TestDescriptorSetLayout_Create_SingleBindingImmutableSamplers(t *testing.T)
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockDriver := mocks.NewMockDriver(ctrl)
+	mockDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_0)
 	loader, err := core.CreateLoaderFromDriver(mockDriver)
 	require.NoError(t, err)
 
@@ -83,7 +85,7 @@ func TestDescriptorSetLayout_Create_SingleBindingImmutableSamplers(t *testing.T)
 			v := reflect.ValueOf(*pCreateInfo)
 			require.Equal(t, uint64(32), v.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO
 			require.True(t, v.FieldByName("pNext").IsNil())
-			require.Equal(t, uint64(4), v.FieldByName("flags").Uint()) // VK_DESCRIPTOR_SET_LAYOUT_CREATE_HOST_ONLY_POOL_BIT_VALVE
+			require.Equal(t, uint64(0), v.FieldByName("flags").Uint())
 			require.Equal(t, uint64(1), v.FieldByName("bindingCount").Uint())
 
 			bindingsPtr := (*driver.VkDescriptorSetLayoutBinding)(unsafe.Pointer(v.FieldByName("pBindings").Elem().UnsafeAddr()))
@@ -104,18 +106,18 @@ func TestDescriptorSetLayout_Create_SingleBindingImmutableSamplers(t *testing.T)
 			require.Same(t, sampler4.Handle(), samplersSlice[3])
 
 			*pDescriptorSetLayout = layoutHandle
-			return common.VKSuccess, nil
+			return core1_0.VKSuccess, nil
 		})
 
-	layout, _, err := loader.CreateDescriptorSetLayout(mockDevice, nil, &core.DescriptorSetLayoutOptions{
-		Flags: core.DescriptorSetLayoutHostOnlyPoolValve,
-		Bindings: []*core.DescriptorLayoutBinding{
+	layout, _, err := loader.CreateDescriptorSetLayout(mockDevice, nil, &core1_0.DescriptorSetLayoutOptions{
+		Flags: 0,
+		Bindings: []core1_0.DescriptorLayoutBinding{
 			{
 				Binding:         3,
-				DescriptorType:  common.DescriptorCombinedImageSampler,
+				DescriptorType:  core1_0.DescriptorCombinedImageSampler,
 				DescriptorCount: 4,
-				StageFlags:      common.StageGeometry,
-				ImmutableSamplers: []core.Sampler{
+				StageFlags:      core1_0.StageGeometry,
+				ImmutableSamplers: []core1_0.Sampler{
 					sampler1, sampler2, sampler3, sampler4,
 				},
 			},
@@ -131,7 +133,7 @@ func TestDescriptorSetLayout_Create_FailBindingSamplerMismatch(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockDriver := mocks.NewMockDriver(ctrl)
+	mockDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_0)
 	loader, err := core.CreateLoaderFromDriver(mockDriver)
 	require.NoError(t, err)
 
@@ -142,15 +144,15 @@ func TestDescriptorSetLayout_Create_FailBindingSamplerMismatch(t *testing.T) {
 	sampler3 := mocks.EasyMockSampler(ctrl)
 	sampler4 := mocks.EasyMockSampler(ctrl)
 
-	_, _, err = loader.CreateDescriptorSetLayout(mockDevice, nil, &core.DescriptorSetLayoutOptions{
-		Flags: core.DescriptorSetLayoutHostOnlyPoolValve,
-		Bindings: []*core.DescriptorLayoutBinding{
+	_, _, err = loader.CreateDescriptorSetLayout(mockDevice, nil, &core1_0.DescriptorSetLayoutOptions{
+		Flags: 0,
+		Bindings: []core1_0.DescriptorLayoutBinding{
 			{
 				Binding:         3,
-				DescriptorType:  common.DescriptorCombinedImageSampler,
+				DescriptorType:  core1_0.DescriptorCombinedImageSampler,
 				DescriptorCount: 3,
-				StageFlags:      common.StageGeometry,
-				ImmutableSamplers: []core.Sampler{
+				StageFlags:      core1_0.StageGeometry,
+				ImmutableSamplers: []core1_0.Sampler{
 					sampler1, sampler2, sampler3, sampler4,
 				},
 			},
@@ -164,7 +166,7 @@ func TestDescriptorSetLayout_Create_MultiBinding(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockDriver := mocks.NewMockDriver(ctrl)
+	mockDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_0)
 	loader, err := core.CreateLoaderFromDriver(mockDriver)
 	require.NoError(t, err)
 
@@ -176,7 +178,7 @@ func TestDescriptorSetLayout_Create_MultiBinding(t *testing.T) {
 			v := reflect.ValueOf(*pCreateInfo)
 			require.Equal(t, uint64(32), v.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO
 			require.True(t, v.FieldByName("pNext").IsNil())
-			require.Equal(t, uint64(4), v.FieldByName("flags").Uint()) // VK_DESCRIPTOR_SET_LAYOUT_CREATE_HOST_ONLY_POOL_BIT_VALVE
+			require.Equal(t, uint64(0), v.FieldByName("flags").Uint())
 			require.Equal(t, uint64(3), v.FieldByName("bindingCount").Uint())
 
 			bindingsPtr := (*driver.VkDescriptorSetLayoutBinding)(unsafe.Pointer(v.FieldByName("pBindings").Elem().UnsafeAddr()))
@@ -204,29 +206,29 @@ func TestDescriptorSetLayout_Create_MultiBinding(t *testing.T) {
 			require.True(t, bindingV.FieldByName("pImmutableSamplers").IsNil())
 
 			*pDescriptorSetLayout = layoutHandle
-			return common.VKSuccess, nil
+			return core1_0.VKSuccess, nil
 		})
 
-	layout, _, err := loader.CreateDescriptorSetLayout(mockDevice, nil, &core.DescriptorSetLayoutOptions{
-		Flags: core.DescriptorSetLayoutHostOnlyPoolValve,
-		Bindings: []*core.DescriptorLayoutBinding{
+	layout, _, err := loader.CreateDescriptorSetLayout(mockDevice, nil, &core1_0.DescriptorSetLayoutOptions{
+		Flags: 0,
+		Bindings: []core1_0.DescriptorLayoutBinding{
 			{
 				Binding:         3,
-				DescriptorType:  common.DescriptorStorageBuffer,
+				DescriptorType:  core1_0.DescriptorStorageBuffer,
 				DescriptorCount: 1,
-				StageFlags:      common.StageGeometry,
+				StageFlags:      core1_0.StageGeometry,
 			},
 			{
 				Binding:         11,
-				DescriptorType:  common.DescriptorInputAttachment,
+				DescriptorType:  core1_0.DescriptorInputAttachment,
 				DescriptorCount: 9,
-				StageFlags:      common.StageGeometry,
+				StageFlags:      core1_0.StageGeometry,
 			},
 			{
 				Binding:         12,
-				DescriptorType:  common.DescriptorInputAttachment,
+				DescriptorType:  core1_0.DescriptorInputAttachment,
 				DescriptorCount: 18,
-				StageFlags:      common.StageGeometry,
+				StageFlags:      core1_0.StageGeometry,
 			},
 		},
 	})

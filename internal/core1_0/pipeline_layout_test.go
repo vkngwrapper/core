@@ -3,8 +3,9 @@ package core1_0_test
 import (
 	"github.com/CannibalVox/VKng/core"
 	"github.com/CannibalVox/VKng/core/common"
+	"github.com/CannibalVox/VKng/core/core1_0"
 	"github.com/CannibalVox/VKng/core/driver"
-	"github.com/CannibalVox/VKng/core/internal/universal"
+	mock_driver "github.com/CannibalVox/VKng/core/driver/mocks"
 	"github.com/CannibalVox/VKng/core/mocks"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/require"
@@ -17,8 +18,8 @@ func TestVulkanLoader1_0_CreatePipelineLayout(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockDriver := mocks.NewMockDriver(ctrl)
-	loader, err := universal.CreateLoaderFromDriver(mockDriver)
+	mockDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_0)
+	loader, err := core.CreateLoaderFromDriver(mockDriver)
 	require.NoError(t, err)
 
 	device := mocks.EasyMockDevice(ctrl, mockDriver)
@@ -58,28 +59,28 @@ func TestVulkanLoader1_0_CreatePipelineLayout(t *testing.T) {
 			require.Equal(t, uint64(7), pushConstant.FieldByName("size").Uint())
 
 			pushConstant = pushConstantsSlice.Index(2)
-			require.Equal(t, uint64(0x00000200), pushConstant.FieldByName("stageFlags").Uint()) // VK_SHADER_STAGE_ANY_HIT_BIT_KHR
+			require.Equal(t, uint64(0x00000002), pushConstant.FieldByName("stageFlags").Uint()) // VK_SHADER_STAGE_TESSELLATION_CONTROL_BIT
 			require.Equal(t, uint64(11), pushConstant.FieldByName("offset").Uint())
 			require.Equal(t, uint64(13), pushConstant.FieldByName("size").Uint())
 
-			return common.VKSuccess, nil
+			return core1_0.VKSuccess, nil
 		})
 
-	layout, _, err := loader.CreatePipelineLayout(device, nil, &core.PipelineLayoutOptions{
-		SetLayouts: []core.DescriptorSetLayout{descriptorSetLayout1, descriptorSetLayout2},
-		PushConstantRanges: []common.PushConstantRange{
+	layout, _, err := loader.CreatePipelineLayout(device, nil, &core1_0.PipelineLayoutOptions{
+		SetLayouts: []core1_0.DescriptorSetLayout{descriptorSetLayout1, descriptorSetLayout2},
+		PushConstantRanges: []core1_0.PushConstantRange{
 			{
-				Stages: common.StageFragment,
+				Stages: core1_0.StageFragment,
 				Offset: 1,
 				Size:   3,
 			},
 			{
-				Stages: common.StageVertex,
+				Stages: core1_0.StageVertex,
 				Offset: 5,
 				Size:   7,
 			},
 			{
-				Stages: common.StageAnyHitKHR,
+				Stages: core1_0.StageTessellationControl,
 				Offset: 11,
 				Size:   13,
 			},

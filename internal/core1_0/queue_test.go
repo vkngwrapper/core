@@ -3,8 +3,10 @@ package core1_0_test
 import (
 	"github.com/CannibalVox/VKng/core"
 	"github.com/CannibalVox/VKng/core/common"
+	"github.com/CannibalVox/VKng/core/core1_0"
 	"github.com/CannibalVox/VKng/core/driver"
-	"github.com/CannibalVox/VKng/core/internal/universal"
+	mock_driver "github.com/CannibalVox/VKng/core/driver/mocks"
+	internal_mocks "github.com/CannibalVox/VKng/core/internal/mocks"
 	"github.com/CannibalVox/VKng/core/mocks"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/require"
@@ -17,14 +19,14 @@ func TestVulkanQueue_WaitForIdle(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	driver := mocks.NewMockDriver(ctrl)
-	loader, err := universal.CreateLoaderFromDriver(driver)
+	driver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_0)
+	loader, err := core.CreateLoaderFromDriver(driver)
 	require.NoError(t, err)
 
-	device := mocks.EasyDummyDevice(t, ctrl, loader)
-	queue := mocks.EasyDummyQueue(device)
+	device := internal_mocks.EasyDummyDevice(t, ctrl, loader)
+	queue := internal_mocks.EasyDummyQueue(device)
 
-	driver.EXPECT().VkQueueWaitIdle(mocks.Exactly(queue.Handle())).Return(common.VKSuccess, nil)
+	driver.EXPECT().VkQueueWaitIdle(mocks.Exactly(queue.Handle())).Return(core1_0.VKSuccess, nil)
 
 	_, err = queue.WaitForIdle()
 	require.NoError(t, err)
@@ -34,12 +36,12 @@ func TestVulkanQueue_BindSparse(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockDriver := mocks.NewMockDriver(ctrl)
-	loader, err := universal.CreateLoaderFromDriver(mockDriver)
+	mockDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_0)
+	loader, err := core.CreateLoaderFromDriver(mockDriver)
 	require.NoError(t, err)
 
-	device := mocks.EasyDummyDevice(t, ctrl, loader)
-	queue := mocks.EasyDummyQueue(device)
+	device := internal_mocks.EasyDummyDevice(t, ctrl, loader)
+	queue := internal_mocks.EasyDummyQueue(device)
 
 	semaphore1 := mocks.EasyMockSemaphore(ctrl)
 	semaphore2 := mocks.EasyMockSemaphore(ctrl)
@@ -149,23 +151,23 @@ func TestVulkanQueue_BindSparse(t *testing.T) {
 			require.Equal(t, uint64(61), val.FieldByName("memoryOffset").Uint())
 			require.Equal(t, uint64(1), val.FieldByName("flags").Uint()) // VK_SPARSE_MEMORY_BIND_METADATA_BIT
 
-			return common.VKSuccess, nil
+			return core1_0.VKSuccess, nil
 		})
 
-	_, err = queue.BindSparse(nil, []*core.BindSparseOptions{
+	_, err = queue.BindSparse(nil, []core1_0.BindSparseOptions{
 		{
-			WaitSemaphores:   []core.Semaphore{semaphore1},
-			SignalSemaphores: []core.Semaphore{semaphore2, semaphore3},
-			BufferBinds: []core.SparseBufferMemoryBindInfo{
+			WaitSemaphores:   []core1_0.Semaphore{semaphore1},
+			SignalSemaphores: []core1_0.Semaphore{semaphore2, semaphore3},
+			BufferBinds: []core1_0.SparseBufferMemoryBindInfo{
 				{
 					Buffer: buffer,
-					Binds: []core.SparseMemoryBind{
+					Binds: []core1_0.SparseMemoryBind{
 						{
 							ResourceOffset: 1,
 							Size:           3,
 							Memory:         memory1,
 							MemoryOffset:   5,
-							Flags:          core.SparseMemoryBindMetadata,
+							Flags:          core1_0.SparseMemoryBindMetadata,
 						},
 						{
 							ResourceOffset: 7,
@@ -176,10 +178,10 @@ func TestVulkanQueue_BindSparse(t *testing.T) {
 					},
 				},
 			},
-			ImageOpaqueBinds: []core.SparseImageOpaqueMemoryBindInfo{
+			ImageOpaqueBinds: []core1_0.SparseImageOpaqueMemoryBindInfo{
 				{
 					Image: image1,
-					Binds: []core.SparseMemoryBind{
+					Binds: []core1_0.SparseMemoryBind{
 						{
 							ResourceOffset: 17,
 							Size:           19,
@@ -189,13 +191,13 @@ func TestVulkanQueue_BindSparse(t *testing.T) {
 					},
 				},
 			},
-			ImageBinds: []core.SparseImageMemoryBindInfo{
+			ImageBinds: []core1_0.SparseImageMemoryBindInfo{
 				{
 					Image: image2,
-					Binds: []core.SparseImageMemoryBind{
+					Binds: []core1_0.SparseImageMemoryBind{
 						{
 							Subresource: common.ImageSubresource{
-								AspectMask: common.AspectColor,
+								AspectMask: core1_0.AspectColor,
 								MipLevel:   29,
 								ArrayLayer: 31,
 							},
@@ -203,7 +205,7 @@ func TestVulkanQueue_BindSparse(t *testing.T) {
 							Extent:       common.Extent3D{47, 53, 59},
 							Memory:       memory4,
 							MemoryOffset: 61,
-							Flags:        core.SparseMemoryBindMetadata,
+							Flags:        core1_0.SparseMemoryBindMetadata,
 						},
 					},
 				},

@@ -3,8 +3,10 @@ package core1_0_test
 import (
 	"github.com/CannibalVox/VKng/core"
 	"github.com/CannibalVox/VKng/core/common"
+	"github.com/CannibalVox/VKng/core/core1_0"
 	"github.com/CannibalVox/VKng/core/driver"
-	"github.com/CannibalVox/VKng/core/internal/universal"
+	mock_driver "github.com/CannibalVox/VKng/core/driver/mocks"
+	internal_mocks "github.com/CannibalVox/VKng/core/internal/mocks"
 	"github.com/CannibalVox/VKng/core/mocks"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/require"
@@ -17,8 +19,8 @@ func TestBuffer_Create_NilIndices(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockDriver := mocks.NewMockDriver(ctrl)
-	loader, err := universal.CreateLoaderFromDriver(mockDriver)
+	mockDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_0)
+	loader, err := core.CreateLoaderFromDriver(mockDriver)
 	require.NoError(t, err)
 
 	device := mocks.EasyMockDevice(ctrl, mockDriver)
@@ -40,17 +42,17 @@ func TestBuffer_Create_NilIndices(t *testing.T) {
 
 			*buffer = expectedBuffer
 
-			return common.VKSuccess, nil
+			return core1_0.VKSuccess, nil
 		})
 
-	buffer, res, err := loader.CreateBuffer(device, nil, &core.BufferOptions{
+	buffer, res, err := loader.CreateBuffer(device, nil, &core1_0.BufferOptions{
 		BufferSize:         5,
-		Usage:              common.UsageVertexBuffer | common.UsageTransferSrc,
-		SharingMode:        common.SharingExclusive,
+		Usage:              core1_0.UsageVertexBuffer | core1_0.UsageTransferSrc,
+		SharingMode:        core1_0.SharingExclusive,
 		QueueFamilyIndices: []int{},
 	})
 
-	require.Equal(t, res, common.VKSuccess)
+	require.Equal(t, res, core1_0.VKSuccess)
 	require.NoError(t, err)
 	require.Same(t, expectedBuffer, buffer.Handle())
 }
@@ -59,8 +61,8 @@ func TestBasicBuffer_Create_QueueFamilyIndices(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockDriver := mocks.NewMockDriver(ctrl)
-	loader, err := universal.CreateLoaderFromDriver(mockDriver)
+	mockDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_0)
+	loader, err := core.CreateLoaderFromDriver(mockDriver)
 	require.NoError(t, err)
 
 	device := mocks.EasyMockDevice(ctrl, mockDriver)
@@ -86,17 +88,17 @@ func TestBasicBuffer_Create_QueueFamilyIndices(t *testing.T) {
 
 			*buffer = expectedBuffer
 
-			return common.VKSuccess, nil
+			return core1_0.VKSuccess, nil
 		})
 
-	buffer, res, err := loader.CreateBuffer(device, nil, &core.BufferOptions{
+	buffer, res, err := loader.CreateBuffer(device, nil, &core1_0.BufferOptions{
 		BufferSize:         5,
-		Usage:              common.UsageVertexBuffer | common.UsageTransferSrc,
-		SharingMode:        common.SharingExclusive,
+		Usage:              core1_0.UsageVertexBuffer | core1_0.UsageTransferSrc,
+		SharingMode:        core1_0.SharingExclusive,
 		QueueFamilyIndices: []int{1, 2, 3, 4},
 	})
 
-	require.Equal(t, res, common.VKSuccess)
+	require.Equal(t, res, core1_0.VKSuccess)
 	require.NoError(t, err)
 	require.Same(t, expectedBuffer, buffer.Handle())
 
@@ -106,12 +108,12 @@ func TestBuffer_MemoryRequirements(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockDriver := mocks.NewMockDriver(ctrl)
-	loader, err := universal.CreateLoaderFromDriver(mockDriver)
+	mockDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_0)
+	loader, err := core.CreateLoaderFromDriver(mockDriver)
 	require.NoError(t, err)
 
 	device := mocks.EasyMockDevice(ctrl, mockDriver)
-	buffer := mocks.EasyDummyBuffer(t, loader, device)
+	buffer := internal_mocks.EasyDummyBuffer(t, loader, device)
 
 	mockDriver.EXPECT().VkGetBufferMemoryRequirements(mocks.Exactly(device.Handle()), mocks.Exactly(buffer.Handle()), gomock.Not(nil)).DoAndReturn(
 		func(device driver.VkDevice, buffer driver.VkBuffer, requirements *driver.VkMemoryRequirements) {
@@ -132,15 +134,15 @@ func TestBuffer_BindBufferMemory_Success(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockDriver := mocks.NewMockDriver(ctrl)
-	loader, err := universal.CreateLoaderFromDriver(mockDriver)
+	mockDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_0)
+	loader, err := core.CreateLoaderFromDriver(mockDriver)
 	require.NoError(t, err)
 
 	device := mocks.EasyMockDevice(ctrl, mockDriver)
-	buffer := mocks.EasyDummyBuffer(t, loader, device)
+	buffer := internal_mocks.EasyDummyBuffer(t, loader, device)
 	memory := mocks.EasyMockDeviceMemory(ctrl)
 
-	mockDriver.EXPECT().VkBindBufferMemory(mocks.Exactly(device.Handle()), mocks.Exactly(buffer.Handle()), mocks.Exactly(memory.Handle()), driver.VkDeviceSize(3)).Return(common.VKSuccess, nil)
+	mockDriver.EXPECT().VkBindBufferMemory(mocks.Exactly(device.Handle()), mocks.Exactly(buffer.Handle()), mocks.Exactly(memory.Handle()), driver.VkDeviceSize(3)).Return(core1_0.VKSuccess, nil)
 	_, err = buffer.BindBufferMemory(memory, 3)
 	require.NoError(t, err)
 }
@@ -149,12 +151,12 @@ func TestBuffer_BindBufferMemory_FailNilMemory(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockDriver := mocks.NewMockDriver(ctrl)
-	loader, err := universal.CreateLoaderFromDriver(mockDriver)
+	mockDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_0)
+	loader, err := core.CreateLoaderFromDriver(mockDriver)
 	require.NoError(t, err)
 
 	device := mocks.EasyMockDevice(ctrl, mockDriver)
-	buffer := mocks.EasyDummyBuffer(t, loader, device)
+	buffer := internal_mocks.EasyDummyBuffer(t, loader, device)
 
 	_, err = buffer.BindBufferMemory(nil, 3)
 	require.EqualError(t, err, "received nil DeviceMemory")

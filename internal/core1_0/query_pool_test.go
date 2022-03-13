@@ -5,8 +5,10 @@ import (
 	"encoding/binary"
 	"github.com/CannibalVox/VKng/core"
 	"github.com/CannibalVox/VKng/core/common"
+	"github.com/CannibalVox/VKng/core/core1_0"
 	"github.com/CannibalVox/VKng/core/driver"
-	"github.com/CannibalVox/VKng/core/internal/universal"
+	mock_driver "github.com/CannibalVox/VKng/core/driver/mocks"
+	internal_mocks "github.com/CannibalVox/VKng/core/internal/mocks"
 	"github.com/CannibalVox/VKng/core/mocks"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/require"
@@ -19,8 +21,8 @@ func TestVulkanLoader1_0_CreateQueryPool(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockDriver := mocks.NewMockDriver(ctrl)
-	loader, err := universal.CreateLoaderFromDriver(mockDriver)
+	mockDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_0)
+	loader, err := core.CreateLoaderFromDriver(mockDriver)
 	require.NoError(t, err)
 
 	device := mocks.EasyMockDevice(ctrl, mockDriver)
@@ -32,18 +34,18 @@ func TestVulkanLoader1_0_CreateQueryPool(t *testing.T) {
 			require.Equal(t, uint64(11), val.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_QUERY_POOL_CREATE_INFO
 			require.True(t, val.FieldByName("pNext").IsNil())
 			require.Equal(t, uint64(0), val.FieldByName("flags").Uint())
-			require.Equal(t, uint64(1000150000), val.FieldByName("queryType").Uint()) //VK_QUERY_TYPE_ACCELERATION_STRUCTURE_COMPACTED_SIZE_KHR
+			require.Equal(t, uint64(0), val.FieldByName("queryType").Uint()) //VK_QUERY_TYPE_OCCLUSION
 			require.Equal(t, uint64(5), val.FieldByName("queryCount").Uint())
 			require.Equal(t, uint64(0x10), val.FieldByName("pipelineStatistics").Uint()) // VK_QUERY_PIPELINE_STATISTIC_GEOMETRY_SHADER_PRIMITIVES_BIT
 
 			*pQueryPool = poolHandle
-			return common.VKSuccess, nil
+			return core1_0.VKSuccess, nil
 		})
 
-	queryPool, _, err := loader.CreateQueryPool(device, nil, &core.QueryPoolOptions{
-		QueryType:          common.QueryTypeAccelerationStructureCompactedSizeKHR,
+	queryPool, _, err := loader.CreateQueryPool(device, nil, &core1_0.QueryPoolOptions{
+		QueryType:          core1_0.QueryTypeOcclusion,
 		QueryCount:         5,
-		PipelineStatistics: common.PipelineStatisticGeometryShaderPrimitives,
+		PipelineStatistics: core1_0.PipelineStatisticGeometryShaderPrimitives,
 	})
 	require.NoError(t, err)
 	require.NotNil(t, queryPool)
@@ -54,12 +56,12 @@ func TestVulkanQueryPool_PopulateResults(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockDriver := mocks.NewMockDriver(ctrl)
-	loader, err := universal.CreateLoaderFromDriver(mockDriver)
+	mockDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_0)
+	loader, err := core.CreateLoaderFromDriver(mockDriver)
 	require.NoError(t, err)
 
 	device := mocks.EasyMockDevice(ctrl, mockDriver)
-	queryPool := mocks.EasyDummyQueryPool(t, loader, device)
+	queryPool := internal_mocks.EasyDummyQueryPool(t, loader, device)
 
 	mockDriver.EXPECT().VkGetQueryPoolResults(
 		mocks.Exactly(device.Handle()),
@@ -86,10 +88,10 @@ func TestVulkanQueryPool_PopulateResults(t *testing.T) {
 			data[3] = 8
 			data[4] = 13
 
-			return common.VKSuccess, nil
+			return core1_0.VKSuccess, nil
 		})
 
-	results, _, err := queryPool.PopulateResults(1, 3, 40, 8, common.QueryResultPartial)
+	results, _, err := queryPool.PopulateResults(1, 3, 40, 8, core1_0.QueryResultPartial)
 	require.NoError(t, err)
 	require.Len(t, results, 40)
 

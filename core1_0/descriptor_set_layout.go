@@ -51,7 +51,7 @@ type DescriptorLayoutBinding struct {
 
 type DescriptorSetLayoutOptions struct {
 	Flags    common.DescriptorSetLayoutCreateFlags
-	Bindings []*DescriptorLayoutBinding
+	Bindings []DescriptorLayoutBinding
 
 	common.HaveNext
 }

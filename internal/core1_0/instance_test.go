@@ -3,7 +3,10 @@ package core1_0_test
 import (
 	"github.com/CannibalVox/VKng/core"
 	"github.com/CannibalVox/VKng/core/common"
+	"github.com/CannibalVox/VKng/core/core1_0"
 	"github.com/CannibalVox/VKng/core/driver"
+	mock_driver "github.com/CannibalVox/VKng/core/driver/mocks"
+	internal_mocks "github.com/CannibalVox/VKng/core/internal/mocks"
 	"github.com/CannibalVox/VKng/core/mocks"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/require"
@@ -16,7 +19,7 @@ func TestVulkanLoader1_0_CreateInstance(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockDriver := mocks.NewMockDriver(ctrl)
+	mockDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_0)
 	loader, err := core.CreateLoaderFromDriver(mockDriver)
 	require.NoError(t, err)
 
@@ -82,10 +85,10 @@ func TestVulkanLoader1_0_CreateInstance(t *testing.T) {
 			}
 			require.Equal(t, driver.Char(0), engineNameSlice[len(engineNameBytes)])
 
-			return common.VKSuccess, nil
+			return core1_0.VKSuccess, nil
 		})
 
-	instance, _, err := loader.CreateInstance(nil, &core.InstanceOptions{
+	instance, _, err := loader.CreateInstance(nil, &core1_0.InstanceOptions{
 		ApplicationName:    "test app",
 		ApplicationVersion: common.CreateVersion(2, 3, 4),
 		EngineName:         "test engine",
@@ -103,11 +106,11 @@ func TestVulkanInstance_PhysicalDevices(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockDriver := mocks.NewMockDriver(ctrl)
+	mockDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_2)
 	loader, err := core.CreateLoaderFromDriver(mockDriver)
 	require.NoError(t, err)
 
-	instance := mocks.EasyDummyInstance(t, loader)
+	instance := internal_mocks.EasyDummyInstance(t, loader)
 	device1 := mocks.NewFakePhysicalDeviceHandle()
 	device2 := mocks.NewFakePhysicalDeviceHandle()
 
@@ -115,7 +118,7 @@ func TestVulkanInstance_PhysicalDevices(t *testing.T) {
 		func(instance driver.VkInstance, pPhysicalDeviceCount *driver.Uint32, pPhysicalDevices *driver.VkPhysicalDevice) (common.VkResult, error) {
 			*pPhysicalDeviceCount = 2
 
-			return common.VKSuccess, nil
+			return core1_0.VKSuccess, nil
 		})
 	mockDriver.EXPECT().VkEnumeratePhysicalDevices(mocks.Exactly(instance.Handle()), gomock.Not(nil), gomock.Not(nil)).DoAndReturn(
 		func(instance driver.VkInstance, pPhysicalDeviceCount *driver.Uint32, pPhysicalDevices *driver.VkPhysicalDevice) (common.VkResult, error) {
@@ -125,12 +128,27 @@ func TestVulkanInstance_PhysicalDevices(t *testing.T) {
 			deviceSlice[0] = device1
 			deviceSlice[1] = device2
 
-			return common.VKSuccess, nil
+			return core1_0.VKSuccess, nil
+		})
+	mockDriver.EXPECT().VkGetPhysicalDeviceProperties(mocks.Exactly(device1), gomock.Not(nil)).DoAndReturn(
+		func(physicalDevice driver.VkPhysicalDevice, pProperties *driver.VkPhysicalDeviceProperties) {
+			val := reflect.ValueOf(pProperties).Elem()
+
+			*(*uint32)(unsafe.Pointer(val.FieldByName("apiVersion").UnsafeAddr())) = uint32(1 << 22)
+		})
+
+	mockDriver.EXPECT().VkGetPhysicalDeviceProperties(mocks.Exactly(device2), gomock.Not(nil)).DoAndReturn(
+		func(physicalDevice driver.VkPhysicalDevice, pProperties *driver.VkPhysicalDeviceProperties) {
+			val := reflect.ValueOf(pProperties).Elem()
+
+			*(*uint32)(unsafe.Pointer(val.FieldByName("apiVersion").UnsafeAddr())) = uint32(1<<22 | 2<<12)
 		})
 
 	devices, _, err := instance.PhysicalDevices()
 	require.NoError(t, err)
 	require.Len(t, devices, 2)
 	require.Same(t, device1, devices[0].Handle())
+	require.Equal(t, common.Vulkan1_0, devices[0].APIVersion())
 	require.Same(t, device2, devices[1].Handle())
+	require.Equal(t, common.Vulkan1_2, devices[1].APIVersion())
 }

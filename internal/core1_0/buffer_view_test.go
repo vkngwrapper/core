@@ -3,8 +3,9 @@ package core1_0_test
 import (
 	"github.com/CannibalVox/VKng/core"
 	"github.com/CannibalVox/VKng/core/common"
+	"github.com/CannibalVox/VKng/core/core1_0"
 	"github.com/CannibalVox/VKng/core/driver"
-	"github.com/CannibalVox/VKng/core/internal/universal"
+	mock_driver "github.com/CannibalVox/VKng/core/driver/mocks"
 	"github.com/CannibalVox/VKng/core/mocks"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/require"
@@ -17,8 +18,8 @@ func TestVulkanLoader1_0_CreateBufferView(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockDriver := mocks.NewMockDriver(ctrl)
-	loader, err := universal.CreateLoaderFromDriver(mockDriver)
+	mockDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_0)
+	loader, err := core.CreateLoaderFromDriver(mockDriver)
 	require.NoError(t, err)
 
 	device := mocks.EasyMockDevice(ctrl, mockDriver)
@@ -41,17 +42,17 @@ func TestVulkanLoader1_0_CreateBufferView(t *testing.T) {
 			require.Equal(t, v.FieldByName("_range").Uint(), uint64(7))
 
 			*pBufferView = expectedBufferView
-			return common.VKSuccess, nil
+			return core1_0.VKSuccess, nil
 		})
 
-	bufferView, res, err := loader.CreateBufferView(device, nil, &core.BufferViewOptions{
+	bufferView, res, err := loader.CreateBufferView(device, nil, &core1_0.BufferViewOptions{
 		Buffer: buffer,
-		Format: common.FormatR32G32SignedFloat,
+		Format: core1_0.DataFormatR32G32SignedFloat,
 		Offset: 5,
 		Range:  7,
 	})
 
-	require.Equal(t, res, common.VKSuccess)
+	require.Equal(t, res, core1_0.VKSuccess)
 	require.NoError(t, err)
 	require.Same(t, expectedBufferView, bufferView.Handle())
 }

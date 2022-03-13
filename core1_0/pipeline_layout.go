@@ -11,9 +11,15 @@ import (
 	"unsafe"
 )
 
+type PushConstantRange struct {
+	Stages common.ShaderStages
+	Offset int
+	Size   int
+}
+
 type PipelineLayoutOptions struct {
 	SetLayouts         []DescriptorSetLayout
-	PushConstantRanges []common.PushConstantRange
+	PushConstantRanges []PushConstantRange
 
 	common.HaveNext
 }

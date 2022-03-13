@@ -3,7 +3,9 @@ package core1_0_test
 import (
 	"github.com/CannibalVox/VKng/core"
 	"github.com/CannibalVox/VKng/core/common"
+	"github.com/CannibalVox/VKng/core/core1_0"
 	"github.com/CannibalVox/VKng/core/driver"
+	mock_driver "github.com/CannibalVox/VKng/core/driver/mocks"
 	"github.com/CannibalVox/VKng/core/mocks"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/require"
@@ -16,7 +18,7 @@ func TestVulkanLoader1_0_CreateShaderModule(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockDriver := mocks.NewMockDriver(ctrl)
+	mockDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_0)
 	loader, err := core.CreateLoaderFromDriver(mockDriver)
 	require.NoError(t, err)
 
@@ -38,10 +40,10 @@ func TestVulkanLoader1_0_CreateShaderModule(t *testing.T) {
 
 			require.Equal(t, []driver.Uint32{1, 1, 2, 3, 5, 8, 13, 21}, codeSlice)
 
-			return common.VKSuccess, nil
+			return core1_0.VKSuccess, nil
 		})
 
-	shaderModule, _, err := loader.CreateShaderModule(device, nil, &core.ShaderModuleOptions{
+	shaderModule, _, err := loader.CreateShaderModule(device, nil, &core1_0.ShaderModuleOptions{
 		SpirVByteCode: []uint32{1, 1, 2, 3, 5, 8, 13, 21},
 	})
 	require.NoError(t, err)

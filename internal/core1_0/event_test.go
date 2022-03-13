@@ -3,7 +3,10 @@ package core1_0_test
 import (
 	"github.com/CannibalVox/VKng/core"
 	"github.com/CannibalVox/VKng/core/common"
+	"github.com/CannibalVox/VKng/core/core1_0"
 	"github.com/CannibalVox/VKng/core/driver"
+	mock_driver "github.com/CannibalVox/VKng/core/driver/mocks"
+	internal_mocks "github.com/CannibalVox/VKng/core/internal/mocks"
 	"github.com/CannibalVox/VKng/core/mocks"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/require"
@@ -15,11 +18,11 @@ func TestVulkanLoader1_0_CreateEvent(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockDriver := mocks.NewMockDriver(ctrl)
+	mockDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_0)
 	loader, err := core.CreateLoaderFromDriver(mockDriver)
 	require.NoError(t, err)
 
-	device := mocks.EasyDummyDevice(t, ctrl, loader)
+	device := internal_mocks.EasyDummyDevice(t, ctrl, loader)
 	eventHandle := mocks.NewFakeEventHandle()
 
 	mockDriver.EXPECT().VkCreateEvent(mocks.Exactly(device.Handle()), gomock.Not(nil), nil, gomock.Not(nil)).DoAndReturn(
@@ -28,14 +31,14 @@ func TestVulkanLoader1_0_CreateEvent(t *testing.T) {
 
 			require.Equal(t, uint64(10), val.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_EVENT_CREATE_INFO
 			require.True(t, val.FieldByName("pNext").IsNil())
-			require.Equal(t, uint64(1), val.FieldByName("flags").Uint()) // VK_EVENT_CREATE_DEVICE_ONLY_BIT_KHR
+			require.Equal(t, uint64(0), val.FieldByName("flags").Uint())
 
 			*pEvent = eventHandle
-			return common.VKSuccess, nil
+			return core1_0.VKSuccess, nil
 		})
 
-	event, _, err := loader.CreateEvent(device, nil, &core.EventOptions{
-		Flags: core.EventDeviceOnlyKHR,
+	event, _, err := loader.CreateEvent(device, nil, &core1_0.EventOptions{
+		Flags: 0,
 	})
 	require.NoError(t, err)
 	require.NotNil(t, event)
@@ -46,14 +49,14 @@ func TestVulkanEvent_Set(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	driver := mocks.NewMockDriver(ctrl)
+	driver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_0)
 	loader, err := core.CreateLoaderFromDriver(driver)
 	require.NoError(t, err)
 
 	device := mocks.EasyMockDevice(ctrl, driver)
-	event := mocks.EasyDummyEvent(t, loader, device)
+	event := internal_mocks.EasyDummyEvent(t, loader, device)
 
-	driver.EXPECT().VkSetEvent(mocks.Exactly(device.Handle()), mocks.Exactly(event.Handle())).Return(common.VKSuccess, nil)
+	driver.EXPECT().VkSetEvent(mocks.Exactly(device.Handle()), mocks.Exactly(event.Handle())).Return(core1_0.VKSuccess, nil)
 
 	_, err = event.Set()
 	require.NoError(t, err)
@@ -63,14 +66,14 @@ func TestVulkanEvent_Reset(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	driver := mocks.NewMockDriver(ctrl)
+	driver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_0)
 	loader, err := core.CreateLoaderFromDriver(driver)
 	require.NoError(t, err)
 
 	device := mocks.EasyMockDevice(ctrl, driver)
-	event := mocks.EasyDummyEvent(t, loader, device)
+	event := internal_mocks.EasyDummyEvent(t, loader, device)
 
-	driver.EXPECT().VkResetEvent(mocks.Exactly(device.Handle()), mocks.Exactly(event.Handle())).Return(common.VKSuccess, nil)
+	driver.EXPECT().VkResetEvent(mocks.Exactly(device.Handle()), mocks.Exactly(event.Handle())).Return(core1_0.VKSuccess, nil)
 
 	_, err = event.Reset()
 	require.NoError(t, err)
@@ -80,16 +83,16 @@ func TestVulkanEvent_Status(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	driver := mocks.NewMockDriver(ctrl)
+	driver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_0)
 	loader, err := core.CreateLoaderFromDriver(driver)
 	require.NoError(t, err)
 
 	device := mocks.EasyMockDevice(ctrl, driver)
-	event := mocks.EasyDummyEvent(t, loader, device)
+	event := internal_mocks.EasyDummyEvent(t, loader, device)
 
-	driver.EXPECT().VkGetEventStatus(mocks.Exactly(device.Handle()), mocks.Exactly(event.Handle())).Return(common.VKEventReset, nil)
+	driver.EXPECT().VkGetEventStatus(mocks.Exactly(device.Handle()), mocks.Exactly(event.Handle())).Return(core1_0.VKEventReset, nil)
 
 	res, err := event.Status()
 	require.NoError(t, err)
-	require.Equal(t, common.VKEventReset, res)
+	require.Equal(t, core1_0.VKEventReset, res)
 }

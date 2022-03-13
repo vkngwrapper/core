@@ -17,7 +17,7 @@ func (c *VulkanCommandBuffer) CmdCopyBuffer(srcBuffer core1_0.Buffer, dstBuffer 
 	allocator := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(allocator)
 
-	copyRegionPtr, err := common.AllocSlice[C.VkCommandBuffer, core1_0.BufferCopy](allocator, copyRegions)
+	copyRegionPtr, err := common.AllocSlice[C.VkBufferCopy, core1_0.BufferCopy](allocator, copyRegions)
 	if err != nil {
 		return err
 	}

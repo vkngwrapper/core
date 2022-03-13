@@ -18,7 +18,7 @@ type QueueFamilyOptions struct {
 }
 
 type DeviceOptions struct {
-	QueueFamilies   []*QueueFamilyOptions
+	QueueFamilies   []QueueFamilyOptions
 	EnabledFeatures *PhysicalDeviceFeatures
 	ExtensionNames  []string
 	LayerNames      []string
