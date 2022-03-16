@@ -2433,6 +2433,20 @@ func (mr *MockPhysicalDeviceMockRecorder) QueueFamilyProperties() *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "QueueFamilyProperties", reflect.TypeOf((*MockPhysicalDevice)(nil).QueueFamilyProperties))
 }
 
+// SparseImageFormatProperties mocks base method.
+func (m *MockPhysicalDevice) SparseImageFormatProperties(format common.DataFormat, imageType common.ImageType, samples common.SampleCounts, usages common.ImageUsages, tiling common.ImageTiling) []core1_0.SparseImageFormatProperties {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "SparseImageFormatProperties", format, imageType, samples, usages, tiling)
+	ret0, _ := ret[0].([]core1_0.SparseImageFormatProperties)
+	return ret0
+}
+
+// SparseImageFormatProperties indicates an expected call of SparseImageFormatProperties.
+func (mr *MockPhysicalDeviceMockRecorder) SparseImageFormatProperties(format, imageType, samples, usages, tiling interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SparseImageFormatProperties", reflect.TypeOf((*MockPhysicalDevice)(nil).SparseImageFormatProperties), format, imageType, samples, usages, tiling)
+}
+
 // MockPipeline is a mock of Pipeline interface.
 type MockPipeline struct {
 	ctrl     *gomock.Controller

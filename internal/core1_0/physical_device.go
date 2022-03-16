@@ -104,7 +104,7 @@ func (d *VulkanPhysicalDevice) attemptAvailableExtensions(layerNamePtr *driver.C
 	extensionCountPtr := allocator.Malloc(int(unsafe.Sizeof(C.uint32_t(0))))
 	extensionCount := (*driver.Uint32)(extensionCountPtr)
 
-	res, err := d.InstanceDriver.VkEnumerateDeviceExtensionProperties(d.PhysicalDeviceHandle, nil, extensionCount, nil)
+	res, err := d.InstanceDriver.VkEnumerateDeviceExtensionProperties(d.PhysicalDeviceHandle, layerNamePtr, extensionCount, nil)
 
 	if err != nil || *extensionCount == 0 {
 		return nil, res, err
@@ -113,7 +113,7 @@ func (d *VulkanPhysicalDevice) attemptAvailableExtensions(layerNamePtr *driver.C
 	extensionTotal := int(*extensionCount)
 	extensionsPtr := allocator.Malloc(extensionTotal * C.sizeof_struct_VkExtensionProperties)
 
-	res, err = d.InstanceDriver.VkEnumerateDeviceExtensionProperties(d.PhysicalDeviceHandle, nil, extensionCount, (*driver.VkExtensionProperties)(extensionsPtr))
+	res, err = d.InstanceDriver.VkEnumerateDeviceExtensionProperties(d.PhysicalDeviceHandle, layerNamePtr, extensionCount, (*driver.VkExtensionProperties)(extensionsPtr))
 	if err != nil {
 		return nil, res, err
 	}
@@ -265,6 +265,39 @@ func (d *VulkanPhysicalDevice) ImageFormatProperties(format common.DataFormat, i
 		SampleCounts:    common.SampleCounts(properties.sampleCounts),
 		MaxResourceSize: int(properties.maxResourceSize),
 	}, res, nil
+}
+
+func (d *VulkanPhysicalDevice) SparseImageFormatProperties(format common.DataFormat, imageType common.ImageType, samples common.SampleCounts, usages common.ImageUsages, tiling common.ImageTiling) []core1_0.SparseImageFormatProperties {
+	arena := cgoparam.GetAlloc()
+	defer cgoparam.ReturnAlloc(arena)
+
+	propertiesCount := (*C.uint32_t)(arena.Malloc(4))
+
+	d.InstanceDriver.VkGetPhysicalDeviceSparseImageFormatProperties(d.PhysicalDeviceHandle, driver.VkFormat(format), driver.VkImageType(imageType), driver.VkSampleCountFlagBits(samples), driver.VkImageUsageFlags(usages), driver.VkImageTiling(tiling), (*driver.Uint32)(propertiesCount), nil)
+
+	if *propertiesCount == 0 {
+		return nil
+	}
+
+	propertiesPtr := (*C.VkSparseImageFormatProperties)(arena.Malloc(int(*propertiesCount) * C.sizeof_struct_VkSparseImageFormatProperties))
+
+	d.InstanceDriver.VkGetPhysicalDeviceSparseImageFormatProperties(d.PhysicalDeviceHandle, driver.VkFormat(format), driver.VkImageType(imageType), driver.VkSampleCountFlagBits(samples), driver.VkImageUsageFlags(usages), driver.VkImageTiling(tiling), (*driver.Uint32)(unsafe.Pointer(propertiesCount)), (*driver.VkSparseImageFormatProperties)(unsafe.Pointer(propertiesPtr)))
+
+	propertiesSlice := ([]C.VkSparseImageFormatProperties)(unsafe.Slice(propertiesPtr, int(*propertiesCount)))
+
+	outReqs := make([]core1_0.SparseImageFormatProperties, *propertiesCount)
+	for j := 0; j < int(*propertiesCount); j++ {
+		inProps := propertiesSlice[j]
+		outReqs[j].Flags = common.SparseImageFormatFlags(inProps.flags)
+		outReqs[j].ImageGranularity = common.Extent3D{
+			Width:  int(inProps.imageGranularity.width),
+			Height: int(inProps.imageGranularity.height),
+			Depth:  int(inProps.imageGranularity.depth),
+		}
+		outReqs[j].AspectMask = common.ImageAspectFlags(inProps.aspectMask)
+	}
+
+	return outReqs
 }
 
 func createPhysicalDeviceFeatures(f *C.VkPhysicalDeviceFeatures) *core1_0.PhysicalDeviceFeatures {

@@ -241,6 +241,7 @@ type PhysicalDevice interface {
 	MemoryProperties() *PhysicalDeviceMemoryProperties
 	FormatProperties(format common.DataFormat) *FormatProperties
 	ImageFormatProperties(format common.DataFormat, imageType common.ImageType, tiling common.ImageTiling, usages common.ImageUsages, flags common.ImageCreateFlags) (*ImageFormatProperties, common.VkResult, error)
+	SparseImageFormatProperties(format common.DataFormat, imageType common.ImageType, samples common.SampleCounts, usages common.ImageUsages, tiling common.ImageTiling) []SparseImageFormatProperties
 }
 
 type Pipeline interface {
