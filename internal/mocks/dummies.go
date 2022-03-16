@@ -83,6 +83,25 @@ func EasyDummyDescriptorPool(t *testing.T, loader core.Loader, device core1_0.De
 	return pool
 }
 
+func EasyDummyDescriptorSet(t *testing.T, loader core.Loader, pool core1_0.DescriptorPool, layout core1_0.DescriptorSetLayout) core1_0.DescriptorSet {
+	mockDriver := pool.Driver().(*mock_driver.MockDriver)
+
+	mockDriver.EXPECT().VkAllocateDescriptorSets(gomock.Any(), gomock.Any(), gomock.Any()).DoAndReturn(
+		func(device driver.VkDevice, pCreateInfo *driver.VkDescriptorSetAllocateInfo, pDescriptorSets *driver.VkDescriptorSet) (common.VkResult, error) {
+			*pDescriptorSets = mocks.NewFakeDescriptorSet()
+
+			return core1_0.VKSuccess, nil
+		})
+
+	sets, _, err := loader.AllocateDescriptorSets(&core1_0.DescriptorSetOptions{
+		DescriptorPool:    pool,
+		AllocationLayouts: []core1_0.DescriptorSetLayout{layout},
+	})
+	require.NoError(t, err)
+
+	return sets[0]
+}
+
 func EasyDummyDescriptorSetLayout(t *testing.T, loader core.Loader, device core1_0.Device) core1_0.DescriptorSetLayout {
 	mockDriver := device.Driver().(*mock_driver.MockDriver)
 

@@ -21,6 +21,69 @@ func strToCharSlice(text string, slice []driver.Char) {
 	slice[len(byteSlice)] = driver.Char(0)
 }
 
+func TestVulkanLoader1_0_AvailableExtensionsForLayer(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	mockDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_0)
+	loader, err := core.CreateLoaderFromDriver(mockDriver)
+	require.NoError(t, err)
+
+	mockDriver.EXPECT().VkEnumerateInstanceExtensionProperties(gomock.Not(nil), gomock.Not(nil), nil).DoAndReturn(
+		func(pLayerName *driver.Char, pPropertyCount *driver.Uint32, pProperties *driver.VkExtensionProperties) (common.VkResult, error) {
+			pLayerBytes := (*byte)(unsafe.Pointer(pLayerName))
+
+			layerByteSlice := ([]byte)(unsafe.Slice(pLayerBytes, 9))
+			layer := string(layerByteSlice)
+
+			require.Equal(t, "someLayer", layer)
+
+			*pPropertyCount = 2
+
+			return core1_0.VKSuccess, nil
+		})
+
+	mockDriver.EXPECT().VkEnumerateInstanceExtensionProperties(gomock.Not(nil), gomock.Not(nil), gomock.Not(nil)).DoAndReturn(
+		func(pLayerName *driver.Char, pPropertyCount *driver.Uint32, pProperties *driver.VkExtensionProperties) (common.VkResult, error) {
+			pLayerBytes := (*byte)(unsafe.Pointer(pLayerName))
+
+			layerByteSlice := ([]byte)(unsafe.Slice(pLayerBytes, 9))
+			layer := string(layerByteSlice)
+
+			require.Equal(t, "someLayer", layer)
+
+			*pPropertyCount = 2
+			propertySlice := reflect.ValueOf(([]driver.VkExtensionProperties)(unsafe.Slice(pProperties, 2)))
+
+			extension := propertySlice.Index(0)
+
+			*(*uint32)(unsafe.Pointer(extension.FieldByName("specVersion").UnsafeAddr())) = uint32(common.CreateVersion(1, 2, 3))
+			extensionName := ([]driver.Char)(unsafe.Slice((*driver.Char)(unsafe.Pointer(extension.FieldByName("extensionName").UnsafeAddr())), 256))
+			strToCharSlice("extension 1", extensionName)
+
+			extension = propertySlice.Index(1)
+			*(*uint32)(unsafe.Pointer(extension.FieldByName("specVersion").UnsafeAddr())) = uint32(common.CreateVersion(3, 2, 1))
+			extensionName = ([]driver.Char)(unsafe.Slice((*driver.Char)(unsafe.Pointer(extension.FieldByName("extensionName").UnsafeAddr())), 256))
+			strToCharSlice("extension A", extensionName)
+
+			return core1_0.VKSuccess, nil
+		})
+
+	extensions, _, err := loader.AvailableExtensionsForLayer("someLayer")
+	require.NoError(t, err)
+	require.Len(t, extensions, 2)
+
+	extension := extensions["extension 1"]
+	require.NotNil(t, extension)
+	require.Equal(t, "extension 1", extension.ExtensionName)
+	require.Equal(t, common.CreateVersion(1, 2, 3), extension.SpecVersion)
+
+	extension = extensions["extension A"]
+	require.NotNil(t, extension)
+	require.Equal(t, "extension A", extension.ExtensionName)
+	require.Equal(t, common.CreateVersion(3, 2, 1), extension.SpecVersion)
+}
+
 func TestVulkanLoader1_0_AvailableExtensions(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
