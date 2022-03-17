@@ -66,7 +66,7 @@ func (l *VulkanLoader1_0) attemptAvailableExtensions(layerName *driver.Char) (ma
 	extensionsUnsafe := alloc.Malloc(int(*extensionCount) * C.sizeof_struct_VkExtensionProperties)
 
 	res, err = l.driver.VkEnumerateInstanceExtensionProperties(layerName, extensionCount, (*driver.VkExtensionProperties)(extensionsUnsafe))
-	if err != nil {
+	if err != nil || res == core1_0.VKIncomplete {
 		return nil, res, err
 	}
 
@@ -135,7 +135,7 @@ func (l *VulkanLoader1_0) attemptAvailableLayers() (map[string]*common.LayerProp
 	layersUnsafe := alloc.Malloc(int(*layerCount) * C.sizeof_struct_VkLayerProperties)
 
 	res, err = l.driver.VkEnumerateInstanceLayerProperties(layerCount, (*driver.VkLayerProperties)(layersUnsafe))
-	if err != nil {
+	if err != nil || res == core1_0.VKIncomplete {
 		return nil, res, err
 	}
 

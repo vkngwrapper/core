@@ -114,7 +114,7 @@ func (d *VulkanPhysicalDevice) attemptAvailableExtensions(layerNamePtr *driver.C
 	extensionsPtr := allocator.Malloc(extensionTotal * C.sizeof_struct_VkExtensionProperties)
 
 	res, err = d.InstanceDriver.VkEnumerateDeviceExtensionProperties(d.PhysicalDeviceHandle, layerNamePtr, extensionCount, (*driver.VkExtensionProperties)(extensionsPtr))
-	if err != nil {
+	if err != nil || res == core1_0.VKIncomplete {
 		return nil, res, err
 	}
 

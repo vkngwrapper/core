@@ -80,6 +80,13 @@ func EasyMockImageView(ctrl *gomock.Controller) *MockImageView {
 	return imageView
 }
 
+func EasyMockInstance(ctrl *gomock.Controller) *MockInstance {
+	instance := NewMockInstance(ctrl)
+	instance.EXPECT().Handle().Return(NewFakeInstanceHandle()).AnyTimes()
+
+	return instance
+}
+
 func EasyMockPipeline(ctrl *gomock.Controller) *MockPipeline {
 	pipeline := NewMockPipeline(ctrl)
 	pipeline.EXPECT().Handle().Return(NewFakePipeline()).AnyTimes()
