@@ -53,3 +53,8 @@ func (o CommandPoolOptions) PopulateCPointer(allocator *cgoparam.Allocator, prea
 
 	return unsafe.Pointer(cmdPoolCreate), nil
 }
+
+func (o CommandPoolOptions) PopulateOutData(cDataPointer unsafe.Pointer) (next unsafe.Pointer, err error) {
+	createInfo := (*C.VkCommandPoolCreateInfo)(cDataPointer)
+	return createInfo.pNext, nil
+}

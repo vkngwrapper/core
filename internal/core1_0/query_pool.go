@@ -35,21 +35,21 @@ func (p *VulkanQueryPool) Destroy(callbacks *driver.AllocationCallbacks) {
 	p.Driver.VkDestroyQueryPool(p.Device, p.QueryPoolHandle, callbacks.Handle())
 }
 
-func (p *VulkanQueryPool) PopulateResults(firstQuery, queryCount int, resultSize, resultStride int, flags common.QueryResultFlags) ([]byte, common.VkResult, error) {
+func (p *VulkanQueryPool) PopulateResults(firstQuery, queryCount int, results []byte, resultStride int, flags common.QueryResultFlags) (common.VkResult, error) {
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
-	outBuffer := make([]byte, resultSize)
+	resultSize := len(results)
 
 	inPointer := arena.Malloc(resultSize)
 
 	res, err := p.Driver.VkGetQueryPoolResults(p.Device, p.QueryPoolHandle, driver.Uint32(firstQuery), driver.Uint32(queryCount), driver.Size(resultSize), inPointer, driver.VkDeviceSize(resultStride), driver.VkQueryResultFlags(flags))
 	if err != nil {
-		return nil, res, err
+		return res, err
 	}
 
 	inBuffer := ([]byte)(unsafe.Slice((*byte)(inPointer), resultSize))
-	copy(outBuffer, inBuffer)
+	copy(results, inBuffer)
 
-	return outBuffer, res, nil
+	return res, nil
 }

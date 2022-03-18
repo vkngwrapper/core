@@ -124,3 +124,8 @@ func (o SubmitOptions) PopulateCPointer(allocator *cgoparam.Allocator, prealloca
 
 	return preallocatedPointer, nil
 }
+
+func (o SubmitOptions) PopulateOutData(cDataPointer unsafe.Pointer) (next unsafe.Pointer, err error) {
+	createInfo := (*C.VkSubmitInfo)(cDataPointer)
+	return createInfo.pNext, nil
+}

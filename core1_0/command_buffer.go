@@ -65,3 +65,8 @@ func (o CommandBufferOptions) PopulateCPointer(allocator *cgoparam.Allocator, pr
 
 	return unsafe.Pointer(createInfo), nil
 }
+
+func (o CommandBufferOptions) PopulateOutData(cDataPointer unsafe.Pointer) (next unsafe.Pointer, err error) {
+	createInfo := (*C.VkCommandBufferAllocateInfo)(cDataPointer)
+	return createInfo.pNext, nil
+}

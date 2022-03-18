@@ -66,6 +66,13 @@ func EasyMockEvent(ctrl *gomock.Controller) *MockEvent {
 	return event
 }
 
+func EasyMockFence(ctrl *gomock.Controller) *MockFence {
+	fence := NewMockFence(ctrl)
+	fence.EXPECT().Handle().Return(NewFakeFenceHandle()).AnyTimes()
+
+	return fence
+}
+
 func EasyMockImage(ctrl *gomock.Controller) *MockImage {
 	image := NewMockImage(ctrl)
 	image.EXPECT().Handle().Return(NewFakeImageHandle()).AnyTimes()
@@ -80,9 +87,11 @@ func EasyMockImageView(ctrl *gomock.Controller) *MockImageView {
 	return imageView
 }
 
-func EasyMockInstance(ctrl *gomock.Controller) *MockInstance {
+func EasyMockInstance(ctrl *gomock.Controller, driver driver.Driver) *MockInstance {
 	instance := NewMockInstance(ctrl)
 	instance.EXPECT().Handle().Return(NewFakeInstanceHandle()).AnyTimes()
+	instance.EXPECT().Driver().Return(driver).AnyTimes()
+	instance.EXPECT().APIVersion().Return(driver.Version()).AnyTimes()
 
 	return instance
 }
@@ -125,6 +134,13 @@ func EasyMockQueryPool(ctrl *gomock.Controller) *MockQueryPool {
 	queryPool.EXPECT().Handle().Return(NewFakeQueryPool()).AnyTimes()
 
 	return queryPool
+}
+
+func EasyMockQueue(ctrl *gomock.Controller) *MockQueue {
+	queue := NewMockQueue(ctrl)
+	queue.EXPECT().Handle().Return(NewFakeQueue()).AnyTimes()
+
+	return queue
 }
 
 func EasyMockRenderPass(ctrl *gomock.Controller) *MockRenderPass {

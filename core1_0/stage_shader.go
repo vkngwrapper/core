@@ -96,3 +96,8 @@ func (s ShaderStageOptions) PopulateCPointer(allocator *cgoparam.Allocator, prea
 
 	return preallocatedPointer, nil
 }
+
+func (o ShaderStageOptions) PopulateOutData(cDataPointer unsafe.Pointer) (next unsafe.Pointer, err error) {
+	createInfo := (*C.VkPipelineShaderStageCreateInfo)(cDataPointer)
+	return createInfo.pNext, nil
+}

@@ -91,7 +91,8 @@ func TestVulkanQueryPool_PopulateResults(t *testing.T) {
 			return core1_0.VKSuccess, nil
 		})
 
-	results, _, err := queryPool.PopulateResults(1, 3, 40, 8, core1_0.QueryResultPartial)
+	results := make([]byte, 40)
+	_, err = queryPool.PopulateResults(1, 3, results, 8, core1_0.QueryResultPartial)
 	require.NoError(t, err)
 	require.Len(t, results, 40)
 

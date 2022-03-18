@@ -62,3 +62,8 @@ func (o DescriptorPoolOptions) PopulateCPointer(allocator *cgoparam.Allocator, p
 
 	return unsafe.Pointer(createInfo), nil
 }
+
+func (o DescriptorPoolOptions) PopulateOutData(cDataPointer unsafe.Pointer) (next unsafe.Pointer, err error) {
+	createInfo := (*C.VkDescriptorPoolCreateInfo)(cDataPointer)
+	return createInfo.pNext, nil
+}

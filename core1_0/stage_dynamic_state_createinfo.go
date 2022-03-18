@@ -66,3 +66,8 @@ func (o DynamicStateOptions) PopulateCPointer(allocator *cgoparam.Allocator, pre
 
 	return preallocatedPointer, nil
 }
+
+func (o DynamicStateOptions) PopulateOutData(cDataPointer unsafe.Pointer) (next unsafe.Pointer, err error) {
+	createInfo := (*C.VkPipelineDynamicStateCreateInfo)(cDataPointer)
+	return createInfo.pNext, nil
+}

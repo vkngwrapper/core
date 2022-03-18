@@ -618,17 +618,3 @@ func (f SubPassFlags) Register(str string) {
 func (f SubPassFlags) String() string {
 	return subPassFlagsMapping.FlagsToString(f)
 }
-
-////
-
-type SurfaceTransforms int32
-
-var surfaceTransformsMapping = NewFlagStringMapping[SurfaceTransforms]()
-
-func (f SurfaceTransforms) Register(str string) {
-	surfaceTransformsMapping.Register(f, str)
-}
-
-func (f SurfaceTransforms) String() string {
-	return surfaceTransformsMapping.FlagsToString(f)
-}

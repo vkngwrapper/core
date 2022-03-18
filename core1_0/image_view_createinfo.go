@@ -66,7 +66,7 @@ type ImageViewOptions struct {
 	common.HaveNext
 }
 
-func (o *ImageViewOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o ImageViewOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == unsafe.Pointer(nil) {
 		preallocatedPointer = allocator.Malloc(int(unsafe.Sizeof([1]C.VkImageViewCreateInfo{})))
 	}
@@ -89,4 +89,9 @@ func (o *ImageViewOptions) PopulateCPointer(allocator *cgoparam.Allocator, preal
 	createInfo.subresourceRange.layerCount = C.uint32_t(o.SubresourceRange.LayerCount)
 
 	return preallocatedPointer, nil
+}
+
+func (o ImageViewOptions) PopulateOutData(cDataPointer unsafe.Pointer) (next unsafe.Pointer, err error) {
+	createInfo := (*C.VkImageViewCreateInfo)(cDataPointer)
+	return createInfo.pNext, nil
 }

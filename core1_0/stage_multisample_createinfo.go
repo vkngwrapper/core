@@ -75,3 +75,8 @@ func (o MultisampleOptions) PopulateCPointer(allocator *cgoparam.Allocator, prea
 
 	return preallocatedPointer, nil
 }
+
+func (o MultisampleOptions) PopulateOutData(cDataPointer unsafe.Pointer) (next unsafe.Pointer, err error) {
+	createInfo := (*C.VkPipelineMultisampleStateCreateInfo)(cDataPointer)
+	return createInfo.pNext, nil
+}

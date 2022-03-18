@@ -85,3 +85,8 @@ func (o VertexInputOptions) PopulateCPointer(allocator *cgoparam.Allocator, prea
 
 	return unsafe.Pointer(createInfo), nil
 }
+
+func (o VertexInputOptions) PopulateOutData(cDataPointer unsafe.Pointer) (next unsafe.Pointer, err error) {
+	createInfo := (*C.VkPipelineVertexInputStateCreateInfo)(cDataPointer)
+	return createInfo.pNext, nil
+}

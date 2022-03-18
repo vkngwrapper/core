@@ -94,7 +94,7 @@ type SamplerOptions struct {
 	common.HaveNext
 }
 
-func (o *SamplerOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o SamplerOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == unsafe.Pointer(nil) {
 		preallocatedPointer = allocator.Malloc(C.sizeof_struct_VkSamplerCreateInfo)
 	}
@@ -128,4 +128,9 @@ func (o *SamplerOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallo
 	}
 
 	return preallocatedPointer, nil
+}
+
+func (o SamplerOptions) PopulateOutData(cDataPointer unsafe.Pointer) (next unsafe.Pointer, err error) {
+	createInfo := (*C.VkSamplerCreateInfo)(cDataPointer)
+	return createInfo.pNext, nil
 }

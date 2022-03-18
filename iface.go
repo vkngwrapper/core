@@ -56,11 +56,11 @@ type Loader1_1 interface {
 	SomeOneOneMethod()
 }
 
-func CreateStaticLinkedLoader() (Loader, error) {
+func CreateStaticLinkedLoader() (*VulkanLoader1_0, error) {
 	return CreateLoaderFromProcAddr(unsafe.Pointer(C.vkGetInstanceProcAddr))
 }
 
-func CreateLoaderFromProcAddr(addr unsafe.Pointer) (Loader, error) {
+func CreateLoaderFromProcAddr(addr unsafe.Pointer) (*VulkanLoader1_0, error) {
 	driver, err := driver.CreateDriverFromProcAddr(addr)
 	if err != nil {
 		return nil, err
@@ -69,6 +69,6 @@ func CreateLoaderFromProcAddr(addr unsafe.Pointer) (Loader, error) {
 	return CreateLoaderFromDriver(driver)
 }
 
-func CreateLoaderFromDriver(driver driver.Driver) (Loader, error) {
+func CreateLoaderFromDriver(driver driver.Driver) (*VulkanLoader1_0, error) {
 	return NewLoader(driver), nil
 }

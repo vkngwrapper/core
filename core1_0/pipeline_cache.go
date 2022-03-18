@@ -18,7 +18,7 @@ type PipelineCacheOptions struct {
 	common.HaveNext
 }
 
-func (o *PipelineCacheOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o PipelineCacheOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == unsafe.Pointer(nil) {
 		preallocatedPointer = allocator.Malloc(C.sizeof_struct_VkPipelineCacheCreateInfo)
 	}
@@ -36,4 +36,9 @@ func (o *PipelineCacheOptions) PopulateCPointer(allocator *cgoparam.Allocator, p
 	}
 
 	return preallocatedPointer, nil
+}
+
+func (o PipelineCacheOptions) PopulateOutData(cDataPointer unsafe.Pointer) (next unsafe.Pointer, err error) {
+	createInfo := (*C.VkPipelineCacheCreateInfo)(cDataPointer)
+	return createInfo.pNext, nil
 }

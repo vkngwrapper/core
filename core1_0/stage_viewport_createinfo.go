@@ -60,3 +60,8 @@ func (o ViewportOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallo
 
 	return preallocatedPointer, nil
 }
+
+func (o ViewportOptions) PopulateOutData(cDataPointer unsafe.Pointer) (next unsafe.Pointer, err error) {
+	createInfo := (*C.VkPipelineViewportStateCreateInfo)(cDataPointer)
+	return createInfo.pNext, nil
+}

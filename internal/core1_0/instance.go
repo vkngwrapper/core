@@ -31,6 +31,10 @@ func (i *VulkanInstance) Handle() driver.VkInstance {
 	return i.InstanceHandle
 }
 
+func (i *VulkanInstance) APIVersion() common.APIVersion {
+	return i.MaximumVersion
+}
+
 func (i *VulkanInstance) Core1_1() core1_1.Instance {
 	return i.Instance1_1
 }

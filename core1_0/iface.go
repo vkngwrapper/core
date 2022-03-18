@@ -218,6 +218,7 @@ type ImageView interface {
 type Instance interface {
 	Handle() driver.VkInstance
 	Driver() driver.Driver
+	APIVersion() common.APIVersion
 
 	Core1_1() core1_1.Instance
 
@@ -276,7 +277,7 @@ type QueryPool interface {
 	Core1_1() core1_1.QueryPool
 
 	Destroy(callbacks *driver.AllocationCallbacks)
-	PopulateResults(firstQuery, queryCount int, resultSize, resultStride int, flags common.QueryResultFlags) ([]byte, common.VkResult, error)
+	PopulateResults(firstQuery, queryCount int, results []byte, resultStride int, flags common.QueryResultFlags) (common.VkResult, error)
 }
 
 type Queue interface {

@@ -26,7 +26,7 @@ type DeviceOptions struct {
 	common.HaveNext
 }
 
-func (o *DeviceOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o DeviceOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if len(o.QueueFamilies) == 0 {
 		return nil, errors.New("alloc DeviceOptions: no queue families added")
 	}
@@ -94,6 +94,11 @@ func (o *DeviceOptions) PopulateCPointer(allocator *cgoparam.Allocator, prealloc
 	}
 
 	return unsafe.Pointer(createInfo), nil
+}
+
+func (o DeviceOptions) PopulateOutData(cDataPointer unsafe.Pointer) (next unsafe.Pointer, err error) {
+	createInfo := (*C.VkDeviceCreateInfo)(cDataPointer)
+	return createInfo.pNext, nil
 }
 
 func populateFeatures(f *C.VkPhysicalDeviceFeatures, enabledFeatures *PhysicalDeviceFeatures) {

@@ -179,6 +179,7 @@ type VkCommandPoolTrimFlags C.VkCommandPoolTrimFlags
 type VkDeviceAddress C.VkDeviceAddress
 type VkQueueFlags C.VkQueueFlags
 type VkSampleMask C.VkSampleMask
+type VkResult C.VkResult
 
 type VkBool32 C.VkBool32
 type Int32 C.int32_t

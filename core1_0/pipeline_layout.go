@@ -24,7 +24,7 @@ type PipelineLayoutOptions struct {
 	common.HaveNext
 }
 
-func (o *PipelineLayoutOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o PipelineLayoutOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == unsafe.Pointer(nil) {
 		preallocatedPointer = allocator.Malloc(C.sizeof_struct_VkPipelineLayoutCreateInfo)
 	}
@@ -64,4 +64,9 @@ func (o *PipelineLayoutOptions) PopulateCPointer(allocator *cgoparam.Allocator, 
 	}
 
 	return preallocatedPointer, nil
+}
+
+func (o PipelineLayoutOptions) PopulateOutData(cDataPointer unsafe.Pointer) (next unsafe.Pointer, err error) {
+	createInfo := (*C.VkPipelineLayoutCreateInfo)(cDataPointer)
+	return createInfo.pNext, nil
 }

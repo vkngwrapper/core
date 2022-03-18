@@ -178,6 +178,11 @@ func (o GraphicsPipelineOptions) PopulateCPointer(allocator *cgoparam.Allocator,
 	return preallocatedPointer, nil
 }
 
+func (o GraphicsPipelineOptions) PopulateOutData(cDataPointer unsafe.Pointer) (next unsafe.Pointer, err error) {
+	createInfo := (*C.VkGraphicsPipelineCreateInfo)(cDataPointer)
+	return createInfo.pNext, nil
+}
+
 type ComputePipelineOptions struct {
 	Flags  common.PipelineCreateFlags
 	Shader ShaderStageOptions
@@ -209,4 +214,9 @@ func (o ComputePipelineOptions) PopulateCPointer(allocator *cgoparam.Allocator, 
 	createInfo.basePipelineIndex = C.int32_t(o.BasePipelineIndex)
 
 	return preallocatedPointer, nil
+}
+
+func (o ComputePipelineOptions) PopulateOutData(cDataPointer unsafe.Pointer) (next unsafe.Pointer, err error) {
+	createInfo := (*C.VkComputePipelineCreateInfo)(cDataPointer)
+	return createInfo.pNext, nil
 }

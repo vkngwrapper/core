@@ -102,3 +102,8 @@ func (o *DescriptorSetLayoutOptions) PopulateCPointer(allocator *cgoparam.Alloca
 
 	return preallocatedPointer, nil
 }
+
+func (o DescriptorSetLayoutOptions) PopulateOutData(cDataPointer unsafe.Pointer) (next unsafe.Pointer, err error) {
+	createInfo := (*C.VkDescriptorSetLayoutCreateInfo)(cDataPointer)
+	return createInfo.pNext, nil
+}

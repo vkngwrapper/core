@@ -65,7 +65,7 @@ type QueryPoolOptions struct {
 	common.HaveNext
 }
 
-func (o *QueryPoolOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o QueryPoolOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == unsafe.Pointer(nil) {
 		preallocatedPointer = allocator.Malloc(C.sizeof_struct_VkQueryPoolCreateInfo)
 	}
@@ -78,4 +78,9 @@ func (o *QueryPoolOptions) PopulateCPointer(allocator *cgoparam.Allocator, preal
 	createInfo.pipelineStatistics = C.VkQueryPipelineStatisticFlags(o.PipelineStatistics)
 
 	return preallocatedPointer, nil
+}
+
+func (o QueryPoolOptions) PopulateOutData(cDataPointer unsafe.Pointer) (next unsafe.Pointer, err error) {
+	createInfo := (*C.VkQueryPoolCreateInfo)(cDataPointer)
+	return createInfo.pNext, nil
 }

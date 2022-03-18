@@ -29,3 +29,8 @@ func (o TessellationOptions) PopulateCPointer(allocator *cgoparam.Allocator, pre
 
 	return preallocatePointer, nil
 }
+
+func (o TessellationOptions) PopulateOutData(cDataPointer unsafe.Pointer) (next unsafe.Pointer, err error) {
+	createInfo := (*C.VkPipelineTessellationStateCreateInfo)(cDataPointer)
+	return createInfo.pNext, nil
+}

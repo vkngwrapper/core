@@ -2150,6 +2150,20 @@ func (m *MockInstance) EXPECT() *MockInstanceMockRecorder {
 	return m.recorder
 }
 
+// APIVersion mocks base method.
+func (m *MockInstance) APIVersion() common.APIVersion {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "APIVersion")
+	ret0, _ := ret[0].(common.APIVersion)
+	return ret0
+}
+
+// APIVersion indicates an expected call of APIVersion.
+func (mr *MockInstanceMockRecorder) APIVersion() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "APIVersion", reflect.TypeOf((*MockInstance)(nil).APIVersion))
+}
+
 // Core1_1 mocks base method.
 func (m *MockInstance) Core1_1() core1_1.Instance {
 	m.ctrl.T.Helper()
@@ -2731,19 +2745,18 @@ func (mr *MockQueryPoolMockRecorder) Handle() *gomock.Call {
 }
 
 // PopulateResults mocks base method.
-func (m *MockQueryPool) PopulateResults(firstQuery, queryCount, resultSize, resultStride int, flags common.QueryResultFlags) ([]byte, common.VkResult, error) {
+func (m *MockQueryPool) PopulateResults(firstQuery, queryCount int, results []byte, resultStride int, flags common.QueryResultFlags) (common.VkResult, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "PopulateResults", firstQuery, queryCount, resultSize, resultStride, flags)
-	ret0, _ := ret[0].([]byte)
-	ret1, _ := ret[1].(common.VkResult)
-	ret2, _ := ret[2].(error)
-	return ret0, ret1, ret2
+	ret := m.ctrl.Call(m, "PopulateResults", firstQuery, queryCount, results, resultStride, flags)
+	ret0, _ := ret[0].(common.VkResult)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
 }
 
 // PopulateResults indicates an expected call of PopulateResults.
-func (mr *MockQueryPoolMockRecorder) PopulateResults(firstQuery, queryCount, resultSize, resultStride, flags interface{}) *gomock.Call {
+func (mr *MockQueryPoolMockRecorder) PopulateResults(firstQuery, queryCount, results, resultStride, flags interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "PopulateResults", reflect.TypeOf((*MockQueryPool)(nil).PopulateResults), firstQuery, queryCount, resultSize, resultStride, flags)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "PopulateResults", reflect.TypeOf((*MockQueryPool)(nil).PopulateResults), firstQuery, queryCount, results, resultStride, flags)
 }
 
 // MockQueue is a mock of Queue interface.

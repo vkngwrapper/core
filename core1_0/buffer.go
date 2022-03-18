@@ -79,3 +79,8 @@ func (o BufferOptions) PopulateCPointer(allocator *cgoparam.Allocator, prealloca
 
 	return preallocatedPointer, nil
 }
+
+func (o BufferOptions) PopulateOutData(cDataPointer unsafe.Pointer) (next unsafe.Pointer, err error) {
+	createInfo := (*C.VkBufferCreateInfo)(cDataPointer)
+	return createInfo.pNext, nil
+}

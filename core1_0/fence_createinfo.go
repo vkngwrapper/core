@@ -25,7 +25,7 @@ type FenceOptions struct {
 	common.HaveNext
 }
 
-func (o *FenceOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o FenceOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == unsafe.Pointer(nil) {
 		preallocatedPointer = allocator.Malloc(C.sizeof_struct_VkFenceCreateInfo)
 	}
@@ -35,4 +35,9 @@ func (o *FenceOptions) PopulateCPointer(allocator *cgoparam.Allocator, prealloca
 	createInfo.pNext = next
 
 	return unsafe.Pointer(createInfo), nil
+}
+
+func (o FenceOptions) PopulateOutData(cDataPointer unsafe.Pointer) (next unsafe.Pointer, err error) {
+	createInfo := (*C.VkFenceCreateInfo)(cDataPointer)
+	return createInfo.pNext, nil
 }

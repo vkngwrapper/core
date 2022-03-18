@@ -209,3 +209,8 @@ func (b BindSparseOptions) PopulateCPointer(allocator *cgoparam.Allocator, preal
 
 	return preallocatedPointer, nil
 }
+
+func (o BindSparseOptions) PopulateOutData(cDataPointer unsafe.Pointer) (next unsafe.Pointer, err error) {
+	createInfo := (*C.VkBindSparseInfo)(cDataPointer)
+	return createInfo.pNext, nil
+}

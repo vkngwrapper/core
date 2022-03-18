@@ -48,6 +48,11 @@ func (o DescriptorSetOptions) PopulateCPointer(allocator *cgoparam.Allocator, pr
 	return preallocatedPointer, nil
 }
 
+func (o DescriptorSetOptions) PopulateOutData(cDataPointer unsafe.Pointer) (next unsafe.Pointer, err error) {
+	createInfo := (*C.VkDescriptorSetAllocateInfo)(cDataPointer)
+	return createInfo.pNext, nil
+}
+
 type DescriptorImageInfo struct {
 	Sampler     Sampler
 	ImageView   ImageView
@@ -181,6 +186,11 @@ func (o WriteDescriptorSetOptions) PopulateCPointer(allocator *cgoparam.Allocato
 	return preallocatedPointer, nil
 }
 
+func (o WriteDescriptorSetOptions) PopulateOutData(cDataPointer unsafe.Pointer) (next unsafe.Pointer, err error) {
+	createInfo := (*C.VkWriteDescriptorSet)(cDataPointer)
+	return createInfo.pNext, nil
+}
+
 type CopyDescriptorSetOptions struct {
 	Source             DescriptorSet
 	SourceBinding      int
@@ -215,4 +225,9 @@ func (o CopyDescriptorSetOptions) PopulateCPointer(allocator *cgoparam.Allocator
 	createInfo.descriptorCount = C.uint32_t(o.Count)
 
 	return preallocatedPointer, nil
+}
+
+func (o CopyDescriptorSetOptions) PopulateOutData(cDataPointer unsafe.Pointer) (next unsafe.Pointer, err error) {
+	createInfo := (*C.VkCopyDescriptorSet)(cDataPointer)
+	return createInfo.pNext, nil
 }

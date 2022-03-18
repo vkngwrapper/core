@@ -24,7 +24,7 @@ type FramebufferOptions struct {
 	common.HaveNext
 }
 
-func (o *FramebufferOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o FramebufferOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == unsafe.Pointer(nil) {
 		preallocatedPointer = allocator.Malloc(C.sizeof_struct_VkFramebufferCreateInfo)
 	}
@@ -56,4 +56,9 @@ func (o *FramebufferOptions) PopulateCPointer(allocator *cgoparam.Allocator, pre
 	createInfo.flags = C.VkFramebufferCreateFlags(o.Flags)
 
 	return unsafe.Pointer(createInfo), nil
+}
+
+func (o FramebufferOptions) PopulateOutData(cDataPointer unsafe.Pointer) (next unsafe.Pointer, err error) {
+	createInfo := (*C.VkFramebufferCreateInfo)(cDataPointer)
+	return createInfo.pNext, nil
 }

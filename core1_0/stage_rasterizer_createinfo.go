@@ -89,3 +89,8 @@ func (o RasterizationOptions) PopulateCPointer(allocator *cgoparam.Allocator, pr
 
 	return preallocatedPointer, nil
 }
+
+func (o RasterizationOptions) PopulateOutData(cDataPointer unsafe.Pointer) (next unsafe.Pointer, err error) {
+	createInfo := (*C.VkPipelineRasterizationStateCreateInfo)(cDataPointer)
+	return createInfo.pNext, nil
+}

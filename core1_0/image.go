@@ -116,7 +116,7 @@ type ImageOptions struct {
 	common.HaveNext
 }
 
-func (o *ImageOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o ImageOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == unsafe.Pointer(nil) {
 		preallocatedPointer = allocator.Malloc(int(unsafe.Sizeof([1]C.VkImageCreateInfo{})))
 	}
@@ -154,4 +154,9 @@ func (o *ImageOptions) PopulateCPointer(allocator *cgoparam.Allocator, prealloca
 	}
 
 	return unsafe.Pointer(createInfo), nil
+}
+
+func (o ImageOptions) PopulateOutData(cDataPointer unsafe.Pointer) (next unsafe.Pointer, err error) {
+	createInfo := (*C.VkImageCreateInfo)(cDataPointer)
+	return createInfo.pNext, nil
 }

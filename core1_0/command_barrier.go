@@ -31,6 +31,11 @@ func (o MemoryBarrierOptions) PopulateCPointer(allocator *cgoparam.Allocator, pr
 	return preallocatedPointer, nil
 }
 
+func (o MemoryBarrierOptions) PopulateOutData(cDataPointer unsafe.Pointer) (next unsafe.Pointer, err error) {
+	createInfo := (*C.VkMemoryBarrier)(cDataPointer)
+	return createInfo.pNext, nil
+}
+
 type BufferMemoryBarrierOptions struct {
 	SrcAccessMask common.AccessFlags
 	DstAccessMask common.AccessFlags
@@ -62,6 +67,11 @@ func (o BufferMemoryBarrierOptions) PopulateCPointer(allocator *cgoparam.Allocat
 	createInfo.size = C.VkDeviceSize(o.Size)
 
 	return preallocatedPointer, nil
+}
+
+func (o BufferMemoryBarrierOptions) PopulateOutData(cDataPointer unsafe.Pointer) (next unsafe.Pointer, err error) {
+	createInfo := (*C.VkBufferMemoryBarrier)(cDataPointer)
+	return createInfo.pNext, nil
 }
 
 type ImageMemoryBarrierOptions struct {
@@ -101,4 +111,9 @@ func (o ImageMemoryBarrierOptions) PopulateCPointer(allocator *cgoparam.Allocato
 	createInfo.subresourceRange.layerCount = C.uint32_t(o.SubresourceRange.LayerCount)
 
 	return preallocatedPointer, nil
+}
+
+func (o ImageMemoryBarrierOptions) PopulateOutData(cDataPointer unsafe.Pointer) (next unsafe.Pointer, err error) {
+	createInfo := (*C.VkImageMemoryBarrier)(cDataPointer)
+	return createInfo.pNext, nil
 }
