@@ -47,7 +47,7 @@ func TestDescriptorSetLayout_Create_SingleBinding(t *testing.T) {
 			return core1_0.VKSuccess, nil
 		})
 
-	layout, _, err := loader.CreateDescriptorSetLayout(mockDevice, nil, &core1_0.DescriptorSetLayoutOptions{
+	layout, _, err := loader.CreateDescriptorSetLayout(mockDevice, nil, core1_0.DescriptorSetLayoutOptions{
 		Flags: 0,
 		Bindings: []core1_0.DescriptorLayoutBinding{
 			{
@@ -109,7 +109,7 @@ func TestDescriptorSetLayout_Create_SingleBindingImmutableSamplers(t *testing.T)
 			return core1_0.VKSuccess, nil
 		})
 
-	layout, _, err := loader.CreateDescriptorSetLayout(mockDevice, nil, &core1_0.DescriptorSetLayoutOptions{
+	layout, _, err := loader.CreateDescriptorSetLayout(mockDevice, nil, core1_0.DescriptorSetLayoutOptions{
 		Flags: 0,
 		Bindings: []core1_0.DescriptorLayoutBinding{
 			{
@@ -144,7 +144,7 @@ func TestDescriptorSetLayout_Create_FailBindingSamplerMismatch(t *testing.T) {
 	sampler3 := mocks.EasyMockSampler(ctrl)
 	sampler4 := mocks.EasyMockSampler(ctrl)
 
-	_, _, err = loader.CreateDescriptorSetLayout(mockDevice, nil, &core1_0.DescriptorSetLayoutOptions{
+	_, _, err = loader.CreateDescriptorSetLayout(mockDevice, nil, core1_0.DescriptorSetLayoutOptions{
 		Flags: 0,
 		Bindings: []core1_0.DescriptorLayoutBinding{
 			{
@@ -209,7 +209,7 @@ func TestDescriptorSetLayout_Create_MultiBinding(t *testing.T) {
 			return core1_0.VKSuccess, nil
 		})
 
-	layout, _, err := loader.CreateDescriptorSetLayout(mockDevice, nil, &core1_0.DescriptorSetLayoutOptions{
+	layout, _, err := loader.CreateDescriptorSetLayout(mockDevice, nil, core1_0.DescriptorSetLayoutOptions{
 		Flags: 0,
 		Bindings: []core1_0.DescriptorLayoutBinding{
 			{

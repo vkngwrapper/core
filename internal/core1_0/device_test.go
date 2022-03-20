@@ -116,7 +116,7 @@ func TestVulkanLoader1_0_CreateDevice_Success(t *testing.T) {
 			return core1_0.VKSuccess, nil
 		})
 
-	device, _, err := loader.CreateDevice(mockPhysicalDevice, nil, &core1_0.DeviceOptions{
+	device, _, err := loader.CreateDevice(mockPhysicalDevice, nil, core1_0.DeviceOptions{
 		QueueFamilies: []core1_0.QueueFamilyOptions{
 			{
 				QueueFamilyIndex: 1,
@@ -148,7 +148,7 @@ func TestVulkanLoader1_0_CreateDevice_FailNoQueueFamilies(t *testing.T) {
 	loader, err := core.CreateLoaderFromDriver(mockDriver)
 	require.NoError(t, err)
 
-	_, _, err = loader.CreateDevice(mockPhysicalDevice, nil, &core1_0.DeviceOptions{
+	_, _, err = loader.CreateDevice(mockPhysicalDevice, nil, core1_0.DeviceOptions{
 		QueueFamilies:  []core1_0.QueueFamilyOptions{},
 		ExtensionNames: []string{"A", "B", "C"},
 		LayerNames:     []string{"D", "E"},
@@ -170,7 +170,7 @@ func TestVulkanLoader1_0_CreateDevice_FailFamilyWithoutPriorities(t *testing.T) 
 
 	mockPhysicalDevice := mocks.EasyMockPhysicalDevice(ctrl, mockDriver)
 
-	_, _, err = loader.CreateDevice(mockPhysicalDevice, nil, &core1_0.DeviceOptions{
+	_, _, err = loader.CreateDevice(mockPhysicalDevice, nil, core1_0.DeviceOptions{
 		QueueFamilies: []core1_0.QueueFamilyOptions{
 			{
 				QueueFamilyIndex: 1,

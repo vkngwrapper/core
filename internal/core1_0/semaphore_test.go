@@ -36,7 +36,7 @@ func TestVulkanLoader1_0_CreateSemaphore(t *testing.T) {
 			return core1_0.VKSuccess, nil
 		})
 
-	semaphore, _, err := loader.CreateSemaphore(device, nil, &core1_0.SemaphoreOptions{})
+	semaphore, _, err := loader.CreateSemaphore(device, nil, core1_0.SemaphoreOptions{})
 	require.NoError(t, err)
 	require.NotNil(t, semaphore)
 	require.Equal(t, semaphoreHandle, semaphore.Handle())

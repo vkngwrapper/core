@@ -45,7 +45,7 @@ func (c *VulkanCommandBuffer) Core1_1() core1_1.CommandBuffer {
 	return c.CommandBuffer1_1
 }
 
-func (c *VulkanCommandBuffer) Begin(o *core1_0.BeginOptions) (common.VkResult, error) {
+func (c *VulkanCommandBuffer) Begin(o core1_0.BeginOptions) (common.VkResult, error) {
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
@@ -61,7 +61,7 @@ func (c *VulkanCommandBuffer) End() (common.VkResult, error) {
 	return c.DeviceDriver.VkEndCommandBuffer(c.CommandBufferHandle)
 }
 
-func (c *VulkanCommandBuffer) CmdBeginRenderPass(contents common.SubpassContents, o *core1_0.RenderPassBeginOptions) error {
+func (c *VulkanCommandBuffer) CmdBeginRenderPass(contents common.SubpassContents, o core1_0.RenderPassBeginOptions) error {
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 

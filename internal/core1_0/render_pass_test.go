@@ -144,7 +144,7 @@ func TestVulkanLoader1_0_CreateRenderPass_Success(t *testing.T) {
 			return core1_0.VKSuccess, nil
 		})
 
-	renderPass, _, err := loader.CreateRenderPass(device, nil, &core1_0.RenderPassOptions{
+	renderPass, _, err := loader.CreateRenderPass(device, nil, core1_0.RenderPassOptions{
 		Flags: 0,
 		Attachments: []core1_0.AttachmentDescription{
 			{
@@ -359,7 +359,7 @@ func TestVulkanLoader1_0_CreateRenderPass_SuccessNoNonColorAttachments(t *testin
 			return core1_0.VKSuccess, nil
 		})
 
-	renderPass, _, err := loader.CreateRenderPass(device, nil, &core1_0.RenderPassOptions{
+	renderPass, _, err := loader.CreateRenderPass(device, nil, core1_0.RenderPassOptions{
 		Flags: 0,
 		Attachments: []core1_0.AttachmentDescription{
 			{
@@ -454,7 +454,7 @@ func TestVulkanLoader1_0_CreateRenderPass_MismatchResolve(t *testing.T) {
 
 	device := mocks.EasyMockDevice(ctrl, driver)
 
-	_, _, err = loader.CreateRenderPass(device, nil, &core1_0.RenderPassOptions{
+	_, _, err = loader.CreateRenderPass(device, nil, core1_0.RenderPassOptions{
 		Flags: 0,
 		Attachments: []core1_0.AttachmentDescription{
 			{

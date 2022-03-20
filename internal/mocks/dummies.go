@@ -23,7 +23,7 @@ func EasyDummyBuffer(t *testing.T, loader core.Loader, device core1_0.Device) co
 			return core1_0.VKSuccess, nil
 		})
 
-	buffer, _, err := loader.CreateBuffer(device, nil, &core1_0.BufferOptions{})
+	buffer, _, err := loader.CreateBuffer(device, nil, core1_0.BufferOptions{})
 	require.NoError(t, err)
 	require.NotNil(t, buffer)
 
@@ -41,7 +41,7 @@ func EasyDummyCommandPool(t *testing.T, loader core.Loader, device core1_0.Devic
 		})
 
 	graphicsFamily := 0
-	pool, res, err := loader.CreateCommandPool(device, nil, &core1_0.CommandPoolOptions{
+	pool, res, err := loader.CreateCommandPool(device, nil, core1_0.CommandPoolOptions{
 		Flags:               core1_0.CommandPoolCreateResetBuffer,
 		GraphicsQueueFamily: &graphicsFamily,
 	})
@@ -59,7 +59,7 @@ func EasyDummyCommandBuffer(t *testing.T, loader core.Loader, device core1_0.Dev
 			*pCommandBuffers = mocks.NewFakeCommandBufferHandle()
 		})
 
-	buffers, _, err := loader.AllocateCommandBuffers(&core1_0.CommandBufferOptions{
+	buffers, _, err := loader.AllocateCommandBuffers(core1_0.CommandBufferOptions{
 		CommandPool: commandPool,
 		BufferCount: 1,
 	})
@@ -77,7 +77,7 @@ func EasyDummyDescriptorPool(t *testing.T, loader core.Loader, device core1_0.De
 			return core1_0.VKSuccess, nil
 		})
 
-	pool, _, err := loader.CreateDescriptorPool(device, nil, &core1_0.DescriptorPoolOptions{})
+	pool, _, err := loader.CreateDescriptorPool(device, nil, core1_0.DescriptorPoolOptions{})
 	require.NoError(t, err)
 
 	return pool
@@ -93,7 +93,7 @@ func EasyDummyDescriptorSet(t *testing.T, loader core.Loader, pool core1_0.Descr
 			return core1_0.VKSuccess, nil
 		})
 
-	sets, _, err := loader.AllocateDescriptorSets(&core1_0.DescriptorSetOptions{
+	sets, _, err := loader.AllocateDescriptorSets(core1_0.DescriptorSetOptions{
 		DescriptorPool:    pool,
 		AllocationLayouts: []core1_0.DescriptorSetLayout{layout},
 	})
@@ -111,7 +111,7 @@ func EasyDummyDescriptorSetLayout(t *testing.T, loader core.Loader, device core1
 			return core1_0.VKSuccess, nil
 		})
 
-	layout, _, err := loader.CreateDescriptorSetLayout(device, nil, &core1_0.DescriptorSetLayoutOptions{})
+	layout, _, err := loader.CreateDescriptorSetLayout(device, nil, core1_0.DescriptorSetLayoutOptions{})
 	require.NoError(t, err)
 	return layout
 }
@@ -126,7 +126,7 @@ func EasyDummyDevice(t *testing.T, ctrl *gomock.Controller, loader core.Loader) 
 			return core1_0.VKSuccess, nil
 		})
 
-	device, _, err := loader.CreateDevice(mocks.EasyMockPhysicalDevice(ctrl, mockDriver), nil, &core1_0.DeviceOptions{
+	device, _, err := loader.CreateDevice(mocks.EasyMockPhysicalDevice(ctrl, mockDriver), nil, core1_0.DeviceOptions{
 		QueueFamilies: []core1_0.QueueFamilyOptions{
 			{
 				QueuePriorities: []float32{1},
@@ -147,7 +147,7 @@ func EasyDummyDeviceMemory(t *testing.T, loader core.Loader, device core1_0.Devi
 			return core1_0.VKSuccess, nil
 		})
 
-	memory, _, err := loader.AllocateMemory(device, nil, &core1_0.DeviceMemoryOptions{
+	memory, _, err := loader.AllocateMemory(device, nil, core1_0.DeviceMemoryOptions{
 		AllocationSize: size,
 	})
 	require.NoError(t, err)
@@ -164,7 +164,7 @@ func EasyDummyEvent(t *testing.T, loader core.Loader, device core1_0.Device) cor
 			return core1_0.VKSuccess, nil
 		})
 
-	event, _, err := loader.CreateEvent(device, nil, &core1_0.EventOptions{})
+	event, _, err := loader.CreateEvent(device, nil, core1_0.EventOptions{})
 	require.NoError(t, err)
 
 	return event
@@ -179,7 +179,7 @@ func EasyDummyFence(t *testing.T, loader core.Loader, device core1_0.Device) cor
 			return core1_0.VKSuccess, nil
 		})
 
-	fence, _, err := loader.CreateFence(device, nil, &core1_0.FenceOptions{})
+	fence, _, err := loader.CreateFence(device, nil, core1_0.FenceOptions{})
 	require.NoError(t, err)
 
 	return fence
@@ -194,7 +194,7 @@ func EasyDummyFramebuffer(t *testing.T, loader core.Loader, device core1_0.Devic
 			return core1_0.VKSuccess, nil
 		})
 
-	framebuffer, _, err := loader.CreateFrameBuffer(device, nil, &core1_0.FramebufferOptions{})
+	framebuffer, _, err := loader.CreateFrameBuffer(device, nil, core1_0.FramebufferOptions{})
 	require.NoError(t, err)
 
 	return framebuffer
@@ -225,7 +225,7 @@ func EasyDummyImage(t *testing.T, loader core.Loader, device core1_0.Device) cor
 			return core1_0.VKSuccess, nil
 		})
 
-	image, _, err := loader.CreateImage(device, nil, &core1_0.ImageOptions{})
+	image, _, err := loader.CreateImage(device, nil, core1_0.ImageOptions{})
 	require.NoError(t, err)
 
 	return image
@@ -241,7 +241,7 @@ func EasyDummyInstance(t *testing.T, loader core.Loader) core1_0.Instance {
 			return core1_0.VKSuccess, nil
 		})
 
-	instance, _, err := loader.CreateInstance(nil, &core1_0.InstanceOptions{
+	instance, _, err := loader.CreateInstance(nil, core1_0.InstanceOptions{
 		VulkanVersion: loader.Version(),
 	})
 	require.NoError(t, err)
@@ -308,7 +308,7 @@ func EasyDummyPipelineCache(t *testing.T, device core1_0.Device, loader core.Loa
 			return core1_0.VKSuccess, nil
 		})
 
-	pipelineCache, _, err := loader.CreatePipelineCache(device, nil, &core1_0.PipelineCacheOptions{})
+	pipelineCache, _, err := loader.CreatePipelineCache(device, nil, core1_0.PipelineCacheOptions{})
 	require.NoError(t, err)
 	return pipelineCache
 }
@@ -322,7 +322,7 @@ func EasyDummyQueryPool(t *testing.T, loader core.Loader, device core1_0.Device)
 			return core1_0.VKSuccess, nil
 		})
 
-	queryPool, _, err := loader.CreateQueryPool(device, nil, &core1_0.QueryPoolOptions{})
+	queryPool, _, err := loader.CreateQueryPool(device, nil, core1_0.QueryPoolOptions{})
 	require.NoError(t, err)
 	return queryPool
 }
@@ -350,7 +350,7 @@ func EasyDummyRenderPass(t *testing.T, loader core.Loader, device core1_0.Device
 			return core1_0.VKSuccess, nil
 		})
 
-	renderPass, _, err := loader.CreateRenderPass(device, nil, &core1_0.RenderPassOptions{})
+	renderPass, _, err := loader.CreateRenderPass(device, nil, core1_0.RenderPassOptions{})
 	require.NoError(t, err)
 
 	return renderPass
@@ -365,7 +365,7 @@ func EasyDummySemaphore(t *testing.T, loader core.Loader, device core1_0.Device)
 			return core1_0.VKSuccess, nil
 		})
 
-	semaphore, _, err := loader.CreateSemaphore(device, nil, &core1_0.SemaphoreOptions{})
+	semaphore, _, err := loader.CreateSemaphore(device, nil, core1_0.SemaphoreOptions{})
 	require.NoError(t, err)
 
 	return semaphore

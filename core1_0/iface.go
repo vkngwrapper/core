@@ -37,11 +37,11 @@ type CommandBuffer interface {
 	Core1_1() core1_1.CommandBuffer
 
 	Free()
-	Begin(o *BeginOptions) (common.VkResult, error)
+	Begin(o BeginOptions) (common.VkResult, error)
 	End() (common.VkResult, error)
 	Reset(flags common.CommandBufferResetFlags) (common.VkResult, error)
 
-	CmdBeginRenderPass(contents common.SubpassContents, o *RenderPassBeginOptions) error
+	CmdBeginRenderPass(contents common.SubpassContents, o RenderPassBeginOptions) error
 	CmdEndRenderPass()
 	CmdBindPipeline(bindPoint common.PipelineBindPoint, pipeline Pipeline)
 	CmdDraw(vertexCount, instanceCount int, firstVertex, firstInstance uint32)

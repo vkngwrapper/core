@@ -195,7 +195,7 @@ func (m *MockCommandBuffer) EXPECT() *MockCommandBufferMockRecorder {
 }
 
 // Begin mocks base method.
-func (m *MockCommandBuffer) Begin(o *core1_0.BeginOptions) (common.VkResult, error) {
+func (m *MockCommandBuffer) Begin(o core1_0.BeginOptions) (common.VkResult, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Begin", o)
 	ret0, _ := ret[0].(common.VkResult)
@@ -222,7 +222,7 @@ func (mr *MockCommandBufferMockRecorder) CmdBeginQuery(queryPool, query, flags i
 }
 
 // CmdBeginRenderPass mocks base method.
-func (m *MockCommandBuffer) CmdBeginRenderPass(contents common.SubpassContents, o *core1_0.RenderPassBeginOptions) error {
+func (m *MockCommandBuffer) CmdBeginRenderPass(contents common.SubpassContents, o core1_0.RenderPassBeginOptions) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CmdBeginRenderPass", contents, o)
 	ret0, _ := ret[0].(error)

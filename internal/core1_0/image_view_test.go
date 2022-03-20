@@ -54,7 +54,7 @@ func TestVulkanLoader1_0_CreateImageView(t *testing.T) {
 			return core1_0.VKSuccess, nil
 		})
 
-	imageView, _, err := loader.CreateImageView(device, nil, &core1_0.ImageViewOptions{
+	imageView, _, err := loader.CreateImageView(device, nil, core1_0.ImageViewOptions{
 		Image:    image,
 		ViewType: core1_0.ViewType2D,
 		Format:   core1_0.DataFormatA2B10G10R10SignedScaled,

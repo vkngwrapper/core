@@ -62,7 +62,7 @@ func TestCommandBuffer_Begin_NoInheritance(t *testing.T) {
 			return core1_0.VKSuccess, nil
 		})
 
-	_, err := buffer.Begin(&core1_0.BeginOptions{
+	_, err := buffer.Begin(core1_0.BeginOptions{
 		Flags: core1_0.BeginInfoSimultaneousUse,
 	})
 	require.NoError(t, err)
@@ -95,7 +95,7 @@ func TestCommandBuffer_Begin_WithInheritance(t *testing.T) {
 			return core1_0.VKSuccess, nil
 		})
 
-	_, err := buffer.Begin(&core1_0.BeginOptions{
+	_, err := buffer.Begin(core1_0.BeginOptions{
 		Flags: core1_0.BeginInfoSimultaneousUse,
 		InheritanceInfo: &core1_0.CommandBufferInheritanceOptions{
 			Framebuffer:          framebuffer,
@@ -146,7 +146,7 @@ func TestCommandBuffer_BeginRenderPass(t *testing.T) {
 			require.ElementsMatch(t, []float32{5, 6, 7, 8}, clearValueSlice)
 		})
 
-	err := buffer.CmdBeginRenderPass(core1_0.SubpassContentsSecondaryCommandBuffers, &core1_0.RenderPassBeginOptions{
+	err := buffer.CmdBeginRenderPass(core1_0.SubpassContentsSecondaryCommandBuffers, core1_0.RenderPassBeginOptions{
 		RenderPass:  renderPass,
 		Framebuffer: framebuffer,
 		RenderArea: common.Rect2D{
