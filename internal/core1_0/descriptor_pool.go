@@ -43,6 +43,7 @@ func (p *VulkanDescriptorPool) Core1_1() core1_1.DescriptorPool {
 
 func (p *VulkanDescriptorPool) Destroy(callbacks *driver.AllocationCallbacks) {
 	p.DeviceDriver.VkDestroyDescriptorPool(p.Device, p.DescriptorPoolHandle, callbacks.Handle())
+	p.DeviceDriver.ObjectStore().Delete(driver.VulkanHandle(p.DescriptorPoolHandle), p)
 }
 
 func (p *VulkanDescriptorPool) Reset(flags common.DescriptorPoolResetFlags) (common.VkResult, error) {

@@ -34,6 +34,7 @@ func (c *VulkanPipelineCache) Core1_1() core1_1.PipelineCache {
 
 func (c *VulkanPipelineCache) Destroy(callbacks *driver.AllocationCallbacks) {
 	c.Driver.VkDestroyPipelineCache(c.Device, c.PipelineCacheHandle, callbacks.Handle())
+	c.Driver.ObjectStore().Delete(driver.VulkanHandle(c.PipelineCacheHandle), c)
 }
 
 func (c *VulkanPipelineCache) CacheData() ([]byte, common.VkResult, error) {

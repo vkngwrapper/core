@@ -34,6 +34,7 @@ func (f *VulkanFence) Core1_1() core1_1.Fence {
 
 func (f *VulkanFence) Destroy(callbacks *driver.AllocationCallbacks) {
 	f.Driver.VkDestroyFence(f.Device, f.FenceHandle, callbacks.Handle())
+	f.Driver.ObjectStore().Delete(driver.VulkanHandle(f.FenceHandle), f)
 }
 
 func (f *VulkanFence) Wait(timeout time.Duration) (common.VkResult, error) {

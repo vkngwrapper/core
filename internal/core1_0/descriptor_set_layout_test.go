@@ -25,7 +25,7 @@ func TestDescriptorSetLayout_Create_SingleBinding(t *testing.T) {
 	mockDevice := mocks.EasyMockDevice(ctrl, mockDriver)
 	layoutHandle := mocks.NewFakeDescriptorSetLayout()
 
-	mockDriver.EXPECT().VkCreateDescriptorSetLayout(mocks.Exactly(mockDevice.Handle()), gomock.Not(nil), nil, gomock.Not(nil)).DoAndReturn(
+	mockDriver.EXPECT().VkCreateDescriptorSetLayout(mockDevice.Handle(), gomock.Not(nil), nil, gomock.Not(nil)).DoAndReturn(
 		func(device driver.VkDevice, pCreateInfo *driver.VkDescriptorSetLayoutCreateInfo, pAllocator *driver.VkAllocationCallbacks, pDescriptorSetLayout *driver.VkDescriptorSetLayout) (common.VkResult, error) {
 			v := reflect.ValueOf(*pCreateInfo)
 			require.Equal(t, uint64(32), v.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO
@@ -61,7 +61,7 @@ func TestDescriptorSetLayout_Create_SingleBinding(t *testing.T) {
 
 	require.NoError(t, err)
 	require.NotNil(t, layout)
-	require.Same(t, layoutHandle, layout.Handle())
+	require.Equal(t, layoutHandle, layout.Handle())
 }
 
 func TestDescriptorSetLayout_Create_SingleBindingImmutableSamplers(t *testing.T) {
@@ -80,7 +80,7 @@ func TestDescriptorSetLayout_Create_SingleBindingImmutableSamplers(t *testing.T)
 	sampler3 := mocks.EasyMockSampler(ctrl)
 	sampler4 := mocks.EasyMockSampler(ctrl)
 
-	mockDriver.EXPECT().VkCreateDescriptorSetLayout(mocks.Exactly(mockDevice.Handle()), gomock.Not(nil), nil, gomock.Not(nil)).DoAndReturn(
+	mockDriver.EXPECT().VkCreateDescriptorSetLayout(mockDevice.Handle(), gomock.Not(nil), nil, gomock.Not(nil)).DoAndReturn(
 		func(device driver.VkDevice, pCreateInfo *driver.VkDescriptorSetLayoutCreateInfo, pAllocator *driver.VkAllocationCallbacks, pDescriptorSetLayout *driver.VkDescriptorSetLayout) (common.VkResult, error) {
 			v := reflect.ValueOf(*pCreateInfo)
 			require.Equal(t, uint64(32), v.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO
@@ -100,10 +100,10 @@ func TestDescriptorSetLayout_Create_SingleBindingImmutableSamplers(t *testing.T)
 			samplersPtr := (*driver.VkSampler)(unsafe.Pointer(bindingV.FieldByName("pImmutableSamplers").Elem().UnsafeAddr()))
 			samplersSlice := ([]driver.VkSampler)(unsafe.Slice(samplersPtr, 4))
 
-			require.Same(t, sampler1.Handle(), samplersSlice[0])
-			require.Same(t, sampler2.Handle(), samplersSlice[1])
-			require.Same(t, sampler3.Handle(), samplersSlice[2])
-			require.Same(t, sampler4.Handle(), samplersSlice[3])
+			require.Equal(t, sampler1.Handle(), samplersSlice[0])
+			require.Equal(t, sampler2.Handle(), samplersSlice[1])
+			require.Equal(t, sampler3.Handle(), samplersSlice[2])
+			require.Equal(t, sampler4.Handle(), samplersSlice[3])
 
 			*pDescriptorSetLayout = layoutHandle
 			return core1_0.VKSuccess, nil
@@ -126,7 +126,7 @@ func TestDescriptorSetLayout_Create_SingleBindingImmutableSamplers(t *testing.T)
 
 	require.NoError(t, err)
 	require.NotNil(t, layout)
-	require.Same(t, layoutHandle, layout.Handle())
+	require.Equal(t, layoutHandle, layout.Handle())
 }
 
 func TestDescriptorSetLayout_Create_FailBindingSamplerMismatch(t *testing.T) {
@@ -173,7 +173,7 @@ func TestDescriptorSetLayout_Create_MultiBinding(t *testing.T) {
 	mockDevice := mocks.EasyMockDevice(ctrl, mockDriver)
 	layoutHandle := mocks.NewFakeDescriptorSetLayout()
 
-	mockDriver.EXPECT().VkCreateDescriptorSetLayout(mocks.Exactly(mockDevice.Handle()), gomock.Not(nil), nil, gomock.Not(nil)).DoAndReturn(
+	mockDriver.EXPECT().VkCreateDescriptorSetLayout(mockDevice.Handle(), gomock.Not(nil), nil, gomock.Not(nil)).DoAndReturn(
 		func(device driver.VkDevice, pCreateInfo *driver.VkDescriptorSetLayoutCreateInfo, pAllocator *driver.VkAllocationCallbacks, pDescriptorSetLayout *driver.VkDescriptorSetLayout) (common.VkResult, error) {
 			v := reflect.ValueOf(*pCreateInfo)
 			require.Equal(t, uint64(32), v.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO
@@ -235,5 +235,5 @@ func TestDescriptorSetLayout_Create_MultiBinding(t *testing.T) {
 
 	require.NoError(t, err)
 	require.NotNil(t, layout)
-	require.Same(t, layoutHandle, layout.Handle())
+	require.Equal(t, layoutHandle, layout.Handle())
 }

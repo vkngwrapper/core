@@ -1359,19 +1359,19 @@ func (mr *MockDeviceMemoryMockRecorder) Driver() *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Driver", reflect.TypeOf((*MockDeviceMemory)(nil).Driver))
 }
 
-// Flush mocks base method.
-func (m *MockDeviceMemory) Flush() (common.VkResult, error) {
+// FlushAll mocks base method.
+func (m *MockDeviceMemory) FlushAll() (common.VkResult, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Flush")
+	ret := m.ctrl.Call(m, "FlushAll")
 	ret0, _ := ret[0].(common.VkResult)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// Flush indicates an expected call of Flush.
-func (mr *MockDeviceMemoryMockRecorder) Flush() *gomock.Call {
+// FlushAll indicates an expected call of FlushAll.
+func (mr *MockDeviceMemoryMockRecorder) FlushAll() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Flush", reflect.TypeOf((*MockDeviceMemory)(nil).Flush))
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FlushAll", reflect.TypeOf((*MockDeviceMemory)(nil).FlushAll))
 }
 
 // Free mocks base method.
@@ -1400,19 +1400,19 @@ func (mr *MockDeviceMemoryMockRecorder) Handle() *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Handle", reflect.TypeOf((*MockDeviceMemory)(nil).Handle))
 }
 
-// Invalidate mocks base method.
-func (m *MockDeviceMemory) Invalidate() (common.VkResult, error) {
+// InvalidateAll mocks base method.
+func (m *MockDeviceMemory) InvalidateAll() (common.VkResult, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Invalidate")
+	ret := m.ctrl.Call(m, "InvalidateAll")
 	ret0, _ := ret[0].(common.VkResult)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// Invalidate indicates an expected call of Invalidate.
-func (mr *MockDeviceMemoryMockRecorder) Invalidate() *gomock.Call {
+// InvalidateAll indicates an expected call of InvalidateAll.
+func (mr *MockDeviceMemoryMockRecorder) InvalidateAll() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Invalidate", reflect.TypeOf((*MockDeviceMemory)(nil).Invalidate))
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "InvalidateAll", reflect.TypeOf((*MockDeviceMemory)(nil).InvalidateAll))
 }
 
 // MapMemory mocks base method.
@@ -1480,22 +1480,6 @@ func (mr *MockDeviceMockRecorder) APIVersion() *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "APIVersion", reflect.TypeOf((*MockDevice)(nil).APIVersion))
 }
 
-// AllocateMemory mocks base method.
-func (m *MockDevice) AllocateMemory(allocationCallbacks *driver.AllocationCallbacks, o *core1_0.DeviceMemoryOptions) (core1_0.DeviceMemory, common.VkResult, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "AllocateMemory", allocationCallbacks, o)
-	ret0, _ := ret[0].(core1_0.DeviceMemory)
-	ret1, _ := ret[1].(common.VkResult)
-	ret2, _ := ret[2].(error)
-	return ret0, ret1, ret2
-}
-
-// AllocateMemory indicates an expected call of AllocateMemory.
-func (mr *MockDeviceMockRecorder) AllocateMemory(allocationCallbacks, o interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AllocateMemory", reflect.TypeOf((*MockDevice)(nil).AllocateMemory), allocationCallbacks, o)
-}
-
 // Core1_1 mocks base method.
 func (m *MockDevice) Core1_1() core1_1.Device {
 	m.ctrl.T.Helper()
@@ -1549,32 +1533,6 @@ func (m *MockDevice) FlushMappedMemoryRanges(ranges []core1_0.MappedMemoryRange)
 func (mr *MockDeviceMockRecorder) FlushMappedMemoryRanges(ranges interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FlushMappedMemoryRanges", reflect.TypeOf((*MockDevice)(nil).FlushMappedMemoryRanges), ranges)
-}
-
-// FreeMemory mocks base method.
-func (m *MockDevice) FreeMemory(deviceMemory core1_0.DeviceMemory, allocationCallbacks *driver.AllocationCallbacks) {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "FreeMemory", deviceMemory, allocationCallbacks)
-}
-
-// FreeMemory indicates an expected call of FreeMemory.
-func (mr *MockDeviceMockRecorder) FreeMemory(deviceMemory, allocationCallbacks interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FreeMemory", reflect.TypeOf((*MockDevice)(nil).FreeMemory), deviceMemory, allocationCallbacks)
-}
-
-// GetQueue mocks base method.
-func (m *MockDevice) GetQueue(queueFamilyIndex, queueIndex int) core1_0.Queue {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetQueue", queueFamilyIndex, queueIndex)
-	ret0, _ := ret[0].(core1_0.Queue)
-	return ret0
-}
-
-// GetQueue indicates an expected call of GetQueue.
-func (mr *MockDeviceMockRecorder) GetQueue(queueFamilyIndex, queueIndex interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetQueue", reflect.TypeOf((*MockDevice)(nil).GetQueue), queueFamilyIndex, queueIndex)
 }
 
 // Handle mocks base method.
@@ -2216,22 +2174,6 @@ func (m *MockInstance) Handle() driver.VkInstance {
 func (mr *MockInstanceMockRecorder) Handle() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Handle", reflect.TypeOf((*MockInstance)(nil).Handle))
-}
-
-// PhysicalDevices mocks base method.
-func (m *MockInstance) PhysicalDevices() ([]core1_0.PhysicalDevice, common.VkResult, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "PhysicalDevices")
-	ret0, _ := ret[0].([]core1_0.PhysicalDevice)
-	ret1, _ := ret[1].(common.VkResult)
-	ret2, _ := ret[2].(error)
-	return ret0, ret1, ret2
-}
-
-// PhysicalDevices indicates an expected call of PhysicalDevices.
-func (mr *MockInstanceMockRecorder) PhysicalDevices() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "PhysicalDevices", reflect.TypeOf((*MockInstance)(nil).PhysicalDevices))
 }
 
 // MockPhysicalDevice is a mock of PhysicalDevice interface.

@@ -31,6 +31,7 @@ func (e *VulkanEvent) Core1_1() core1_1.Event {
 
 func (e *VulkanEvent) Destroy(callbacks *driver.AllocationCallbacks) {
 	e.Driver.VkDestroyEvent(e.Device, e.EventHandle, callbacks.Handle())
+	e.Driver.ObjectStore().Delete(driver.VulkanHandle(e.EventHandle), e)
 }
 
 func (e *VulkanEvent) Set() (common.VkResult, error) {

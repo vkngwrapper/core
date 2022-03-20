@@ -42,8 +42,8 @@ func TestVulkanLoader1_0_CreatePipelineLayout(t *testing.T) {
 			setLayoutsPtr := (*driver.VkDescriptorSetLayout)(unsafe.Pointer(val.FieldByName("pSetLayouts").Elem().UnsafeAddr()))
 			setLayoutsSlice := ([]driver.VkDescriptorSetLayout)(unsafe.Slice(setLayoutsPtr, 2))
 
-			require.Same(t, descriptorSetLayout1.Handle(), setLayoutsSlice[0])
-			require.Same(t, descriptorSetLayout2.Handle(), setLayoutsSlice[1])
+			require.Equal(t, descriptorSetLayout1.Handle(), setLayoutsSlice[0])
+			require.Equal(t, descriptorSetLayout2.Handle(), setLayoutsSlice[1])
 
 			pushConstantsPtr := (*driver.VkPushConstantRange)(unsafe.Pointer(val.FieldByName("pPushConstantRanges").Elem().UnsafeAddr()))
 			pushConstantsSlice := reflect.ValueOf(([]driver.VkPushConstantRange)(unsafe.Slice(pushConstantsPtr, 3)))
@@ -88,5 +88,5 @@ func TestVulkanLoader1_0_CreatePipelineLayout(t *testing.T) {
 	})
 	require.NoError(t, err)
 	require.NotNil(t, layout)
-	require.Same(t, layoutHandle, layout.Handle())
+	require.Equal(t, layoutHandle, layout.Handle())
 }

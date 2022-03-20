@@ -6,12 +6,10 @@ package core1_1
 */
 import "C"
 import (
-	"github.com/CannibalVox/VKng/core/common"
 	"github.com/CannibalVox/VKng/core/driver"
 )
 
 type VulkanPhysicalDevice struct {
 	InstanceDriver       driver.Driver
 	PhysicalDeviceHandle driver.VkPhysicalDevice
-	MaximumVersion       common.APIVersion
 }

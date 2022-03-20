@@ -27,7 +27,7 @@ func TestVulkanLoader1_0_CreateBufferView(t *testing.T) {
 	buffer := mocks.EasyMockBuffer(ctrl)
 	expectedBufferView := mocks.NewFakeBufferViewHandle()
 
-	mockDriver.EXPECT().VkCreateBufferView(mocks.Exactly(device.Handle()), gomock.Not(nil), nil, gomock.Not(nil)).DoAndReturn(
+	mockDriver.EXPECT().VkCreateBufferView(device.Handle(), gomock.Not(nil), nil, gomock.Not(nil)).DoAndReturn(
 		func(device driver.VkDevice, pCreateInfo *driver.VkBufferViewCreateInfo, pAllocator *driver.VkAllocationCallbacks, pBufferView *driver.VkBufferView) (common.VkResult, error) {
 			v := reflect.ValueOf(*pCreateInfo)
 			require.Equal(t, v.FieldByName("sType").Uint(), uint64(13)) // VK_STRUCTURE_TYPE_BUFFER_VIEW_CREATE_INFO
@@ -54,5 +54,5 @@ func TestVulkanLoader1_0_CreateBufferView(t *testing.T) {
 
 	require.Equal(t, res, core1_0.VKSuccess)
 	require.NoError(t, err)
-	require.Same(t, expectedBufferView, bufferView.Handle())
+	require.Equal(t, expectedBufferView, bufferView.Handle())
 }

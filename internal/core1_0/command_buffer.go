@@ -571,4 +571,5 @@ func (c *VulkanCommandBuffer) Free() {
 	commandBufferSlice[0] = c.CommandBufferHandle
 
 	c.DeviceDriver.VkFreeCommandBuffers(c.Device, c.CommandPool, 1, vkCommandBuffer)
+	c.DeviceDriver.ObjectStore().Delete(driver.VulkanHandle(c.CommandBufferHandle), c)
 }

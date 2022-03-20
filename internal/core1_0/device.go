@@ -10,7 +10,6 @@ import (
 	"github.com/CannibalVox/VKng/core/core1_0"
 	"github.com/CannibalVox/VKng/core/core1_1"
 	"github.com/CannibalVox/VKng/core/driver"
-	internal1_1 "github.com/CannibalVox/VKng/core/internal/core1_1"
 	"github.com/CannibalVox/cgoparam"
 	"time"
 	"unsafe"
@@ -43,6 +42,7 @@ func (d *VulkanDevice) Core1_1() core1_1.Device {
 
 func (d *VulkanDevice) Destroy(callbacks *driver.AllocationCallbacks) {
 	d.DeviceDriver.VkDestroyDevice(d.DeviceHandle, callbacks.Handle())
+	d.DeviceDriver.ObjectStore().Delete(driver.VulkanHandle(d.DeviceHandle), d)
 }
 
 func (d *VulkanDevice) WaitForIdle() (common.VkResult, error) {
@@ -140,71 +140,4 @@ func (d *VulkanDevice) InvalidateMappedMemoryRanges(ranges []core1_0.MappedMemor
 	}
 
 	return d.DeviceDriver.VkInvalidateMappedMemoryRanges(d.DeviceHandle, driver.Uint32(rangeCount), (*driver.VkMappedMemoryRange)(unsafe.Pointer(createInfos)))
-}
-
-func (d *VulkanDevice) GetQueue(queueFamilyIndex int, queueIndex int) core1_0.Queue {
-
-	var queueHandle driver.VkQueue
-
-	d.DeviceDriver.VkGetDeviceQueue(d.DeviceHandle, driver.Uint32(queueFamilyIndex), driver.Uint32(queueIndex), &queueHandle)
-
-	queue := &VulkanQueue{
-		DeviceDriver: d.DeviceDriver,
-		QueueHandle:  queueHandle,
-
-		MaximumAPIVersion: d.MaximumAPIVersion,
-	}
-
-	if d.MaximumAPIVersion.IsAtLeast(common.Vulkan1_1) {
-		queue.Queue1_1 = &internal1_1.VulkanQueue{
-			DeviceDriver: d.DeviceDriver,
-			QueueHandle:  queueHandle,
-		}
-	}
-
-	return queue
-}
-
-func (d *VulkanDevice) AllocateMemory(allocationCallbacks *driver.AllocationCallbacks, o *core1_0.DeviceMemoryOptions) (core1_0.DeviceMemory, common.VkResult, error) {
-	arena := cgoparam.GetAlloc()
-	defer cgoparam.ReturnAlloc(arena)
-
-	createInfo, err := common.AllocOptions(arena, o)
-	if err != nil {
-		return nil, core1_0.VKErrorUnknown, err
-	}
-
-	var deviceMemoryHandle driver.VkDeviceMemory
-
-	deviceDriver := d.DeviceDriver
-	deviceHandle := d.DeviceHandle
-
-	res, err := deviceDriver.VkAllocateMemory(deviceHandle, (*driver.VkMemoryAllocateInfo)(createInfo), allocationCallbacks.Handle(), &deviceMemoryHandle)
-	if err != nil {
-		return nil, res, err
-	}
-
-	deviceMemory := &VulkanDeviceMemory{
-		DeviceDriver:       deviceDriver,
-		Device:             deviceHandle,
-		DeviceMemoryHandle: deviceMemoryHandle,
-
-		MaximumAPIVersion: d.MaximumAPIVersion,
-		size:              o.AllocationSize,
-	}
-
-	if d.MaximumAPIVersion.IsAtLeast(common.Vulkan1_1) {
-		deviceMemory.DeviceMemory1_1 = &internal1_1.VulkanDeviceMemory{
-			DeviceDriver:       deviceDriver,
-			Device:             deviceHandle,
-			DeviceMemoryHandle: deviceMemoryHandle,
-		}
-	}
-
-	return deviceMemory, res, nil
-}
-
-func (d *VulkanDevice) FreeMemory(deviceMemory core1_0.DeviceMemory, allocationCallbacks *driver.AllocationCallbacks) {
-	// This is really only here for a kind of API symmetry
-	freeDeviceMemory(deviceMemory, allocationCallbacks)
 }

@@ -69,6 +69,22 @@ func (mr *MockLoaderMockRecorder) AllocateDescriptorSets(o interface{}) *gomock.
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AllocateDescriptorSets", reflect.TypeOf((*MockLoader)(nil).AllocateDescriptorSets), o)
 }
 
+// AllocateMemory mocks base method.
+func (m *MockLoader) AllocateMemory(device core1_0.Device, allocationCallbacks *driver.AllocationCallbacks, o *core1_0.DeviceMemoryOptions) (core1_0.DeviceMemory, common.VkResult, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "AllocateMemory", device, allocationCallbacks, o)
+	ret0, _ := ret[0].(core1_0.DeviceMemory)
+	ret1, _ := ret[1].(common.VkResult)
+	ret2, _ := ret[2].(error)
+	return ret0, ret1, ret2
+}
+
+// AllocateMemory indicates an expected call of AllocateMemory.
+func (mr *MockLoaderMockRecorder) AllocateMemory(device, allocationCallbacks, o interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AllocateMemory", reflect.TypeOf((*MockLoader)(nil).AllocateMemory), device, allocationCallbacks, o)
+}
+
 // AvailableExtensions mocks base method.
 func (m *MockLoader) AvailableExtensions() (map[string]*common.ExtensionProperties, common.VkResult, error) {
 	m.ctrl.T.Helper()
@@ -506,6 +522,48 @@ func (m *MockLoader) FreeDescriptorSets(sets []core1_0.DescriptorSet) (common.Vk
 func (mr *MockLoaderMockRecorder) FreeDescriptorSets(sets interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FreeDescriptorSets", reflect.TypeOf((*MockLoader)(nil).FreeDescriptorSets), sets)
+}
+
+// FreeMemory mocks base method.
+func (m *MockLoader) FreeMemory(deviceMemory core1_0.DeviceMemory, allocationCallbacks *driver.AllocationCallbacks) {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "FreeMemory", deviceMemory, allocationCallbacks)
+}
+
+// FreeMemory indicates an expected call of FreeMemory.
+func (mr *MockLoaderMockRecorder) FreeMemory(deviceMemory, allocationCallbacks interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FreeMemory", reflect.TypeOf((*MockLoader)(nil).FreeMemory), deviceMemory, allocationCallbacks)
+}
+
+// GetQueue mocks base method.
+func (m *MockLoader) GetQueue(device core1_0.Device, queueFamilyIndex, queueIndex int) core1_0.Queue {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetQueue", device, queueFamilyIndex, queueIndex)
+	ret0, _ := ret[0].(core1_0.Queue)
+	return ret0
+}
+
+// GetQueue indicates an expected call of GetQueue.
+func (mr *MockLoaderMockRecorder) GetQueue(device, queueFamilyIndex, queueIndex interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetQueue", reflect.TypeOf((*MockLoader)(nil).GetQueue), device, queueFamilyIndex, queueIndex)
+}
+
+// PhysicalDevices mocks base method.
+func (m *MockLoader) PhysicalDevices(instance core1_0.Instance) ([]core1_0.PhysicalDevice, common.VkResult, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "PhysicalDevices", instance)
+	ret0, _ := ret[0].([]core1_0.PhysicalDevice)
+	ret1, _ := ret[1].(common.VkResult)
+	ret2, _ := ret[2].(error)
+	return ret0, ret1, ret2
+}
+
+// PhysicalDevices indicates an expected call of PhysicalDevices.
+func (mr *MockLoaderMockRecorder) PhysicalDevices(instance interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "PhysicalDevices", reflect.TypeOf((*MockLoader)(nil).PhysicalDevices), instance)
 }
 
 // Version mocks base method.

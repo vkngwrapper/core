@@ -14,5 +14,5 @@ type VulkanDeviceMemory struct {
 	Device             driver.VkDevice
 	DeviceMemoryHandle driver.VkDeviceMemory
 
-	size int
+	Size int
 }

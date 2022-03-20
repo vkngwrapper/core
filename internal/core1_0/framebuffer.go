@@ -31,4 +31,5 @@ func (b *VulkanFramebuffer) Core1_1() core1_1.Framebuffer {
 
 func (b *VulkanFramebuffer) Destroy(callbacks *driver.AllocationCallbacks) {
 	b.Driver.VkDestroyFramebuffer(b.Device, b.FramebufferHandle, callbacks.Handle())
+	b.Driver.ObjectStore().Delete(driver.VulkanHandle(b.FramebufferHandle), b)
 }

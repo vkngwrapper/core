@@ -31,4 +31,5 @@ func (s *VulkanSemaphore) Core1_1() core1_1.Semaphore {
 
 func (s *VulkanSemaphore) Destroy(callbacks *driver.AllocationCallbacks) {
 	s.Driver.VkDestroySemaphore(s.Device, s.SemaphoreHandle, callbacks.Handle())
+	s.Driver.ObjectStore().Delete(driver.VulkanHandle(s.SemaphoreHandle), s)
 }

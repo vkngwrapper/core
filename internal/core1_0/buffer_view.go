@@ -27,6 +27,7 @@ func (v *VulkanBufferView) Handle() driver.VkBufferView {
 
 func (v *VulkanBufferView) Destroy(callbacks *driver.AllocationCallbacks) {
 	v.Driver.VkDestroyBufferView(v.Device, v.BufferViewHandle, callbacks.Handle())
+	v.Driver.ObjectStore().Delete(driver.VulkanHandle(v.BufferViewHandle), v)
 }
 
 func (v *VulkanBufferView) Core1_1() core1_1.BufferView {

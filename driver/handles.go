@@ -5,34 +5,37 @@ package driver
 */
 import "C"
 
-type VkBuffer C.VkBuffer
-type VkBufferView C.VkBufferView
-type VkCommandBuffer C.VkCommandBuffer
-type VkCommandPool C.VkCommandPool
-type VkDescriptorPool C.VkDescriptorPool
-type VkDescriptorSet C.VkDescriptorSet
-type VkDescriptorSetLayout C.VkDescriptorSetLayout
-type VkDevice C.VkDevice
-type VkDeviceMemory C.VkDeviceMemory
-type VkEvent C.VkEvent
-type VkFence C.VkFence
-type VkFramebuffer C.VkFramebuffer
-type VkImage C.VkImage
-type VkImageLayout C.VkImageLayout
-type VkImageView C.VkImageView
-type VkInstance C.VkInstance
-type VkPhysicalDevice C.VkPhysicalDevice
-type VkPipeline C.VkPipeline
-type VkPipelineCache C.VkPipelineCache
-type VkPipelineLayout C.VkPipelineLayout
-type VkQueue C.VkQueue
-type VkQueryPool C.VkQueryPool
-type VkRenderPass C.VkRenderPass
-type VkSampler C.VkSampler
-type VkSemaphore C.VkSemaphore
-type VkShaderModule C.VkShaderModule
-type VkSamplerYcbcrConversion C.VkSamplerYcbcrConversion
-type VkDescriptorUpdateTemplate C.VkDescriptorUpdateTemplate
+const NullHandle VulkanHandle = 0
+
+type VulkanHandle uintptr
+type VkBuffer VulkanHandle
+type VkBufferView VulkanHandle
+type VkCommandBuffer VulkanHandle
+type VkCommandPool VulkanHandle
+type VkDescriptorPool VulkanHandle
+type VkDescriptorSet VulkanHandle
+type VkDescriptorSetLayout VulkanHandle
+type VkDevice VulkanHandle
+type VkDeviceMemory VulkanHandle
+type VkEvent VulkanHandle
+type VkFence VulkanHandle
+type VkFramebuffer VulkanHandle
+type VkImage VulkanHandle
+type VkImageLayout VulkanHandle
+type VkImageView VulkanHandle
+type VkInstance VulkanHandle
+type VkPhysicalDevice VulkanHandle
+type VkPipeline VulkanHandle
+type VkPipelineCache VulkanHandle
+type VkPipelineLayout VulkanHandle
+type VkQueue VulkanHandle
+type VkQueryPool VulkanHandle
+type VkRenderPass VulkanHandle
+type VkSampler VulkanHandle
+type VkSemaphore VulkanHandle
+type VkShaderModule VulkanHandle
+type VkSamplerYcbcrConversion VulkanHandle
+type VkDescriptorUpdateTemplate VulkanHandle
 
 type VkBufferCreateInfo C.VkBufferCreateInfo
 type VkBufferViewCreateInfo C.VkBufferViewCreateInfo

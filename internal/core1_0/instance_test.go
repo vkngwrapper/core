@@ -99,7 +99,7 @@ func TestVulkanLoader1_0_CreateInstance(t *testing.T) {
 	})
 	require.NoError(t, err)
 	require.NotNil(t, instance)
-	require.Same(t, instanceHandle, instance.Handle())
+	require.Equal(t, instanceHandle, instance.Handle())
 }
 
 func TestVulkanInstance_PhysicalDevices(t *testing.T) {
@@ -114,13 +114,13 @@ func TestVulkanInstance_PhysicalDevices(t *testing.T) {
 	device1 := mocks.NewFakePhysicalDeviceHandle()
 	device2 := mocks.NewFakePhysicalDeviceHandle()
 
-	mockDriver.EXPECT().VkEnumeratePhysicalDevices(mocks.Exactly(instance.Handle()), gomock.Not(nil), nil).DoAndReturn(
+	mockDriver.EXPECT().VkEnumeratePhysicalDevices(instance.Handle(), gomock.Not(nil), nil).DoAndReturn(
 		func(instance driver.VkInstance, pPhysicalDeviceCount *driver.Uint32, pPhysicalDevices *driver.VkPhysicalDevice) (common.VkResult, error) {
 			*pPhysicalDeviceCount = 2
 
 			return core1_0.VKSuccess, nil
 		})
-	mockDriver.EXPECT().VkEnumeratePhysicalDevices(mocks.Exactly(instance.Handle()), gomock.Not(nil), gomock.Not(nil)).DoAndReturn(
+	mockDriver.EXPECT().VkEnumeratePhysicalDevices(instance.Handle(), gomock.Not(nil), gomock.Not(nil)).DoAndReturn(
 		func(instance driver.VkInstance, pPhysicalDeviceCount *driver.Uint32, pPhysicalDevices *driver.VkPhysicalDevice) (common.VkResult, error) {
 			*pPhysicalDeviceCount = 2
 
@@ -130,25 +130,25 @@ func TestVulkanInstance_PhysicalDevices(t *testing.T) {
 
 			return core1_0.VKSuccess, nil
 		})
-	mockDriver.EXPECT().VkGetPhysicalDeviceProperties(mocks.Exactly(device1), gomock.Not(nil)).DoAndReturn(
+	mockDriver.EXPECT().VkGetPhysicalDeviceProperties(device1, gomock.Not(nil)).DoAndReturn(
 		func(physicalDevice driver.VkPhysicalDevice, pProperties *driver.VkPhysicalDeviceProperties) {
 			val := reflect.ValueOf(pProperties).Elem()
 
 			*(*uint32)(unsafe.Pointer(val.FieldByName("apiVersion").UnsafeAddr())) = uint32(1 << 22)
 		})
 
-	mockDriver.EXPECT().VkGetPhysicalDeviceProperties(mocks.Exactly(device2), gomock.Not(nil)).DoAndReturn(
+	mockDriver.EXPECT().VkGetPhysicalDeviceProperties(device2, gomock.Not(nil)).DoAndReturn(
 		func(physicalDevice driver.VkPhysicalDevice, pProperties *driver.VkPhysicalDeviceProperties) {
 			val := reflect.ValueOf(pProperties).Elem()
 
 			*(*uint32)(unsafe.Pointer(val.FieldByName("apiVersion").UnsafeAddr())) = uint32(1<<22 | 2<<12)
 		})
 
-	devices, _, err := instance.PhysicalDevices()
+	devices, _, err := loader.PhysicalDevices(instance)
 	require.NoError(t, err)
 	require.Len(t, devices, 2)
-	require.Same(t, device1, devices[0].Handle())
+	require.Equal(t, device1, devices[0].Handle())
 	require.Equal(t, common.Vulkan1_0, devices[0].APIVersion())
-	require.Same(t, device2, devices[1].Handle())
+	require.Equal(t, device2, devices[1].Handle())
 	require.Equal(t, common.Vulkan1_2, devices[1].APIVersion())
 }

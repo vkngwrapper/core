@@ -36,7 +36,13 @@ func (s *VulkanDescriptorSet) Free() (common.VkResult, error) {
 	commandBufferSlice := ([]driver.VkDescriptorSet)(unsafe.Slice(vkDescriptorSet, 1))
 	commandBufferSlice[0] = s.DescriptorSetHandle
 
-	return s.DeviceDriver.VkFreeDescriptorSets(s.Device, s.DescriptorPool, 1, vkDescriptorSet)
+	res, err := s.DeviceDriver.VkFreeDescriptorSets(s.Device, s.DescriptorPool, 1, vkDescriptorSet)
+	if err != nil {
+		return res, err
+	}
+
+	s.DeviceDriver.ObjectStore().Delete(driver.VulkanHandle(s.DescriptorSetHandle), s)
+	return res, nil
 }
 
 func (s *VulkanDescriptorSet) PoolHandle() driver.VkDescriptorPool {

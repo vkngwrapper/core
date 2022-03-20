@@ -13,6 +13,7 @@ type Driver interface {
 	CreateDeviceDriver(device VkDevice) (Driver, error)
 	LoadProcAddr(name *Char) unsafe.Pointer
 	Version() common.APIVersion
+	ObjectStore() *VulkanObjectStore
 
 	VkEnumerateInstanceVersion(pApiVersion *Uint32) (common.VkResult, error)
 

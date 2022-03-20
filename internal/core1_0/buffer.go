@@ -37,6 +37,7 @@ func (b *VulkanBuffer) Destroy(allocationCallbacks *driver.AllocationCallbacks) 
 	defer cgoparam.ReturnAlloc(arena)
 
 	b.Driver.VkDestroyBuffer(b.Device, b.BufferHandle, allocationCallbacks.Handle())
+	b.Driver.ObjectStore().Delete(driver.VulkanHandle(b.BufferHandle), b)
 }
 
 func (b *VulkanBuffer) MemoryRequirements() *core1_0.MemoryRequirements {

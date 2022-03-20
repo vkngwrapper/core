@@ -24,7 +24,7 @@ func TestVulkanLoader1_0_CreateSampler(t *testing.T) {
 	device := mocks.EasyMockDevice(ctrl, mockDriver)
 	samplerHandle := mocks.NewFakeSamplerHandle()
 
-	mockDriver.EXPECT().VkCreateSampler(mocks.Exactly(device.Handle()), gomock.Not(nil), nil, gomock.Not(nil)).DoAndReturn(
+	mockDriver.EXPECT().VkCreateSampler(device.Handle(), gomock.Not(nil), nil, gomock.Not(nil)).DoAndReturn(
 		func(device driver.VkDevice, pCreateInfo *driver.VkSamplerCreateInfo, pAllocator *driver.VkAllocationCallbacks, pSampler *driver.VkSampler) (common.VkResult, error) {
 			*pSampler = samplerHandle
 
@@ -71,5 +71,5 @@ func TestVulkanLoader1_0_CreateSampler(t *testing.T) {
 	})
 	require.NoError(t, err)
 	require.NotNil(t, sampler)
-	require.Same(t, samplerHandle, sampler.Handle())
+	require.Equal(t, samplerHandle, sampler.Handle())
 }

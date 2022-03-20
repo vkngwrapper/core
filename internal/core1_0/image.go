@@ -35,6 +35,7 @@ func (i *VulkanImage) Core1_1() core1_1.Image {
 
 func (i *VulkanImage) Destroy(callbacks *driver.AllocationCallbacks) {
 	i.Driver.VkDestroyImage(i.Device, i.ImageHandle, callbacks.Handle())
+	i.Driver.ObjectStore().Delete(driver.VulkanHandle(i.ImageHandle), i)
 }
 
 func (i *VulkanImage) MemoryRequirements() *core1_0.MemoryRequirements {

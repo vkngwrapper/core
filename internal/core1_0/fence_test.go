@@ -27,7 +27,7 @@ func TestVulkanLoader1_0_CreateFence(t *testing.T) {
 	device := internal_mocks.EasyDummyDevice(t, ctrl, loader)
 	fenceHandle := mocks.NewFakeFenceHandle()
 
-	mockDriver.EXPECT().VkCreateFence(mocks.Exactly(device.Handle()), gomock.Not(nil), nil, gomock.Not(nil)).DoAndReturn(
+	mockDriver.EXPECT().VkCreateFence(device.Handle(), gomock.Not(nil), nil, gomock.Not(nil)).DoAndReturn(
 		func(device driver.VkDevice, pCreateInfo *driver.VkFenceCreateInfo, pAllocator *driver.VkAllocationCallbacks, pFence *driver.VkFence) (common.VkResult, error) {
 			val := reflect.ValueOf(*pCreateInfo)
 
@@ -44,7 +44,7 @@ func TestVulkanLoader1_0_CreateFence(t *testing.T) {
 	})
 	require.NoError(t, err)
 	require.NotNil(t, fence)
-	require.Same(t, fenceHandle, fence.Handle())
+	require.Equal(t, fenceHandle, fence.Handle())
 }
 
 func TestVulkanFence_Wait(t *testing.T) {
@@ -58,10 +58,10 @@ func TestVulkanFence_Wait(t *testing.T) {
 	device := mocks.EasyMockDevice(ctrl, mockDriver)
 	fence := internal_mocks.EasyDummyFence(t, loader, device)
 
-	mockDriver.EXPECT().VkWaitForFences(mocks.Exactly(device.Handle()), driver.Uint32(1), gomock.Not(nil), driver.VkBool32(1), driver.Uint64(60000000000)).DoAndReturn(
+	mockDriver.EXPECT().VkWaitForFences(device.Handle(), driver.Uint32(1), gomock.Not(nil), driver.VkBool32(1), driver.Uint64(60000000000)).DoAndReturn(
 		func(device driver.VkDevice, fenceCount driver.Uint32, pFences *driver.VkFence, waitAll driver.VkBool32, timeout driver.Uint64) (common.VkResult, error) {
 			fenceSlice := ([]driver.VkFence)(unsafe.Slice(pFences, 1))
-			require.Same(t, fence.Handle(), fenceSlice[0])
+			require.Equal(t, fence.Handle(), fenceSlice[0])
 
 			return core1_0.VKSuccess, nil
 		})
@@ -81,10 +81,10 @@ func TestVulkanFence_Reset(t *testing.T) {
 	device := mocks.EasyMockDevice(ctrl, mockDriver)
 	fence := internal_mocks.EasyDummyFence(t, loader, device)
 
-	mockDriver.EXPECT().VkResetFences(mocks.Exactly(device.Handle()), driver.Uint32(1), gomock.Not(nil)).DoAndReturn(
+	mockDriver.EXPECT().VkResetFences(device.Handle(), driver.Uint32(1), gomock.Not(nil)).DoAndReturn(
 		func(device driver.VkDevice, fenceCount driver.Uint32, pFence *driver.VkFence) (common.VkResult, error) {
 			fences := ([]driver.VkFence)(unsafe.Slice(pFence, 1))
-			require.Same(t, fence.Handle(), fences[0])
+			require.Equal(t, fence.Handle(), fences[0])
 
 			return core1_0.VKSuccess, nil
 		})
@@ -104,7 +104,7 @@ func TestVulkanFence_Status(t *testing.T) {
 	device := mocks.EasyMockDevice(ctrl, mockDriver)
 	fence := internal_mocks.EasyDummyFence(t, loader, device)
 
-	mockDriver.EXPECT().VkGetFenceStatus(mocks.Exactly(device.Handle()), mocks.Exactly(fence.Handle())).Return(core1_0.VKNotReady, nil)
+	mockDriver.EXPECT().VkGetFenceStatus(device.Handle(), fence.Handle()).Return(core1_0.VKNotReady, nil)
 
 	res, err := fence.Status()
 	require.NoError(t, err)

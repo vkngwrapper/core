@@ -31,4 +31,5 @@ func (v *VulkanImageView) Core1_1() core1_1.ImageView {
 
 func (v *VulkanImageView) Destroy(callbacks *driver.AllocationCallbacks) {
 	v.Driver.VkDestroyImageView(v.Device, v.ImageViewHandle, callbacks.Handle())
+	v.Driver.ObjectStore().Delete(driver.VulkanHandle(v.ImageViewHandle), v)
 }

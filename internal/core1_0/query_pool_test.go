@@ -28,7 +28,7 @@ func TestVulkanLoader1_0_CreateQueryPool(t *testing.T) {
 	device := mocks.EasyMockDevice(ctrl, mockDriver)
 	poolHandle := mocks.NewFakeQueryPool()
 
-	mockDriver.EXPECT().VkCreateQueryPool(mocks.Exactly(device.Handle()), gomock.Not(nil), nil, gomock.Not(nil)).DoAndReturn(
+	mockDriver.EXPECT().VkCreateQueryPool(device.Handle(), gomock.Not(nil), nil, gomock.Not(nil)).DoAndReturn(
 		func(device driver.VkDevice, pCreateInfo *driver.VkQueryPoolCreateInfo, pAllocator *driver.VkAllocationCallbacks, pQueryPool *driver.VkQueryPool) (common.VkResult, error) {
 			val := reflect.ValueOf(*pCreateInfo)
 			require.Equal(t, uint64(11), val.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_QUERY_POOL_CREATE_INFO
@@ -49,7 +49,7 @@ func TestVulkanLoader1_0_CreateQueryPool(t *testing.T) {
 	})
 	require.NoError(t, err)
 	require.NotNil(t, queryPool)
-	require.Same(t, poolHandle, queryPool.Handle())
+	require.Equal(t, poolHandle, queryPool.Handle())
 }
 
 func TestVulkanQueryPool_PopulateResults(t *testing.T) {
@@ -64,8 +64,8 @@ func TestVulkanQueryPool_PopulateResults(t *testing.T) {
 	queryPool := internal_mocks.EasyDummyQueryPool(t, loader, device)
 
 	mockDriver.EXPECT().VkGetQueryPoolResults(
-		mocks.Exactly(device.Handle()),
-		mocks.Exactly(queryPool.Handle()),
+		device.Handle(),
+		queryPool.Handle(),
 		driver.Uint32(1),
 		driver.Uint32(3),
 		driver.Size(40),

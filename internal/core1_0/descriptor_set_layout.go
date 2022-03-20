@@ -26,4 +26,5 @@ func (h *VulkanDescriptorSetLayout) Core1_1() core1_1.DescriptorSetLayout {
 
 func (h *VulkanDescriptorSetLayout) Destroy(callbacks *driver.AllocationCallbacks) {
 	h.Driver.VkDestroyDescriptorSetLayout(h.Device, h.DescriptorSetLayoutHandle, callbacks.Handle())
+	h.Driver.ObjectStore().Delete(driver.VulkanHandle(h.DescriptorSetLayoutHandle), h)
 }

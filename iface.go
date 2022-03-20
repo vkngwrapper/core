@@ -46,6 +46,11 @@ type Loader interface {
 	CreateSemaphore(device core1_0.Device, allocationCallbacks *driver.AllocationCallbacks, o *core1_0.SemaphoreOptions) (core1_0.Semaphore, common.VkResult, error)
 	CreateShaderModule(device core1_0.Device, allocationCallbacks *driver.AllocationCallbacks, o *core1_0.ShaderModuleOptions) (core1_0.ShaderModule, common.VkResult, error)
 
+	GetQueue(device core1_0.Device, queueFamilyIndex int, queueIndex int) core1_0.Queue
+	AllocateMemory(device core1_0.Device, allocationCallbacks *driver.AllocationCallbacks, o *core1_0.DeviceMemoryOptions) (core1_0.DeviceMemory, common.VkResult, error)
+	FreeMemory(deviceMemory core1_0.DeviceMemory, allocationCallbacks *driver.AllocationCallbacks)
+	PhysicalDevices(instance core1_0.Instance) ([]core1_0.PhysicalDevice, common.VkResult, error)
+
 	AllocateCommandBuffers(o *core1_0.CommandBufferOptions) ([]core1_0.CommandBuffer, common.VkResult, error)
 	FreeCommandBuffers(buffers []core1_0.CommandBuffer)
 	AllocateDescriptorSets(o *core1_0.DescriptorSetOptions) ([]core1_0.DescriptorSet, common.VkResult, error)

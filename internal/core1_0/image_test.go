@@ -26,7 +26,7 @@ func TestVulkanLoader1_0_CreateImage(t *testing.T) {
 	device := mocks.EasyMockDevice(ctrl, mockDriver)
 	imageHandle := mocks.NewFakeImageHandle()
 
-	mockDriver.EXPECT().VkCreateImage(mocks.Exactly(device.Handle()), gomock.Not(nil), nil, gomock.Not(nil)).DoAndReturn(
+	mockDriver.EXPECT().VkCreateImage(device.Handle(), gomock.Not(nil), nil, gomock.Not(nil)).DoAndReturn(
 		func(device driver.VkDevice, pCreateInfo *driver.VkImageCreateInfo, pAllocator *driver.VkAllocationCallbacks, pImage *driver.VkImage) (common.VkResult, error) {
 			*pImage = imageHandle
 
@@ -78,7 +78,7 @@ func TestVulkanLoader1_0_CreateImage(t *testing.T) {
 	})
 	require.NoError(t, err)
 	require.NotNil(t, image)
-	require.Same(t, imageHandle, image.Handle())
+	require.Equal(t, imageHandle, image.Handle())
 }
 
 func TestVulkanImage_MemoryRequirements(t *testing.T) {
@@ -92,7 +92,7 @@ func TestVulkanImage_MemoryRequirements(t *testing.T) {
 	device := mocks.EasyMockDevice(ctrl, mockDriver)
 	image := internal_mocks.EasyDummyImage(t, loader, device)
 
-	mockDriver.EXPECT().VkGetImageMemoryRequirements(mocks.Exactly(device.Handle()), mocks.Exactly(image.Handle()), gomock.Not(nil)).DoAndReturn(
+	mockDriver.EXPECT().VkGetImageMemoryRequirements(device.Handle(), image.Handle(), gomock.Not(nil)).DoAndReturn(
 		func(device driver.VkDevice, image driver.VkImage, pRequirements *driver.VkMemoryRequirements) {
 			val := reflect.ValueOf(pRequirements).Elem()
 
@@ -120,7 +120,7 @@ func TestVulkanImage_BindImageMemory(t *testing.T) {
 	memory := mocks.EasyMockDeviceMemory(ctrl)
 	image := internal_mocks.EasyDummyImage(t, loader, device)
 
-	mockDriver.EXPECT().VkBindImageMemory(mocks.Exactly(device.Handle()), mocks.Exactly(image.Handle()), memory.Handle(), driver.VkDeviceSize(3)).Return(core1_0.VKSuccess, nil)
+	mockDriver.EXPECT().VkBindImageMemory(device.Handle(), image.Handle(), memory.Handle(), driver.VkDeviceSize(3)).Return(core1_0.VKSuccess, nil)
 
 	_, err = image.BindImageMemory(memory, 3)
 	require.NoError(t, err)
@@ -137,7 +137,7 @@ func TestVulkanImage_SubresourceLayout(t *testing.T) {
 	device := mocks.EasyMockDevice(ctrl, mockDriver)
 	image := internal_mocks.EasyDummyImage(t, loader, device)
 
-	mockDriver.EXPECT().VkGetImageSubresourceLayout(mocks.Exactly(device.Handle()), mocks.Exactly(image.Handle()), gomock.Not(nil), gomock.Not(nil)).DoAndReturn(
+	mockDriver.EXPECT().VkGetImageSubresourceLayout(device.Handle(), image.Handle(), gomock.Not(nil), gomock.Not(nil)).DoAndReturn(
 		func(device driver.VkDevice, image driver.VkImage, pSubresource *driver.VkImageSubresource, pLayout *driver.VkSubresourceLayout) {
 			val := reflect.ValueOf(pSubresource).Elem()
 
@@ -177,12 +177,12 @@ func TestVulkanImage_SparseMemoryRequirements(t *testing.T) {
 	device := mocks.EasyMockDevice(ctrl, mockDriver)
 	image := internal_mocks.EasyDummyImage(t, loader, device)
 
-	mockDriver.EXPECT().VkGetImageSparseMemoryRequirements(mocks.Exactly(device.Handle()), mocks.Exactly(image.Handle()), gomock.Not(nil), nil).DoAndReturn(
+	mockDriver.EXPECT().VkGetImageSparseMemoryRequirements(device.Handle(), image.Handle(), gomock.Not(nil), nil).DoAndReturn(
 		func(device driver.VkDevice, image driver.VkImage, pReqCount *driver.Uint32, pRequirements *driver.VkSparseImageMemoryRequirements) {
 			*pReqCount = 2
 		})
 
-	mockDriver.EXPECT().VkGetImageSparseMemoryRequirements(mocks.Exactly(device.Handle()), mocks.Exactly(image.Handle()), gomock.Not(nil), gomock.Not(nil)).DoAndReturn(
+	mockDriver.EXPECT().VkGetImageSparseMemoryRequirements(device.Handle(), image.Handle(), gomock.Not(nil), gomock.Not(nil)).DoAndReturn(
 		func(device driver.VkDevice, image driver.VkImage, pReqCount *driver.Uint32, pRequirements *driver.VkSparseImageMemoryRequirements) {
 			require.Equal(t, driver.Uint32(2), *pReqCount)
 

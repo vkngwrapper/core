@@ -23,7 +23,7 @@ func (q *VulkanQueue) SubmitToQueue(fence core1_0.Fence, o []core1_0.SubmitOptio
 		return core1_0.VKErrorUnknown, err
 	}
 
-	var fenceHandle driver.VkFence = nil
+	var fenceHandle driver.VkFence
 	if fence != nil {
 		fenceHandle = fence.Handle()
 	}

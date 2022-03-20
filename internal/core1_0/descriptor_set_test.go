@@ -28,10 +28,10 @@ func TestVulkanDescriptorSet_Free(t *testing.T) {
 
 	set := internal_mocks.EasyDummyDescriptorSet(t, loader, pool, layout)
 
-	mockDriver.EXPECT().VkFreeDescriptorSets(mocks.Exactly(device.Handle()), mocks.Exactly(pool.Handle()), driver.Uint32(1), gomock.Not(unsafe.Pointer(nil))).DoAndReturn(
+	mockDriver.EXPECT().VkFreeDescriptorSets(device.Handle(), pool.Handle(), driver.Uint32(1), gomock.Not(unsafe.Pointer(nil))).DoAndReturn(
 		func(device driver.VkDevice, descriptorPool driver.VkDescriptorPool, descriptorSetCount driver.Uint32, pDescriptorSets *driver.VkDescriptorSet) (common.VkResult, error) {
 			descriptorSetSlice := unsafe.Slice(pDescriptorSets, 1)
-			require.Same(t, set.Handle(), descriptorSetSlice[0])
+			require.Equal(t, set.Handle(), descriptorSetSlice[0])
 
 			return core1_0.VKSuccess, nil
 		})

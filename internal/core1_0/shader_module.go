@@ -31,4 +31,5 @@ func (m *VulkanShaderModule) Core1_1() core1_1.ShaderModule {
 
 func (m *VulkanShaderModule) Destroy(callbacks *driver.AllocationCallbacks) {
 	m.Driver.VkDestroyShaderModule(m.Device, m.ShaderModuleHandle, callbacks.Handle())
+	m.Driver.ObjectStore().Delete(driver.VulkanHandle(m.ShaderModuleHandle), m)
 }

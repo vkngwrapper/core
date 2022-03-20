@@ -29,11 +29,19 @@ type vulkanDriver struct {
 	funcPtrs *C.DriverFuncPtrs
 
 	version common.APIVersion
+
+	objStore *VulkanObjectStore
 }
 
-func createVulkanDriver(funcPtrs *C.DriverFuncPtrs, instance VkInstance, device VkDevice) (*vulkanDriver, error) {
+func createVulkanDriver(funcPtrs *C.DriverFuncPtrs, objStore *VulkanObjectStore, instance VkInstance, device VkDevice) (*vulkanDriver, error) {
 	version := common.Vulkan1_0
-	driver := &vulkanDriver{funcPtrs: funcPtrs, instance: instance, device: device}
+	driver := &vulkanDriver{
+		funcPtrs: funcPtrs,
+		instance: instance,
+		device:   device,
+
+		objStore: objStore,
+	}
 
 	if funcPtrs.vkEnumerateInstanceVersion != nil {
 		var versionBits Uint32
@@ -54,7 +62,11 @@ func CreateDriverFromProcAddr(procAddr unsafe.Pointer) (*vulkanDriver, error) {
 	funcPtrs := (*C.DriverFuncPtrs)(C.malloc(C.sizeof_struct_DriverFuncPtrs))
 	C.driverFuncPtrs_populate(baseFuncPtr, funcPtrs)
 
-	return createVulkanDriver(funcPtrs, nil, nil)
+	return createVulkanDriver(funcPtrs, NewObjectStore(), VkInstance(NullHandle), VkDevice(NullHandle))
+}
+
+func (l *vulkanDriver) ObjectStore() *VulkanObjectStore {
+	return l.objStore
 }
 
 func (l *vulkanDriver) Destroy() {
@@ -63,27 +75,27 @@ func (l *vulkanDriver) Destroy() {
 
 func (l *vulkanDriver) CreateInstanceDriver(instance VkInstance) (Driver, error) {
 	instanceFuncPtrs := (*C.DriverFuncPtrs)(C.malloc(C.sizeof_struct_DriverFuncPtrs))
-	C.instanceFuncPtrs_populate((C.VkInstance)(instance), l.funcPtrs, instanceFuncPtrs)
+	C.instanceFuncPtrs_populate((C.VkInstance)(unsafe.Pointer(instance)), l.funcPtrs, instanceFuncPtrs)
 
-	return createVulkanDriver(instanceFuncPtrs, instance, nil)
+	return createVulkanDriver(instanceFuncPtrs, l.objStore, instance, VkDevice(NullHandle))
 }
 
 func (l *vulkanDriver) CreateDeviceDriver(device VkDevice) (Driver, error) {
-	if l.instance == nil {
+	if l.instance == VkInstance(NullHandle) {
 		return nil, errors.New("attempted to call instance driver function on a basic driver")
 	}
 
 	deviceFuncPtrs := (*C.DriverFuncPtrs)(C.malloc(C.sizeof_struct_DriverFuncPtrs))
-	C.deviceFuncPtrs_populate((C.VkDevice)(device), l.funcPtrs, deviceFuncPtrs)
+	C.deviceFuncPtrs_populate((C.VkDevice)(unsafe.Pointer(device)), l.funcPtrs, deviceFuncPtrs)
 
-	return createVulkanDriver(deviceFuncPtrs, l.instance, device)
+	return createVulkanDriver(deviceFuncPtrs, l.objStore, l.instance, device)
 }
 
 func (l *vulkanDriver) LoadProcAddr(name *Char) unsafe.Pointer {
-	if l.device != nil {
-		return unsafe.Pointer(C.device_proc_addr(l.funcPtrs, l.device, (*C.char)(name)))
+	if l.device != VkDevice(NullHandle) {
+		return unsafe.Pointer(C.device_proc_addr(l.funcPtrs, C.VkDevice(unsafe.Pointer(l.device)), (*C.char)(name)))
 	} else {
-		return unsafe.Pointer(C.instance_proc_addr(l.funcPtrs, l.instance, (*C.char)(name)))
+		return unsafe.Pointer(C.instance_proc_addr(l.funcPtrs, C.VkInstance(unsafe.Pointer(l.instance)), (*C.char)(name)))
 	}
 }
 

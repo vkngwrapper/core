@@ -83,7 +83,7 @@ func (d *VulkanPhysicalDevice) Properties() *core1_0.PhysicalDeviceProperties {
 
 	d.InstanceDriver.VkGetPhysicalDeviceProperties(d.PhysicalDeviceHandle, (*driver.VkPhysicalDeviceProperties)(propertiesUnsafe))
 
-	return createPhysicalDeviceProperties((*C.VkPhysicalDeviceProperties)(propertiesUnsafe))
+	return CreatePhysicalDeviceProperties(propertiesUnsafe)
 }
 
 func (d *VulkanPhysicalDevice) Features() *core1_0.PhysicalDeviceFeatures {
@@ -501,7 +501,8 @@ func createSparseProperties(p *C.VkPhysicalDeviceSparseProperties) *core1_0.Phys
 	}
 }
 
-func createPhysicalDeviceProperties(p *C.VkPhysicalDeviceProperties) *core1_0.PhysicalDeviceProperties {
+func CreatePhysicalDeviceProperties(unsafeP unsafe.Pointer) *core1_0.PhysicalDeviceProperties {
+	p := (*C.VkPhysicalDeviceProperties)(unsafeP)
 	uuidBytes := C.GoBytes(unsafe.Pointer(&p.pipelineCacheUUID[0]), C.VK_UUID_SIZE)
 	uuid, err := uuid.FromBytes(uuidBytes)
 	if err != nil {

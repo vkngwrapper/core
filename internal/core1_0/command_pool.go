@@ -42,6 +42,7 @@ func (p *VulkanCommandPool) Core1_1() core1_1.CommandPool {
 
 func (p *VulkanCommandPool) Destroy(callbacks *driver.AllocationCallbacks) {
 	p.DeviceDriver.VkDestroyCommandPool(p.DeviceHandle, p.CommandPoolHandle, callbacks.Handle())
+	p.DeviceDriver.ObjectStore().Delete(driver.VulkanHandle(p.CommandPoolHandle), p)
 }
 
 func (p *VulkanCommandPool) Reset(flags common.CommandPoolResetFlags) (common.VkResult, error) {

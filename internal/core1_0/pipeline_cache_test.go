@@ -26,7 +26,7 @@ func TestVulkanLoader1_0_CreatePipelineCache(t *testing.T) {
 	device := mocks.EasyMockDevice(ctrl, mockDriver)
 	pipelineCacheHandle := mocks.NewFakePipelineCache()
 
-	mockDriver.EXPECT().VkCreatePipelineCache(mocks.Exactly(device.Handle()), gomock.Not(nil), nil, gomock.Not(nil)).DoAndReturn(
+	mockDriver.EXPECT().VkCreatePipelineCache(device.Handle(), gomock.Not(nil), nil, gomock.Not(nil)).DoAndReturn(
 		func(device driver.VkDevice,
 			pCreateInfo *driver.VkPipelineCacheCreateInfo,
 			pAllocator *driver.VkAllocationCallbacks,
@@ -53,7 +53,7 @@ func TestVulkanLoader1_0_CreatePipelineCache(t *testing.T) {
 	})
 	require.NoError(t, err)
 	require.NotNil(t, pipelineCache)
-	require.Same(t, pipelineCacheHandle, pipelineCache.Handle())
+	require.Equal(t, pipelineCacheHandle, pipelineCache.Handle())
 }
 
 func TestVulkanPipelineCache_CacheData(t *testing.T) {
@@ -67,12 +67,12 @@ func TestVulkanPipelineCache_CacheData(t *testing.T) {
 	device := mocks.EasyMockDevice(ctrl, mockDriver)
 	pipelineCache := internal_mocks.EasyDummyPipelineCache(t, device, loader)
 
-	mockDriver.EXPECT().VkGetPipelineCacheData(mocks.Exactly(device.Handle()), mocks.Exactly(pipelineCache.Handle()), gomock.Not(nil), unsafe.Pointer(nil)).DoAndReturn(
+	mockDriver.EXPECT().VkGetPipelineCacheData(device.Handle(), pipelineCache.Handle(), gomock.Not(nil), unsafe.Pointer(nil)).DoAndReturn(
 		func(device driver.VkDevice, pipelineCache driver.VkPipelineCache, pSize *driver.Size, pCacheData unsafe.Pointer) (common.VkResult, error) {
 			*pSize = 8
 			return core1_0.VKSuccess, nil
 		})
-	mockDriver.EXPECT().VkGetPipelineCacheData(mocks.Exactly(device.Handle()), mocks.Exactly(pipelineCache.Handle()), gomock.Not(nil), gomock.Not(unsafe.Pointer(nil))).DoAndReturn(
+	mockDriver.EXPECT().VkGetPipelineCacheData(device.Handle(), pipelineCache.Handle(), gomock.Not(nil), gomock.Not(unsafe.Pointer(nil))).DoAndReturn(
 		func(device driver.VkDevice, pipelineCache driver.VkPipelineCache, pSize *driver.Size, pCacheData unsafe.Pointer) (common.VkResult, error) {
 			require.Equal(t, driver.Size(8), *pSize)
 			bytes := ([]byte)(unsafe.Slice((*byte)(pCacheData), 8))
@@ -100,13 +100,13 @@ func TestVulkanPipelineCache_MergePipelineCaches(t *testing.T) {
 	srcPipeline2 := mocks.EasyMockPipelineCache(ctrl)
 	srcPipeline3 := mocks.EasyMockPipelineCache(ctrl)
 
-	mockDriver.EXPECT().VkMergePipelineCaches(mocks.Exactly(device.Handle()), mocks.Exactly(pipelineCache.Handle()), driver.Uint32(3), gomock.Not(nil)).DoAndReturn(
+	mockDriver.EXPECT().VkMergePipelineCaches(device.Handle(), pipelineCache.Handle(), driver.Uint32(3), gomock.Not(nil)).DoAndReturn(
 		func(device driver.VkDevice, dstCache driver.VkPipelineCache, srcCacheCount driver.Uint32, pSrcCaches *driver.VkPipelineCache) (common.VkResult, error) {
 			cacheSlice := unsafe.Slice(pSrcCaches, 3)
 
-			require.Same(t, srcPipeline1.Handle(), cacheSlice[0])
-			require.Same(t, srcPipeline2.Handle(), cacheSlice[1])
-			require.Same(t, srcPipeline3.Handle(), cacheSlice[2])
+			require.Equal(t, srcPipeline1.Handle(), cacheSlice[0])
+			require.Equal(t, srcPipeline2.Handle(), cacheSlice[1])
+			require.Equal(t, srcPipeline3.Handle(), cacheSlice[2])
 
 			return core1_0.VKSuccess, nil
 		})

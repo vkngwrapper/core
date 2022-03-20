@@ -31,4 +31,5 @@ func (p *VulkanPipeline) Core1_1() core1_1.Pipeline {
 
 func (p *VulkanPipeline) Destroy(callbacks *driver.AllocationCallbacks) {
 	p.Driver.VkDestroyPipeline(p.Device, p.PipelineHandle, callbacks.Handle())
+	p.Driver.ObjectStore().Delete(driver.VulkanHandle(p.PipelineHandle), p)
 }

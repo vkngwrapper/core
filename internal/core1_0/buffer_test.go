@@ -27,7 +27,7 @@ func TestBuffer_Create_NilIndices(t *testing.T) {
 
 	expectedBuffer := mocks.NewFakeBufferHandle()
 
-	mockDriver.EXPECT().VkCreateBuffer(mocks.Exactly(device.Handle()), gomock.Not(nil), nil, gomock.Not(nil)).DoAndReturn(
+	mockDriver.EXPECT().VkCreateBuffer(device.Handle(), gomock.Not(nil), nil, gomock.Not(nil)).DoAndReturn(
 		func(device driver.VkDevice, createInfo *driver.VkBufferCreateInfo, allocator *driver.VkAllocationCallbacks, buffer *driver.VkBuffer) (common.VkResult, error) {
 			v := reflect.ValueOf(*createInfo)
 			require.Equal(t, v.FieldByName("sType").Uint(), uint64(12)) //VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO
@@ -54,7 +54,7 @@ func TestBuffer_Create_NilIndices(t *testing.T) {
 
 	require.Equal(t, res, core1_0.VKSuccess)
 	require.NoError(t, err)
-	require.Same(t, expectedBuffer, buffer.Handle())
+	require.Equal(t, expectedBuffer, buffer.Handle())
 }
 
 func TestBasicBuffer_Create_QueueFamilyIndices(t *testing.T) {
@@ -69,7 +69,7 @@ func TestBasicBuffer_Create_QueueFamilyIndices(t *testing.T) {
 
 	expectedBuffer := mocks.NewFakeBufferHandle()
 
-	mockDriver.EXPECT().VkCreateBuffer(mocks.Exactly(device.Handle()), gomock.Not(nil), nil, gomock.Not(nil)).DoAndReturn(
+	mockDriver.EXPECT().VkCreateBuffer(device.Handle(), gomock.Not(nil), nil, gomock.Not(nil)).DoAndReturn(
 		func(device driver.VkDevice, createInfo *driver.VkBufferCreateInfo, allocator *driver.VkAllocationCallbacks, buffer *driver.VkBuffer) (common.VkResult, error) {
 			v := reflect.ValueOf(*createInfo)
 			require.Equal(t, v.FieldByName("sType").Uint(), uint64(12)) //VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO
@@ -100,7 +100,7 @@ func TestBasicBuffer_Create_QueueFamilyIndices(t *testing.T) {
 
 	require.Equal(t, res, core1_0.VKSuccess)
 	require.NoError(t, err)
-	require.Same(t, expectedBuffer, buffer.Handle())
+	require.Equal(t, expectedBuffer, buffer.Handle())
 
 }
 
@@ -115,7 +115,7 @@ func TestBuffer_MemoryRequirements(t *testing.T) {
 	device := mocks.EasyMockDevice(ctrl, mockDriver)
 	buffer := internal_mocks.EasyDummyBuffer(t, loader, device)
 
-	mockDriver.EXPECT().VkGetBufferMemoryRequirements(mocks.Exactly(device.Handle()), mocks.Exactly(buffer.Handle()), gomock.Not(nil)).DoAndReturn(
+	mockDriver.EXPECT().VkGetBufferMemoryRequirements(device.Handle(), buffer.Handle(), gomock.Not(nil)).DoAndReturn(
 		func(device driver.VkDevice, buffer driver.VkBuffer, requirements *driver.VkMemoryRequirements) {
 			v := reflect.ValueOf(requirements).Elem()
 			*(*uint64)(unsafe.Pointer(v.FieldByName("size").UnsafeAddr())) = 5
@@ -142,7 +142,7 @@ func TestBuffer_BindBufferMemory_Success(t *testing.T) {
 	buffer := internal_mocks.EasyDummyBuffer(t, loader, device)
 	memory := mocks.EasyMockDeviceMemory(ctrl)
 
-	mockDriver.EXPECT().VkBindBufferMemory(mocks.Exactly(device.Handle()), mocks.Exactly(buffer.Handle()), mocks.Exactly(memory.Handle()), driver.VkDeviceSize(3)).Return(core1_0.VKSuccess, nil)
+	mockDriver.EXPECT().VkBindBufferMemory(device.Handle(), buffer.Handle(), memory.Handle(), driver.VkDeviceSize(3)).Return(core1_0.VKSuccess, nil)
 	_, err = buffer.BindBufferMemory(memory, 3)
 	require.NoError(t, err)
 }

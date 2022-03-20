@@ -23,7 +23,7 @@ type VulkanDeviceMemory struct {
 
 	DeviceMemory1_1 core1_1.DeviceMemory
 
-	size int
+	Size int
 }
 
 func (m *VulkanDeviceMemory) Handle() driver.VkDeviceMemory {
@@ -56,12 +56,9 @@ func (m *VulkanDeviceMemory) UnmapMemory() {
 	m.DeviceDriver.VkUnmapMemory(m.Device, m.DeviceMemoryHandle)
 }
 
-func freeDeviceMemory(memory core1_0.DeviceMemory, allocationCallbacks *driver.AllocationCallbacks) {
-	memory.Driver().VkFreeMemory(memory.DeviceHandle(), memory.Handle(), allocationCallbacks.Handle())
-}
-
 func (m *VulkanDeviceMemory) Free(allocationCallbacks *driver.AllocationCallbacks) {
-	freeDeviceMemory(m, allocationCallbacks)
+	m.Driver().VkFreeMemory(m.Device, m.DeviceMemoryHandle, allocationCallbacks.Handle())
+	m.Driver().ObjectStore().Delete(driver.VulkanHandle(m.DeviceMemoryHandle), m)
 }
 
 func (m *VulkanDeviceMemory) Commitment() int {
@@ -75,7 +72,7 @@ func (m *VulkanDeviceMemory) Commitment() int {
 	return int(*committedMemoryPtr)
 }
 
-func (m *VulkanDeviceMemory) Flush() (common.VkResult, error) {
+func (m *VulkanDeviceMemory) FlushAll() (common.VkResult, error) {
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
@@ -84,12 +81,12 @@ func (m *VulkanDeviceMemory) Flush() (common.VkResult, error) {
 	mappedRange.pNext = nil
 	mappedRange.memory = C.VkDeviceMemory(unsafe.Pointer(m.DeviceMemoryHandle))
 	mappedRange.offset = 0
-	mappedRange.size = C.VkDeviceSize(m.size)
+	mappedRange.size = C.VkDeviceSize(m.Size)
 
 	return m.DeviceDriver.VkFlushMappedMemoryRanges(m.Device, driver.Uint32(1), (*driver.VkMappedMemoryRange)(unsafe.Pointer(mappedRange)))
 }
 
-func (m *VulkanDeviceMemory) Invalidate() (common.VkResult, error) {
+func (m *VulkanDeviceMemory) InvalidateAll() (common.VkResult, error) {
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
@@ -98,7 +95,7 @@ func (m *VulkanDeviceMemory) Invalidate() (common.VkResult, error) {
 	mappedRange.pNext = nil
 	mappedRange.memory = C.VkDeviceMemory(unsafe.Pointer(m.DeviceMemoryHandle))
 	mappedRange.offset = 0
-	mappedRange.size = C.VkDeviceSize(m.size)
+	mappedRange.size = C.VkDeviceSize(m.Size)
 
 	return m.DeviceDriver.VkInvalidateMappedMemoryRanges(m.Device, driver.Uint32(1), (*driver.VkMappedMemoryRange)(unsafe.Pointer(mappedRange)))
 }

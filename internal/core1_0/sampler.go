@@ -26,4 +26,5 @@ func (s *VulkanSampler) Core1_1() core1_1.Sampler {
 
 func (s *VulkanSampler) Destroy(callbacks *driver.AllocationCallbacks) {
 	s.Driver.VkDestroySampler(s.Device, s.SamplerHandle, callbacks.Handle())
+	s.Driver.ObjectStore().Delete(driver.VulkanHandle(s.SamplerHandle), s)
 }

@@ -33,6 +33,7 @@ func (p *VulkanRenderPass) Core1_1() core1_1.RenderPass {
 
 func (p *VulkanRenderPass) Destroy(callbacks *driver.AllocationCallbacks) {
 	p.Driver.VkDestroyRenderPass(p.Device, p.RenderPassHandle, callbacks.Handle())
+	p.Driver.ObjectStore().Delete(driver.VulkanHandle(p.RenderPassHandle), p)
 }
 
 func (p *VulkanRenderPass) RenderAreaGranularity() common.Extent2D {

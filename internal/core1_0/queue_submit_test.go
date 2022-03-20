@@ -7,7 +7,6 @@ import (
 	"github.com/CannibalVox/VKng/core/driver"
 	mock_driver "github.com/CannibalVox/VKng/core/driver/mocks"
 	internal_mocks "github.com/CannibalVox/VKng/core/internal/mocks"
-	"github.com/CannibalVox/VKng/core/mocks"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/require"
 	"reflect"
@@ -24,7 +23,7 @@ func TestSubmitToQueue_SignalSuccess(t *testing.T) {
 	require.NoError(t, err)
 
 	mockDevice := internal_mocks.EasyDummyDevice(t, ctrl, loader)
-	queue := internal_mocks.EasyDummyQueue(mockDevice)
+	queue := internal_mocks.EasyDummyQueue(loader, mockDevice)
 
 	fence := internal_mocks.EasyDummyFence(t, loader, mockDevice)
 
@@ -38,7 +37,7 @@ func TestSubmitToQueue_SignalSuccess(t *testing.T) {
 	signalSemaphore2 := internal_mocks.EasyDummySemaphore(t, loader, mockDevice)
 	signalSemaphore3 := internal_mocks.EasyDummySemaphore(t, loader, mockDevice)
 
-	mockDriver.EXPECT().VkQueueSubmit(mocks.Exactly(queue.Handle()), driver.Uint32(1), gomock.Not(nil), mocks.Exactly(fence.Handle())).DoAndReturn(
+	mockDriver.EXPECT().VkQueueSubmit(queue.Handle(), driver.Uint32(1), gomock.Not(nil), fence.Handle()).DoAndReturn(
 		func(queue driver.VkQueue, submitCount driver.Uint32, pSubmits *driver.VkSubmitInfo, fence driver.VkFence) (common.VkResult, error) {
 			submitSlices := ([]driver.VkSubmitInfo)(unsafe.Slice(pSubmits, int(submitCount)))
 
@@ -53,8 +52,8 @@ func TestSubmitToQueue_SignalSuccess(t *testing.T) {
 				waitSemaphorePtr := unsafe.Pointer(v.FieldByName("pWaitSemaphores").Elem().UnsafeAddr())
 				waitSemaphoreSlice := ([]driver.VkSemaphore)(unsafe.Slice((*driver.VkSemaphore)(waitSemaphorePtr), 2))
 
-				require.Same(t, waitSemaphore1.Handle(), waitSemaphoreSlice[0])
-				require.Same(t, waitSemaphore2.Handle(), waitSemaphoreSlice[1])
+				require.Equal(t, waitSemaphore1.Handle(), waitSemaphoreSlice[0])
+				require.Equal(t, waitSemaphore2.Handle(), waitSemaphoreSlice[1])
 
 				waitDstStageMaskPtr := unsafe.Pointer(v.FieldByName("pWaitDstStageMask").Elem().UnsafeAddr())
 				waitDstStageMaskSlice := ([]driver.VkPipelineStageFlags)(unsafe.Slice((*driver.VkPipelineStageFlags)(waitDstStageMaskPtr), 2))
@@ -64,14 +63,14 @@ func TestSubmitToQueue_SignalSuccess(t *testing.T) {
 				commandBufferPtr := unsafe.Pointer(v.FieldByName("pCommandBuffers").Elem().UnsafeAddr())
 				commandBufferSlice := ([]driver.VkCommandBuffer)(unsafe.Slice((*driver.VkCommandBuffer)(commandBufferPtr), 1))
 
-				require.Same(t, buffer.Handle(), commandBufferSlice[0])
+				require.Equal(t, buffer.Handle(), commandBufferSlice[0])
 
 				signalSemaphorePtr := unsafe.Pointer(v.FieldByName("pSignalSemaphores").Elem().UnsafeAddr())
 				signalSemaphoreSlice := ([]driver.VkSemaphore)(unsafe.Slice((*driver.VkSemaphore)(signalSemaphorePtr), 3))
 
-				require.Same(t, signalSemaphore1.Handle(), signalSemaphoreSlice[0])
-				require.Same(t, signalSemaphore2.Handle(), signalSemaphoreSlice[1])
-				require.Same(t, signalSemaphore3.Handle(), signalSemaphoreSlice[2])
+				require.Equal(t, signalSemaphore1.Handle(), signalSemaphoreSlice[0])
+				require.Equal(t, signalSemaphore2.Handle(), signalSemaphoreSlice[1])
+				require.Equal(t, signalSemaphore3.Handle(), signalSemaphoreSlice[2])
 			}
 
 			return core1_0.VKSuccess, nil
@@ -97,12 +96,12 @@ func TestSubmitToQueue_NoSignalSuccess(t *testing.T) {
 	require.NoError(t, err)
 
 	mockDevice := internal_mocks.EasyDummyDevice(t, ctrl, loader)
-	queue := internal_mocks.EasyDummyQueue(mockDevice)
+	queue := internal_mocks.EasyDummyQueue(loader, mockDevice)
 
 	pool := internal_mocks.EasyDummyCommandPool(t, loader, mockDevice)
 	buffer := internal_mocks.EasyDummyCommandBuffer(t, loader, mockDevice, pool)
 
-	mockDriver.EXPECT().VkQueueSubmit(mocks.Exactly(queue.Handle()), driver.Uint32(1), gomock.Not(nil), nil).DoAndReturn(
+	mockDriver.EXPECT().VkQueueSubmit(queue.Handle(), driver.Uint32(1), gomock.Not(nil), driver.VkFence(driver.NullHandle)).DoAndReturn(
 		func(queue driver.VkQueue, submitCount driver.Uint32, pSubmits *driver.VkSubmitInfo, fence driver.VkFence) (common.VkResult, error) {
 			submitSlices := ([]driver.VkSubmitInfo)(unsafe.Slice(pSubmits, int(submitCount)))
 
@@ -121,7 +120,7 @@ func TestSubmitToQueue_NoSignalSuccess(t *testing.T) {
 				commandBufferPtr := unsafe.Pointer(v.FieldByName("pCommandBuffers").Elem().UnsafeAddr())
 				commandBufferSlice := ([]driver.VkCommandBuffer)(unsafe.Slice((*driver.VkCommandBuffer)(commandBufferPtr), 1))
 
-				require.Same(t, buffer.Handle(), commandBufferSlice[0])
+				require.Equal(t, buffer.Handle(), commandBufferSlice[0])
 			}
 
 			return core1_0.VKSuccess, nil
@@ -147,7 +146,7 @@ func TestSubmitToQueue_MismatchWaitSemaphores(t *testing.T) {
 	require.NoError(t, err)
 
 	mockDevice := internal_mocks.EasyDummyDevice(t, ctrl, loader)
-	queue := internal_mocks.EasyDummyQueue(mockDevice)
+	queue := internal_mocks.EasyDummyQueue(loader, mockDevice)
 
 	pool := internal_mocks.EasyDummyCommandPool(t, loader, mockDevice)
 	buffer := internal_mocks.EasyDummyCommandBuffer(t, loader, mockDevice, pool)

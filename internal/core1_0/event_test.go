@@ -25,7 +25,7 @@ func TestVulkanLoader1_0_CreateEvent(t *testing.T) {
 	device := internal_mocks.EasyDummyDevice(t, ctrl, loader)
 	eventHandle := mocks.NewFakeEventHandle()
 
-	mockDriver.EXPECT().VkCreateEvent(mocks.Exactly(device.Handle()), gomock.Not(nil), nil, gomock.Not(nil)).DoAndReturn(
+	mockDriver.EXPECT().VkCreateEvent(device.Handle(), gomock.Not(nil), nil, gomock.Not(nil)).DoAndReturn(
 		func(device driver.VkDevice, pCreateInfo *driver.VkEventCreateInfo, pAllocator *driver.VkAllocationCallbacks, pEvent *driver.VkEvent) (common.VkResult, error) {
 			val := reflect.ValueOf(*pCreateInfo)
 
@@ -42,7 +42,7 @@ func TestVulkanLoader1_0_CreateEvent(t *testing.T) {
 	})
 	require.NoError(t, err)
 	require.NotNil(t, event)
-	require.Same(t, eventHandle, event.Handle())
+	require.Equal(t, eventHandle, event.Handle())
 }
 
 func TestVulkanEvent_Set(t *testing.T) {
@@ -56,7 +56,7 @@ func TestVulkanEvent_Set(t *testing.T) {
 	device := mocks.EasyMockDevice(ctrl, driver)
 	event := internal_mocks.EasyDummyEvent(t, loader, device)
 
-	driver.EXPECT().VkSetEvent(mocks.Exactly(device.Handle()), mocks.Exactly(event.Handle())).Return(core1_0.VKSuccess, nil)
+	driver.EXPECT().VkSetEvent(device.Handle(), event.Handle()).Return(core1_0.VKSuccess, nil)
 
 	_, err = event.Set()
 	require.NoError(t, err)
@@ -73,7 +73,7 @@ func TestVulkanEvent_Reset(t *testing.T) {
 	device := mocks.EasyMockDevice(ctrl, driver)
 	event := internal_mocks.EasyDummyEvent(t, loader, device)
 
-	driver.EXPECT().VkResetEvent(mocks.Exactly(device.Handle()), mocks.Exactly(event.Handle())).Return(core1_0.VKSuccess, nil)
+	driver.EXPECT().VkResetEvent(device.Handle(), event.Handle()).Return(core1_0.VKSuccess, nil)
 
 	_, err = event.Reset()
 	require.NoError(t, err)
@@ -90,7 +90,7 @@ func TestVulkanEvent_Status(t *testing.T) {
 	device := mocks.EasyMockDevice(ctrl, driver)
 	event := internal_mocks.EasyDummyEvent(t, loader, device)
 
-	driver.EXPECT().VkGetEventStatus(mocks.Exactly(device.Handle()), mocks.Exactly(event.Handle())).Return(core1_0.VKEventReset, nil)
+	driver.EXPECT().VkGetEventStatus(device.Handle(), event.Handle()).Return(core1_0.VKEventReset, nil)
 
 	res, err := event.Status()
 	require.NoError(t, err)

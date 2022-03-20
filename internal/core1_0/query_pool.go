@@ -33,6 +33,7 @@ func (p *VulkanQueryPool) Core1_1() core1_1.QueryPool {
 
 func (p *VulkanQueryPool) Destroy(callbacks *driver.AllocationCallbacks) {
 	p.Driver.VkDestroyQueryPool(p.Device, p.QueryPoolHandle, callbacks.Handle())
+	p.Driver.ObjectStore().Delete(driver.VulkanHandle(p.QueryPoolHandle), p)
 }
 
 func (p *VulkanQueryPool) PopulateResults(firstQuery, queryCount int, results []byte, resultStride int, flags common.QueryResultFlags) (common.VkResult, error) {

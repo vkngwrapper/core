@@ -147,7 +147,7 @@ func EasyDummyDeviceMemory(t *testing.T, loader core.Loader, device core1_0.Devi
 			return core1_0.VKSuccess, nil
 		})
 
-	memory, _, err := device.AllocateMemory(nil, &core1_0.DeviceMemoryOptions{
+	memory, _, err := loader.AllocateMemory(device, nil, &core1_0.DeviceMemoryOptions{
 		AllocationSize: size,
 	})
 	require.NoError(t, err)
@@ -268,14 +268,14 @@ func EasyDummyPhysicalDevice(t *testing.T, loader core.Loader) core1_0.PhysicalD
 
 			return core1_0.VKSuccess, nil
 		})
-	mockDriver.EXPECT().VkGetPhysicalDeviceProperties(mocks.Exactly(handle), gomock.Not(nil)).DoAndReturn(
+	mockDriver.EXPECT().VkGetPhysicalDeviceProperties(handle, gomock.Not(nil)).DoAndReturn(
 		func(physicalDevice driver.VkPhysicalDevice, pProperties *driver.VkPhysicalDeviceProperties) {
 			val := reflect.ValueOf(pProperties).Elem()
 
 			*(*uint32)(unsafe.Pointer(val.FieldByName("apiVersion").UnsafeAddr())) = uint32(loader.Version())
 		})
 
-	devices, _, err := instance.PhysicalDevices()
+	devices, _, err := loader.PhysicalDevices(instance)
 	require.NoError(t, err)
 
 	return devices[0]
@@ -284,7 +284,7 @@ func EasyDummyPhysicalDevice(t *testing.T, loader core.Loader) core1_0.PhysicalD
 func EasyDummyPipeline(t *testing.T, device core1_0.Device, loader core.Loader) core1_0.Pipeline {
 	mockDriver := loader.Driver().(*mock_driver.MockDriver)
 
-	mockDriver.EXPECT().VkCreateGraphicsPipelines(device.Handle(), nil, driver.Uint32(1), gomock.Not(nil), nil, gomock.Not(nil)).DoAndReturn(
+	mockDriver.EXPECT().VkCreateGraphicsPipelines(device.Handle(), driver.VkPipelineCache(driver.NullHandle), driver.Uint32(1), gomock.Not(nil), nil, gomock.Not(nil)).DoAndReturn(
 		func(device driver.VkDevice, cache driver.VkPipelineCache, createInfoCount driver.Uint32, pCreateInfos *driver.VkGraphicsPipelineCreateInfo, pAllocator *driver.VkAllocationCallbacks, pPipelines *driver.VkPipeline) (common.VkResult, error) {
 			pipelines := ([]driver.VkPipeline)(unsafe.Slice(pPipelines, 1))
 			pipelines[0] = mocks.NewFakePipeline()
@@ -327,7 +327,7 @@ func EasyDummyQueryPool(t *testing.T, loader core.Loader, device core1_0.Device)
 	return queryPool
 }
 
-func EasyDummyQueue(device core1_0.Device) core1_0.Queue {
+func EasyDummyQueue(loader core.Loader, device core1_0.Device) core1_0.Queue {
 	mockDriver := device.Driver().(*mock_driver.MockDriver)
 
 	mockDriver.EXPECT().VkGetDeviceQueue(gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any()).DoAndReturn(
@@ -336,7 +336,7 @@ func EasyDummyQueue(device core1_0.Device) core1_0.Queue {
 			return nil
 		})
 
-	queue := device.GetQueue(0, 0)
+	queue := loader.GetQueue(device, 0, 0)
 
 	return queue
 }

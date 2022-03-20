@@ -141,8 +141,8 @@ type DeviceMemory interface {
 	UnmapMemory()
 	Free(callbacks *driver.AllocationCallbacks)
 	Commitment() int
-	Flush() (common.VkResult, error)
-	Invalidate() (common.VkResult, error)
+	FlushAll() (common.VkResult, error)
+	InvalidateAll() (common.VkResult, error)
 }
 
 type Device interface {
@@ -159,10 +159,6 @@ type Device interface {
 	UpdateDescriptorSets(writes []WriteDescriptorSetOptions, copies []CopyDescriptorSetOptions) error
 	FlushMappedMemoryRanges(ranges []MappedMemoryRange) (common.VkResult, error)
 	InvalidateMappedMemoryRanges(ranges []MappedMemoryRange) (common.VkResult, error)
-
-	GetQueue(queueFamilyIndex int, queueIndex int) Queue
-	AllocateMemory(allocationCallbacks *driver.AllocationCallbacks, o *DeviceMemoryOptions) (DeviceMemory, common.VkResult, error)
-	FreeMemory(deviceMemory DeviceMemory, allocationCallbacks *driver.AllocationCallbacks)
 }
 
 type Event interface {
@@ -223,7 +219,6 @@ type Instance interface {
 	Core1_1() core1_1.Instance
 
 	Destroy(callbacks *driver.AllocationCallbacks)
-	PhysicalDevices() ([]PhysicalDevice, common.VkResult, error)
 }
 
 type PhysicalDevice interface {
