@@ -1,6 +1,7 @@
 package mocks
 
 import (
+	"github.com/CannibalVox/VKng/core/core1_0"
 	"github.com/CannibalVox/VKng/core/driver"
 	"github.com/golang/mock/gomock"
 )
@@ -24,6 +25,15 @@ func EasyMockCommandBuffer(ctrl *gomock.Controller) *MockCommandBuffer {
 	commandBuffer.EXPECT().Handle().Return(NewFakeCommandBufferHandle()).AnyTimes()
 
 	return commandBuffer
+}
+
+func EasyMockCommandPool(ctrl *gomock.Controller, device core1_0.Device) *MockCommandPool {
+	commandPool := NewMockCommandPool(ctrl)
+	commandPool.EXPECT().Handle().Return(NewFakeCommandPoolHandle()).AnyTimes()
+	commandPool.EXPECT().Driver().Return(device.Driver()).AnyTimes()
+	commandPool.EXPECT().Device().Return(device.Handle()).AnyTimes()
+
+	return commandPool
 }
 
 func EasyMockDescriptorSet(ctrl *gomock.Controller) *MockDescriptorSet {
