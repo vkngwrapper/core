@@ -229,7 +229,7 @@ type PhysicalDevice interface {
 	Core1_1() core1_1.PhysicalDevice
 
 	QueueFamilyProperties() []*QueueFamily
-	Properties() *PhysicalDeviceProperties
+	Properties() (*PhysicalDeviceProperties, error)
 	Features() *PhysicalDeviceFeatures
 	AvailableExtensions() (map[string]*common.ExtensionProperties, common.VkResult, error)
 	AvailableExtensionsForLayer(layerName string) (map[string]*common.ExtensionProperties, common.VkResult, error)

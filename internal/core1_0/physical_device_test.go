@@ -345,10 +345,10 @@ func TestVulkanPhysicalDevice_QueueFamilyProperties(t *testing.T) {
 	mockDriver.EXPECT().VkGetPhysicalDeviceQueueFamilyProperties(physicalDevice.Handle(), gomock.Not(gomock.Nil()), gomock.Not(gomock.Nil())).DoAndReturn(
 		func(device driver.VkPhysicalDevice, pPropertyCount *driver.Uint32, pProperties *driver.VkQueueFamilyProperties) {
 			*pPropertyCount = 1
-			propertySlice := reflect.ValueOf(([]driver.VkQueueFamilyProperties)(unsafe.Slice(pProperties, 3)))
+			propertySlice := reflect.ValueOf(([]driver.VkQueueFamilyProperties)(unsafe.Slice(pProperties, 1)))
 
 			property := propertySlice.Index(0)
-			*(*driver.VkQueueFlags)(unsafe.Pointer(property.FieldByName("queueFlags").UnsafeAddr())) = driver.VkQueueFlags(8)
+			*(*driver.VkQueueFlags)(unsafe.Pointer(property.FieldByName("queueFlags").UnsafeAddr())) = driver.VkQueueFlags(8) // VK_QUEUE_SPARSE_BINDING_BIT
 			*(*uint32)(unsafe.Pointer(property.FieldByName("queueCount").UnsafeAddr())) = uint32(3)
 			*(*uint32)(unsafe.Pointer(property.FieldByName("timestampValidBits").UnsafeAddr())) = uint32(5)
 
@@ -359,7 +359,7 @@ func TestVulkanPhysicalDevice_QueueFamilyProperties(t *testing.T) {
 		})
 
 	queueProperties := physicalDevice.QueueFamilyProperties()
-	require.Equal(t, uint32(3), queueProperties[0].QueueCount)
+	require.Equal(t, 3, queueProperties[0].QueueCount)
 	require.Equal(t, uint32(5), queueProperties[0].TimestampValidBits)
 	require.Equal(t, 7, queueProperties[0].MinImageTransferGranularity.Width)
 	require.Equal(t, 11, queueProperties[0].MinImageTransferGranularity.Height)
@@ -426,8 +426,9 @@ func TestVulkanPhysicalDevice_Properties(t *testing.T) {
 			*(*driver.VkBool32)(unsafe.Pointer(sparseProperties.FieldByName("residencyNonResidentStrict").UnsafeAddr())) = driver.VkBool32(1)
 		})
 
-	properties := physicalDevice.Properties()
+	properties, err := physicalDevice.Properties()
 	require.NotNil(t, properties)
+	require.NoError(t, err)
 	require.Equal(t, common.Vulkan1_1, properties.APIVersion)
 	require.Equal(t, common.CreateVersion(3, 2, 1), properties.DriverVersion)
 	require.Equal(t, uint32(3), properties.VendorID)
@@ -762,8 +763,8 @@ func TestVulkanPhysicalDevice_MemoryProperties(t *testing.T) {
 	require.Len(t, memoryProps.MemoryHeaps, 1)
 
 	require.Equal(t, 3, memoryProps.MemoryTypes[0].HeapIndex)
-	require.Equal(t, core1_0.MemoryLazilyAllocated, memoryProps.MemoryTypes[0].Properties)
+	require.Equal(t, core1_0.MemoryPropertyLazilyAllocated, memoryProps.MemoryTypes[0].Properties)
 
 	require.Equal(t, uint64(99), memoryProps.MemoryHeaps[0].Size)
-	require.Equal(t, core1_0.HeapDeviceLocal, memoryProps.MemoryHeaps[0].Flags)
+	require.Equal(t, core1_0.MemoryHeapDeviceLocal, memoryProps.MemoryHeaps[0].Flags)
 }

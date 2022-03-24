@@ -9,7 +9,6 @@ import (
 	"github.com/CannibalVox/VKng/core/common"
 	"github.com/CannibalVox/VKng/core/core1_0"
 	"github.com/CannibalVox/VKng/core/driver"
-	internal1_0 "github.com/CannibalVox/VKng/core/internal/core1_0"
 	"github.com/CannibalVox/VKng/core/internal/objects"
 	"github.com/CannibalVox/cgoparam"
 	"github.com/cockroachdb/errors"
@@ -242,7 +241,7 @@ func (l *VulkanLoader1_0) CreateDevice(physicalDevice core1_0.PhysicalDevice, al
 	if err != nil {
 		return nil, core1_0.VKErrorUnknown, err
 	}
-
+	
 	device := objects.CreateDevice(deviceDriver, deviceHandle, physicalDevice.APIVersion())
 
 	return device, res, nil
@@ -886,7 +885,11 @@ func (l *VulkanLoader1_0) PhysicalDevices(instance core1_0.Instance) ([]core1_0.
 
 		instance.Driver().VkGetPhysicalDeviceProperties(deviceHandles[ind], (*driver.VkPhysicalDeviceProperties)(propertiesUnsafe))
 
-		properties := internal1_0.CreatePhysicalDeviceProperties(propertiesUnsafe)
+		var properties core1_0.PhysicalDeviceProperties
+		err = (&properties).PopulateFromCPointer(propertiesUnsafe)
+		if err != nil {
+			return nil, core1_0.VKErrorUnknown, err
+		}
 
 		version := instance.APIVersion().Min(properties.APIVersion)
 		physicalDevice := objects.CreatePhysicalDevice(instance, deviceHandles[ind], version)

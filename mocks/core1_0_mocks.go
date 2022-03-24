@@ -2362,11 +2362,12 @@ func (mr *MockPhysicalDeviceMockRecorder) MemoryProperties() *gomock.Call {
 }
 
 // Properties mocks base method.
-func (m *MockPhysicalDevice) Properties() *core1_0.PhysicalDeviceProperties {
+func (m *MockPhysicalDevice) Properties() (*core1_0.PhysicalDeviceProperties, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Properties")
 	ret0, _ := ret[0].(*core1_0.PhysicalDeviceProperties)
-	return ret0
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
 }
 
 // Properties indicates an expected call of Properties.

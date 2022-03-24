@@ -226,6 +226,20 @@ func (f DescriptorSetLayoutCreateFlags) String() string {
 
 ////
 
+type DeviceQueueCreateFlags int32
+
+var deviceQueueCreateFlagsMapping = NewFlagStringMapping[DeviceQueueCreateFlags]()
+
+func (f DeviceQueueCreateFlags) Register(str string) {
+	deviceQueueCreateFlagsMapping.Register(f, str)
+}
+
+func (f DeviceQueueCreateFlags) String() string {
+	return deviceQueueCreateFlagsMapping.FlagsToString(f)
+}
+
+////
+
 type EventCreateFlags int32
 
 var eventCreateFlagsMapping = NewFlagStringMapping[EventCreateFlags]()
