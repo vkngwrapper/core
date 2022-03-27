@@ -91,6 +91,7 @@ type VkBufferDeviceAddressInfo C.VkBufferDeviceAddressInfo
 type VkDeviceMemoryOpaqueCaptureAddressInfo C.VkDeviceMemoryOpaqueCaptureAddressInfo
 type VkDeviceQueueCreateInfo C.VkDeviceQueueCreateInfo
 type VkPipelineShaderStageCreateInfo C.VkPipelineShaderStageCreateInfo
+type VkPipelineTessellationStateCreateInfo C.VkPipelineTessellationStateCreateInfo
 
 type VkAllocationCallbacks C.VkAllocationCallbacks
 type VkBindSparseInfo C.VkBindSparseInfo
