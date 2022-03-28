@@ -6,6 +6,6 @@ type MemoryType struct {
 }
 
 type MemoryHeap struct {
-	Size  uint64
+	Size  int
 	Flags MemoryHeapFlags
 }

@@ -92,6 +92,7 @@ type VkDeviceMemoryOpaqueCaptureAddressInfo C.VkDeviceMemoryOpaqueCaptureAddress
 type VkDeviceQueueCreateInfo C.VkDeviceQueueCreateInfo
 type VkPipelineShaderStageCreateInfo C.VkPipelineShaderStageCreateInfo
 type VkPipelineTessellationStateCreateInfo C.VkPipelineTessellationStateCreateInfo
+type VkImageAspectFlags C.VkImageAspectFlags
 
 type VkAllocationCallbacks C.VkAllocationCallbacks
 type VkBindSparseInfo C.VkBindSparseInfo
@@ -183,6 +184,7 @@ type VkCommandPoolTrimFlags C.VkCommandPoolTrimFlags
 type VkDeviceAddress C.VkDeviceAddress
 type VkQueueFlags C.VkQueueFlags
 type VkSampleMask C.VkSampleMask
+type VkSparseImageFormatFlags C.VkSparseImageFormatFlags
 type VkResult C.VkResult
 
 type VkBool32 C.VkBool32

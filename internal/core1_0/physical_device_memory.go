@@ -37,7 +37,7 @@ func (d *VulkanPhysicalDevice) MemoryProperties() *core1_0.PhysicalDeviceMemoryP
 	for i := 0; i < heapCount; i++ {
 		heap := props.memoryHeaps[i]
 		outProps.MemoryHeaps = append(outProps.MemoryHeaps, common.MemoryHeap{
-			Size:  uint64(heap.size),
+			Size:  int(heap.size),
 			Flags: common.MemoryHeapFlags(heap.flags),
 		})
 	}
