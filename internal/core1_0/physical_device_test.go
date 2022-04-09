@@ -765,6 +765,6 @@ func TestVulkanPhysicalDevice_MemoryProperties(t *testing.T) {
 	require.Equal(t, 3, memoryProps.MemoryTypes[0].HeapIndex)
 	require.Equal(t, core1_0.MemoryPropertyLazilyAllocated, memoryProps.MemoryTypes[0].Properties)
 
-	require.Equal(t, uint64(99), memoryProps.MemoryHeaps[0].Size)
+	require.Equal(t, 99, memoryProps.MemoryHeaps[0].Size)
 	require.Equal(t, core1_0.MemoryHeapDeviceLocal, memoryProps.MemoryHeaps[0].Flags)
 }
