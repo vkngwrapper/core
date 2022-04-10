@@ -96,7 +96,7 @@ func (o CommandBufferInheritanceOptions) PopulateCPointer(allocator *cgoparam.Al
 	return unsafe.Pointer(createInfo), nil
 }
 
-func (o CommandBufferInheritanceOptions) PopulateOutData(cDataPointer unsafe.Pointer) (next unsafe.Pointer, err error) {
+func (o CommandBufferInheritanceOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
 	createInfo := (*C.VkCommandBufferInheritanceInfo)(cDataPointer)
 	return createInfo.pNext, nil
 }
@@ -131,7 +131,7 @@ func (o BeginOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocat
 	return unsafe.Pointer(createInfo), nil
 }
 
-func (o BeginOptions) PopulateOutData(cDataPointer unsafe.Pointer) (next unsafe.Pointer, err error) {
+func (o BeginOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
 	createInfo := (*C.VkCommandBufferBeginInfo)(cDataPointer)
 	return createInfo.pNext, nil
 }

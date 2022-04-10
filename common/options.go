@@ -12,7 +12,7 @@ type CAllocatable interface {
 
 type Options interface {
 	PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error)
-	PopulateOutData(cDataPointer unsafe.Pointer) (next unsafe.Pointer, err error)
+	PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error)
 	NextInChain() Options
 }
 
@@ -84,25 +84,25 @@ func AllocSlice[T any, A CAllocatable](allocator *cgoparam.Allocator, a []A) (*T
 	return (*T)(optionPtr), nil
 }
 
-func PopulateOutData(o Options, cPointer unsafe.Pointer) error {
-	next, err := o.PopulateOutData(cPointer)
+func PopulateOutData(o Options, cPointer unsafe.Pointer, helpers ...any) error {
+	next, err := o.PopulateOutData(cPointer, helpers...)
 	if err != nil {
 		return err
 	}
 
 	nextOptions := o.NextInChain()
 	if nextOptions != nil {
-		return PopulateOutData(nextOptions, next)
+		return PopulateOutData(nextOptions, next, helpers...)
 	}
 
 	return nil
 }
 
-func PopulateOutDataSlice[T any, O Options](o []O, cSlicePointer unsafe.Pointer) error {
+func PopulateOutDataSlice[T any, O Options](o []O, cSlicePointer unsafe.Pointer, helpers ...any) error {
 	cElementSize := unsafe.Sizeof([1]T{})
 
 	for i := 0; i < len(o); i++ {
-		err := PopulateOutData(o[i], cSlicePointer)
+		err := PopulateOutData(o[i], cSlicePointer, helpers...)
 		if err != nil {
 			return err
 		}
@@ -111,4 +111,16 @@ func PopulateOutDataSlice[T any, O Options](o []O, cSlicePointer unsafe.Pointer)
 	}
 
 	return nil
+}
+
+func OfType[T any](values []any) (T, bool) {
+	for _, val := range values {
+		typed, ok := val.(T)
+		if ok {
+			return typed, true
+		}
+	}
+
+	var zero T
+	return zero, false
 }

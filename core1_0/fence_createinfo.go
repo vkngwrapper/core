@@ -37,7 +37,7 @@ func (o FenceOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocat
 	return unsafe.Pointer(createInfo), nil
 }
 
-func (o FenceOptions) PopulateOutData(cDataPointer unsafe.Pointer) (next unsafe.Pointer, err error) {
+func (o FenceOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
 	createInfo := (*C.VkFenceCreateInfo)(cDataPointer)
 	return createInfo.pNext, nil
 }

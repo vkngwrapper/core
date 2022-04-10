@@ -38,7 +38,7 @@ func (o DeviceMemoryOptions) PopulateCPointer(allocator *cgoparam.Allocator, pre
 	return unsafe.Pointer(createInfo), nil
 }
 
-func (o DeviceMemoryOptions) PopulateOutData(cDataPointer unsafe.Pointer) (next unsafe.Pointer, err error) {
+func (o DeviceMemoryOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
 	createInfo := (*C.VkMemoryAllocateInfo)(cDataPointer)
 	return createInfo.pNext, nil
 }
@@ -66,7 +66,7 @@ func (r MappedMemoryRange) PopulateCPointer(allocator *cgoparam.Allocator, preal
 	return preallocatedPointer, nil
 }
 
-func (r MappedMemoryRange) PopulateOutData(cDataPointer unsafe.Pointer) (next unsafe.Pointer, err error) {
+func (r MappedMemoryRange) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
 	createInfo := (*C.VkMappedMemoryRange)(cDataPointer)
 	return createInfo.pNext, nil
 }

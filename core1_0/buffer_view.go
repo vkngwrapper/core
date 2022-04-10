@@ -36,7 +36,7 @@ func (o BufferViewOptions) PopulateCPointer(allocator *cgoparam.Allocator, preal
 	return unsafe.Pointer(createInfo), nil
 }
 
-func (o BufferViewOptions) PopulateOutData(cDataPointer unsafe.Pointer) (next unsafe.Pointer, err error) {
+func (o BufferViewOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
 	createInfo := (*C.VkBufferViewCreateInfo)(cDataPointer)
 	return createInfo.pNext, nil
 }

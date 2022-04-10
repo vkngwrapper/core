@@ -58,7 +58,7 @@ func (o FramebufferOptions) PopulateCPointer(allocator *cgoparam.Allocator, prea
 	return unsafe.Pointer(createInfo), nil
 }
 
-func (o FramebufferOptions) PopulateOutData(cDataPointer unsafe.Pointer) (next unsafe.Pointer, err error) {
+func (o FramebufferOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
 	createInfo := (*C.VkFramebufferCreateInfo)(cDataPointer)
 	return createInfo.pNext, nil
 }

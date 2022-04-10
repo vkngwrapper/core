@@ -91,7 +91,7 @@ func (o ImageViewOptions) PopulateCPointer(allocator *cgoparam.Allocator, preall
 	return preallocatedPointer, nil
 }
 
-func (o ImageViewOptions) PopulateOutData(cDataPointer unsafe.Pointer) (next unsafe.Pointer, err error) {
+func (o ImageViewOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
 	createInfo := (*C.VkImageViewCreateInfo)(cDataPointer)
 	return createInfo.pNext, nil
 }

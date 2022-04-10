@@ -172,7 +172,7 @@ func (o ColorBlendOptions) PopulateCPointer(allocator *cgoparam.Allocator, preal
 	return preallocatedPointer, nil
 }
 
-func (o ColorBlendOptions) PopulateOutData(cDataPointer unsafe.Pointer) (next unsafe.Pointer, err error) {
+func (o ColorBlendOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
 	createInfo := (*C.VkPipelineColorBlendStateCreateInfo)(cDataPointer)
 	return createInfo.pNext, nil
 }

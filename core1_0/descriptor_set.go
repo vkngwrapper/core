@@ -48,7 +48,7 @@ func (o DescriptorSetOptions) PopulateCPointer(allocator *cgoparam.Allocator, pr
 	return preallocatedPointer, nil
 }
 
-func (o DescriptorSetOptions) PopulateOutData(cDataPointer unsafe.Pointer) (next unsafe.Pointer, err error) {
+func (o DescriptorSetOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
 	createInfo := (*C.VkDescriptorSetAllocateInfo)(cDataPointer)
 	return createInfo.pNext, nil
 }
@@ -186,7 +186,7 @@ func (o WriteDescriptorSetOptions) PopulateCPointer(allocator *cgoparam.Allocato
 	return preallocatedPointer, nil
 }
 
-func (o WriteDescriptorSetOptions) PopulateOutData(cDataPointer unsafe.Pointer) (next unsafe.Pointer, err error) {
+func (o WriteDescriptorSetOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
 	createInfo := (*C.VkWriteDescriptorSet)(cDataPointer)
 	return createInfo.pNext, nil
 }
@@ -227,7 +227,7 @@ func (o CopyDescriptorSetOptions) PopulateCPointer(allocator *cgoparam.Allocator
 	return preallocatedPointer, nil
 }
 
-func (o CopyDescriptorSetOptions) PopulateOutData(cDataPointer unsafe.Pointer) (next unsafe.Pointer, err error) {
+func (o CopyDescriptorSetOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
 	createInfo := (*C.VkCopyDescriptorSet)(cDataPointer)
 	return createInfo.pNext, nil
 }

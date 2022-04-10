@@ -66,7 +66,7 @@ func (o PipelineLayoutOptions) PopulateCPointer(allocator *cgoparam.Allocator, p
 	return preallocatedPointer, nil
 }
 
-func (o PipelineLayoutOptions) PopulateOutData(cDataPointer unsafe.Pointer) (next unsafe.Pointer, err error) {
+func (o PipelineLayoutOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
 	createInfo := (*C.VkPipelineLayoutCreateInfo)(cDataPointer)
 	return createInfo.pNext, nil
 }

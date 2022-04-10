@@ -27,7 +27,7 @@ func (o SemaphoreOptions) PopulateCPointer(allocator *cgoparam.Allocator, preall
 	return unsafe.Pointer(createInfo), nil
 }
 
-func (o SemaphoreOptions) PopulateOutData(cDataPointer unsafe.Pointer) (next unsafe.Pointer, err error) {
+func (o SemaphoreOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
 	createInfo := (*C.VkSemaphoreCreateInfo)(cDataPointer)
 	return createInfo.pNext, nil
 }

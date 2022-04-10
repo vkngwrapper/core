@@ -65,7 +65,7 @@ func (o InputAssemblyOptions) PopulateCPointer(allocator *cgoparam.Allocator, pr
 	return preallocatedPointer, nil
 }
 
-func (o InputAssemblyOptions) PopulateOutData(cDataPointer unsafe.Pointer) (next unsafe.Pointer, err error) {
+func (o InputAssemblyOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
 	createInfo := (*C.VkPipelineInputAssemblyStateCreateInfo)(cDataPointer)
 	return createInfo.pNext, nil
 }

@@ -130,7 +130,7 @@ func (o SamplerOptions) PopulateCPointer(allocator *cgoparam.Allocator, prealloc
 	return preallocatedPointer, nil
 }
 
-func (o SamplerOptions) PopulateOutData(cDataPointer unsafe.Pointer) (next unsafe.Pointer, err error) {
+func (o SamplerOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
 	createInfo := (*C.VkSamplerCreateInfo)(cDataPointer)
 	return createInfo.pNext, nil
 }

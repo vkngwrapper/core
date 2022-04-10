@@ -198,7 +198,7 @@ func (o RenderPassOptions) PopulateCPointer(allocator *cgoparam.Allocator, preal
 	return unsafe.Pointer(createInfo), nil
 }
 
-func (o RenderPassOptions) PopulateOutData(cDataPointer unsafe.Pointer) (next unsafe.Pointer, err error) {
+func (o RenderPassOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
 	createInfo := (*C.VkRenderPassCreateInfo)(cDataPointer)
 	return createInfo.pNext, nil
 }

@@ -71,7 +71,7 @@ func (o InstanceOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallo
 	return preallocatedPointer, nil
 }
 
-func (o InstanceOptions) PopulateOutData(cDataPointer unsafe.Pointer) (next unsafe.Pointer, err error) {
+func (o InstanceOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
 	createInfo := (*C.VkInstanceCreateInfo)(cDataPointer)
 	return createInfo.pNext, nil
 }

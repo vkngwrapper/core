@@ -112,7 +112,7 @@ func (o DepthStencilOptions) PopulateCPointer(allocator *cgoparam.Allocator, pre
 	return preallocatedPointer, nil
 }
 
-func (o DepthStencilOptions) PopulateOutData(cDataPointer unsafe.Pointer) (next unsafe.Pointer, err error) {
+func (o DepthStencilOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
 	createInfo := (*C.VkPipelineDepthStencilStateCreateInfo)(cDataPointer)
 	return createInfo.pNext, nil
 }

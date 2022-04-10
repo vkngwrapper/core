@@ -77,7 +77,7 @@ func (o DeviceOptions) PopulateCPointer(allocator *cgoparam.Allocator, prealloca
 	return unsafe.Pointer(createInfo), nil
 }
 
-func (o DeviceOptions) PopulateOutData(cDataPointer unsafe.Pointer) (next unsafe.Pointer, err error) {
+func (o DeviceOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
 	createInfo := (*C.VkDeviceCreateInfo)(cDataPointer)
 	return createInfo.pNext, nil
 }

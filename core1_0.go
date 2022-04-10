@@ -190,7 +190,7 @@ func (l *VulkanLoader1_0) CreateBufferView(device core1_0.Device, allocationCall
 		return nil, res, err
 	}
 
-	bufferView := objects.CreateBufferView(device, bufferViewHandle)
+	bufferView := objects.CreateBufferView(device.Driver(), device.Handle(), bufferViewHandle, device.APIVersion())
 
 	return bufferView, res, nil
 }
@@ -241,7 +241,7 @@ func (l *VulkanLoader1_0) CreateDevice(physicalDevice core1_0.PhysicalDevice, al
 	if err != nil {
 		return nil, core1_0.VKErrorUnknown, err
 	}
-	
+
 	device := objects.CreateDevice(deviceDriver, deviceHandle, physicalDevice.APIVersion())
 
 	return device, res, nil
@@ -262,7 +262,7 @@ func (l *VulkanLoader1_0) CreateShaderModule(device core1_0.Device, allocationCa
 		return nil, res, err
 	}
 
-	shaderModule := objects.CreateShaderModule(device, shaderModuleHandle)
+	shaderModule := objects.CreateShaderModule(device.Driver(), device.Handle(), shaderModuleHandle, device.APIVersion())
 
 	return shaderModule, res, nil
 }
@@ -283,7 +283,7 @@ func (l *VulkanLoader1_0) CreateImageView(device core1_0.Device, allocationCallb
 		return nil, res, err
 	}
 
-	imageView := objects.CreateImageView(device, imageViewHandle)
+	imageView := objects.CreateImageView(device.Driver(), device.Handle(), imageViewHandle, device.APIVersion())
 
 	return imageView, res, nil
 }
@@ -304,7 +304,7 @@ func (l *VulkanLoader1_0) CreateSemaphore(device core1_0.Device, allocationCallb
 		return nil, res, err
 	}
 
-	semaphore := objects.CreateSemaphore(device, semaphoreHandle)
+	semaphore := objects.CreateSemaphore(device.Driver(), device.Handle(), semaphoreHandle, device.APIVersion())
 
 	return semaphore, res, nil
 }
@@ -325,7 +325,7 @@ func (l *VulkanLoader1_0) CreateFence(device core1_0.Device, allocationCallbacks
 		return nil, res, err
 	}
 
-	fence := objects.CreateFence(device, fenceHandle)
+	fence := objects.CreateFence(device.Driver(), device.Handle(), fenceHandle, device.APIVersion())
 
 	return fence, res, nil
 }
@@ -346,7 +346,7 @@ func (l *VulkanLoader1_0) CreateBuffer(device core1_0.Device, allocationCallback
 		return nil, res, err
 	}
 
-	buffer := objects.CreateBuffer(device, bufferHandle)
+	buffer := objects.CreateBuffer(device.Driver(), device.Handle(), bufferHandle, device.APIVersion())
 
 	return buffer, res, nil
 }
@@ -367,7 +367,7 @@ func (l *VulkanLoader1_0) CreateDescriptorSetLayout(device core1_0.Device, alloc
 		return nil, res, err
 	}
 
-	descriptorSetLayout := objects.CreateDescriptorSetLayout(device, descriptorSetLayoutHandle)
+	descriptorSetLayout := objects.CreateDescriptorSetLayout(device.Driver(), device.Handle(), descriptorSetLayoutHandle, device.APIVersion())
 
 	return descriptorSetLayout, res, nil
 }
@@ -388,7 +388,7 @@ func (l *VulkanLoader1_0) CreateDescriptorPool(device core1_0.Device, allocation
 		return nil, res, err
 	}
 
-	descriptorPool := objects.CreateDescriptorPool(device, descriptorPoolHandle)
+	descriptorPool := objects.CreateDescriptorPool(device.Driver(), device.Handle(), descriptorPoolHandle, device.APIVersion())
 
 	return descriptorPool, res, nil
 }
@@ -408,7 +408,7 @@ func (l *VulkanLoader1_0) CreateCommandPool(device core1_0.Device, allocationCal
 		return nil, res, err
 	}
 
-	commandPool := objects.CreateCommandPool(device, cmdPoolHandle)
+	commandPool := objects.CreateCommandPool(device.Driver(), device.Handle(), cmdPoolHandle, device.APIVersion())
 
 	return commandPool, res, nil
 }
@@ -428,7 +428,7 @@ func (l *VulkanLoader1_0) CreateEvent(device core1_0.Device, allocationCallbacks
 		return nil, res, err
 	}
 
-	event := objects.CreateEvent(device, eventHandle)
+	event := objects.CreateEvent(device.Driver(), device.Handle(), eventHandle, device.APIVersion())
 
 	return event, res, nil
 }
@@ -449,7 +449,7 @@ func (l *VulkanLoader1_0) CreateFrameBuffer(device core1_0.Device, allocationCal
 		return nil, res, err
 	}
 
-	framebuffer := objects.CreateFramebuffer(device, framebufferHandle)
+	framebuffer := objects.CreateFramebuffer(device.Driver(), device.Handle(), framebufferHandle, device.APIVersion())
 
 	return framebuffer, res, nil
 }
@@ -481,7 +481,7 @@ func (l *VulkanLoader1_0) CreateGraphicsPipelines(device core1_0.Device, pipelin
 	pipelineSlice := ([]driver.VkPipeline)(unsafe.Slice(pipelinePtr, pipelineCount))
 
 	for i := 0; i < pipelineCount; i++ {
-		pipeline := objects.CreatePipeline(device, pipelineSlice[i])
+		pipeline := objects.CreatePipeline(device.Driver(), device.Handle(), pipelineSlice[i], device.APIVersion())
 		output = append(output, pipeline)
 	}
 
@@ -515,7 +515,7 @@ func (l *VulkanLoader1_0) CreateComputePipelines(device core1_0.Device, pipeline
 	pipelineSlice := ([]driver.VkPipeline)(unsafe.Slice(pipelinePtr, pipelineCount))
 
 	for i := 0; i < pipelineCount; i++ {
-		pipeline := objects.CreatePipeline(device, pipelineSlice[i])
+		pipeline := objects.CreatePipeline(device.Driver(), device.Handle(), pipelineSlice[i], device.APIVersion())
 
 		output = append(output, pipeline)
 	}
@@ -538,7 +538,7 @@ func (l *VulkanLoader1_0) CreateImage(device core1_0.Device, allocationCallbacks
 		return nil, res, err
 	}
 
-	image := objects.CreateImage(device, imageHandle)
+	image := objects.CreateImage(device.Driver(), device.Handle(), imageHandle, device.APIVersion())
 
 	return image, res, nil
 }
@@ -558,7 +558,7 @@ func (l *VulkanLoader1_0) CreatePipelineCache(device core1_0.Device, allocationC
 		return nil, res, err
 	}
 
-	pipelineCache := objects.CreatePipelineCache(device, pipelineCacheHandle)
+	pipelineCache := objects.CreatePipelineCache(device.Driver(), device.Handle(), pipelineCacheHandle, device.APIVersion())
 
 	return pipelineCache, res, nil
 }
@@ -578,7 +578,7 @@ func (l *VulkanLoader1_0) CreatePipelineLayout(device core1_0.Device, allocation
 		return nil, res, err
 	}
 
-	pipelineLayout := objects.CreatePipelineLayout(device, pipelineLayoutHandle)
+	pipelineLayout := objects.CreatePipelineLayout(device.Driver(), device.Handle(), pipelineLayoutHandle, device.APIVersion())
 
 	return pipelineLayout, res, nil
 }
@@ -599,7 +599,7 @@ func (l *VulkanLoader1_0) CreateQueryPool(device core1_0.Device, allocationCallb
 		return nil, res, err
 	}
 
-	queryPool := objects.CreateQueryPool(device, queryPoolHandle)
+	queryPool := objects.CreateQueryPool(device.Driver(), device.Handle(), queryPoolHandle, device.APIVersion())
 	return queryPool, res, nil
 }
 
@@ -619,7 +619,7 @@ func (l *VulkanLoader1_0) CreateRenderPass(device core1_0.Device, allocationCall
 		return nil, res, err
 	}
 
-	renderPass := objects.CreateRenderPass(device, renderPassHandle)
+	renderPass := objects.CreateRenderPass(device.Driver(), device.Handle(), renderPassHandle, device.APIVersion())
 
 	return renderPass, res, nil
 }
@@ -640,7 +640,7 @@ func (l *VulkanLoader1_0) CreateSampler(device core1_0.Device, allocationCallbac
 		return nil, res, err
 	}
 
-	sampler := objects.CreateSampler(device, samplerHandle)
+	sampler := objects.CreateSampler(device.Driver(), device.Handle(), samplerHandle, device.APIVersion())
 
 	return sampler, res, nil
 }
@@ -717,7 +717,7 @@ func (l *VulkanLoader1_0) AllocateCommandBuffers(o core1_0.CommandBufferOptions)
 	var result []core1_0.CommandBuffer
 
 	for i := 0; i < o.BufferCount; i++ {
-		commandBuffer := objects.CreateCommandBuffer(o.CommandPool, commandBufferArray[i])
+		commandBuffer := objects.CreateCommandBuffer(o.CommandPool.Driver(), o.CommandPool.Handle(), device, commandBufferArray[i], o.CommandPool.APIVersion())
 
 		result = append(result, commandBuffer)
 	}
@@ -753,7 +753,7 @@ func (l *VulkanLoader1_0) AllocateDescriptorSets(o core1_0.DescriptorSetOptions)
 	descriptorSetSlice := ([]driver.VkDescriptorSet)(unsafe.Slice(descriptorSets, setCount))
 
 	for i := 0; i < setCount; i++ {
-		descriptorSet := objects.CreateDescriptorSet(o.DescriptorPool, descriptorSetSlice[i])
+		descriptorSet := objects.CreateDescriptorSet(poolDriver, device, o.DescriptorPool.Handle(), descriptorSetSlice[i], o.DescriptorPool.APIVersion())
 
 		sets = append(sets, descriptorSet)
 	}
@@ -821,7 +821,7 @@ func (l *VulkanLoader1_0) GetQueue(device core1_0.Device, queueFamilyIndex int, 
 
 	device.Driver().VkGetDeviceQueue(device.Handle(), driver.Uint32(queueFamilyIndex), driver.Uint32(queueIndex), &queueHandle)
 
-	queue := objects.CreateQueue(device, queueHandle)
+	queue := objects.CreateQueue(device.Driver(), device.Handle(), queueHandle, device.APIVersion())
 
 	return queue
 }
@@ -845,7 +845,7 @@ func (l *VulkanLoader1_0) AllocateMemory(device core1_0.Device, allocationCallba
 		return nil, res, err
 	}
 
-	deviceMemory := objects.CreateDeviceMemory(device, deviceMemoryHandle, o.AllocationSize)
+	deviceMemory := objects.CreateDeviceMemory(deviceDriver, deviceHandle, deviceMemoryHandle, device.APIVersion(), o.AllocationSize)
 
 	return deviceMemory, res, nil
 }
@@ -892,7 +892,7 @@ func (l *VulkanLoader1_0) PhysicalDevices(instance core1_0.Instance) ([]core1_0.
 		}
 
 		version := instance.APIVersion().Min(properties.APIVersion)
-		physicalDevice := objects.CreatePhysicalDevice(instance, deviceHandles[ind], version)
+		physicalDevice := objects.CreatePhysicalDevice(instance.Driver(), instance.Handle(), deviceHandles[ind], version)
 
 		devices = append(devices, physicalDevice)
 	}

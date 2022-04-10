@@ -46,7 +46,7 @@ func (o ShaderModuleOptions) PopulateCPointer(allocator *cgoparam.Allocator, pre
 	return preallocatedPointer, nil
 }
 
-func (o ShaderModuleOptions) PopulateOutData(cDataPointer unsafe.Pointer) (next unsafe.Pointer, err error) {
+func (o ShaderModuleOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
 	createInfo := (*C.VkShaderModuleCreateInfo)(cDataPointer)
 	return createInfo.pNext, nil
 }

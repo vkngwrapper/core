@@ -31,7 +31,7 @@ func (o MemoryBarrierOptions) PopulateCPointer(allocator *cgoparam.Allocator, pr
 	return preallocatedPointer, nil
 }
 
-func (o MemoryBarrierOptions) PopulateOutData(cDataPointer unsafe.Pointer) (next unsafe.Pointer, err error) {
+func (o MemoryBarrierOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
 	createInfo := (*C.VkMemoryBarrier)(cDataPointer)
 	return createInfo.pNext, nil
 }
@@ -69,7 +69,7 @@ func (o BufferMemoryBarrierOptions) PopulateCPointer(allocator *cgoparam.Allocat
 	return preallocatedPointer, nil
 }
 
-func (o BufferMemoryBarrierOptions) PopulateOutData(cDataPointer unsafe.Pointer) (next unsafe.Pointer, err error) {
+func (o BufferMemoryBarrierOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
 	createInfo := (*C.VkBufferMemoryBarrier)(cDataPointer)
 	return createInfo.pNext, nil
 }
@@ -113,7 +113,7 @@ func (o ImageMemoryBarrierOptions) PopulateCPointer(allocator *cgoparam.Allocato
 	return preallocatedPointer, nil
 }
 
-func (o ImageMemoryBarrierOptions) PopulateOutData(cDataPointer unsafe.Pointer) (next unsafe.Pointer, err error) {
+func (o ImageMemoryBarrierOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
 	createInfo := (*C.VkImageMemoryBarrier)(cDataPointer)
 	return createInfo.pNext, nil
 }

@@ -178,7 +178,7 @@ func (o GraphicsPipelineOptions) PopulateCPointer(allocator *cgoparam.Allocator,
 	return preallocatedPointer, nil
 }
 
-func (o GraphicsPipelineOptions) PopulateOutData(cDataPointer unsafe.Pointer) (next unsafe.Pointer, err error) {
+func (o GraphicsPipelineOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
 	createInfo := (*C.VkGraphicsPipelineCreateInfo)(cDataPointer)
 	return createInfo.pNext, nil
 }
@@ -216,7 +216,7 @@ func (o ComputePipelineOptions) PopulateCPointer(allocator *cgoparam.Allocator, 
 	return preallocatedPointer, nil
 }
 
-func (o ComputePipelineOptions) PopulateOutData(cDataPointer unsafe.Pointer) (next unsafe.Pointer, err error) {
+func (o ComputePipelineOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
 	createInfo := (*C.VkComputePipelineCreateInfo)(cDataPointer)
 	return createInfo.pNext, nil
 }
