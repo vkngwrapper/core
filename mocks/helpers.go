@@ -83,6 +83,13 @@ func EasyMockFence(ctrl *gomock.Controller) *MockFence {
 	return fence
 }
 
+func EasyMockFramebuffer(ctrl *gomock.Controller) *MockFramebuffer {
+	framebuffer := NewMockFramebuffer(ctrl)
+	framebuffer.EXPECT().Handle().Return(NewFakeFramebufferHandle()).AnyTimes()
+
+	return framebuffer
+}
+
 func EasyMockImage(ctrl *gomock.Controller) *MockImage {
 	image := NewMockImage(ctrl)
 	image.EXPECT().Handle().Return(NewFakeImageHandle()).AnyTimes()
