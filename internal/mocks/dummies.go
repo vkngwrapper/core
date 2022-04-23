@@ -127,9 +127,9 @@ func EasyDummyDevice(t *testing.T, ctrl *gomock.Controller, loader core.Loader) 
 		})
 
 	device, _, err := loader.CreateDevice(mocks.EasyMockPhysicalDevice(ctrl, mockDriver), nil, core1_0.DeviceOptions{
-		QueueFamilies: []core1_0.QueueFamilyOptions{
+		QueueFamilies: []core1_0.DeviceQueueOptions{
 			{
-				QueuePriorities: []float32{1},
+				CreatedQueuePriorities: []float32{1},
 			},
 		},
 	})
