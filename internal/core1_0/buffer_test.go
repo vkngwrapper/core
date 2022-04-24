@@ -47,7 +47,7 @@ func TestBuffer_Create_NilIndices(t *testing.T) {
 
 	buffer, res, err := loader.CreateBuffer(device, nil, core1_0.BufferOptions{
 		BufferSize:         5,
-		Usage:              core1_0.UsageVertexBuffer | core1_0.UsageTransferSrc,
+		Usage:              core1_0.BufferUsageVertexBuffer | core1_0.BufferUsageTransferSrc,
 		SharingMode:        core1_0.SharingExclusive,
 		QueueFamilyIndices: []int{},
 	})
@@ -93,7 +93,7 @@ func TestBasicBuffer_Create_QueueFamilyIndices(t *testing.T) {
 
 	buffer, res, err := loader.CreateBuffer(device, nil, core1_0.BufferOptions{
 		BufferSize:         5,
-		Usage:              core1_0.UsageVertexBuffer | core1_0.UsageTransferSrc,
+		Usage:              core1_0.BufferUsageVertexBuffer | core1_0.BufferUsageTransferSrc,
 		SharingMode:        core1_0.SharingExclusive,
 		QueueFamilyIndices: []int{1, 2, 3, 4},
 	})

@@ -86,6 +86,20 @@ func (f BeginInfoFlags) String() string {
 
 ////
 
+type BufferCreateFlags int32
+
+var bufferCreateFlagsMapping = NewFlagStringMapping[BufferCreateFlags]()
+
+func (f BufferCreateFlags) Register(str string) {
+	bufferCreateFlagsMapping.Register(f, str)
+}
+
+func (f BufferCreateFlags) String() string {
+	return bufferCreateFlagsMapping.FlagsToString(f)
+}
+
+////
+
 type BufferUsages int32
 
 var bufferUsagesMapping = NewFlagStringMapping[BufferUsages]()
