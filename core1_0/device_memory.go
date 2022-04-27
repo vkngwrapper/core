@@ -17,14 +17,14 @@ func (f MemoryMapFlags) String() string {
 	return "None"
 }
 
-type DeviceMemoryOptions struct {
+type MemoryAllocateOptions struct {
 	AllocationSize  int
 	MemoryTypeIndex int
 
 	common.HaveNext
 }
 
-func (o DeviceMemoryOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o MemoryAllocateOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == unsafe.Pointer(nil) {
 		preallocatedPointer = allocator.Malloc(C.sizeof_struct_VkMemoryAllocateInfo)
 	}
@@ -38,7 +38,7 @@ func (o DeviceMemoryOptions) PopulateCPointer(allocator *cgoparam.Allocator, pre
 	return unsafe.Pointer(createInfo), nil
 }
 
-func (o DeviceMemoryOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
+func (o MemoryAllocateOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
 	createInfo := (*C.VkMemoryAllocateInfo)(cDataPointer)
 	return createInfo.pNext, nil
 }

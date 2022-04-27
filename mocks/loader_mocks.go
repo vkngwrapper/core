@@ -70,7 +70,7 @@ func (mr *MockLoaderMockRecorder) AllocateDescriptorSets(o interface{}) *gomock.
 }
 
 // AllocateMemory mocks base method.
-func (m *MockLoader) AllocateMemory(device core1_0.Device, allocationCallbacks *driver.AllocationCallbacks, o core1_0.DeviceMemoryOptions) (core1_0.DeviceMemory, common.VkResult, error) {
+func (m *MockLoader) AllocateMemory(device core1_0.Device, allocationCallbacks *driver.AllocationCallbacks, o core1_0.MemoryAllocateOptions) (core1_0.DeviceMemory, common.VkResult, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "AllocateMemory", device, allocationCallbacks, o)
 	ret0, _ := ret[0].(core1_0.DeviceMemory)

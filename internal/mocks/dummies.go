@@ -147,7 +147,7 @@ func EasyDummyDeviceMemory(t *testing.T, loader core.Loader, device core1_0.Devi
 			return core1_0.VKSuccess, nil
 		})
 
-	memory, _, err := loader.AllocateMemory(device, nil, core1_0.DeviceMemoryOptions{
+	memory, _, err := loader.AllocateMemory(device, nil, core1_0.MemoryAllocateOptions{
 		AllocationSize: size,
 	})
 	require.NoError(t, err)

@@ -826,7 +826,7 @@ func (l *VulkanLoader1_0) GetQueue(device core1_0.Device, queueFamilyIndex int, 
 	return queue
 }
 
-func (l *VulkanLoader1_0) AllocateMemory(device core1_0.Device, allocationCallbacks *driver.AllocationCallbacks, o core1_0.DeviceMemoryOptions) (core1_0.DeviceMemory, common.VkResult, error) {
+func (l *VulkanLoader1_0) AllocateMemory(device core1_0.Device, allocationCallbacks *driver.AllocationCallbacks, o core1_0.MemoryAllocateOptions) (core1_0.DeviceMemory, common.VkResult, error) {
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 

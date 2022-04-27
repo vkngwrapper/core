@@ -155,7 +155,7 @@ func TestVulkanDeviceMemory_AllocateAndFreeMemory(t *testing.T) {
 		})
 	mockDriver.EXPECT().VkFreeMemory(device.Handle(), memoryHandle, nil)
 
-	memory, _, err := loader.AllocateMemory(device, nil, core1_0.DeviceMemoryOptions{
+	memory, _, err := loader.AllocateMemory(device, nil, core1_0.MemoryAllocateOptions{
 		AllocationSize:  7,
 		MemoryTypeIndex: 3,
 	})
