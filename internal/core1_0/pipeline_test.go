@@ -319,13 +319,13 @@ func TestVulkanLoader1_0_CreateGraphicsPipelines_VertexInputSuccess(t *testing.T
 					{
 						Location: 1,
 						Binding:  3,
-						Format:   core1_0.DataFormatA1R5G5B5UnsignedNormalized,
+						Format:   core1_0.DataFormatA1R5G5B5UnsignedNormalizedPacked,
 						Offset:   5,
 					},
 					{
 						Location: 7,
 						Binding:  11,
-						Format:   core1_0.DataFormatA2B10G10R10UnsignedNormalized,
+						Format:   core1_0.DataFormatA2B10G10R10UnsignedNormalizedPacked,
 						Offset:   13,
 					},
 				},

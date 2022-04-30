@@ -603,7 +603,7 @@ func TestVulkanPhysicalDevice_FormatProperties(t *testing.T) {
 			*(*uint32)(unsafe.Pointer(val.FieldByName("bufferFeatures").UnsafeAddr())) = uint32(0x00000010)        // VK_FORMAT_FEATURE_STORAGE_TEXEL_BUFFER_BIT
 		})
 
-	props := physicalDevice.FormatProperties(core1_0.DataFormatA8B8G8R8SRGB)
+	props := physicalDevice.FormatProperties(core1_0.DataFormatA8B8G8R8SRGBPacked)
 	require.NotNil(t, props)
 	require.Equal(t, core1_0.FormatFeatureColorAttachmentBlend, props.OptimalTilingFeatures)
 	require.Equal(t, core1_0.FormatFeatureBlitSource, props.LinearTilingFeatures)
@@ -649,7 +649,7 @@ func TestVulkanPhysicalDevice_ImageFormatProperties(t *testing.T) {
 			return core1_0.VKSuccess, nil
 		})
 
-	props, _, err := physicalDevice.ImageFormatProperties(core1_0.DataFormatA8B8G8R8SRGB, core1_0.ImageType2D, core1_0.ImageTilingLinear, core1_0.ImageUsageStorage, core1_0.ImageCreateSparseAliased)
+	props, _, err := physicalDevice.ImageFormatProperties(core1_0.DataFormatA8B8G8R8SRGBPacked, core1_0.ImageType2D, core1_0.ImageTilingLinear, core1_0.ImageUsageStorage, core1_0.ImageCreateSparseAliased)
 	require.NoError(t, err)
 	require.NotNil(t, props)
 	require.Equal(t, 1, props.MaxMipLevels)
@@ -716,7 +716,7 @@ func TestVulkanPhysicalDevice_SparseImageFormatProperties(t *testing.T) {
 			*(*uint32)(unsafe.Pointer(granularity.FieldByName("depth").UnsafeAddr())) = uint32(13)
 		})
 
-	props := physicalDevice.SparseImageFormatProperties(core1_0.DataFormatA2B10G10R10UnsignedInt, core1_0.ImageType3D, core1_0.Samples8, core1_0.ImageUsageInputAttachment, core1_0.ImageTilingLinear)
+	props := physicalDevice.SparseImageFormatProperties(core1_0.DataFormatA2B10G10R10UnsignedIntPacked, core1_0.ImageType3D, core1_0.Samples8, core1_0.ImageUsageInputAttachment, core1_0.ImageTilingLinear)
 	require.Len(t, props, 2)
 	require.Equal(t, core1_0.AspectStencil, props[0].AspectMask)
 	require.Equal(t, core1_0.SparseImageFormatNonstandardBlockSize|core1_0.SparseImageFormatSingleMipTail, props[0].Flags)

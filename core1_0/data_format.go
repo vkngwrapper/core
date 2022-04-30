@@ -8,16 +8,16 @@ import "C"
 import "github.com/CannibalVox/VKng/core/common"
 
 const (
-	DataFormatUndefined              common.DataFormat = C.VK_FORMAT_UNDEFINED
-	DataFormatR4G4UnsignedNormalized common.DataFormat = C.VK_FORMAT_R4G4_UNORM_PACK8
+	DataFormatUndefined                    common.DataFormat = C.VK_FORMAT_UNDEFINED
+	DataFormatR4G4UnsignedNormalizedPacked common.DataFormat = C.VK_FORMAT_R4G4_UNORM_PACK8
 
-	DataFormatR4G4B4A4UnsignedNormalized common.DataFormat = C.VK_FORMAT_R4G4B4A4_UNORM_PACK16
-	DataFormatB4G4R4A4UnsignedNormalized common.DataFormat = C.VK_FORMAT_B4G4R4A4_UNORM_PACK16
-	DataFormatR5G6B5UnsignedNormalized   common.DataFormat = C.VK_FORMAT_R5G6B5_UNORM_PACK16
-	DataFormatB5G6R5UnsignedNormalized   common.DataFormat = C.VK_FORMAT_B5G6R5_UNORM_PACK16
-	DataFormatR5G5B5A1UnsignedNormalized common.DataFormat = C.VK_FORMAT_R5G5B5A1_UNORM_PACK16
-	DataFormatB5G5R5A1UnsignedNormalized common.DataFormat = C.VK_FORMAT_B5G5R5A1_UNORM_PACK16
-	DataFormatA1R5G5B5UnsignedNormalized common.DataFormat = C.VK_FORMAT_A1R5G5B5_UNORM_PACK16
+	DataFormatR4G4B4A4UnsignedNormalizedPacked common.DataFormat = C.VK_FORMAT_R4G4B4A4_UNORM_PACK16
+	DataFormatB4G4R4A4UnsignedNormalizedPacked common.DataFormat = C.VK_FORMAT_B4G4R4A4_UNORM_PACK16
+	DataFormatR5G6B5UnsignedNormalizedPacked   common.DataFormat = C.VK_FORMAT_R5G6B5_UNORM_PACK16
+	DataFormatB5G6R5UnsignedNormalizedPacked   common.DataFormat = C.VK_FORMAT_B5G6R5_UNORM_PACK16
+	DataFormatR5G5B5A1UnsignedNormalizedPacked common.DataFormat = C.VK_FORMAT_R5G5B5A1_UNORM_PACK16
+	DataFormatB5G5R5A1UnsignedNormalizedPacked common.DataFormat = C.VK_FORMAT_B5G5R5A1_UNORM_PACK16
+	DataFormatA1R5G5B5UnsignedNormalizedPacked common.DataFormat = C.VK_FORMAT_A1R5G5B5_UNORM_PACK16
 
 	DataFormatR8UnsignedNormalized common.DataFormat = C.VK_FORMAT_R8_UNORM
 	DataFormatR8SignedNormalized   common.DataFormat = C.VK_FORMAT_R8_SNORM
@@ -67,27 +67,27 @@ const (
 	DataFormatB8G8R8A8SignedInt          common.DataFormat = C.VK_FORMAT_B8G8R8A8_SINT
 	DataFormatB8G8R8A8SRGB               common.DataFormat = C.VK_FORMAT_B8G8R8A8_SRGB
 
-	DataFormatA8B8G8R8UnsignedNormalized common.DataFormat = C.VK_FORMAT_A8B8G8R8_UNORM_PACK32
-	DataFormatA8B8G8R8SignedNormalized   common.DataFormat = C.VK_FORMAT_A8B8G8R8_SNORM_PACK32
-	DataFormatA8B8G8R8UnsignedScaled     common.DataFormat = C.VK_FORMAT_A8B8G8R8_USCALED_PACK32
-	DataFormatA8B8G8R8SignedScaled       common.DataFormat = C.VK_FORMAT_A8B8G8R8_SSCALED_PACK32
-	DataFormatA8B8G8R8UnsignedInt        common.DataFormat = C.VK_FORMAT_A8B8G8R8_UINT_PACK32
-	DataFormatA8B8G8R8SignedInt          common.DataFormat = C.VK_FORMAT_A8B8G8R8_SINT_PACK32
-	DataFormatA8B8G8R8SRGB               common.DataFormat = C.VK_FORMAT_A8B8G8R8_SRGB_PACK32
+	DataFormatA8B8G8R8UnsignedNormalizedPacked common.DataFormat = C.VK_FORMAT_A8B8G8R8_UNORM_PACK32
+	DataFormatA8B8G8R8SignedNormalizedPacked   common.DataFormat = C.VK_FORMAT_A8B8G8R8_SNORM_PACK32
+	DataFormatA8B8G8R8UnsignedScaledPacked     common.DataFormat = C.VK_FORMAT_A8B8G8R8_USCALED_PACK32
+	DataFormatA8B8G8R8SignedScaledPacked       common.DataFormat = C.VK_FORMAT_A8B8G8R8_SSCALED_PACK32
+	DataFormatA8B8G8R8UnsignedIntPacked        common.DataFormat = C.VK_FORMAT_A8B8G8R8_UINT_PACK32
+	DataFormatA8B8G8R8SignedIntPacked          common.DataFormat = C.VK_FORMAT_A8B8G8R8_SINT_PACK32
+	DataFormatA8B8G8R8SRGBPacked               common.DataFormat = C.VK_FORMAT_A8B8G8R8_SRGB_PACK32
 
-	DataFormatA2R10G10B10UnsignedNormalized common.DataFormat = C.VK_FORMAT_A2R10G10B10_UNORM_PACK32
-	DataFormatA2R10G10B10SignedNormalized   common.DataFormat = C.VK_FORMAT_A2R10G10B10_SNORM_PACK32
-	DataFormatA2R10G10B10UnsignedScaled     common.DataFormat = C.VK_FORMAT_A2R10G10B10_USCALED_PACK32
-	DataFormatA2R10G10B10SignedScaled       common.DataFormat = C.VK_FORMAT_A2R10G10B10_SSCALED_PACK32
-	DataFormatA2R10G10B10UnsignedInt        common.DataFormat = C.VK_FORMAT_A2R10G10B10_UINT_PACK32
-	DataFormatA2R10G10B10SignedInt          common.DataFormat = C.VK_FORMAT_A2R10G10B10_SINT_PACK32
+	DataFormatA2R10G10B10UnsignedNormalizedPacked common.DataFormat = C.VK_FORMAT_A2R10G10B10_UNORM_PACK32
+	DataFormatA2R10G10B10SignedNormalizedPacked   common.DataFormat = C.VK_FORMAT_A2R10G10B10_SNORM_PACK32
+	DataFormatA2R10G10B10UnsignedScaledPacked     common.DataFormat = C.VK_FORMAT_A2R10G10B10_USCALED_PACK32
+	DataFormatA2R10G10B10SignedScaledPacked       common.DataFormat = C.VK_FORMAT_A2R10G10B10_SSCALED_PACK32
+	DataFormatA2R10G10B10UnsignedIntPacked        common.DataFormat = C.VK_FORMAT_A2R10G10B10_UINT_PACK32
+	DataFormatA2R10G10B10SignedIntPacked          common.DataFormat = C.VK_FORMAT_A2R10G10B10_SINT_PACK32
 
-	DataFormatA2B10G10R10UnsignedNormalized common.DataFormat = C.VK_FORMAT_A2B10G10R10_UNORM_PACK32
-	DataFormatA2B10G10R10SignedNormalized   common.DataFormat = C.VK_FORMAT_A2B10G10R10_SNORM_PACK32
-	DataFormatA2B10G10R10UnsignedScaled     common.DataFormat = C.VK_FORMAT_A2B10G10R10_USCALED_PACK32
-	DataFormatA2B10G10R10SignedScaled       common.DataFormat = C.VK_FORMAT_A2B10G10R10_SSCALED_PACK32
-	DataFormatA2B10G10R10UnsignedInt        common.DataFormat = C.VK_FORMAT_A2B10G10R10_UINT_PACK32
-	DataFormatA2B10G10R10SignedInt          common.DataFormat = C.VK_FORMAT_A2B10G10R10_SINT_PACK32
+	DataFormatA2B10G10R10UnsignedNormalizedPacked common.DataFormat = C.VK_FORMAT_A2B10G10R10_UNORM_PACK32
+	DataFormatA2B10G10R10SignedNormalizedPacked   common.DataFormat = C.VK_FORMAT_A2B10G10R10_SNORM_PACK32
+	DataFormatA2B10G10R10UnsignedScaledPacked     common.DataFormat = C.VK_FORMAT_A2B10G10R10_USCALED_PACK32
+	DataFormatA2B10G10R10SignedScaledPacked       common.DataFormat = C.VK_FORMAT_A2B10G10R10_SSCALED_PACK32
+	DataFormatA2B10G10R10UnsignedIntPacked        common.DataFormat = C.VK_FORMAT_A2B10G10R10_UINT_PACK32
+	DataFormatA2B10G10R10SignedIntPacked          common.DataFormat = C.VK_FORMAT_A2B10G10R10_SINT_PACK32
 
 	DataFormatR16UnsignedNormalized common.DataFormat = C.VK_FORMAT_R16_UNORM
 	DataFormatR16SignedNormalized   common.DataFormat = C.VK_FORMAT_R16_SNORM
@@ -147,12 +147,12 @@ const (
 	DataFormatR64G64B64A64SignedInt   common.DataFormat = C.VK_FORMAT_R64G64B64A64_SINT
 	DataFormatR64G64B64A64SignedFloat common.DataFormat = C.VK_FORMAT_R64G64B64A64_SFLOAT
 
-	DataFormatB10G11R11UnsignedFloat  common.DataFormat = C.VK_FORMAT_B10G11R11_UFLOAT_PACK32
-	DataFormatE5B9G9R9UnsignedFloat   common.DataFormat = C.VK_FORMAT_E5B9G9R9_UFLOAT_PACK32
-	DataFormatD16UnsignedNormalized   common.DataFormat = C.VK_FORMAT_D16_UNORM
-	DataFormatD24X8UnsignedNormalized common.DataFormat = C.VK_FORMAT_X8_D24_UNORM_PACK32
-	DataFormatD32SignedFloat          common.DataFormat = C.VK_FORMAT_D32_SFLOAT
-	DataFormatS8UnsignedInt           common.DataFormat = C.VK_FORMAT_S8_UINT
+	DataFormatB10G11R11UnsignedFloatPacked  common.DataFormat = C.VK_FORMAT_B10G11R11_UFLOAT_PACK32
+	DataFormatE5B9G9R9UnsignedFloatPacked   common.DataFormat = C.VK_FORMAT_E5B9G9R9_UFLOAT_PACK32
+	DataFormatD16UnsignedNormalized         common.DataFormat = C.VK_FORMAT_D16_UNORM
+	DataFormatD24X8UnsignedNormalizedPacked common.DataFormat = C.VK_FORMAT_X8_D24_UNORM_PACK32
+	DataFormatD32SignedFloat                common.DataFormat = C.VK_FORMAT_D32_SFLOAT
+	DataFormatS8UnsignedInt                 common.DataFormat = C.VK_FORMAT_S8_UINT
 
 	DataFormatD16UnsignedNormalizedS8UnsignedInt common.DataFormat = C.VK_FORMAT_D16_UNORM_S8_UINT
 	DataFormatD24UnsignedNormalizedS8UnsignedInt common.DataFormat = C.VK_FORMAT_D24_UNORM_S8_UINT
@@ -225,15 +225,15 @@ const (
 
 func init() {
 	DataFormatUndefined.Register("Undefined")
-	DataFormatR4G4UnsignedNormalized.Register("R4G4 Unsigned Normalized")
+	DataFormatR4G4UnsignedNormalizedPacked.Register("R4G4 Unsigned Normalized (Packed)")
 
-	DataFormatR4G4B4A4UnsignedNormalized.Register("R4G4B4A4 Unsigned Normalized")
-	DataFormatB4G4R4A4UnsignedNormalized.Register("B4G4R4A4 Unsigned Normalized")
-	DataFormatR5G6B5UnsignedNormalized.Register("R5G6B5 Unsigned Normalized")
-	DataFormatB5G6R5UnsignedNormalized.Register("B5G6R5 Unsigned Normalized")
-	DataFormatR5G5B5A1UnsignedNormalized.Register("R5G5B5A1 Unsigned Normalized")
-	DataFormatB5G5R5A1UnsignedNormalized.Register("B5G5R5A1 Unsigned Normalized")
-	DataFormatA1R5G5B5UnsignedNormalized.Register("A1R5G5B5 Unsigned Normalized")
+	DataFormatR4G4B4A4UnsignedNormalizedPacked.Register("R4G4B4A4 Unsigned Normalized (Packed)")
+	DataFormatB4G4R4A4UnsignedNormalizedPacked.Register("B4G4R4A4 Unsigned Normalized (Packed)")
+	DataFormatR5G6B5UnsignedNormalizedPacked.Register("R5G6B5 Unsigned Normalized (Packed)")
+	DataFormatB5G6R5UnsignedNormalizedPacked.Register("B5G6R5 Unsigned Normalized (Packed)")
+	DataFormatR5G5B5A1UnsignedNormalizedPacked.Register("R5G5B5A1 Unsigned Normalized (Packed)")
+	DataFormatB5G5R5A1UnsignedNormalizedPacked.Register("B5G5R5A1 Unsigned Normalized (Packed)")
+	DataFormatA1R5G5B5UnsignedNormalizedPacked.Register("A1R5G5B5 Unsigned Normalized (Packed)")
 
 	DataFormatR8UnsignedNormalized.Register("R8 Unsigned Normalized")
 	DataFormatR8SignedNormalized.Register("R8 Signed Normalized")
@@ -283,27 +283,27 @@ func init() {
 	DataFormatB8G8R8A8SignedInt.Register("B8G8R8A8 Signed Int")
 	DataFormatB8G8R8A8SRGB.Register("B8G8R8A8 sRGB")
 
-	DataFormatA8B8G8R8UnsignedNormalized.Register("A8B8G8R8 Unsigned Normalized")
-	DataFormatA8B8G8R8SignedNormalized.Register("A8B8G8R8 Signed Normalized")
-	DataFormatA8B8G8R8UnsignedScaled.Register("A8B8G8R8 Unsigned Scaled")
-	DataFormatA8B8G8R8SignedScaled.Register("A8B8G8R8 Signed Scaled")
-	DataFormatA8B8G8R8UnsignedInt.Register("A8B8G8R8 Unsigned Int")
-	DataFormatA8B8G8R8SignedInt.Register("A8B8G8R8 Signed Int")
-	DataFormatA8B8G8R8SRGB.Register("A8B8G8R8 sRGB")
+	DataFormatA8B8G8R8UnsignedNormalizedPacked.Register("A8B8G8R8 Unsigned Normalized (Packed)")
+	DataFormatA8B8G8R8SignedNormalizedPacked.Register("A8B8G8R8 Signed Normalized (Packed)")
+	DataFormatA8B8G8R8UnsignedScaledPacked.Register("A8B8G8R8 Unsigned Scaled (Packed)")
+	DataFormatA8B8G8R8SignedScaledPacked.Register("A8B8G8R8 Signed Scaled (Packed)")
+	DataFormatA8B8G8R8UnsignedIntPacked.Register("A8B8G8R8 Unsigned Int (Packed)")
+	DataFormatA8B8G8R8SignedIntPacked.Register("A8B8G8R8 Signed Int (Packed)")
+	DataFormatA8B8G8R8SRGBPacked.Register("A8B8G8R8 sRGB (Packed)")
 
-	DataFormatA2R10G10B10UnsignedNormalized.Register("A2R10G10B10 Unsigned Normalized")
-	DataFormatA2R10G10B10SignedNormalized.Register("A2R10G10B10 Signed Normalized")
-	DataFormatA2R10G10B10UnsignedScaled.Register("A2R10G10B10 Unsigned Scaled")
-	DataFormatA2R10G10B10SignedScaled.Register("A2R10G10B10 Signed Scaled")
-	DataFormatA2R10G10B10UnsignedInt.Register("A2R10G10B10 Unsigned Int")
-	DataFormatA2R10G10B10SignedInt.Register("A2R10G10B10 Signed Int")
+	DataFormatA2R10G10B10UnsignedNormalizedPacked.Register("A2R10G10B10 Unsigned Normalized (Packed)")
+	DataFormatA2R10G10B10SignedNormalizedPacked.Register("A2R10G10B10 Signed Normalized (Packed)")
+	DataFormatA2R10G10B10UnsignedScaledPacked.Register("A2R10G10B10 Unsigned Scaled (Packed)")
+	DataFormatA2R10G10B10SignedScaledPacked.Register("A2R10G10B10 Signed Scaled (Packed)")
+	DataFormatA2R10G10B10UnsignedIntPacked.Register("A2R10G10B10 Unsigned Int (Packed)")
+	DataFormatA2R10G10B10SignedIntPacked.Register("A2R10G10B10 Signed Int (Packed)")
 
-	DataFormatA2B10G10R10UnsignedNormalized.Register("A2B10G10R10 Unsigned Normalized")
-	DataFormatA2B10G10R10SignedNormalized.Register("A2B10G10R10 Signed Normalized")
-	DataFormatA2B10G10R10UnsignedScaled.Register("A2B10G10R10 Unsigned Scaled")
-	DataFormatA2B10G10R10SignedScaled.Register("A2B10G10R10 Signed Scaled")
-	DataFormatA2B10G10R10UnsignedInt.Register("A2B10G10R10 Unsigned Int")
-	DataFormatA2B10G10R10SignedInt.Register("A2B10G10R10 Signed Int")
+	DataFormatA2B10G10R10UnsignedNormalizedPacked.Register("A2B10G10R10 Unsigned Normalized (Packed)")
+	DataFormatA2B10G10R10SignedNormalizedPacked.Register("A2B10G10R10 Signed Normalized (Packed)")
+	DataFormatA2B10G10R10UnsignedScaledPacked.Register("A2B10G10R10 Unsigned Scaled (Packed)")
+	DataFormatA2B10G10R10SignedScaledPacked.Register("A2B10G10R10 Signed Scaled (Packed)")
+	DataFormatA2B10G10R10UnsignedIntPacked.Register("A2B10G10R10 Unsigned Int (Packed)")
+	DataFormatA2B10G10R10SignedIntPacked.Register("A2B10G10R10 Signed Int (Packed)")
 
 	DataFormatR16UnsignedNormalized.Register("R16 Unsigned Normalized")
 	DataFormatR16SignedNormalized.Register("R16 Signed Normalized")
@@ -363,10 +363,10 @@ func init() {
 	DataFormatR64G64B64A64SignedInt.Register("R64G64B64A64 Signed Int")
 	DataFormatR64G64B64A64SignedFloat.Register("R64G64B64A64 Signed Float")
 
-	DataFormatB10G11R11UnsignedFloat.Register("B10G11R11 Unsigned Float")
-	DataFormatE5B9G9R9UnsignedFloat.Register("E5B9G9R9 Unsigned Float")
+	DataFormatB10G11R11UnsignedFloatPacked.Register("B10G11R11 Unsigned Float (Packed)")
+	DataFormatE5B9G9R9UnsignedFloatPacked.Register("E5B9G9R9 Unsigned Float (Packed)")
 	DataFormatD16UnsignedNormalized.Register("D16 Unsigned Normalized")
-	DataFormatD24X8UnsignedNormalized.Register("D24X8 Unsigned Normalized")
+	DataFormatD24X8UnsignedNormalizedPacked.Register("D24X8 Unsigned Normalized (Packed)")
 	DataFormatD32SignedFloat.Register("D32 Signed Float")
 	DataFormatS8UnsignedInt.Register("S8 Unsigned Int")
 

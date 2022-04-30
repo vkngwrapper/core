@@ -149,7 +149,7 @@ func TestVulkanLoader1_0_CreateRenderPass_Success(t *testing.T) {
 		Attachments: []core1_0.AttachmentDescription{
 			{
 				Flags:          core1_0.AttachmentMayAlias,
-				Format:         core1_0.DataFormatA2B10G10R10SignedInt,
+				Format:         core1_0.DataFormatA2B10G10R10SignedIntPacked,
 				Samples:        core1_0.Samples4,
 				LoadOp:         core1_0.LoadOpClear,
 				StoreOp:        core1_0.StoreOpStore,
@@ -160,7 +160,7 @@ func TestVulkanLoader1_0_CreateRenderPass_Success(t *testing.T) {
 			},
 			{
 				Flags:          0,
-				Format:         core1_0.DataFormatA2R10G10B10SignedInt,
+				Format:         core1_0.DataFormatA2R10G10B10SignedIntPacked,
 				Samples:        core1_0.Samples64,
 				LoadOp:         core1_0.LoadOpLoad,
 				StoreOp:        core1_0.StoreOpDontCare,
@@ -364,7 +364,7 @@ func TestVulkanLoader1_0_CreateRenderPass_SuccessNoNonColorAttachments(t *testin
 		Attachments: []core1_0.AttachmentDescription{
 			{
 				Flags:          core1_0.AttachmentMayAlias,
-				Format:         core1_0.DataFormatA2B10G10R10SignedInt,
+				Format:         core1_0.DataFormatA2B10G10R10SignedIntPacked,
 				Samples:        core1_0.Samples4,
 				LoadOp:         core1_0.LoadOpClear,
 				StoreOp:        core1_0.StoreOpStore,
@@ -375,7 +375,7 @@ func TestVulkanLoader1_0_CreateRenderPass_SuccessNoNonColorAttachments(t *testin
 			},
 			{
 				Flags:          0,
-				Format:         core1_0.DataFormatA2R10G10B10SignedInt,
+				Format:         core1_0.DataFormatA2R10G10B10SignedIntPacked,
 				Samples:        core1_0.Samples64,
 				LoadOp:         core1_0.LoadOpLoad,
 				StoreOp:        core1_0.StoreOpDontCare,
@@ -459,7 +459,7 @@ func TestVulkanLoader1_0_CreateRenderPass_MismatchResolve(t *testing.T) {
 		Attachments: []core1_0.AttachmentDescription{
 			{
 				Flags:          core1_0.AttachmentMayAlias,
-				Format:         core1_0.DataFormatA2B10G10R10SignedInt,
+				Format:         core1_0.DataFormatA2B10G10R10SignedIntPacked,
 				Samples:        core1_0.Samples4,
 				LoadOp:         core1_0.LoadOpClear,
 				StoreOp:        core1_0.StoreOpStore,
@@ -470,7 +470,7 @@ func TestVulkanLoader1_0_CreateRenderPass_MismatchResolve(t *testing.T) {
 			},
 			{
 				Flags:          0,
-				Format:         core1_0.DataFormatA2R10G10B10SignedInt,
+				Format:         core1_0.DataFormatA2R10G10B10SignedIntPacked,
 				Samples:        core1_0.Samples64,
 				LoadOp:         core1_0.LoadOpLoad,
 				StoreOp:        core1_0.StoreOpDontCare,

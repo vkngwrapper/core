@@ -61,7 +61,7 @@ func TestVulkanLoader1_0_CreateImage(t *testing.T) {
 	image, _, err := loader.CreateImage(device, nil, core1_0.ImageOptions{
 		Flags:     core1_0.ImageCreateCubeCompatible,
 		ImageType: core1_0.ImageType2D,
-		Format:    core1_0.DataFormatA2R10G10B10SignedNormalized,
+		Format:    core1_0.DataFormatA2R10G10B10SignedNormalizedPacked,
 		Extent: common.Extent3D{
 			Width:  1,
 			Height: 3,
