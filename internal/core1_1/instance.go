@@ -73,7 +73,7 @@ func (i *VulkanInstance) attemptEnumeratePhysicalDeviceGroups(outDataFactory fun
 	return outDataSlice, res, nil
 }
 
-func (i *VulkanInstance) EnumeratePhysicalDeviceGroups(outDataFactory func() *core1_1.DeviceGroupOutData) ([]*core1_1.DeviceGroupOutData, common.VkResult, error) {
+func (i *VulkanInstance) PhysicalDeviceGroups(outDataFactory func() *core1_1.DeviceGroupOutData) ([]*core1_1.DeviceGroupOutData, common.VkResult, error) {
 	var outData []*core1_1.DeviceGroupOutData
 	var result common.VkResult
 	var err error

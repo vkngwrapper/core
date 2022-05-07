@@ -46,6 +46,10 @@ func CreateDescriptorSetLayout(coreDriver driver.Driver, device driver.VkDevice,
 	return objects.CreateDescriptorSetLayout(coreDriver, device, handle, version)
 }
 
+func CreateDescriptorUpdateTemplate(coreDriver driver.Driver, device driver.VkDevice, handle driver.VkDescriptorUpdateTemplate, version common.APIVersion) DescriptorUpdateTemplate {
+	return objects.CreateDescriptorUpdateTemplate(coreDriver, device, handle, version)
+}
+
 func CreateDeviceMemory(coreDriver driver.Driver, device driver.VkDevice, handle driver.VkDeviceMemory, version common.APIVersion, size int) DeviceMemory {
 	return objects.CreateDeviceMemory(coreDriver, device, handle, version, size)
 }
@@ -96,6 +100,10 @@ func CreateRenderPass(coreDriver driver.Driver, device driver.VkDevice, handle d
 
 func CreateSampler(coreDriver driver.Driver, device driver.VkDevice, handle driver.VkSampler, version common.APIVersion) Sampler {
 	return objects.CreateSampler(coreDriver, device, handle, version)
+}
+
+func CreateSamplerYcbcrConversion(coreDriver driver.Driver, device driver.VkDevice, handle driver.VkSamplerYcbcrConversion, version common.APIVersion) SamplerYcbcrConversion {
+	return objects.CreateSamplerYcbcrConversion(coreDriver, device, handle, version)
 }
 
 func CreateSemaphore(coreDriver driver.Driver, device driver.VkDevice, handle driver.VkSemaphore, version common.APIVersion) Semaphore {

@@ -166,3 +166,20 @@ func (d *VulkanDevice) DescriptorSetLayoutSupport(o core1_0.DescriptorSetLayoutC
 
 	return common.PopulateOutData(outData, outDataPtr)
 }
+
+func (d *VulkanDevice) DeviceGroupPeerMemoryFeatures(heapIndex, localDeviceIndex, remoteDeviceIndex int) core1_1.PeerMemoryFeatures {
+	arena := cgoparam.GetAlloc()
+	defer cgoparam.ReturnAlloc(arena)
+
+	featuresPtr := (*driver.VkPeerMemoryFeatureFlags)(arena.Malloc(int(unsafe.Sizeof(C.VkPeerMemoryFeatureFlags(0)))))
+
+	d.DeviceDriver.VkGetDeviceGroupPeerMemoryFeatures(
+		d.DeviceHandle,
+		driver.Uint32(heapIndex),
+		driver.Uint32(localDeviceIndex),
+		driver.Uint32(remoteDeviceIndex),
+		featuresPtr,
+	)
+
+	return core1_1.PeerMemoryFeatures(*featuresPtr)
+}

@@ -61,6 +61,8 @@ type Loader interface {
 type Loader1_1 interface {
 	CreateDescriptorUpdateTemplate(device Device, o core1_1.DescriptorUpdateTemplateCreateOptions, allocator *driver.AllocationCallbacks) (DescriptorUpdateTemplate, common.VkResult, error)
 	CreateSamplerYcbcrConversion(device Device, o core1_1.SamplerYcbcrConversionCreateOptions, allocator *driver.AllocationCallbacks) (SamplerYcbcrConversion, common.VkResult, error)
+
+	GetQueue(device Device, o core1_1.DeviceQueueOptions) (Queue, error)
 }
 
 func CreateStaticLinkedLoader() (*VulkanLoader1_0, error) {

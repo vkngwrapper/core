@@ -11,6 +11,35 @@ import (
 	"unsafe"
 )
 
+type PeerMemoryFeatures int32
+
+var peerMemoryFeaturesMapping = common.NewFlagStringMapping[PeerMemoryFeatures]()
+
+func (f PeerMemoryFeatures) Register(str string) {
+	peerMemoryFeaturesMapping.Register(f, str)
+}
+func (f PeerMemoryFeatures) String() string {
+	return peerMemoryFeaturesMapping.FlagsToString(f)
+}
+
+////
+
+const (
+	PeerMemoryFeatureCopyDst    PeerMemoryFeatures = C.VK_PEER_MEMORY_FEATURE_COPY_DST_BIT
+	PeerMemoryFeatureCopySrc    PeerMemoryFeatures = C.VK_PEER_MEMORY_FEATURE_COPY_SRC_BIT
+	PeerMemoryFeatureGenericDst PeerMemoryFeatures = C.VK_PEER_MEMORY_FEATURE_GENERIC_DST_BIT
+	PeerMemoryFeatureGenericSrc PeerMemoryFeatures = C.VK_PEER_MEMORY_FEATURE_GENERIC_SRC_BIT
+)
+
+func init() {
+	PeerMemoryFeatureCopyDst.Register("Copy Dst")
+	PeerMemoryFeatureCopySrc.Register("Copy Src")
+	PeerMemoryFeatureGenericDst.Register("Generic Dst")
+	PeerMemoryFeatureGenericSrc.Register("Generic Src")
+}
+
+////
+
 type DescriptorSetLayoutSupportOutData struct {
 	Supported bool
 
@@ -35,3 +64,5 @@ func (o *DescriptorSetLayoutSupportOutData) PopulateOutData(cDataPointer unsafe.
 
 	return outData.pNext, nil
 }
+
+////

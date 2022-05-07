@@ -26,6 +26,8 @@ type Device interface {
 	SparseImageMemoryRequirements(o SparseImageRequirementsOptions, outDataFactory func() *SparseImageMemoryRequirementsOutData) ([]*SparseImageMemoryRequirementsOutData, error)
 
 	DescriptorSetLayoutSupport(o core1_0.DescriptorSetLayoutCreateOptions, outData *DescriptorSetLayoutSupportOutData) error
+
+	DeviceGroupPeerMemoryFeatures(heapIndex, localDeviceIndex, remoteDeviceIndex int) PeerMemoryFeatures
 }
 
 type DescriptorUpdateTemplate interface {
@@ -38,7 +40,7 @@ type DescriptorUpdateTemplate interface {
 }
 
 type Instance interface {
-	EnumeratePhysicalDeviceGroups(outDataFactory func() *DeviceGroupOutData) ([]*DeviceGroupOutData, common.VkResult, error)
+	PhysicalDeviceGroups(outDataFactory func() *DeviceGroupOutData) ([]*DeviceGroupOutData, common.VkResult, error)
 }
 
 type InstancePhysicalDevice interface {

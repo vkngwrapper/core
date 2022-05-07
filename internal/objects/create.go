@@ -5,6 +5,7 @@ import (
 	"github.com/CannibalVox/VKng/core/driver"
 	internal1_0 "github.com/CannibalVox/VKng/core/internal/core1_0"
 	"github.com/CannibalVox/VKng/core/internal/core1_1"
+	internal1_1 "github.com/CannibalVox/VKng/core/internal/core1_1"
 )
 
 func CreateInstance(instanceDriver driver.Driver, handle driver.VkInstance, version common.APIVersion) *internal1_0.VulkanInstance {
@@ -204,6 +205,20 @@ func CreateDescriptorSetLayout(coreDriver driver.Driver, device driver.VkDevice,
 		}).(*internal1_0.VulkanDescriptorSetLayout)
 }
 
+func CreateDescriptorUpdateTemplate(coreDriver driver.Driver, device driver.VkDevice, handle driver.VkDescriptorUpdateTemplate, version common.APIVersion) *internal1_1.VulkanDescriptorUpdateTemplate {
+	return coreDriver.ObjectStore().GetOrCreate(driver.VulkanHandle(handle),
+		func() interface{} {
+			template := &internal1_1.VulkanDescriptorUpdateTemplate{
+				Driver:                   coreDriver,
+				Device:                   device,
+				DescriptorTemplateHandle: handle,
+				MaximumAPIVersion:        version,
+			}
+
+			return template
+		}).(*internal1_1.VulkanDescriptorUpdateTemplate)
+}
+
 func CreateDeviceMemory(coreDriver driver.Driver, device driver.VkDevice, handle driver.VkDeviceMemory, version common.APIVersion, size int) *internal1_0.VulkanDeviceMemory {
 	return coreDriver.ObjectStore().GetOrCreate(driver.VulkanHandle(handle),
 		func() interface{} {
@@ -386,6 +401,18 @@ func CreateSampler(coreDriver driver.Driver, device driver.VkDevice, handle driv
 
 			return pipeline
 		}).(*internal1_0.VulkanSampler)
+}
+
+func CreateSamplerYcbcrConversion(coreDriver driver.Driver, device driver.VkDevice, handle driver.VkSamplerYcbcrConversion, version common.APIVersion) *internal1_1.VulkanSamplerYcbcrConversion {
+	return coreDriver.ObjectStore().GetOrCreate(driver.VulkanHandle(handle),
+		func() interface{} {
+			return &internal1_1.VulkanSamplerYcbcrConversion{
+				Driver:            coreDriver,
+				Device:            device,
+				YcbcrHandle:       handle,
+				MaximumAPIVersion: version,
+			}
+		}).(*internal1_1.VulkanSamplerYcbcrConversion)
 }
 
 func CreateSemaphore(coreDriver driver.Driver, device driver.VkDevice, handle driver.VkSemaphore, version common.APIVersion) *internal1_0.VulkanSemaphore {
