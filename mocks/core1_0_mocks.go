@@ -743,6 +743,20 @@ func (mr *MockCommandBufferMockRecorder) CommandPoolHandle() *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CommandPoolHandle", reflect.TypeOf((*MockCommandBuffer)(nil).CommandPoolHandle))
 }
 
+// CommandsRecorded mocks base method.
+func (m *MockCommandBuffer) CommandsRecorded() int {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CommandsRecorded")
+	ret0, _ := ret[0].(int)
+	return ret0
+}
+
+// CommandsRecorded indicates an expected call of CommandsRecorded.
+func (mr *MockCommandBufferMockRecorder) CommandsRecorded() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CommandsRecorded", reflect.TypeOf((*MockCommandBuffer)(nil).CommandsRecorded))
+}
+
 // Core1_1 mocks base method.
 func (m *MockCommandBuffer) Core1_1() core1_1.CommandBuffer {
 	m.ctrl.T.Helper()
