@@ -12,13 +12,13 @@ import (
 	"unsafe"
 )
 
-type ShaderModuleOptions struct {
+type ShaderModuleCreateOptions struct {
 	SpirVByteCode []uint32
 
 	common.HaveNext
 }
 
-func (o ShaderModuleOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o ShaderModuleCreateOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	byteCodeLen := len(o.SpirVByteCode)
 	if byteCodeLen == 0 {
 		return nil, errors.New("attempted to create a shader module with no shader bytecode")
@@ -46,7 +46,7 @@ func (o ShaderModuleOptions) PopulateCPointer(allocator *cgoparam.Allocator, pre
 	return preallocatedPointer, nil
 }
 
-func (o ShaderModuleOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
+func (o ShaderModuleCreateOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
 	createInfo := (*C.VkShaderModuleCreateInfo)(cDataPointer)
 	return createInfo.pNext, nil
 }

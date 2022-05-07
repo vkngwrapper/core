@@ -1,4 +1,4 @@
-package core1_0_test
+package internal1_0_test
 
 import (
 	"github.com/CannibalVox/VKng/core"

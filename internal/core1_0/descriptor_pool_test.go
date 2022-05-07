@@ -1,4 +1,4 @@
-package core1_0_test
+package internal1_0_test
 
 import (
 	"github.com/CannibalVox/VKng/core"
@@ -54,7 +54,7 @@ func TestDescriptorPool_Create(t *testing.T) {
 			return core1_0.VKSuccess, nil
 		})
 
-	pool, _, err := loader.CreateDescriptorPool(mockDevice, nil, core1_0.DescriptorPoolOptions{
+	pool, _, err := loader.CreateDescriptorPool(mockDevice, nil, core1_0.DescriptorPoolCreateOptions{
 		Flags:   core1_0.DescriptorPoolCreateFreeDescriptorSet,
 		MaxSets: 3,
 		PoolSizes: []core1_0.PoolSize{

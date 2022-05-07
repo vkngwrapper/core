@@ -1,4 +1,4 @@
-package core1_0_test
+package internal1_0_test
 
 import (
 	"github.com/CannibalVox/VKng/core"
@@ -37,7 +37,7 @@ func TestVulkanLoader1_0_CreateEvent(t *testing.T) {
 			return core1_0.VKSuccess, nil
 		})
 
-	event, _, err := loader.CreateEvent(device, nil, core1_0.EventOptions{
+	event, _, err := loader.CreateEvent(device, nil, core1_0.EventCreateOptions{
 		Flags: 0,
 	})
 	require.NoError(t, err)

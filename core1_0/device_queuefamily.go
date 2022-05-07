@@ -28,7 +28,7 @@ func (o DeviceQueueOptions) PopulateCPointer(allocator *cgoparam.Allocator, prea
 	createInfo := (*C.VkDeviceQueueCreateInfo)(preallocatedPointer)
 
 	if len(o.CreatedQueuePriorities) == 0 {
-		return nil, errors.Newf("alloc DeviceOptions: queue family %d had no queue priorities", o.QueueFamilyIndex)
+		return nil, errors.Newf("alloc DeviceCreateOptions: queue family %d had no queue priorities", o.QueueFamilyIndex)
 	}
 
 	prioritiesPtr := allocator.Malloc(len(o.CreatedQueuePriorities) * int(unsafe.Sizeof(C.float(0))))

@@ -1,4 +1,4 @@
-package core1_0_test
+package internal1_0_test
 
 import (
 	"bytes"
@@ -64,7 +64,7 @@ func TestVulkanLoader1_0_CreateGraphicsPipelines_EmptySuccess(t *testing.T) {
 			return core1_0.VKSuccess, nil
 		})
 
-	pipelines, _, err := loader.CreateGraphicsPipelines(device, nil, nil, []core1_0.GraphicsPipelineOptions{
+	pipelines, _, err := loader.CreateGraphicsPipelines(device, nil, nil, []core1_0.GraphicsPipelineCreateOptions{
 		{
 			Flags:             core1_0.PipelineCreateAllowDerivatives,
 			Layout:            layout,
@@ -188,7 +188,7 @@ func TestVulkanLoader1_0_CreateGraphicsPipelines_ShaderStagesSuccess(t *testing.
 			return core1_0.VKSuccess, nil
 		})
 
-	pipelines, _, err := loader.CreateGraphicsPipelines(device, nil, nil, []core1_0.GraphicsPipelineOptions{
+	pipelines, _, err := loader.CreateGraphicsPipelines(device, nil, nil, []core1_0.GraphicsPipelineCreateOptions{
 		{
 			Layout:     layout,
 			RenderPass: renderPass,
@@ -230,7 +230,7 @@ func TestVulkanLoader1_0_CreateGraphicsPipelines_ShaderStagesFailure_InvalidSpec
 	shaderModule1 := mocks.EasyMockShaderModule(ctrl)
 	shaderModule2 := mocks.EasyMockShaderModule(ctrl)
 
-	_, _, err = loader.CreateGraphicsPipelines(device, nil, nil, []core1_0.GraphicsPipelineOptions{
+	_, _, err = loader.CreateGraphicsPipelines(device, nil, nil, []core1_0.GraphicsPipelineCreateOptions{
 		{
 			Layout:     layout,
 			RenderPass: renderPass,
@@ -310,7 +310,7 @@ func TestVulkanLoader1_0_CreateGraphicsPipelines_VertexInputSuccess(t *testing.T
 			return core1_0.VKSuccess, nil
 		})
 
-	pipelines, _, err := loader.CreateGraphicsPipelines(device, nil, nil, []core1_0.GraphicsPipelineOptions{
+	pipelines, _, err := loader.CreateGraphicsPipelines(device, nil, nil, []core1_0.GraphicsPipelineCreateOptions{
 		{
 			Layout:     layout,
 			RenderPass: renderPass,
@@ -374,7 +374,7 @@ func TestVulkanLoader1_0_CreateGraphicsPipelines_InputAssemblySuccess(t *testing
 			return core1_0.VKSuccess, nil
 		})
 
-	pipelines, _, err := loader.CreateGraphicsPipelines(device, nil, nil, []core1_0.GraphicsPipelineOptions{
+	pipelines, _, err := loader.CreateGraphicsPipelines(device, nil, nil, []core1_0.GraphicsPipelineCreateOptions{
 		{
 			Layout:     layout,
 			RenderPass: renderPass,
@@ -419,7 +419,7 @@ func TestVulkanLoader1_0_CreateGraphicsPipelines_TessellationSuccess(t *testing.
 			return core1_0.VKSuccess, nil
 		})
 
-	pipelines, _, err := loader.CreateGraphicsPipelines(device, nil, nil, []core1_0.GraphicsPipelineOptions{
+	pipelines, _, err := loader.CreateGraphicsPipelines(device, nil, nil, []core1_0.GraphicsPipelineCreateOptions{
 		{
 			Layout:     layout,
 			RenderPass: renderPass,
@@ -493,7 +493,7 @@ func TestVulkanLoader1_0_CreateGraphicsPipelines_ViewportSuccess(t *testing.T) {
 			return core1_0.VKSuccess, nil
 		})
 
-	pipelines, _, err := loader.CreateGraphicsPipelines(device, nil, nil, []core1_0.GraphicsPipelineOptions{
+	pipelines, _, err := loader.CreateGraphicsPipelines(device, nil, nil, []core1_0.GraphicsPipelineCreateOptions{
 		{
 			Layout:     layout,
 			RenderPass: renderPass,
@@ -564,7 +564,7 @@ func TestVulkanLoader1_0_CreateGraphicsPipelines_RasterizationSuccess(t *testing
 			return core1_0.VKSuccess, nil
 		})
 
-	pipelines, _, err := loader.CreateGraphicsPipelines(device, nil, nil, []core1_0.GraphicsPipelineOptions{
+	pipelines, _, err := loader.CreateGraphicsPipelines(device, nil, nil, []core1_0.GraphicsPipelineCreateOptions{
 		{
 			Layout:     layout,
 			RenderPass: renderPass,
@@ -628,7 +628,7 @@ func TestVulkanLoader1_0_CreateGraphicsPipelines_MultisampleSuccess(t *testing.T
 			return core1_0.VKSuccess, nil
 		})
 
-	pipelines, _, err := loader.CreateGraphicsPipelines(device, nil, nil, []core1_0.GraphicsPipelineOptions{
+	pipelines, _, err := loader.CreateGraphicsPipelines(device, nil, nil, []core1_0.GraphicsPipelineCreateOptions{
 		{
 			Layout:     layout,
 			RenderPass: renderPass,
@@ -681,7 +681,7 @@ func TestVulkanLoader1_0_CreateGraphicsPipelines_MultisampleSuccess_NoSampleMask
 			return core1_0.VKSuccess, nil
 		})
 
-	pipelines, _, err := loader.CreateGraphicsPipelines(device, nil, nil, []core1_0.GraphicsPipelineOptions{
+	pipelines, _, err := loader.CreateGraphicsPipelines(device, nil, nil, []core1_0.GraphicsPipelineCreateOptions{
 		{
 			Layout:     layout,
 			RenderPass: renderPass,
@@ -711,7 +711,7 @@ func TestVulkanLoader1_0_CreateGraphicsPipelines_MultisampleFail_MismatchSampleM
 	layout := mocks.EasyMockPipelineLayout(ctrl)
 	renderPass := mocks.EasyMockRenderPass(ctrl)
 
-	_, _, err = loader.CreateGraphicsPipelines(device, nil, nil, []core1_0.GraphicsPipelineOptions{
+	_, _, err = loader.CreateGraphicsPipelines(device, nil, nil, []core1_0.GraphicsPipelineCreateOptions{
 		{
 			Layout:     layout,
 			RenderPass: renderPass,
@@ -780,7 +780,7 @@ func TestVulkanLoader1_0_CreateGraphicsPipelines_DepthStencilSuccess(t *testing.
 			return core1_0.VKSuccess, nil
 		})
 
-	pipelines, _, err := loader.CreateGraphicsPipelines(device, nil, nil, []core1_0.GraphicsPipelineOptions{
+	pipelines, _, err := loader.CreateGraphicsPipelines(device, nil, nil, []core1_0.GraphicsPipelineCreateOptions{
 		{
 			Layout:     layout,
 			RenderPass: renderPass,
@@ -878,7 +878,7 @@ func TestVulkanLoader1_0_CreateGraphicsPipelines_ColorBlendSuccess(t *testing.T)
 			return core1_0.VKSuccess, nil
 		})
 
-	pipelines, _, err := loader.CreateGraphicsPipelines(device, nil, nil, []core1_0.GraphicsPipelineOptions{
+	pipelines, _, err := loader.CreateGraphicsPipelines(device, nil, nil, []core1_0.GraphicsPipelineCreateOptions{
 		{
 			Layout:     layout,
 			RenderPass: renderPass,
@@ -951,7 +951,7 @@ func TestVulkanLoader1_0_CreateGraphicsPipelines_DynamicStateSuccess(t *testing.
 			return core1_0.VKSuccess, nil
 		})
 
-	pipelines, _, err := loader.CreateGraphicsPipelines(device, nil, nil, []core1_0.GraphicsPipelineOptions{
+	pipelines, _, err := loader.CreateGraphicsPipelines(device, nil, nil, []core1_0.GraphicsPipelineCreateOptions{
 		{
 			Layout:     layout,
 			RenderPass: renderPass,
@@ -1060,7 +1060,7 @@ func TestVulkanLoader1_0_CreateComputePipelines_EmptySuccess(t *testing.T) {
 			return core1_0.VKSuccess, nil
 		})
 
-	pipelines, _, err := loader.CreateComputePipelines(device, nil, nil, []core1_0.ComputePipelineOptions{
+	pipelines, _, err := loader.CreateComputePipelines(device, nil, nil, []core1_0.ComputePipelineCreateOptions{
 		{
 			Flags: core1_0.PipelineCreateDerivative,
 			Shader: core1_0.ShaderStageOptions{

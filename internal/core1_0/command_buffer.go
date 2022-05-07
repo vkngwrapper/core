@@ -1,4 +1,4 @@
-package core1_0
+package internal1_0
 
 /*
 #include <stdlib.h>

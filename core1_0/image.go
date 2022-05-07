@@ -95,7 +95,7 @@ func init() {
 	Samples64.RegisterSamples("64 Samples", 64)
 }
 
-type ImageOptions struct {
+type ImageCreateOptions struct {
 	Flags     common.ImageCreateFlags
 	ImageType common.ImageType
 	Format    common.DataFormat
@@ -116,7 +116,7 @@ type ImageOptions struct {
 	common.HaveNext
 }
 
-func (o ImageOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o ImageCreateOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == unsafe.Pointer(nil) {
 		preallocatedPointer = allocator.Malloc(int(unsafe.Sizeof([1]C.VkImageCreateInfo{})))
 	}
@@ -156,7 +156,7 @@ func (o ImageOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocat
 	return unsafe.Pointer(createInfo), nil
 }
 
-func (o ImageOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
+func (o ImageCreateOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
 	createInfo := (*C.VkImageCreateInfo)(cDataPointer)
 	return createInfo.pNext, nil
 }

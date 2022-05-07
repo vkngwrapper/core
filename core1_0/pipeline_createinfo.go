@@ -23,7 +23,7 @@ func init() {
 	PipelineCreateDerivative.Register("Derivative")
 }
 
-type GraphicsPipelineOptions struct {
+type GraphicsPipelineCreateOptions struct {
 	Flags common.PipelineCreateFlags
 
 	ShaderStages  []ShaderStageOptions
@@ -47,7 +47,7 @@ type GraphicsPipelineOptions struct {
 	common.HaveNext
 }
 
-func (o GraphicsPipelineOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o GraphicsPipelineCreateOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == unsafe.Pointer(nil) {
 		preallocatedPointer = allocator.Malloc(C.sizeof_struct_VkGraphicsPipelineCreateInfo)
 	}
@@ -178,12 +178,12 @@ func (o GraphicsPipelineOptions) PopulateCPointer(allocator *cgoparam.Allocator,
 	return preallocatedPointer, nil
 }
 
-func (o GraphicsPipelineOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
+func (o GraphicsPipelineCreateOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
 	createInfo := (*C.VkGraphicsPipelineCreateInfo)(cDataPointer)
 	return createInfo.pNext, nil
 }
 
-type ComputePipelineOptions struct {
+type ComputePipelineCreateOptions struct {
 	Flags  common.PipelineCreateFlags
 	Shader ShaderStageOptions
 	Layout PipelineLayout
@@ -194,7 +194,7 @@ type ComputePipelineOptions struct {
 	common.HaveNext
 }
 
-func (o ComputePipelineOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o ComputePipelineCreateOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == unsafe.Pointer(nil) {
 		preallocatedPointer = allocator.Malloc(C.sizeof_struct_VkComputePipelineCreateInfo)
 	}
@@ -216,7 +216,7 @@ func (o ComputePipelineOptions) PopulateCPointer(allocator *cgoparam.Allocator, 
 	return preallocatedPointer, nil
 }
 
-func (o ComputePipelineOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
+func (o ComputePipelineCreateOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
 	createInfo := (*C.VkComputePipelineCreateInfo)(cDataPointer)
 	return createInfo.pNext, nil
 }

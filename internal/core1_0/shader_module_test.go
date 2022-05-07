@@ -1,4 +1,4 @@
-package core1_0_test
+package internal1_0_test
 
 import (
 	"github.com/CannibalVox/VKng/core"
@@ -43,7 +43,7 @@ func TestVulkanLoader1_0_CreateShaderModule(t *testing.T) {
 			return core1_0.VKSuccess, nil
 		})
 
-	shaderModule, _, err := loader.CreateShaderModule(device, nil, core1_0.ShaderModuleOptions{
+	shaderModule, _, err := loader.CreateShaderModule(device, nil, core1_0.ShaderModuleCreateOptions{
 		SpirVByteCode: []uint32{1, 1, 2, 3, 5, 8, 13, 21},
 	})
 	require.NoError(t, err)

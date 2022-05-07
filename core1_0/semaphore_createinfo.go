@@ -11,11 +11,11 @@ import (
 	"unsafe"
 )
 
-type SemaphoreOptions struct {
+type SemaphoreCreateOptions struct {
 	common.HaveNext
 }
 
-func (o SemaphoreOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o SemaphoreCreateOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == unsafe.Pointer(nil) {
 		preallocatedPointer = allocator.Malloc(C.sizeof_struct_VkSemaphoreCreateInfo)
 	}
@@ -27,7 +27,7 @@ func (o SemaphoreOptions) PopulateCPointer(allocator *cgoparam.Allocator, preall
 	return unsafe.Pointer(createInfo), nil
 }
 
-func (o SemaphoreOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
+func (o SemaphoreCreateOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
 	createInfo := (*C.VkSemaphoreCreateInfo)(cDataPointer)
 	return createInfo.pNext, nil
 }

@@ -84,7 +84,7 @@ type SubPass struct {
 	PreservedAttachmentIndices []int
 }
 
-type RenderPassOptions struct {
+type RenderPassCreateOptions struct {
 	Flags               common.RenderPassCreateFlags
 	Attachments         []AttachmentDescription
 	SubPasses           []SubPass
@@ -93,7 +93,7 @@ type RenderPassOptions struct {
 	common.HaveNext
 }
 
-func (o RenderPassOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o RenderPassCreateOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == unsafe.Pointer(nil) {
 		preallocatedPointer = allocator.Malloc(int(unsafe.Sizeof(C.VkRenderPassCreateInfo{})))
 	}
@@ -198,7 +198,7 @@ func (o RenderPassOptions) PopulateCPointer(allocator *cgoparam.Allocator, preal
 	return unsafe.Pointer(createInfo), nil
 }
 
-func (o RenderPassOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
+func (o RenderPassCreateOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
 	createInfo := (*C.VkRenderPassCreateInfo)(cDataPointer)
 	return createInfo.pNext, nil
 }

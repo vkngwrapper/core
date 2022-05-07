@@ -12,7 +12,7 @@ import (
 	"unsafe"
 )
 
-type DeviceOptions struct {
+type DeviceCreateOptions struct {
 	QueueFamilies   []DeviceQueueOptions
 	EnabledFeatures *PhysicalDeviceFeatures
 	ExtensionNames  []string
@@ -21,9 +21,9 @@ type DeviceOptions struct {
 	common.HaveNext
 }
 
-func (o DeviceOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o DeviceCreateOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if len(o.QueueFamilies) == 0 {
-		return nil, errors.New("alloc DeviceOptions: no queue families added")
+		return nil, errors.New("alloc DeviceCreateOptions: no queue families added")
 	}
 	if preallocatedPointer == unsafe.Pointer(nil) {
 		preallocatedPointer = allocator.Malloc(int(unsafe.Sizeof(C.VkDeviceCreateInfo{})))
@@ -77,7 +77,7 @@ func (o DeviceOptions) PopulateCPointer(allocator *cgoparam.Allocator, prealloca
 	return unsafe.Pointer(createInfo), nil
 }
 
-func (o DeviceOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
+func (o DeviceCreateOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
 	createInfo := (*C.VkDeviceCreateInfo)(cDataPointer)
 	return createInfo.pNext, nil
 }

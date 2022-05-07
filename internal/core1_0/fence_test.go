@@ -1,4 +1,4 @@
-package core1_0_test
+package internal1_0_test
 
 import (
 	"github.com/CannibalVox/VKng/core"
@@ -39,7 +39,7 @@ func TestVulkanLoader1_0_CreateFence(t *testing.T) {
 			return core1_0.VKSuccess, nil
 		})
 
-	fence, _, err := loader.CreateFence(device, nil, core1_0.FenceOptions{
+	fence, _, err := loader.CreateFence(device, nil, core1_0.FenceCreateOptions{
 		Flags: core1_0.FenceCreateSignaled,
 	})
 	require.NoError(t, err)

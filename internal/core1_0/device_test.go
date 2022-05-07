@@ -1,4 +1,4 @@
-package core1_0_test
+package internal1_0_test
 
 import (
 	"github.com/CannibalVox/VKng/core"
@@ -116,7 +116,7 @@ func TestVulkanLoader1_0_CreateDevice_Success(t *testing.T) {
 			return core1_0.VKSuccess, nil
 		})
 
-	device, _, err := loader.CreateDevice(mockPhysicalDevice, nil, core1_0.DeviceOptions{
+	device, _, err := loader.CreateDevice(mockPhysicalDevice, nil, core1_0.DeviceCreateOptions{
 		QueueFamilies: []core1_0.DeviceQueueOptions{
 			{
 				QueueFamilyIndex:       1,
@@ -148,7 +148,7 @@ func TestVulkanLoader1_0_CreateDevice_FailNoQueueFamilies(t *testing.T) {
 	loader, err := core.CreateLoaderFromDriver(mockDriver)
 	require.NoError(t, err)
 
-	_, _, err = loader.CreateDevice(mockPhysicalDevice, nil, core1_0.DeviceOptions{
+	_, _, err = loader.CreateDevice(mockPhysicalDevice, nil, core1_0.DeviceCreateOptions{
 		QueueFamilies:  []core1_0.DeviceQueueOptions{},
 		ExtensionNames: []string{"A", "B", "C"},
 		LayerNames:     []string{"D", "E"},
@@ -157,7 +157,7 @@ func TestVulkanLoader1_0_CreateDevice_FailNoQueueFamilies(t *testing.T) {
 			TessellationShader:    true,
 		},
 	})
-	require.EqualError(t, err, "alloc DeviceOptions: no queue families added")
+	require.EqualError(t, err, "alloc DeviceCreateOptions: no queue families added")
 }
 
 func TestVulkanLoader1_0_CreateDevice_FailFamilyWithoutPriorities(t *testing.T) {
@@ -170,7 +170,7 @@ func TestVulkanLoader1_0_CreateDevice_FailFamilyWithoutPriorities(t *testing.T) 
 
 	mockPhysicalDevice := mocks.EasyMockPhysicalDevice(ctrl, mockDriver)
 
-	_, _, err = loader.CreateDevice(mockPhysicalDevice, nil, core1_0.DeviceOptions{
+	_, _, err = loader.CreateDevice(mockPhysicalDevice, nil, core1_0.DeviceCreateOptions{
 		QueueFamilies: []core1_0.DeviceQueueOptions{
 			{
 				QueueFamilyIndex:       1,
@@ -188,7 +188,7 @@ func TestVulkanLoader1_0_CreateDevice_FailFamilyWithoutPriorities(t *testing.T) 
 			TessellationShader:    true,
 		},
 	})
-	require.EqualError(t, err, "alloc DeviceOptions: queue family 3 had no queue priorities")
+	require.EqualError(t, err, "alloc DeviceCreateOptions: queue family 3 had no queue priorities")
 }
 
 func TestDevice_GetQueue(t *testing.T) {

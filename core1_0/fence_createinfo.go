@@ -19,13 +19,13 @@ func init() {
 	FenceCreateSignaled.Register("Signaled")
 }
 
-type FenceOptions struct {
+type FenceCreateOptions struct {
 	Flags common.FenceCreateFlags
 
 	common.HaveNext
 }
 
-func (o FenceOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o FenceCreateOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == unsafe.Pointer(nil) {
 		preallocatedPointer = allocator.Malloc(C.sizeof_struct_VkFenceCreateInfo)
 	}
@@ -37,7 +37,7 @@ func (o FenceOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocat
 	return unsafe.Pointer(createInfo), nil
 }
 
-func (o FenceOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
+func (o FenceCreateOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
 	createInfo := (*C.VkFenceCreateInfo)(cDataPointer)
 	return createInfo.pNext, nil
 }

@@ -1,4 +1,4 @@
-package core1_0_test
+package internal1_0_test
 
 import (
 	"github.com/CannibalVox/VKng/core"
@@ -45,7 +45,7 @@ func TestVulkanLoader1_0_CreateBufferView(t *testing.T) {
 			return core1_0.VKSuccess, nil
 		})
 
-	bufferView, res, err := loader.CreateBufferView(device, nil, core1_0.BufferViewOptions{
+	bufferView, res, err := loader.CreateBufferView(device, nil, core1_0.BufferViewCreateOptions{
 		Buffer: buffer,
 		Format: core1_0.DataFormatR32G32SignedFloat,
 		Offset: 5,

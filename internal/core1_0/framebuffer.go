@@ -1,4 +1,4 @@
-package core1_0
+package internal1_0
 
 /*
 #include <stdlib.h>
@@ -7,7 +7,6 @@ package core1_0
 import "C"
 import (
 	"github.com/CannibalVox/VKng/core/common"
-	"github.com/CannibalVox/VKng/core/core1_1"
 	"github.com/CannibalVox/VKng/core/driver"
 )
 
@@ -17,16 +16,10 @@ type VulkanFramebuffer struct {
 	FramebufferHandle driver.VkFramebuffer
 
 	MaximumAPIVersion common.APIVersion
-
-	Framebuffer1_1 core1_1.Framebuffer
 }
 
 func (b *VulkanFramebuffer) Handle() driver.VkFramebuffer {
 	return b.FramebufferHandle
-}
-
-func (b *VulkanFramebuffer) Core1_1() core1_1.Framebuffer {
-	return b.Framebuffer1_1
 }
 
 func (b *VulkanFramebuffer) Destroy(callbacks *driver.AllocationCallbacks) {

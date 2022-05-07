@@ -69,7 +69,7 @@ func init() {
 	SamplerAddressModeClampToBorder.Register("Clamp to Border")
 }
 
-type SamplerOptions struct {
+type SamplerCreateOptions struct {
 	Flags        common.SamplerCreateFlags
 	MagFilter    common.Filter
 	MinFilter    common.Filter
@@ -94,7 +94,7 @@ type SamplerOptions struct {
 	common.HaveNext
 }
 
-func (o SamplerOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o SamplerCreateOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == unsafe.Pointer(nil) {
 		preallocatedPointer = allocator.Malloc(C.sizeof_struct_VkSamplerCreateInfo)
 	}
@@ -130,7 +130,7 @@ func (o SamplerOptions) PopulateCPointer(allocator *cgoparam.Allocator, prealloc
 	return preallocatedPointer, nil
 }
 
-func (o SamplerOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
+func (o SamplerCreateOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
 	createInfo := (*C.VkSamplerCreateInfo)(cDataPointer)
 	return createInfo.pNext, nil
 }

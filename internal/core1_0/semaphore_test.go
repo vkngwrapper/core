@@ -1,4 +1,4 @@
-package core1_0_test
+package internal1_0_test
 
 import (
 	"github.com/CannibalVox/VKng/core"
@@ -36,7 +36,7 @@ func TestVulkanLoader1_0_CreateSemaphore(t *testing.T) {
 			return core1_0.VKSuccess, nil
 		})
 
-	semaphore, _, err := loader.CreateSemaphore(device, nil, core1_0.SemaphoreOptions{})
+	semaphore, _, err := loader.CreateSemaphore(device, nil, core1_0.SemaphoreCreateOptions{})
 	require.NoError(t, err)
 	require.NotNil(t, semaphore)
 	require.Equal(t, semaphoreHandle, semaphore.Handle())

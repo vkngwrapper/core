@@ -49,7 +49,7 @@ func init() {
 	SharingConcurrent.Register("Concurrent")
 }
 
-type BufferOptions struct {
+type BufferCreateOptions struct {
 	Flags              common.BufferCreateFlags
 	BufferSize         int
 	Usage              common.BufferUsages
@@ -59,7 +59,7 @@ type BufferOptions struct {
 	common.HaveNext
 }
 
-func (o BufferOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o BufferCreateOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == unsafe.Pointer(nil) {
 		preallocatedPointer = allocator.Malloc(C.sizeof_struct_VkBufferCreateInfo)
 	}
@@ -89,7 +89,7 @@ func (o BufferOptions) PopulateCPointer(allocator *cgoparam.Allocator, prealloca
 	return preallocatedPointer, nil
 }
 
-func (o BufferOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
+func (o BufferCreateOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
 	createInfo := (*C.VkBufferCreateInfo)(cDataPointer)
 	return createInfo.pNext, nil
 }

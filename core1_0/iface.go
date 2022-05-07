@@ -2,19 +2,13 @@ package core1_0
 
 import (
 	"github.com/CannibalVox/VKng/core/common"
-	"github.com/CannibalVox/VKng/core/core1_1"
 	"github.com/CannibalVox/VKng/core/driver"
 	"time"
 	"unsafe"
 )
 
-//go:generate mockgen -source ./iface.go -destination ../mocks/core1_0_mocks.go -package mocks
-
 type Buffer interface {
 	Handle() driver.VkBuffer
-
-	Core1_1() core1_1.Buffer
-
 	Destroy(callbacks *driver.AllocationCallbacks)
 	MemoryRequirements() *MemoryRequirements
 	BindBufferMemory(memory DeviceMemory, offset int) (common.VkResult, error)
@@ -22,8 +16,6 @@ type Buffer interface {
 
 type BufferView interface {
 	Handle() driver.VkBufferView
-
-	Core1_1() core1_1.BufferView
 
 	Destroy(callbacks *driver.AllocationCallbacks)
 }
@@ -33,8 +25,6 @@ type CommandBuffer interface {
 	Driver() driver.Driver
 	DeviceHandle() driver.VkDevice
 	CommandPoolHandle() driver.VkCommandPool
-
-	Core1_1() core1_1.CommandBuffer
 
 	Free()
 	Begin(o BeginOptions) (common.VkResult, error)
@@ -93,8 +83,6 @@ type CommandPool interface {
 	Driver() driver.Driver
 	APIVersion() common.APIVersion
 
-	Core1_1() core1_1.CommandPool
-
 	Destroy(callbacks *driver.AllocationCallbacks)
 	Reset(flags common.CommandPoolResetFlags) (common.VkResult, error)
 }
@@ -104,8 +92,6 @@ type DescriptorPool interface {
 	DeviceHandle() driver.VkDevice
 	Driver() driver.Driver
 	APIVersion() common.APIVersion
-
-	Core1_1() core1_1.DescriptorPool
 
 	Destroy(callbacks *driver.AllocationCallbacks)
 	Reset(flags common.DescriptorPoolResetFlags) (common.VkResult, error)
@@ -117,15 +103,11 @@ type DescriptorSet interface {
 	DeviceHandle() driver.VkDevice
 	Driver() driver.Driver
 
-	Core1_1() core1_1.DescriptorSet
-
 	Free() (common.VkResult, error)
 }
 
 type DescriptorSetLayout interface {
 	Handle() driver.VkDescriptorSetLayout
-
-	Core1_1() core1_1.DescriptorSetLayout
 
 	Destroy(callbacks *driver.AllocationCallbacks)
 }
@@ -134,8 +116,6 @@ type DeviceMemory interface {
 	Handle() driver.VkDeviceMemory
 	DeviceHandle() driver.VkDevice
 	Driver() driver.Driver
-
-	Core1_1() core1_1.DeviceMemory
 
 	MapMemory(offset int, size int, flags MemoryMapFlags) (unsafe.Pointer, common.VkResult, error)
 	UnmapMemory()
@@ -151,8 +131,6 @@ type Device interface {
 	Destroy(callbacks *driver.AllocationCallbacks)
 	APIVersion() common.APIVersion
 
-	Core1_1() core1_1.Device
-
 	WaitForIdle() (common.VkResult, error)
 	WaitForFences(waitForAll bool, timeout time.Duration, fences []Fence) (common.VkResult, error)
 	ResetFences(fences []Fence) (common.VkResult, error)
@@ -164,8 +142,6 @@ type Device interface {
 type Event interface {
 	Handle() driver.VkEvent
 
-	Core1_1() core1_1.Event
-
 	Destroy(callbacks *driver.AllocationCallbacks)
 	Set() (common.VkResult, error)
 	Reset() (common.VkResult, error)
@@ -174,8 +150,6 @@ type Event interface {
 
 type Fence interface {
 	Handle() driver.VkFence
-
-	Core1_1() core1_1.Fence
 
 	Destroy(callbacks *driver.AllocationCallbacks)
 	Wait(timeout time.Duration) (common.VkResult, error)
@@ -186,15 +160,11 @@ type Fence interface {
 type Framebuffer interface {
 	Handle() driver.VkFramebuffer
 
-	Core1_1() core1_1.Framebuffer
-
 	Destroy(callbacks *driver.AllocationCallbacks)
 }
 
 type Image interface {
 	Handle() driver.VkImage
-
-	Core1_1() core1_1.Image
 
 	Destroy(callbacks *driver.AllocationCallbacks)
 	MemoryRequirements() *MemoryRequirements
@@ -206,8 +176,6 @@ type Image interface {
 type ImageView interface {
 	Handle() driver.VkImageView
 
-	Core1_1() core1_1.ImageView
-
 	Destroy(callbacks *driver.AllocationCallbacks)
 }
 
@@ -216,8 +184,6 @@ type Instance interface {
 	Driver() driver.Driver
 	APIVersion() common.APIVersion
 
-	Core1_1() core1_1.Instance
-
 	Destroy(callbacks *driver.AllocationCallbacks)
 }
 
@@ -225,8 +191,6 @@ type PhysicalDevice interface {
 	Handle() driver.VkPhysicalDevice
 	Driver() driver.Driver
 	APIVersion() common.APIVersion
-
-	Core1_1() core1_1.PhysicalDevice
 
 	QueueFamilyProperties() []*QueueFamily
 	Properties() (*PhysicalDeviceProperties, error)
@@ -243,15 +207,11 @@ type PhysicalDevice interface {
 type Pipeline interface {
 	Handle() driver.VkPipeline
 
-	Core1_1() core1_1.Pipeline
-
 	Destroy(callbacks *driver.AllocationCallbacks)
 }
 
 type PipelineCache interface {
 	Handle() driver.VkPipelineCache
-
-	Core1_1() core1_1.PipelineCache
 
 	Destroy(callbacks *driver.AllocationCallbacks)
 	CacheData() ([]byte, common.VkResult, error)
@@ -261,15 +221,11 @@ type PipelineCache interface {
 type PipelineLayout interface {
 	Handle() driver.VkPipelineLayout
 
-	Core1_1() core1_1.PipelineLayout
-
 	Destroy(callbacks *driver.AllocationCallbacks)
 }
 
 type QueryPool interface {
 	Handle() driver.VkQueryPool
-
-	Core1_1() core1_1.QueryPool
 
 	Destroy(callbacks *driver.AllocationCallbacks)
 	PopulateResults(firstQuery, queryCount int, results []byte, resultStride int, flags common.QueryResultFlags) (common.VkResult, error)
@@ -279,8 +235,6 @@ type Queue interface {
 	Handle() driver.VkQueue
 	Driver() driver.Driver
 
-	Core1_1() core1_1.Queue
-
 	WaitForIdle() (common.VkResult, error)
 	SubmitToQueue(fence Fence, o []SubmitOptions) (common.VkResult, error)
 	BindSparse(fence Fence, bindInfos []BindSparseOptions) (common.VkResult, error)
@@ -289,8 +243,6 @@ type Queue interface {
 type RenderPass interface {
 	Handle() driver.VkRenderPass
 
-	Core1_1() core1_1.RenderPass
-
 	Destroy(callbacks *driver.AllocationCallbacks)
 	RenderAreaGranularity() common.Extent2D
 }
@@ -298,23 +250,17 @@ type RenderPass interface {
 type Sampler interface {
 	Handle() driver.VkSampler
 
-	Core1_1() core1_1.Sampler
-
 	Destroy(callbacks *driver.AllocationCallbacks)
 }
 
 type Semaphore interface {
 	Handle() driver.VkSemaphore
 
-	Core1_1() core1_1.Semaphore
-
 	Destroy(callbacks *driver.AllocationCallbacks)
 }
 
 type ShaderModule interface {
 	Handle() driver.VkShaderModule
-
-	Core1_1() core1_1.ShaderModule
 
 	Destroy(callbacks *driver.AllocationCallbacks)
 }

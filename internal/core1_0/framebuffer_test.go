@@ -1,4 +1,4 @@
-package core1_0_test
+package internal1_0_test
 
 import (
 	"github.com/CannibalVox/VKng/core"
@@ -52,7 +52,7 @@ func TestVulkanLoader1_0_CreateFrameBuffer(t *testing.T) {
 			return core1_0.VKSuccess, nil
 		})
 
-	framebuffer, _, err := loader.CreateFrameBuffer(device, nil, core1_0.FramebufferOptions{
+	framebuffer, _, err := loader.CreateFrameBuffer(device, nil, core1_0.FramebufferCreateOptions{
 		Flags:      0,
 		RenderPass: renderPass,
 		Width:      3,

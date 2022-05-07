@@ -1,4 +1,4 @@
-package core1_0_test
+package internal1_0_test
 
 import (
 	"github.com/CannibalVox/VKng/core"
@@ -51,7 +51,7 @@ func TestVulkanLoader1_0_CreateSampler(t *testing.T) {
 			return core1_0.VKSuccess, nil
 		})
 
-	sampler, _, err := loader.CreateSampler(device, nil, core1_0.SamplerOptions{
+	sampler, _, err := loader.CreateSampler(device, nil, core1_0.SamplerCreateOptions{
 		Flags:                   0,
 		MagFilter:               core1_0.FilterNearest,
 		MinFilter:               core1_0.FilterLinear,

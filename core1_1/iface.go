@@ -1,78 +1,61 @@
 package core1_1
 
-//go:generate mockgen -source ./iface.go -destination ../mocks/core1_1_mocks.go -package mocks -mock_names Buffer=MockBuffer1_1,BufferView=MockBufferView1_1,CommandBuffer=MockCommandBuffer1_1,CommandPool=MockCommandPool1_1,DescriptorPool=MockDescriptorPool1_1,DescriptorSet=MockDescriptorSet1_1,DescriptorSetLayout=MockDescriptorSetLayout1_1,DeviceMemory=MockDeviceMemory1_1,Device=MockDevice1_1,Event=MockEvent1_1,Fence=MockFence1_1,Framebuffer=MockFramebuffer1_1,Image=MockImage1_1,ImageView=MockImageView1_1,Instance=MockInstance1_1,PhysicalDevice=MockPhysicalDevice1_1,Pipeline=MockPipeline1_1,PipelineCache=MockPipelineCache1_1,PipelineLayout=MockPipelineLayout1_1,QueryPool=MockQueryPool1_1,Queue=MockQueue1_1,RenderPass=MockRenderPass1_1,Semaphore=MockSemaphore1_1,ShaderModule=MockShaderModule1_1,Sampler=MockSampler1_1
+import (
+	"github.com/CannibalVox/VKng/core/common"
+	"github.com/CannibalVox/VKng/core/core1_0"
+	"github.com/CannibalVox/VKng/core/driver"
+)
 
-type Buffer interface {
-}
-
-type BufferView interface {
-}
+//go:generate mockgen -source ./iface.go -destination ../mocks/core1_1_mocks.go -package mocks -mock_names CommandBuffer=CommandBuffer1_1,CommandPool=CommandPool1_1,Device=Device1_1,DescriptorUpdateTemplate=DescriptorUpdateTemplate1_1,Instance=Instance1_1,PhysicalDevice=PhysicalDevice1_1,SamplerYcbcrConversion=SamplerYcbcrConversion1_1
 
 type CommandBuffer interface {
+	CmdDispatchBase(baseGroupX, baseGroupY, baseGroupZ, groupCountX, groupCountY, groupCountZ int)
+	CmdSetDeviceMask(deviceMask uint32)
 }
 
 type CommandPool interface {
-}
-
-type DescriptorPool interface {
-}
-
-type DescriptorSet interface {
-}
-
-type DescriptorSetLayout interface {
-}
-
-type DeviceMemory interface {
+	TrimCommandPool(flags CommandPoolTrimFlags)
 }
 
 type Device interface {
+	BindBufferMemory(o []BindBufferMemoryOptions) (common.VkResult, error)
+	BindImageMemory(o []BindImageMemoryOptions) (common.VkResult, error)
+
+	BufferMemoryRequirements(o BufferMemoryRequirementsOptions, out *MemoryRequirementsOutData) error
+	ImageMemoryRequirements(o ImageMemoryRequirementsOptions, out *MemoryRequirementsOutData) error
+	SparseImageMemoryRequirements(o SparseImageRequirementsOptions, outDataFactory func() *SparseImageMemoryRequirementsOutData) ([]*SparseImageMemoryRequirementsOutData, error)
+
+	DescriptorSetLayoutSupport(o core1_0.DescriptorSetLayoutCreateOptions, outData *DescriptorSetLayoutSupportOutData) error
 }
 
-type Event interface {
-}
+type DescriptorUpdateTemplate interface {
+	Handle() driver.VkDescriptorUpdateTemplate
+	Destroy(allocator *driver.AllocationCallbacks)
 
-type Fence interface {
-}
-
-type Framebuffer interface {
-}
-
-type Image interface {
-}
-
-type ImageView interface {
+	UpdateDescriptorSetFromBuffer(descriptorSet core1_0.DescriptorSet, data core1_0.DescriptorBufferInfo)
+	UpdateDescriptorSetFromImage(descriptorSet core1_0.DescriptorSet, data core1_0.DescriptorImageInfo)
+	UpdateDescriptorSetFromObjectHandle(descriptorSet core1_0.DescriptorSet, data driver.VulkanHandle)
 }
 
 type Instance interface {
+	EnumeratePhysicalDeviceGroups(outDataFactory func() *DeviceGroupOutData) ([]*DeviceGroupOutData, common.VkResult, error)
 }
 
 type PhysicalDevice interface {
+	ExternalFenceProperties(o ExternalFenceOptions, outData *ExternalFenceOutData) error
+	ExternalBufferProperties(o ExternalBufferOptions, outData *ExternalBufferOutData) error
+	ExternalSemaphoreProperties(o ExternalSemaphoreOptions, outData *ExternalSemaphoreOutData) error
+
+	Features(out *DeviceFeaturesOutData) error
+	FormatProperties(format common.DataFormat, out *FormatPropertiesOutData) error
+	ImageFormatProperties(o ImageFormatOptions, out *ImageFormatOutData) (common.VkResult, error)
+	MemoryProperties(out *MemoryPropertiesOutData) error
+	Properties(out *DevicePropertiesOutData) error
+	QueueFamilyProperties(outDataFactory func() *QueueFamilyOutData) ([]*QueueFamilyOutData, error)
+	SparseImageFormatProperties(o SparseImageFormatOptions, outDataFactory func() *SparseImageFormatPropertiesOutData) ([]*SparseImageFormatPropertiesOutData, error)
 }
 
-type Pipeline interface {
-}
-
-type PipelineCache interface {
-}
-
-type PipelineLayout interface {
-}
-
-type QueryPool interface {
-}
-
-type Queue interface {
-}
-
-type RenderPass interface {
-}
-
-type Semaphore interface {
-}
-
-type ShaderModule interface {
-}
-
-type Sampler interface {
+type SamplerYcbcrConversion interface {
+	Handle() driver.VkSamplerYcbcrConversion
+	Destroy(allocator *driver.AllocationCallbacks)
 }

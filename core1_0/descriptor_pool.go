@@ -24,7 +24,7 @@ type PoolSize struct {
 	DescriptorCount int
 }
 
-type DescriptorPoolOptions struct {
+type DescriptorPoolCreateOptions struct {
 	Flags common.DescriptorPoolCreateFlags
 
 	MaxSets   int
@@ -33,7 +33,7 @@ type DescriptorPoolOptions struct {
 	common.HaveNext
 }
 
-func (o DescriptorPoolOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o DescriptorPoolCreateOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == unsafe.Pointer(nil) {
 		preallocatedPointer = allocator.Malloc(C.sizeof_struct_VkDescriptorPoolCreateInfo)
 	}
@@ -63,7 +63,7 @@ func (o DescriptorPoolOptions) PopulateCPointer(allocator *cgoparam.Allocator, p
 	return unsafe.Pointer(createInfo), nil
 }
 
-func (o DescriptorPoolOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
+func (o DescriptorPoolCreateOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
 	createInfo := (*C.VkDescriptorPoolCreateInfo)(cDataPointer)
 	return createInfo.pNext, nil
 }

@@ -1,4 +1,4 @@
-package core1_0
+package internal1_0
 
 /*
 #include <stdlib.h>
@@ -7,7 +7,6 @@ package core1_0
 import "C"
 import (
 	"github.com/CannibalVox/VKng/core/common"
-	"github.com/CannibalVox/VKng/core/core1_1"
 	"github.com/CannibalVox/VKng/core/driver"
 	"github.com/CannibalVox/cgoparam"
 	"unsafe"
@@ -20,8 +19,6 @@ type VulkanDescriptorSet struct {
 	DescriptorPool      driver.VkDescriptorPool
 
 	MaximumAPIVersion common.APIVersion
-
-	DescriptorSet1_1 core1_1.DescriptorSet
 }
 
 func (s *VulkanDescriptorSet) Handle() driver.VkDescriptorSet {
@@ -55,8 +52,4 @@ func (s *VulkanDescriptorSet) DeviceHandle() driver.VkDevice {
 
 func (s *VulkanDescriptorSet) Driver() driver.Driver {
 	return s.DeviceDriver
-}
-
-func (s *VulkanDescriptorSet) Core1_1() core1_1.DescriptorSet {
-	return s.DescriptorSet1_1
 }

@@ -1,4 +1,4 @@
-package core1_0_test
+package internal1_0_test
 
 import (
 	"github.com/CannibalVox/VKng/core"
@@ -42,7 +42,7 @@ func TestCommandPoolCreateBasic(t *testing.T) {
 	require.NoError(t, err)
 
 	graphicsFamily := 1
-	pool, res, err := loader.CreateCommandPool(device, nil, core1_0.CommandPoolOptions{
+	pool, res, err := loader.CreateCommandPool(device, nil, core1_0.CommandPoolCreateOptions{
 		Flags:               core1_0.CommandPoolCreateResetBuffer,
 		GraphicsQueueFamily: &graphicsFamily,
 	})
@@ -63,7 +63,7 @@ func TestCommandPoolNullQueue(t *testing.T) {
 	loader, err := core.CreateLoaderFromDriver(mockDriver)
 	require.NoError(t, err)
 
-	pool, res, err := loader.CreateCommandPool(mockDevice, nil, core1_0.CommandPoolOptions{
+	pool, res, err := loader.CreateCommandPool(mockDevice, nil, core1_0.CommandPoolCreateOptions{
 		Flags: core1_0.CommandPoolCreateResetBuffer,
 	})
 	require.Error(t, err)

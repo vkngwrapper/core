@@ -11,7 +11,7 @@ import (
 	"unsafe"
 )
 
-type BufferViewOptions struct {
+type BufferViewCreateOptions struct {
 	Buffer Buffer
 	Format common.DataFormat
 	Offset int
@@ -20,7 +20,7 @@ type BufferViewOptions struct {
 	common.HaveNext
 }
 
-func (o BufferViewOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o BufferViewCreateOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == unsafe.Pointer(nil) {
 		preallocatedPointer = allocator.Malloc(C.sizeof_struct_VkBufferViewCreateInfo)
 	}
@@ -36,7 +36,7 @@ func (o BufferViewOptions) PopulateCPointer(allocator *cgoparam.Allocator, preal
 	return unsafe.Pointer(createInfo), nil
 }
 
-func (o BufferViewOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
+func (o BufferViewCreateOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
 	createInfo := (*C.VkBufferViewCreateInfo)(cDataPointer)
 	return createInfo.pNext, nil
 }

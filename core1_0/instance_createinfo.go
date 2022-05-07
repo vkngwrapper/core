@@ -11,7 +11,7 @@ import (
 	"unsafe"
 )
 
-type InstanceOptions struct {
+type InstanceCreateOptions struct {
 	ApplicationName    string
 	ApplicationVersion common.Version
 	EngineName         string
@@ -24,7 +24,7 @@ type InstanceOptions struct {
 	common.HaveNext
 }
 
-func (o InstanceOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o InstanceCreateOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == unsafe.Pointer(nil) {
 		preallocatedPointer = allocator.Malloc(int(unsafe.Sizeof(C.VkInstanceCreateInfo{})))
 	}
@@ -71,7 +71,7 @@ func (o InstanceOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallo
 	return preallocatedPointer, nil
 }
 
-func (o InstanceOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
+func (o InstanceCreateOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
 	createInfo := (*C.VkInstanceCreateInfo)(cDataPointer)
 	return createInfo.pNext, nil
 }

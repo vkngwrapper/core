@@ -57,7 +57,7 @@ func init() {
 	QueryResultPartial.Register("Partial")
 }
 
-type QueryPoolOptions struct {
+type QueryPoolCreateOptions struct {
 	QueryType          common.QueryType
 	QueryCount         int
 	PipelineStatistics common.PipelineStatistics
@@ -65,7 +65,7 @@ type QueryPoolOptions struct {
 	common.HaveNext
 }
 
-func (o QueryPoolOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o QueryPoolCreateOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == unsafe.Pointer(nil) {
 		preallocatedPointer = allocator.Malloc(C.sizeof_struct_VkQueryPoolCreateInfo)
 	}
@@ -80,7 +80,7 @@ func (o QueryPoolOptions) PopulateCPointer(allocator *cgoparam.Allocator, preall
 	return preallocatedPointer, nil
 }
 
-func (o QueryPoolOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
+func (o QueryPoolCreateOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
 	createInfo := (*C.VkQueryPoolCreateInfo)(cDataPointer)
 	return createInfo.pNext, nil
 }

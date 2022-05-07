@@ -54,7 +54,7 @@ type ComponentMapping struct {
 	A common.ComponentSwizzle
 }
 
-type ImageViewOptions struct {
+type ImageViewCreateOptions struct {
 	Image Image
 
 	Flags            common.ImageViewCreateFlags
@@ -66,7 +66,7 @@ type ImageViewOptions struct {
 	common.HaveNext
 }
 
-func (o ImageViewOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o ImageViewCreateOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == unsafe.Pointer(nil) {
 		preallocatedPointer = allocator.Malloc(int(unsafe.Sizeof([1]C.VkImageViewCreateInfo{})))
 	}
@@ -91,7 +91,7 @@ func (o ImageViewOptions) PopulateCPointer(allocator *cgoparam.Allocator, preall
 	return preallocatedPointer, nil
 }
 
-func (o ImageViewOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
+func (o ImageViewCreateOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
 	createInfo := (*C.VkImageViewCreateInfo)(cDataPointer)
 	return createInfo.pNext, nil
 }

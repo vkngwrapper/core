@@ -5,580 +5,542 @@
 package mocks
 
 import (
+	reflect "reflect"
+
+	common "github.com/CannibalVox/VKng/core/common"
+	core1_0 "github.com/CannibalVox/VKng/core/core1_0"
+	core1_1 "github.com/CannibalVox/VKng/core/core1_1"
+	driver "github.com/CannibalVox/VKng/core/driver"
 	gomock "github.com/golang/mock/gomock"
 )
 
-// MockBuffer1_1 is a mock of Buffer interface.
-type MockBuffer1_1 struct {
+// CommandBuffer1_1 is a mock of CommandBuffer interface.
+type CommandBuffer1_1 struct {
 	ctrl     *gomock.Controller
-	recorder *MockBuffer1_1MockRecorder
+	recorder *CommandBuffer1_1MockRecorder
 }
 
-// MockBuffer1_1MockRecorder is the mock recorder for MockBuffer1_1.
-type MockBuffer1_1MockRecorder struct {
-	mock *MockBuffer1_1
+// CommandBuffer1_1MockRecorder is the mock recorder for CommandBuffer1_1.
+type CommandBuffer1_1MockRecorder struct {
+	mock *CommandBuffer1_1
 }
 
-// NewMockBuffer1_1 creates a new mock instance.
-func NewMockBuffer1_1(ctrl *gomock.Controller) *MockBuffer1_1 {
-	mock := &MockBuffer1_1{ctrl: ctrl}
-	mock.recorder = &MockBuffer1_1MockRecorder{mock}
+// NewCommandBuffer1_1 creates a new mock instance.
+func NewCommandBuffer1_1(ctrl *gomock.Controller) *CommandBuffer1_1 {
+	mock := &CommandBuffer1_1{ctrl: ctrl}
+	mock.recorder = &CommandBuffer1_1MockRecorder{mock}
 	return mock
 }
 
 // EXPECT returns an object that allows the caller to indicate expected use.
-func (m *MockBuffer1_1) EXPECT() *MockBuffer1_1MockRecorder {
+func (m *CommandBuffer1_1) EXPECT() *CommandBuffer1_1MockRecorder {
 	return m.recorder
 }
 
-// MockBufferView1_1 is a mock of BufferView interface.
-type MockBufferView1_1 struct {
+// CmdDispatchBase mocks base method.
+func (m *CommandBuffer1_1) CmdDispatchBase(baseGroupX, baseGroupY, baseGroupZ, groupCountX, groupCountY, groupCountZ int) {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "CmdDispatchBase", baseGroupX, baseGroupY, baseGroupZ, groupCountX, groupCountY, groupCountZ)
+}
+
+// CmdDispatchBase indicates an expected call of CmdDispatchBase.
+func (mr *CommandBuffer1_1MockRecorder) CmdDispatchBase(baseGroupX, baseGroupY, baseGroupZ, groupCountX, groupCountY, groupCountZ interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CmdDispatchBase", reflect.TypeOf((*CommandBuffer1_1)(nil).CmdDispatchBase), baseGroupX, baseGroupY, baseGroupZ, groupCountX, groupCountY, groupCountZ)
+}
+
+// CmdSetDeviceMask mocks base method.
+func (m *CommandBuffer1_1) CmdSetDeviceMask(deviceMask uint32) {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "CmdSetDeviceMask", deviceMask)
+}
+
+// CmdSetDeviceMask indicates an expected call of CmdSetDeviceMask.
+func (mr *CommandBuffer1_1MockRecorder) CmdSetDeviceMask(deviceMask interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CmdSetDeviceMask", reflect.TypeOf((*CommandBuffer1_1)(nil).CmdSetDeviceMask), deviceMask)
+}
+
+// CommandPool1_1 is a mock of CommandPool interface.
+type CommandPool1_1 struct {
 	ctrl     *gomock.Controller
-	recorder *MockBufferView1_1MockRecorder
+	recorder *CommandPool1_1MockRecorder
 }
 
-// MockBufferView1_1MockRecorder is the mock recorder for MockBufferView1_1.
-type MockBufferView1_1MockRecorder struct {
-	mock *MockBufferView1_1
+// CommandPool1_1MockRecorder is the mock recorder for CommandPool1_1.
+type CommandPool1_1MockRecorder struct {
+	mock *CommandPool1_1
 }
 
-// NewMockBufferView1_1 creates a new mock instance.
-func NewMockBufferView1_1(ctrl *gomock.Controller) *MockBufferView1_1 {
-	mock := &MockBufferView1_1{ctrl: ctrl}
-	mock.recorder = &MockBufferView1_1MockRecorder{mock}
+// NewCommandPool1_1 creates a new mock instance.
+func NewCommandPool1_1(ctrl *gomock.Controller) *CommandPool1_1 {
+	mock := &CommandPool1_1{ctrl: ctrl}
+	mock.recorder = &CommandPool1_1MockRecorder{mock}
 	return mock
 }
 
 // EXPECT returns an object that allows the caller to indicate expected use.
-func (m *MockBufferView1_1) EXPECT() *MockBufferView1_1MockRecorder {
+func (m *CommandPool1_1) EXPECT() *CommandPool1_1MockRecorder {
 	return m.recorder
 }
 
-// MockCommandBuffer1_1 is a mock of CommandBuffer interface.
-type MockCommandBuffer1_1 struct {
+// TrimCommandPool mocks base method.
+func (m *CommandPool1_1) TrimCommandPool(flags core1_1.CommandPoolTrimFlags) {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "TrimCommandPool", flags)
+}
+
+// TrimCommandPool indicates an expected call of TrimCommandPool.
+func (mr *CommandPool1_1MockRecorder) TrimCommandPool(flags interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "TrimCommandPool", reflect.TypeOf((*CommandPool1_1)(nil).TrimCommandPool), flags)
+}
+
+// Device1_1 is a mock of Device interface.
+type Device1_1 struct {
 	ctrl     *gomock.Controller
-	recorder *MockCommandBuffer1_1MockRecorder
+	recorder *Device1_1MockRecorder
 }
 
-// MockCommandBuffer1_1MockRecorder is the mock recorder for MockCommandBuffer1_1.
-type MockCommandBuffer1_1MockRecorder struct {
-	mock *MockCommandBuffer1_1
+// Device1_1MockRecorder is the mock recorder for Device1_1.
+type Device1_1MockRecorder struct {
+	mock *Device1_1
 }
 
-// NewMockCommandBuffer1_1 creates a new mock instance.
-func NewMockCommandBuffer1_1(ctrl *gomock.Controller) *MockCommandBuffer1_1 {
-	mock := &MockCommandBuffer1_1{ctrl: ctrl}
-	mock.recorder = &MockCommandBuffer1_1MockRecorder{mock}
+// NewDevice1_1 creates a new mock instance.
+func NewDevice1_1(ctrl *gomock.Controller) *Device1_1 {
+	mock := &Device1_1{ctrl: ctrl}
+	mock.recorder = &Device1_1MockRecorder{mock}
 	return mock
 }
 
 // EXPECT returns an object that allows the caller to indicate expected use.
-func (m *MockCommandBuffer1_1) EXPECT() *MockCommandBuffer1_1MockRecorder {
+func (m *Device1_1) EXPECT() *Device1_1MockRecorder {
 	return m.recorder
 }
 
-// MockCommandPool1_1 is a mock of CommandPool interface.
-type MockCommandPool1_1 struct {
+// BindBufferMemory mocks base method.
+func (m *Device1_1) BindBufferMemory(o []core1_1.BindBufferMemoryOptions) (common.VkResult, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "BindBufferMemory", o)
+	ret0, _ := ret[0].(common.VkResult)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// BindBufferMemory indicates an expected call of BindBufferMemory.
+func (mr *Device1_1MockRecorder) BindBufferMemory(o interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "BindBufferMemory", reflect.TypeOf((*Device1_1)(nil).BindBufferMemory), o)
+}
+
+// BindImageMemory mocks base method.
+func (m *Device1_1) BindImageMemory(o []core1_1.BindImageMemoryOptions) (common.VkResult, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "BindImageMemory", o)
+	ret0, _ := ret[0].(common.VkResult)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// BindImageMemory indicates an expected call of BindImageMemory.
+func (mr *Device1_1MockRecorder) BindImageMemory(o interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "BindImageMemory", reflect.TypeOf((*Device1_1)(nil).BindImageMemory), o)
+}
+
+// BufferMemoryRequirements mocks base method.
+func (m *Device1_1) BufferMemoryRequirements(o core1_1.BufferMemoryRequirementsOptions, out *core1_1.MemoryRequirementsOutData) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "BufferMemoryRequirements", o, out)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// BufferMemoryRequirements indicates an expected call of BufferMemoryRequirements.
+func (mr *Device1_1MockRecorder) BufferMemoryRequirements(o, out interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "BufferMemoryRequirements", reflect.TypeOf((*Device1_1)(nil).BufferMemoryRequirements), o, out)
+}
+
+// DescriptorSetLayoutSupport mocks base method.
+func (m *Device1_1) DescriptorSetLayoutSupport(o core1_0.DescriptorSetLayoutCreateOptions, outData *core1_1.DescriptorSetLayoutSupportOutData) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DescriptorSetLayoutSupport", o, outData)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// DescriptorSetLayoutSupport indicates an expected call of DescriptorSetLayoutSupport.
+func (mr *Device1_1MockRecorder) DescriptorSetLayoutSupport(o, outData interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DescriptorSetLayoutSupport", reflect.TypeOf((*Device1_1)(nil).DescriptorSetLayoutSupport), o, outData)
+}
+
+// ImageMemoryRequirements mocks base method.
+func (m *Device1_1) ImageMemoryRequirements(o core1_1.ImageMemoryRequirementsOptions, out *core1_1.MemoryRequirementsOutData) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ImageMemoryRequirements", o, out)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// ImageMemoryRequirements indicates an expected call of ImageMemoryRequirements.
+func (mr *Device1_1MockRecorder) ImageMemoryRequirements(o, out interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ImageMemoryRequirements", reflect.TypeOf((*Device1_1)(nil).ImageMemoryRequirements), o, out)
+}
+
+// SparseImageMemoryRequirements mocks base method.
+func (m *Device1_1) SparseImageMemoryRequirements(o core1_1.SparseImageRequirementsOptions, outDataFactory func() *core1_1.SparseImageMemoryRequirementsOutData) ([]*core1_1.SparseImageMemoryRequirementsOutData, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "SparseImageMemoryRequirements", o, outDataFactory)
+	ret0, _ := ret[0].([]*core1_1.SparseImageMemoryRequirementsOutData)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// SparseImageMemoryRequirements indicates an expected call of SparseImageMemoryRequirements.
+func (mr *Device1_1MockRecorder) SparseImageMemoryRequirements(o, outDataFactory interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SparseImageMemoryRequirements", reflect.TypeOf((*Device1_1)(nil).SparseImageMemoryRequirements), o, outDataFactory)
+}
+
+// DescriptorUpdateTemplate1_1 is a mock of DescriptorUpdateTemplate interface.
+type DescriptorUpdateTemplate1_1 struct {
 	ctrl     *gomock.Controller
-	recorder *MockCommandPool1_1MockRecorder
+	recorder *DescriptorUpdateTemplate1_1MockRecorder
 }
 
-// MockCommandPool1_1MockRecorder is the mock recorder for MockCommandPool1_1.
-type MockCommandPool1_1MockRecorder struct {
-	mock *MockCommandPool1_1
+// DescriptorUpdateTemplate1_1MockRecorder is the mock recorder for DescriptorUpdateTemplate1_1.
+type DescriptorUpdateTemplate1_1MockRecorder struct {
+	mock *DescriptorUpdateTemplate1_1
 }
 
-// NewMockCommandPool1_1 creates a new mock instance.
-func NewMockCommandPool1_1(ctrl *gomock.Controller) *MockCommandPool1_1 {
-	mock := &MockCommandPool1_1{ctrl: ctrl}
-	mock.recorder = &MockCommandPool1_1MockRecorder{mock}
+// NewDescriptorUpdateTemplate1_1 creates a new mock instance.
+func NewDescriptorUpdateTemplate1_1(ctrl *gomock.Controller) *DescriptorUpdateTemplate1_1 {
+	mock := &DescriptorUpdateTemplate1_1{ctrl: ctrl}
+	mock.recorder = &DescriptorUpdateTemplate1_1MockRecorder{mock}
 	return mock
 }
 
 // EXPECT returns an object that allows the caller to indicate expected use.
-func (m *MockCommandPool1_1) EXPECT() *MockCommandPool1_1MockRecorder {
+func (m *DescriptorUpdateTemplate1_1) EXPECT() *DescriptorUpdateTemplate1_1MockRecorder {
 	return m.recorder
 }
 
-// MockDescriptorPool1_1 is a mock of DescriptorPool interface.
-type MockDescriptorPool1_1 struct {
+// Destroy mocks base method.
+func (m *DescriptorUpdateTemplate1_1) Destroy(allocator *driver.AllocationCallbacks) {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "Destroy", allocator)
+}
+
+// Destroy indicates an expected call of Destroy.
+func (mr *DescriptorUpdateTemplate1_1MockRecorder) Destroy(allocator interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Destroy", reflect.TypeOf((*DescriptorUpdateTemplate1_1)(nil).Destroy), allocator)
+}
+
+// Handle mocks base method.
+func (m *DescriptorUpdateTemplate1_1) Handle() driver.VkDescriptorUpdateTemplate {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Handle")
+	ret0, _ := ret[0].(driver.VkDescriptorUpdateTemplate)
+	return ret0
+}
+
+// Handle indicates an expected call of Handle.
+func (mr *DescriptorUpdateTemplate1_1MockRecorder) Handle() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Handle", reflect.TypeOf((*DescriptorUpdateTemplate1_1)(nil).Handle))
+}
+
+// UpdateDescriptorSetFromBuffer mocks base method.
+func (m *DescriptorUpdateTemplate1_1) UpdateDescriptorSetFromBuffer(descriptorSet core1_0.DescriptorSet, data core1_0.DescriptorBufferInfo) {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "UpdateDescriptorSetFromBuffer", descriptorSet, data)
+}
+
+// UpdateDescriptorSetFromBuffer indicates an expected call of UpdateDescriptorSetFromBuffer.
+func (mr *DescriptorUpdateTemplate1_1MockRecorder) UpdateDescriptorSetFromBuffer(descriptorSet, data interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateDescriptorSetFromBuffer", reflect.TypeOf((*DescriptorUpdateTemplate1_1)(nil).UpdateDescriptorSetFromBuffer), descriptorSet, data)
+}
+
+// UpdateDescriptorSetFromImage mocks base method.
+func (m *DescriptorUpdateTemplate1_1) UpdateDescriptorSetFromImage(descriptorSet core1_0.DescriptorSet, data core1_0.DescriptorImageInfo) {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "UpdateDescriptorSetFromImage", descriptorSet, data)
+}
+
+// UpdateDescriptorSetFromImage indicates an expected call of UpdateDescriptorSetFromImage.
+func (mr *DescriptorUpdateTemplate1_1MockRecorder) UpdateDescriptorSetFromImage(descriptorSet, data interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateDescriptorSetFromImage", reflect.TypeOf((*DescriptorUpdateTemplate1_1)(nil).UpdateDescriptorSetFromImage), descriptorSet, data)
+}
+
+// UpdateDescriptorSetFromObjectHandle mocks base method.
+func (m *DescriptorUpdateTemplate1_1) UpdateDescriptorSetFromObjectHandle(descriptorSet core1_0.DescriptorSet, data driver.VulkanHandle) {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "UpdateDescriptorSetFromObjectHandle", descriptorSet, data)
+}
+
+// UpdateDescriptorSetFromObjectHandle indicates an expected call of UpdateDescriptorSetFromObjectHandle.
+func (mr *DescriptorUpdateTemplate1_1MockRecorder) UpdateDescriptorSetFromObjectHandle(descriptorSet, data interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateDescriptorSetFromObjectHandle", reflect.TypeOf((*DescriptorUpdateTemplate1_1)(nil).UpdateDescriptorSetFromObjectHandle), descriptorSet, data)
+}
+
+// Instance1_1 is a mock of Instance interface.
+type Instance1_1 struct {
 	ctrl     *gomock.Controller
-	recorder *MockDescriptorPool1_1MockRecorder
+	recorder *Instance1_1MockRecorder
 }
 
-// MockDescriptorPool1_1MockRecorder is the mock recorder for MockDescriptorPool1_1.
-type MockDescriptorPool1_1MockRecorder struct {
-	mock *MockDescriptorPool1_1
+// Instance1_1MockRecorder is the mock recorder for Instance1_1.
+type Instance1_1MockRecorder struct {
+	mock *Instance1_1
 }
 
-// NewMockDescriptorPool1_1 creates a new mock instance.
-func NewMockDescriptorPool1_1(ctrl *gomock.Controller) *MockDescriptorPool1_1 {
-	mock := &MockDescriptorPool1_1{ctrl: ctrl}
-	mock.recorder = &MockDescriptorPool1_1MockRecorder{mock}
+// NewInstance1_1 creates a new mock instance.
+func NewInstance1_1(ctrl *gomock.Controller) *Instance1_1 {
+	mock := &Instance1_1{ctrl: ctrl}
+	mock.recorder = &Instance1_1MockRecorder{mock}
 	return mock
 }
 
 // EXPECT returns an object that allows the caller to indicate expected use.
-func (m *MockDescriptorPool1_1) EXPECT() *MockDescriptorPool1_1MockRecorder {
+func (m *Instance1_1) EXPECT() *Instance1_1MockRecorder {
 	return m.recorder
 }
 
-// MockDescriptorSet1_1 is a mock of DescriptorSet interface.
-type MockDescriptorSet1_1 struct {
+// EnumeratePhysicalDeviceGroups mocks base method.
+func (m *Instance1_1) EnumeratePhysicalDeviceGroups(outDataFactory func() *core1_1.DeviceGroupOutData) ([]*core1_1.DeviceGroupOutData, common.VkResult, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "EnumeratePhysicalDeviceGroups", outDataFactory)
+	ret0, _ := ret[0].([]*core1_1.DeviceGroupOutData)
+	ret1, _ := ret[1].(common.VkResult)
+	ret2, _ := ret[2].(error)
+	return ret0, ret1, ret2
+}
+
+// EnumeratePhysicalDeviceGroups indicates an expected call of EnumeratePhysicalDeviceGroups.
+func (mr *Instance1_1MockRecorder) EnumeratePhysicalDeviceGroups(outDataFactory interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "EnumeratePhysicalDeviceGroups", reflect.TypeOf((*Instance1_1)(nil).EnumeratePhysicalDeviceGroups), outDataFactory)
+}
+
+// PhysicalDevice1_1 is a mock of PhysicalDevice interface.
+type PhysicalDevice1_1 struct {
 	ctrl     *gomock.Controller
-	recorder *MockDescriptorSet1_1MockRecorder
+	recorder *PhysicalDevice1_1MockRecorder
 }
 
-// MockDescriptorSet1_1MockRecorder is the mock recorder for MockDescriptorSet1_1.
-type MockDescriptorSet1_1MockRecorder struct {
-	mock *MockDescriptorSet1_1
+// PhysicalDevice1_1MockRecorder is the mock recorder for PhysicalDevice1_1.
+type PhysicalDevice1_1MockRecorder struct {
+	mock *PhysicalDevice1_1
 }
 
-// NewMockDescriptorSet1_1 creates a new mock instance.
-func NewMockDescriptorSet1_1(ctrl *gomock.Controller) *MockDescriptorSet1_1 {
-	mock := &MockDescriptorSet1_1{ctrl: ctrl}
-	mock.recorder = &MockDescriptorSet1_1MockRecorder{mock}
+// NewPhysicalDevice1_1 creates a new mock instance.
+func NewPhysicalDevice1_1(ctrl *gomock.Controller) *PhysicalDevice1_1 {
+	mock := &PhysicalDevice1_1{ctrl: ctrl}
+	mock.recorder = &PhysicalDevice1_1MockRecorder{mock}
 	return mock
 }
 
 // EXPECT returns an object that allows the caller to indicate expected use.
-func (m *MockDescriptorSet1_1) EXPECT() *MockDescriptorSet1_1MockRecorder {
+func (m *PhysicalDevice1_1) EXPECT() *PhysicalDevice1_1MockRecorder {
 	return m.recorder
 }
 
-// MockDescriptorSetLayout1_1 is a mock of DescriptorSetLayout interface.
-type MockDescriptorSetLayout1_1 struct {
+// ExternalBufferProperties mocks base method.
+func (m *PhysicalDevice1_1) ExternalBufferProperties(o core1_1.ExternalBufferOptions, outData *core1_1.ExternalBufferOutData) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ExternalBufferProperties", o, outData)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// ExternalBufferProperties indicates an expected call of ExternalBufferProperties.
+func (mr *PhysicalDevice1_1MockRecorder) ExternalBufferProperties(o, outData interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ExternalBufferProperties", reflect.TypeOf((*PhysicalDevice1_1)(nil).ExternalBufferProperties), o, outData)
+}
+
+// ExternalFenceProperties mocks base method.
+func (m *PhysicalDevice1_1) ExternalFenceProperties(o core1_1.ExternalFenceOptions, outData *core1_1.ExternalFenceOutData) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ExternalFenceProperties", o, outData)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// ExternalFenceProperties indicates an expected call of ExternalFenceProperties.
+func (mr *PhysicalDevice1_1MockRecorder) ExternalFenceProperties(o, outData interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ExternalFenceProperties", reflect.TypeOf((*PhysicalDevice1_1)(nil).ExternalFenceProperties), o, outData)
+}
+
+// ExternalSemaphoreProperties mocks base method.
+func (m *PhysicalDevice1_1) ExternalSemaphoreProperties(o core1_1.ExternalSemaphoreOptions, outData *core1_1.ExternalSemaphoreOutData) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ExternalSemaphoreProperties", o, outData)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// ExternalSemaphoreProperties indicates an expected call of ExternalSemaphoreProperties.
+func (mr *PhysicalDevice1_1MockRecorder) ExternalSemaphoreProperties(o, outData interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ExternalSemaphoreProperties", reflect.TypeOf((*PhysicalDevice1_1)(nil).ExternalSemaphoreProperties), o, outData)
+}
+
+// Features mocks base method.
+func (m *PhysicalDevice1_1) Features(out *core1_1.DeviceFeaturesOutData) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Features", out)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// Features indicates an expected call of Features.
+func (mr *PhysicalDevice1_1MockRecorder) Features(out interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Features", reflect.TypeOf((*PhysicalDevice1_1)(nil).Features), out)
+}
+
+// FormatProperties mocks base method.
+func (m *PhysicalDevice1_1) FormatProperties(format common.DataFormat, out *core1_1.FormatPropertiesOutData) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "FormatProperties", format, out)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// FormatProperties indicates an expected call of FormatProperties.
+func (mr *PhysicalDevice1_1MockRecorder) FormatProperties(format, out interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FormatProperties", reflect.TypeOf((*PhysicalDevice1_1)(nil).FormatProperties), format, out)
+}
+
+// ImageFormatProperties mocks base method.
+func (m *PhysicalDevice1_1) ImageFormatProperties(o core1_1.ImageFormatOptions, out *core1_1.ImageFormatOutData) (common.VkResult, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ImageFormatProperties", o, out)
+	ret0, _ := ret[0].(common.VkResult)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ImageFormatProperties indicates an expected call of ImageFormatProperties.
+func (mr *PhysicalDevice1_1MockRecorder) ImageFormatProperties(o, out interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ImageFormatProperties", reflect.TypeOf((*PhysicalDevice1_1)(nil).ImageFormatProperties), o, out)
+}
+
+// MemoryProperties mocks base method.
+func (m *PhysicalDevice1_1) MemoryProperties(out *core1_1.MemoryPropertiesOutData) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "MemoryProperties", out)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// MemoryProperties indicates an expected call of MemoryProperties.
+func (mr *PhysicalDevice1_1MockRecorder) MemoryProperties(out interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "MemoryProperties", reflect.TypeOf((*PhysicalDevice1_1)(nil).MemoryProperties), out)
+}
+
+// Properties mocks base method.
+func (m *PhysicalDevice1_1) Properties(out *core1_1.DevicePropertiesOutData) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Properties", out)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// Properties indicates an expected call of Properties.
+func (mr *PhysicalDevice1_1MockRecorder) Properties(out interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Properties", reflect.TypeOf((*PhysicalDevice1_1)(nil).Properties), out)
+}
+
+// QueueFamilyProperties mocks base method.
+func (m *PhysicalDevice1_1) QueueFamilyProperties(outDataFactory func() *core1_1.QueueFamilyOutData) ([]*core1_1.QueueFamilyOutData, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "QueueFamilyProperties", outDataFactory)
+	ret0, _ := ret[0].([]*core1_1.QueueFamilyOutData)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// QueueFamilyProperties indicates an expected call of QueueFamilyProperties.
+func (mr *PhysicalDevice1_1MockRecorder) QueueFamilyProperties(outDataFactory interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "QueueFamilyProperties", reflect.TypeOf((*PhysicalDevice1_1)(nil).QueueFamilyProperties), outDataFactory)
+}
+
+// SparseImageFormatProperties mocks base method.
+func (m *PhysicalDevice1_1) SparseImageFormatProperties(o core1_1.SparseImageFormatOptions, outDataFactory func() *core1_1.SparseImageFormatPropertiesOutData) ([]*core1_1.SparseImageFormatPropertiesOutData, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "SparseImageFormatProperties", o, outDataFactory)
+	ret0, _ := ret[0].([]*core1_1.SparseImageFormatPropertiesOutData)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// SparseImageFormatProperties indicates an expected call of SparseImageFormatProperties.
+func (mr *PhysicalDevice1_1MockRecorder) SparseImageFormatProperties(o, outDataFactory interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SparseImageFormatProperties", reflect.TypeOf((*PhysicalDevice1_1)(nil).SparseImageFormatProperties), o, outDataFactory)
+}
+
+// SamplerYcbcrConversion1_1 is a mock of SamplerYcbcrConversion interface.
+type SamplerYcbcrConversion1_1 struct {
 	ctrl     *gomock.Controller
-	recorder *MockDescriptorSetLayout1_1MockRecorder
+	recorder *SamplerYcbcrConversion1_1MockRecorder
 }
 
-// MockDescriptorSetLayout1_1MockRecorder is the mock recorder for MockDescriptorSetLayout1_1.
-type MockDescriptorSetLayout1_1MockRecorder struct {
-	mock *MockDescriptorSetLayout1_1
+// SamplerYcbcrConversion1_1MockRecorder is the mock recorder for SamplerYcbcrConversion1_1.
+type SamplerYcbcrConversion1_1MockRecorder struct {
+	mock *SamplerYcbcrConversion1_1
 }
 
-// NewMockDescriptorSetLayout1_1 creates a new mock instance.
-func NewMockDescriptorSetLayout1_1(ctrl *gomock.Controller) *MockDescriptorSetLayout1_1 {
-	mock := &MockDescriptorSetLayout1_1{ctrl: ctrl}
-	mock.recorder = &MockDescriptorSetLayout1_1MockRecorder{mock}
+// NewSamplerYcbcrConversion1_1 creates a new mock instance.
+func NewSamplerYcbcrConversion1_1(ctrl *gomock.Controller) *SamplerYcbcrConversion1_1 {
+	mock := &SamplerYcbcrConversion1_1{ctrl: ctrl}
+	mock.recorder = &SamplerYcbcrConversion1_1MockRecorder{mock}
 	return mock
 }
 
 // EXPECT returns an object that allows the caller to indicate expected use.
-func (m *MockDescriptorSetLayout1_1) EXPECT() *MockDescriptorSetLayout1_1MockRecorder {
+func (m *SamplerYcbcrConversion1_1) EXPECT() *SamplerYcbcrConversion1_1MockRecorder {
 	return m.recorder
 }
 
-// MockDeviceMemory1_1 is a mock of DeviceMemory interface.
-type MockDeviceMemory1_1 struct {
-	ctrl     *gomock.Controller
-	recorder *MockDeviceMemory1_1MockRecorder
+// Destroy mocks base method.
+func (m *SamplerYcbcrConversion1_1) Destroy(allocator *driver.AllocationCallbacks) {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "Destroy", allocator)
 }
 
-// MockDeviceMemory1_1MockRecorder is the mock recorder for MockDeviceMemory1_1.
-type MockDeviceMemory1_1MockRecorder struct {
-	mock *MockDeviceMemory1_1
+// Destroy indicates an expected call of Destroy.
+func (mr *SamplerYcbcrConversion1_1MockRecorder) Destroy(allocator interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Destroy", reflect.TypeOf((*SamplerYcbcrConversion1_1)(nil).Destroy), allocator)
 }
 
-// NewMockDeviceMemory1_1 creates a new mock instance.
-func NewMockDeviceMemory1_1(ctrl *gomock.Controller) *MockDeviceMemory1_1 {
-	mock := &MockDeviceMemory1_1{ctrl: ctrl}
-	mock.recorder = &MockDeviceMemory1_1MockRecorder{mock}
-	return mock
+// Handle mocks base method.
+func (m *SamplerYcbcrConversion1_1) Handle() driver.VkSamplerYcbcrConversion {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Handle")
+	ret0, _ := ret[0].(driver.VkSamplerYcbcrConversion)
+	return ret0
 }
 
-// EXPECT returns an object that allows the caller to indicate expected use.
-func (m *MockDeviceMemory1_1) EXPECT() *MockDeviceMemory1_1MockRecorder {
-	return m.recorder
-}
-
-// MockDevice1_1 is a mock of Device interface.
-type MockDevice1_1 struct {
-	ctrl     *gomock.Controller
-	recorder *MockDevice1_1MockRecorder
-}
-
-// MockDevice1_1MockRecorder is the mock recorder for MockDevice1_1.
-type MockDevice1_1MockRecorder struct {
-	mock *MockDevice1_1
-}
-
-// NewMockDevice1_1 creates a new mock instance.
-func NewMockDevice1_1(ctrl *gomock.Controller) *MockDevice1_1 {
-	mock := &MockDevice1_1{ctrl: ctrl}
-	mock.recorder = &MockDevice1_1MockRecorder{mock}
-	return mock
-}
-
-// EXPECT returns an object that allows the caller to indicate expected use.
-func (m *MockDevice1_1) EXPECT() *MockDevice1_1MockRecorder {
-	return m.recorder
-}
-
-// MockEvent1_1 is a mock of Event interface.
-type MockEvent1_1 struct {
-	ctrl     *gomock.Controller
-	recorder *MockEvent1_1MockRecorder
-}
-
-// MockEvent1_1MockRecorder is the mock recorder for MockEvent1_1.
-type MockEvent1_1MockRecorder struct {
-	mock *MockEvent1_1
-}
-
-// NewMockEvent1_1 creates a new mock instance.
-func NewMockEvent1_1(ctrl *gomock.Controller) *MockEvent1_1 {
-	mock := &MockEvent1_1{ctrl: ctrl}
-	mock.recorder = &MockEvent1_1MockRecorder{mock}
-	return mock
-}
-
-// EXPECT returns an object that allows the caller to indicate expected use.
-func (m *MockEvent1_1) EXPECT() *MockEvent1_1MockRecorder {
-	return m.recorder
-}
-
-// MockFence1_1 is a mock of Fence interface.
-type MockFence1_1 struct {
-	ctrl     *gomock.Controller
-	recorder *MockFence1_1MockRecorder
-}
-
-// MockFence1_1MockRecorder is the mock recorder for MockFence1_1.
-type MockFence1_1MockRecorder struct {
-	mock *MockFence1_1
-}
-
-// NewMockFence1_1 creates a new mock instance.
-func NewMockFence1_1(ctrl *gomock.Controller) *MockFence1_1 {
-	mock := &MockFence1_1{ctrl: ctrl}
-	mock.recorder = &MockFence1_1MockRecorder{mock}
-	return mock
-}
-
-// EXPECT returns an object that allows the caller to indicate expected use.
-func (m *MockFence1_1) EXPECT() *MockFence1_1MockRecorder {
-	return m.recorder
-}
-
-// MockFramebuffer1_1 is a mock of Framebuffer interface.
-type MockFramebuffer1_1 struct {
-	ctrl     *gomock.Controller
-	recorder *MockFramebuffer1_1MockRecorder
-}
-
-// MockFramebuffer1_1MockRecorder is the mock recorder for MockFramebuffer1_1.
-type MockFramebuffer1_1MockRecorder struct {
-	mock *MockFramebuffer1_1
-}
-
-// NewMockFramebuffer1_1 creates a new mock instance.
-func NewMockFramebuffer1_1(ctrl *gomock.Controller) *MockFramebuffer1_1 {
-	mock := &MockFramebuffer1_1{ctrl: ctrl}
-	mock.recorder = &MockFramebuffer1_1MockRecorder{mock}
-	return mock
-}
-
-// EXPECT returns an object that allows the caller to indicate expected use.
-func (m *MockFramebuffer1_1) EXPECT() *MockFramebuffer1_1MockRecorder {
-	return m.recorder
-}
-
-// MockImage1_1 is a mock of Image interface.
-type MockImage1_1 struct {
-	ctrl     *gomock.Controller
-	recorder *MockImage1_1MockRecorder
-}
-
-// MockImage1_1MockRecorder is the mock recorder for MockImage1_1.
-type MockImage1_1MockRecorder struct {
-	mock *MockImage1_1
-}
-
-// NewMockImage1_1 creates a new mock instance.
-func NewMockImage1_1(ctrl *gomock.Controller) *MockImage1_1 {
-	mock := &MockImage1_1{ctrl: ctrl}
-	mock.recorder = &MockImage1_1MockRecorder{mock}
-	return mock
-}
-
-// EXPECT returns an object that allows the caller to indicate expected use.
-func (m *MockImage1_1) EXPECT() *MockImage1_1MockRecorder {
-	return m.recorder
-}
-
-// MockImageView1_1 is a mock of ImageView interface.
-type MockImageView1_1 struct {
-	ctrl     *gomock.Controller
-	recorder *MockImageView1_1MockRecorder
-}
-
-// MockImageView1_1MockRecorder is the mock recorder for MockImageView1_1.
-type MockImageView1_1MockRecorder struct {
-	mock *MockImageView1_1
-}
-
-// NewMockImageView1_1 creates a new mock instance.
-func NewMockImageView1_1(ctrl *gomock.Controller) *MockImageView1_1 {
-	mock := &MockImageView1_1{ctrl: ctrl}
-	mock.recorder = &MockImageView1_1MockRecorder{mock}
-	return mock
-}
-
-// EXPECT returns an object that allows the caller to indicate expected use.
-func (m *MockImageView1_1) EXPECT() *MockImageView1_1MockRecorder {
-	return m.recorder
-}
-
-// MockInstance1_1 is a mock of Instance interface.
-type MockInstance1_1 struct {
-	ctrl     *gomock.Controller
-	recorder *MockInstance1_1MockRecorder
-}
-
-// MockInstance1_1MockRecorder is the mock recorder for MockInstance1_1.
-type MockInstance1_1MockRecorder struct {
-	mock *MockInstance1_1
-}
-
-// NewMockInstance1_1 creates a new mock instance.
-func NewMockInstance1_1(ctrl *gomock.Controller) *MockInstance1_1 {
-	mock := &MockInstance1_1{ctrl: ctrl}
-	mock.recorder = &MockInstance1_1MockRecorder{mock}
-	return mock
-}
-
-// EXPECT returns an object that allows the caller to indicate expected use.
-func (m *MockInstance1_1) EXPECT() *MockInstance1_1MockRecorder {
-	return m.recorder
-}
-
-// MockPhysicalDevice1_1 is a mock of PhysicalDevice interface.
-type MockPhysicalDevice1_1 struct {
-	ctrl     *gomock.Controller
-	recorder *MockPhysicalDevice1_1MockRecorder
-}
-
-// MockPhysicalDevice1_1MockRecorder is the mock recorder for MockPhysicalDevice1_1.
-type MockPhysicalDevice1_1MockRecorder struct {
-	mock *MockPhysicalDevice1_1
-}
-
-// NewMockPhysicalDevice1_1 creates a new mock instance.
-func NewMockPhysicalDevice1_1(ctrl *gomock.Controller) *MockPhysicalDevice1_1 {
-	mock := &MockPhysicalDevice1_1{ctrl: ctrl}
-	mock.recorder = &MockPhysicalDevice1_1MockRecorder{mock}
-	return mock
-}
-
-// EXPECT returns an object that allows the caller to indicate expected use.
-func (m *MockPhysicalDevice1_1) EXPECT() *MockPhysicalDevice1_1MockRecorder {
-	return m.recorder
-}
-
-// MockPipeline1_1 is a mock of Pipeline interface.
-type MockPipeline1_1 struct {
-	ctrl     *gomock.Controller
-	recorder *MockPipeline1_1MockRecorder
-}
-
-// MockPipeline1_1MockRecorder is the mock recorder for MockPipeline1_1.
-type MockPipeline1_1MockRecorder struct {
-	mock *MockPipeline1_1
-}
-
-// NewMockPipeline1_1 creates a new mock instance.
-func NewMockPipeline1_1(ctrl *gomock.Controller) *MockPipeline1_1 {
-	mock := &MockPipeline1_1{ctrl: ctrl}
-	mock.recorder = &MockPipeline1_1MockRecorder{mock}
-	return mock
-}
-
-// EXPECT returns an object that allows the caller to indicate expected use.
-func (m *MockPipeline1_1) EXPECT() *MockPipeline1_1MockRecorder {
-	return m.recorder
-}
-
-// MockPipelineCache1_1 is a mock of PipelineCache interface.
-type MockPipelineCache1_1 struct {
-	ctrl     *gomock.Controller
-	recorder *MockPipelineCache1_1MockRecorder
-}
-
-// MockPipelineCache1_1MockRecorder is the mock recorder for MockPipelineCache1_1.
-type MockPipelineCache1_1MockRecorder struct {
-	mock *MockPipelineCache1_1
-}
-
-// NewMockPipelineCache1_1 creates a new mock instance.
-func NewMockPipelineCache1_1(ctrl *gomock.Controller) *MockPipelineCache1_1 {
-	mock := &MockPipelineCache1_1{ctrl: ctrl}
-	mock.recorder = &MockPipelineCache1_1MockRecorder{mock}
-	return mock
-}
-
-// EXPECT returns an object that allows the caller to indicate expected use.
-func (m *MockPipelineCache1_1) EXPECT() *MockPipelineCache1_1MockRecorder {
-	return m.recorder
-}
-
-// MockPipelineLayout1_1 is a mock of PipelineLayout interface.
-type MockPipelineLayout1_1 struct {
-	ctrl     *gomock.Controller
-	recorder *MockPipelineLayout1_1MockRecorder
-}
-
-// MockPipelineLayout1_1MockRecorder is the mock recorder for MockPipelineLayout1_1.
-type MockPipelineLayout1_1MockRecorder struct {
-	mock *MockPipelineLayout1_1
-}
-
-// NewMockPipelineLayout1_1 creates a new mock instance.
-func NewMockPipelineLayout1_1(ctrl *gomock.Controller) *MockPipelineLayout1_1 {
-	mock := &MockPipelineLayout1_1{ctrl: ctrl}
-	mock.recorder = &MockPipelineLayout1_1MockRecorder{mock}
-	return mock
-}
-
-// EXPECT returns an object that allows the caller to indicate expected use.
-func (m *MockPipelineLayout1_1) EXPECT() *MockPipelineLayout1_1MockRecorder {
-	return m.recorder
-}
-
-// MockQueryPool1_1 is a mock of QueryPool interface.
-type MockQueryPool1_1 struct {
-	ctrl     *gomock.Controller
-	recorder *MockQueryPool1_1MockRecorder
-}
-
-// MockQueryPool1_1MockRecorder is the mock recorder for MockQueryPool1_1.
-type MockQueryPool1_1MockRecorder struct {
-	mock *MockQueryPool1_1
-}
-
-// NewMockQueryPool1_1 creates a new mock instance.
-func NewMockQueryPool1_1(ctrl *gomock.Controller) *MockQueryPool1_1 {
-	mock := &MockQueryPool1_1{ctrl: ctrl}
-	mock.recorder = &MockQueryPool1_1MockRecorder{mock}
-	return mock
-}
-
-// EXPECT returns an object that allows the caller to indicate expected use.
-func (m *MockQueryPool1_1) EXPECT() *MockQueryPool1_1MockRecorder {
-	return m.recorder
-}
-
-// MockQueue1_1 is a mock of Queue interface.
-type MockQueue1_1 struct {
-	ctrl     *gomock.Controller
-	recorder *MockQueue1_1MockRecorder
-}
-
-// MockQueue1_1MockRecorder is the mock recorder for MockQueue1_1.
-type MockQueue1_1MockRecorder struct {
-	mock *MockQueue1_1
-}
-
-// NewMockQueue1_1 creates a new mock instance.
-func NewMockQueue1_1(ctrl *gomock.Controller) *MockQueue1_1 {
-	mock := &MockQueue1_1{ctrl: ctrl}
-	mock.recorder = &MockQueue1_1MockRecorder{mock}
-	return mock
-}
-
-// EXPECT returns an object that allows the caller to indicate expected use.
-func (m *MockQueue1_1) EXPECT() *MockQueue1_1MockRecorder {
-	return m.recorder
-}
-
-// MockRenderPass1_1 is a mock of RenderPass interface.
-type MockRenderPass1_1 struct {
-	ctrl     *gomock.Controller
-	recorder *MockRenderPass1_1MockRecorder
-}
-
-// MockRenderPass1_1MockRecorder is the mock recorder for MockRenderPass1_1.
-type MockRenderPass1_1MockRecorder struct {
-	mock *MockRenderPass1_1
-}
-
-// NewMockRenderPass1_1 creates a new mock instance.
-func NewMockRenderPass1_1(ctrl *gomock.Controller) *MockRenderPass1_1 {
-	mock := &MockRenderPass1_1{ctrl: ctrl}
-	mock.recorder = &MockRenderPass1_1MockRecorder{mock}
-	return mock
-}
-
-// EXPECT returns an object that allows the caller to indicate expected use.
-func (m *MockRenderPass1_1) EXPECT() *MockRenderPass1_1MockRecorder {
-	return m.recorder
-}
-
-// MockSemaphore1_1 is a mock of Semaphore interface.
-type MockSemaphore1_1 struct {
-	ctrl     *gomock.Controller
-	recorder *MockSemaphore1_1MockRecorder
-}
-
-// MockSemaphore1_1MockRecorder is the mock recorder for MockSemaphore1_1.
-type MockSemaphore1_1MockRecorder struct {
-	mock *MockSemaphore1_1
-}
-
-// NewMockSemaphore1_1 creates a new mock instance.
-func NewMockSemaphore1_1(ctrl *gomock.Controller) *MockSemaphore1_1 {
-	mock := &MockSemaphore1_1{ctrl: ctrl}
-	mock.recorder = &MockSemaphore1_1MockRecorder{mock}
-	return mock
-}
-
-// EXPECT returns an object that allows the caller to indicate expected use.
-func (m *MockSemaphore1_1) EXPECT() *MockSemaphore1_1MockRecorder {
-	return m.recorder
-}
-
-// MockShaderModule1_1 is a mock of ShaderModule interface.
-type MockShaderModule1_1 struct {
-	ctrl     *gomock.Controller
-	recorder *MockShaderModule1_1MockRecorder
-}
-
-// MockShaderModule1_1MockRecorder is the mock recorder for MockShaderModule1_1.
-type MockShaderModule1_1MockRecorder struct {
-	mock *MockShaderModule1_1
-}
-
-// NewMockShaderModule1_1 creates a new mock instance.
-func NewMockShaderModule1_1(ctrl *gomock.Controller) *MockShaderModule1_1 {
-	mock := &MockShaderModule1_1{ctrl: ctrl}
-	mock.recorder = &MockShaderModule1_1MockRecorder{mock}
-	return mock
-}
-
-// EXPECT returns an object that allows the caller to indicate expected use.
-func (m *MockShaderModule1_1) EXPECT() *MockShaderModule1_1MockRecorder {
-	return m.recorder
-}
-
-// MockSampler1_1 is a mock of Sampler interface.
-type MockSampler1_1 struct {
-	ctrl     *gomock.Controller
-	recorder *MockSampler1_1MockRecorder
-}
-
-// MockSampler1_1MockRecorder is the mock recorder for MockSampler1_1.
-type MockSampler1_1MockRecorder struct {
-	mock *MockSampler1_1
-}
-
-// NewMockSampler1_1 creates a new mock instance.
-func NewMockSampler1_1(ctrl *gomock.Controller) *MockSampler1_1 {
-	mock := &MockSampler1_1{ctrl: ctrl}
-	mock.recorder = &MockSampler1_1MockRecorder{mock}
-	return mock
-}
-
-// EXPECT returns an object that allows the caller to indicate expected use.
-func (m *MockSampler1_1) EXPECT() *MockSampler1_1MockRecorder {
-	return m.recorder
+// Handle indicates an expected call of Handle.
+func (mr *SamplerYcbcrConversion1_1MockRecorder) Handle() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Handle", reflect.TypeOf((*SamplerYcbcrConversion1_1)(nil).Handle))
 }

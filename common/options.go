@@ -124,3 +124,12 @@ func OfType[T any](values []any) (T, bool) {
 	var zero T
 	return zero, false
 }
+
+func ConvertSlice[T any, U any](values []T, mapping func(in T) U) []U {
+	out := make([]U, len(values))
+	for i := 0; i < len(values); i++ {
+		out[i] = mapping(values[i])
+	}
+
+	return out
+}
