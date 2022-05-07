@@ -10,8 +10,8 @@ func CreateInstance(instanceDriver driver.Driver, handle driver.VkInstance, vers
 	return objects.CreateInstance(instanceDriver, handle, version)
 }
 
-func CreatePhysicalDevice(coreDriver driver.Driver, instance driver.VkInstance, handle driver.VkPhysicalDevice, version common.APIVersion) PhysicalDevice {
-	return objects.CreatePhysicalDevice(coreDriver, instance, handle, version)
+func CreatePhysicalDevice(coreDriver driver.Driver, instance driver.VkInstance, handle driver.VkPhysicalDevice, instanceVersion, deviceVersion common.APIVersion) PhysicalDevice {
+	return objects.CreatePhysicalDevice(coreDriver, instance, handle, instanceVersion, deviceVersion)
 }
 
 func CreateDevice(deviceDriver driver.Driver, handle driver.VkDevice, version common.APIVersion) Device {

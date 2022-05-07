@@ -190,7 +190,8 @@ type Instance interface {
 type PhysicalDevice interface {
 	Handle() driver.VkPhysicalDevice
 	Driver() driver.Driver
-	APIVersion() common.APIVersion
+	InstanceAPIVersion() common.APIVersion
+	DeviceAPIVersion() common.APIVersion
 
 	QueueFamilyProperties() []*QueueFamily
 	Properties() (*PhysicalDeviceProperties, error)

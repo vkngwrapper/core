@@ -244,7 +244,7 @@ func (l *VulkanLoader1_0) CreateDevice(physicalDevice PhysicalDevice, allocation
 		return nil, core1_0.VKErrorUnknown, err
 	}
 
-	device := objects.CreateDevice(deviceDriver, deviceHandle, physicalDevice.APIVersion())
+	device := objects.CreateDevice(deviceDriver, deviceHandle, physicalDevice.DeviceAPIVersion())
 
 	return device, res, nil
 }
@@ -893,8 +893,8 @@ func (l *VulkanLoader1_0) PhysicalDevices(instance Instance) ([]PhysicalDevice, 
 			return nil, core1_0.VKErrorUnknown, err
 		}
 
-		version := instance.APIVersion().Min(properties.APIVersion)
-		physicalDevice := objects.CreatePhysicalDevice(instance.Driver(), instance.Handle(), deviceHandles[ind], version)
+		deviceVersion := instance.APIVersion().Min(properties.APIVersion)
+		physicalDevice := objects.CreatePhysicalDevice(instance.Driver(), instance.Handle(), deviceHandles[ind], instance.APIVersion(), deviceVersion)
 
 		devices = append(devices, physicalDevice)
 	}

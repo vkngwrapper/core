@@ -148,7 +148,7 @@ func TestVulkanInstance_PhysicalDevices(t *testing.T) {
 	require.NoError(t, err)
 	require.Len(t, devices, 2)
 	require.Equal(t, device1, devices[0].Handle())
-	require.Equal(t, common.Vulkan1_0, devices[0].APIVersion())
+	require.Equal(t, common.Vulkan1_0, devices[0].DeviceAPIVersion())
 	require.Equal(t, device2, devices[1].Handle())
-	require.Equal(t, common.Vulkan1_2, devices[1].APIVersion())
+	require.Equal(t, common.Vulkan1_2, devices[1].DeviceAPIVersion())
 }

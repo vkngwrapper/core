@@ -44,7 +44,7 @@ func (o *DeviceGroupOutData) PopulateCPointer(allocator *cgoparam.Allocator, pre
 // by using a go:linkname and may god have mercy on my soul.
 
 //go:linkname createPhysicalDevice github.com/CannibalVox/VKng/core.CreatePhysicalDevice
-func createPhysicalDevice(coreDriver driver.Driver, instance driver.VkInstance, handle driver.VkPhysicalDevice, version common.APIVersion) core1_0.PhysicalDevice
+func createPhysicalDevice(coreDriver driver.Driver, instance driver.VkInstance, handle driver.VkPhysicalDevice, instanceVersion, deviceVersion common.APIVersion) core1_0.PhysicalDevice
 
 func (o *DeviceGroupOutData) PopulateOutData(cPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
 	arena := cgoparam.GetAlloc()
@@ -81,9 +81,9 @@ func (o *DeviceGroupOutData) PopulateOutData(cPointer unsafe.Pointer, helpers ..
 			return nil, err
 		}
 
-		version := instanceVersion.Min(properties.APIVersion)
+		deviceVersion := instanceVersion.Min(properties.APIVersion)
 
-		o.PhysicalDevices[i] = createPhysicalDevice(instanceDriver, instanceHandle, handle, version)
+		o.PhysicalDevices[i] = createPhysicalDevice(instanceDriver, instanceHandle, handle, instanceVersion, deviceVersion)
 	}
 
 	return createInfo.pNext, nil

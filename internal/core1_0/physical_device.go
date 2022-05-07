@@ -17,9 +17,11 @@ import (
 type VulkanPhysicalDevice struct {
 	InstanceDriver       driver.Driver
 	PhysicalDeviceHandle driver.VkPhysicalDevice
-	MaximumVersion       common.APIVersion
 
-	PhysicalDevice1_1 core1_1.PhysicalDevice
+	InstanceVersion      common.APIVersion
+	MaximumDeviceVersion common.APIVersion
+
+	PhysicalDevice1_1 core1_1.InstancePhysicalDevice
 }
 
 func (d *VulkanPhysicalDevice) Handle() driver.VkPhysicalDevice {
@@ -30,11 +32,15 @@ func (d *VulkanPhysicalDevice) Driver() driver.Driver {
 	return d.InstanceDriver
 }
 
-func (d *VulkanPhysicalDevice) APIVersion() common.APIVersion {
-	return d.MaximumVersion
+func (d *VulkanPhysicalDevice) DeviceAPIVersion() common.APIVersion {
+	return d.MaximumDeviceVersion
 }
 
-func (d *VulkanPhysicalDevice) Core1_1() core1_1.PhysicalDevice {
+func (d *VulkanPhysicalDevice) InstanceAPIVersion() common.APIVersion {
+	return d.InstanceVersion
+}
+
+func (d *VulkanPhysicalDevice) Core1_1Instance() core1_1.InstancePhysicalDevice {
 	return d.PhysicalDevice1_1
 }
 

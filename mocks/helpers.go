@@ -140,7 +140,8 @@ func EasyMockPhysicalDevice(ctrl *gomock.Controller, driver driver.Driver) *Mock
 	physicalDevice.EXPECT().Driver().Return(driver).AnyTimes()
 
 	if driver.Version() > 0 {
-		physicalDevice.EXPECT().APIVersion().Return(driver.Version()).AnyTimes()
+		physicalDevice.EXPECT().InstanceAPIVersion().Return(driver.Version()).AnyTimes()
+		physicalDevice.EXPECT().DeviceAPIVersion().Return(driver.Version()).AnyTimes()
 	}
 
 	return physicalDevice

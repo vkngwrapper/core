@@ -29,17 +29,18 @@ func CreateInstance(instanceDriver driver.Driver, handle driver.VkInstance, vers
 		}).(*internal1_0.VulkanInstance)
 }
 
-func CreatePhysicalDevice(coreDriver driver.Driver, instance driver.VkInstance, handle driver.VkPhysicalDevice, version common.APIVersion) *internal1_0.VulkanPhysicalDevice {
+func CreatePhysicalDevice(coreDriver driver.Driver, instance driver.VkInstance, handle driver.VkPhysicalDevice, instanceVersion, deviceVersion common.APIVersion) *internal1_0.VulkanPhysicalDevice {
 	physicalDevice := coreDriver.ObjectStore().GetOrCreate(driver.VulkanHandle(handle),
 		func() interface{} {
 			device := &internal1_0.VulkanPhysicalDevice{
 				InstanceDriver:       coreDriver,
 				PhysicalDeviceHandle: handle,
-				MaximumVersion:       version,
+				InstanceVersion:      instanceVersion,
+				MaximumDeviceVersion: deviceVersion,
 			}
 
-			if version.IsAtLeast(common.Vulkan1_1) {
-				device.PhysicalDevice1_1 = &core1_1.VulkanPhysicalDevice{
+			if instanceVersion.IsAtLeast(common.Vulkan1_1) {
+				device.PhysicalDevice1_1 = &core1_1.VulkanInstancePhysicalDevice{
 					InstanceDriver:       coreDriver,
 					PhysicalDeviceHandle: handle,
 				}

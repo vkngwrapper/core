@@ -2045,20 +2045,6 @@ func (m *MockPhysicalDevice) EXPECT() *MockPhysicalDeviceMockRecorder {
 	return m.recorder
 }
 
-// APIVersion mocks base method.
-func (m *MockPhysicalDevice) APIVersion() common.APIVersion {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "APIVersion")
-	ret0, _ := ret[0].(common.APIVersion)
-	return ret0
-}
-
-// APIVersion indicates an expected call of APIVersion.
-func (mr *MockPhysicalDeviceMockRecorder) APIVersion() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "APIVersion", reflect.TypeOf((*MockPhysicalDevice)(nil).APIVersion))
-}
-
 // AvailableExtensions mocks base method.
 func (m *MockPhysicalDevice) AvailableExtensions() (map[string]*common.ExtensionProperties, common.VkResult, error) {
 	m.ctrl.T.Helper()
@@ -2107,18 +2093,32 @@ func (mr *MockPhysicalDeviceMockRecorder) AvailableLayers() *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AvailableLayers", reflect.TypeOf((*MockPhysicalDevice)(nil).AvailableLayers))
 }
 
-// Core1_1 mocks base method.
-func (m *MockPhysicalDevice) Core1_1() core1_1.PhysicalDevice {
+// Core1_1Instance mocks base method.
+func (m *MockPhysicalDevice) Core1_1Instance() core1_1.InstancePhysicalDevice {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Core1_1")
-	ret0, _ := ret[0].(core1_1.PhysicalDevice)
+	ret := m.ctrl.Call(m, "Core1_1Instance")
+	ret0, _ := ret[0].(core1_1.InstancePhysicalDevice)
 	return ret0
 }
 
-// Core1_1 indicates an expected call of Core1_1.
-func (mr *MockPhysicalDeviceMockRecorder) Core1_1() *gomock.Call {
+// Core1_1Instance indicates an expected call of Core1_1Instance.
+func (mr *MockPhysicalDeviceMockRecorder) Core1_1Instance() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Core1_1", reflect.TypeOf((*MockPhysicalDevice)(nil).Core1_1))
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Core1_1Instance", reflect.TypeOf((*MockPhysicalDevice)(nil).Core1_1Instance))
+}
+
+// DeviceAPIVersion mocks base method.
+func (m *MockPhysicalDevice) DeviceAPIVersion() common.APIVersion {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DeviceAPIVersion")
+	ret0, _ := ret[0].(common.APIVersion)
+	return ret0
+}
+
+// DeviceAPIVersion indicates an expected call of DeviceAPIVersion.
+func (mr *MockPhysicalDeviceMockRecorder) DeviceAPIVersion() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeviceAPIVersion", reflect.TypeOf((*MockPhysicalDevice)(nil).DeviceAPIVersion))
 }
 
 // Driver mocks base method.
@@ -2191,6 +2191,20 @@ func (m *MockPhysicalDevice) ImageFormatProperties(format common.DataFormat, ima
 func (mr *MockPhysicalDeviceMockRecorder) ImageFormatProperties(format, imageType, tiling, usages, flags interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ImageFormatProperties", reflect.TypeOf((*MockPhysicalDevice)(nil).ImageFormatProperties), format, imageType, tiling, usages, flags)
+}
+
+// InstanceAPIVersion mocks base method.
+func (m *MockPhysicalDevice) InstanceAPIVersion() common.APIVersion {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "InstanceAPIVersion")
+	ret0, _ := ret[0].(common.APIVersion)
+	return ret0
+}
+
+// InstanceAPIVersion indicates an expected call of InstanceAPIVersion.
+func (mr *MockPhysicalDeviceMockRecorder) InstanceAPIVersion() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "InstanceAPIVersion", reflect.TypeOf((*MockPhysicalDevice)(nil).InstanceAPIVersion))
 }
 
 // MemoryProperties mocks base method.

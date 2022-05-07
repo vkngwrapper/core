@@ -75,10 +75,23 @@ type Instance interface {
 	Core1_1() core1_1.Instance
 }
 
+// PhysicalDevice straddles the line between the "instance" and "device" section
+// of the vulkan spec. They have "instance" level functionality which will be available
+// if the instance supports core 1.x, even if the device does not, and they have "device"
+// level functionality which is only available if both the instance and device support 1.x
+//
+// As a result, PhysicalDevice's Core1_X() methods indicate whether they are for instance
+// or device.
+//
+// It is hypothetically possible for a core 1.x version to have a Core1_XInstance() and
+// Core1_XDevice method here, and one of those will return nil while the other does not
+// in certain circumstances. No core version has had that situation so far, though.
 type PhysicalDevice interface {
 	core1_0.PhysicalDevice
 
-	Core1_1() core1_1.PhysicalDevice
+	// Core1_1Instance retrieves the 1.1 methods for physical devices
+	// that were promoted from instance extensions
+	Core1_1Instance() core1_1.InstancePhysicalDevice
 }
 
 type Pipeline interface {

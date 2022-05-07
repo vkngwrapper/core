@@ -41,7 +41,7 @@ type Instance interface {
 	EnumeratePhysicalDeviceGroups(outDataFactory func() *DeviceGroupOutData) ([]*DeviceGroupOutData, common.VkResult, error)
 }
 
-type PhysicalDevice interface {
+type InstancePhysicalDevice interface {
 	ExternalFenceProperties(o ExternalFenceOptions, outData *ExternalFenceOutData) error
 	ExternalBufferProperties(o ExternalBufferOptions, outData *ExternalBufferOutData) error
 	ExternalSemaphoreProperties(o ExternalSemaphoreOptions, outData *ExternalSemaphoreOutData) error

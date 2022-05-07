@@ -14,12 +14,12 @@ import (
 	"unsafe"
 )
 
-type VulkanPhysicalDevice struct {
+type VulkanInstancePhysicalDevice struct {
 	InstanceDriver       driver.Driver
 	PhysicalDeviceHandle driver.VkPhysicalDevice
 }
 
-func (p *VulkanPhysicalDevice) ExternalFenceProperties(o core1_1.ExternalFenceOptions, outData *core1_1.ExternalFenceOutData) error {
+func (p *VulkanInstancePhysicalDevice) ExternalFenceProperties(o core1_1.ExternalFenceOptions, outData *core1_1.ExternalFenceOutData) error {
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
@@ -42,7 +42,7 @@ func (p *VulkanPhysicalDevice) ExternalFenceProperties(o core1_1.ExternalFenceOp
 	return common.PopulateOutData(outData, outDataPtr)
 }
 
-func (p *VulkanPhysicalDevice) ExternalBufferProperties(o core1_1.ExternalBufferOptions, outData *core1_1.ExternalBufferOutData) error {
+func (p *VulkanInstancePhysicalDevice) ExternalBufferProperties(o core1_1.ExternalBufferOptions, outData *core1_1.ExternalBufferOutData) error {
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
@@ -63,7 +63,7 @@ func (p *VulkanPhysicalDevice) ExternalBufferProperties(o core1_1.ExternalBuffer
 	return common.PopulateOutData(outData, outDataPtr)
 }
 
-func (p *VulkanPhysicalDevice) ExternalSemaphoreProperties(o core1_1.ExternalSemaphoreOptions, outData *core1_1.ExternalSemaphoreOutData) error {
+func (p *VulkanInstancePhysicalDevice) ExternalSemaphoreProperties(o core1_1.ExternalSemaphoreOptions, outData *core1_1.ExternalSemaphoreOutData) error {
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
@@ -86,7 +86,7 @@ func (p *VulkanPhysicalDevice) ExternalSemaphoreProperties(o core1_1.ExternalSem
 	return common.PopulateOutData(outData, outDataPtr)
 }
 
-func (p *VulkanPhysicalDevice) Features(out *core1_1.DeviceFeaturesOutData) error {
+func (p *VulkanInstancePhysicalDevice) Features(out *core1_1.DeviceFeaturesOutData) error {
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
@@ -100,7 +100,7 @@ func (p *VulkanPhysicalDevice) Features(out *core1_1.DeviceFeaturesOutData) erro
 	return common.PopulateOutData(out, outData)
 }
 
-func (p *VulkanPhysicalDevice) FormatProperties(format common.DataFormat, out *core1_1.FormatPropertiesOutData) error {
+func (p *VulkanInstancePhysicalDevice) FormatProperties(format common.DataFormat, out *core1_1.FormatPropertiesOutData) error {
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
@@ -114,7 +114,7 @@ func (p *VulkanPhysicalDevice) FormatProperties(format common.DataFormat, out *c
 	return common.PopulateOutData(out, outData)
 }
 
-func (p *VulkanPhysicalDevice) ImageFormatProperties(o core1_1.ImageFormatOptions, out *core1_1.ImageFormatOutData) (common.VkResult, error) {
+func (p *VulkanInstancePhysicalDevice) ImageFormatProperties(o core1_1.ImageFormatOptions, out *core1_1.ImageFormatOutData) (common.VkResult, error) {
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
@@ -144,7 +144,7 @@ func (p *VulkanPhysicalDevice) ImageFormatProperties(o core1_1.ImageFormatOption
 	return res, nil
 }
 
-func (p *VulkanPhysicalDevice) MemoryProperties(out *core1_1.MemoryPropertiesOutData) error {
+func (p *VulkanInstancePhysicalDevice) MemoryProperties(out *core1_1.MemoryPropertiesOutData) error {
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
@@ -158,7 +158,7 @@ func (p *VulkanPhysicalDevice) MemoryProperties(out *core1_1.MemoryPropertiesOut
 	return common.PopulateOutData(out, outData)
 }
 
-func (p *VulkanPhysicalDevice) Properties(out *core1_1.DevicePropertiesOutData) error {
+func (p *VulkanInstancePhysicalDevice) Properties(out *core1_1.DevicePropertiesOutData) error {
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
@@ -173,7 +173,7 @@ func (p *VulkanPhysicalDevice) Properties(out *core1_1.DevicePropertiesOutData) 
 	return common.PopulateOutData(out, outData)
 }
 
-func (p *VulkanPhysicalDevice) QueueFamilyProperties(outDataFactory func() *core1_1.QueueFamilyOutData) ([]*core1_1.QueueFamilyOutData, error) {
+func (p *VulkanInstancePhysicalDevice) QueueFamilyProperties(outDataFactory func() *core1_1.QueueFamilyOutData) ([]*core1_1.QueueFamilyOutData, error) {
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
@@ -206,7 +206,7 @@ func (p *VulkanPhysicalDevice) QueueFamilyProperties(outDataFactory func() *core
 	return out, err
 }
 
-func (p *VulkanPhysicalDevice) SparseImageFormatProperties(o core1_1.SparseImageFormatOptions, outDataFactory func() *core1_1.SparseImageFormatPropertiesOutData) ([]*core1_1.SparseImageFormatPropertiesOutData, error) {
+func (p *VulkanInstancePhysicalDevice) SparseImageFormatProperties(o core1_1.SparseImageFormatOptions, outDataFactory func() *core1_1.SparseImageFormatPropertiesOutData) ([]*core1_1.SparseImageFormatPropertiesOutData, error) {
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
