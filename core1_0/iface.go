@@ -31,6 +31,8 @@ type CommandBuffer interface {
 	End() (common.VkResult, error)
 	Reset(flags common.CommandBufferResetFlags) (common.VkResult, error)
 	CommandsRecorded() int
+	DrawsRecorded() int
+	DispatchesRecorded() int
 
 	CmdBeginRenderPass(contents common.SubpassContents, o RenderPassBeginOptions) error
 	CmdEndRenderPass()

@@ -785,6 +785,34 @@ func (mr *MockCommandBufferMockRecorder) DeviceHandle() *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeviceHandle", reflect.TypeOf((*MockCommandBuffer)(nil).DeviceHandle))
 }
 
+// DispatchesRecorded mocks base method.
+func (m *MockCommandBuffer) DispatchesRecorded() int {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DispatchesRecorded")
+	ret0, _ := ret[0].(int)
+	return ret0
+}
+
+// DispatchesRecorded indicates an expected call of DispatchesRecorded.
+func (mr *MockCommandBufferMockRecorder) DispatchesRecorded() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DispatchesRecorded", reflect.TypeOf((*MockCommandBuffer)(nil).DispatchesRecorded))
+}
+
+// DrawsRecorded mocks base method.
+func (m *MockCommandBuffer) DrawsRecorded() int {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DrawsRecorded")
+	ret0, _ := ret[0].(int)
+	return ret0
+}
+
+// DrawsRecorded indicates an expected call of DrawsRecorded.
+func (mr *MockCommandBufferMockRecorder) DrawsRecorded() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DrawsRecorded", reflect.TypeOf((*MockCommandBuffer)(nil).DrawsRecorded))
+}
+
 // Driver mocks base method.
 func (m *MockCommandBuffer) Driver() driver.Driver {
 	m.ctrl.T.Helper()

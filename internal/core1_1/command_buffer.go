@@ -15,7 +15,8 @@ type VulkanCommandBuffer struct {
 	CommandPool         driver.VkCommandPool
 	CommandBufferHandle driver.VkCommandBuffer
 
-	CommandCount *int
+	CommandCount  *int
+	DispatchCount *int
 }
 
 func (c *VulkanCommandBuffer) CmdDispatchBase(baseGroupX, baseGroupY, baseGroupZ, groupCountX, groupCountY, groupCountZ int) {
@@ -27,6 +28,7 @@ func (c *VulkanCommandBuffer) CmdDispatchBase(baseGroupX, baseGroupY, baseGroupZ
 		driver.Uint32(groupCountY),
 		driver.Uint32(groupCountZ))
 	*c.CommandCount++
+	*c.DispatchCount++
 }
 
 func (c *VulkanCommandBuffer) CmdSetDeviceMask(deviceMask uint32) {

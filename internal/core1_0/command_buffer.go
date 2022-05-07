@@ -20,7 +20,9 @@ type VulkanCommandBuffer struct {
 	CommandPool         driver.VkCommandPool
 	CommandBufferHandle driver.VkCommandBuffer
 
-	CommandCount *int
+	CommandCount  *int
+	DrawCallCount *int
+	DispatchCount *int
 
 	MaximumAPIVersion common.APIVersion
 
@@ -47,6 +49,14 @@ func (c *VulkanCommandBuffer) CommandsRecorded() int {
 	return *c.CommandCount
 }
 
+func (c *VulkanCommandBuffer) DrawsRecorded() int {
+	return *c.DrawCallCount
+}
+
+func (c *VulkanCommandBuffer) DispatchesRecorded() int {
+	return *c.DispatchCount
+}
+
 func (c *VulkanCommandBuffer) Core1_1() core1_1.CommandBuffer {
 	return c.CommandBuffer1_1
 }
@@ -63,6 +73,8 @@ func (c *VulkanCommandBuffer) Begin(o core1_0.BeginOptions) (common.VkResult, er
 	res, err := c.DeviceDriver.VkBeginCommandBuffer(c.CommandBufferHandle, (*driver.VkCommandBufferBeginInfo)(createInfo))
 	if err == nil {
 		*c.CommandCount = 0
+		*c.DrawCallCount = 0
+		*c.DispatchCount = 0
 	}
 
 	return res, err
@@ -99,11 +111,13 @@ func (c *VulkanCommandBuffer) CmdBindPipeline(bindPoint common.PipelineBindPoint
 func (c *VulkanCommandBuffer) CmdDraw(vertexCount, instanceCount int, firstVertex, firstInstance uint32) {
 	c.DeviceDriver.VkCmdDraw(c.CommandBufferHandle, driver.Uint32(vertexCount), driver.Uint32(instanceCount), driver.Uint32(firstVertex), driver.Uint32(firstInstance))
 	*c.CommandCount++
+	*c.DrawCallCount++
 }
 
 func (c *VulkanCommandBuffer) CmdDrawIndexed(indexCount, instanceCount int, firstIndex uint32, vertexOffset int, firstInstance uint32) {
 	c.DeviceDriver.VkCmdDrawIndexed(c.CommandBufferHandle, driver.Uint32(indexCount), driver.Uint32(instanceCount), driver.Uint32(firstIndex), driver.Int32(vertexOffset), driver.Uint32(firstInstance))
 	*c.CommandCount++
+	*c.DrawCallCount++
 }
 
 func (c *VulkanCommandBuffer) CmdBindVertexBuffers(buffers []core1_0.Buffer, bufferOffsets []int) {
@@ -434,12 +448,18 @@ func (c *VulkanCommandBuffer) CmdExecuteCommands(commandBuffers []core1_0.Comman
 	commandBufferPtr := (*C.VkCommandBuffer)(arena.Malloc(bufferCount * int(unsafe.Sizeof([1]C.VkCommandBuffer{}))))
 	commandBufferSlice := ([]C.VkCommandBuffer)(unsafe.Slice(commandBufferPtr, bufferCount))
 
+	var addToDrawCount int
+	var addToDispatchCount int
 	for i := 0; i < bufferCount; i++ {
 		commandBufferSlice[i] = C.VkCommandBuffer(unsafe.Pointer(commandBuffers[i].Handle()))
+		addToDrawCount += commandBuffers[i].DrawsRecorded()
+		addToDispatchCount += commandBuffers[i].DispatchesRecorded()
 	}
 
 	c.DeviceDriver.VkCmdExecuteCommands(c.CommandBufferHandle, driver.Uint32(bufferCount), (*driver.VkCommandBuffer)(unsafe.Pointer(commandBufferPtr)))
 	*c.CommandCount++
+	*c.DrawCallCount += addToDrawCount
+	*c.DispatchCount += addToDispatchCount
 }
 
 func (c *VulkanCommandBuffer) CmdClearAttachments(attachments []core1_0.ClearAttachment, rects []core1_0.ClearRect) error {
@@ -505,21 +525,25 @@ func (c *VulkanCommandBuffer) CmdCopyImageToBuffer(srcImage core1_0.Image, srcIm
 func (c *VulkanCommandBuffer) CmdDispatch(groupCountX, groupCountY, groupCountZ int) {
 	c.DeviceDriver.VkCmdDispatch(c.CommandBufferHandle, driver.Uint32(groupCountX), driver.Uint32(groupCountY), driver.Uint32(groupCountZ))
 	*c.CommandCount++
+	*c.DispatchCount++
 }
 
 func (c *VulkanCommandBuffer) CmdDispatchIndirect(buffer core1_0.Buffer, offset int) {
 	c.DeviceDriver.VkCmdDispatchIndirect(c.CommandBufferHandle, buffer.Handle(), driver.VkDeviceSize(offset))
 	*c.CommandCount++
+	*c.DispatchCount++
 }
 
 func (c *VulkanCommandBuffer) CmdDrawIndexedIndirect(buffer core1_0.Buffer, offset int, drawCount, stride int) {
 	c.DeviceDriver.VkCmdDrawIndexedIndirect(c.CommandBufferHandle, buffer.Handle(), driver.VkDeviceSize(offset), driver.Uint32(drawCount), driver.Uint32(stride))
 	*c.CommandCount++
+	*c.DrawCallCount++
 }
 
 func (c *VulkanCommandBuffer) CmdDrawIndirect(buffer core1_0.Buffer, offset int, drawCount, stride int) {
 	c.DeviceDriver.VkCmdDrawIndirect(c.CommandBufferHandle, buffer.Handle(), driver.VkDeviceSize(offset), driver.Uint32(drawCount), driver.Uint32(stride))
 	*c.CommandCount++
+	*c.DrawCallCount++
 }
 
 func (c *VulkanCommandBuffer) CmdFillBuffer(dstBuffer core1_0.Buffer, dstOffset int, size int, data uint32) {

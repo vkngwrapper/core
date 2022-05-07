@@ -104,6 +104,8 @@ func CreateCommandBuffer(coreDriver driver.Driver, commandPool driver.VkCommandP
 	commandBuffer := coreDriver.ObjectStore().GetOrCreate(driver.VulkanHandle(handle),
 		func() interface{} {
 			var commandCount int
+			var drawCount int
+			var dispatchCount int
 
 			commandBuffer := &internal1_0.VulkanCommandBuffer{
 				DeviceDriver:        coreDriver,
@@ -112,7 +114,9 @@ func CreateCommandBuffer(coreDriver driver.Driver, commandPool driver.VkCommandP
 				CommandPool:         commandPool,
 				MaximumAPIVersion:   version,
 
-				CommandCount: &commandCount,
+				CommandCount:  &commandCount,
+				DrawCallCount: &drawCount,
+				DispatchCount: &dispatchCount,
 			}
 
 			if version.IsAtLeast(common.Vulkan1_1) {
@@ -122,7 +126,8 @@ func CreateCommandBuffer(coreDriver driver.Driver, commandPool driver.VkCommandP
 					CommandPool:         commandPool,
 					CommandBufferHandle: handle,
 
-					CommandCount: &commandCount,
+					CommandCount:  &commandCount,
+					DispatchCount: &dispatchCount,
 				}
 			}
 
