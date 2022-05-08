@@ -314,7 +314,7 @@ func TestVulkanLoader1_0_CreateGraphicsPipelines_VertexInputSuccess(t *testing.T
 		{
 			Layout:     layout,
 			RenderPass: renderPass,
-			VertexInput: &core1_0.VertexInputOptions{
+			VertexInput: &core1_0.VertexInputStateOptions{
 				VertexAttributeDescriptions: []core1_0.VertexAttributeDescription{
 					{
 						Location: 1,
@@ -378,7 +378,7 @@ func TestVulkanLoader1_0_CreateGraphicsPipelines_InputAssemblySuccess(t *testing
 		{
 			Layout:     layout,
 			RenderPass: renderPass,
-			InputAssembly: &core1_0.InputAssemblyOptions{
+			InputAssembly: &core1_0.InputAssemblyStateOptions{
 				Topology:               core1_0.TopologyLineList,
 				EnablePrimitiveRestart: true,
 			},
@@ -423,7 +423,7 @@ func TestVulkanLoader1_0_CreateGraphicsPipelines_TessellationSuccess(t *testing.
 		{
 			Layout:     layout,
 			RenderPass: renderPass,
-			Tessellation: &core1_0.TessellationOptions{
+			Tessellation: &core1_0.TessellationStateOptions{
 				PatchControlPoints: 3,
 			},
 		}})
@@ -497,7 +497,7 @@ func TestVulkanLoader1_0_CreateGraphicsPipelines_ViewportSuccess(t *testing.T) {
 		{
 			Layout:     layout,
 			RenderPass: renderPass,
-			Viewport: &core1_0.ViewportOptions{
+			Viewport: &core1_0.ViewportStateOptions{
 				Viewports: []common.Viewport{
 					{
 						X:        1,
@@ -568,7 +568,7 @@ func TestVulkanLoader1_0_CreateGraphicsPipelines_RasterizationSuccess(t *testing
 		{
 			Layout:     layout,
 			RenderPass: renderPass,
-			Rasterization: &core1_0.RasterizationOptions{
+			Rasterization: &core1_0.RasterizationStateOptions{
 				DepthClamp:        true,
 				RasterizerDiscard: true,
 
@@ -632,7 +632,7 @@ func TestVulkanLoader1_0_CreateGraphicsPipelines_MultisampleSuccess(t *testing.T
 		{
 			Layout:     layout,
 			RenderPass: renderPass,
-			Multisample: &core1_0.MultisampleOptions{
+			Multisample: &core1_0.MultisampleStateOptions{
 				RasterizationSamples: core1_0.Samples64,
 				SampleShading:        true,
 				MinSampleShading:     2.3,
@@ -685,7 +685,7 @@ func TestVulkanLoader1_0_CreateGraphicsPipelines_MultisampleSuccess_NoSampleMask
 		{
 			Layout:     layout,
 			RenderPass: renderPass,
-			Multisample: &core1_0.MultisampleOptions{
+			Multisample: &core1_0.MultisampleStateOptions{
 				RasterizationSamples: core1_0.Samples64,
 				SampleShading:        true,
 				MinSampleShading:     2.3,
@@ -715,7 +715,7 @@ func TestVulkanLoader1_0_CreateGraphicsPipelines_MultisampleFail_MismatchSampleM
 		{
 			Layout:     layout,
 			RenderPass: renderPass,
-			Multisample: &core1_0.MultisampleOptions{
+			Multisample: &core1_0.MultisampleStateOptions{
 				RasterizationSamples: core1_0.Samples4,
 				SampleShading:        true,
 				MinSampleShading:     2.3,
@@ -784,7 +784,7 @@ func TestVulkanLoader1_0_CreateGraphicsPipelines_DepthStencilSuccess(t *testing.
 		{
 			Layout:     layout,
 			RenderPass: renderPass,
-			DepthStencil: &core1_0.DepthStencilOptions{
+			DepthStencil: &core1_0.DepthStencilStateOptions{
 				DepthTestEnable:       true,
 				DepthWriteEnable:      true,
 				DepthCompareOp:        core1_0.CompareEqual,
@@ -882,7 +882,7 @@ func TestVulkanLoader1_0_CreateGraphicsPipelines_ColorBlendSuccess(t *testing.T)
 		{
 			Layout:     layout,
 			RenderPass: renderPass,
-			ColorBlend: &core1_0.ColorBlendOptions{
+			ColorBlend: &core1_0.ColorBlendStateOptions{
 				LogicOpEnabled: true,
 				LogicOp:        core1_0.LogicOpCopyInverted,
 				BlendConstants: [4]float32{1.2, 2.3, 3.4, 4.5},

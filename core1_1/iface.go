@@ -50,7 +50,7 @@ type InstancePhysicalDevice interface {
 
 	Features(out *DeviceFeaturesOutData) error
 	FormatProperties(format common.DataFormat, out *FormatPropertiesOutData) error
-	ImageFormatProperties(o ImageFormatOptions, out *ImageFormatOutData) (common.VkResult, error)
+	ImageFormatProperties(o ImageFormatOptions, out *ImageFormatPropertiesOutData) (common.VkResult, error)
 	MemoryProperties(out *MemoryPropertiesOutData) error
 	Properties(out *DevicePropertiesOutData) error
 	QueueFamilyProperties(outDataFactory func() *QueueFamilyOutData) ([]*QueueFamilyOutData, error)

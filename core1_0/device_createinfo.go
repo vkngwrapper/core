@@ -13,7 +13,7 @@ import (
 )
 
 type DeviceCreateOptions struct {
-	QueueFamilies   []DeviceQueueOptions
+	QueueFamilies   []DeviceQueueCreateOptions
 	EnabledFeatures *PhysicalDeviceFeatures
 	ExtensionNames  []string
 	LayerNames      []string
@@ -30,7 +30,7 @@ func (o DeviceCreateOptions) PopulateCPointer(allocator *cgoparam.Allocator, pre
 	}
 
 	// Alloc queue families
-	queueFamilyPtr, err := common.AllocOptionSlice[C.VkDeviceQueueCreateInfo, DeviceQueueOptions](allocator, o.QueueFamilies)
+	queueFamilyPtr, err := common.AllocOptionSlice[C.VkDeviceQueueCreateInfo, DeviceQueueCreateOptions](allocator, o.QueueFamilies)
 	if err != nil {
 		return nil, err
 	}

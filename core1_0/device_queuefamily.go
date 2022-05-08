@@ -12,7 +12,7 @@ import (
 	"unsafe"
 )
 
-type DeviceQueueOptions struct {
+type DeviceQueueCreateOptions struct {
 	Flags                  common.DeviceQueueCreateFlags
 	QueueFamilyIndex       int
 	CreatedQueuePriorities []float32
@@ -20,7 +20,7 @@ type DeviceQueueOptions struct {
 	common.HaveNext
 }
 
-func (o DeviceQueueOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o DeviceQueueCreateOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == nil {
 		preallocatedPointer = allocator.Malloc(C.sizeof_struct_VkDeviceQueueCreateInfo)
 	}
@@ -47,7 +47,7 @@ func (o DeviceQueueOptions) PopulateCPointer(allocator *cgoparam.Allocator, prea
 	return preallocatedPointer, nil
 }
 
-func (o DeviceQueueOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
+func (o DeviceQueueCreateOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
 	createInfo := (*C.VkDeviceQueueCreateInfo)(cDataPointer)
 	return createInfo.pNext, nil
 }

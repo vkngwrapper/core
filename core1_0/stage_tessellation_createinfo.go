@@ -11,13 +11,13 @@ import (
 	"unsafe"
 )
 
-type TessellationOptions struct {
+type TessellationStateOptions struct {
 	PatchControlPoints uint32
 
 	common.HaveNext
 }
 
-func (o TessellationOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatePointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o TessellationStateOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatePointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatePointer == nil {
 		preallocatePointer = allocator.Malloc(C.sizeof_struct_VkPipelineTessellationStateCreateInfo)
 	}
@@ -30,7 +30,7 @@ func (o TessellationOptions) PopulateCPointer(allocator *cgoparam.Allocator, pre
 	return preallocatePointer, nil
 }
 
-func (o TessellationOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
+func (o TessellationStateOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
 	createInfo := (*C.VkPipelineTessellationStateCreateInfo)(cDataPointer)
 	return createInfo.pNext, nil
 }

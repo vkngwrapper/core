@@ -138,8 +138,8 @@ type Device interface {
 	WaitForFences(waitForAll bool, timeout time.Duration, fences []Fence) (common.VkResult, error)
 	ResetFences(fences []Fence) (common.VkResult, error)
 	UpdateDescriptorSets(writes []WriteDescriptorSetOptions, copies []CopyDescriptorSetOptions) error
-	FlushMappedMemoryRanges(ranges []MappedMemoryRange) (common.VkResult, error)
-	InvalidateMappedMemoryRanges(ranges []MappedMemoryRange) (common.VkResult, error)
+	FlushMappedMemoryRanges(ranges []MappedMemoryRangeOptions) (common.VkResult, error)
+	InvalidateMappedMemoryRanges(ranges []MappedMemoryRangeOptions) (common.VkResult, error)
 }
 
 type Event interface {

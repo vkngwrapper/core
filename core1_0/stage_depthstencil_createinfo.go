@@ -46,7 +46,7 @@ type StencilOpState struct {
 	Reference uint32
 }
 
-type DepthStencilOptions struct {
+type DepthStencilStateOptions struct {
 	DepthTestEnable  bool
 	DepthWriteEnable bool
 	DepthCompareOp   common.CompareOp
@@ -63,7 +63,7 @@ type DepthStencilOptions struct {
 	common.HaveNext
 }
 
-func (o DepthStencilOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o DepthStencilStateOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == unsafe.Pointer(nil) {
 		preallocatedPointer = allocator.Malloc(C.sizeof_struct_VkPipelineDepthStencilStateCreateInfo)
 	}
@@ -112,7 +112,7 @@ func (o DepthStencilOptions) PopulateCPointer(allocator *cgoparam.Allocator, pre
 	return preallocatedPointer, nil
 }
 
-func (o DepthStencilOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
+func (o DepthStencilStateOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
 	createInfo := (*C.VkPipelineDepthStencilStateCreateInfo)(cDataPointer)
 	return createInfo.pNext, nil
 }

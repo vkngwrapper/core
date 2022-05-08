@@ -117,7 +117,7 @@ func TestVulkanLoader1_0_CreateDevice_Success(t *testing.T) {
 		})
 
 	device, _, err := loader.CreateDevice(mockPhysicalDevice, nil, core1_0.DeviceCreateOptions{
-		QueueFamilies: []core1_0.DeviceQueueOptions{
+		QueueFamilies: []core1_0.DeviceQueueCreateOptions{
 			{
 				QueueFamilyIndex:       1,
 				CreatedQueuePriorities: []float32{1, 0, 0.5},
@@ -149,7 +149,7 @@ func TestVulkanLoader1_0_CreateDevice_FailNoQueueFamilies(t *testing.T) {
 	require.NoError(t, err)
 
 	_, _, err = loader.CreateDevice(mockPhysicalDevice, nil, core1_0.DeviceCreateOptions{
-		QueueFamilies:  []core1_0.DeviceQueueOptions{},
+		QueueFamilies:  []core1_0.DeviceQueueCreateOptions{},
 		ExtensionNames: []string{"A", "B", "C"},
 		LayerNames:     []string{"D", "E"},
 		EnabledFeatures: &core1_0.PhysicalDeviceFeatures{
@@ -171,7 +171,7 @@ func TestVulkanLoader1_0_CreateDevice_FailFamilyWithoutPriorities(t *testing.T) 
 	mockPhysicalDevice := mocks.EasyMockPhysicalDevice(ctrl, mockDriver)
 
 	_, _, err = loader.CreateDevice(mockPhysicalDevice, nil, core1_0.DeviceCreateOptions{
-		QueueFamilies: []core1_0.DeviceQueueOptions{
+		QueueFamilies: []core1_0.DeviceQueueCreateOptions{
 			{
 				QueueFamilyIndex:       1,
 				CreatedQueuePriorities: []float32{1, 0, 0.5},
@@ -740,7 +740,7 @@ func TestVulkanDevice_FlushMappedMemoryRanges(t *testing.T) {
 			return core1_0.VKSuccess, nil
 		})
 
-	_, err = device.FlushMappedMemoryRanges([]core1_0.MappedMemoryRange{
+	_, err = device.FlushMappedMemoryRanges([]core1_0.MappedMemoryRangeOptions{
 		{
 			Memory: mem1,
 			Offset: 1,
@@ -788,7 +788,7 @@ func TestVulkanDevice_InvalidateMappedMemoryRanges(t *testing.T) {
 			return core1_0.VKSuccess, nil
 		})
 
-	_, err = device.InvalidateMappedMemoryRanges([]core1_0.MappedMemoryRange{
+	_, err = device.InvalidateMappedMemoryRanges([]core1_0.MappedMemoryRangeOptions{
 		{
 			Memory: mem1,
 			Offset: 1,

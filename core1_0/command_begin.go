@@ -51,7 +51,7 @@ func init() {
 	QueryStatisticComputeShaderInvocations.Register("Compute Shader Invocations")
 }
 
-type CommandBufferInheritanceOptions struct {
+type InheritanceOptions struct {
 	Framebuffer Framebuffer
 	RenderPass  RenderPass
 	SubPass     int
@@ -63,7 +63,7 @@ type CommandBufferInheritanceOptions struct {
 	common.HaveNext
 }
 
-func (o CommandBufferInheritanceOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o InheritanceOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == unsafe.Pointer(nil) {
 		preallocatedPointer = allocator.Malloc(C.sizeof_struct_VkCommandBufferInheritanceInfo)
 	}
@@ -96,14 +96,14 @@ func (o CommandBufferInheritanceOptions) PopulateCPointer(allocator *cgoparam.Al
 	return unsafe.Pointer(createInfo), nil
 }
 
-func (o CommandBufferInheritanceOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
+func (o InheritanceOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
 	createInfo := (*C.VkCommandBufferInheritanceInfo)(cDataPointer)
 	return createInfo.pNext, nil
 }
 
 type BeginOptions struct {
 	Flags           common.BeginInfoFlags
-	InheritanceInfo *CommandBufferInheritanceOptions
+	InheritanceInfo *InheritanceOptions
 
 	common.HaveNext
 }

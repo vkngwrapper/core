@@ -43,7 +43,7 @@ func (o MemoryAllocateOptions) PopulateOutData(cDataPointer unsafe.Pointer, help
 	return createInfo.pNext, nil
 }
 
-type MappedMemoryRange struct {
+type MappedMemoryRangeOptions struct {
 	Memory DeviceMemory
 	Offset int
 	Size   int
@@ -51,7 +51,7 @@ type MappedMemoryRange struct {
 	common.HaveNext
 }
 
-func (r MappedMemoryRange) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (r MappedMemoryRangeOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == unsafe.Pointer(nil) {
 		preallocatedPointer = allocator.Malloc(C.sizeof_struct_VkMappedMemoryRange)
 	}
@@ -66,7 +66,7 @@ func (r MappedMemoryRange) PopulateCPointer(allocator *cgoparam.Allocator, preal
 	return preallocatedPointer, nil
 }
 
-func (r MappedMemoryRange) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
+func (r MappedMemoryRangeOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
 	createInfo := (*C.VkMappedMemoryRange)(cDataPointer)
 	return createInfo.pNext, nil
 }

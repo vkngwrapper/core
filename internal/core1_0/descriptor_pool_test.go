@@ -118,7 +118,7 @@ func TestDescriptorPool_AllocAndFree_Single(t *testing.T) {
 			return core1_0.VKSuccess, nil
 		})
 
-	sets, _, err := loader.AllocateDescriptorSets(core1_0.DescriptorSetOptions{
+	sets, _, err := loader.AllocateDescriptorSets(core1_0.DescriptorSetAllocateOptions{
 		DescriptorPool:    pool,
 		AllocationLayouts: []core1_0.DescriptorSetLayout{layout},
 	})
@@ -186,7 +186,7 @@ func TestDescriptorPool_AllocAndFree_Multi(t *testing.T) {
 			return core1_0.VKSuccess, nil
 		})
 
-	sets, _, err := loader.AllocateDescriptorSets(core1_0.DescriptorSetOptions{
+	sets, _, err := loader.AllocateDescriptorSets(core1_0.DescriptorSetAllocateOptions{
 		DescriptorPool:    pool,
 		AllocationLayouts: []core1_0.DescriptorSetLayout{layout1, layout2, layout3},
 	})

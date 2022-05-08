@@ -52,9 +52,9 @@ type Loader interface {
 	FreeMemory(deviceMemory DeviceMemory, allocationCallbacks *driver.AllocationCallbacks)
 	PhysicalDevices(instance Instance) ([]PhysicalDevice, common.VkResult, error)
 
-	AllocateCommandBuffers(o core1_0.CommandBufferOptions) ([]CommandBuffer, common.VkResult, error)
+	AllocateCommandBuffers(o core1_0.CommandBufferAllocateOptions) ([]CommandBuffer, common.VkResult, error)
 	FreeCommandBuffers(buffers []CommandBuffer)
-	AllocateDescriptorSets(o core1_0.DescriptorSetOptions) ([]DescriptorSet, common.VkResult, error)
+	AllocateDescriptorSets(o core1_0.DescriptorSetAllocateOptions) ([]DescriptorSet, common.VkResult, error)
 	FreeDescriptorSets(sets []DescriptorSet) (common.VkResult, error)
 }
 

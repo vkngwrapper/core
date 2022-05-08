@@ -59,7 +59,7 @@ func EasyDummyCommandBuffer(t *testing.T, loader core.Loader, device core.Device
 			*pCommandBuffers = mocks.NewFakeCommandBufferHandle()
 		})
 
-	buffers, _, err := loader.AllocateCommandBuffers(core1_0.CommandBufferOptions{
+	buffers, _, err := loader.AllocateCommandBuffers(core1_0.CommandBufferAllocateOptions{
 		CommandPool: commandPool,
 		BufferCount: 1,
 	})
@@ -93,7 +93,7 @@ func EasyDummyDescriptorSet(t *testing.T, loader core.Loader, pool core.Descript
 			return core1_0.VKSuccess, nil
 		})
 
-	sets, _, err := loader.AllocateDescriptorSets(core1_0.DescriptorSetOptions{
+	sets, _, err := loader.AllocateDescriptorSets(core1_0.DescriptorSetAllocateOptions{
 		DescriptorPool:    pool,
 		AllocationLayouts: []core1_0.DescriptorSetLayout{layout},
 	})
@@ -127,7 +127,7 @@ func EasyDummyDevice(t *testing.T, ctrl *gomock.Controller, loader core.Loader) 
 		})
 
 	device, _, err := loader.CreateDevice(mocks.EasyMockPhysicalDevice(ctrl, mockDriver), nil, core1_0.DeviceCreateOptions{
-		QueueFamilies: []core1_0.DeviceQueueOptions{
+		QueueFamilies: []core1_0.DeviceQueueCreateOptions{
 			{
 				CreatedQueuePriorities: []float32{1},
 			},

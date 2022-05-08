@@ -97,7 +97,7 @@ func TestCommandBuffer_Begin_WithInheritance(t *testing.T) {
 
 	_, err := buffer.Begin(core1_0.BeginOptions{
 		Flags: core1_0.BeginInfoSimultaneousUse,
-		InheritanceInfo: &core1_0.CommandBufferInheritanceOptions{
+		InheritanceInfo: &core1_0.InheritanceOptions{
 			Framebuffer:          framebuffer,
 			RenderPass:           renderPass,
 			SubPass:              3,

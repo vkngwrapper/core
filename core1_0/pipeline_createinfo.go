@@ -27,14 +27,14 @@ type GraphicsPipelineCreateOptions struct {
 	Flags common.PipelineCreateFlags
 
 	ShaderStages  []ShaderStageOptions
-	VertexInput   *VertexInputOptions
-	InputAssembly *InputAssemblyOptions
-	Tessellation  *TessellationOptions
-	Viewport      *ViewportOptions
-	Rasterization *RasterizationOptions
-	Multisample   *MultisampleOptions
-	DepthStencil  *DepthStencilOptions
-	ColorBlend    *ColorBlendOptions
+	VertexInput   *VertexInputStateOptions
+	InputAssembly *InputAssemblyStateOptions
+	Tessellation  *TessellationStateOptions
+	Viewport      *ViewportStateOptions
+	Rasterization *RasterizationStateOptions
+	Multisample   *MultisampleStateOptions
+	DepthStencil  *DepthStencilStateOptions
+	ColorBlend    *ColorBlendStateOptions
 	DynamicState  *DynamicStateOptions
 
 	Layout     PipelineLayout

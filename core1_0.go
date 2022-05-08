@@ -692,7 +692,7 @@ func (l *VulkanLoader1_0) FreeCommandBuffers(buffers []CommandBuffer) {
 	}
 }
 
-func (l *VulkanLoader1_0) AllocateCommandBuffers(o core1_0.CommandBufferOptions) ([]CommandBuffer, common.VkResult, error) {
+func (l *VulkanLoader1_0) AllocateCommandBuffers(o core1_0.CommandBufferAllocateOptions) ([]CommandBuffer, common.VkResult, error) {
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
@@ -727,7 +727,7 @@ func (l *VulkanLoader1_0) AllocateCommandBuffers(o core1_0.CommandBufferOptions)
 	return result, res, nil
 }
 
-func (l *VulkanLoader1_0) AllocateDescriptorSets(o core1_0.DescriptorSetOptions) ([]DescriptorSet, common.VkResult, error) {
+func (l *VulkanLoader1_0) AllocateDescriptorSets(o core1_0.DescriptorSetAllocateOptions) ([]DescriptorSet, common.VkResult, error) {
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 

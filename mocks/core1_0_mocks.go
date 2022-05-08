@@ -1479,7 +1479,7 @@ func (mr *MockDeviceMockRecorder) Driver() *gomock.Call {
 }
 
 // FlushMappedMemoryRanges mocks base method.
-func (m *MockDevice) FlushMappedMemoryRanges(ranges []core1_0.MappedMemoryRange) (common.VkResult, error) {
+func (m *MockDevice) FlushMappedMemoryRanges(ranges []core1_0.MappedMemoryRangeOptions) (common.VkResult, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "FlushMappedMemoryRanges", ranges)
 	ret0, _ := ret[0].(common.VkResult)
@@ -1508,7 +1508,7 @@ func (mr *MockDeviceMockRecorder) Handle() *gomock.Call {
 }
 
 // InvalidateMappedMemoryRanges mocks base method.
-func (m *MockDevice) InvalidateMappedMemoryRanges(ranges []core1_0.MappedMemoryRange) (common.VkResult, error) {
+func (m *MockDevice) InvalidateMappedMemoryRanges(ranges []core1_0.MappedMemoryRangeOptions) (common.VkResult, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "InvalidateMappedMemoryRanges", ranges)
 	ret0, _ := ret[0].(common.VkResult)

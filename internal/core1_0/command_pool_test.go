@@ -101,7 +101,7 @@ func TestCommandBufferSingleAllocateFree(t *testing.T) {
 			return core1_0.VKSuccess, nil
 		})
 
-	buffers, res, err := loader.AllocateCommandBuffers(core1_0.CommandBufferOptions{
+	buffers, res, err := loader.AllocateCommandBuffers(core1_0.CommandBufferAllocateOptions{
 		CommandPool: commandPool,
 		Level:       core1_0.LevelPrimary,
 		BufferCount: 1,
@@ -159,7 +159,7 @@ func TestCommandBufferMultiAllocateFree(t *testing.T) {
 			return core1_0.VKSuccess, nil
 		})
 
-	buffers, res, err := loader.AllocateCommandBuffers(core1_0.CommandBufferOptions{
+	buffers, res, err := loader.AllocateCommandBuffers(core1_0.CommandBufferAllocateOptions{
 		CommandPool: commandPool,
 		Level:       core1_0.LevelSecondary,
 		BufferCount: 3,

@@ -12,7 +12,7 @@ import (
 	"unsafe"
 )
 
-type MultisampleOptions struct {
+type MultisampleStateOptions struct {
 	RasterizationSamples common.SampleCounts
 
 	SampleShading    bool
@@ -25,7 +25,7 @@ type MultisampleOptions struct {
 	common.HaveNext
 }
 
-func (o MultisampleOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o MultisampleStateOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == unsafe.Pointer(nil) {
 		preallocatedPointer = allocator.Malloc(C.sizeof_struct_VkPipelineMultisampleStateCreateInfo)
 	}
@@ -76,7 +76,7 @@ func (o MultisampleOptions) PopulateCPointer(allocator *cgoparam.Allocator, prea
 	return preallocatedPointer, nil
 }
 
-func (o MultisampleOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
+func (o MultisampleStateOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
 	createInfo := (*C.VkPipelineMultisampleStateCreateInfo)(cDataPointer)
 	return createInfo.pNext, nil
 }

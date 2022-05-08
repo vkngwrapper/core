@@ -424,7 +424,7 @@ func (mr *MockInstancePhysicalDeviceMockRecorder) FormatProperties(format, out i
 }
 
 // ImageFormatProperties mocks base method.
-func (m *MockInstancePhysicalDevice) ImageFormatProperties(o core1_1.ImageFormatOptions, out *core1_1.ImageFormatOutData) (common.VkResult, error) {
+func (m *MockInstancePhysicalDevice) ImageFormatProperties(o core1_1.ImageFormatOptions, out *core1_1.ImageFormatPropertiesOutData) (common.VkResult, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ImageFormatProperties", o, out)
 	ret0, _ := ret[0].(common.VkResult)

@@ -116,12 +116,12 @@ func (d *VulkanDevice) UpdateDescriptorSets(writes []core1_0.WriteDescriptorSetO
 	return nil
 }
 
-func (d *VulkanDevice) FlushMappedMemoryRanges(ranges []core1_0.MappedMemoryRange) (common.VkResult, error) {
+func (d *VulkanDevice) FlushMappedMemoryRanges(ranges []core1_0.MappedMemoryRangeOptions) (common.VkResult, error) {
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
 	rangeCount := len(ranges)
-	createInfos, err := common.AllocOptionSlice[C.VkMappedMemoryRange, core1_0.MappedMemoryRange](arena, ranges)
+	createInfos, err := common.AllocOptionSlice[C.VkMappedMemoryRange, core1_0.MappedMemoryRangeOptions](arena, ranges)
 	if err != nil {
 		return core1_0.VKErrorUnknown, err
 	}
@@ -129,12 +129,12 @@ func (d *VulkanDevice) FlushMappedMemoryRanges(ranges []core1_0.MappedMemoryRang
 	return d.DeviceDriver.VkFlushMappedMemoryRanges(d.DeviceHandle, driver.Uint32(rangeCount), (*driver.VkMappedMemoryRange)(unsafe.Pointer(createInfos)))
 }
 
-func (d *VulkanDevice) InvalidateMappedMemoryRanges(ranges []core1_0.MappedMemoryRange) (common.VkResult, error) {
+func (d *VulkanDevice) InvalidateMappedMemoryRanges(ranges []core1_0.MappedMemoryRangeOptions) (common.VkResult, error) {
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
 	rangeCount := len(ranges)
-	createInfos, err := common.AllocOptionSlice[C.VkMappedMemoryRange, core1_0.MappedMemoryRange](arena, ranges)
+	createInfos, err := common.AllocOptionSlice[C.VkMappedMemoryRange, core1_0.MappedMemoryRangeOptions](arena, ranges)
 	if err != nil {
 		return core1_0.VKErrorUnknown, err
 	}

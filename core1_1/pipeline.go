@@ -43,12 +43,12 @@ func init() {
 
 ////
 
-type TessellationDomainOriginOptions struct {
+type PipelineTessellationDomainOriginStateOptions struct {
 	DomainOrigin TessellationDomainOrigin
 	common.HaveNext
 }
 
-func (o TessellationDomainOriginOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o PipelineTessellationDomainOriginStateOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == nil {
 		preallocatedPointer = allocator.Malloc(int(unsafe.Sizeof(C.VkPipelineTessellationDomainOriginStateCreateInfo{})))
 	}
@@ -61,7 +61,7 @@ func (o TessellationDomainOriginOptions) PopulateCPointer(allocator *cgoparam.Al
 	return preallocatedPointer, nil
 }
 
-func (o TessellationDomainOriginOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
+func (o PipelineTessellationDomainOriginStateOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
 	createInfo := (*C.VkPipelineTessellationDomainOriginStateCreateInfo)(cDataPointer)
 	return createInfo.pNext, nil
 }

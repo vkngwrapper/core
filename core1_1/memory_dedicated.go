@@ -14,18 +14,18 @@ import (
 	"unsafe"
 )
 
-type DedicatedAllocationOptions struct {
+type MemoryDedicatedAllocationOptions struct {
 	Image  core1_0.Image
 	Buffer core1_0.Buffer
 
 	common.HaveNext
 }
 
-func (o DedicatedAllocationOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o MemoryDedicatedAllocationOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if o.Image != nil && o.Buffer != nil {
-		return nil, errors.New("both Image and Buffer fields are set in DedicatedAllocationOptions- only one must be set")
+		return nil, errors.New("both Image and Buffer fields are set in MemoryDedicatedAllocationOptions- only one must be set")
 	} else if o.Image == nil && o.Buffer == nil {
-		return nil, errors.New("neither Image nor Buffer fields are set in DedicatedAllocationOptions- one must be set")
+		return nil, errors.New("neither Image nor Buffer fields are set in MemoryDedicatedAllocationOptions- one must be set")
 	}
 
 	if preallocatedPointer == nil {
@@ -47,21 +47,21 @@ func (o DedicatedAllocationOptions) PopulateCPointer(allocator *cgoparam.Allocat
 	return preallocatedPointer, nil
 }
 
-func (o DedicatedAllocationOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
+func (o MemoryDedicatedAllocationOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
 	createInfo := (*C.VkMemoryDedicatedAllocateInfo)(cDataPointer)
 	return createInfo.pNext, nil
 }
 
 ////
 
-type DedicatedAllocationOutData struct {
+type MemoryDedicatedAllocationOutData struct {
 	DedicatedPreferred bool
 	DedicatedRequired  bool
 
 	common.HaveNext
 }
 
-func (o *DedicatedAllocationOutData) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o *MemoryDedicatedAllocationOutData) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == nil {
 		preallocatedPointer = allocator.Malloc(int(unsafe.Sizeof(C.VkMemoryDedicatedRequirements{})))
 	}
@@ -73,7 +73,7 @@ func (o *DedicatedAllocationOutData) PopulateCPointer(allocator *cgoparam.Alloca
 	return preallocatedPointer, nil
 }
 
-func (o *DedicatedAllocationOutData) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
+func (o *MemoryDedicatedAllocationOutData) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
 	outData := (*C.VkMemoryDedicatedRequirements)(cDataPointer)
 	o.DedicatedRequired = driver.VkBool32(outData.requiresDedicatedAllocation) != driver.VkBool32(0)
 	o.DedicatedPreferred = driver.VkBool32(outData.prefersDedicatedAllocation) != driver.VkBool32(0)

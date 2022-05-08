@@ -35,7 +35,7 @@ func init() {
 	FrontFaceClockwise.Register("Clockwise")
 }
 
-type RasterizationOptions struct {
+type RasterizationStateOptions struct {
 	DepthClamp        bool
 	RasterizerDiscard bool
 
@@ -53,7 +53,7 @@ type RasterizationOptions struct {
 	common.HaveNext
 }
 
-func (o RasterizationOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o RasterizationStateOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == unsafe.Pointer(nil) {
 		preallocatedPointer = allocator.Malloc(C.sizeof_struct_VkPipelineRasterizationStateCreateInfo)
 	}
@@ -90,7 +90,7 @@ func (o RasterizationOptions) PopulateCPointer(allocator *cgoparam.Allocator, pr
 	return preallocatedPointer, nil
 }
 
-func (o RasterizationOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
+func (o RasterizationStateOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
 	createInfo := (*C.VkPipelineRasterizationStateCreateInfo)(cDataPointer)
 	return createInfo.pNext, nil
 }

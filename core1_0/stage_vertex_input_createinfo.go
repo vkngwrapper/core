@@ -34,14 +34,14 @@ type VertexAttributeDescription struct {
 	Offset   int
 }
 
-type VertexInputOptions struct {
+type VertexInputStateOptions struct {
 	VertexBindingDescriptions   []VertexBindingDescription
 	VertexAttributeDescriptions []VertexAttributeDescription
 
 	common.HaveNext
 }
 
-func (o VertexInputOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o VertexInputStateOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == unsafe.Pointer(nil) {
 		preallocatedPointer = allocator.Malloc(C.sizeof_struct_VkPipelineVertexInputStateCreateInfo)
 	}
@@ -86,7 +86,7 @@ func (o VertexInputOptions) PopulateCPointer(allocator *cgoparam.Allocator, prea
 	return unsafe.Pointer(createInfo), nil
 }
 
-func (o VertexInputOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
+func (o VertexInputStateOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
 	createInfo := (*C.VkPipelineVertexInputStateCreateInfo)(cDataPointer)
 	return createInfo.pNext, nil
 }

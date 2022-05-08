@@ -12,7 +12,7 @@ import (
 	"unsafe"
 )
 
-type DescriptorSetOptions struct {
+type DescriptorSetAllocateOptions struct {
 	DescriptorPool DescriptorPool
 
 	AllocationLayouts []DescriptorSetLayout
@@ -20,7 +20,7 @@ type DescriptorSetOptions struct {
 	common.HaveNext
 }
 
-func (o DescriptorSetOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o DescriptorSetAllocateOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == unsafe.Pointer(nil) {
 		preallocatedPointer = allocator.Malloc(C.sizeof_struct_VkDescriptorSetAllocateInfo)
 	}
@@ -48,7 +48,7 @@ func (o DescriptorSetOptions) PopulateCPointer(allocator *cgoparam.Allocator, pr
 	return preallocatedPointer, nil
 }
 
-func (o DescriptorSetOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
+func (o DescriptorSetAllocateOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
 	createInfo := (*C.VkDescriptorSetAllocateInfo)(cDataPointer)
 	return createInfo.pNext, nil
 }

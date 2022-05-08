@@ -40,14 +40,14 @@ func init() {
 	TopologyPatchlist.Register("Patch List")
 }
 
-type InputAssemblyOptions struct {
+type InputAssemblyStateOptions struct {
 	Topology               common.PrimitiveTopology
 	EnablePrimitiveRestart bool
 
 	common.HaveNext
 }
 
-func (o InputAssemblyOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o InputAssemblyStateOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == unsafe.Pointer(nil) {
 		preallocatedPointer = allocator.Malloc(C.sizeof_struct_VkPipelineInputAssemblyStateCreateInfo)
 	}
@@ -65,7 +65,7 @@ func (o InputAssemblyOptions) PopulateCPointer(allocator *cgoparam.Allocator, pr
 	return preallocatedPointer, nil
 }
 
-func (o InputAssemblyOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
+func (o InputAssemblyStateOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
 	createInfo := (*C.VkPipelineInputAssemblyStateCreateInfo)(cDataPointer)
 	return createInfo.pNext, nil
 }

@@ -113,7 +113,7 @@ type ColorBlendAttachment struct {
 	WriteMask common.ColorComponents
 }
 
-type ColorBlendOptions struct {
+type ColorBlendStateOptions struct {
 	LogicOpEnabled bool
 	LogicOp        common.LogicOp
 
@@ -123,7 +123,7 @@ type ColorBlendOptions struct {
 	common.HaveNext
 }
 
-func (o ColorBlendOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o ColorBlendStateOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == unsafe.Pointer(nil) {
 		preallocatedPointer = allocator.Malloc(C.sizeof_struct_VkPipelineColorBlendStateCreateInfo)
 	}
@@ -172,7 +172,7 @@ func (o ColorBlendOptions) PopulateCPointer(allocator *cgoparam.Allocator, preal
 	return preallocatedPointer, nil
 }
 
-func (o ColorBlendOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
+func (o ColorBlendStateOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
 	createInfo := (*C.VkPipelineColorBlendStateCreateInfo)(cDataPointer)
 	return createInfo.pNext, nil
 }

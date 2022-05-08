@@ -38,7 +38,7 @@ func init() {
 	StencilFaceBack.Register("Stencil Back")
 }
 
-type CommandBufferOptions struct {
+type CommandBufferAllocateOptions struct {
 	Level       common.CommandBufferLevel
 	BufferCount int
 	CommandPool CommandPool
@@ -46,7 +46,7 @@ type CommandBufferOptions struct {
 	common.HaveNext
 }
 
-func (o CommandBufferOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o CommandBufferAllocateOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if o.BufferCount == 0 {
 		return nil, errors.New("attempted to create 0 command buffers")
 	}
@@ -66,7 +66,7 @@ func (o CommandBufferOptions) PopulateCPointer(allocator *cgoparam.Allocator, pr
 	return unsafe.Pointer(createInfo), nil
 }
 
-func (o CommandBufferOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
+func (o CommandBufferAllocateOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
 	createInfo := (*C.VkCommandBufferAllocateInfo)(cDataPointer)
 	return createInfo.pNext, nil
 }

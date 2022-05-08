@@ -11,14 +11,14 @@ import (
 	"unsafe"
 )
 
-type ViewportOptions struct {
+type ViewportStateOptions struct {
 	Viewports []common.Viewport
 	Scissors  []common.Rect2D
 
 	common.HaveNext
 }
 
-func (o ViewportOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o ViewportStateOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == unsafe.Pointer(nil) {
 		preallocatedPointer = allocator.Malloc(C.sizeof_struct_VkPipelineViewportStateCreateInfo)
 	}
@@ -61,7 +61,7 @@ func (o ViewportOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallo
 	return preallocatedPointer, nil
 }
 
-func (o ViewportOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
+func (o ViewportStateOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
 	createInfo := (*C.VkPipelineViewportStateCreateInfo)(cDataPointer)
 	return createInfo.pNext, nil
 }

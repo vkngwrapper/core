@@ -114,7 +114,7 @@ func (p *VulkanInstancePhysicalDevice) FormatProperties(format common.DataFormat
 	return common.PopulateOutData(out, outData)
 }
 
-func (p *VulkanInstancePhysicalDevice) ImageFormatProperties(o core1_1.ImageFormatOptions, out *core1_1.ImageFormatOutData) (common.VkResult, error) {
+func (p *VulkanInstancePhysicalDevice) ImageFormatProperties(o core1_1.ImageFormatOptions, out *core1_1.ImageFormatPropertiesOutData) (common.VkResult, error) {
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 

@@ -39,7 +39,7 @@ func (m *MockLoader) EXPECT() *MockLoaderMockRecorder {
 }
 
 // AllocateCommandBuffers mocks base method.
-func (m *MockLoader) AllocateCommandBuffers(o core1_0.CommandBufferOptions) ([]core.CommandBuffer, common.VkResult, error) {
+func (m *MockLoader) AllocateCommandBuffers(o core1_0.CommandBufferAllocateOptions) ([]core.CommandBuffer, common.VkResult, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "AllocateCommandBuffers", o)
 	ret0, _ := ret[0].([]core.CommandBuffer)
@@ -55,7 +55,7 @@ func (mr *MockLoaderMockRecorder) AllocateCommandBuffers(o interface{}) *gomock.
 }
 
 // AllocateDescriptorSets mocks base method.
-func (m *MockLoader) AllocateDescriptorSets(o core1_0.DescriptorSetOptions) ([]core.DescriptorSet, common.VkResult, error) {
+func (m *MockLoader) AllocateDescriptorSets(o core1_0.DescriptorSetAllocateOptions) ([]core.DescriptorSet, common.VkResult, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "AllocateDescriptorSets", o)
 	ret0, _ := ret[0].([]core.DescriptorSet)
