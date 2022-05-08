@@ -5,7 +5,6 @@ import (
 	"github.com/CannibalVox/VKng/core/driver"
 	internal1_0 "github.com/CannibalVox/VKng/core/internal/core1_0"
 	"github.com/CannibalVox/VKng/core/internal/core1_1"
-	internal1_1 "github.com/CannibalVox/VKng/core/internal/core1_1"
 )
 
 func CreateInstance(instanceDriver driver.Driver, handle driver.VkInstance, version common.APIVersion) *internal1_0.VulkanInstance {
@@ -18,7 +17,7 @@ func CreateInstance(instanceDriver driver.Driver, handle driver.VkInstance, vers
 			}
 
 			if version.IsAtLeast(common.Vulkan1_1) {
-				instance.Instance1_1 = &core1_1.VulkanInstance{
+				instance.Instance1_1 = &internal1_1.VulkanInstance{
 					InstanceDriver: instanceDriver,
 					InstanceHandle: handle,
 
@@ -41,7 +40,7 @@ func CreatePhysicalDevice(coreDriver driver.Driver, instance driver.VkInstance, 
 			}
 
 			if instanceVersion.IsAtLeast(common.Vulkan1_1) {
-				device.PhysicalDevice1_1 = &core1_1.VulkanInstancePhysicalDevice{
+				device.PhysicalDevice1_1 = &internal1_1.VulkanInstancePhysicalDevice{
 					InstanceDriver:       coreDriver,
 					PhysicalDeviceHandle: handle,
 				}
@@ -63,7 +62,7 @@ func CreateDevice(deviceDriver driver.Driver, handle driver.VkDevice, version co
 			}
 
 			if version.IsAtLeast(common.Vulkan1_1) {
-				device.Device1_1 = &core1_1.VulkanDevice{
+				device.Device1_1 = &internal1_1.VulkanDevice{
 					DeviceDriver: deviceDriver,
 					DeviceHandle: handle,
 				}
@@ -121,7 +120,7 @@ func CreateCommandBuffer(coreDriver driver.Driver, commandPool driver.VkCommandP
 			}
 
 			if version.IsAtLeast(common.Vulkan1_1) {
-				commandBuffer.CommandBuffer1_1 = &core1_1.VulkanCommandBuffer{
+				commandBuffer.CommandBuffer1_1 = &internal1_1.VulkanCommandBuffer{
 					DeviceDriver:        coreDriver,
 					Device:              device,
 					CommandPool:         commandPool,
@@ -149,7 +148,7 @@ func CreateCommandPool(coreDriver driver.Driver, device driver.VkDevice, handle 
 			}
 
 			if version.IsAtLeast(common.Vulkan1_1) {
-				commandPool.CommandPool1_1 = &core1_1.VulkanCommandPool{
+				commandPool.CommandPool1_1 = &internal1_1.VulkanCommandPool{
 					DeviceDriver:      coreDriver,
 					DeviceHandle:      device,
 					CommandPoolHandle: handle,

@@ -38,6 +38,10 @@ func NewFakeDescriptorSetLayout() driver.VkDescriptorSetLayout {
 	return driver.VkDescriptorSetLayout(fakePointer())
 }
 
+func NewFakeDescriptorUpdateTemplate() driver.VkDescriptorUpdateTemplate {
+	return driver.VkDescriptorUpdateTemplate(fakePointer())
+}
+
 func NewFakeDeviceHandle() driver.VkDevice {
 	return driver.VkDevice(fakePointer())
 }
@@ -100,6 +104,10 @@ func NewFakeRenderPassHandle() driver.VkRenderPass {
 
 func NewFakeSamplerHandle() driver.VkSampler {
 	return driver.VkSampler(fakePointer())
+}
+
+func NewFakeSamplerYcbcrConversionHandle() driver.VkSamplerYcbcrConversion {
+	return driver.VkSamplerYcbcrConversion(fakePointer())
 }
 
 func NewFakeSemaphore() driver.VkSemaphore {

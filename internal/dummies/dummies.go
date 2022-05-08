@@ -1,4 +1,4 @@
-package mocks
+package dummies
 
 import (
 	"github.com/CannibalVox/VKng/core"

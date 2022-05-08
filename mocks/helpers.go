@@ -32,6 +32,7 @@ func EasyMockCommandPool(ctrl *gomock.Controller, device core1_0.Device) *MockCo
 	commandPool.EXPECT().Handle().Return(NewFakeCommandPoolHandle()).AnyTimes()
 	commandPool.EXPECT().Driver().Return(device.Driver()).AnyTimes()
 	commandPool.EXPECT().Device().Return(device.Handle()).AnyTimes()
+	commandPool.EXPECT().APIVersion().Return(device.APIVersion()).AnyTimes()
 
 	return commandPool
 }

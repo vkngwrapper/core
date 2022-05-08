@@ -1,4 +1,4 @@
-package core1_1
+package internal1_1
 
 import (
 	"github.com/CannibalVox/VKng/core/common"

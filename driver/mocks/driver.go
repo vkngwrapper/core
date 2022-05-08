@@ -36,7 +36,7 @@ func (m *MockDriver) EXPECT() *MockDriverMockRecorder {
 	return m.recorder
 }
 
-// CreateDeviceDriver mocks base method.
+// CreateDeviceDriver dummies base method.
 func (m *MockDriver) CreateDeviceDriver(device driver.VkDevice) (driver.Driver, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateDeviceDriver", device)
@@ -51,7 +51,7 @@ func (mr *MockDriverMockRecorder) CreateDeviceDriver(device interface{}) *gomock
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateDeviceDriver", reflect.TypeOf((*MockDriver)(nil).CreateDeviceDriver), device)
 }
 
-// CreateInstanceDriver mocks base method.
+// CreateInstanceDriver dummies base method.
 func (m *MockDriver) CreateInstanceDriver(instance driver.VkInstance) (driver.Driver, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateInstanceDriver", instance)
@@ -66,7 +66,7 @@ func (mr *MockDriverMockRecorder) CreateInstanceDriver(instance interface{}) *go
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateInstanceDriver", reflect.TypeOf((*MockDriver)(nil).CreateInstanceDriver), instance)
 }
 
-// Destroy mocks base method.
+// Destroy dummies base method.
 func (m *MockDriver) Destroy() {
 	m.ctrl.T.Helper()
 	m.ctrl.Call(m, "Destroy")
@@ -78,7 +78,7 @@ func (mr *MockDriverMockRecorder) Destroy() *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Destroy", reflect.TypeOf((*MockDriver)(nil).Destroy))
 }
 
-// LoadProcAddr mocks base method.
+// LoadProcAddr dummies base method.
 func (m *MockDriver) LoadProcAddr(name *driver.Char) unsafe.Pointer {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "LoadProcAddr", name)
@@ -92,7 +92,7 @@ func (mr *MockDriverMockRecorder) LoadProcAddr(name interface{}) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "LoadProcAddr", reflect.TypeOf((*MockDriver)(nil).LoadProcAddr), name)
 }
 
-// ObjectStore mocks base method.
+// ObjectStore dummies base method.
 func (m *MockDriver) ObjectStore() *driver.VulkanObjectStore {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ObjectStore")
@@ -106,7 +106,7 @@ func (mr *MockDriverMockRecorder) ObjectStore() *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ObjectStore", reflect.TypeOf((*MockDriver)(nil).ObjectStore))
 }
 
-// Version mocks base method.
+// Version dummies base method.
 func (m *MockDriver) Version() common.APIVersion {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Version")
@@ -120,7 +120,7 @@ func (mr *MockDriverMockRecorder) Version() *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Version", reflect.TypeOf((*MockDriver)(nil).Version))
 }
 
-// VkAllocateCommandBuffers mocks base method.
+// VkAllocateCommandBuffers dummies base method.
 func (m *MockDriver) VkAllocateCommandBuffers(device driver.VkDevice, pAllocateInfo *driver.VkCommandBufferAllocateInfo, pCommandBuffers *driver.VkCommandBuffer) (common.VkResult, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "VkAllocateCommandBuffers", device, pAllocateInfo, pCommandBuffers)
@@ -135,7 +135,7 @@ func (mr *MockDriverMockRecorder) VkAllocateCommandBuffers(device, pAllocateInfo
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkAllocateCommandBuffers", reflect.TypeOf((*MockDriver)(nil).VkAllocateCommandBuffers), device, pAllocateInfo, pCommandBuffers)
 }
 
-// VkAllocateDescriptorSets mocks base method.
+// VkAllocateDescriptorSets dummies base method.
 func (m *MockDriver) VkAllocateDescriptorSets(device driver.VkDevice, pAllocateInfo *driver.VkDescriptorSetAllocateInfo, pDescriptorSets *driver.VkDescriptorSet) (common.VkResult, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "VkAllocateDescriptorSets", device, pAllocateInfo, pDescriptorSets)
@@ -150,7 +150,7 @@ func (mr *MockDriverMockRecorder) VkAllocateDescriptorSets(device, pAllocateInfo
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkAllocateDescriptorSets", reflect.TypeOf((*MockDriver)(nil).VkAllocateDescriptorSets), device, pAllocateInfo, pDescriptorSets)
 }
 
-// VkAllocateMemory mocks base method.
+// VkAllocateMemory dummies base method.
 func (m *MockDriver) VkAllocateMemory(device driver.VkDevice, pAllocateInfo *driver.VkMemoryAllocateInfo, pAllocator *driver.VkAllocationCallbacks, pMemory *driver.VkDeviceMemory) (common.VkResult, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "VkAllocateMemory", device, pAllocateInfo, pAllocator, pMemory)
@@ -165,7 +165,7 @@ func (mr *MockDriverMockRecorder) VkAllocateMemory(device, pAllocateInfo, pAlloc
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkAllocateMemory", reflect.TypeOf((*MockDriver)(nil).VkAllocateMemory), device, pAllocateInfo, pAllocator, pMemory)
 }
 
-// VkBeginCommandBuffer mocks base method.
+// VkBeginCommandBuffer dummies base method.
 func (m *MockDriver) VkBeginCommandBuffer(commandBuffer driver.VkCommandBuffer, pBeginInfo *driver.VkCommandBufferBeginInfo) (common.VkResult, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "VkBeginCommandBuffer", commandBuffer, pBeginInfo)
@@ -180,7 +180,7 @@ func (mr *MockDriverMockRecorder) VkBeginCommandBuffer(commandBuffer, pBeginInfo
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkBeginCommandBuffer", reflect.TypeOf((*MockDriver)(nil).VkBeginCommandBuffer), commandBuffer, pBeginInfo)
 }
 
-// VkBindBufferMemory mocks base method.
+// VkBindBufferMemory dummies base method.
 func (m *MockDriver) VkBindBufferMemory(device driver.VkDevice, buffer driver.VkBuffer, memory driver.VkDeviceMemory, memoryOffset driver.VkDeviceSize) (common.VkResult, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "VkBindBufferMemory", device, buffer, memory, memoryOffset)
@@ -195,7 +195,7 @@ func (mr *MockDriverMockRecorder) VkBindBufferMemory(device, buffer, memory, mem
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkBindBufferMemory", reflect.TypeOf((*MockDriver)(nil).VkBindBufferMemory), device, buffer, memory, memoryOffset)
 }
 
-// VkBindBufferMemory2 mocks base method.
+// VkBindBufferMemory2 dummies base method.
 func (m *MockDriver) VkBindBufferMemory2(device driver.VkDevice, bindInfoCount driver.Uint32, pBindInfos *driver.VkBindBufferMemoryInfo) (common.VkResult, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "VkBindBufferMemory2", device, bindInfoCount, pBindInfos)
@@ -210,7 +210,7 @@ func (mr *MockDriverMockRecorder) VkBindBufferMemory2(device, bindInfoCount, pBi
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkBindBufferMemory2", reflect.TypeOf((*MockDriver)(nil).VkBindBufferMemory2), device, bindInfoCount, pBindInfos)
 }
 
-// VkBindImageMemory mocks base method.
+// VkBindImageMemory dummies base method.
 func (m *MockDriver) VkBindImageMemory(device driver.VkDevice, image driver.VkImage, memory driver.VkDeviceMemory, memoryOffset driver.VkDeviceSize) (common.VkResult, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "VkBindImageMemory", device, image, memory, memoryOffset)
@@ -225,7 +225,7 @@ func (mr *MockDriverMockRecorder) VkBindImageMemory(device, image, memory, memor
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkBindImageMemory", reflect.TypeOf((*MockDriver)(nil).VkBindImageMemory), device, image, memory, memoryOffset)
 }
 
-// VkBindImageMemory2 mocks base method.
+// VkBindImageMemory2 dummies base method.
 func (m *MockDriver) VkBindImageMemory2(device driver.VkDevice, bindInfoCount driver.Uint32, pBindInfos *driver.VkBindImageMemoryInfo) (common.VkResult, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "VkBindImageMemory2", device, bindInfoCount, pBindInfos)
@@ -240,7 +240,7 @@ func (mr *MockDriverMockRecorder) VkBindImageMemory2(device, bindInfoCount, pBin
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkBindImageMemory2", reflect.TypeOf((*MockDriver)(nil).VkBindImageMemory2), device, bindInfoCount, pBindInfos)
 }
 
-// VkCmdBeginQuery mocks base method.
+// VkCmdBeginQuery dummies base method.
 func (m *MockDriver) VkCmdBeginQuery(commandBuffer driver.VkCommandBuffer, queryPool driver.VkQueryPool, query driver.Uint32, flags driver.VkQueryControlFlags) {
 	m.ctrl.T.Helper()
 	m.ctrl.Call(m, "VkCmdBeginQuery", commandBuffer, queryPool, query, flags)
@@ -252,7 +252,7 @@ func (mr *MockDriverMockRecorder) VkCmdBeginQuery(commandBuffer, queryPool, quer
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkCmdBeginQuery", reflect.TypeOf((*MockDriver)(nil).VkCmdBeginQuery), commandBuffer, queryPool, query, flags)
 }
 
-// VkCmdBeginRenderPass mocks base method.
+// VkCmdBeginRenderPass dummies base method.
 func (m *MockDriver) VkCmdBeginRenderPass(commandBuffer driver.VkCommandBuffer, pRenderPassBegin *driver.VkRenderPassBeginInfo, contents driver.VkSubpassContents) {
 	m.ctrl.T.Helper()
 	m.ctrl.Call(m, "VkCmdBeginRenderPass", commandBuffer, pRenderPassBegin, contents)
@@ -264,7 +264,7 @@ func (mr *MockDriverMockRecorder) VkCmdBeginRenderPass(commandBuffer, pRenderPas
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkCmdBeginRenderPass", reflect.TypeOf((*MockDriver)(nil).VkCmdBeginRenderPass), commandBuffer, pRenderPassBegin, contents)
 }
 
-// VkCmdBeginRenderPass2 mocks base method.
+// VkCmdBeginRenderPass2 dummies base method.
 func (m *MockDriver) VkCmdBeginRenderPass2(commandBuffer driver.VkCommandBuffer, pRenderPassBegin *driver.VkRenderPassBeginInfo, pSubpassBeginInfo *driver.VkSubpassBeginInfo) {
 	m.ctrl.T.Helper()
 	m.ctrl.Call(m, "VkCmdBeginRenderPass2", commandBuffer, pRenderPassBegin, pSubpassBeginInfo)
@@ -276,7 +276,7 @@ func (mr *MockDriverMockRecorder) VkCmdBeginRenderPass2(commandBuffer, pRenderPa
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkCmdBeginRenderPass2", reflect.TypeOf((*MockDriver)(nil).VkCmdBeginRenderPass2), commandBuffer, pRenderPassBegin, pSubpassBeginInfo)
 }
 
-// VkCmdBindDescriptorSets mocks base method.
+// VkCmdBindDescriptorSets dummies base method.
 func (m *MockDriver) VkCmdBindDescriptorSets(commandBuffer driver.VkCommandBuffer, pipelineBindPoint driver.VkPipelineBindPoint, layout driver.VkPipelineLayout, firstSet, descriptorSetCount driver.Uint32, pDescriptorSets *driver.VkDescriptorSet, dynamicOffsetCount driver.Uint32, pDynamicOffsets *driver.Uint32) {
 	m.ctrl.T.Helper()
 	m.ctrl.Call(m, "VkCmdBindDescriptorSets", commandBuffer, pipelineBindPoint, layout, firstSet, descriptorSetCount, pDescriptorSets, dynamicOffsetCount, pDynamicOffsets)
@@ -288,7 +288,7 @@ func (mr *MockDriverMockRecorder) VkCmdBindDescriptorSets(commandBuffer, pipelin
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkCmdBindDescriptorSets", reflect.TypeOf((*MockDriver)(nil).VkCmdBindDescriptorSets), commandBuffer, pipelineBindPoint, layout, firstSet, descriptorSetCount, pDescriptorSets, dynamicOffsetCount, pDynamicOffsets)
 }
 
-// VkCmdBindIndexBuffer mocks base method.
+// VkCmdBindIndexBuffer dummies base method.
 func (m *MockDriver) VkCmdBindIndexBuffer(commandBuffer driver.VkCommandBuffer, buffer driver.VkBuffer, offset driver.VkDeviceSize, indexType driver.VkIndexType) {
 	m.ctrl.T.Helper()
 	m.ctrl.Call(m, "VkCmdBindIndexBuffer", commandBuffer, buffer, offset, indexType)
@@ -300,7 +300,7 @@ func (mr *MockDriverMockRecorder) VkCmdBindIndexBuffer(commandBuffer, buffer, of
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkCmdBindIndexBuffer", reflect.TypeOf((*MockDriver)(nil).VkCmdBindIndexBuffer), commandBuffer, buffer, offset, indexType)
 }
 
-// VkCmdBindPipeline mocks base method.
+// VkCmdBindPipeline dummies base method.
 func (m *MockDriver) VkCmdBindPipeline(commandBuffer driver.VkCommandBuffer, pipelineBindPoint driver.VkPipelineBindPoint, pipeline driver.VkPipeline) {
 	m.ctrl.T.Helper()
 	m.ctrl.Call(m, "VkCmdBindPipeline", commandBuffer, pipelineBindPoint, pipeline)
@@ -312,7 +312,7 @@ func (mr *MockDriverMockRecorder) VkCmdBindPipeline(commandBuffer, pipelineBindP
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkCmdBindPipeline", reflect.TypeOf((*MockDriver)(nil).VkCmdBindPipeline), commandBuffer, pipelineBindPoint, pipeline)
 }
 
-// VkCmdBindVertexBuffers mocks base method.
+// VkCmdBindVertexBuffers dummies base method.
 func (m *MockDriver) VkCmdBindVertexBuffers(commandBuffer driver.VkCommandBuffer, firstBinding, bindingCount driver.Uint32, pBuffers *driver.VkBuffer, pOffsets *driver.VkDeviceSize) {
 	m.ctrl.T.Helper()
 	m.ctrl.Call(m, "VkCmdBindVertexBuffers", commandBuffer, firstBinding, bindingCount, pBuffers, pOffsets)
@@ -324,7 +324,7 @@ func (mr *MockDriverMockRecorder) VkCmdBindVertexBuffers(commandBuffer, firstBin
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkCmdBindVertexBuffers", reflect.TypeOf((*MockDriver)(nil).VkCmdBindVertexBuffers), commandBuffer, firstBinding, bindingCount, pBuffers, pOffsets)
 }
 
-// VkCmdBlitImage mocks base method.
+// VkCmdBlitImage dummies base method.
 func (m *MockDriver) VkCmdBlitImage(commandBuffer driver.VkCommandBuffer, srcImage driver.VkImage, srcImageLayout driver.VkImageLayout, dstImage driver.VkImage, dstImageLayout driver.VkImageLayout, regionCount driver.Uint32, pRegions *driver.VkImageBlit, filter driver.VkFilter) {
 	m.ctrl.T.Helper()
 	m.ctrl.Call(m, "VkCmdBlitImage", commandBuffer, srcImage, srcImageLayout, dstImage, dstImageLayout, regionCount, pRegions, filter)
@@ -336,7 +336,7 @@ func (mr *MockDriverMockRecorder) VkCmdBlitImage(commandBuffer, srcImage, srcIma
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkCmdBlitImage", reflect.TypeOf((*MockDriver)(nil).VkCmdBlitImage), commandBuffer, srcImage, srcImageLayout, dstImage, dstImageLayout, regionCount, pRegions, filter)
 }
 
-// VkCmdClearAttachments mocks base method.
+// VkCmdClearAttachments dummies base method.
 func (m *MockDriver) VkCmdClearAttachments(commandBuffer driver.VkCommandBuffer, attachmentCount driver.Uint32, pAttachments *driver.VkClearAttachment, rectCount driver.Uint32, pRects *driver.VkClearRect) {
 	m.ctrl.T.Helper()
 	m.ctrl.Call(m, "VkCmdClearAttachments", commandBuffer, attachmentCount, pAttachments, rectCount, pRects)
@@ -348,7 +348,7 @@ func (mr *MockDriverMockRecorder) VkCmdClearAttachments(commandBuffer, attachmen
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkCmdClearAttachments", reflect.TypeOf((*MockDriver)(nil).VkCmdClearAttachments), commandBuffer, attachmentCount, pAttachments, rectCount, pRects)
 }
 
-// VkCmdClearColorImage mocks base method.
+// VkCmdClearColorImage dummies base method.
 func (m *MockDriver) VkCmdClearColorImage(commandBuffer driver.VkCommandBuffer, image driver.VkImage, imageLayout driver.VkImageLayout, pColor *driver.VkClearColorValue, rangeCount driver.Uint32, pRanges *driver.VkImageSubresourceRange) {
 	m.ctrl.T.Helper()
 	m.ctrl.Call(m, "VkCmdClearColorImage", commandBuffer, image, imageLayout, pColor, rangeCount, pRanges)
@@ -360,7 +360,7 @@ func (mr *MockDriverMockRecorder) VkCmdClearColorImage(commandBuffer, image, ima
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkCmdClearColorImage", reflect.TypeOf((*MockDriver)(nil).VkCmdClearColorImage), commandBuffer, image, imageLayout, pColor, rangeCount, pRanges)
 }
 
-// VkCmdClearDepthStencilImage mocks base method.
+// VkCmdClearDepthStencilImage dummies base method.
 func (m *MockDriver) VkCmdClearDepthStencilImage(commandBuffer driver.VkCommandBuffer, image driver.VkImage, imageLayout driver.VkImageLayout, pDepthStencil *driver.VkClearDepthStencilValue, rangeCount driver.Uint32, pRanges *driver.VkImageSubresourceRange) {
 	m.ctrl.T.Helper()
 	m.ctrl.Call(m, "VkCmdClearDepthStencilImage", commandBuffer, image, imageLayout, pDepthStencil, rangeCount, pRanges)
@@ -372,7 +372,7 @@ func (mr *MockDriverMockRecorder) VkCmdClearDepthStencilImage(commandBuffer, ima
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkCmdClearDepthStencilImage", reflect.TypeOf((*MockDriver)(nil).VkCmdClearDepthStencilImage), commandBuffer, image, imageLayout, pDepthStencil, rangeCount, pRanges)
 }
 
-// VkCmdCopyBuffer mocks base method.
+// VkCmdCopyBuffer dummies base method.
 func (m *MockDriver) VkCmdCopyBuffer(commandBuffer driver.VkCommandBuffer, srcBuffer, dstBuffer driver.VkBuffer, regionCount driver.Uint32, pRegions *driver.VkBufferCopy) {
 	m.ctrl.T.Helper()
 	m.ctrl.Call(m, "VkCmdCopyBuffer", commandBuffer, srcBuffer, dstBuffer, regionCount, pRegions)
@@ -384,7 +384,7 @@ func (mr *MockDriverMockRecorder) VkCmdCopyBuffer(commandBuffer, srcBuffer, dstB
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkCmdCopyBuffer", reflect.TypeOf((*MockDriver)(nil).VkCmdCopyBuffer), commandBuffer, srcBuffer, dstBuffer, regionCount, pRegions)
 }
 
-// VkCmdCopyBufferToImage mocks base method.
+// VkCmdCopyBufferToImage dummies base method.
 func (m *MockDriver) VkCmdCopyBufferToImage(commandBuffer driver.VkCommandBuffer, srcBuffer driver.VkBuffer, dstImage driver.VkImage, dstImageLayout driver.VkImageLayout, regionCount driver.Uint32, pRegions *driver.VkBufferImageCopy) {
 	m.ctrl.T.Helper()
 	m.ctrl.Call(m, "VkCmdCopyBufferToImage", commandBuffer, srcBuffer, dstImage, dstImageLayout, regionCount, pRegions)
@@ -396,7 +396,7 @@ func (mr *MockDriverMockRecorder) VkCmdCopyBufferToImage(commandBuffer, srcBuffe
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkCmdCopyBufferToImage", reflect.TypeOf((*MockDriver)(nil).VkCmdCopyBufferToImage), commandBuffer, srcBuffer, dstImage, dstImageLayout, regionCount, pRegions)
 }
 
-// VkCmdCopyImage mocks base method.
+// VkCmdCopyImage dummies base method.
 func (m *MockDriver) VkCmdCopyImage(commandBuffer driver.VkCommandBuffer, srcImage driver.VkImage, srcImageLayout driver.VkImageLayout, dstImage driver.VkImage, dstImageLayout driver.VkImageLayout, regionCount driver.Uint32, pRegions *driver.VkImageCopy) {
 	m.ctrl.T.Helper()
 	m.ctrl.Call(m, "VkCmdCopyImage", commandBuffer, srcImage, srcImageLayout, dstImage, dstImageLayout, regionCount, pRegions)
@@ -408,7 +408,7 @@ func (mr *MockDriverMockRecorder) VkCmdCopyImage(commandBuffer, srcImage, srcIma
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkCmdCopyImage", reflect.TypeOf((*MockDriver)(nil).VkCmdCopyImage), commandBuffer, srcImage, srcImageLayout, dstImage, dstImageLayout, regionCount, pRegions)
 }
 
-// VkCmdCopyImageToBuffer mocks base method.
+// VkCmdCopyImageToBuffer dummies base method.
 func (m *MockDriver) VkCmdCopyImageToBuffer(commandBuffer driver.VkCommandBuffer, srcImage driver.VkImage, srcImageLayout driver.VkImageLayout, dstBuffer driver.VkBuffer, regionCount driver.Uint32, pRegions *driver.VkBufferImageCopy) {
 	m.ctrl.T.Helper()
 	m.ctrl.Call(m, "VkCmdCopyImageToBuffer", commandBuffer, srcImage, srcImageLayout, dstBuffer, regionCount, pRegions)
@@ -420,7 +420,7 @@ func (mr *MockDriverMockRecorder) VkCmdCopyImageToBuffer(commandBuffer, srcImage
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkCmdCopyImageToBuffer", reflect.TypeOf((*MockDriver)(nil).VkCmdCopyImageToBuffer), commandBuffer, srcImage, srcImageLayout, dstBuffer, regionCount, pRegions)
 }
 
-// VkCmdCopyQueryPoolResults mocks base method.
+// VkCmdCopyQueryPoolResults dummies base method.
 func (m *MockDriver) VkCmdCopyQueryPoolResults(commandBuffer driver.VkCommandBuffer, queryPool driver.VkQueryPool, firstQuery, queryCount driver.Uint32, dstBuffer driver.VkBuffer, dstOffset, stride driver.VkDeviceSize, flags driver.VkQueryResultFlags) {
 	m.ctrl.T.Helper()
 	m.ctrl.Call(m, "VkCmdCopyQueryPoolResults", commandBuffer, queryPool, firstQuery, queryCount, dstBuffer, dstOffset, stride, flags)
@@ -432,7 +432,7 @@ func (mr *MockDriverMockRecorder) VkCmdCopyQueryPoolResults(commandBuffer, query
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkCmdCopyQueryPoolResults", reflect.TypeOf((*MockDriver)(nil).VkCmdCopyQueryPoolResults), commandBuffer, queryPool, firstQuery, queryCount, dstBuffer, dstOffset, stride, flags)
 }
 
-// VkCmdDispatch mocks base method.
+// VkCmdDispatch dummies base method.
 func (m *MockDriver) VkCmdDispatch(commandBuffer driver.VkCommandBuffer, groupCountX, groupCountY, groupCountZ driver.Uint32) {
 	m.ctrl.T.Helper()
 	m.ctrl.Call(m, "VkCmdDispatch", commandBuffer, groupCountX, groupCountY, groupCountZ)
@@ -444,7 +444,7 @@ func (mr *MockDriverMockRecorder) VkCmdDispatch(commandBuffer, groupCountX, grou
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkCmdDispatch", reflect.TypeOf((*MockDriver)(nil).VkCmdDispatch), commandBuffer, groupCountX, groupCountY, groupCountZ)
 }
 
-// VkCmdDispatchBase mocks base method.
+// VkCmdDispatchBase dummies base method.
 func (m *MockDriver) VkCmdDispatchBase(commandBuffer driver.VkCommandBuffer, baseGroupX, baseGroupY, baseGroupZ, groupCountX, groupCountY, groupCountZ driver.Uint32) {
 	m.ctrl.T.Helper()
 	m.ctrl.Call(m, "VkCmdDispatchBase", commandBuffer, baseGroupX, baseGroupY, baseGroupZ, groupCountX, groupCountY, groupCountZ)
@@ -456,7 +456,7 @@ func (mr *MockDriverMockRecorder) VkCmdDispatchBase(commandBuffer, baseGroupX, b
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkCmdDispatchBase", reflect.TypeOf((*MockDriver)(nil).VkCmdDispatchBase), commandBuffer, baseGroupX, baseGroupY, baseGroupZ, groupCountX, groupCountY, groupCountZ)
 }
 
-// VkCmdDispatchIndirect mocks base method.
+// VkCmdDispatchIndirect dummies base method.
 func (m *MockDriver) VkCmdDispatchIndirect(commandBuffer driver.VkCommandBuffer, buffer driver.VkBuffer, offset driver.VkDeviceSize) {
 	m.ctrl.T.Helper()
 	m.ctrl.Call(m, "VkCmdDispatchIndirect", commandBuffer, buffer, offset)
@@ -468,7 +468,7 @@ func (mr *MockDriverMockRecorder) VkCmdDispatchIndirect(commandBuffer, buffer, o
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkCmdDispatchIndirect", reflect.TypeOf((*MockDriver)(nil).VkCmdDispatchIndirect), commandBuffer, buffer, offset)
 }
 
-// VkCmdDraw mocks base method.
+// VkCmdDraw dummies base method.
 func (m *MockDriver) VkCmdDraw(commandBuffer driver.VkCommandBuffer, vertexCount, instanceCount, firstVertex, firstInstance driver.Uint32) {
 	m.ctrl.T.Helper()
 	m.ctrl.Call(m, "VkCmdDraw", commandBuffer, vertexCount, instanceCount, firstVertex, firstInstance)
@@ -480,7 +480,7 @@ func (mr *MockDriverMockRecorder) VkCmdDraw(commandBuffer, vertexCount, instance
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkCmdDraw", reflect.TypeOf((*MockDriver)(nil).VkCmdDraw), commandBuffer, vertexCount, instanceCount, firstVertex, firstInstance)
 }
 
-// VkCmdDrawIndexed mocks base method.
+// VkCmdDrawIndexed dummies base method.
 func (m *MockDriver) VkCmdDrawIndexed(commandBuffer driver.VkCommandBuffer, indexCount, instanceCount, firstIndex driver.Uint32, vertexOffset driver.Int32, firstInstance driver.Uint32) {
 	m.ctrl.T.Helper()
 	m.ctrl.Call(m, "VkCmdDrawIndexed", commandBuffer, indexCount, instanceCount, firstIndex, vertexOffset, firstInstance)
@@ -492,7 +492,7 @@ func (mr *MockDriverMockRecorder) VkCmdDrawIndexed(commandBuffer, indexCount, in
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkCmdDrawIndexed", reflect.TypeOf((*MockDriver)(nil).VkCmdDrawIndexed), commandBuffer, indexCount, instanceCount, firstIndex, vertexOffset, firstInstance)
 }
 
-// VkCmdDrawIndexedIndirect mocks base method.
+// VkCmdDrawIndexedIndirect dummies base method.
 func (m *MockDriver) VkCmdDrawIndexedIndirect(commandBuffer driver.VkCommandBuffer, buffer driver.VkBuffer, offset driver.VkDeviceSize, drawCount, stride driver.Uint32) {
 	m.ctrl.T.Helper()
 	m.ctrl.Call(m, "VkCmdDrawIndexedIndirect", commandBuffer, buffer, offset, drawCount, stride)
@@ -504,7 +504,7 @@ func (mr *MockDriverMockRecorder) VkCmdDrawIndexedIndirect(commandBuffer, buffer
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkCmdDrawIndexedIndirect", reflect.TypeOf((*MockDriver)(nil).VkCmdDrawIndexedIndirect), commandBuffer, buffer, offset, drawCount, stride)
 }
 
-// VkCmdDrawIndexedIndirectCount mocks base method.
+// VkCmdDrawIndexedIndirectCount dummies base method.
 func (m *MockDriver) VkCmdDrawIndexedIndirectCount(commandBuffer driver.VkCommandBuffer, buffer driver.VkBuffer, offset driver.VkDeviceSize, countBuffer driver.VkBuffer, countBufferOffset driver.VkDeviceSize, maxDrawCount, stride driver.Uint32) {
 	m.ctrl.T.Helper()
 	m.ctrl.Call(m, "VkCmdDrawIndexedIndirectCount", commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride)
@@ -516,7 +516,7 @@ func (mr *MockDriverMockRecorder) VkCmdDrawIndexedIndirectCount(commandBuffer, b
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkCmdDrawIndexedIndirectCount", reflect.TypeOf((*MockDriver)(nil).VkCmdDrawIndexedIndirectCount), commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride)
 }
 
-// VkCmdDrawIndirect mocks base method.
+// VkCmdDrawIndirect dummies base method.
 func (m *MockDriver) VkCmdDrawIndirect(commandBuffer driver.VkCommandBuffer, buffer driver.VkBuffer, offset driver.VkDeviceSize, drawCount, stride driver.Uint32) {
 	m.ctrl.T.Helper()
 	m.ctrl.Call(m, "VkCmdDrawIndirect", commandBuffer, buffer, offset, drawCount, stride)
@@ -528,7 +528,7 @@ func (mr *MockDriverMockRecorder) VkCmdDrawIndirect(commandBuffer, buffer, offse
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkCmdDrawIndirect", reflect.TypeOf((*MockDriver)(nil).VkCmdDrawIndirect), commandBuffer, buffer, offset, drawCount, stride)
 }
 
-// VkCmdDrawIndirectCount mocks base method.
+// VkCmdDrawIndirectCount dummies base method.
 func (m *MockDriver) VkCmdDrawIndirectCount(commandBuffer driver.VkCommandBuffer, buffer driver.VkBuffer, offset driver.VkDeviceSize, countBuffer driver.VkBuffer, countBufferOffset driver.VkDeviceSize, maxDrawCount, stride driver.Uint32) {
 	m.ctrl.T.Helper()
 	m.ctrl.Call(m, "VkCmdDrawIndirectCount", commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride)
@@ -540,7 +540,7 @@ func (mr *MockDriverMockRecorder) VkCmdDrawIndirectCount(commandBuffer, buffer, 
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkCmdDrawIndirectCount", reflect.TypeOf((*MockDriver)(nil).VkCmdDrawIndirectCount), commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride)
 }
 
-// VkCmdEndQuery mocks base method.
+// VkCmdEndQuery dummies base method.
 func (m *MockDriver) VkCmdEndQuery(commandBuffer driver.VkCommandBuffer, queryPool driver.VkQueryPool, query driver.Uint32) {
 	m.ctrl.T.Helper()
 	m.ctrl.Call(m, "VkCmdEndQuery", commandBuffer, queryPool, query)
@@ -552,7 +552,7 @@ func (mr *MockDriverMockRecorder) VkCmdEndQuery(commandBuffer, queryPool, query 
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkCmdEndQuery", reflect.TypeOf((*MockDriver)(nil).VkCmdEndQuery), commandBuffer, queryPool, query)
 }
 
-// VkCmdEndRenderPass mocks base method.
+// VkCmdEndRenderPass dummies base method.
 func (m *MockDriver) VkCmdEndRenderPass(commandBuffer driver.VkCommandBuffer) {
 	m.ctrl.T.Helper()
 	m.ctrl.Call(m, "VkCmdEndRenderPass", commandBuffer)
@@ -564,7 +564,7 @@ func (mr *MockDriverMockRecorder) VkCmdEndRenderPass(commandBuffer interface{}) 
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkCmdEndRenderPass", reflect.TypeOf((*MockDriver)(nil).VkCmdEndRenderPass), commandBuffer)
 }
 
-// VkCmdEndRenderPass2 mocks base method.
+// VkCmdEndRenderPass2 dummies base method.
 func (m *MockDriver) VkCmdEndRenderPass2(commandBuffer driver.VkCommandBuffer, pSubpassEndInfo *driver.VkSubpassEndInfo) {
 	m.ctrl.T.Helper()
 	m.ctrl.Call(m, "VkCmdEndRenderPass2", commandBuffer, pSubpassEndInfo)
@@ -576,7 +576,7 @@ func (mr *MockDriverMockRecorder) VkCmdEndRenderPass2(commandBuffer, pSubpassEnd
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkCmdEndRenderPass2", reflect.TypeOf((*MockDriver)(nil).VkCmdEndRenderPass2), commandBuffer, pSubpassEndInfo)
 }
 
-// VkCmdExecuteCommands mocks base method.
+// VkCmdExecuteCommands dummies base method.
 func (m *MockDriver) VkCmdExecuteCommands(commandBuffer driver.VkCommandBuffer, commandBufferCount driver.Uint32, pCommandBuffers *driver.VkCommandBuffer) {
 	m.ctrl.T.Helper()
 	m.ctrl.Call(m, "VkCmdExecuteCommands", commandBuffer, commandBufferCount, pCommandBuffers)
@@ -588,7 +588,7 @@ func (mr *MockDriverMockRecorder) VkCmdExecuteCommands(commandBuffer, commandBuf
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkCmdExecuteCommands", reflect.TypeOf((*MockDriver)(nil).VkCmdExecuteCommands), commandBuffer, commandBufferCount, pCommandBuffers)
 }
 
-// VkCmdFillBuffer mocks base method.
+// VkCmdFillBuffer dummies base method.
 func (m *MockDriver) VkCmdFillBuffer(commandBuffer driver.VkCommandBuffer, dstBuffer driver.VkBuffer, dstOffset, size driver.VkDeviceSize, data driver.Uint32) {
 	m.ctrl.T.Helper()
 	m.ctrl.Call(m, "VkCmdFillBuffer", commandBuffer, dstBuffer, dstOffset, size, data)
@@ -600,7 +600,7 @@ func (mr *MockDriverMockRecorder) VkCmdFillBuffer(commandBuffer, dstBuffer, dstO
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkCmdFillBuffer", reflect.TypeOf((*MockDriver)(nil).VkCmdFillBuffer), commandBuffer, dstBuffer, dstOffset, size, data)
 }
 
-// VkCmdNextSubpass mocks base method.
+// VkCmdNextSubpass dummies base method.
 func (m *MockDriver) VkCmdNextSubpass(commandBuffer driver.VkCommandBuffer, contents driver.VkSubpassContents) {
 	m.ctrl.T.Helper()
 	m.ctrl.Call(m, "VkCmdNextSubpass", commandBuffer, contents)
@@ -612,7 +612,7 @@ func (mr *MockDriverMockRecorder) VkCmdNextSubpass(commandBuffer, contents inter
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkCmdNextSubpass", reflect.TypeOf((*MockDriver)(nil).VkCmdNextSubpass), commandBuffer, contents)
 }
 
-// VkCmdNextSubpass2 mocks base method.
+// VkCmdNextSubpass2 dummies base method.
 func (m *MockDriver) VkCmdNextSubpass2(commandBuffer driver.VkCommandBuffer, pSubpassBeginInfo *driver.VkSubpassBeginInfo, pSubpassEndInfo *driver.VkSubpassEndInfo) {
 	m.ctrl.T.Helper()
 	m.ctrl.Call(m, "VkCmdNextSubpass2", commandBuffer, pSubpassBeginInfo, pSubpassEndInfo)
@@ -624,7 +624,7 @@ func (mr *MockDriverMockRecorder) VkCmdNextSubpass2(commandBuffer, pSubpassBegin
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkCmdNextSubpass2", reflect.TypeOf((*MockDriver)(nil).VkCmdNextSubpass2), commandBuffer, pSubpassBeginInfo, pSubpassEndInfo)
 }
 
-// VkCmdPipelineBarrier mocks base method.
+// VkCmdPipelineBarrier dummies base method.
 func (m *MockDriver) VkCmdPipelineBarrier(commandBuffer driver.VkCommandBuffer, srcStageMask, dstStageMask driver.VkPipelineStageFlags, dependencyFlags driver.VkDependencyFlags, memoryBarrierCount driver.Uint32, pMemoryBarriers *driver.VkMemoryBarrier, bufferMemoryBarrierCount driver.Uint32, pBufferMemoryBarriers *driver.VkBufferMemoryBarrier, imageMemoryBarrierCount driver.Uint32, pImageMemoryBarriers *driver.VkImageMemoryBarrier) {
 	m.ctrl.T.Helper()
 	m.ctrl.Call(m, "VkCmdPipelineBarrier", commandBuffer, srcStageMask, dstStageMask, dependencyFlags, memoryBarrierCount, pMemoryBarriers, bufferMemoryBarrierCount, pBufferMemoryBarriers, imageMemoryBarrierCount, pImageMemoryBarriers)
@@ -636,7 +636,7 @@ func (mr *MockDriverMockRecorder) VkCmdPipelineBarrier(commandBuffer, srcStageMa
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkCmdPipelineBarrier", reflect.TypeOf((*MockDriver)(nil).VkCmdPipelineBarrier), commandBuffer, srcStageMask, dstStageMask, dependencyFlags, memoryBarrierCount, pMemoryBarriers, bufferMemoryBarrierCount, pBufferMemoryBarriers, imageMemoryBarrierCount, pImageMemoryBarriers)
 }
 
-// VkCmdPushConstants mocks base method.
+// VkCmdPushConstants dummies base method.
 func (m *MockDriver) VkCmdPushConstants(commandBuffer driver.VkCommandBuffer, layout driver.VkPipelineLayout, stageFlags driver.VkShaderStageFlags, offset, size driver.Uint32, pValues unsafe.Pointer) {
 	m.ctrl.T.Helper()
 	m.ctrl.Call(m, "VkCmdPushConstants", commandBuffer, layout, stageFlags, offset, size, pValues)
@@ -648,7 +648,7 @@ func (mr *MockDriverMockRecorder) VkCmdPushConstants(commandBuffer, layout, stag
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkCmdPushConstants", reflect.TypeOf((*MockDriver)(nil).VkCmdPushConstants), commandBuffer, layout, stageFlags, offset, size, pValues)
 }
 
-// VkCmdResetEvent mocks base method.
+// VkCmdResetEvent dummies base method.
 func (m *MockDriver) VkCmdResetEvent(commandBuffer driver.VkCommandBuffer, event driver.VkEvent, stageMask driver.VkPipelineStageFlags) {
 	m.ctrl.T.Helper()
 	m.ctrl.Call(m, "VkCmdResetEvent", commandBuffer, event, stageMask)
@@ -660,7 +660,7 @@ func (mr *MockDriverMockRecorder) VkCmdResetEvent(commandBuffer, event, stageMas
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkCmdResetEvent", reflect.TypeOf((*MockDriver)(nil).VkCmdResetEvent), commandBuffer, event, stageMask)
 }
 
-// VkCmdResetQueryPool mocks base method.
+// VkCmdResetQueryPool dummies base method.
 func (m *MockDriver) VkCmdResetQueryPool(commandBuffer driver.VkCommandBuffer, queryPool driver.VkQueryPool, firstQuery, queryCount driver.Uint32) {
 	m.ctrl.T.Helper()
 	m.ctrl.Call(m, "VkCmdResetQueryPool", commandBuffer, queryPool, firstQuery, queryCount)
@@ -672,7 +672,7 @@ func (mr *MockDriverMockRecorder) VkCmdResetQueryPool(commandBuffer, queryPool, 
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkCmdResetQueryPool", reflect.TypeOf((*MockDriver)(nil).VkCmdResetQueryPool), commandBuffer, queryPool, firstQuery, queryCount)
 }
 
-// VkCmdResolveImage mocks base method.
+// VkCmdResolveImage dummies base method.
 func (m *MockDriver) VkCmdResolveImage(commandBuffer driver.VkCommandBuffer, srcImage driver.VkImage, srcImageLayout driver.VkImageLayout, dstImage driver.VkImage, dstImageLayout driver.VkImageLayout, regionCount driver.Uint32, pRegions *driver.VkImageResolve) {
 	m.ctrl.T.Helper()
 	m.ctrl.Call(m, "VkCmdResolveImage", commandBuffer, srcImage, srcImageLayout, dstImage, dstImageLayout, regionCount, pRegions)
@@ -684,7 +684,7 @@ func (mr *MockDriverMockRecorder) VkCmdResolveImage(commandBuffer, srcImage, src
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkCmdResolveImage", reflect.TypeOf((*MockDriver)(nil).VkCmdResolveImage), commandBuffer, srcImage, srcImageLayout, dstImage, dstImageLayout, regionCount, pRegions)
 }
 
-// VkCmdSetBlendConstants mocks base method.
+// VkCmdSetBlendConstants dummies base method.
 func (m *MockDriver) VkCmdSetBlendConstants(commandBuffer driver.VkCommandBuffer, blendConstants *driver.Float) {
 	m.ctrl.T.Helper()
 	m.ctrl.Call(m, "VkCmdSetBlendConstants", commandBuffer, blendConstants)
@@ -696,7 +696,7 @@ func (mr *MockDriverMockRecorder) VkCmdSetBlendConstants(commandBuffer, blendCon
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkCmdSetBlendConstants", reflect.TypeOf((*MockDriver)(nil).VkCmdSetBlendConstants), commandBuffer, blendConstants)
 }
 
-// VkCmdSetDepthBias mocks base method.
+// VkCmdSetDepthBias dummies base method.
 func (m *MockDriver) VkCmdSetDepthBias(commandBuffer driver.VkCommandBuffer, depthBiasConstantFactor, depthBiasClamp, depthBiasSlopeFactor driver.Float) {
 	m.ctrl.T.Helper()
 	m.ctrl.Call(m, "VkCmdSetDepthBias", commandBuffer, depthBiasConstantFactor, depthBiasClamp, depthBiasSlopeFactor)
@@ -708,7 +708,7 @@ func (mr *MockDriverMockRecorder) VkCmdSetDepthBias(commandBuffer, depthBiasCons
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkCmdSetDepthBias", reflect.TypeOf((*MockDriver)(nil).VkCmdSetDepthBias), commandBuffer, depthBiasConstantFactor, depthBiasClamp, depthBiasSlopeFactor)
 }
 
-// VkCmdSetDepthBounds mocks base method.
+// VkCmdSetDepthBounds dummies base method.
 func (m *MockDriver) VkCmdSetDepthBounds(commandBuffer driver.VkCommandBuffer, minDepthBounds, maxDepthBounds driver.Float) {
 	m.ctrl.T.Helper()
 	m.ctrl.Call(m, "VkCmdSetDepthBounds", commandBuffer, minDepthBounds, maxDepthBounds)
@@ -720,7 +720,7 @@ func (mr *MockDriverMockRecorder) VkCmdSetDepthBounds(commandBuffer, minDepthBou
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkCmdSetDepthBounds", reflect.TypeOf((*MockDriver)(nil).VkCmdSetDepthBounds), commandBuffer, minDepthBounds, maxDepthBounds)
 }
 
-// VkCmdSetDeviceMask mocks base method.
+// VkCmdSetDeviceMask dummies base method.
 func (m *MockDriver) VkCmdSetDeviceMask(commandBuffer driver.VkCommandBuffer, deviceMask driver.Uint32) {
 	m.ctrl.T.Helper()
 	m.ctrl.Call(m, "VkCmdSetDeviceMask", commandBuffer, deviceMask)
@@ -732,7 +732,7 @@ func (mr *MockDriverMockRecorder) VkCmdSetDeviceMask(commandBuffer, deviceMask i
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkCmdSetDeviceMask", reflect.TypeOf((*MockDriver)(nil).VkCmdSetDeviceMask), commandBuffer, deviceMask)
 }
 
-// VkCmdSetEvent mocks base method.
+// VkCmdSetEvent dummies base method.
 func (m *MockDriver) VkCmdSetEvent(commandBuffer driver.VkCommandBuffer, event driver.VkEvent, stageMask driver.VkPipelineStageFlags) {
 	m.ctrl.T.Helper()
 	m.ctrl.Call(m, "VkCmdSetEvent", commandBuffer, event, stageMask)
@@ -744,7 +744,7 @@ func (mr *MockDriverMockRecorder) VkCmdSetEvent(commandBuffer, event, stageMask 
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkCmdSetEvent", reflect.TypeOf((*MockDriver)(nil).VkCmdSetEvent), commandBuffer, event, stageMask)
 }
 
-// VkCmdSetLineWidth mocks base method.
+// VkCmdSetLineWidth dummies base method.
 func (m *MockDriver) VkCmdSetLineWidth(commandBuffer driver.VkCommandBuffer, lineWidth driver.Float) {
 	m.ctrl.T.Helper()
 	m.ctrl.Call(m, "VkCmdSetLineWidth", commandBuffer, lineWidth)
@@ -756,7 +756,7 @@ func (mr *MockDriverMockRecorder) VkCmdSetLineWidth(commandBuffer, lineWidth int
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkCmdSetLineWidth", reflect.TypeOf((*MockDriver)(nil).VkCmdSetLineWidth), commandBuffer, lineWidth)
 }
 
-// VkCmdSetScissor mocks base method.
+// VkCmdSetScissor dummies base method.
 func (m *MockDriver) VkCmdSetScissor(commandBuffer driver.VkCommandBuffer, firstScissor, scissorCount driver.Uint32, pScissors *driver.VkRect2D) {
 	m.ctrl.T.Helper()
 	m.ctrl.Call(m, "VkCmdSetScissor", commandBuffer, firstScissor, scissorCount, pScissors)
@@ -768,7 +768,7 @@ func (mr *MockDriverMockRecorder) VkCmdSetScissor(commandBuffer, firstScissor, s
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkCmdSetScissor", reflect.TypeOf((*MockDriver)(nil).VkCmdSetScissor), commandBuffer, firstScissor, scissorCount, pScissors)
 }
 
-// VkCmdSetStencilCompareMask mocks base method.
+// VkCmdSetStencilCompareMask dummies base method.
 func (m *MockDriver) VkCmdSetStencilCompareMask(commandBuffer driver.VkCommandBuffer, faceMask driver.VkStencilFaceFlags, compareMask driver.Uint32) {
 	m.ctrl.T.Helper()
 	m.ctrl.Call(m, "VkCmdSetStencilCompareMask", commandBuffer, faceMask, compareMask)
@@ -780,7 +780,7 @@ func (mr *MockDriverMockRecorder) VkCmdSetStencilCompareMask(commandBuffer, face
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkCmdSetStencilCompareMask", reflect.TypeOf((*MockDriver)(nil).VkCmdSetStencilCompareMask), commandBuffer, faceMask, compareMask)
 }
 
-// VkCmdSetStencilReference mocks base method.
+// VkCmdSetStencilReference dummies base method.
 func (m *MockDriver) VkCmdSetStencilReference(commandBuffer driver.VkCommandBuffer, faceMask driver.VkStencilFaceFlags, reference driver.Uint32) {
 	m.ctrl.T.Helper()
 	m.ctrl.Call(m, "VkCmdSetStencilReference", commandBuffer, faceMask, reference)
@@ -792,7 +792,7 @@ func (mr *MockDriverMockRecorder) VkCmdSetStencilReference(commandBuffer, faceMa
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkCmdSetStencilReference", reflect.TypeOf((*MockDriver)(nil).VkCmdSetStencilReference), commandBuffer, faceMask, reference)
 }
 
-// VkCmdSetStencilWriteMask mocks base method.
+// VkCmdSetStencilWriteMask dummies base method.
 func (m *MockDriver) VkCmdSetStencilWriteMask(commandBuffer driver.VkCommandBuffer, faceMask driver.VkStencilFaceFlags, writeMask driver.Uint32) {
 	m.ctrl.T.Helper()
 	m.ctrl.Call(m, "VkCmdSetStencilWriteMask", commandBuffer, faceMask, writeMask)
@@ -804,7 +804,7 @@ func (mr *MockDriverMockRecorder) VkCmdSetStencilWriteMask(commandBuffer, faceMa
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkCmdSetStencilWriteMask", reflect.TypeOf((*MockDriver)(nil).VkCmdSetStencilWriteMask), commandBuffer, faceMask, writeMask)
 }
 
-// VkCmdSetViewport mocks base method.
+// VkCmdSetViewport dummies base method.
 func (m *MockDriver) VkCmdSetViewport(commandBuffer driver.VkCommandBuffer, firstViewport, viewportCount driver.Uint32, pViewports *driver.VkViewport) {
 	m.ctrl.T.Helper()
 	m.ctrl.Call(m, "VkCmdSetViewport", commandBuffer, firstViewport, viewportCount, pViewports)
@@ -816,7 +816,7 @@ func (mr *MockDriverMockRecorder) VkCmdSetViewport(commandBuffer, firstViewport,
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkCmdSetViewport", reflect.TypeOf((*MockDriver)(nil).VkCmdSetViewport), commandBuffer, firstViewport, viewportCount, pViewports)
 }
 
-// VkCmdUpdateBuffer mocks base method.
+// VkCmdUpdateBuffer dummies base method.
 func (m *MockDriver) VkCmdUpdateBuffer(commandBuffer driver.VkCommandBuffer, dstBuffer driver.VkBuffer, dstOffset, dataSize driver.VkDeviceSize, pData unsafe.Pointer) {
 	m.ctrl.T.Helper()
 	m.ctrl.Call(m, "VkCmdUpdateBuffer", commandBuffer, dstBuffer, dstOffset, dataSize, pData)
@@ -828,7 +828,7 @@ func (mr *MockDriverMockRecorder) VkCmdUpdateBuffer(commandBuffer, dstBuffer, ds
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkCmdUpdateBuffer", reflect.TypeOf((*MockDriver)(nil).VkCmdUpdateBuffer), commandBuffer, dstBuffer, dstOffset, dataSize, pData)
 }
 
-// VkCmdWaitEvents mocks base method.
+// VkCmdWaitEvents dummies base method.
 func (m *MockDriver) VkCmdWaitEvents(commandBuffer driver.VkCommandBuffer, eventCount driver.Uint32, pEvents *driver.VkEvent, srcStageMask, dstStageMask driver.VkPipelineStageFlags, memoryBarrierCount driver.Uint32, pMemoryBarriers *driver.VkMemoryBarrier, bufferMemoryBarrierCount driver.Uint32, pBufferMemoryBarriers *driver.VkBufferMemoryBarrier, imageMemoryBarrierCount driver.Uint32, pImageMemoryBarriers *driver.VkImageMemoryBarrier) {
 	m.ctrl.T.Helper()
 	m.ctrl.Call(m, "VkCmdWaitEvents", commandBuffer, eventCount, pEvents, srcStageMask, dstStageMask, memoryBarrierCount, pMemoryBarriers, bufferMemoryBarrierCount, pBufferMemoryBarriers, imageMemoryBarrierCount, pImageMemoryBarriers)
@@ -840,7 +840,7 @@ func (mr *MockDriverMockRecorder) VkCmdWaitEvents(commandBuffer, eventCount, pEv
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkCmdWaitEvents", reflect.TypeOf((*MockDriver)(nil).VkCmdWaitEvents), commandBuffer, eventCount, pEvents, srcStageMask, dstStageMask, memoryBarrierCount, pMemoryBarriers, bufferMemoryBarrierCount, pBufferMemoryBarriers, imageMemoryBarrierCount, pImageMemoryBarriers)
 }
 
-// VkCmdWriteTimestamp mocks base method.
+// VkCmdWriteTimestamp dummies base method.
 func (m *MockDriver) VkCmdWriteTimestamp(commandBuffer driver.VkCommandBuffer, pipelineStage driver.VkPipelineStageFlags, queryPool driver.VkQueryPool, query driver.Uint32) {
 	m.ctrl.T.Helper()
 	m.ctrl.Call(m, "VkCmdWriteTimestamp", commandBuffer, pipelineStage, queryPool, query)
@@ -852,7 +852,7 @@ func (mr *MockDriverMockRecorder) VkCmdWriteTimestamp(commandBuffer, pipelineSta
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkCmdWriteTimestamp", reflect.TypeOf((*MockDriver)(nil).VkCmdWriteTimestamp), commandBuffer, pipelineStage, queryPool, query)
 }
 
-// VkCreateBuffer mocks base method.
+// VkCreateBuffer dummies base method.
 func (m *MockDriver) VkCreateBuffer(device driver.VkDevice, pCreateInfo *driver.VkBufferCreateInfo, pAllocator *driver.VkAllocationCallbacks, pBuffer *driver.VkBuffer) (common.VkResult, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "VkCreateBuffer", device, pCreateInfo, pAllocator, pBuffer)
@@ -867,7 +867,7 @@ func (mr *MockDriverMockRecorder) VkCreateBuffer(device, pCreateInfo, pAllocator
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkCreateBuffer", reflect.TypeOf((*MockDriver)(nil).VkCreateBuffer), device, pCreateInfo, pAllocator, pBuffer)
 }
 
-// VkCreateBufferView mocks base method.
+// VkCreateBufferView dummies base method.
 func (m *MockDriver) VkCreateBufferView(device driver.VkDevice, pCreateInfo *driver.VkBufferViewCreateInfo, pAllocator *driver.VkAllocationCallbacks, pView *driver.VkBufferView) (common.VkResult, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "VkCreateBufferView", device, pCreateInfo, pAllocator, pView)
@@ -882,7 +882,7 @@ func (mr *MockDriverMockRecorder) VkCreateBufferView(device, pCreateInfo, pAlloc
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkCreateBufferView", reflect.TypeOf((*MockDriver)(nil).VkCreateBufferView), device, pCreateInfo, pAllocator, pView)
 }
 
-// VkCreateCommandPool mocks base method.
+// VkCreateCommandPool dummies base method.
 func (m *MockDriver) VkCreateCommandPool(device driver.VkDevice, pCreateInfo *driver.VkCommandPoolCreateInfo, pAllocator *driver.VkAllocationCallbacks, pCommandPool *driver.VkCommandPool) (common.VkResult, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "VkCreateCommandPool", device, pCreateInfo, pAllocator, pCommandPool)
@@ -897,7 +897,7 @@ func (mr *MockDriverMockRecorder) VkCreateCommandPool(device, pCreateInfo, pAllo
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkCreateCommandPool", reflect.TypeOf((*MockDriver)(nil).VkCreateCommandPool), device, pCreateInfo, pAllocator, pCommandPool)
 }
 
-// VkCreateComputePipelines mocks base method.
+// VkCreateComputePipelines dummies base method.
 func (m *MockDriver) VkCreateComputePipelines(device driver.VkDevice, pipelineCache driver.VkPipelineCache, createInfoCount driver.Uint32, pCreateInfos *driver.VkComputePipelineCreateInfo, pAllocator *driver.VkAllocationCallbacks, pPipelines *driver.VkPipeline) (common.VkResult, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "VkCreateComputePipelines", device, pipelineCache, createInfoCount, pCreateInfos, pAllocator, pPipelines)
@@ -912,7 +912,7 @@ func (mr *MockDriverMockRecorder) VkCreateComputePipelines(device, pipelineCache
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkCreateComputePipelines", reflect.TypeOf((*MockDriver)(nil).VkCreateComputePipelines), device, pipelineCache, createInfoCount, pCreateInfos, pAllocator, pPipelines)
 }
 
-// VkCreateDescriptorPool mocks base method.
+// VkCreateDescriptorPool dummies base method.
 func (m *MockDriver) VkCreateDescriptorPool(device driver.VkDevice, pCreateInfo *driver.VkDescriptorPoolCreateInfo, pAllocator *driver.VkAllocationCallbacks, pDescriptorPool *driver.VkDescriptorPool) (common.VkResult, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "VkCreateDescriptorPool", device, pCreateInfo, pAllocator, pDescriptorPool)
@@ -927,7 +927,7 @@ func (mr *MockDriverMockRecorder) VkCreateDescriptorPool(device, pCreateInfo, pA
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkCreateDescriptorPool", reflect.TypeOf((*MockDriver)(nil).VkCreateDescriptorPool), device, pCreateInfo, pAllocator, pDescriptorPool)
 }
 
-// VkCreateDescriptorSetLayout mocks base method.
+// VkCreateDescriptorSetLayout dummies base method.
 func (m *MockDriver) VkCreateDescriptorSetLayout(device driver.VkDevice, pCreateInfo *driver.VkDescriptorSetLayoutCreateInfo, pAllocator *driver.VkAllocationCallbacks, pSetLayout *driver.VkDescriptorSetLayout) (common.VkResult, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "VkCreateDescriptorSetLayout", device, pCreateInfo, pAllocator, pSetLayout)
@@ -942,7 +942,7 @@ func (mr *MockDriverMockRecorder) VkCreateDescriptorSetLayout(device, pCreateInf
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkCreateDescriptorSetLayout", reflect.TypeOf((*MockDriver)(nil).VkCreateDescriptorSetLayout), device, pCreateInfo, pAllocator, pSetLayout)
 }
 
-// VkCreateDescriptorUpdateTemplate mocks base method.
+// VkCreateDescriptorUpdateTemplate dummies base method.
 func (m *MockDriver) VkCreateDescriptorUpdateTemplate(device driver.VkDevice, pCreateInfo *driver.VkDescriptorUpdateTemplateCreateInfo, pAllocator *driver.VkAllocationCallbacks, pDescriptorUpdateTemplate *driver.VkDescriptorUpdateTemplate) (common.VkResult, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "VkCreateDescriptorUpdateTemplate", device, pCreateInfo, pAllocator, pDescriptorUpdateTemplate)
@@ -957,7 +957,7 @@ func (mr *MockDriverMockRecorder) VkCreateDescriptorUpdateTemplate(device, pCrea
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkCreateDescriptorUpdateTemplate", reflect.TypeOf((*MockDriver)(nil).VkCreateDescriptorUpdateTemplate), device, pCreateInfo, pAllocator, pDescriptorUpdateTemplate)
 }
 
-// VkCreateDevice mocks base method.
+// VkCreateDevice dummies base method.
 func (m *MockDriver) VkCreateDevice(physicalDevice driver.VkPhysicalDevice, pCreateInfo *driver.VkDeviceCreateInfo, pAllocator *driver.VkAllocationCallbacks, pDevice *driver.VkDevice) (common.VkResult, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "VkCreateDevice", physicalDevice, pCreateInfo, pAllocator, pDevice)
@@ -972,7 +972,7 @@ func (mr *MockDriverMockRecorder) VkCreateDevice(physicalDevice, pCreateInfo, pA
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkCreateDevice", reflect.TypeOf((*MockDriver)(nil).VkCreateDevice), physicalDevice, pCreateInfo, pAllocator, pDevice)
 }
 
-// VkCreateEvent mocks base method.
+// VkCreateEvent dummies base method.
 func (m *MockDriver) VkCreateEvent(device driver.VkDevice, pCreateInfo *driver.VkEventCreateInfo, pAllocator *driver.VkAllocationCallbacks, pEvent *driver.VkEvent) (common.VkResult, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "VkCreateEvent", device, pCreateInfo, pAllocator, pEvent)
@@ -987,7 +987,7 @@ func (mr *MockDriverMockRecorder) VkCreateEvent(device, pCreateInfo, pAllocator,
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkCreateEvent", reflect.TypeOf((*MockDriver)(nil).VkCreateEvent), device, pCreateInfo, pAllocator, pEvent)
 }
 
-// VkCreateFence mocks base method.
+// VkCreateFence dummies base method.
 func (m *MockDriver) VkCreateFence(device driver.VkDevice, pCreateInfo *driver.VkFenceCreateInfo, pAllocator *driver.VkAllocationCallbacks, pFence *driver.VkFence) (common.VkResult, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "VkCreateFence", device, pCreateInfo, pAllocator, pFence)
@@ -1002,7 +1002,7 @@ func (mr *MockDriverMockRecorder) VkCreateFence(device, pCreateInfo, pAllocator,
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkCreateFence", reflect.TypeOf((*MockDriver)(nil).VkCreateFence), device, pCreateInfo, pAllocator, pFence)
 }
 
-// VkCreateFramebuffer mocks base method.
+// VkCreateFramebuffer dummies base method.
 func (m *MockDriver) VkCreateFramebuffer(device driver.VkDevice, pCreateInfo *driver.VkFramebufferCreateInfo, pAllocator *driver.VkAllocationCallbacks, pFramebuffer *driver.VkFramebuffer) (common.VkResult, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "VkCreateFramebuffer", device, pCreateInfo, pAllocator, pFramebuffer)
@@ -1017,7 +1017,7 @@ func (mr *MockDriverMockRecorder) VkCreateFramebuffer(device, pCreateInfo, pAllo
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkCreateFramebuffer", reflect.TypeOf((*MockDriver)(nil).VkCreateFramebuffer), device, pCreateInfo, pAllocator, pFramebuffer)
 }
 
-// VkCreateGraphicsPipelines mocks base method.
+// VkCreateGraphicsPipelines dummies base method.
 func (m *MockDriver) VkCreateGraphicsPipelines(device driver.VkDevice, pipelineCache driver.VkPipelineCache, createInfoCount driver.Uint32, pCreateInfos *driver.VkGraphicsPipelineCreateInfo, pAllocator *driver.VkAllocationCallbacks, pPipelines *driver.VkPipeline) (common.VkResult, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "VkCreateGraphicsPipelines", device, pipelineCache, createInfoCount, pCreateInfos, pAllocator, pPipelines)
@@ -1032,7 +1032,7 @@ func (mr *MockDriverMockRecorder) VkCreateGraphicsPipelines(device, pipelineCach
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkCreateGraphicsPipelines", reflect.TypeOf((*MockDriver)(nil).VkCreateGraphicsPipelines), device, pipelineCache, createInfoCount, pCreateInfos, pAllocator, pPipelines)
 }
 
-// VkCreateImage mocks base method.
+// VkCreateImage dummies base method.
 func (m *MockDriver) VkCreateImage(device driver.VkDevice, pCreateInfo *driver.VkImageCreateInfo, pAllocator *driver.VkAllocationCallbacks, pImage *driver.VkImage) (common.VkResult, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "VkCreateImage", device, pCreateInfo, pAllocator, pImage)
@@ -1047,7 +1047,7 @@ func (mr *MockDriverMockRecorder) VkCreateImage(device, pCreateInfo, pAllocator,
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkCreateImage", reflect.TypeOf((*MockDriver)(nil).VkCreateImage), device, pCreateInfo, pAllocator, pImage)
 }
 
-// VkCreateImageView mocks base method.
+// VkCreateImageView dummies base method.
 func (m *MockDriver) VkCreateImageView(device driver.VkDevice, pCreateInfo *driver.VkImageViewCreateInfo, pAllocator *driver.VkAllocationCallbacks, pView *driver.VkImageView) (common.VkResult, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "VkCreateImageView", device, pCreateInfo, pAllocator, pView)
@@ -1062,7 +1062,7 @@ func (mr *MockDriverMockRecorder) VkCreateImageView(device, pCreateInfo, pAlloca
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkCreateImageView", reflect.TypeOf((*MockDriver)(nil).VkCreateImageView), device, pCreateInfo, pAllocator, pView)
 }
 
-// VkCreateInstance mocks base method.
+// VkCreateInstance dummies base method.
 func (m *MockDriver) VkCreateInstance(pCreateInfo *driver.VkInstanceCreateInfo, pAllocator *driver.VkAllocationCallbacks, pInstance *driver.VkInstance) (common.VkResult, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "VkCreateInstance", pCreateInfo, pAllocator, pInstance)
@@ -1077,7 +1077,7 @@ func (mr *MockDriverMockRecorder) VkCreateInstance(pCreateInfo, pAllocator, pIns
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkCreateInstance", reflect.TypeOf((*MockDriver)(nil).VkCreateInstance), pCreateInfo, pAllocator, pInstance)
 }
 
-// VkCreatePipelineCache mocks base method.
+// VkCreatePipelineCache dummies base method.
 func (m *MockDriver) VkCreatePipelineCache(device driver.VkDevice, pCreateInfo *driver.VkPipelineCacheCreateInfo, pAllocator *driver.VkAllocationCallbacks, pPipelineCache *driver.VkPipelineCache) (common.VkResult, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "VkCreatePipelineCache", device, pCreateInfo, pAllocator, pPipelineCache)
@@ -1092,7 +1092,7 @@ func (mr *MockDriverMockRecorder) VkCreatePipelineCache(device, pCreateInfo, pAl
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkCreatePipelineCache", reflect.TypeOf((*MockDriver)(nil).VkCreatePipelineCache), device, pCreateInfo, pAllocator, pPipelineCache)
 }
 
-// VkCreatePipelineLayout mocks base method.
+// VkCreatePipelineLayout dummies base method.
 func (m *MockDriver) VkCreatePipelineLayout(device driver.VkDevice, pCreateInfo *driver.VkPipelineLayoutCreateInfo, pAllocator *driver.VkAllocationCallbacks, pPipelineLayout *driver.VkPipelineLayout) (common.VkResult, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "VkCreatePipelineLayout", device, pCreateInfo, pAllocator, pPipelineLayout)
@@ -1107,7 +1107,7 @@ func (mr *MockDriverMockRecorder) VkCreatePipelineLayout(device, pCreateInfo, pA
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkCreatePipelineLayout", reflect.TypeOf((*MockDriver)(nil).VkCreatePipelineLayout), device, pCreateInfo, pAllocator, pPipelineLayout)
 }
 
-// VkCreateQueryPool mocks base method.
+// VkCreateQueryPool dummies base method.
 func (m *MockDriver) VkCreateQueryPool(device driver.VkDevice, pCreateInfo *driver.VkQueryPoolCreateInfo, pAllocator *driver.VkAllocationCallbacks, pQueryPool *driver.VkQueryPool) (common.VkResult, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "VkCreateQueryPool", device, pCreateInfo, pAllocator, pQueryPool)
@@ -1122,7 +1122,7 @@ func (mr *MockDriverMockRecorder) VkCreateQueryPool(device, pCreateInfo, pAlloca
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkCreateQueryPool", reflect.TypeOf((*MockDriver)(nil).VkCreateQueryPool), device, pCreateInfo, pAllocator, pQueryPool)
 }
 
-// VkCreateRenderPass mocks base method.
+// VkCreateRenderPass dummies base method.
 func (m *MockDriver) VkCreateRenderPass(device driver.VkDevice, pCreateInfo *driver.VkRenderPassCreateInfo, pAllocator *driver.VkAllocationCallbacks, pRenderPass *driver.VkRenderPass) (common.VkResult, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "VkCreateRenderPass", device, pCreateInfo, pAllocator, pRenderPass)
@@ -1137,7 +1137,7 @@ func (mr *MockDriverMockRecorder) VkCreateRenderPass(device, pCreateInfo, pAlloc
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkCreateRenderPass", reflect.TypeOf((*MockDriver)(nil).VkCreateRenderPass), device, pCreateInfo, pAllocator, pRenderPass)
 }
 
-// VkCreateRenderPass2 mocks base method.
+// VkCreateRenderPass2 dummies base method.
 func (m *MockDriver) VkCreateRenderPass2(device driver.VkDevice, pCreateInfo *driver.VkRenderPassCreateInfo2, pAllocator *driver.VkAllocationCallbacks, pRenderPass *driver.VkRenderPass) (common.VkResult, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "VkCreateRenderPass2", device, pCreateInfo, pAllocator, pRenderPass)
@@ -1152,7 +1152,7 @@ func (mr *MockDriverMockRecorder) VkCreateRenderPass2(device, pCreateInfo, pAllo
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkCreateRenderPass2", reflect.TypeOf((*MockDriver)(nil).VkCreateRenderPass2), device, pCreateInfo, pAllocator, pRenderPass)
 }
 
-// VkCreateSampler mocks base method.
+// VkCreateSampler dummies base method.
 func (m *MockDriver) VkCreateSampler(device driver.VkDevice, pCreateInfo *driver.VkSamplerCreateInfo, pAllocator *driver.VkAllocationCallbacks, pSampler *driver.VkSampler) (common.VkResult, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "VkCreateSampler", device, pCreateInfo, pAllocator, pSampler)
@@ -1167,7 +1167,7 @@ func (mr *MockDriverMockRecorder) VkCreateSampler(device, pCreateInfo, pAllocato
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkCreateSampler", reflect.TypeOf((*MockDriver)(nil).VkCreateSampler), device, pCreateInfo, pAllocator, pSampler)
 }
 
-// VkCreateSamplerYcbcrConversion mocks base method.
+// VkCreateSamplerYcbcrConversion dummies base method.
 func (m *MockDriver) VkCreateSamplerYcbcrConversion(device driver.VkDevice, pCreateInfo *driver.VkSamplerYcbcrConversionCreateInfo, pAllocator *driver.VkAllocationCallbacks, pYcbcrConversion *driver.VkSamplerYcbcrConversion) (common.VkResult, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "VkCreateSamplerYcbcrConversion", device, pCreateInfo, pAllocator, pYcbcrConversion)
@@ -1182,7 +1182,7 @@ func (mr *MockDriverMockRecorder) VkCreateSamplerYcbcrConversion(device, pCreate
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkCreateSamplerYcbcrConversion", reflect.TypeOf((*MockDriver)(nil).VkCreateSamplerYcbcrConversion), device, pCreateInfo, pAllocator, pYcbcrConversion)
 }
 
-// VkCreateSemaphore mocks base method.
+// VkCreateSemaphore dummies base method.
 func (m *MockDriver) VkCreateSemaphore(device driver.VkDevice, pCreateInfo *driver.VkSemaphoreCreateInfo, pAllocator *driver.VkAllocationCallbacks, pSemaphore *driver.VkSemaphore) (common.VkResult, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "VkCreateSemaphore", device, pCreateInfo, pAllocator, pSemaphore)
@@ -1197,7 +1197,7 @@ func (mr *MockDriverMockRecorder) VkCreateSemaphore(device, pCreateInfo, pAlloca
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkCreateSemaphore", reflect.TypeOf((*MockDriver)(nil).VkCreateSemaphore), device, pCreateInfo, pAllocator, pSemaphore)
 }
 
-// VkCreateShaderModule mocks base method.
+// VkCreateShaderModule dummies base method.
 func (m *MockDriver) VkCreateShaderModule(device driver.VkDevice, pCreateInfo *driver.VkShaderModuleCreateInfo, pAllocator *driver.VkAllocationCallbacks, pShaderModule *driver.VkShaderModule) (common.VkResult, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "VkCreateShaderModule", device, pCreateInfo, pAllocator, pShaderModule)
@@ -1212,7 +1212,7 @@ func (mr *MockDriverMockRecorder) VkCreateShaderModule(device, pCreateInfo, pAll
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkCreateShaderModule", reflect.TypeOf((*MockDriver)(nil).VkCreateShaderModule), device, pCreateInfo, pAllocator, pShaderModule)
 }
 
-// VkDestroyBuffer mocks base method.
+// VkDestroyBuffer dummies base method.
 func (m *MockDriver) VkDestroyBuffer(device driver.VkDevice, buffer driver.VkBuffer, pAllocator *driver.VkAllocationCallbacks) {
 	m.ctrl.T.Helper()
 	m.ctrl.Call(m, "VkDestroyBuffer", device, buffer, pAllocator)
@@ -1224,7 +1224,7 @@ func (mr *MockDriverMockRecorder) VkDestroyBuffer(device, buffer, pAllocator int
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkDestroyBuffer", reflect.TypeOf((*MockDriver)(nil).VkDestroyBuffer), device, buffer, pAllocator)
 }
 
-// VkDestroyBufferView mocks base method.
+// VkDestroyBufferView dummies base method.
 func (m *MockDriver) VkDestroyBufferView(device driver.VkDevice, bufferView driver.VkBufferView, pAllocator *driver.VkAllocationCallbacks) {
 	m.ctrl.T.Helper()
 	m.ctrl.Call(m, "VkDestroyBufferView", device, bufferView, pAllocator)
@@ -1236,7 +1236,7 @@ func (mr *MockDriverMockRecorder) VkDestroyBufferView(device, bufferView, pAlloc
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkDestroyBufferView", reflect.TypeOf((*MockDriver)(nil).VkDestroyBufferView), device, bufferView, pAllocator)
 }
 
-// VkDestroyCommandPool mocks base method.
+// VkDestroyCommandPool dummies base method.
 func (m *MockDriver) VkDestroyCommandPool(device driver.VkDevice, commandPool driver.VkCommandPool, pAllocator *driver.VkAllocationCallbacks) {
 	m.ctrl.T.Helper()
 	m.ctrl.Call(m, "VkDestroyCommandPool", device, commandPool, pAllocator)
@@ -1248,7 +1248,7 @@ func (mr *MockDriverMockRecorder) VkDestroyCommandPool(device, commandPool, pAll
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkDestroyCommandPool", reflect.TypeOf((*MockDriver)(nil).VkDestroyCommandPool), device, commandPool, pAllocator)
 }
 
-// VkDestroyDescriptorPool mocks base method.
+// VkDestroyDescriptorPool dummies base method.
 func (m *MockDriver) VkDestroyDescriptorPool(device driver.VkDevice, descriptorPool driver.VkDescriptorPool, pAllocator *driver.VkAllocationCallbacks) {
 	m.ctrl.T.Helper()
 	m.ctrl.Call(m, "VkDestroyDescriptorPool", device, descriptorPool, pAllocator)
@@ -1260,7 +1260,7 @@ func (mr *MockDriverMockRecorder) VkDestroyDescriptorPool(device, descriptorPool
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkDestroyDescriptorPool", reflect.TypeOf((*MockDriver)(nil).VkDestroyDescriptorPool), device, descriptorPool, pAllocator)
 }
 
-// VkDestroyDescriptorSetLayout mocks base method.
+// VkDestroyDescriptorSetLayout dummies base method.
 func (m *MockDriver) VkDestroyDescriptorSetLayout(device driver.VkDevice, descriptorSetLayout driver.VkDescriptorSetLayout, pAllocator *driver.VkAllocationCallbacks) {
 	m.ctrl.T.Helper()
 	m.ctrl.Call(m, "VkDestroyDescriptorSetLayout", device, descriptorSetLayout, pAllocator)
@@ -1272,7 +1272,7 @@ func (mr *MockDriverMockRecorder) VkDestroyDescriptorSetLayout(device, descripto
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkDestroyDescriptorSetLayout", reflect.TypeOf((*MockDriver)(nil).VkDestroyDescriptorSetLayout), device, descriptorSetLayout, pAllocator)
 }
 
-// VkDestroyDescriptorUpdateTemplate mocks base method.
+// VkDestroyDescriptorUpdateTemplate dummies base method.
 func (m *MockDriver) VkDestroyDescriptorUpdateTemplate(device driver.VkDevice, descriptorUpdateTemplate driver.VkDescriptorUpdateTemplate, pAllocator *driver.VkAllocationCallbacks) {
 	m.ctrl.T.Helper()
 	m.ctrl.Call(m, "VkDestroyDescriptorUpdateTemplate", device, descriptorUpdateTemplate, pAllocator)
@@ -1284,7 +1284,7 @@ func (mr *MockDriverMockRecorder) VkDestroyDescriptorUpdateTemplate(device, desc
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkDestroyDescriptorUpdateTemplate", reflect.TypeOf((*MockDriver)(nil).VkDestroyDescriptorUpdateTemplate), device, descriptorUpdateTemplate, pAllocator)
 }
 
-// VkDestroyDevice mocks base method.
+// VkDestroyDevice dummies base method.
 func (m *MockDriver) VkDestroyDevice(device driver.VkDevice, pAllocator *driver.VkAllocationCallbacks) {
 	m.ctrl.T.Helper()
 	m.ctrl.Call(m, "VkDestroyDevice", device, pAllocator)
@@ -1296,7 +1296,7 @@ func (mr *MockDriverMockRecorder) VkDestroyDevice(device, pAllocator interface{}
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkDestroyDevice", reflect.TypeOf((*MockDriver)(nil).VkDestroyDevice), device, pAllocator)
 }
 
-// VkDestroyEvent mocks base method.
+// VkDestroyEvent dummies base method.
 func (m *MockDriver) VkDestroyEvent(device driver.VkDevice, event driver.VkEvent, pAllocator *driver.VkAllocationCallbacks) {
 	m.ctrl.T.Helper()
 	m.ctrl.Call(m, "VkDestroyEvent", device, event, pAllocator)
@@ -1308,7 +1308,7 @@ func (mr *MockDriverMockRecorder) VkDestroyEvent(device, event, pAllocator inter
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkDestroyEvent", reflect.TypeOf((*MockDriver)(nil).VkDestroyEvent), device, event, pAllocator)
 }
 
-// VkDestroyFence mocks base method.
+// VkDestroyFence dummies base method.
 func (m *MockDriver) VkDestroyFence(device driver.VkDevice, fence driver.VkFence, pAllocator *driver.VkAllocationCallbacks) {
 	m.ctrl.T.Helper()
 	m.ctrl.Call(m, "VkDestroyFence", device, fence, pAllocator)
@@ -1320,7 +1320,7 @@ func (mr *MockDriverMockRecorder) VkDestroyFence(device, fence, pAllocator inter
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkDestroyFence", reflect.TypeOf((*MockDriver)(nil).VkDestroyFence), device, fence, pAllocator)
 }
 
-// VkDestroyFramebuffer mocks base method.
+// VkDestroyFramebuffer dummies base method.
 func (m *MockDriver) VkDestroyFramebuffer(device driver.VkDevice, framebuffer driver.VkFramebuffer, pAllocator *driver.VkAllocationCallbacks) {
 	m.ctrl.T.Helper()
 	m.ctrl.Call(m, "VkDestroyFramebuffer", device, framebuffer, pAllocator)
@@ -1332,7 +1332,7 @@ func (mr *MockDriverMockRecorder) VkDestroyFramebuffer(device, framebuffer, pAll
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkDestroyFramebuffer", reflect.TypeOf((*MockDriver)(nil).VkDestroyFramebuffer), device, framebuffer, pAllocator)
 }
 
-// VkDestroyImage mocks base method.
+// VkDestroyImage dummies base method.
 func (m *MockDriver) VkDestroyImage(device driver.VkDevice, image driver.VkImage, pAllocator *driver.VkAllocationCallbacks) {
 	m.ctrl.T.Helper()
 	m.ctrl.Call(m, "VkDestroyImage", device, image, pAllocator)
@@ -1344,7 +1344,7 @@ func (mr *MockDriverMockRecorder) VkDestroyImage(device, image, pAllocator inter
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkDestroyImage", reflect.TypeOf((*MockDriver)(nil).VkDestroyImage), device, image, pAllocator)
 }
 
-// VkDestroyImageView mocks base method.
+// VkDestroyImageView dummies base method.
 func (m *MockDriver) VkDestroyImageView(device driver.VkDevice, imageView driver.VkImageView, pAllocator *driver.VkAllocationCallbacks) {
 	m.ctrl.T.Helper()
 	m.ctrl.Call(m, "VkDestroyImageView", device, imageView, pAllocator)
@@ -1356,7 +1356,7 @@ func (mr *MockDriverMockRecorder) VkDestroyImageView(device, imageView, pAllocat
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkDestroyImageView", reflect.TypeOf((*MockDriver)(nil).VkDestroyImageView), device, imageView, pAllocator)
 }
 
-// VkDestroyInstance mocks base method.
+// VkDestroyInstance dummies base method.
 func (m *MockDriver) VkDestroyInstance(instance driver.VkInstance, pAllocator *driver.VkAllocationCallbacks) {
 	m.ctrl.T.Helper()
 	m.ctrl.Call(m, "VkDestroyInstance", instance, pAllocator)
@@ -1368,7 +1368,7 @@ func (mr *MockDriverMockRecorder) VkDestroyInstance(instance, pAllocator interfa
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkDestroyInstance", reflect.TypeOf((*MockDriver)(nil).VkDestroyInstance), instance, pAllocator)
 }
 
-// VkDestroyPipeline mocks base method.
+// VkDestroyPipeline dummies base method.
 func (m *MockDriver) VkDestroyPipeline(device driver.VkDevice, pipeline driver.VkPipeline, pAllocator *driver.VkAllocationCallbacks) {
 	m.ctrl.T.Helper()
 	m.ctrl.Call(m, "VkDestroyPipeline", device, pipeline, pAllocator)
@@ -1380,7 +1380,7 @@ func (mr *MockDriverMockRecorder) VkDestroyPipeline(device, pipeline, pAllocator
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkDestroyPipeline", reflect.TypeOf((*MockDriver)(nil).VkDestroyPipeline), device, pipeline, pAllocator)
 }
 
-// VkDestroyPipelineCache mocks base method.
+// VkDestroyPipelineCache dummies base method.
 func (m *MockDriver) VkDestroyPipelineCache(device driver.VkDevice, pipelineCache driver.VkPipelineCache, pAllocator *driver.VkAllocationCallbacks) {
 	m.ctrl.T.Helper()
 	m.ctrl.Call(m, "VkDestroyPipelineCache", device, pipelineCache, pAllocator)
@@ -1392,7 +1392,7 @@ func (mr *MockDriverMockRecorder) VkDestroyPipelineCache(device, pipelineCache, 
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkDestroyPipelineCache", reflect.TypeOf((*MockDriver)(nil).VkDestroyPipelineCache), device, pipelineCache, pAllocator)
 }
 
-// VkDestroyPipelineLayout mocks base method.
+// VkDestroyPipelineLayout dummies base method.
 func (m *MockDriver) VkDestroyPipelineLayout(device driver.VkDevice, pipelineLayout driver.VkPipelineLayout, pAllocator *driver.VkAllocationCallbacks) {
 	m.ctrl.T.Helper()
 	m.ctrl.Call(m, "VkDestroyPipelineLayout", device, pipelineLayout, pAllocator)
@@ -1404,7 +1404,7 @@ func (mr *MockDriverMockRecorder) VkDestroyPipelineLayout(device, pipelineLayout
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkDestroyPipelineLayout", reflect.TypeOf((*MockDriver)(nil).VkDestroyPipelineLayout), device, pipelineLayout, pAllocator)
 }
 
-// VkDestroyQueryPool mocks base method.
+// VkDestroyQueryPool dummies base method.
 func (m *MockDriver) VkDestroyQueryPool(device driver.VkDevice, queryPool driver.VkQueryPool, pAllocator *driver.VkAllocationCallbacks) {
 	m.ctrl.T.Helper()
 	m.ctrl.Call(m, "VkDestroyQueryPool", device, queryPool, pAllocator)
@@ -1416,7 +1416,7 @@ func (mr *MockDriverMockRecorder) VkDestroyQueryPool(device, queryPool, pAllocat
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkDestroyQueryPool", reflect.TypeOf((*MockDriver)(nil).VkDestroyQueryPool), device, queryPool, pAllocator)
 }
 
-// VkDestroyRenderPass mocks base method.
+// VkDestroyRenderPass dummies base method.
 func (m *MockDriver) VkDestroyRenderPass(device driver.VkDevice, renderPass driver.VkRenderPass, pAllocator *driver.VkAllocationCallbacks) {
 	m.ctrl.T.Helper()
 	m.ctrl.Call(m, "VkDestroyRenderPass", device, renderPass, pAllocator)
@@ -1428,7 +1428,7 @@ func (mr *MockDriverMockRecorder) VkDestroyRenderPass(device, renderPass, pAlloc
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkDestroyRenderPass", reflect.TypeOf((*MockDriver)(nil).VkDestroyRenderPass), device, renderPass, pAllocator)
 }
 
-// VkDestroySampler mocks base method.
+// VkDestroySampler dummies base method.
 func (m *MockDriver) VkDestroySampler(device driver.VkDevice, sampler driver.VkSampler, pAllocator *driver.VkAllocationCallbacks) {
 	m.ctrl.T.Helper()
 	m.ctrl.Call(m, "VkDestroySampler", device, sampler, pAllocator)
@@ -1440,7 +1440,7 @@ func (mr *MockDriverMockRecorder) VkDestroySampler(device, sampler, pAllocator i
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkDestroySampler", reflect.TypeOf((*MockDriver)(nil).VkDestroySampler), device, sampler, pAllocator)
 }
 
-// VkDestroySamplerYcbcrConversion mocks base method.
+// VkDestroySamplerYcbcrConversion dummies base method.
 func (m *MockDriver) VkDestroySamplerYcbcrConversion(device driver.VkDevice, ycbcrConversion driver.VkSamplerYcbcrConversion, pAllocator *driver.VkAllocationCallbacks) {
 	m.ctrl.T.Helper()
 	m.ctrl.Call(m, "VkDestroySamplerYcbcrConversion", device, ycbcrConversion, pAllocator)
@@ -1452,7 +1452,7 @@ func (mr *MockDriverMockRecorder) VkDestroySamplerYcbcrConversion(device, ycbcrC
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkDestroySamplerYcbcrConversion", reflect.TypeOf((*MockDriver)(nil).VkDestroySamplerYcbcrConversion), device, ycbcrConversion, pAllocator)
 }
 
-// VkDestroySemaphore mocks base method.
+// VkDestroySemaphore dummies base method.
 func (m *MockDriver) VkDestroySemaphore(device driver.VkDevice, semaphore driver.VkSemaphore, pAllocator *driver.VkAllocationCallbacks) {
 	m.ctrl.T.Helper()
 	m.ctrl.Call(m, "VkDestroySemaphore", device, semaphore, pAllocator)
@@ -1464,7 +1464,7 @@ func (mr *MockDriverMockRecorder) VkDestroySemaphore(device, semaphore, pAllocat
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkDestroySemaphore", reflect.TypeOf((*MockDriver)(nil).VkDestroySemaphore), device, semaphore, pAllocator)
 }
 
-// VkDestroyShaderModule mocks base method.
+// VkDestroyShaderModule dummies base method.
 func (m *MockDriver) VkDestroyShaderModule(device driver.VkDevice, shaderModule driver.VkShaderModule, pAllocator *driver.VkAllocationCallbacks) {
 	m.ctrl.T.Helper()
 	m.ctrl.Call(m, "VkDestroyShaderModule", device, shaderModule, pAllocator)
@@ -1476,7 +1476,7 @@ func (mr *MockDriverMockRecorder) VkDestroyShaderModule(device, shaderModule, pA
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkDestroyShaderModule", reflect.TypeOf((*MockDriver)(nil).VkDestroyShaderModule), device, shaderModule, pAllocator)
 }
 
-// VkDeviceWaitIdle mocks base method.
+// VkDeviceWaitIdle dummies base method.
 func (m *MockDriver) VkDeviceWaitIdle(device driver.VkDevice) (common.VkResult, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "VkDeviceWaitIdle", device)
@@ -1491,7 +1491,7 @@ func (mr *MockDriverMockRecorder) VkDeviceWaitIdle(device interface{}) *gomock.C
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkDeviceWaitIdle", reflect.TypeOf((*MockDriver)(nil).VkDeviceWaitIdle), device)
 }
 
-// VkEndCommandBuffer mocks base method.
+// VkEndCommandBuffer dummies base method.
 func (m *MockDriver) VkEndCommandBuffer(commandBuffer driver.VkCommandBuffer) (common.VkResult, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "VkEndCommandBuffer", commandBuffer)
@@ -1506,7 +1506,7 @@ func (mr *MockDriverMockRecorder) VkEndCommandBuffer(commandBuffer interface{}) 
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkEndCommandBuffer", reflect.TypeOf((*MockDriver)(nil).VkEndCommandBuffer), commandBuffer)
 }
 
-// VkEnumerateDeviceExtensionProperties mocks base method.
+// VkEnumerateDeviceExtensionProperties dummies base method.
 func (m *MockDriver) VkEnumerateDeviceExtensionProperties(physicalDevice driver.VkPhysicalDevice, pLayerName *driver.Char, pPropertyCount *driver.Uint32, pProperties *driver.VkExtensionProperties) (common.VkResult, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "VkEnumerateDeviceExtensionProperties", physicalDevice, pLayerName, pPropertyCount, pProperties)
@@ -1521,7 +1521,7 @@ func (mr *MockDriverMockRecorder) VkEnumerateDeviceExtensionProperties(physicalD
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkEnumerateDeviceExtensionProperties", reflect.TypeOf((*MockDriver)(nil).VkEnumerateDeviceExtensionProperties), physicalDevice, pLayerName, pPropertyCount, pProperties)
 }
 
-// VkEnumerateDeviceLayerProperties mocks base method.
+// VkEnumerateDeviceLayerProperties dummies base method.
 func (m *MockDriver) VkEnumerateDeviceLayerProperties(physicalDevice driver.VkPhysicalDevice, pPropertyCount *driver.Uint32, pProperties *driver.VkLayerProperties) (common.VkResult, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "VkEnumerateDeviceLayerProperties", physicalDevice, pPropertyCount, pProperties)
@@ -1536,7 +1536,7 @@ func (mr *MockDriverMockRecorder) VkEnumerateDeviceLayerProperties(physicalDevic
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkEnumerateDeviceLayerProperties", reflect.TypeOf((*MockDriver)(nil).VkEnumerateDeviceLayerProperties), physicalDevice, pPropertyCount, pProperties)
 }
 
-// VkEnumerateInstanceExtensionProperties mocks base method.
+// VkEnumerateInstanceExtensionProperties dummies base method.
 func (m *MockDriver) VkEnumerateInstanceExtensionProperties(pLayerName *driver.Char, pPropertyCount *driver.Uint32, pProperties *driver.VkExtensionProperties) (common.VkResult, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "VkEnumerateInstanceExtensionProperties", pLayerName, pPropertyCount, pProperties)
@@ -1551,7 +1551,7 @@ func (mr *MockDriverMockRecorder) VkEnumerateInstanceExtensionProperties(pLayerN
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkEnumerateInstanceExtensionProperties", reflect.TypeOf((*MockDriver)(nil).VkEnumerateInstanceExtensionProperties), pLayerName, pPropertyCount, pProperties)
 }
 
-// VkEnumerateInstanceLayerProperties mocks base method.
+// VkEnumerateInstanceLayerProperties dummies base method.
 func (m *MockDriver) VkEnumerateInstanceLayerProperties(pPropertyCount *driver.Uint32, pProperties *driver.VkLayerProperties) (common.VkResult, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "VkEnumerateInstanceLayerProperties", pPropertyCount, pProperties)
@@ -1566,7 +1566,7 @@ func (mr *MockDriverMockRecorder) VkEnumerateInstanceLayerProperties(pPropertyCo
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkEnumerateInstanceLayerProperties", reflect.TypeOf((*MockDriver)(nil).VkEnumerateInstanceLayerProperties), pPropertyCount, pProperties)
 }
 
-// VkEnumerateInstanceVersion mocks base method.
+// VkEnumerateInstanceVersion dummies base method.
 func (m *MockDriver) VkEnumerateInstanceVersion(pApiVersion *driver.Uint32) (common.VkResult, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "VkEnumerateInstanceVersion", pApiVersion)
@@ -1581,7 +1581,7 @@ func (mr *MockDriverMockRecorder) VkEnumerateInstanceVersion(pApiVersion interfa
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkEnumerateInstanceVersion", reflect.TypeOf((*MockDriver)(nil).VkEnumerateInstanceVersion), pApiVersion)
 }
 
-// VkEnumeratePhysicalDeviceGroups mocks base method.
+// VkEnumeratePhysicalDeviceGroups dummies base method.
 func (m *MockDriver) VkEnumeratePhysicalDeviceGroups(instance driver.VkInstance, pPhysicalDeviceGroupCount *driver.Uint32, pPhysicalDeviceGroupProperties *driver.VkPhysicalDeviceGroupProperties) (common.VkResult, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "VkEnumeratePhysicalDeviceGroups", instance, pPhysicalDeviceGroupCount, pPhysicalDeviceGroupProperties)
@@ -1596,7 +1596,7 @@ func (mr *MockDriverMockRecorder) VkEnumeratePhysicalDeviceGroups(instance, pPhy
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkEnumeratePhysicalDeviceGroups", reflect.TypeOf((*MockDriver)(nil).VkEnumeratePhysicalDeviceGroups), instance, pPhysicalDeviceGroupCount, pPhysicalDeviceGroupProperties)
 }
 
-// VkEnumeratePhysicalDevices mocks base method.
+// VkEnumeratePhysicalDevices dummies base method.
 func (m *MockDriver) VkEnumeratePhysicalDevices(instance driver.VkInstance, pPhysicalDeviceCount *driver.Uint32, pPhysicalDevices *driver.VkPhysicalDevice) (common.VkResult, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "VkEnumeratePhysicalDevices", instance, pPhysicalDeviceCount, pPhysicalDevices)
@@ -1611,7 +1611,7 @@ func (mr *MockDriverMockRecorder) VkEnumeratePhysicalDevices(instance, pPhysical
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkEnumeratePhysicalDevices", reflect.TypeOf((*MockDriver)(nil).VkEnumeratePhysicalDevices), instance, pPhysicalDeviceCount, pPhysicalDevices)
 }
 
-// VkFlushMappedMemoryRanges mocks base method.
+// VkFlushMappedMemoryRanges dummies base method.
 func (m *MockDriver) VkFlushMappedMemoryRanges(device driver.VkDevice, memoryRangeCount driver.Uint32, pMemoryRanges *driver.VkMappedMemoryRange) (common.VkResult, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "VkFlushMappedMemoryRanges", device, memoryRangeCount, pMemoryRanges)
@@ -1626,7 +1626,7 @@ func (mr *MockDriverMockRecorder) VkFlushMappedMemoryRanges(device, memoryRangeC
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkFlushMappedMemoryRanges", reflect.TypeOf((*MockDriver)(nil).VkFlushMappedMemoryRanges), device, memoryRangeCount, pMemoryRanges)
 }
 
-// VkFreeCommandBuffers mocks base method.
+// VkFreeCommandBuffers dummies base method.
 func (m *MockDriver) VkFreeCommandBuffers(device driver.VkDevice, commandPool driver.VkCommandPool, commandBufferCount driver.Uint32, pCommandBuffers *driver.VkCommandBuffer) {
 	m.ctrl.T.Helper()
 	m.ctrl.Call(m, "VkFreeCommandBuffers", device, commandPool, commandBufferCount, pCommandBuffers)
@@ -1638,7 +1638,7 @@ func (mr *MockDriverMockRecorder) VkFreeCommandBuffers(device, commandPool, comm
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkFreeCommandBuffers", reflect.TypeOf((*MockDriver)(nil).VkFreeCommandBuffers), device, commandPool, commandBufferCount, pCommandBuffers)
 }
 
-// VkFreeDescriptorSets mocks base method.
+// VkFreeDescriptorSets dummies base method.
 func (m *MockDriver) VkFreeDescriptorSets(device driver.VkDevice, descriptorPool driver.VkDescriptorPool, descriptorSetCount driver.Uint32, pDescriptorSets *driver.VkDescriptorSet) (common.VkResult, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "VkFreeDescriptorSets", device, descriptorPool, descriptorSetCount, pDescriptorSets)
@@ -1653,7 +1653,7 @@ func (mr *MockDriverMockRecorder) VkFreeDescriptorSets(device, descriptorPool, d
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkFreeDescriptorSets", reflect.TypeOf((*MockDriver)(nil).VkFreeDescriptorSets), device, descriptorPool, descriptorSetCount, pDescriptorSets)
 }
 
-// VkFreeMemory mocks base method.
+// VkFreeMemory dummies base method.
 func (m *MockDriver) VkFreeMemory(device driver.VkDevice, memory driver.VkDeviceMemory, pAllocator *driver.VkAllocationCallbacks) {
 	m.ctrl.T.Helper()
 	m.ctrl.Call(m, "VkFreeMemory", device, memory, pAllocator)
@@ -1665,7 +1665,7 @@ func (mr *MockDriverMockRecorder) VkFreeMemory(device, memory, pAllocator interf
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkFreeMemory", reflect.TypeOf((*MockDriver)(nil).VkFreeMemory), device, memory, pAllocator)
 }
 
-// VkGetBufferDeviceAddress mocks base method.
+// VkGetBufferDeviceAddress dummies base method.
 func (m *MockDriver) VkGetBufferDeviceAddress(device driver.VkDevice, pInfo *driver.VkBufferDeviceAddressInfo) driver.VkDeviceAddress {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "VkGetBufferDeviceAddress", device, pInfo)
@@ -1679,7 +1679,7 @@ func (mr *MockDriverMockRecorder) VkGetBufferDeviceAddress(device, pInfo interfa
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkGetBufferDeviceAddress", reflect.TypeOf((*MockDriver)(nil).VkGetBufferDeviceAddress), device, pInfo)
 }
 
-// VkGetBufferMemoryRequirements mocks base method.
+// VkGetBufferMemoryRequirements dummies base method.
 func (m *MockDriver) VkGetBufferMemoryRequirements(device driver.VkDevice, buffer driver.VkBuffer, pMemoryRequirements *driver.VkMemoryRequirements) {
 	m.ctrl.T.Helper()
 	m.ctrl.Call(m, "VkGetBufferMemoryRequirements", device, buffer, pMemoryRequirements)
@@ -1691,7 +1691,7 @@ func (mr *MockDriverMockRecorder) VkGetBufferMemoryRequirements(device, buffer, 
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkGetBufferMemoryRequirements", reflect.TypeOf((*MockDriver)(nil).VkGetBufferMemoryRequirements), device, buffer, pMemoryRequirements)
 }
 
-// VkGetBufferMemoryRequirements2 mocks base method.
+// VkGetBufferMemoryRequirements2 dummies base method.
 func (m *MockDriver) VkGetBufferMemoryRequirements2(device driver.VkDevice, pInfo *driver.VkBufferMemoryRequirementsInfo2, pMemoryRequirements *driver.VkMemoryRequirements2) {
 	m.ctrl.T.Helper()
 	m.ctrl.Call(m, "VkGetBufferMemoryRequirements2", device, pInfo, pMemoryRequirements)
@@ -1703,7 +1703,7 @@ func (mr *MockDriverMockRecorder) VkGetBufferMemoryRequirements2(device, pInfo, 
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkGetBufferMemoryRequirements2", reflect.TypeOf((*MockDriver)(nil).VkGetBufferMemoryRequirements2), device, pInfo, pMemoryRequirements)
 }
 
-// VkGetBufferOpaqueCaptureAddress mocks base method.
+// VkGetBufferOpaqueCaptureAddress dummies base method.
 func (m *MockDriver) VkGetBufferOpaqueCaptureAddress(device driver.VkDevice, pInfo *driver.VkBufferDeviceAddressInfo) driver.Uint64 {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "VkGetBufferOpaqueCaptureAddress", device, pInfo)
@@ -1717,7 +1717,7 @@ func (mr *MockDriverMockRecorder) VkGetBufferOpaqueCaptureAddress(device, pInfo 
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkGetBufferOpaqueCaptureAddress", reflect.TypeOf((*MockDriver)(nil).VkGetBufferOpaqueCaptureAddress), device, pInfo)
 }
 
-// VkGetDescriptorSetLayoutSupport mocks base method.
+// VkGetDescriptorSetLayoutSupport dummies base method.
 func (m *MockDriver) VkGetDescriptorSetLayoutSupport(device driver.VkDevice, pCreateInfo *driver.VkDescriptorSetLayoutCreateInfo, pSupport *driver.VkDescriptorSetLayoutSupport) {
 	m.ctrl.T.Helper()
 	m.ctrl.Call(m, "VkGetDescriptorSetLayoutSupport", device, pCreateInfo, pSupport)
@@ -1729,7 +1729,7 @@ func (mr *MockDriverMockRecorder) VkGetDescriptorSetLayoutSupport(device, pCreat
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkGetDescriptorSetLayoutSupport", reflect.TypeOf((*MockDriver)(nil).VkGetDescriptorSetLayoutSupport), device, pCreateInfo, pSupport)
 }
 
-// VkGetDeviceGroupPeerMemoryFeatures mocks base method.
+// VkGetDeviceGroupPeerMemoryFeatures dummies base method.
 func (m *MockDriver) VkGetDeviceGroupPeerMemoryFeatures(device driver.VkDevice, heapIndex, localDeviceIndex, remoteDeviceIndex driver.Uint32, pPeerMemoryFeatures *driver.VkPeerMemoryFeatureFlags) {
 	m.ctrl.T.Helper()
 	m.ctrl.Call(m, "VkGetDeviceGroupPeerMemoryFeatures", device, heapIndex, localDeviceIndex, remoteDeviceIndex, pPeerMemoryFeatures)
@@ -1741,7 +1741,7 @@ func (mr *MockDriverMockRecorder) VkGetDeviceGroupPeerMemoryFeatures(device, hea
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkGetDeviceGroupPeerMemoryFeatures", reflect.TypeOf((*MockDriver)(nil).VkGetDeviceGroupPeerMemoryFeatures), device, heapIndex, localDeviceIndex, remoteDeviceIndex, pPeerMemoryFeatures)
 }
 
-// VkGetDeviceMemoryCommitment mocks base method.
+// VkGetDeviceMemoryCommitment dummies base method.
 func (m *MockDriver) VkGetDeviceMemoryCommitment(device driver.VkDevice, memory driver.VkDeviceMemory, pCommittedMemoryInBytes *driver.VkDeviceSize) {
 	m.ctrl.T.Helper()
 	m.ctrl.Call(m, "VkGetDeviceMemoryCommitment", device, memory, pCommittedMemoryInBytes)
@@ -1753,7 +1753,7 @@ func (mr *MockDriverMockRecorder) VkGetDeviceMemoryCommitment(device, memory, pC
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkGetDeviceMemoryCommitment", reflect.TypeOf((*MockDriver)(nil).VkGetDeviceMemoryCommitment), device, memory, pCommittedMemoryInBytes)
 }
 
-// VkGetDeviceMemoryOpaqueCaptureAddress mocks base method.
+// VkGetDeviceMemoryOpaqueCaptureAddress dummies base method.
 func (m *MockDriver) VkGetDeviceMemoryOpaqueCaptureAddress(device driver.VkDevice, pInfo *driver.VkDeviceMemoryOpaqueCaptureAddressInfo) driver.Uint64 {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "VkGetDeviceMemoryOpaqueCaptureAddress", device, pInfo)
@@ -1767,7 +1767,7 @@ func (mr *MockDriverMockRecorder) VkGetDeviceMemoryOpaqueCaptureAddress(device, 
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkGetDeviceMemoryOpaqueCaptureAddress", reflect.TypeOf((*MockDriver)(nil).VkGetDeviceMemoryOpaqueCaptureAddress), device, pInfo)
 }
 
-// VkGetDeviceQueue mocks base method.
+// VkGetDeviceQueue dummies base method.
 func (m *MockDriver) VkGetDeviceQueue(device driver.VkDevice, queueFamilyIndex, queueIndex driver.Uint32, pQueue *driver.VkQueue) {
 	m.ctrl.T.Helper()
 	m.ctrl.Call(m, "VkGetDeviceQueue", device, queueFamilyIndex, queueIndex, pQueue)
@@ -1779,7 +1779,7 @@ func (mr *MockDriverMockRecorder) VkGetDeviceQueue(device, queueFamilyIndex, que
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkGetDeviceQueue", reflect.TypeOf((*MockDriver)(nil).VkGetDeviceQueue), device, queueFamilyIndex, queueIndex, pQueue)
 }
 
-// VkGetDeviceQueue2 mocks base method.
+// VkGetDeviceQueue2 dummies base method.
 func (m *MockDriver) VkGetDeviceQueue2(device driver.VkDevice, pQueueInfo *driver.VkDeviceQueueInfo2, pQueue *driver.VkQueue) {
 	m.ctrl.T.Helper()
 	m.ctrl.Call(m, "VkGetDeviceQueue2", device, pQueueInfo, pQueue)
@@ -1791,7 +1791,7 @@ func (mr *MockDriverMockRecorder) VkGetDeviceQueue2(device, pQueueInfo, pQueue i
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkGetDeviceQueue2", reflect.TypeOf((*MockDriver)(nil).VkGetDeviceQueue2), device, pQueueInfo, pQueue)
 }
 
-// VkGetEventStatus mocks base method.
+// VkGetEventStatus dummies base method.
 func (m *MockDriver) VkGetEventStatus(device driver.VkDevice, event driver.VkEvent) (common.VkResult, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "VkGetEventStatus", device, event)
@@ -1806,7 +1806,7 @@ func (mr *MockDriverMockRecorder) VkGetEventStatus(device, event interface{}) *g
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkGetEventStatus", reflect.TypeOf((*MockDriver)(nil).VkGetEventStatus), device, event)
 }
 
-// VkGetFenceStatus mocks base method.
+// VkGetFenceStatus dummies base method.
 func (m *MockDriver) VkGetFenceStatus(device driver.VkDevice, fence driver.VkFence) (common.VkResult, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "VkGetFenceStatus", device, fence)
@@ -1821,7 +1821,7 @@ func (mr *MockDriverMockRecorder) VkGetFenceStatus(device, fence interface{}) *g
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkGetFenceStatus", reflect.TypeOf((*MockDriver)(nil).VkGetFenceStatus), device, fence)
 }
 
-// VkGetImageMemoryRequirements mocks base method.
+// VkGetImageMemoryRequirements dummies base method.
 func (m *MockDriver) VkGetImageMemoryRequirements(device driver.VkDevice, image driver.VkImage, pMemoryRequirements *driver.VkMemoryRequirements) {
 	m.ctrl.T.Helper()
 	m.ctrl.Call(m, "VkGetImageMemoryRequirements", device, image, pMemoryRequirements)
@@ -1833,7 +1833,7 @@ func (mr *MockDriverMockRecorder) VkGetImageMemoryRequirements(device, image, pM
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkGetImageMemoryRequirements", reflect.TypeOf((*MockDriver)(nil).VkGetImageMemoryRequirements), device, image, pMemoryRequirements)
 }
 
-// VkGetImageMemoryRequirements2 mocks base method.
+// VkGetImageMemoryRequirements2 dummies base method.
 func (m *MockDriver) VkGetImageMemoryRequirements2(device driver.VkDevice, pInfo *driver.VkImageMemoryRequirementsInfo2, pMemoryRequirements *driver.VkMemoryRequirements2) {
 	m.ctrl.T.Helper()
 	m.ctrl.Call(m, "VkGetImageMemoryRequirements2", device, pInfo, pMemoryRequirements)
@@ -1845,7 +1845,7 @@ func (mr *MockDriverMockRecorder) VkGetImageMemoryRequirements2(device, pInfo, p
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkGetImageMemoryRequirements2", reflect.TypeOf((*MockDriver)(nil).VkGetImageMemoryRequirements2), device, pInfo, pMemoryRequirements)
 }
 
-// VkGetImageSparseMemoryRequirements mocks base method.
+// VkGetImageSparseMemoryRequirements dummies base method.
 func (m *MockDriver) VkGetImageSparseMemoryRequirements(device driver.VkDevice, image driver.VkImage, pSparseMemoryRequirementCount *driver.Uint32, pSparseMemoryRequirements *driver.VkSparseImageMemoryRequirements) {
 	m.ctrl.T.Helper()
 	m.ctrl.Call(m, "VkGetImageSparseMemoryRequirements", device, image, pSparseMemoryRequirementCount, pSparseMemoryRequirements)
@@ -1857,7 +1857,7 @@ func (mr *MockDriverMockRecorder) VkGetImageSparseMemoryRequirements(device, ima
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkGetImageSparseMemoryRequirements", reflect.TypeOf((*MockDriver)(nil).VkGetImageSparseMemoryRequirements), device, image, pSparseMemoryRequirementCount, pSparseMemoryRequirements)
 }
 
-// VkGetImageSparseMemoryRequirements2 mocks base method.
+// VkGetImageSparseMemoryRequirements2 dummies base method.
 func (m *MockDriver) VkGetImageSparseMemoryRequirements2(device driver.VkDevice, pInfo *driver.VkImageSparseMemoryRequirementsInfo2, pSparseMemoryRequirementCount *driver.Uint32, pSparseMemoryRequirements *driver.VkSparseImageMemoryRequirements2) {
 	m.ctrl.T.Helper()
 	m.ctrl.Call(m, "VkGetImageSparseMemoryRequirements2", device, pInfo, pSparseMemoryRequirementCount, pSparseMemoryRequirements)
@@ -1869,7 +1869,7 @@ func (mr *MockDriverMockRecorder) VkGetImageSparseMemoryRequirements2(device, pI
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkGetImageSparseMemoryRequirements2", reflect.TypeOf((*MockDriver)(nil).VkGetImageSparseMemoryRequirements2), device, pInfo, pSparseMemoryRequirementCount, pSparseMemoryRequirements)
 }
 
-// VkGetImageSubresourceLayout mocks base method.
+// VkGetImageSubresourceLayout dummies base method.
 func (m *MockDriver) VkGetImageSubresourceLayout(device driver.VkDevice, image driver.VkImage, pSubresource *driver.VkImageSubresource, pLayout *driver.VkSubresourceLayout) {
 	m.ctrl.T.Helper()
 	m.ctrl.Call(m, "VkGetImageSubresourceLayout", device, image, pSubresource, pLayout)
@@ -1881,7 +1881,7 @@ func (mr *MockDriverMockRecorder) VkGetImageSubresourceLayout(device, image, pSu
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkGetImageSubresourceLayout", reflect.TypeOf((*MockDriver)(nil).VkGetImageSubresourceLayout), device, image, pSubresource, pLayout)
 }
 
-// VkGetPhysicalDeviceExternalBufferProperties mocks base method.
+// VkGetPhysicalDeviceExternalBufferProperties dummies base method.
 func (m *MockDriver) VkGetPhysicalDeviceExternalBufferProperties(physicalDevice driver.VkPhysicalDevice, pExternalBufferInfo *driver.VkPhysicalDeviceExternalBufferInfo, pExternalBufferProperties *driver.VkExternalBufferProperties) {
 	m.ctrl.T.Helper()
 	m.ctrl.Call(m, "VkGetPhysicalDeviceExternalBufferProperties", physicalDevice, pExternalBufferInfo, pExternalBufferProperties)
@@ -1893,7 +1893,7 @@ func (mr *MockDriverMockRecorder) VkGetPhysicalDeviceExternalBufferProperties(ph
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkGetPhysicalDeviceExternalBufferProperties", reflect.TypeOf((*MockDriver)(nil).VkGetPhysicalDeviceExternalBufferProperties), physicalDevice, pExternalBufferInfo, pExternalBufferProperties)
 }
 
-// VkGetPhysicalDeviceExternalFenceProperties mocks base method.
+// VkGetPhysicalDeviceExternalFenceProperties dummies base method.
 func (m *MockDriver) VkGetPhysicalDeviceExternalFenceProperties(physicalDevice driver.VkPhysicalDevice, pExternalFenceInfo *driver.VkPhysicalDeviceExternalFenceInfo, pExternalFenceProperties *driver.VkExternalFenceProperties) {
 	m.ctrl.T.Helper()
 	m.ctrl.Call(m, "VkGetPhysicalDeviceExternalFenceProperties", physicalDevice, pExternalFenceInfo, pExternalFenceProperties)
@@ -1905,7 +1905,7 @@ func (mr *MockDriverMockRecorder) VkGetPhysicalDeviceExternalFenceProperties(phy
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkGetPhysicalDeviceExternalFenceProperties", reflect.TypeOf((*MockDriver)(nil).VkGetPhysicalDeviceExternalFenceProperties), physicalDevice, pExternalFenceInfo, pExternalFenceProperties)
 }
 
-// VkGetPhysicalDeviceExternalSemaphoreProperties mocks base method.
+// VkGetPhysicalDeviceExternalSemaphoreProperties dummies base method.
 func (m *MockDriver) VkGetPhysicalDeviceExternalSemaphoreProperties(physicalDevice driver.VkPhysicalDevice, pExternalSemaphoreInfo *driver.VkPhysicalDeviceExternalSemaphoreInfo, pExternalSemaphoreProperties *driver.VkExternalSemaphoreProperties) {
 	m.ctrl.T.Helper()
 	m.ctrl.Call(m, "VkGetPhysicalDeviceExternalSemaphoreProperties", physicalDevice, pExternalSemaphoreInfo, pExternalSemaphoreProperties)
@@ -1917,7 +1917,7 @@ func (mr *MockDriverMockRecorder) VkGetPhysicalDeviceExternalSemaphoreProperties
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkGetPhysicalDeviceExternalSemaphoreProperties", reflect.TypeOf((*MockDriver)(nil).VkGetPhysicalDeviceExternalSemaphoreProperties), physicalDevice, pExternalSemaphoreInfo, pExternalSemaphoreProperties)
 }
 
-// VkGetPhysicalDeviceFeatures mocks base method.
+// VkGetPhysicalDeviceFeatures dummies base method.
 func (m *MockDriver) VkGetPhysicalDeviceFeatures(physicalDevice driver.VkPhysicalDevice, pFeatures *driver.VkPhysicalDeviceFeatures) {
 	m.ctrl.T.Helper()
 	m.ctrl.Call(m, "VkGetPhysicalDeviceFeatures", physicalDevice, pFeatures)
@@ -1929,7 +1929,7 @@ func (mr *MockDriverMockRecorder) VkGetPhysicalDeviceFeatures(physicalDevice, pF
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkGetPhysicalDeviceFeatures", reflect.TypeOf((*MockDriver)(nil).VkGetPhysicalDeviceFeatures), physicalDevice, pFeatures)
 }
 
-// VkGetPhysicalDeviceFeatures2 mocks base method.
+// VkGetPhysicalDeviceFeatures2 dummies base method.
 func (m *MockDriver) VkGetPhysicalDeviceFeatures2(physicalDevice driver.VkPhysicalDevice, pFeatures *driver.VkPhysicalDeviceFeatures2) {
 	m.ctrl.T.Helper()
 	m.ctrl.Call(m, "VkGetPhysicalDeviceFeatures2", physicalDevice, pFeatures)
@@ -1941,7 +1941,7 @@ func (mr *MockDriverMockRecorder) VkGetPhysicalDeviceFeatures2(physicalDevice, p
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkGetPhysicalDeviceFeatures2", reflect.TypeOf((*MockDriver)(nil).VkGetPhysicalDeviceFeatures2), physicalDevice, pFeatures)
 }
 
-// VkGetPhysicalDeviceFormatProperties mocks base method.
+// VkGetPhysicalDeviceFormatProperties dummies base method.
 func (m *MockDriver) VkGetPhysicalDeviceFormatProperties(physicalDevice driver.VkPhysicalDevice, format driver.VkFormat, pFormatProperties *driver.VkFormatProperties) {
 	m.ctrl.T.Helper()
 	m.ctrl.Call(m, "VkGetPhysicalDeviceFormatProperties", physicalDevice, format, pFormatProperties)
@@ -1953,7 +1953,7 @@ func (mr *MockDriverMockRecorder) VkGetPhysicalDeviceFormatProperties(physicalDe
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkGetPhysicalDeviceFormatProperties", reflect.TypeOf((*MockDriver)(nil).VkGetPhysicalDeviceFormatProperties), physicalDevice, format, pFormatProperties)
 }
 
-// VkGetPhysicalDeviceFormatProperties2 mocks base method.
+// VkGetPhysicalDeviceFormatProperties2 dummies base method.
 func (m *MockDriver) VkGetPhysicalDeviceFormatProperties2(physicalDevice driver.VkPhysicalDevice, format driver.VkFormat, pFormatProperties *driver.VkFormatProperties2) {
 	m.ctrl.T.Helper()
 	m.ctrl.Call(m, "VkGetPhysicalDeviceFormatProperties2", physicalDevice, format, pFormatProperties)
@@ -1965,7 +1965,7 @@ func (mr *MockDriverMockRecorder) VkGetPhysicalDeviceFormatProperties2(physicalD
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkGetPhysicalDeviceFormatProperties2", reflect.TypeOf((*MockDriver)(nil).VkGetPhysicalDeviceFormatProperties2), physicalDevice, format, pFormatProperties)
 }
 
-// VkGetPhysicalDeviceImageFormatProperties mocks base method.
+// VkGetPhysicalDeviceImageFormatProperties dummies base method.
 func (m *MockDriver) VkGetPhysicalDeviceImageFormatProperties(physicalDevice driver.VkPhysicalDevice, format driver.VkFormat, t driver.VkImageType, tiling driver.VkImageTiling, usage driver.VkImageUsageFlags, flags driver.VkImageCreateFlags, pImageFormatProperties *driver.VkImageFormatProperties) (common.VkResult, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "VkGetPhysicalDeviceImageFormatProperties", physicalDevice, format, t, tiling, usage, flags, pImageFormatProperties)
@@ -1980,7 +1980,7 @@ func (mr *MockDriverMockRecorder) VkGetPhysicalDeviceImageFormatProperties(physi
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkGetPhysicalDeviceImageFormatProperties", reflect.TypeOf((*MockDriver)(nil).VkGetPhysicalDeviceImageFormatProperties), physicalDevice, format, t, tiling, usage, flags, pImageFormatProperties)
 }
 
-// VkGetPhysicalDeviceImageFormatProperties2 mocks base method.
+// VkGetPhysicalDeviceImageFormatProperties2 dummies base method.
 func (m *MockDriver) VkGetPhysicalDeviceImageFormatProperties2(physicalDevice driver.VkPhysicalDevice, pImageFormatInfo *driver.VkPhysicalDeviceImageFormatInfo2, pImageFormatProperties *driver.VkImageFormatProperties2) (common.VkResult, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "VkGetPhysicalDeviceImageFormatProperties2", physicalDevice, pImageFormatInfo, pImageFormatProperties)
@@ -1995,7 +1995,7 @@ func (mr *MockDriverMockRecorder) VkGetPhysicalDeviceImageFormatProperties2(phys
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkGetPhysicalDeviceImageFormatProperties2", reflect.TypeOf((*MockDriver)(nil).VkGetPhysicalDeviceImageFormatProperties2), physicalDevice, pImageFormatInfo, pImageFormatProperties)
 }
 
-// VkGetPhysicalDeviceMemoryProperties mocks base method.
+// VkGetPhysicalDeviceMemoryProperties dummies base method.
 func (m *MockDriver) VkGetPhysicalDeviceMemoryProperties(physicalDevice driver.VkPhysicalDevice, pMemoryProperties *driver.VkPhysicalDeviceMemoryProperties) {
 	m.ctrl.T.Helper()
 	m.ctrl.Call(m, "VkGetPhysicalDeviceMemoryProperties", physicalDevice, pMemoryProperties)
@@ -2007,7 +2007,7 @@ func (mr *MockDriverMockRecorder) VkGetPhysicalDeviceMemoryProperties(physicalDe
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkGetPhysicalDeviceMemoryProperties", reflect.TypeOf((*MockDriver)(nil).VkGetPhysicalDeviceMemoryProperties), physicalDevice, pMemoryProperties)
 }
 
-// VkGetPhysicalDeviceMemoryProperties2 mocks base method.
+// VkGetPhysicalDeviceMemoryProperties2 dummies base method.
 func (m *MockDriver) VkGetPhysicalDeviceMemoryProperties2(physicalDevice driver.VkPhysicalDevice, pMemoryProperties *driver.VkPhysicalDeviceMemoryProperties2) {
 	m.ctrl.T.Helper()
 	m.ctrl.Call(m, "VkGetPhysicalDeviceMemoryProperties2", physicalDevice, pMemoryProperties)
@@ -2019,7 +2019,7 @@ func (mr *MockDriverMockRecorder) VkGetPhysicalDeviceMemoryProperties2(physicalD
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkGetPhysicalDeviceMemoryProperties2", reflect.TypeOf((*MockDriver)(nil).VkGetPhysicalDeviceMemoryProperties2), physicalDevice, pMemoryProperties)
 }
 
-// VkGetPhysicalDeviceProperties mocks base method.
+// VkGetPhysicalDeviceProperties dummies base method.
 func (m *MockDriver) VkGetPhysicalDeviceProperties(physicalDevice driver.VkPhysicalDevice, pProperties *driver.VkPhysicalDeviceProperties) {
 	m.ctrl.T.Helper()
 	m.ctrl.Call(m, "VkGetPhysicalDeviceProperties", physicalDevice, pProperties)
@@ -2031,7 +2031,7 @@ func (mr *MockDriverMockRecorder) VkGetPhysicalDeviceProperties(physicalDevice, 
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkGetPhysicalDeviceProperties", reflect.TypeOf((*MockDriver)(nil).VkGetPhysicalDeviceProperties), physicalDevice, pProperties)
 }
 
-// VkGetPhysicalDeviceProperties2 mocks base method.
+// VkGetPhysicalDeviceProperties2 dummies base method.
 func (m *MockDriver) VkGetPhysicalDeviceProperties2(physicalDevice driver.VkPhysicalDevice, pProperties *driver.VkPhysicalDeviceProperties2) {
 	m.ctrl.T.Helper()
 	m.ctrl.Call(m, "VkGetPhysicalDeviceProperties2", physicalDevice, pProperties)
@@ -2043,7 +2043,7 @@ func (mr *MockDriverMockRecorder) VkGetPhysicalDeviceProperties2(physicalDevice,
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkGetPhysicalDeviceProperties2", reflect.TypeOf((*MockDriver)(nil).VkGetPhysicalDeviceProperties2), physicalDevice, pProperties)
 }
 
-// VkGetPhysicalDeviceQueueFamilyProperties mocks base method.
+// VkGetPhysicalDeviceQueueFamilyProperties dummies base method.
 func (m *MockDriver) VkGetPhysicalDeviceQueueFamilyProperties(physicalDevice driver.VkPhysicalDevice, pQueueFamilyPropertyCount *driver.Uint32, pQueueFamilyProperties *driver.VkQueueFamilyProperties) {
 	m.ctrl.T.Helper()
 	m.ctrl.Call(m, "VkGetPhysicalDeviceQueueFamilyProperties", physicalDevice, pQueueFamilyPropertyCount, pQueueFamilyProperties)
@@ -2055,7 +2055,7 @@ func (mr *MockDriverMockRecorder) VkGetPhysicalDeviceQueueFamilyProperties(physi
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkGetPhysicalDeviceQueueFamilyProperties", reflect.TypeOf((*MockDriver)(nil).VkGetPhysicalDeviceQueueFamilyProperties), physicalDevice, pQueueFamilyPropertyCount, pQueueFamilyProperties)
 }
 
-// VkGetPhysicalDeviceQueueFamilyProperties2 mocks base method.
+// VkGetPhysicalDeviceQueueFamilyProperties2 dummies base method.
 func (m *MockDriver) VkGetPhysicalDeviceQueueFamilyProperties2(physicalDevice driver.VkPhysicalDevice, pQueueFamilyPropertyCount *driver.Uint32, pQueueFamilyProperties *driver.VkQueueFamilyProperties2) {
 	m.ctrl.T.Helper()
 	m.ctrl.Call(m, "VkGetPhysicalDeviceQueueFamilyProperties2", physicalDevice, pQueueFamilyPropertyCount, pQueueFamilyProperties)
@@ -2067,7 +2067,7 @@ func (mr *MockDriverMockRecorder) VkGetPhysicalDeviceQueueFamilyProperties2(phys
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkGetPhysicalDeviceQueueFamilyProperties2", reflect.TypeOf((*MockDriver)(nil).VkGetPhysicalDeviceQueueFamilyProperties2), physicalDevice, pQueueFamilyPropertyCount, pQueueFamilyProperties)
 }
 
-// VkGetPhysicalDeviceSparseImageFormatProperties mocks base method.
+// VkGetPhysicalDeviceSparseImageFormatProperties dummies base method.
 func (m *MockDriver) VkGetPhysicalDeviceSparseImageFormatProperties(physicalDevice driver.VkPhysicalDevice, format driver.VkFormat, t driver.VkImageType, samples driver.VkSampleCountFlagBits, usage driver.VkImageUsageFlags, tiling driver.VkImageTiling, pPropertyCount *driver.Uint32, pProperties *driver.VkSparseImageFormatProperties) {
 	m.ctrl.T.Helper()
 	m.ctrl.Call(m, "VkGetPhysicalDeviceSparseImageFormatProperties", physicalDevice, format, t, samples, usage, tiling, pPropertyCount, pProperties)
@@ -2079,7 +2079,7 @@ func (mr *MockDriverMockRecorder) VkGetPhysicalDeviceSparseImageFormatProperties
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkGetPhysicalDeviceSparseImageFormatProperties", reflect.TypeOf((*MockDriver)(nil).VkGetPhysicalDeviceSparseImageFormatProperties), physicalDevice, format, t, samples, usage, tiling, pPropertyCount, pProperties)
 }
 
-// VkGetPhysicalDeviceSparseImageFormatProperties2 mocks base method.
+// VkGetPhysicalDeviceSparseImageFormatProperties2 dummies base method.
 func (m *MockDriver) VkGetPhysicalDeviceSparseImageFormatProperties2(physicalDevice driver.VkPhysicalDevice, pFormatInfo *driver.VkPhysicalDeviceSparseImageFormatInfo2, pPropertyCount *driver.Uint32, pProperties *driver.VkSparseImageFormatProperties2) {
 	m.ctrl.T.Helper()
 	m.ctrl.Call(m, "VkGetPhysicalDeviceSparseImageFormatProperties2", physicalDevice, pFormatInfo, pPropertyCount, pProperties)
@@ -2091,7 +2091,7 @@ func (mr *MockDriverMockRecorder) VkGetPhysicalDeviceSparseImageFormatProperties
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkGetPhysicalDeviceSparseImageFormatProperties2", reflect.TypeOf((*MockDriver)(nil).VkGetPhysicalDeviceSparseImageFormatProperties2), physicalDevice, pFormatInfo, pPropertyCount, pProperties)
 }
 
-// VkGetPipelineCacheData mocks base method.
+// VkGetPipelineCacheData dummies base method.
 func (m *MockDriver) VkGetPipelineCacheData(device driver.VkDevice, pipelineCache driver.VkPipelineCache, pDataSize *driver.Size, pData unsafe.Pointer) (common.VkResult, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "VkGetPipelineCacheData", device, pipelineCache, pDataSize, pData)
@@ -2106,7 +2106,7 @@ func (mr *MockDriverMockRecorder) VkGetPipelineCacheData(device, pipelineCache, 
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkGetPipelineCacheData", reflect.TypeOf((*MockDriver)(nil).VkGetPipelineCacheData), device, pipelineCache, pDataSize, pData)
 }
 
-// VkGetQueryPoolResults mocks base method.
+// VkGetQueryPoolResults dummies base method.
 func (m *MockDriver) VkGetQueryPoolResults(device driver.VkDevice, queryPool driver.VkQueryPool, firstQuery, queryCount driver.Uint32, dataSize driver.Size, pData unsafe.Pointer, stride driver.VkDeviceSize, flags driver.VkQueryResultFlags) (common.VkResult, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "VkGetQueryPoolResults", device, queryPool, firstQuery, queryCount, dataSize, pData, stride, flags)
@@ -2121,7 +2121,7 @@ func (mr *MockDriverMockRecorder) VkGetQueryPoolResults(device, queryPool, first
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkGetQueryPoolResults", reflect.TypeOf((*MockDriver)(nil).VkGetQueryPoolResults), device, queryPool, firstQuery, queryCount, dataSize, pData, stride, flags)
 }
 
-// VkGetRenderAreaGranularity mocks base method.
+// VkGetRenderAreaGranularity dummies base method.
 func (m *MockDriver) VkGetRenderAreaGranularity(device driver.VkDevice, renderPass driver.VkRenderPass, pGranularity *driver.VkExtent2D) {
 	m.ctrl.T.Helper()
 	m.ctrl.Call(m, "VkGetRenderAreaGranularity", device, renderPass, pGranularity)
@@ -2133,7 +2133,7 @@ func (mr *MockDriverMockRecorder) VkGetRenderAreaGranularity(device, renderPass,
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkGetRenderAreaGranularity", reflect.TypeOf((*MockDriver)(nil).VkGetRenderAreaGranularity), device, renderPass, pGranularity)
 }
 
-// VkGetSemaphoreCounterValue mocks base method.
+// VkGetSemaphoreCounterValue dummies base method.
 func (m *MockDriver) VkGetSemaphoreCounterValue(device driver.VkDevice, semaphore driver.VkSemaphore, pValue *driver.Uint64) (common.VkResult, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "VkGetSemaphoreCounterValue", device, semaphore, pValue)
@@ -2148,7 +2148,7 @@ func (mr *MockDriverMockRecorder) VkGetSemaphoreCounterValue(device, semaphore, 
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkGetSemaphoreCounterValue", reflect.TypeOf((*MockDriver)(nil).VkGetSemaphoreCounterValue), device, semaphore, pValue)
 }
 
-// VkInvalidateMappedMemoryRanges mocks base method.
+// VkInvalidateMappedMemoryRanges dummies base method.
 func (m *MockDriver) VkInvalidateMappedMemoryRanges(device driver.VkDevice, memoryRangeCount driver.Uint32, pMemoryRanges *driver.VkMappedMemoryRange) (common.VkResult, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "VkInvalidateMappedMemoryRanges", device, memoryRangeCount, pMemoryRanges)
@@ -2163,7 +2163,7 @@ func (mr *MockDriverMockRecorder) VkInvalidateMappedMemoryRanges(device, memoryR
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkInvalidateMappedMemoryRanges", reflect.TypeOf((*MockDriver)(nil).VkInvalidateMappedMemoryRanges), device, memoryRangeCount, pMemoryRanges)
 }
 
-// VkMapMemory mocks base method.
+// VkMapMemory dummies base method.
 func (m *MockDriver) VkMapMemory(device driver.VkDevice, memory driver.VkDeviceMemory, offset, size driver.VkDeviceSize, flags driver.VkMemoryMapFlags, ppData *unsafe.Pointer) (common.VkResult, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "VkMapMemory", device, memory, offset, size, flags, ppData)
@@ -2178,7 +2178,7 @@ func (mr *MockDriverMockRecorder) VkMapMemory(device, memory, offset, size, flag
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkMapMemory", reflect.TypeOf((*MockDriver)(nil).VkMapMemory), device, memory, offset, size, flags, ppData)
 }
 
-// VkMergePipelineCaches mocks base method.
+// VkMergePipelineCaches dummies base method.
 func (m *MockDriver) VkMergePipelineCaches(device driver.VkDevice, dstCache driver.VkPipelineCache, srcCacheCount driver.Uint32, pSrcCaches *driver.VkPipelineCache) (common.VkResult, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "VkMergePipelineCaches", device, dstCache, srcCacheCount, pSrcCaches)
@@ -2193,7 +2193,7 @@ func (mr *MockDriverMockRecorder) VkMergePipelineCaches(device, dstCache, srcCac
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkMergePipelineCaches", reflect.TypeOf((*MockDriver)(nil).VkMergePipelineCaches), device, dstCache, srcCacheCount, pSrcCaches)
 }
 
-// VkQueueBindSparse mocks base method.
+// VkQueueBindSparse dummies base method.
 func (m *MockDriver) VkQueueBindSparse(queue driver.VkQueue, bindInfoCount driver.Uint32, pBindInfo *driver.VkBindSparseInfo, fence driver.VkFence) (common.VkResult, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "VkQueueBindSparse", queue, bindInfoCount, pBindInfo, fence)
@@ -2208,7 +2208,7 @@ func (mr *MockDriverMockRecorder) VkQueueBindSparse(queue, bindInfoCount, pBindI
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkQueueBindSparse", reflect.TypeOf((*MockDriver)(nil).VkQueueBindSparse), queue, bindInfoCount, pBindInfo, fence)
 }
 
-// VkQueueSubmit mocks base method.
+// VkQueueSubmit dummies base method.
 func (m *MockDriver) VkQueueSubmit(queue driver.VkQueue, submitCount driver.Uint32, pSubmits *driver.VkSubmitInfo, fence driver.VkFence) (common.VkResult, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "VkQueueSubmit", queue, submitCount, pSubmits, fence)
@@ -2223,7 +2223,7 @@ func (mr *MockDriverMockRecorder) VkQueueSubmit(queue, submitCount, pSubmits, fe
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkQueueSubmit", reflect.TypeOf((*MockDriver)(nil).VkQueueSubmit), queue, submitCount, pSubmits, fence)
 }
 
-// VkQueueWaitIdle mocks base method.
+// VkQueueWaitIdle dummies base method.
 func (m *MockDriver) VkQueueWaitIdle(queue driver.VkQueue) (common.VkResult, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "VkQueueWaitIdle", queue)
@@ -2238,7 +2238,7 @@ func (mr *MockDriverMockRecorder) VkQueueWaitIdle(queue interface{}) *gomock.Cal
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkQueueWaitIdle", reflect.TypeOf((*MockDriver)(nil).VkQueueWaitIdle), queue)
 }
 
-// VkResetCommandBuffer mocks base method.
+// VkResetCommandBuffer dummies base method.
 func (m *MockDriver) VkResetCommandBuffer(commandBuffer driver.VkCommandBuffer, flags driver.VkCommandBufferResetFlags) (common.VkResult, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "VkResetCommandBuffer", commandBuffer, flags)
@@ -2253,7 +2253,7 @@ func (mr *MockDriverMockRecorder) VkResetCommandBuffer(commandBuffer, flags inte
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkResetCommandBuffer", reflect.TypeOf((*MockDriver)(nil).VkResetCommandBuffer), commandBuffer, flags)
 }
 
-// VkResetCommandPool mocks base method.
+// VkResetCommandPool dummies base method.
 func (m *MockDriver) VkResetCommandPool(device driver.VkDevice, commandPool driver.VkCommandPool, flags driver.VkCommandPoolResetFlags) (common.VkResult, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "VkResetCommandPool", device, commandPool, flags)
@@ -2268,7 +2268,7 @@ func (mr *MockDriverMockRecorder) VkResetCommandPool(device, commandPool, flags 
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkResetCommandPool", reflect.TypeOf((*MockDriver)(nil).VkResetCommandPool), device, commandPool, flags)
 }
 
-// VkResetDescriptorPool mocks base method.
+// VkResetDescriptorPool dummies base method.
 func (m *MockDriver) VkResetDescriptorPool(device driver.VkDevice, descriptorPool driver.VkDescriptorPool, flags driver.VkDescriptorPoolResetFlags) (common.VkResult, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "VkResetDescriptorPool", device, descriptorPool, flags)
@@ -2283,7 +2283,7 @@ func (mr *MockDriverMockRecorder) VkResetDescriptorPool(device, descriptorPool, 
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkResetDescriptorPool", reflect.TypeOf((*MockDriver)(nil).VkResetDescriptorPool), device, descriptorPool, flags)
 }
 
-// VkResetEvent mocks base method.
+// VkResetEvent dummies base method.
 func (m *MockDriver) VkResetEvent(device driver.VkDevice, event driver.VkEvent) (common.VkResult, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "VkResetEvent", device, event)
@@ -2298,7 +2298,7 @@ func (mr *MockDriverMockRecorder) VkResetEvent(device, event interface{}) *gomoc
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkResetEvent", reflect.TypeOf((*MockDriver)(nil).VkResetEvent), device, event)
 }
 
-// VkResetFences mocks base method.
+// VkResetFences dummies base method.
 func (m *MockDriver) VkResetFences(device driver.VkDevice, fenceCount driver.Uint32, pFences *driver.VkFence) (common.VkResult, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "VkResetFences", device, fenceCount, pFences)
@@ -2313,7 +2313,7 @@ func (mr *MockDriverMockRecorder) VkResetFences(device, fenceCount, pFences inte
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkResetFences", reflect.TypeOf((*MockDriver)(nil).VkResetFences), device, fenceCount, pFences)
 }
 
-// VkResetQueryPool mocks base method.
+// VkResetQueryPool dummies base method.
 func (m *MockDriver) VkResetQueryPool(device driver.VkDevice, queryPool driver.VkQueryPool, firstQuery, queryCount driver.Uint32) {
 	m.ctrl.T.Helper()
 	m.ctrl.Call(m, "VkResetQueryPool", device, queryPool, firstQuery, queryCount)
@@ -2325,7 +2325,7 @@ func (mr *MockDriverMockRecorder) VkResetQueryPool(device, queryPool, firstQuery
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkResetQueryPool", reflect.TypeOf((*MockDriver)(nil).VkResetQueryPool), device, queryPool, firstQuery, queryCount)
 }
 
-// VkSetEvent mocks base method.
+// VkSetEvent dummies base method.
 func (m *MockDriver) VkSetEvent(device driver.VkDevice, event driver.VkEvent) (common.VkResult, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "VkSetEvent", device, event)
@@ -2340,7 +2340,7 @@ func (mr *MockDriverMockRecorder) VkSetEvent(device, event interface{}) *gomock.
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkSetEvent", reflect.TypeOf((*MockDriver)(nil).VkSetEvent), device, event)
 }
 
-// VkSignalSemaphore mocks base method.
+// VkSignalSemaphore dummies base method.
 func (m *MockDriver) VkSignalSemaphore(device driver.VkDevice, pSignalInfo *driver.VkSemaphoreSignalInfo) (common.VkResult, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "VkSignalSemaphore", device, pSignalInfo)
@@ -2355,7 +2355,7 @@ func (mr *MockDriverMockRecorder) VkSignalSemaphore(device, pSignalInfo interfac
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkSignalSemaphore", reflect.TypeOf((*MockDriver)(nil).VkSignalSemaphore), device, pSignalInfo)
 }
 
-// VkTrimCommandPool mocks base method.
+// VkTrimCommandPool dummies base method.
 func (m *MockDriver) VkTrimCommandPool(device driver.VkDevice, commandPool driver.VkCommandPool, flags driver.VkCommandPoolTrimFlags) {
 	m.ctrl.T.Helper()
 	m.ctrl.Call(m, "VkTrimCommandPool", device, commandPool, flags)
@@ -2367,7 +2367,7 @@ func (mr *MockDriverMockRecorder) VkTrimCommandPool(device, commandPool, flags i
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkTrimCommandPool", reflect.TypeOf((*MockDriver)(nil).VkTrimCommandPool), device, commandPool, flags)
 }
 
-// VkUnmapMemory mocks base method.
+// VkUnmapMemory dummies base method.
 func (m *MockDriver) VkUnmapMemory(device driver.VkDevice, memory driver.VkDeviceMemory) {
 	m.ctrl.T.Helper()
 	m.ctrl.Call(m, "VkUnmapMemory", device, memory)
@@ -2379,7 +2379,7 @@ func (mr *MockDriverMockRecorder) VkUnmapMemory(device, memory interface{}) *gom
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkUnmapMemory", reflect.TypeOf((*MockDriver)(nil).VkUnmapMemory), device, memory)
 }
 
-// VkUpdateDescriptorSetWithTemplate mocks base method.
+// VkUpdateDescriptorSetWithTemplate dummies base method.
 func (m *MockDriver) VkUpdateDescriptorSetWithTemplate(device driver.VkDevice, descriptorSet driver.VkDescriptorSet, descriptorUpdateTemplate driver.VkDescriptorUpdateTemplate, pData unsafe.Pointer) {
 	m.ctrl.T.Helper()
 	m.ctrl.Call(m, "VkUpdateDescriptorSetWithTemplate", device, descriptorSet, descriptorUpdateTemplate, pData)
@@ -2391,7 +2391,7 @@ func (mr *MockDriverMockRecorder) VkUpdateDescriptorSetWithTemplate(device, desc
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkUpdateDescriptorSetWithTemplate", reflect.TypeOf((*MockDriver)(nil).VkUpdateDescriptorSetWithTemplate), device, descriptorSet, descriptorUpdateTemplate, pData)
 }
 
-// VkUpdateDescriptorSets mocks base method.
+// VkUpdateDescriptorSets dummies base method.
 func (m *MockDriver) VkUpdateDescriptorSets(device driver.VkDevice, descriptorWriteCount driver.Uint32, pDescriptorWrites *driver.VkWriteDescriptorSet, descriptorCopyCount driver.Uint32, pDescriptorCopies *driver.VkCopyDescriptorSet) {
 	m.ctrl.T.Helper()
 	m.ctrl.Call(m, "VkUpdateDescriptorSets", device, descriptorWriteCount, pDescriptorWrites, descriptorCopyCount, pDescriptorCopies)
@@ -2403,7 +2403,7 @@ func (mr *MockDriverMockRecorder) VkUpdateDescriptorSets(device, descriptorWrite
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkUpdateDescriptorSets", reflect.TypeOf((*MockDriver)(nil).VkUpdateDescriptorSets), device, descriptorWriteCount, pDescriptorWrites, descriptorCopyCount, pDescriptorCopies)
 }
 
-// VkWaitForFences mocks base method.
+// VkWaitForFences dummies base method.
 func (m *MockDriver) VkWaitForFences(device driver.VkDevice, fenceCount driver.Uint32, pFences *driver.VkFence, waitAll driver.VkBool32, timeout driver.Uint64) (common.VkResult, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "VkWaitForFences", device, fenceCount, pFences, waitAll, timeout)
@@ -2418,7 +2418,7 @@ func (mr *MockDriverMockRecorder) VkWaitForFences(device, fenceCount, pFences, w
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VkWaitForFences", reflect.TypeOf((*MockDriver)(nil).VkWaitForFences), device, fenceCount, pFences, waitAll, timeout)
 }
 
-// VkWaitSemaphores mocks base method.
+// VkWaitSemaphores dummies base method.
 func (m *MockDriver) VkWaitSemaphores(device driver.VkDevice, pWaitInfo *driver.VkSemaphoreWaitInfo, timeout driver.Uint64) (common.VkResult, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "VkWaitSemaphores", device, pWaitInfo, timeout)
