@@ -69,3 +69,154 @@ func (o BindImageMemoryOptions) PopulateOutData(cDataPointer unsafe.Pointer, hel
 	createInfo := (*C.VkBindImageMemoryInfo)(cDataPointer)
 	return createInfo.pNext, nil
 }
+
+////
+
+type BindBufferMemoryDeviceGroupOptions struct {
+	DeviceIndices []int
+
+	common.HaveNext
+}
+
+func (o BindBufferMemoryDeviceGroupOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+	if preallocatedPointer == nil {
+		preallocatedPointer = allocator.Malloc(int(unsafe.Sizeof(C.VkBindBufferMemoryDeviceGroupInfo{})))
+	}
+
+	info := (*C.VkBindBufferMemoryDeviceGroupInfo)(preallocatedPointer)
+	info.sType = C.VK_STRUCTURE_TYPE_BIND_BUFFER_MEMORY_DEVICE_GROUP_INFO
+	info.pNext = next
+
+	count := len(o.DeviceIndices)
+	info.deviceIndexCount = C.uint32_t(count)
+	info.pDeviceIndices = nil
+
+	if count > 0 {
+		indices := (*C.uint32_t)(allocator.Malloc(count * int(unsafe.Sizeof(C.uint32_t(0)))))
+		indexSlice := ([]C.uint32_t)(unsafe.Slice(indices, count))
+
+		for i := 0; i < count; i++ {
+			indexSlice[i] = C.uint32_t(o.DeviceIndices[i])
+		}
+
+		info.pDeviceIndices = indices
+	}
+
+	return preallocatedPointer, nil
+}
+
+func (o BindBufferMemoryDeviceGroupOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
+	info := (*C.VkBindBufferMemoryDeviceGroupInfo)(cDataPointer)
+	return info.pNext, nil
+}
+
+////
+
+type BindImageMemoryDeviceGroupOptions struct {
+	DeviceIndices            []int
+	SplitInstanceBindRegions []common.Rect2D
+
+	common.HaveNext
+}
+
+func (o BindImageMemoryDeviceGroupOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+	if preallocatedPointer == nil {
+		preallocatedPointer = allocator.Malloc(int(unsafe.Sizeof(C.VkBindImageMemoryDeviceGroupInfo{})))
+	}
+
+	info := (*C.VkBindImageMemoryDeviceGroupInfo)(preallocatedPointer)
+	info.sType = C.VK_STRUCTURE_TYPE_BIND_IMAGE_MEMORY_DEVICE_GROUP_INFO
+	info.pNext = next
+
+	count := len(o.DeviceIndices)
+	info.deviceIndexCount = C.uint32_t(count)
+	info.pDeviceIndices = nil
+	if count > 0 {
+		indices := (*C.uint32_t)(allocator.Malloc(count * int(unsafe.Sizeof(C.uint32_t(0)))))
+		indexSlice := ([]C.uint32_t)(unsafe.Slice(indices, count))
+
+		for i := 0; i < count; i++ {
+			indexSlice[i] = C.uint32_t(o.DeviceIndices[i])
+		}
+
+		info.pDeviceIndices = indices
+	}
+
+	count = len(o.SplitInstanceBindRegions)
+	info.splitInstanceBindRegionCount = C.uint32_t(count)
+	info.pSplitInstanceBindRegions = nil
+	if count > 0 {
+		regions := (*C.VkRect2D)(allocator.Malloc(count * C.sizeof_struct_VkRect2D))
+		regionSlice := ([]C.VkRect2D)(unsafe.Slice(regions, count))
+
+		for i := 0; i < count; i++ {
+			regionSlice[i].offset.x = C.int32_t(o.SplitInstanceBindRegions[i].Offset.X)
+			regionSlice[i].offset.y = C.int32_t(o.SplitInstanceBindRegions[i].Offset.Y)
+			regionSlice[i].extent.width = C.uint32_t(o.SplitInstanceBindRegions[i].Extent.Width)
+			regionSlice[i].extent.height = C.uint32_t(o.SplitInstanceBindRegions[i].Extent.Height)
+		}
+
+		info.pSplitInstanceBindRegions = regions
+	}
+
+	return preallocatedPointer, nil
+}
+
+func (o BindImageMemoryDeviceGroupOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
+	info := (*C.VkBindImageMemoryDeviceGroupInfo)(cDataPointer)
+	return info.pNext, nil
+}
+
+////
+
+type BindImagePlaneMemoryOptions struct {
+	PlaneAspect common.ImageAspectFlags
+
+	common.HaveNext
+}
+
+func (o BindImagePlaneMemoryOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+	if preallocatedPointer == nil {
+		preallocatedPointer = allocator.Malloc(int(unsafe.Sizeof(C.VkBindImagePlaneMemoryInfo{})))
+	}
+
+	info := (*C.VkBindImagePlaneMemoryInfo)(preallocatedPointer)
+	info.sType = C.VK_STRUCTURE_TYPE_BIND_IMAGE_PLANE_MEMORY_INFO
+	info.pNext = next
+	info.planeAspect = C.VkImageAspectFlagBits(o.PlaneAspect)
+
+	return preallocatedPointer, nil
+}
+
+func (o BindImagePlaneMemoryOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
+	info := (*C.VkBindImagePlaneMemoryInfo)(cDataPointer)
+	return info.pNext, nil
+}
+
+////
+
+type DeviceGroupBindSparseOptions struct {
+	ResourceDeviceIndex int
+	MemoryDeviceIndex   int
+
+	common.HaveNext
+}
+
+func (o DeviceGroupBindSparseOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+	if preallocatedPointer == nil {
+		preallocatedPointer = allocator.Malloc(int(unsafe.Sizeof(C.VkDeviceGroupBindSparseInfo{})))
+	}
+
+	createInfo := (*C.VkDeviceGroupBindSparseInfo)(preallocatedPointer)
+	createInfo.sType = C.VK_STRUCTURE_TYPE_DEVICE_GROUP_BIND_SPARSE_INFO
+	createInfo.pNext = next
+	createInfo.resourceDeviceIndex = C.uint32_t(o.ResourceDeviceIndex)
+	createInfo.memoryDeviceIndex = C.uint32_t(o.MemoryDeviceIndex)
+
+	return preallocatedPointer, nil
+}
+
+func (o DeviceGroupBindSparseOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
+	createInfo := (*C.VkDeviceGroupBindSparseInfo)(cDataPointer)
+	return createInfo.pNext, nil
+}

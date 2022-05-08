@@ -47,6 +47,8 @@ func init() {
 	DescriptorTemplateTypeDescriptorSet.Register("Descriptor Set")
 }
 
+////
+
 type DescriptorUpdateTemplateEntry struct {
 	DstBinding      int
 	DstArrayElement int

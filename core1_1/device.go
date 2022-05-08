@@ -29,6 +29,11 @@ const (
 	PeerMemoryFeatureCopySrc    PeerMemoryFeatures = C.VK_PEER_MEMORY_FEATURE_COPY_SRC_BIT
 	PeerMemoryFeatureGenericDst PeerMemoryFeatures = C.VK_PEER_MEMORY_FEATURE_GENERIC_DST_BIT
 	PeerMemoryFeatureGenericSrc PeerMemoryFeatures = C.VK_PEER_MEMORY_FEATURE_GENERIC_SRC_BIT
+
+	QueueFamilyExternal int = C.VK_QUEUE_FAMILY_EXTERNAL
+
+	DependencyDeviceGroup common.DependencyFlags = C.VK_DEPENDENCY_DEVICE_GROUP_BIT
+	DependencyViewLocal   common.DependencyFlags = C.VK_DEPENDENCY_VIEW_LOCAL_BIT
 )
 
 func init() {
@@ -36,6 +41,9 @@ func init() {
 	PeerMemoryFeatureCopySrc.Register("Copy Src")
 	PeerMemoryFeatureGenericDst.Register("Generic Dst")
 	PeerMemoryFeatureGenericSrc.Register("Generic Src")
+
+	DependencyDeviceGroup.Register("Device Group")
+	DependencyViewLocal.Register("View Local")
 }
 
 ////

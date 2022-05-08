@@ -51,8 +51,6 @@ const (
 	ExternalMemoryHandleTypeOpaqueFD        ExternalMemoryHandleTypes = C.VK_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_FD_BIT
 	ExternalMemoryHandleTypeOpaqueWin32     ExternalMemoryHandleTypes = C.VK_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_BIT
 	ExternalMemoryHandleTypeOpaqueWin32KMT  ExternalMemoryHandleTypes = C.VK_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT
-
-	VkErrorInvalidExternalHandle common.VkResult = C.VK_ERROR_INVALID_EXTERNAL_HANDLE
 )
 
 func init() {
@@ -67,8 +65,6 @@ func init() {
 	ExternalMemoryHandleTypeOpaqueFD.Register("Opaque File Descriptor")
 	ExternalMemoryHandleTypeOpaqueWin32.Register("Opaque Win32")
 	ExternalMemoryHandleTypeOpaqueWin32KMT.Register("Opaque Win32 (Kernel-Mode)")
-
-	VkErrorInvalidExternalHandle.Register("invalid external handle")
 }
 
 ////
@@ -155,4 +151,136 @@ func (o *ExternalBufferOutData) PopulateOutData(cDataPointer unsafe.Pointer, hel
 
 	err = (&o.ExternalMemoryProperties).PopulateOutData(unsafe.Pointer(&info.externalMemoryProperties))
 	return info.pNext, nil
+}
+
+////
+
+type ExternalMemoryBufferOptions struct {
+	HandleTypes ExternalMemoryHandleTypes
+
+	common.HaveNext
+}
+
+func (o ExternalMemoryBufferOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+	if preallocatedPointer == nil {
+		preallocatedPointer = allocator.Malloc(int(unsafe.Sizeof(C.VkExternalMemoryBufferCreateInfo{})))
+	}
+
+	info := (*C.VkExternalMemoryBufferCreateInfo)(preallocatedPointer)
+	info.sType = C.VK_STRUCTURE_TYPE_EXTERNAL_MEMORY_BUFFER_CREATE_INFO
+	info.pNext = next
+	info.handleTypes = C.VkExternalMemoryHandleTypeFlags(o.HandleTypes)
+
+	return preallocatedPointer, nil
+}
+
+func (o ExternalMemoryBufferOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
+	info := (*C.VkExternalMemoryBufferCreateInfo)(cDataPointer)
+	return info.pNext, nil
+}
+
+////
+
+type ExternalMemoryImageOptions struct {
+	HandleTypes ExternalMemoryHandleTypes
+
+	common.HaveNext
+}
+
+func (o ExternalMemoryImageOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+	if preallocatedPointer == nil {
+		preallocatedPointer = allocator.Malloc(int(unsafe.Sizeof(C.VkExternalMemoryImageCreateInfo{})))
+	}
+
+	info := (*C.VkExternalMemoryImageCreateInfo)(preallocatedPointer)
+	info.sType = C.VK_STRUCTURE_TYPE_EXTERNAL_MEMORY_IMAGE_CREATE_INFO
+	info.pNext = next
+	info.handleTypes = C.VkExternalMemoryHandleTypeFlags(o.HandleTypes)
+
+	return preallocatedPointer, nil
+}
+
+func (o ExternalMemoryImageOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
+	info := (*C.VkExternalMemoryImageCreateInfo)(cDataPointer)
+	return info.pNext, nil
+}
+
+////
+
+type ExternalImageFormatOptions struct {
+	HandleType ExternalMemoryHandleTypes
+
+	common.HaveNext
+}
+
+func (o ExternalImageFormatOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+	if preallocatedPointer == nil {
+		preallocatedPointer = allocator.Malloc(int(unsafe.Sizeof(C.VkPhysicalDeviceExternalImageFormatInfo{})))
+	}
+
+	info := (*C.VkPhysicalDeviceExternalImageFormatInfo)(preallocatedPointer)
+
+	info.sType = C.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_IMAGE_FORMAT_INFO
+	info.pNext = next
+	info.handleType = C.VkExternalMemoryHandleTypeFlagBits(o.HandleType)
+
+	return preallocatedPointer, nil
+}
+
+func (o ExternalImageFormatOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
+	info := (*C.VkPhysicalDeviceExternalImageFormatInfo)(cDataPointer)
+	return info.pNext, nil
+}
+
+////
+
+type ExportMemoryAllocateOptions struct {
+	HandleTypes ExternalMemoryHandleTypes
+
+	common.HaveNext
+}
+
+func (o ExportMemoryAllocateOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+	if preallocatedPointer == nil {
+		preallocatedPointer = allocator.Malloc(int(unsafe.Sizeof(C.VkExportMemoryAllocateInfo{})))
+	}
+
+	info := (*C.VkExportMemoryAllocateInfo)(preallocatedPointer)
+	info.sType = C.VK_STRUCTURE_TYPE_EXPORT_MEMORY_ALLOCATE_INFO
+	info.pNext = next
+	info.handleTypes = C.VkExternalMemoryHandleTypeFlags(o.HandleTypes)
+
+	return preallocatedPointer, nil
+}
+
+func (o ExportMemoryAllocateOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
+	info := (*C.VkExportMemoryAllocateInfo)(cDataPointer)
+	return info.pNext, nil
+}
+
+////
+
+type ExternalImageFormatOutData struct {
+	ExternalMemoryProperties ExternalMemoryProperties
+
+	common.HaveNext
+}
+
+func (o *ExternalImageFormatOutData) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+	if preallocatedPointer == nil {
+		preallocatedPointer = allocator.Malloc(int(unsafe.Sizeof(C.VkExternalImageFormatProperties{})))
+	}
+
+	info := (*C.VkExternalImageFormatProperties)(preallocatedPointer)
+	info.sType = C.VK_STRUCTURE_TYPE_EXTERNAL_IMAGE_FORMAT_PROPERTIES
+	info.pNext = next
+
+	return preallocatedPointer, nil
+}
+
+func (o *ExternalImageFormatOutData) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
+	info := (*C.VkExternalImageFormatProperties)(cDataPointer)
+
+	err = (&o.ExternalMemoryProperties).PopulateOutData(unsafe.Pointer(&info.externalMemoryProperties))
+	return info.pNext, err
 }

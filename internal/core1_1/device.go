@@ -94,7 +94,7 @@ func (d *VulkanDevice) ImageMemoryRequirements(o core1_1.ImageMemoryRequirements
 	return common.PopulateOutData(out, outDataPtr)
 }
 
-func (d *VulkanDevice) SparseImageMemoryRequirements(o core1_1.SparseImageRequirementsOptions, outDataFactory func() *core1_1.SparseImageMemoryRequirementsOutData) ([]*core1_1.SparseImageMemoryRequirementsOutData, error) {
+func (d *VulkanDevice) SparseImageMemoryRequirements(o core1_1.ImageSparseMemoryRequirementsOptions, outDataFactory func() *core1_1.SparseImageMemoryRequirementsOutData) ([]*core1_1.SparseImageMemoryRequirementsOutData, error) {
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 

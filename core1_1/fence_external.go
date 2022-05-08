@@ -131,3 +131,29 @@ func (o *ExternalFenceOutData) PopulateOutData(cDataPointer unsafe.Pointer, help
 
 	return info.pNext, nil
 }
+
+////
+
+type ExportFenceOptions struct {
+	HandleTypes ExternalFenceHandleTypes
+
+	common.HaveNext
+}
+
+func (o ExportFenceOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+	if preallocatedPointer == nil {
+		preallocatedPointer = allocator.Malloc(int(unsafe.Sizeof(C.VkExportFenceCreateInfo{})))
+	}
+
+	info := (*C.VkExportFenceCreateInfo)(preallocatedPointer)
+	info.sType = C.VK_STRUCTURE_TYPE_EXPORT_FENCE_CREATE_INFO
+	info.pNext = next
+	info.handleTypes = C.VkExternalFenceHandleTypeFlags(o.HandleTypes)
+
+	return preallocatedPointer, nil
+}
+
+func (o ExportFenceOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
+	info := (*C.VkExportFenceCreateInfo)(cDataPointer)
+	return info.pNext, nil
+}

@@ -142,3 +142,83 @@ func (o SamplerYcbcrConversionCreateOptions) PopulateOutData(cDataPointer unsafe
 	info := (*C.VkSamplerYcbcrConversionCreateInfo)(cDataPointer)
 	return info.pNext, nil
 }
+
+////
+
+type SamplerYcbcrImageFormatOutData struct {
+	CombinedImageSamplerDescriptorCount int
+
+	common.HaveNext
+}
+
+func (o *SamplerYcbcrImageFormatOutData) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+	if preallocatedPointer == nil {
+		preallocatedPointer = allocator.Malloc(int(unsafe.Sizeof(C.VkSamplerYcbcrConversionImageFormatProperties{})))
+	}
+
+	info := (*C.VkSamplerYcbcrConversionImageFormatProperties)(preallocatedPointer)
+	info.sType = C.VK_STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_IMAGE_FORMAT_PROPERTIES
+	info.pNext = next
+
+	return preallocatedPointer, nil
+}
+
+func (o *SamplerYcbcrImageFormatOutData) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
+	info := (*C.VkSamplerYcbcrConversionImageFormatProperties)(cDataPointer)
+
+	o.CombinedImageSamplerDescriptorCount = int(info.combinedImageSamplerDescriptorCount)
+
+	return info.pNext, nil
+}
+
+////
+
+type ImagePlaneMemoryRequirementsOptions struct {
+	PlaneAspect common.ImageAspectFlags
+
+	common.HaveNext
+}
+
+func (o ImagePlaneMemoryRequirementsOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+	if preallocatedPointer == nil {
+		preallocatedPointer = allocator.Malloc(int(unsafe.Sizeof(C.VkImagePlaneMemoryRequirementsInfo{})))
+	}
+
+	info := (*C.VkImagePlaneMemoryRequirementsInfo)(preallocatedPointer)
+	info.sType = C.VK_STRUCTURE_TYPE_IMAGE_PLANE_MEMORY_REQUIREMENTS_INFO
+	info.pNext = next
+	info.planeAspect = C.VkImageAspectFlagBits(o.PlaneAspect)
+
+	return preallocatedPointer, nil
+}
+
+func (o ImagePlaneMemoryRequirementsOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
+	info := (*C.VkImagePlaneMemoryRequirementsInfo)(cDataPointer)
+	return info.pNext, nil
+}
+
+////
+
+type SamplerYcbcrConversionOptions struct {
+	Conversion SamplerYcbcrConversion
+
+	common.HaveNext
+}
+
+func (o SamplerYcbcrConversionOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+	if preallocatedPointer == nil {
+		preallocatedPointer = allocator.Malloc(int(unsafe.Sizeof(C.VkSamplerYcbcrConversionInfo{})))
+	}
+
+	info := (*C.VkSamplerYcbcrConversionInfo)(preallocatedPointer)
+	info.sType = C.VK_STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_INFO
+	info.pNext = next
+	info.conversion = C.VkSamplerYcbcrConversion(unsafe.Pointer(o.Conversion.Handle()))
+
+	return preallocatedPointer, nil
+}
+
+func (o SamplerYcbcrConversionOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
+	info := (*C.VkSamplerYcbcrConversionInfo)(cDataPointer)
+	return info.pNext, nil
+}

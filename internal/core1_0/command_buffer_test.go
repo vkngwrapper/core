@@ -1203,10 +1203,20 @@ func TestVulkanCommandBuffer_CmdExecuteCommands(t *testing.T) {
 
 	mockDriver, buffer := setup(t, ctrl)
 
+	cmd1 := mocks.EasyMockCommandBuffer(ctrl)
+	cmd1.EXPECT().DrawsRecorded().Return(1)
+	cmd1.EXPECT().DispatchesRecorded().Return(3)
+
+	cmd2 := mocks.EasyMockCommandBuffer(ctrl)
+	cmd2.EXPECT().DrawsRecorded().Return(5)
+	cmd2.EXPECT().DispatchesRecorded().Return(7)
+
+	cmd3 := mocks.EasyMockCommandBuffer(ctrl)
+	cmd3.EXPECT().DrawsRecorded().Return(11)
+	cmd3.EXPECT().DispatchesRecorded().Return(13)
+
 	commandBuffers := []core1_0.CommandBuffer{
-		mocks.EasyMockCommandBuffer(ctrl),
-		mocks.EasyMockCommandBuffer(ctrl),
-		mocks.EasyMockCommandBuffer(ctrl),
+		cmd1, cmd2, cmd3,
 	}
 
 	mockDriver.EXPECT().VkCmdExecuteCommands(
@@ -1223,6 +1233,8 @@ func TestVulkanCommandBuffer_CmdExecuteCommands(t *testing.T) {
 		})
 
 	buffer.CmdExecuteCommands(commandBuffers)
+	require.Equal(t, 17, buffer.DrawsRecorded())
+	require.Equal(t, 23, buffer.DispatchesRecorded())
 }
 
 func TestVulkanCommandBuffer_CmdClearAttachments(t *testing.T) {

@@ -192,7 +192,7 @@ func (mr *Device1_1MockRecorder) ImageMemoryRequirements(o, out interface{}) *go
 }
 
 // SparseImageMemoryRequirements mocks base method.
-func (m *Device1_1) SparseImageMemoryRequirements(o core1_1.SparseImageRequirementsOptions, outDataFactory func() *core1_1.SparseImageMemoryRequirementsOutData) ([]*core1_1.SparseImageMemoryRequirementsOutData, error) {
+func (m *Device1_1) SparseImageMemoryRequirements(o core1_1.ImageSparseMemoryRequirementsOptions, outDataFactory func() *core1_1.SparseImageMemoryRequirementsOutData) ([]*core1_1.SparseImageMemoryRequirementsOutData, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "SparseImageMemoryRequirements", o, outDataFactory)
 	ret0, _ := ret[0].([]*core1_1.SparseImageMemoryRequirementsOutData)
