@@ -652,3 +652,32 @@ func TestVulkanExtension_SparseImageMemoryRequirements(t *testing.T) {
 		},
 	}, outData)
 }
+
+func TestVulkanDevice_GetDeviceGroupPeerMemoryFeatures(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	coreDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_1)
+	loader, err := core.CreateLoaderFromDriver(coreDriver)
+	require.NoError(t, err)
+	device := dummies.EasyDummyDevice(t, ctrl, loader)
+
+	coreDriver.EXPECT().VkGetDeviceGroupPeerMemoryFeatures(
+		device.Handle(),
+		driver.Uint32(1),
+		driver.Uint32(3),
+		driver.Uint32(5),
+		gomock.Not(gomock.Nil()),
+	).DoAndReturn(func(
+		device driver.VkDevice,
+		heapIndex, localDeviceIndex, remoteDeviceIndex driver.Uint32,
+		pPeerMemoryFeatures *driver.VkPeerMemoryFeatureFlags,
+	) {
+		*pPeerMemoryFeatures = driver.VkPeerMemoryFeatureFlags(1) // VK_PEER_MEMORY_FEATURE_COPY_SRC_BIT
+	})
+
+	features := device.Core1_1().DeviceGroupPeerMemoryFeatures(
+		1, 3, 5,
+	)
+	require.Equal(t, core1_1.PeerMemoryFeatureCopySrc, features)
+}

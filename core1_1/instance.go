@@ -43,7 +43,7 @@ func (o *DeviceGroupOutData) PopulateCPointer(allocator *cgoparam.Allocator, pre
 // but it poses a serious problem right here, in core/core*. I'm breaking the circular dependency
 // by using a go:linkname and may god have mercy on my soul.
 
-//go:linkname createPhysicalDevice github.com/CannibalVox/VKng/core.CreatePhysicalDevice
+//go:linkname createPhysicalDevice github.com/CannibalVox/VKng/core/internal/objects.createPhysicalDeviceCore1_0
 func createPhysicalDevice(coreDriver driver.Driver, instance driver.VkInstance, handle driver.VkPhysicalDevice, instanceVersion, deviceVersion common.APIVersion) core1_0.PhysicalDevice
 
 func (o *DeviceGroupOutData) PopulateOutData(cPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
@@ -69,7 +69,7 @@ func (o *DeviceGroupOutData) PopulateOutData(cPointer unsafe.Pointer, helpers ..
 	count := int(createInfo.physicalDeviceCount)
 	o.PhysicalDevices = make([]core1_0.PhysicalDevice, count)
 
-	propertiesUnsafe := arena.Malloc(int(unsafe.Sizeof([1]C.VkPhysicalDeviceProperties{})))
+	propertiesUnsafe := arena.Malloc(C.sizeof_struct_VkPhysicalDeviceProperties)
 
 	for i := 0; i < count; i++ {
 		handle := driver.VkPhysicalDevice(unsafe.Pointer(createInfo.physicalDevices[i]))

@@ -2,6 +2,7 @@ package objects
 
 import (
 	"github.com/CannibalVox/VKng/core/common"
+	"github.com/CannibalVox/VKng/core/core1_0"
 	"github.com/CannibalVox/VKng/core/driver"
 	internal1_0 "github.com/CannibalVox/VKng/core/internal/core1_0"
 	"github.com/CannibalVox/VKng/core/internal/core1_1"
@@ -30,6 +31,29 @@ func CreateInstance(instanceDriver driver.Driver, handle driver.VkInstance, vers
 }
 
 func CreatePhysicalDevice(coreDriver driver.Driver, instance driver.VkInstance, handle driver.VkPhysicalDevice, instanceVersion, deviceVersion common.APIVersion) *internal1_0.VulkanPhysicalDevice {
+	physicalDevice := coreDriver.ObjectStore().GetOrCreate(driver.VulkanHandle(handle),
+		func() interface{} {
+			device := &internal1_0.VulkanPhysicalDevice{
+				InstanceDriver:       coreDriver,
+				PhysicalDeviceHandle: handle,
+				InstanceVersion:      instanceVersion,
+				MaximumDeviceVersion: deviceVersion,
+			}
+
+			if instanceVersion.IsAtLeast(common.Vulkan1_1) {
+				device.PhysicalDevice1_1 = &internal1_1.VulkanInstancePhysicalDevice{
+					InstanceDriver:       coreDriver,
+					PhysicalDeviceHandle: handle,
+				}
+			}
+
+			return device
+		}).(*internal1_0.VulkanPhysicalDevice)
+	coreDriver.ObjectStore().SetParent(driver.VulkanHandle(instance), driver.VulkanHandle(handle))
+	return physicalDevice
+}
+
+func createPhysicalDeviceCore1_0(coreDriver driver.Driver, instance driver.VkInstance, handle driver.VkPhysicalDevice, instanceVersion, deviceVersion common.APIVersion) core1_0.PhysicalDevice {
 	physicalDevice := coreDriver.ObjectStore().GetOrCreate(driver.VulkanHandle(handle),
 		func() interface{} {
 			device := &internal1_0.VulkanPhysicalDevice{

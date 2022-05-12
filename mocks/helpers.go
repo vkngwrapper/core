@@ -176,6 +176,13 @@ func EasyMockSampler(ctrl *gomock.Controller) *MockSampler {
 	return sampler
 }
 
+func EasyMockSamplerYcbcrConversion(ctrl *gomock.Controller) *MockSamplerYcbcrConversion {
+	ycbcr := NewMockSamplerYcbcrConversion(ctrl)
+	ycbcr.EXPECT().Handle().Return(NewFakeSamplerYcbcrConversionHandle()).AnyTimes()
+
+	return ycbcr
+}
+
 func EasyMockSemaphore(ctrl *gomock.Controller) *MockSemaphore {
 	semaphore := NewMockSemaphore(ctrl)
 	semaphore.EXPECT().Handle().Return(NewFakeSemaphore()).AnyTimes()
