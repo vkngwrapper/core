@@ -19,7 +19,7 @@ func (i *VulkanImage) SparseMemoryRequirements() []core1_0.SparseImageMemoryRequ
 
 	requirementsCount := (*C.uint32_t)(arena.Malloc(4))
 
-	i.Driver.VkGetImageSparseMemoryRequirements(i.Device, i.ImageHandle, (*driver.Uint32)(requirementsCount), nil)
+	i.DeviceDriver.VkGetImageSparseMemoryRequirements(i.Device, i.ImageHandle, (*driver.Uint32)(requirementsCount), nil)
 
 	if *requirementsCount == 0 {
 		return nil
@@ -27,7 +27,7 @@ func (i *VulkanImage) SparseMemoryRequirements() []core1_0.SparseImageMemoryRequ
 
 	requirementsPtr := (*C.VkSparseImageMemoryRequirements)(arena.Malloc(int(*requirementsCount) * C.sizeof_struct_VkSparseImageMemoryRequirements))
 
-	i.Driver.VkGetImageSparseMemoryRequirements(i.Device, i.ImageHandle, (*driver.Uint32)(unsafe.Pointer(requirementsCount)), (*driver.VkSparseImageMemoryRequirements)(unsafe.Pointer(requirementsPtr)))
+	i.DeviceDriver.VkGetImageSparseMemoryRequirements(i.Device, i.ImageHandle, (*driver.Uint32)(unsafe.Pointer(requirementsCount)), (*driver.VkSparseImageMemoryRequirements)(unsafe.Pointer(requirementsPtr)))
 
 	requirementsSlice := ([]C.VkSparseImageMemoryRequirements)(unsafe.Slice(requirementsPtr, int(*requirementsCount)))
 

@@ -8,7 +8,6 @@ import "C"
 import (
 	"github.com/CannibalVox/VKng/core/common"
 	"github.com/CannibalVox/VKng/core/core1_0"
-	"github.com/CannibalVox/VKng/core/core1_1"
 	"github.com/CannibalVox/VKng/core/driver"
 	"github.com/CannibalVox/cgoparam"
 	"unsafe"
@@ -25,8 +24,6 @@ type VulkanCommandBuffer struct {
 	DispatchCount *int
 
 	MaximumAPIVersion common.APIVersion
-
-	CommandBuffer1_1 core1_1.CommandBuffer
 }
 
 func (c *VulkanCommandBuffer) Handle() driver.VkCommandBuffer {
@@ -45,6 +42,10 @@ func (c *VulkanCommandBuffer) Driver() driver.Driver {
 	return c.DeviceDriver
 }
 
+func (c *VulkanCommandBuffer) APIVersion() common.APIVersion {
+	return c.MaximumAPIVersion
+}
+
 func (c *VulkanCommandBuffer) CommandsRecorded() int {
 	return *c.CommandCount
 }
@@ -55,10 +56,6 @@ func (c *VulkanCommandBuffer) DrawsRecorded() int {
 
 func (c *VulkanCommandBuffer) DispatchesRecorded() int {
 	return *c.DispatchCount
-}
-
-func (c *VulkanCommandBuffer) Core1_1() core1_1.CommandBuffer {
-	return c.CommandBuffer1_1
 }
 
 func (c *VulkanCommandBuffer) Begin(o core1_0.BeginOptions) (common.VkResult, error) {
@@ -647,5 +644,5 @@ func (c *VulkanCommandBuffer) Free() {
 	commandBufferSlice[0] = c.CommandBufferHandle
 
 	c.DeviceDriver.VkFreeCommandBuffers(c.Device, c.CommandPool, 1, vkCommandBuffer)
-	c.DeviceDriver.ObjectStore().Delete(driver.VulkanHandle(c.CommandBufferHandle), c)
+	c.DeviceDriver.ObjectStore().Delete(driver.VulkanHandle(c.CommandBufferHandle))
 }

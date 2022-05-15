@@ -25,6 +25,10 @@ func (s *VulkanDescriptorSet) Handle() driver.VkDescriptorSet {
 	return s.DescriptorSetHandle
 }
 
+func (s *VulkanDescriptorSet) APIVersion() common.APIVersion {
+	return s.MaximumAPIVersion
+}
+
 func (s *VulkanDescriptorSet) Free() (common.VkResult, error) {
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
@@ -38,11 +42,11 @@ func (s *VulkanDescriptorSet) Free() (common.VkResult, error) {
 		return res, err
 	}
 
-	s.DeviceDriver.ObjectStore().Delete(driver.VulkanHandle(s.DescriptorSetHandle), s)
+	s.DeviceDriver.ObjectStore().Delete(driver.VulkanHandle(s.DescriptorSetHandle))
 	return res, nil
 }
 
-func (s *VulkanDescriptorSet) PoolHandle() driver.VkDescriptorPool {
+func (s *VulkanDescriptorSet) DescriptorPoolHandle() driver.VkDescriptorPool {
 	return s.DescriptorPool
 }
 

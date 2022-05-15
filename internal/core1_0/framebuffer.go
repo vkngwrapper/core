@@ -11,7 +11,7 @@ import (
 )
 
 type VulkanFramebuffer struct {
-	Driver            driver.Driver
+	DeviceDriver      driver.Driver
 	Device            driver.VkDevice
 	FramebufferHandle driver.VkFramebuffer
 
@@ -22,7 +22,15 @@ func (b *VulkanFramebuffer) Handle() driver.VkFramebuffer {
 	return b.FramebufferHandle
 }
 
+func (b *VulkanFramebuffer) Driver() driver.Driver {
+	return b.DeviceDriver
+}
+
+func (b *VulkanFramebuffer) APIVersion() common.APIVersion {
+	return b.MaximumAPIVersion
+}
+
 func (b *VulkanFramebuffer) Destroy(callbacks *driver.AllocationCallbacks) {
-	b.Driver.VkDestroyFramebuffer(b.Device, b.FramebufferHandle, callbacks.Handle())
-	b.Driver.ObjectStore().Delete(driver.VulkanHandle(b.FramebufferHandle), b)
+	b.DeviceDriver.VkDestroyFramebuffer(b.Device, b.FramebufferHandle, callbacks.Handle())
+	b.DeviceDriver.ObjectStore().Delete(driver.VulkanHandle(b.FramebufferHandle))
 }

@@ -6,9 +6,9 @@ import (
 )
 
 type VulkanSamplerYcbcrConversion struct {
-	Driver      driver.Driver
-	Device      driver.VkDevice
-	YcbcrHandle driver.VkSamplerYcbcrConversion
+	DeviceDriver driver.Driver
+	Device       driver.VkDevice
+	YcbcrHandle  driver.VkSamplerYcbcrConversion
 
 	MaximumAPIVersion common.APIVersion
 }
@@ -17,6 +17,14 @@ func (y *VulkanSamplerYcbcrConversion) Handle() driver.VkSamplerYcbcrConversion 
 	return y.YcbcrHandle
 }
 
+func (y *VulkanSamplerYcbcrConversion) Driver() driver.Driver {
+	return y.DeviceDriver
+}
+
+func (y *VulkanSamplerYcbcrConversion) APIVersion() common.APIVersion {
+	return y.MaximumAPIVersion
+}
+
 func (y *VulkanSamplerYcbcrConversion) Destroy(allocator *driver.AllocationCallbacks) {
-	y.Driver.VkDestroySamplerYcbcrConversion(y.Device, y.YcbcrHandle, allocator.Handle())
+	y.DeviceDriver.VkDestroySamplerYcbcrConversion(y.Device, y.YcbcrHandle, allocator.Handle())
 }

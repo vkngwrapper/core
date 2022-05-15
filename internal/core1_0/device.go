@@ -42,7 +42,7 @@ func (d *VulkanDevice) Core1_1() core1_1.Device {
 
 func (d *VulkanDevice) Destroy(callbacks *driver.AllocationCallbacks) {
 	d.DeviceDriver.VkDestroyDevice(d.DeviceHandle, callbacks.Handle())
-	d.DeviceDriver.ObjectStore().Delete(driver.VulkanHandle(d.DeviceHandle), d)
+	d.DeviceDriver.ObjectStore().Delete(driver.VulkanHandle(d.DeviceHandle))
 }
 
 func (d *VulkanDevice) WaitForIdle() (common.VkResult, error) {

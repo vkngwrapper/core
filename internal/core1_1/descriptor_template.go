@@ -14,7 +14,7 @@ import (
 )
 
 type VulkanDescriptorUpdateTemplate struct {
-	Driver                   driver.Driver
+	DeviceDriver             driver.Driver
 	Device                   driver.VkDevice
 	DescriptorTemplateHandle driver.VkDescriptorUpdateTemplate
 
@@ -25,8 +25,16 @@ func (t *VulkanDescriptorUpdateTemplate) Handle() driver.VkDescriptorUpdateTempl
 	return t.DescriptorTemplateHandle
 }
 
+func (t *VulkanDescriptorUpdateTemplate) Driver() driver.Driver {
+	return t.DeviceDriver
+}
+
+func (t *VulkanDescriptorUpdateTemplate) APIVersion() common.APIVersion {
+	return t.MaximumAPIVersion
+}
+
 func (t *VulkanDescriptorUpdateTemplate) Destroy(allocator *driver.AllocationCallbacks) {
-	t.Driver.VkDestroyDescriptorUpdateTemplate(t.Device, t.DescriptorTemplateHandle, allocator.Handle())
+	t.DeviceDriver.VkDestroyDescriptorUpdateTemplate(t.Device, t.DescriptorTemplateHandle, allocator.Handle())
 }
 
 func (t *VulkanDescriptorUpdateTemplate) UpdateDescriptorSetFromImage(descriptorSet core1_0.DescriptorSet, data core1_0.DescriptorImageInfo) {
@@ -39,7 +47,7 @@ func (t *VulkanDescriptorUpdateTemplate) UpdateDescriptorSetFromImage(descriptor
 	info.imageView = C.VkImageView(unsafe.Pointer(data.ImageView.Handle()))
 	info.imageLayout = C.VkImageLayout(data.ImageLayout)
 
-	t.Driver.VkUpdateDescriptorSetWithTemplate(
+	t.DeviceDriver.VkUpdateDescriptorSetWithTemplate(
 		t.Device,
 		descriptorSet.Handle(),
 		t.DescriptorTemplateHandle,
@@ -57,7 +65,7 @@ func (t *VulkanDescriptorUpdateTemplate) UpdateDescriptorSetFromBuffer(descripto
 	info.offset = C.VkDeviceSize(data.Offset)
 	info._range = C.VkDeviceSize(data.Range)
 
-	t.Driver.VkUpdateDescriptorSetWithTemplate(
+	t.DeviceDriver.VkUpdateDescriptorSetWithTemplate(
 		t.Device,
 		descriptorSet.Handle(),
 		t.DescriptorTemplateHandle,
@@ -66,7 +74,7 @@ func (t *VulkanDescriptorUpdateTemplate) UpdateDescriptorSetFromBuffer(descripto
 }
 
 func (t *VulkanDescriptorUpdateTemplate) UpdateDescriptorSetFromObjectHandle(descriptorSet core1_0.DescriptorSet, data driver.VulkanHandle) {
-	t.Driver.VkUpdateDescriptorSetWithTemplate(
+	t.DeviceDriver.VkUpdateDescriptorSetWithTemplate(
 		t.Device,
 		descriptorSet.Handle(),
 		t.DescriptorTemplateHandle,

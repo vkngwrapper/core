@@ -13,7 +13,7 @@ import (
 )
 
 type VulkanRenderPass struct {
-	Driver           driver.Driver
+	DeviceDriver     driver.Driver
 	Device           driver.VkDevice
 	RenderPassHandle driver.VkRenderPass
 
@@ -24,9 +24,17 @@ func (p *VulkanRenderPass) Handle() driver.VkRenderPass {
 	return p.RenderPassHandle
 }
 
+func (p *VulkanRenderPass) Driver() driver.Driver {
+	return p.DeviceDriver
+}
+
+func (p *VulkanRenderPass) APIVersion() common.APIVersion {
+	return p.MaximumAPIVersion
+}
+
 func (p *VulkanRenderPass) Destroy(callbacks *driver.AllocationCallbacks) {
-	p.Driver.VkDestroyRenderPass(p.Device, p.RenderPassHandle, callbacks.Handle())
-	p.Driver.ObjectStore().Delete(driver.VulkanHandle(p.RenderPassHandle), p)
+	p.DeviceDriver.VkDestroyRenderPass(p.Device, p.RenderPassHandle, callbacks.Handle())
+	p.DeviceDriver.ObjectStore().Delete(driver.VulkanHandle(p.RenderPassHandle))
 }
 
 func (p *VulkanRenderPass) RenderAreaGranularity() common.Extent2D {
@@ -35,7 +43,7 @@ func (p *VulkanRenderPass) RenderAreaGranularity() common.Extent2D {
 
 	extentPtr := (*C.VkExtent2D)(arena.Malloc(C.sizeof_struct_VkExtent2D))
 
-	p.Driver.VkGetRenderAreaGranularity(p.Device, p.RenderPassHandle, (*driver.VkExtent2D)(unsafe.Pointer(extentPtr)))
+	p.DeviceDriver.VkGetRenderAreaGranularity(p.Device, p.RenderPassHandle, (*driver.VkExtent2D)(unsafe.Pointer(extentPtr)))
 
 	return common.Extent2D{
 		Width:  int(extentPtr.width),

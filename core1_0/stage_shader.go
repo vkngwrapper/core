@@ -39,7 +39,7 @@ type ShaderStageOptions struct {
 	Name               string
 	Stage              common.ShaderStages
 	Shader             ShaderModule
-	SpecializationInfo map[uint32]interface{}
+	SpecializationInfo map[uint32]any
 
 	common.HaveNext
 }

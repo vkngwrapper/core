@@ -3,6 +3,7 @@ package internal1_1_test
 import (
 	"github.com/CannibalVox/VKng/core"
 	"github.com/CannibalVox/VKng/core/common"
+	"github.com/CannibalVox/VKng/core/core1_1"
 	"github.com/CannibalVox/VKng/core/driver"
 	mock_driver "github.com/CannibalVox/VKng/core/driver/mocks"
 	"github.com/CannibalVox/VKng/core/internal/dummies"
@@ -20,9 +21,9 @@ func TestVulkanCommandPool_TrimCommandPool(t *testing.T) {
 	loader, err := core.CreateLoaderFromDriver(coreDriver)
 	require.NoError(t, err)
 	device := mocks.EasyMockDevice(ctrl, coreDriver)
-	commandPool := dummies.EasyDummyCommandPool(t, loader, device)
+	commandPool := core1_1.PromoteCommandPool(dummies.EasyDummyCommandPool(t, loader, device))
 
 	coreDriver.EXPECT().VkTrimCommandPool(device.Handle(), commandPool.Handle(), driver.VkCommandPoolTrimFlags(0))
 
-	commandPool.Core1_1().TrimCommandPool(0)
+	commandPool.TrimCommandPool(0)
 }

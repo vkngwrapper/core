@@ -23,7 +23,7 @@ func TestImagePlaneMemoryRequirementsOptions(t *testing.T) {
 	coreDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_1)
 	loader, err := core.CreateLoaderFromDriver(coreDriver)
 	require.NoError(t, err)
-	device := dummies.EasyDummyDevice(t, ctrl, loader)
+	device := core1_1.PromoteDevice(dummies.EasyDummyDevice(t, ctrl, loader))
 
 	image := mocks.EasyMockImage(ctrl)
 
@@ -55,7 +55,7 @@ func TestImagePlaneMemoryRequirementsOptions(t *testing.T) {
 	})
 
 	var outData core1_1.MemoryRequirementsOutData
-	err = device.Core1_1().ImageMemoryRequirements(
+	err = device.ImageMemoryRequirements(
 		core1_1.ImageMemoryRequirementsOptions{
 			Image: image,
 			HaveNext: common.HaveNext{
@@ -138,7 +138,7 @@ func TestSamplerYcbcrImageFormatOutData(t *testing.T) {
 	coreDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_1)
 	loader, err := core.CreateLoaderFromDriver(coreDriver)
 	require.NoError(t, err)
-	physicalDevice := dummies.EasyDummyPhysicalDevice(t, loader)
+	physicalDevice := core1_1.PromotePhysicalDevice(dummies.EasyDummyPhysicalDevice(t, loader))
 
 	coreDriver.EXPECT().VkGetPhysicalDeviceImageFormatProperties2(
 		physicalDevice.Handle(),
@@ -166,7 +166,7 @@ func TestSamplerYcbcrImageFormatOutData(t *testing.T) {
 		})
 
 	var outData core1_1.SamplerYcbcrImageFormatOutData
-	_, err = physicalDevice.Core1_1Instance().ImageFormatProperties(
+	_, err = physicalDevice.InstanceScopedPhysicalDevice1_1().ImageFormatProperties(
 		core1_1.ImageFormatOptions{},
 		&core1_1.ImageFormatPropertiesOutData{
 			HaveNext: common.HaveNext{&outData},

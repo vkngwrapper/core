@@ -86,7 +86,7 @@ func TestDedicatedMemoryRequirementsOutData_Buffer(t *testing.T) {
 	loader, err := core.CreateLoaderFromDriver(coreDriver)
 	require.NoError(t, err)
 
-	device := dummies.EasyDummyDevice(t, ctrl, loader)
+	device := core1_1.PromoteDevice(dummies.EasyDummyDevice(t, ctrl, loader))
 	buffer := mocks.EasyMockBuffer(ctrl)
 
 	coreDriver.EXPECT().VkGetBufferMemoryRequirements2(
@@ -122,7 +122,7 @@ func TestDedicatedMemoryRequirementsOutData_Buffer(t *testing.T) {
 	var outData = core1_1.MemoryRequirementsOutData{
 		HaveNext: common.HaveNext{Next: &memReqs},
 	}
-	err = device.Core1_1().BufferMemoryRequirements(
+	err = device.BufferMemoryRequirements(
 		core1_1.BufferMemoryRequirementsOptions{
 			Buffer: buffer,
 		}, &outData)
@@ -142,7 +142,7 @@ func TestDedicatedMemoryRequirementsOutData_Image(t *testing.T) {
 	coreDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_1)
 	loader, err := core.CreateLoaderFromDriver(coreDriver)
 	require.NoError(t, err)
-	device := dummies.EasyDummyDevice(t, ctrl, loader)
+	device := core1_1.PromoteDevice(dummies.EasyDummyDevice(t, ctrl, loader))
 	image := mocks.EasyMockImage(ctrl)
 
 	coreDriver.EXPECT().VkGetImageMemoryRequirements2(
@@ -178,7 +178,7 @@ func TestDedicatedMemoryRequirementsOutData_Image(t *testing.T) {
 	var outData = core1_1.MemoryRequirementsOutData{
 		HaveNext: common.HaveNext{Next: &memReqs},
 	}
-	err = device.Core1_1().ImageMemoryRequirements(
+	err = device.ImageMemoryRequirements(
 		core1_1.ImageMemoryRequirementsOptions{
 			Image: image,
 		}, &outData)
@@ -308,7 +308,7 @@ func TestExternalImageFormatOptions(t *testing.T) {
 	coreDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_1)
 	loader, err := core.CreateLoaderFromDriver(coreDriver)
 	require.NoError(t, err)
-	physicalDevice := dummies.EasyDummyPhysicalDevice(t, loader)
+	physicalDevice := core1_1.PromotePhysicalDevice(dummies.EasyDummyPhysicalDevice(t, loader))
 
 	coreDriver.EXPECT().VkGetPhysicalDeviceImageFormatProperties2(
 		physicalDevice.Handle(),
@@ -351,7 +351,7 @@ func TestExternalImageFormatOptions(t *testing.T) {
 	format := core1_1.ImageFormatPropertiesOutData{
 		HaveNext: common.HaveNext{&outData},
 	}
-	_, err = physicalDevice.Core1_1Instance().ImageFormatProperties(
+	_, err = physicalDevice.InstanceScopedPhysicalDevice1_1().ImageFormatProperties(
 		core1_1.ImageFormatOptions{
 			Format: core1_0.DataFormatA2B10G10R10UnsignedIntPacked,
 			HaveNext: common.HaveNext{

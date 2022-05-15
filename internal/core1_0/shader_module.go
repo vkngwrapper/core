@@ -11,7 +11,7 @@ import (
 )
 
 type VulkanShaderModule struct {
-	Driver             driver.Driver
+	DeviceDriver       driver.Driver
 	Device             driver.VkDevice
 	ShaderModuleHandle driver.VkShaderModule
 
@@ -22,7 +22,15 @@ func (m *VulkanShaderModule) Handle() driver.VkShaderModule {
 	return m.ShaderModuleHandle
 }
 
+func (m *VulkanShaderModule) Driver() driver.Driver {
+	return m.DeviceDriver
+}
+
+func (m *VulkanShaderModule) APIVersion() common.APIVersion {
+	return m.MaximumAPIVersion
+}
+
 func (m *VulkanShaderModule) Destroy(callbacks *driver.AllocationCallbacks) {
-	m.Driver.VkDestroyShaderModule(m.Device, m.ShaderModuleHandle, callbacks.Handle())
-	m.Driver.ObjectStore().Delete(driver.VulkanHandle(m.ShaderModuleHandle), m)
+	m.DeviceDriver.VkDestroyShaderModule(m.Device, m.ShaderModuleHandle, callbacks.Handle())
+	m.DeviceDriver.ObjectStore().Delete(driver.VulkanHandle(m.ShaderModuleHandle))
 }

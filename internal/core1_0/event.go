@@ -11,9 +11,9 @@ import (
 )
 
 type VulkanEvent struct {
-	EventHandle driver.VkEvent
-	Device      driver.VkDevice
-	Driver      driver.Driver
+	EventHandle  driver.VkEvent
+	Device       driver.VkDevice
+	DeviceDriver driver.Driver
 
 	MaximumAPIVersion common.APIVersion
 }
@@ -22,19 +22,27 @@ func (e *VulkanEvent) Handle() driver.VkEvent {
 	return e.EventHandle
 }
 
+func (e *VulkanEvent) Driver() driver.Driver {
+	return e.DeviceDriver
+}
+
+func (e *VulkanEvent) APIVersion() common.APIVersion {
+	return e.MaximumAPIVersion
+}
+
 func (e *VulkanEvent) Destroy(callbacks *driver.AllocationCallbacks) {
-	e.Driver.VkDestroyEvent(e.Device, e.EventHandle, callbacks.Handle())
-	e.Driver.ObjectStore().Delete(driver.VulkanHandle(e.EventHandle), e)
+	e.DeviceDriver.VkDestroyEvent(e.Device, e.EventHandle, callbacks.Handle())
+	e.DeviceDriver.ObjectStore().Delete(driver.VulkanHandle(e.EventHandle))
 }
 
 func (e *VulkanEvent) Set() (common.VkResult, error) {
-	return e.Driver.VkSetEvent(e.Device, e.EventHandle)
+	return e.DeviceDriver.VkSetEvent(e.Device, e.EventHandle)
 }
 
 func (e *VulkanEvent) Reset() (common.VkResult, error) {
-	return e.Driver.VkResetEvent(e.Device, e.EventHandle)
+	return e.DeviceDriver.VkResetEvent(e.Device, e.EventHandle)
 }
 
 func (e *VulkanEvent) Status() (common.VkResult, error) {
-	return e.Driver.VkGetEventStatus(e.Device, e.EventHandle)
+	return e.DeviceDriver.VkGetEventStatus(e.Device, e.EventHandle)
 }

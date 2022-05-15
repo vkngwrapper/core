@@ -11,7 +11,7 @@ import (
 )
 
 type VulkanBufferView struct {
-	Driver           driver.Driver
+	DeviceDriver     driver.Driver
 	Device           driver.VkDevice
 	BufferViewHandle driver.VkBufferView
 
@@ -22,7 +22,15 @@ func (v *VulkanBufferView) Handle() driver.VkBufferView {
 	return v.BufferViewHandle
 }
 
+func (v *VulkanBufferView) Driver() driver.Driver {
+	return v.DeviceDriver
+}
+
+func (v *VulkanBufferView) APIVersion() common.APIVersion {
+	return v.MaximumAPIVersion
+}
+
 func (v *VulkanBufferView) Destroy(callbacks *driver.AllocationCallbacks) {
-	v.Driver.VkDestroyBufferView(v.Device, v.BufferViewHandle, callbacks.Handle())
-	v.Driver.ObjectStore().Delete(driver.VulkanHandle(v.BufferViewHandle), v)
+	v.DeviceDriver.VkDestroyBufferView(v.Device, v.BufferViewHandle, callbacks.Handle())
+	v.DeviceDriver.ObjectStore().Delete(driver.VulkanHandle(v.BufferViewHandle))
 }

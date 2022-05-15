@@ -15,9 +15,9 @@ import (
 )
 
 type VulkanImage struct {
-	Driver      driver.Driver
-	ImageHandle driver.VkImage
-	Device      driver.VkDevice
+	DeviceDriver driver.Driver
+	ImageHandle  driver.VkImage
+	Device       driver.VkDevice
 
 	MaximumAPIVersion common.APIVersion
 }
@@ -26,9 +26,17 @@ func (i *VulkanImage) Handle() driver.VkImage {
 	return i.ImageHandle
 }
 
+func (i *VulkanImage) APIVersion() common.APIVersion {
+	return i.MaximumAPIVersion
+}
+
+func (i *VulkanImage) Driver() driver.Driver {
+	return i.DeviceDriver
+}
+
 func (i *VulkanImage) Destroy(callbacks *driver.AllocationCallbacks) {
-	i.Driver.VkDestroyImage(i.Device, i.ImageHandle, callbacks.Handle())
-	i.Driver.ObjectStore().Delete(driver.VulkanHandle(i.ImageHandle), i)
+	i.DeviceDriver.VkDestroyImage(i.Device, i.ImageHandle, callbacks.Handle())
+	i.DeviceDriver.ObjectStore().Delete(driver.VulkanHandle(i.ImageHandle))
 }
 
 func (i *VulkanImage) MemoryRequirements() *core1_0.MemoryRequirements {
@@ -37,7 +45,7 @@ func (i *VulkanImage) MemoryRequirements() *core1_0.MemoryRequirements {
 
 	memRequirementsUnsafe := arena.Malloc(C.sizeof_struct_VkMemoryRequirements)
 
-	i.Driver.VkGetImageMemoryRequirements(i.Device, i.ImageHandle, (*driver.VkMemoryRequirements)(memRequirementsUnsafe))
+	i.DeviceDriver.VkGetImageMemoryRequirements(i.Device, i.ImageHandle, (*driver.VkMemoryRequirements)(memRequirementsUnsafe))
 
 	memRequirements := (*C.VkMemoryRequirements)(memRequirementsUnsafe)
 
@@ -56,7 +64,7 @@ func (i *VulkanImage) BindImageMemory(memory core1_0.DeviceMemory, offset int) (
 		return core1_0.VKErrorUnknown, errors.New("received negative offset")
 	}
 
-	return i.Driver.VkBindImageMemory(i.Device, i.ImageHandle, memory.Handle(), driver.VkDeviceSize(offset))
+	return i.DeviceDriver.VkBindImageMemory(i.Device, i.ImageHandle, memory.Handle(), driver.VkDeviceSize(offset))
 }
 
 func (i *VulkanImage) SubresourceLayout(subresource *common.ImageSubresource) *common.SubresourceLayout {
@@ -70,7 +78,7 @@ func (i *VulkanImage) SubresourceLayout(subresource *common.ImageSubresource) *c
 	subresourcePtr.mipLevel = C.uint32_t(subresource.MipLevel)
 	subresourcePtr.arrayLayer = C.uint32_t(subresource.ArrayLayer)
 
-	i.Driver.VkGetImageSubresourceLayout(i.Device, i.ImageHandle, (*driver.VkImageSubresource)(unsafe.Pointer(subresourcePtr)), (*driver.VkSubresourceLayout)(subresourceLayoutUnsafe))
+	i.DeviceDriver.VkGetImageSubresourceLayout(i.Device, i.ImageHandle, (*driver.VkImageSubresource)(unsafe.Pointer(subresourcePtr)), (*driver.VkSubresourceLayout)(subresourceLayoutUnsafe))
 
 	subresourceLayout := (*C.VkSubresourceLayout)(subresourceLayoutUnsafe)
 	return &common.SubresourceLayout{

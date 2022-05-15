@@ -11,7 +11,7 @@ import (
 )
 
 type VulkanPipeline struct {
-	Driver         driver.Driver
+	DeviceDriver   driver.Driver
 	Device         driver.VkDevice
 	PipelineHandle driver.VkPipeline
 
@@ -22,7 +22,15 @@ func (p *VulkanPipeline) Handle() driver.VkPipeline {
 	return p.PipelineHandle
 }
 
+func (p *VulkanPipeline) Driver() driver.Driver {
+	return p.DeviceDriver
+}
+
+func (p *VulkanPipeline) APIVersion() common.APIVersion {
+	return p.MaximumAPIVersion
+}
+
 func (p *VulkanPipeline) Destroy(callbacks *driver.AllocationCallbacks) {
-	p.Driver.VkDestroyPipeline(p.Device, p.PipelineHandle, callbacks.Handle())
-	p.Driver.ObjectStore().Delete(driver.VulkanHandle(p.PipelineHandle), p)
+	p.DeviceDriver.VkDestroyPipeline(p.Device, p.PipelineHandle, callbacks.Handle())
+	p.DeviceDriver.ObjectStore().Delete(driver.VulkanHandle(p.PipelineHandle))
 }

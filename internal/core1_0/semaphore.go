@@ -11,7 +11,7 @@ import (
 )
 
 type VulkanSemaphore struct {
-	Driver          driver.Driver
+	DeviceDriver    driver.Driver
 	Device          driver.VkDevice
 	SemaphoreHandle driver.VkSemaphore
 
@@ -22,7 +22,15 @@ func (s *VulkanSemaphore) Handle() driver.VkSemaphore {
 	return s.SemaphoreHandle
 }
 
+func (s *VulkanSemaphore) Driver() driver.Driver {
+	return s.DeviceDriver
+}
+
+func (s *VulkanSemaphore) APIVersion() common.APIVersion {
+	return s.MaximumAPIVersion
+}
+
 func (s *VulkanSemaphore) Destroy(callbacks *driver.AllocationCallbacks) {
-	s.Driver.VkDestroySemaphore(s.Device, s.SemaphoreHandle, callbacks.Handle())
-	s.Driver.ObjectStore().Delete(driver.VulkanHandle(s.SemaphoreHandle), s)
+	s.DeviceDriver.VkDestroySemaphore(s.Device, s.SemaphoreHandle, callbacks.Handle())
+	s.DeviceDriver.ObjectStore().Delete(driver.VulkanHandle(s.SemaphoreHandle))
 }

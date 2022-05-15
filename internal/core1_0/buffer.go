@@ -14,7 +14,7 @@ import (
 )
 
 type VulkanBuffer struct {
-	Driver       driver.Driver
+	DeviceDriver driver.Driver
 	Device       driver.VkDevice
 	BufferHandle driver.VkBuffer
 
@@ -25,12 +25,20 @@ func (b *VulkanBuffer) Handle() driver.VkBuffer {
 	return b.BufferHandle
 }
 
+func (b *VulkanBuffer) Driver() driver.Driver {
+	return b.DeviceDriver
+}
+
+func (b *VulkanBuffer) APIVersion() common.APIVersion {
+	return b.MaximumAPIVersion
+}
+
 func (b *VulkanBuffer) Destroy(allocationCallbacks *driver.AllocationCallbacks) {
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
-	b.Driver.VkDestroyBuffer(b.Device, b.BufferHandle, allocationCallbacks.Handle())
-	b.Driver.ObjectStore().Delete(driver.VulkanHandle(b.BufferHandle), b)
+	b.DeviceDriver.VkDestroyBuffer(b.Device, b.BufferHandle, allocationCallbacks.Handle())
+	b.DeviceDriver.ObjectStore().Delete(driver.VulkanHandle(b.BufferHandle))
 }
 
 func (b *VulkanBuffer) MemoryRequirements() *core1_0.MemoryRequirements {
@@ -39,7 +47,7 @@ func (b *VulkanBuffer) MemoryRequirements() *core1_0.MemoryRequirements {
 
 	requirementsUnsafe := allocator.Malloc(C.sizeof_struct_VkMemoryRequirements)
 
-	b.Driver.VkGetBufferMemoryRequirements(b.Device, b.BufferHandle, (*driver.VkMemoryRequirements)(requirementsUnsafe))
+	b.DeviceDriver.VkGetBufferMemoryRequirements(b.Device, b.BufferHandle, (*driver.VkMemoryRequirements)(requirementsUnsafe))
 
 	requirements := (*C.VkMemoryRequirements)(requirementsUnsafe)
 
@@ -55,5 +63,5 @@ func (b *VulkanBuffer) BindBufferMemory(memory core1_0.DeviceMemory, offset int)
 		return core1_0.VKErrorUnknown, errors.New("received nil DeviceMemory")
 	}
 
-	return b.Driver.VkBindBufferMemory(b.Device, b.BufferHandle, memory.Handle(), driver.VkDeviceSize(offset))
+	return b.DeviceDriver.VkBindBufferMemory(b.Device, b.BufferHandle, memory.Handle(), driver.VkDeviceSize(offset))
 }

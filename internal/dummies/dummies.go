@@ -14,7 +14,7 @@ import (
 	"unsafe"
 )
 
-func EasyDummyBuffer(t *testing.T, loader core.Loader, device core.Device) core.Buffer {
+func EasyDummyBuffer(t *testing.T, loader core.Loader, device core1_0.Device) core1_0.Buffer {
 	handle := mocks.NewFakeBufferHandle()
 	mockDriver := device.Driver().(*mock_driver.MockDriver)
 	mockDriver.EXPECT().VkCreateBuffer(gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any()).DoAndReturn(
@@ -30,7 +30,7 @@ func EasyDummyBuffer(t *testing.T, loader core.Loader, device core.Device) core.
 	return buffer
 }
 
-func EasyDummyCommandPool(t *testing.T, loader core.Loader, device core.Device) core.CommandPool {
+func EasyDummyCommandPool(t *testing.T, loader core.Loader, device core1_0.Device) core1_0.CommandPool {
 	handle := mocks.NewFakeCommandPoolHandle()
 	mockDriver := device.Driver().(*mock_driver.MockDriver)
 	mockDriver.EXPECT().VkCreateCommandPool(device.Handle(), gomock.Not(nil), nil, gomock.Not(nil)).DoAndReturn(
@@ -51,7 +51,7 @@ func EasyDummyCommandPool(t *testing.T, loader core.Loader, device core.Device) 
 	return pool
 }
 
-func EasyDummyCommandBuffer(t *testing.T, loader core.Loader, device core.Device, commandPool core.CommandPool) core.CommandBuffer {
+func EasyDummyCommandBuffer(t *testing.T, loader core.Loader, device core1_0.Device, commandPool core1_0.CommandPool) core1_0.CommandBuffer {
 	mockDriver := device.Driver().(*mock_driver.MockDriver)
 
 	mockDriver.EXPECT().VkAllocateCommandBuffers(gomock.Any(), gomock.Any(), gomock.Any()).Do(
@@ -68,7 +68,7 @@ func EasyDummyCommandBuffer(t *testing.T, loader core.Loader, device core.Device
 	return buffers[0]
 }
 
-func EasyDummyDescriptorPool(t *testing.T, loader core.Loader, device core.Device) core.DescriptorPool {
+func EasyDummyDescriptorPool(t *testing.T, loader core.Loader, device core1_0.Device) core1_0.DescriptorPool {
 	mockDriver := device.Driver().(*mock_driver.MockDriver)
 
 	mockDriver.EXPECT().VkCreateDescriptorPool(gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any()).DoAndReturn(
@@ -83,7 +83,7 @@ func EasyDummyDescriptorPool(t *testing.T, loader core.Loader, device core.Devic
 	return pool
 }
 
-func EasyDummyDescriptorSet(t *testing.T, loader core.Loader, pool core.DescriptorPool, layout core.DescriptorSetLayout) core1_0.DescriptorSet {
+func EasyDummyDescriptorSet(t *testing.T, loader core.Loader, pool core1_0.DescriptorPool, layout core1_0.DescriptorSetLayout) core1_0.DescriptorSet {
 	mockDriver := pool.Driver().(*mock_driver.MockDriver)
 
 	mockDriver.EXPECT().VkAllocateDescriptorSets(gomock.Any(), gomock.Any(), gomock.Any()).DoAndReturn(
@@ -102,7 +102,7 @@ func EasyDummyDescriptorSet(t *testing.T, loader core.Loader, pool core.Descript
 	return sets[0]
 }
 
-func EasyDummyDescriptorSetLayout(t *testing.T, loader core.Loader, device core.Device) core.DescriptorSetLayout {
+func EasyDummyDescriptorSetLayout(t *testing.T, loader core.Loader, device core1_0.Device) core1_0.DescriptorSetLayout {
 	mockDriver := device.Driver().(*mock_driver.MockDriver)
 
 	mockDriver.EXPECT().VkCreateDescriptorSetLayout(gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any()).DoAndReturn(
@@ -116,7 +116,7 @@ func EasyDummyDescriptorSetLayout(t *testing.T, loader core.Loader, device core.
 	return layout
 }
 
-func EasyDummyDevice(t *testing.T, ctrl *gomock.Controller, loader core.Loader) core.Device {
+func EasyDummyDevice(t *testing.T, ctrl *gomock.Controller, loader core.Loader) core1_0.Device {
 	mockDriver := loader.Driver().(*mock_driver.MockDriver)
 
 	mockDriver.EXPECT().CreateDeviceDriver(gomock.Any()).Return(mockDriver, nil)
@@ -138,7 +138,7 @@ func EasyDummyDevice(t *testing.T, ctrl *gomock.Controller, loader core.Loader) 
 	return device
 }
 
-func EasyDummyDeviceMemory(t *testing.T, loader core.Loader, device core.Device, size int) core.DeviceMemory {
+func EasyDummyDeviceMemory(t *testing.T, loader core.Loader, device core1_0.Device, size int) core1_0.DeviceMemory {
 	mockDriver := device.Driver().(*mock_driver.MockDriver)
 
 	mockDriver.EXPECT().VkAllocateMemory(device.Handle(), gomock.Not(nil), nil, gomock.Not(nil)).DoAndReturn(
@@ -155,7 +155,7 @@ func EasyDummyDeviceMemory(t *testing.T, loader core.Loader, device core.Device,
 	return memory
 }
 
-func EasyDummyEvent(t *testing.T, loader core.Loader, device core.Device) core.Event {
+func EasyDummyEvent(t *testing.T, loader core.Loader, device core1_0.Device) core1_0.Event {
 	mockDriver := device.Driver().(*mock_driver.MockDriver)
 
 	mockDriver.EXPECT().VkCreateEvent(device.Handle(), gomock.Not(nil), nil, gomock.Not(nil)).DoAndReturn(
@@ -170,7 +170,7 @@ func EasyDummyEvent(t *testing.T, loader core.Loader, device core.Device) core.E
 	return event
 }
 
-func EasyDummyFence(t *testing.T, loader core.Loader, device core.Device) core.Fence {
+func EasyDummyFence(t *testing.T, loader core.Loader, device core1_0.Device) core1_0.Fence {
 	mockDriver := device.Driver().(*mock_driver.MockDriver)
 
 	mockDriver.EXPECT().VkCreateFence(gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any()).DoAndReturn(
@@ -185,7 +185,7 @@ func EasyDummyFence(t *testing.T, loader core.Loader, device core.Device) core.F
 	return fence
 }
 
-func EasyDummyFramebuffer(t *testing.T, loader core.Loader, device core.Device) core.Framebuffer {
+func EasyDummyFramebuffer(t *testing.T, loader core.Loader, device core1_0.Device) core1_0.Framebuffer {
 	mockDriver := device.Driver().(*mock_driver.MockDriver)
 
 	mockDriver.EXPECT().VkCreateFramebuffer(gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any()).DoAndReturn(
@@ -200,7 +200,7 @@ func EasyDummyFramebuffer(t *testing.T, loader core.Loader, device core.Device) 
 	return framebuffer
 }
 
-func EasyDummyGraphicsPipeline(t *testing.T, loader core.Loader, device core.Device) core.Pipeline {
+func EasyDummyGraphicsPipeline(t *testing.T, loader core.Loader, device core1_0.Device) core1_0.Pipeline {
 	mockDriver := device.Driver().(*mock_driver.MockDriver)
 
 	mockDriver.EXPECT().VkCreateGraphicsPipelines(gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any()).DoAndReturn(
@@ -215,7 +215,7 @@ func EasyDummyGraphicsPipeline(t *testing.T, loader core.Loader, device core.Dev
 	return pipelines[0]
 }
 
-func EasyDummyImage(t *testing.T, loader core.Loader, device core.Device) core.Image {
+func EasyDummyImage(t *testing.T, loader core.Loader, device core1_0.Device) core1_0.Image {
 	mockDriver := device.Driver().(*mock_driver.MockDriver)
 
 	mockDriver.EXPECT().VkCreateImage(device.Handle(), gomock.Any(), gomock.Any(), gomock.Any()).DoAndReturn(
@@ -231,7 +231,7 @@ func EasyDummyImage(t *testing.T, loader core.Loader, device core.Device) core.I
 	return image
 }
 
-func EasyDummyInstance(t *testing.T, loader core.Loader) core.Instance {
+func EasyDummyInstance(t *testing.T, loader core.Loader) core1_0.Instance {
 	mockDriver := loader.Driver().(*mock_driver.MockDriver)
 
 	mockDriver.EXPECT().CreateInstanceDriver(gomock.Any()).Return(mockDriver, nil).AnyTimes()
@@ -242,14 +242,14 @@ func EasyDummyInstance(t *testing.T, loader core.Loader) core.Instance {
 		})
 
 	instance, _, err := loader.CreateInstance(nil, core1_0.InstanceCreateOptions{
-		VulkanVersion: loader.Version(),
+		VulkanVersion: loader.APIVersion(),
 	})
 	require.NoError(t, err)
 
 	return instance
 }
 
-func EasyDummyPhysicalDevice(t *testing.T, loader core.Loader) core.PhysicalDevice {
+func EasyDummyPhysicalDevice(t *testing.T, loader core.Loader) core1_0.PhysicalDevice {
 	mockDriver := loader.Driver().(*mock_driver.MockDriver)
 	instance := EasyDummyInstance(t, loader)
 
@@ -272,7 +272,7 @@ func EasyDummyPhysicalDevice(t *testing.T, loader core.Loader) core.PhysicalDevi
 		func(physicalDevice driver.VkPhysicalDevice, pProperties *driver.VkPhysicalDeviceProperties) {
 			val := reflect.ValueOf(pProperties).Elem()
 
-			*(*uint32)(unsafe.Pointer(val.FieldByName("apiVersion").UnsafeAddr())) = uint32(loader.Version())
+			*(*uint32)(unsafe.Pointer(val.FieldByName("apiVersion").UnsafeAddr())) = uint32(loader.APIVersion())
 		})
 
 	devices, _, err := loader.PhysicalDevices(instance)
@@ -281,7 +281,7 @@ func EasyDummyPhysicalDevice(t *testing.T, loader core.Loader) core.PhysicalDevi
 	return devices[0]
 }
 
-func EasyDummyPipeline(t *testing.T, device core.Device, loader core.Loader) core.Pipeline {
+func EasyDummyPipeline(t *testing.T, device core1_0.Device, loader core.Loader) core1_0.Pipeline {
 	mockDriver := loader.Driver().(*mock_driver.MockDriver)
 
 	mockDriver.EXPECT().VkCreateGraphicsPipelines(device.Handle(), driver.VkPipelineCache(driver.NullHandle), driver.Uint32(1), gomock.Not(nil), nil, gomock.Not(nil)).DoAndReturn(
@@ -299,7 +299,7 @@ func EasyDummyPipeline(t *testing.T, device core.Device, loader core.Loader) cor
 	return pipelines[0]
 }
 
-func EasyDummyPipelineCache(t *testing.T, device core.Device, loader core.Loader) core.PipelineCache {
+func EasyDummyPipelineCache(t *testing.T, device core1_0.Device, loader core.Loader) core1_0.PipelineCache {
 	mockDriver := loader.Driver().(*mock_driver.MockDriver)
 
 	mockDriver.EXPECT().VkCreatePipelineCache(gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any()).DoAndReturn(
@@ -313,7 +313,7 @@ func EasyDummyPipelineCache(t *testing.T, device core.Device, loader core.Loader
 	return pipelineCache
 }
 
-func EasyDummyQueryPool(t *testing.T, loader core.Loader, device core.Device) core.QueryPool {
+func EasyDummyQueryPool(t *testing.T, loader core.Loader, device core1_0.Device) core1_0.QueryPool {
 	mockDriver := device.Driver().(*mock_driver.MockDriver)
 
 	mockDriver.EXPECT().VkCreateQueryPool(gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any()).DoAndReturn(
@@ -327,7 +327,7 @@ func EasyDummyQueryPool(t *testing.T, loader core.Loader, device core.Device) co
 	return queryPool
 }
 
-func EasyDummyQueue(loader core.Loader, device core.Device) core.Queue {
+func EasyDummyQueue(loader core.Loader, device core1_0.Device) core1_0.Queue {
 	mockDriver := device.Driver().(*mock_driver.MockDriver)
 
 	mockDriver.EXPECT().VkGetDeviceQueue(gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any()).DoAndReturn(
@@ -341,7 +341,7 @@ func EasyDummyQueue(loader core.Loader, device core.Device) core.Queue {
 	return queue
 }
 
-func EasyDummyRenderPass(t *testing.T, loader core.Loader, device core.Device) core.RenderPass {
+func EasyDummyRenderPass(t *testing.T, loader core.Loader, device core1_0.Device) core1_0.RenderPass {
 	mockDriver := device.Driver().(*mock_driver.MockDriver)
 
 	mockDriver.EXPECT().VkCreateRenderPass(gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any()).DoAndReturn(
@@ -356,7 +356,7 @@ func EasyDummyRenderPass(t *testing.T, loader core.Loader, device core.Device) c
 	return renderPass
 }
 
-func EasyDummySemaphore(t *testing.T, loader core.Loader, device core.Device) core.Semaphore {
+func EasyDummySemaphore(t *testing.T, loader core.Loader, device core1_0.Device) core1_0.Semaphore {
 	mockDriver := device.Driver().(*mock_driver.MockDriver)
 
 	mockDriver.EXPECT().VkCreateSemaphore(gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any()).DoAndReturn(

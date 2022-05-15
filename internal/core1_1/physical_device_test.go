@@ -25,7 +25,7 @@ func TestVulkanPhysicalDevice_PhysicalDeviceExternalFenceProperties(t *testing.T
 	loader, err := core.CreateLoaderFromDriver(coreDriver)
 	require.NoError(t, err)
 
-	physicalDevice := dummies.EasyDummyPhysicalDevice(t, loader)
+	physicalDevice := core1_1.PromotePhysicalDevice(dummies.EasyDummyPhysicalDevice(t, loader))
 
 	coreDriver.EXPECT().VkGetPhysicalDeviceExternalFenceProperties(
 		physicalDevice.Handle(),
@@ -47,7 +47,7 @@ func TestVulkanPhysicalDevice_PhysicalDeviceExternalFenceProperties(t *testing.T
 	})
 
 	var outData core1_1.ExternalFenceOutData
-	err = physicalDevice.Core1_1Instance().ExternalFenceProperties(
+	err = physicalDevice.InstanceScopedPhysicalDevice1_1().ExternalFenceProperties(
 		core1_1.ExternalFenceOptions{
 			HandleType: core1_1.ExternalFenceHandleTypeOpaqueWin32KMT,
 		},
@@ -68,7 +68,7 @@ func TestVulkanPhysicalDevice_ExternalBufferProperties(t *testing.T) {
 	coreDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_1)
 	loader, err := core.CreateLoaderFromDriver(coreDriver)
 	require.NoError(t, err)
-	physicalDevice := dummies.EasyDummyPhysicalDevice(t, loader)
+	physicalDevice := core1_1.PromotePhysicalDevice(dummies.EasyDummyPhysicalDevice(t, loader))
 
 	coreDriver.EXPECT().VkGetPhysicalDeviceExternalBufferProperties(
 		physicalDevice.Handle(),
@@ -92,7 +92,7 @@ func TestVulkanPhysicalDevice_ExternalBufferProperties(t *testing.T) {
 	})
 
 	var outData core1_1.ExternalBufferOutData
-	err = physicalDevice.Core1_1Instance().ExternalBufferProperties(
+	err = physicalDevice.InstanceScopedPhysicalDevice1_1().ExternalBufferProperties(
 		core1_1.ExternalBufferOptions{
 			Flags:      core1_0.BufferCreateSparseResidency,
 			Usage:      core1_0.BufferUsageStorageTexelBuffer,
@@ -117,7 +117,7 @@ func TestVulkanPhysicalDevice_ExternalSemaphoreProperties(t *testing.T) {
 	coreDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_1)
 	loader, err := core.CreateLoaderFromDriver(coreDriver)
 	require.NoError(t, err)
-	physicalDevice := dummies.EasyDummyPhysicalDevice(t, loader)
+	physicalDevice := core1_1.PromotePhysicalDevice(dummies.EasyDummyPhysicalDevice(t, loader))
 
 	coreDriver.EXPECT().VkGetPhysicalDeviceExternalSemaphoreProperties(
 		physicalDevice.Handle(),
@@ -144,7 +144,7 @@ func TestVulkanPhysicalDevice_ExternalSemaphoreProperties(t *testing.T) {
 		})
 
 	var outData core1_1.ExternalSemaphoreOutData
-	err = physicalDevice.Core1_1Instance().ExternalSemaphoreProperties(
+	err = physicalDevice.InstanceScopedPhysicalDevice1_1().ExternalSemaphoreProperties(
 		core1_1.ExternalSemaphoreOptions{
 			HandleType: core1_1.ExternalSemaphoreHandleTypeSyncFD,
 		},
@@ -164,7 +164,7 @@ func TestVulkanPhysicalDevice_Features(t *testing.T) {
 	coreDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_1)
 	loader, err := core.CreateLoaderFromDriver(coreDriver)
 	require.NoError(t, err)
-	physicalDevice := dummies.EasyDummyPhysicalDevice(t, loader)
+	physicalDevice := core1_1.PromotePhysicalDevice(dummies.EasyDummyPhysicalDevice(t, loader))
 
 	coreDriver.EXPECT().VkGetPhysicalDeviceFeatures2(physicalDevice.Handle(), gomock.Not(gomock.Nil())).
 		DoAndReturn(func(physicalDevice driver.VkPhysicalDevice,
@@ -234,7 +234,7 @@ func TestVulkanPhysicalDevice_Features(t *testing.T) {
 		})
 
 	outData := &core1_1.DeviceFeaturesOutData{}
-	err = physicalDevice.Core1_1Instance().Features(outData)
+	err = physicalDevice.InstanceScopedPhysicalDevice1_1().Features(outData)
 	require.NoError(t, err)
 
 	features := outData.Features
@@ -303,7 +303,7 @@ func TestVulkanPhysicalDevice_FormatProperties(t *testing.T) {
 	coreDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_1)
 	loader, err := core.CreateLoaderFromDriver(coreDriver)
 	require.NoError(t, err)
-	physicalDevice := dummies.EasyDummyPhysicalDevice(t, loader)
+	physicalDevice := core1_1.PromotePhysicalDevice(dummies.EasyDummyPhysicalDevice(t, loader))
 
 	coreDriver.EXPECT().VkGetPhysicalDeviceFormatProperties2(
 		physicalDevice.Handle(),
@@ -324,7 +324,7 @@ func TestVulkanPhysicalDevice_FormatProperties(t *testing.T) {
 	})
 
 	outData := core1_1.FormatPropertiesOutData{}
-	err = physicalDevice.Core1_1Instance().FormatProperties(
+	err = physicalDevice.InstanceScopedPhysicalDevice1_1().FormatProperties(
 		core1_0.DataFormatA2B10G10R10UnsignedNormalizedPacked,
 		&outData)
 	require.NoError(t, err)
@@ -341,7 +341,7 @@ func TestVulkanPhysicalDevice_ImageFormatProperties(t *testing.T) {
 	coreDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_1)
 	loader, err := core.CreateLoaderFromDriver(coreDriver)
 	require.NoError(t, err)
-	physicalDevice := dummies.EasyDummyPhysicalDevice(t, loader)
+	physicalDevice := core1_1.PromotePhysicalDevice(dummies.EasyDummyPhysicalDevice(t, loader))
 
 	coreDriver.EXPECT().VkGetPhysicalDeviceImageFormatProperties2(physicalDevice.Handle(), gomock.Not(gomock.Nil()), gomock.Not(gomock.Nil())).
 		DoAndReturn(func(physicalDevice driver.VkPhysicalDevice,
@@ -376,7 +376,7 @@ func TestVulkanPhysicalDevice_ImageFormatProperties(t *testing.T) {
 		})
 
 	outData := core1_1.ImageFormatPropertiesOutData{}
-	_, err = physicalDevice.Core1_1Instance().ImageFormatProperties(core1_1.ImageFormatOptions{
+	_, err = physicalDevice.InstanceScopedPhysicalDevice1_1().ImageFormatProperties(core1_1.ImageFormatOptions{
 		Format: core1_0.DataFormatA2B10G10R10UnsignedIntPacked,
 		Type:   core1_0.ImageType2D,
 		Tiling: core1_0.ImageTilingOptimal,
@@ -401,7 +401,7 @@ func TestVulkanPhysicalDevice_MemoryProperties(t *testing.T) {
 	coreDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_1)
 	loader, err := core.CreateLoaderFromDriver(coreDriver)
 	require.NoError(t, err)
-	physicalDevice := dummies.EasyDummyPhysicalDevice(t, loader)
+	physicalDevice := core1_1.PromotePhysicalDevice(dummies.EasyDummyPhysicalDevice(t, loader))
 
 	coreDriver.EXPECT().VkGetPhysicalDeviceMemoryProperties2(physicalDevice.Handle(), gomock.Not(gomock.Nil())).
 		DoAndReturn(func(physicalDevice driver.VkPhysicalDevice, pMemoryProperties *driver.VkPhysicalDeviceMemoryProperties2) {
@@ -424,7 +424,7 @@ func TestVulkanPhysicalDevice_MemoryProperties(t *testing.T) {
 		})
 
 	outData := core1_1.MemoryPropertiesOutData{}
-	err = physicalDevice.Core1_1Instance().MemoryProperties(&outData)
+	err = physicalDevice.InstanceScopedPhysicalDevice1_1().MemoryProperties(&outData)
 	require.NoError(t, err)
 	require.Equal(t, []common.MemoryType{
 		{
@@ -447,7 +447,7 @@ func TestVulkanPhysicalDevice_Properties(t *testing.T) {
 	coreDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_1)
 	loader, err := core.CreateLoaderFromDriver(coreDriver)
 	require.NoError(t, err)
-	physicalDevice := dummies.EasyDummyPhysicalDevice(t, loader)
+	physicalDevice := core1_1.PromotePhysicalDevice(dummies.EasyDummyPhysicalDevice(t, loader))
 
 	deviceUUID, err := uuid.NewUUID()
 	require.NoError(t, err)
@@ -503,7 +503,7 @@ func TestVulkanPhysicalDevice_Properties(t *testing.T) {
 		})
 
 	outData := core1_1.DevicePropertiesOutData{}
-	err = physicalDevice.Core1_1Instance().Properties(&outData)
+	err = physicalDevice.InstanceScopedPhysicalDevice1_1().Properties(&outData)
 	require.NoError(t, err)
 
 	require.Equal(t, common.Vulkan1_1, outData.Properties.APIVersion)
@@ -535,7 +535,7 @@ func TestVulkanPhysicalDevice_QueueFamilyProperties(t *testing.T) {
 	coreDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_1)
 	loader, err := core.CreateLoaderFromDriver(coreDriver)
 	require.NoError(t, err)
-	physicalDevice := dummies.EasyDummyPhysicalDevice(t, loader)
+	physicalDevice := core1_1.PromotePhysicalDevice(dummies.EasyDummyPhysicalDevice(t, loader))
 
 	coreDriver.EXPECT().VkGetPhysicalDeviceQueueFamilyProperties2(physicalDevice.Handle(), gomock.Not(gomock.Nil()), nil).
 		DoAndReturn(func(physicalDevice driver.VkPhysicalDevice, pQueueFamilyPropertyCount *driver.Uint32, pQueueFamilyProperties *driver.VkQueueFamilyProperties2) {
@@ -578,7 +578,7 @@ func TestVulkanPhysicalDevice_QueueFamilyProperties(t *testing.T) {
 			*(*uint32)(unsafe.Pointer(propertyExtent.FieldByName("depth").UnsafeAddr())) = uint32(31)
 		})
 
-	outData, err := physicalDevice.Core1_1Instance().QueueFamilyProperties(nil)
+	outData, err := physicalDevice.InstanceScopedPhysicalDevice1_1().QueueFamilyProperties(nil)
 	require.NoError(t, err)
 
 	require.Equal(t, []*core1_1.QueueFamilyOutData{
@@ -616,7 +616,7 @@ func TestVulkanPhysicalDevice_SparseImageFormatProperties(t *testing.T) {
 	coreDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_1)
 	loader, err := core.CreateLoaderFromDriver(coreDriver)
 	require.NoError(t, err)
-	physicalDevice := dummies.EasyDummyPhysicalDevice(t, loader)
+	physicalDevice := core1_1.PromotePhysicalDevice(dummies.EasyDummyPhysicalDevice(t, loader))
 
 	coreDriver.EXPECT().VkGetPhysicalDeviceSparseImageFormatProperties2(
 		physicalDevice.Handle(),
@@ -675,7 +675,7 @@ func TestVulkanPhysicalDevice_SparseImageFormatProperties(t *testing.T) {
 		*(*uint32)(unsafe.Pointer(sparseProps.FieldByName("flags").UnsafeAddr())) = uint32(4) // VK_SPARSE_IMAGE_FORMAT_NONSTANDARD_BLOCK_SIZE_BIT
 	})
 
-	outData, err := physicalDevice.Core1_1Instance().SparseImageFormatProperties(
+	outData, err := physicalDevice.InstanceScopedPhysicalDevice1_1().SparseImageFormatProperties(
 		core1_1.SparseImageFormatOptions{
 			Format:  core1_0.DataFormatA2B10G10R10UnsignedScaledPacked,
 			Type:    core1_0.ImageType3D,
@@ -706,7 +706,7 @@ func TestPhysicalDeviceIDOutData(t *testing.T) {
 	coreDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_1)
 	loader, err := core.CreateLoaderFromDriver(coreDriver)
 	require.NoError(t, err)
-	physicalDevice := dummies.EasyDummyPhysicalDevice(t, loader)
+	physicalDevice := core1_1.PromotePhysicalDevice(dummies.EasyDummyPhysicalDevice(t, loader))
 
 	deviceUUID, err := uuid.NewRandom()
 	require.NoError(t, err)
@@ -752,7 +752,7 @@ func TestPhysicalDeviceIDOutData(t *testing.T) {
 	var outData core1_1.PhysicalDeviceIDOutData
 	properties.HaveNext = common.HaveNext{&outData}
 
-	err = physicalDevice.Core1_1Instance().Properties(
+	err = physicalDevice.InstanceScopedPhysicalDevice1_1().Properties(
 		&properties,
 	)
 	require.NoError(t, err)
@@ -771,7 +771,7 @@ func TestMaintenance3OutData(t *testing.T) {
 
 	coreDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_1)
 	loader, err := core.CreateLoaderFromDriver(coreDriver)
-	physicalDevice := dummies.EasyDummyPhysicalDevice(t, loader)
+	physicalDevice := core1_1.PromotePhysicalDevice(dummies.EasyDummyPhysicalDevice(t, loader))
 
 	coreDriver.EXPECT().VkGetPhysicalDeviceProperties2(physicalDevice.Handle(), gomock.Not(gomock.Nil())).
 		DoAndReturn(func(physicalDevice driver.VkPhysicalDevice, pProperties *driver.VkPhysicalDeviceProperties2) {
@@ -796,7 +796,7 @@ func TestMaintenance3OutData(t *testing.T) {
 	outData := &core1_1.DevicePropertiesOutData{
 		HaveNext: common.HaveNext{Next: maintOutData},
 	}
-	err = physicalDevice.Core1_1Instance().Properties(outData)
+	err = physicalDevice.InstanceScopedPhysicalDevice1_1().Properties(outData)
 	require.NoError(t, err)
 
 	require.Equal(t, uint32(3), outData.Properties.VendorID)
@@ -811,7 +811,7 @@ func TestMultiviewPropertiesOutData(t *testing.T) {
 	coreDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_1)
 	loader, err := core.CreateLoaderFromDriver(coreDriver)
 	require.NoError(t, err)
-	physicalDevice := dummies.EasyDummyPhysicalDevice(t, loader)
+	physicalDevice := core1_1.PromotePhysicalDevice(dummies.EasyDummyPhysicalDevice(t, loader))
 
 	coreDriver.EXPECT().VkGetPhysicalDeviceProperties2(
 		physicalDevice.Handle(),
@@ -836,7 +836,7 @@ func TestMultiviewPropertiesOutData(t *testing.T) {
 		HaveNext: common.HaveNext{&outData},
 	}
 
-	err = physicalDevice.Core1_1Instance().Properties(&properties)
+	err = physicalDevice.InstanceScopedPhysicalDevice1_1().Properties(&properties)
 	require.NoError(t, err)
 	require.Equal(t, core1_1.PhysicalDeviceMultiviewOutData{
 		MaxMultiviewInstanceIndex: 3,
@@ -851,7 +851,7 @@ func TestPointClippingOutData(t *testing.T) {
 	coreDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_1)
 	loader, err := core.CreateLoaderFromDriver(coreDriver)
 	require.NoError(t, err)
-	physicalDevice := dummies.EasyDummyPhysicalDevice(t, loader)
+	physicalDevice := core1_1.PromotePhysicalDevice(dummies.EasyDummyPhysicalDevice(t, loader))
 
 	coreDriver.EXPECT().VkGetPhysicalDeviceProperties2(physicalDevice.Handle(), gomock.Not(gomock.Nil())).
 		DoAndReturn(func(physicalDevice driver.VkPhysicalDevice, pProperties *driver.VkPhysicalDeviceProperties2) {
@@ -879,7 +879,7 @@ func TestPointClippingOutData(t *testing.T) {
 		HaveNext: common.HaveNext{Next: pointClipping},
 	}
 
-	err = physicalDevice.Core1_1Instance().Properties(properties)
+	err = physicalDevice.InstanceScopedPhysicalDevice1_1().Properties(properties)
 	require.NoError(t, err)
 
 	require.Equal(t, uint32(3), properties.Properties.VendorID)
@@ -895,7 +895,7 @@ func TestPhysicalDeviceProtectedMemoryOutData(t *testing.T) {
 	coreDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_1)
 	loader, err := core.CreateLoaderFromDriver(coreDriver)
 	require.NoError(t, err)
-	physicalDevice := dummies.EasyDummyPhysicalDevice(t, loader)
+	physicalDevice := core1_1.PromotePhysicalDevice(dummies.EasyDummyPhysicalDevice(t, loader))
 
 	coreDriver.EXPECT().VkGetPhysicalDeviceProperties2(physicalDevice.Handle(), gomock.Not(gomock.Nil())).
 		DoAndReturn(func(physicalDevice driver.VkPhysicalDevice, pProperties *driver.VkPhysicalDeviceProperties2) {
@@ -923,7 +923,7 @@ func TestPhysicalDeviceProtectedMemoryOutData(t *testing.T) {
 		HaveNext: common.HaveNext{Next: protectedMemory},
 	}
 
-	err = physicalDevice.Core1_1Instance().Properties(properties)
+	err = physicalDevice.InstanceScopedPhysicalDevice1_1().Properties(properties)
 	require.NoError(t, err)
 
 	require.Equal(t, uint32(3), properties.Properties.VendorID)
@@ -939,7 +939,7 @@ func TestPhysicalDeviceSubgroupOutData(t *testing.T) {
 	coreDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_1)
 	loader, err := core.CreateLoaderFromDriver(coreDriver)
 	require.NoError(t, err)
-	physicalDevice := dummies.EasyDummyPhysicalDevice(t, loader)
+	physicalDevice := core1_1.PromotePhysicalDevice(dummies.EasyDummyPhysicalDevice(t, loader))
 
 	coreDriver.EXPECT().VkGetPhysicalDeviceProperties2(physicalDevice.Handle(), gomock.Not(gomock.Nil())).
 		DoAndReturn(func(physicalDevice driver.VkPhysicalDevice, pProperties *driver.VkPhysicalDeviceProperties2) {
@@ -973,7 +973,7 @@ func TestPhysicalDeviceSubgroupOutData(t *testing.T) {
 		HaveNext: common.HaveNext{Next: subgroups},
 	}
 
-	err = physicalDevice.Core1_1Instance().Properties(properties)
+	err = physicalDevice.InstanceScopedPhysicalDevice1_1().Properties(properties)
 	require.NoError(t, err)
 
 	require.Equal(t, uint32(3), properties.Properties.VendorID)
@@ -994,7 +994,7 @@ func TestVulkanExtension_PhysicalDeviceFeatures(t *testing.T) {
 	coreDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_1)
 	loader, err := core.CreateLoaderFromDriver(coreDriver)
 	require.NoError(t, err)
-	physicalDevice := dummies.EasyDummyPhysicalDevice(t, loader)
+	physicalDevice := core1_1.PromotePhysicalDevice(dummies.EasyDummyPhysicalDevice(t, loader))
 
 	coreDriver.EXPECT().VkGetPhysicalDeviceFeatures2(physicalDevice.Handle(), gomock.Not(gomock.Nil())).
 		DoAndReturn(func(physicalDevice driver.VkPhysicalDevice, pFeatures *driver.VkPhysicalDeviceFeatures2) {
@@ -1063,7 +1063,7 @@ func TestVulkanExtension_PhysicalDeviceFeatures(t *testing.T) {
 		})
 
 	outData := &core1_1.DeviceFeaturesOutData{}
-	err = physicalDevice.Core1_1Instance().Features(outData)
+	err = physicalDevice.InstanceScopedPhysicalDevice1_1().Features(outData)
 	require.NoError(t, err)
 
 	features := outData.Features
@@ -1266,7 +1266,7 @@ func TestDevice16BitStorageOutData(t *testing.T) {
 	coreDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_1)
 	loader, err := core.CreateLoaderFromDriver(coreDriver)
 	require.NoError(t, err)
-	physicalDevice := dummies.EasyDummyPhysicalDevice(t, loader)
+	physicalDevice := core1_1.PromotePhysicalDevice(dummies.EasyDummyPhysicalDevice(t, loader))
 
 	coreDriver.EXPECT().VkGetPhysicalDeviceFeatures2(physicalDevice.Handle(), gomock.Not(gomock.Nil())).
 		DoAndReturn(func(physicalDevice driver.VkPhysicalDevice, pFeatures *driver.VkPhysicalDeviceFeatures2) {
@@ -1290,7 +1290,7 @@ func TestDevice16BitStorageOutData(t *testing.T) {
 		HaveNext: common.HaveNext{Next: outData},
 	}
 
-	err = physicalDevice.Core1_1Instance().Features(features)
+	err = physicalDevice.InstanceScopedPhysicalDevice1_1().Features(features)
 	require.NoError(t, err)
 
 	require.True(t, outData.StoragePushConstant16)
@@ -1371,7 +1371,7 @@ func TestMultiviewFeaturesOutData(t *testing.T) {
 
 	coreDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_1)
 	loader, err := core.CreateLoaderFromDriver(coreDriver)
-	physicalDevice := dummies.EasyDummyPhysicalDevice(t, loader)
+	physicalDevice := core1_1.PromotePhysicalDevice(dummies.EasyDummyPhysicalDevice(t, loader))
 
 	coreDriver.EXPECT().VkGetPhysicalDeviceFeatures2(
 		physicalDevice.Handle(),
@@ -1397,7 +1397,7 @@ func TestMultiviewFeaturesOutData(t *testing.T) {
 		HaveNext: common.HaveNext{&outData},
 	}
 
-	err = physicalDevice.Core1_1Instance().Features(&features)
+	err = physicalDevice.InstanceScopedPhysicalDevice1_1().Features(&features)
 	require.NoError(t, err)
 	require.Equal(t, core1_1.PhysicalDeviceMultiviewFeaturesOutData{
 		Multiview:                   true,
@@ -1472,7 +1472,7 @@ func TestPhysicalDeviceProtectedMemoryFeaturesOutData(t *testing.T) {
 
 	coreDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_1)
 	loader, err := core.CreateLoaderFromDriver(coreDriver)
-	physicalDevice := dummies.EasyDummyPhysicalDevice(t, loader)
+	physicalDevice := core1_1.PromotePhysicalDevice(dummies.EasyDummyPhysicalDevice(t, loader))
 
 	coreDriver.EXPECT().VkGetPhysicalDeviceFeatures2(
 		physicalDevice.Handle(),
@@ -1496,7 +1496,7 @@ func TestPhysicalDeviceProtectedMemoryFeaturesOutData(t *testing.T) {
 		HaveNext: common.HaveNext{&outData},
 	}
 
-	err = physicalDevice.Core1_1Instance().Features(&features)
+	err = physicalDevice.InstanceScopedPhysicalDevice1_1().Features(&features)
 	require.NoError(t, err)
 	require.Equal(t, core1_1.PhysicalDeviceProtectedMemoryFeaturesOutData{
 		ProtectedMemory: true,
@@ -1567,7 +1567,7 @@ func TestSamplerYcbcrFeaturesOutData(t *testing.T) {
 	coreDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_1)
 	loader, err := core.CreateLoaderFromDriver(coreDriver)
 	require.NoError(t, err)
-	physicalDevice := dummies.EasyDummyPhysicalDevice(t, loader)
+	physicalDevice := core1_1.PromotePhysicalDevice(dummies.EasyDummyPhysicalDevice(t, loader))
 
 	coreDriver.EXPECT().VkGetPhysicalDeviceFeatures2(
 		physicalDevice.Handle(),
@@ -1588,7 +1588,7 @@ func TestSamplerYcbcrFeaturesOutData(t *testing.T) {
 
 	var outData core1_1.PhysicalDeviceSamplerYcbcrFeaturesOutData
 
-	err = physicalDevice.Core1_1Instance().Features(
+	err = physicalDevice.InstanceScopedPhysicalDevice1_1().Features(
 		&core1_1.DeviceFeaturesOutData{
 			HaveNext: common.HaveNext{
 				&outData,
@@ -1666,7 +1666,7 @@ func TestPhysicalDeviceShaderDrawParametersFeaturesOutData(t *testing.T) {
 
 	coreDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_1)
 	loader, err := core.CreateLoaderFromDriver(coreDriver)
-	physicalDevice := dummies.EasyDummyPhysicalDevice(t, loader)
+	physicalDevice := core1_1.PromotePhysicalDevice(dummies.EasyDummyPhysicalDevice(t, loader))
 
 	coreDriver.EXPECT().VkGetPhysicalDeviceFeatures2(
 		physicalDevice.Handle(),
@@ -1690,7 +1690,7 @@ func TestPhysicalDeviceShaderDrawParametersFeaturesOutData(t *testing.T) {
 		HaveNext: common.HaveNext{&outData},
 	}
 
-	err = physicalDevice.Core1_1Instance().Features(&features)
+	err = physicalDevice.InstanceScopedPhysicalDevice1_1().Features(&features)
 	require.NoError(t, err)
 	require.Equal(t, core1_1.PhysicalDeviceShaderDrawParametersFeaturesOutData{
 		ShaderDrawParameters: true,
@@ -1759,7 +1759,7 @@ func TestVariablePointersFeatureOutData(t *testing.T) {
 	coreDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_1)
 	loader, err := core.CreateLoaderFromDriver(coreDriver)
 	require.NoError(t, err)
-	physicalDevice := dummies.EasyDummyPhysicalDevice(t, loader)
+	physicalDevice := core1_1.PromotePhysicalDevice(dummies.EasyDummyPhysicalDevice(t, loader))
 
 	var pointersOutData core1_1.PhysicalDeviceVariablePointersFeatureOutData
 
@@ -1785,7 +1785,7 @@ func TestVariablePointersFeatureOutData(t *testing.T) {
 			*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("variablePointersStorageBuffer").UnsafeAddr())) = driver.VkBool32(1)
 		})
 
-	err = physicalDevice.Core1_1Instance().Features(&core1_1.DeviceFeaturesOutData{
+	err = physicalDevice.InstanceScopedPhysicalDevice1_1().Features(&core1_1.DeviceFeaturesOutData{
 		HaveNext: common.HaveNext{Next: &pointersOutData},
 	})
 	require.NoError(t, err)

@@ -11,7 +11,7 @@ import (
 )
 
 type VulkanImageView struct {
-	Driver          driver.Driver
+	DeviceDriver    driver.Driver
 	ImageViewHandle driver.VkImageView
 	Device          driver.VkDevice
 
@@ -22,7 +22,15 @@ func (v *VulkanImageView) Handle() driver.VkImageView {
 	return v.ImageViewHandle
 }
 
+func (v *VulkanImageView) Driver() driver.Driver {
+	return v.DeviceDriver
+}
+
+func (v *VulkanImageView) APIVersion() common.APIVersion {
+	return v.MaximumAPIVersion
+}
+
 func (v *VulkanImageView) Destroy(callbacks *driver.AllocationCallbacks) {
-	v.Driver.VkDestroyImageView(v.Device, v.ImageViewHandle, callbacks.Handle())
-	v.Driver.ObjectStore().Delete(driver.VulkanHandle(v.ImageViewHandle), v)
+	v.DeviceDriver.VkDestroyImageView(v.Device, v.ImageViewHandle, callbacks.Handle())
+	v.DeviceDriver.ObjectStore().Delete(driver.VulkanHandle(v.ImageViewHandle))
 }

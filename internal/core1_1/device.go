@@ -15,8 +15,27 @@ import (
 )
 
 type VulkanDevice struct {
+	core1_0.Device
+
 	DeviceDriver driver.Driver
 	DeviceHandle driver.VkDevice
+}
+
+func PromoteDevice(device core1_0.Device) core1_1.Device {
+	if !device.APIVersion().IsAtLeast(common.Vulkan1_1) {
+		return nil
+	}
+
+	return device.Driver().ObjectStore().GetOrCreate(
+		driver.VulkanHandle(device.Handle()),
+		driver.Core1_1,
+		func() any {
+			return &VulkanDevice{
+				Device:       device,
+				DeviceDriver: device.Driver(),
+				DeviceHandle: device.Handle(),
+			}
+		}).(core1_1.Device)
 }
 
 func (d *VulkanDevice) BindBufferMemory(o []core1_1.BindBufferMemoryOptions) (common.VkResult, error) {

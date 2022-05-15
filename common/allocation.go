@@ -31,14 +31,14 @@ var internalAllocationTypeToString = map[InternalAllocationType]string{
 	InternalAllocationExecutable: "Executable Allocation",
 }
 
-type AllocationFunction func(userData interface{}, size int, alignment int, allocationScope SystemAllocationScope) unsafe.Pointer
-type ReallocationFunction func(userData interface{}, original unsafe.Pointer, size int, allignment int, allocationScope SystemAllocationScope) unsafe.Pointer
-type FreeFunction func(userData interface{}, memory unsafe.Pointer)
-type InternalAllocationNotification func(userData interface{}, size int, allocationType InternalAllocationType, allocationScope SystemAllocationScope)
-type InternalFreeNotification func(userData interface{}, size int, allocationType InternalAllocationType, allocationScope SystemAllocationScope)
+type AllocationFunction func(userData any, size int, alignment int, allocationScope SystemAllocationScope) unsafe.Pointer
+type ReallocationFunction func(userData any, original unsafe.Pointer, size int, allignment int, allocationScope SystemAllocationScope) unsafe.Pointer
+type FreeFunction func(userData any, memory unsafe.Pointer)
+type InternalAllocationNotification func(userData any, size int, allocationType InternalAllocationType, allocationScope SystemAllocationScope)
+type InternalFreeNotification func(userData any, size int, allocationType InternalAllocationType, allocationScope SystemAllocationScope)
 
 type AllocationCallbackOptions struct {
-	UserData           interface{}
+	UserData           any
 	Allocation         AllocationFunction
 	Reallocation       ReallocationFunction
 	Free               FreeFunction

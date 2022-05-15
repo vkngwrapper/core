@@ -35,6 +35,10 @@ func (m *VulkanDeviceMemory) Driver() driver.Driver {
 	return m.DeviceDriver
 }
 
+func (m *VulkanDeviceMemory) APIVersion() common.APIVersion {
+	return m.MaximumAPIVersion
+}
+
 func (m *VulkanDeviceMemory) MapMemory(offset int, size int, flags core1_0.MemoryMapFlags) (unsafe.Pointer, common.VkResult, error) {
 	var data unsafe.Pointer
 	res, err := m.DeviceDriver.VkMapMemory(m.Device, m.DeviceMemoryHandle, driver.VkDeviceSize(offset), driver.VkDeviceSize(size), driver.VkMemoryMapFlags(flags), &data)
@@ -51,7 +55,7 @@ func (m *VulkanDeviceMemory) UnmapMemory() {
 
 func (m *VulkanDeviceMemory) Free(allocationCallbacks *driver.AllocationCallbacks) {
 	m.Driver().VkFreeMemory(m.Device, m.DeviceMemoryHandle, allocationCallbacks.Handle())
-	m.Driver().ObjectStore().Delete(driver.VulkanHandle(m.DeviceMemoryHandle), m)
+	m.Driver().ObjectStore().Delete(driver.VulkanHandle(m.DeviceMemoryHandle))
 }
 
 func (m *VulkanDeviceMemory) Commitment() int {

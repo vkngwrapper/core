@@ -11,7 +11,7 @@ import (
 )
 
 type VulkanPipelineLayout struct {
-	Driver               driver.Driver
+	DeviceDriver         driver.Driver
 	Device               driver.VkDevice
 	PipelineLayoutHandle driver.VkPipelineLayout
 
@@ -22,7 +22,15 @@ func (l *VulkanPipelineLayout) Handle() driver.VkPipelineLayout {
 	return l.PipelineLayoutHandle
 }
 
+func (l *VulkanPipelineLayout) Driver() driver.Driver {
+	return l.DeviceDriver
+}
+
+func (l *VulkanPipelineLayout) APIVersion() common.APIVersion {
+	return l.MaximumAPIVersion
+}
+
 func (l *VulkanPipelineLayout) Destroy(callbacks *driver.AllocationCallbacks) {
-	l.Driver.VkDestroyPipelineLayout(l.Device, l.PipelineLayoutHandle, callbacks.Handle())
-	l.Driver.ObjectStore().Delete(driver.VulkanHandle(l.PipelineLayoutHandle), l)
+	l.DeviceDriver.VkDestroyPipelineLayout(l.Device, l.PipelineLayoutHandle, callbacks.Handle())
+	l.DeviceDriver.ObjectStore().Delete(driver.VulkanHandle(l.PipelineLayoutHandle))
 }

@@ -4,6 +4,7 @@ import (
 	"github.com/CannibalVox/VKng/core"
 	"github.com/CannibalVox/VKng/core/common"
 	"github.com/CannibalVox/VKng/core/core1_0"
+	"github.com/CannibalVox/VKng/core/core1_1"
 	"github.com/CannibalVox/VKng/core/driver"
 	mock_driver "github.com/CannibalVox/VKng/core/driver/mocks"
 	"github.com/CannibalVox/VKng/core/internal/dummies"
@@ -22,7 +23,7 @@ func TestVulkanInstance_EnumeratePhysicalDeviceGroups(t *testing.T) {
 	coreDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_1)
 	loader, err := core.CreateLoaderFromDriver(coreDriver)
 	require.NoError(t, err)
-	instance := dummies.EasyDummyInstance(t, loader)
+	instance := core1_1.PromoteInstance(dummies.EasyDummyInstance(t, loader))
 
 	physicalDevice1 := mocks.EasyMockPhysicalDevice(ctrl, coreDriver)
 	physicalDevice2 := mocks.EasyMockPhysicalDevice(ctrl, coreDriver)
@@ -119,7 +120,7 @@ func TestVulkanInstance_EnumeratePhysicalDeviceGroups(t *testing.T) {
 			*(*driver.Uint32)(unsafe.Pointer(value.FieldByName("apiVersion").UnsafeAddr())) = driver.Uint32(common.Vulkan1_0)
 		})
 
-	groups, _, err := instance.Core1_1().PhysicalDeviceGroups(nil)
+	groups, _, err := instance.PhysicalDeviceGroups(nil)
 	require.NoError(t, err)
 	require.Len(t, groups, 3)
 	require.True(t, groups[0].SubsetAllocation)
@@ -145,7 +146,7 @@ func TestVulkanInstance_EnumeratePhysicalDeviceGroups_Incomplete(t *testing.T) {
 	coreDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_1)
 	loader, err := core.CreateLoaderFromDriver(coreDriver)
 	require.NoError(t, err)
-	instance := dummies.EasyDummyInstance(t, loader)
+	instance := core1_1.PromoteInstance(dummies.EasyDummyInstance(t, loader))
 
 	physicalDevice1 := mocks.EasyMockPhysicalDevice(ctrl, coreDriver)
 	physicalDevice2 := mocks.EasyMockPhysicalDevice(ctrl, coreDriver)
@@ -283,7 +284,7 @@ func TestVulkanInstance_EnumeratePhysicalDeviceGroups_Incomplete(t *testing.T) {
 			*(*driver.Uint32)(unsafe.Pointer(value.FieldByName("apiVersion").UnsafeAddr())) = driver.Uint32(common.Vulkan1_0)
 		})
 
-	groups, _, err := instance.Core1_1().PhysicalDeviceGroups(nil)
+	groups, _, err := instance.PhysicalDeviceGroups(nil)
 	require.NoError(t, err)
 	require.Len(t, groups, 3)
 	require.True(t, groups[0].SubsetAllocation)

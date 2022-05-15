@@ -36,7 +36,7 @@ func (p *VulkanDescriptorPool) APIVersion() common.APIVersion {
 
 func (p *VulkanDescriptorPool) Destroy(callbacks *driver.AllocationCallbacks) {
 	p.DeviceDriver.VkDestroyDescriptorPool(p.Device, p.DescriptorPoolHandle, callbacks.Handle())
-	p.DeviceDriver.ObjectStore().Delete(driver.VulkanHandle(p.DescriptorPoolHandle), p)
+	p.DeviceDriver.ObjectStore().Delete(driver.VulkanHandle(p.DescriptorPoolHandle))
 }
 
 func (p *VulkanDescriptorPool) Reset(flags common.DescriptorPoolResetFlags) (common.VkResult, error) {

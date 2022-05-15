@@ -28,6 +28,10 @@ func (q *VulkanQueue) Driver() driver.Driver {
 	return q.DeviceDriver
 }
 
+func (q *VulkanQueue) APIVersion() common.APIVersion {
+	return q.MaximumAPIVersion
+}
+
 func (q *VulkanQueue) WaitForIdle() (common.VkResult, error) {
 	return q.DeviceDriver.VkQueueWaitIdle(q.QueueHandle)
 }

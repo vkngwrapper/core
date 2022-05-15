@@ -14,7 +14,7 @@ import (
 )
 
 type VulkanPipelineCache struct {
-	Driver              driver.Driver
+	DeviceDriver        driver.Driver
 	Device              driver.VkDevice
 	PipelineCacheHandle driver.VkPipelineCache
 
@@ -25,9 +25,17 @@ func (c *VulkanPipelineCache) Handle() driver.VkPipelineCache {
 	return c.PipelineCacheHandle
 }
 
+func (c *VulkanPipelineCache) Driver() driver.Driver {
+	return c.DeviceDriver
+}
+
+func (c *VulkanPipelineCache) APIVersion() common.APIVersion {
+	return c.MaximumAPIVersion
+}
+
 func (c *VulkanPipelineCache) Destroy(callbacks *driver.AllocationCallbacks) {
-	c.Driver.VkDestroyPipelineCache(c.Device, c.PipelineCacheHandle, callbacks.Handle())
-	c.Driver.ObjectStore().Delete(driver.VulkanHandle(c.PipelineCacheHandle), c)
+	c.DeviceDriver.VkDestroyPipelineCache(c.Device, c.PipelineCacheHandle, callbacks.Handle())
+	c.DeviceDriver.ObjectStore().Delete(driver.VulkanHandle(c.PipelineCacheHandle))
 }
 
 func (c *VulkanPipelineCache) CacheData() ([]byte, common.VkResult, error) {
@@ -37,14 +45,14 @@ func (c *VulkanPipelineCache) CacheData() ([]byte, common.VkResult, error) {
 	cacheSizePtr := arena.Malloc(int(unsafe.Sizeof(C.size_t(0))))
 	cacheSize := (*driver.Size)(cacheSizePtr)
 
-	res, err := c.Driver.VkGetPipelineCacheData(c.Device, c.PipelineCacheHandle, cacheSize, nil)
+	res, err := c.DeviceDriver.VkGetPipelineCacheData(c.Device, c.PipelineCacheHandle, cacheSize, nil)
 	if err != nil {
 		return nil, res, err
 	}
 
 	cacheDataPtr := arena.Malloc(int(*cacheSize))
 
-	res, err = c.Driver.VkGetPipelineCacheData(c.Device, c.PipelineCacheHandle, cacheSize, cacheDataPtr)
+	res, err = c.DeviceDriver.VkGetPipelineCacheData(c.Device, c.PipelineCacheHandle, cacheSize, cacheDataPtr)
 	if err != nil {
 		return nil, res, err
 	}
@@ -68,5 +76,5 @@ func (c *VulkanPipelineCache) MergePipelineCaches(srcCaches []core1_0.PipelineCa
 		srcSlice[i] = srcCaches[i].Handle()
 	}
 
-	return c.Driver.VkMergePipelineCaches(c.Device, c.PipelineCacheHandle, driver.Uint32(srcCount), srcPtr)
+	return c.DeviceDriver.VkMergePipelineCaches(c.Device, c.PipelineCacheHandle, driver.Uint32(srcCount), srcPtr)
 }

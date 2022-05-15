@@ -11,5 +11,5 @@ const (
 )
 
 func init() {
-	PipelineCacheHeaderVersion1.Register("Version 1")
+	PipelineCacheHeaderVersion1.Register("APIVersion 1")
 }

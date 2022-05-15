@@ -5,8 +5,18 @@ import (
 	"sync"
 )
 
+const (
+	Core1_0              string = "core1_0"
+	Core1_1              string = "core1_1"
+	Core1_2              string = "core1_2"
+	Core1_3              string = "core1_3"
+	Core1_1InstanceScope string = "core1_1instance"
+	Core1_2InstanceScope string = "core1_2instance"
+	Core1_3InstanceScope string = "core1_3instance"
+)
+
 type VulkanObjectStore struct {
-	objStore     map[VulkanHandle]interface{}
+	objStore     map[VulkanHandle]map[string]any
 	objChildren  map[VulkanHandle]map[VulkanHandle]struct{}
 	objParents   map[VulkanHandle]VulkanHandle
 	controlMutex sync.Mutex
@@ -14,23 +24,30 @@ type VulkanObjectStore struct {
 
 func NewObjectStore() *VulkanObjectStore {
 	return &VulkanObjectStore{
-		objStore:    make(map[VulkanHandle]interface{}),
+		objStore:    make(map[VulkanHandle]map[string]any),
 		objChildren: make(map[VulkanHandle]map[VulkanHandle]struct{}),
 		objParents:  make(map[VulkanHandle]VulkanHandle),
 	}
 }
 
-func (s *VulkanObjectStore) GetOrCreate(handle VulkanHandle, create func() interface{}) interface{} {
+func (s *VulkanObjectStore) GetOrCreate(handle VulkanHandle, key string, create func() any) any {
 	s.controlMutex.Lock()
 	defer s.controlMutex.Unlock()
 
-	obj, hasObj := s.objStore[handle]
-	if hasObj {
-		return obj
+	var obj any
+	objMap, hasObj := s.objStore[handle]
+	if !hasObj {
+		objMap = make(map[string]any)
+		s.objStore[handle] = objMap
+	} else {
+		obj, hasObj = objMap[key]
+		if hasObj {
+			return obj
+		}
 	}
 
 	obj = create()
-	s.objStore[handle] = obj
+	objMap[key] = obj
 
 	return obj
 }
@@ -74,12 +91,12 @@ func (s *VulkanObjectStore) deleteSingle(handle VulkanHandle) {
 	}
 }
 
-func (s *VulkanObjectStore) Delete(handle VulkanHandle, obj interface{}) {
+func (s *VulkanObjectStore) Delete(handle VulkanHandle) {
 	s.controlMutex.Lock()
 	defer s.controlMutex.Unlock()
 
-	actualObj, hasObj := s.objStore[handle]
-	if !hasObj || actualObj != obj {
+	_, hasObj := s.objStore[handle]
+	if !hasObj {
 		return
 	}
 

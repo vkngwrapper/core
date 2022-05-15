@@ -6,7 +6,7 @@ import (
 )
 
 type VulkanDescriptorSetLayout struct {
-	Driver                    driver.Driver
+	DeviceDriver              driver.Driver
 	Device                    driver.VkDevice
 	DescriptorSetLayoutHandle driver.VkDescriptorSetLayout
 
@@ -17,7 +17,15 @@ func (h *VulkanDescriptorSetLayout) Handle() driver.VkDescriptorSetLayout {
 	return h.DescriptorSetLayoutHandle
 }
 
+func (h *VulkanDescriptorSetLayout) Driver() driver.Driver {
+	return h.DeviceDriver
+}
+
+func (h *VulkanDescriptorSetLayout) APIVersion() common.APIVersion {
+	return h.MaximumAPIVersion
+}
+
 func (h *VulkanDescriptorSetLayout) Destroy(callbacks *driver.AllocationCallbacks) {
-	h.Driver.VkDestroyDescriptorSetLayout(h.Device, h.DescriptorSetLayoutHandle, callbacks.Handle())
-	h.Driver.ObjectStore().Delete(driver.VulkanHandle(h.DescriptorSetLayoutHandle), h)
+	h.DeviceDriver.VkDestroyDescriptorSetLayout(h.Device, h.DescriptorSetLayoutHandle, callbacks.Handle())
+	h.DeviceDriver.ObjectStore().Delete(driver.VulkanHandle(h.DescriptorSetLayoutHandle))
 }

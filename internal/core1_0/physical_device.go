@@ -8,7 +8,6 @@ import "C"
 import (
 	"github.com/CannibalVox/VKng/core/common"
 	"github.com/CannibalVox/VKng/core/core1_0"
-	"github.com/CannibalVox/VKng/core/core1_1"
 	"github.com/CannibalVox/VKng/core/driver"
 	"github.com/CannibalVox/cgoparam"
 	"unsafe"
@@ -20,8 +19,6 @@ type VulkanPhysicalDevice struct {
 
 	InstanceVersion      common.APIVersion
 	MaximumDeviceVersion common.APIVersion
-
-	PhysicalDevice1_1 core1_1.InstancePhysicalDevice
 }
 
 func (d *VulkanPhysicalDevice) Handle() driver.VkPhysicalDevice {
@@ -38,10 +35,6 @@ func (d *VulkanPhysicalDevice) DeviceAPIVersion() common.APIVersion {
 
 func (d *VulkanPhysicalDevice) InstanceAPIVersion() common.APIVersion {
 	return d.InstanceVersion
-}
-
-func (d *VulkanPhysicalDevice) Core1_1Instance() core1_1.InstancePhysicalDevice {
-	return d.PhysicalDevice1_1
 }
 
 func (d *VulkanPhysicalDevice) QueueFamilyProperties() []*core1_0.QueueFamily {

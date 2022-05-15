@@ -17,7 +17,7 @@ import (
 
 type Loader interface {
 	Driver() driver.Driver
-	Version() common.APIVersion
+	APIVersion() common.APIVersion
 
 	Core1_1() Loader1_1
 
@@ -25,44 +25,44 @@ type Loader interface {
 	AvailableExtensionsForLayer(layerName string) (map[string]*common.ExtensionProperties, common.VkResult, error)
 	AvailableLayers() (map[string]*common.LayerProperties, common.VkResult, error)
 
-	CreateBuffer(device Device, allocationCallbacks *driver.AllocationCallbacks, o core1_0.BufferCreateOptions) (Buffer, common.VkResult, error)
-	CreateBufferView(device Device, allocationCallbacks *driver.AllocationCallbacks, o core1_0.BufferViewCreateOptions) (BufferView, common.VkResult, error)
-	CreateCommandPool(device Device, allocationCallbacks *driver.AllocationCallbacks, o core1_0.CommandPoolCreateOptions) (CommandPool, common.VkResult, error)
-	CreateDescriptorPool(device Device, allocationCallbacks *driver.AllocationCallbacks, o core1_0.DescriptorPoolCreateOptions) (DescriptorPool, common.VkResult, error)
-	CreateDescriptorSetLayout(device Device, allocationCallbacks *driver.AllocationCallbacks, o core1_0.DescriptorSetLayoutCreateOptions) (DescriptorSetLayout, common.VkResult, error)
-	CreateDevice(physicalDevice PhysicalDevice, allocationCallbacks *driver.AllocationCallbacks, options core1_0.DeviceCreateOptions) (Device, common.VkResult, error)
-	CreateEvent(device Device, allocationCallbacks *driver.AllocationCallbacks, options core1_0.EventCreateOptions) (Event, common.VkResult, error)
-	CreateFence(device Device, allocationCallbacks *driver.AllocationCallbacks, o core1_0.FenceCreateOptions) (Fence, common.VkResult, error)
-	CreateFrameBuffer(device Device, allocationCallbacks *driver.AllocationCallbacks, o core1_0.FramebufferCreateOptions) (Framebuffer, common.VkResult, error)
-	CreateGraphicsPipelines(device Device, pipelineCache core1_0.PipelineCache, allocationCallbacks *driver.AllocationCallbacks, o []core1_0.GraphicsPipelineCreateOptions) ([]Pipeline, common.VkResult, error)
-	CreateComputePipelines(device Device, pipelineCache core1_0.PipelineCache, allocationCallbacks *driver.AllocationCallbacks, o []core1_0.ComputePipelineCreateOptions) ([]Pipeline, common.VkResult, error)
-	CreateInstance(allocationCallbacks *driver.AllocationCallbacks, options core1_0.InstanceCreateOptions) (Instance, common.VkResult, error)
-	CreateImage(device Device, allocationCallbacks *driver.AllocationCallbacks, options core1_0.ImageCreateOptions) (Image, common.VkResult, error)
-	CreateImageView(device Device, allocationCallbacks *driver.AllocationCallbacks, o core1_0.ImageViewCreateOptions) (ImageView, common.VkResult, error)
-	CreatePipelineCache(device Device, allocationCallbacks *driver.AllocationCallbacks, o core1_0.PipelineCacheCreateOptions) (PipelineCache, common.VkResult, error)
-	CreatePipelineLayout(device Device, allocationCallbacks *driver.AllocationCallbacks, o core1_0.PipelineLayoutCreateOptions) (PipelineLayout, common.VkResult, error)
-	CreateQueryPool(device Device, allocationCallbacks *driver.AllocationCallbacks, o core1_0.QueryPoolCreateOptions) (QueryPool, common.VkResult, error)
-	CreateRenderPass(device Device, allocationCallbacks *driver.AllocationCallbacks, o core1_0.RenderPassCreateOptions) (RenderPass, common.VkResult, error)
-	CreateSampler(device Device, allocationCallbacks *driver.AllocationCallbacks, o core1_0.SamplerCreateOptions) (Sampler, common.VkResult, error)
-	CreateSemaphore(device Device, allocationCallbacks *driver.AllocationCallbacks, o core1_0.SemaphoreCreateOptions) (Semaphore, common.VkResult, error)
-	CreateShaderModule(device Device, allocationCallbacks *driver.AllocationCallbacks, o core1_0.ShaderModuleCreateOptions) (ShaderModule, common.VkResult, error)
+	CreateBuffer(device core1_0.Device, allocationCallbacks *driver.AllocationCallbacks, o core1_0.BufferCreateOptions) (core1_0.Buffer, common.VkResult, error)
+	CreateBufferView(device core1_0.Device, allocationCallbacks *driver.AllocationCallbacks, o core1_0.BufferViewCreateOptions) (core1_0.BufferView, common.VkResult, error)
+	CreateCommandPool(device core1_0.Device, allocationCallbacks *driver.AllocationCallbacks, o core1_0.CommandPoolCreateOptions) (core1_0.CommandPool, common.VkResult, error)
+	CreateDescriptorPool(device core1_0.Device, allocationCallbacks *driver.AllocationCallbacks, o core1_0.DescriptorPoolCreateOptions) (core1_0.DescriptorPool, common.VkResult, error)
+	CreateDescriptorSetLayout(device core1_0.Device, allocationCallbacks *driver.AllocationCallbacks, o core1_0.DescriptorSetLayoutCreateOptions) (core1_0.DescriptorSetLayout, common.VkResult, error)
+	CreateDevice(physicalDevice core1_0.PhysicalDevice, allocationCallbacks *driver.AllocationCallbacks, options core1_0.DeviceCreateOptions) (core1_0.Device, common.VkResult, error)
+	CreateEvent(device core1_0.Device, allocationCallbacks *driver.AllocationCallbacks, options core1_0.EventCreateOptions) (core1_0.Event, common.VkResult, error)
+	CreateFence(device core1_0.Device, allocationCallbacks *driver.AllocationCallbacks, o core1_0.FenceCreateOptions) (core1_0.Fence, common.VkResult, error)
+	CreateFrameBuffer(device core1_0.Device, allocationCallbacks *driver.AllocationCallbacks, o core1_0.FramebufferCreateOptions) (core1_0.Framebuffer, common.VkResult, error)
+	CreateGraphicsPipelines(device core1_0.Device, pipelineCache core1_0.PipelineCache, allocationCallbacks *driver.AllocationCallbacks, o []core1_0.GraphicsPipelineCreateOptions) ([]core1_0.Pipeline, common.VkResult, error)
+	CreateComputePipelines(device core1_0.Device, pipelineCache core1_0.PipelineCache, allocationCallbacks *driver.AllocationCallbacks, o []core1_0.ComputePipelineCreateOptions) ([]core1_0.Pipeline, common.VkResult, error)
+	CreateInstance(allocationCallbacks *driver.AllocationCallbacks, options core1_0.InstanceCreateOptions) (core1_0.Instance, common.VkResult, error)
+	CreateImage(device core1_0.Device, allocationCallbacks *driver.AllocationCallbacks, options core1_0.ImageCreateOptions) (core1_0.Image, common.VkResult, error)
+	CreateImageView(device core1_0.Device, allocationCallbacks *driver.AllocationCallbacks, o core1_0.ImageViewCreateOptions) (core1_0.ImageView, common.VkResult, error)
+	CreatePipelineCache(device core1_0.Device, allocationCallbacks *driver.AllocationCallbacks, o core1_0.PipelineCacheCreateOptions) (core1_0.PipelineCache, common.VkResult, error)
+	CreatePipelineLayout(device core1_0.Device, allocationCallbacks *driver.AllocationCallbacks, o core1_0.PipelineLayoutCreateOptions) (core1_0.PipelineLayout, common.VkResult, error)
+	CreateQueryPool(device core1_0.Device, allocationCallbacks *driver.AllocationCallbacks, o core1_0.QueryPoolCreateOptions) (core1_0.QueryPool, common.VkResult, error)
+	CreateRenderPass(device core1_0.Device, allocationCallbacks *driver.AllocationCallbacks, o core1_0.RenderPassCreateOptions) (core1_0.RenderPass, common.VkResult, error)
+	CreateSampler(device core1_0.Device, allocationCallbacks *driver.AllocationCallbacks, o core1_0.SamplerCreateOptions) (core1_0.Sampler, common.VkResult, error)
+	CreateSemaphore(device core1_0.Device, allocationCallbacks *driver.AllocationCallbacks, o core1_0.SemaphoreCreateOptions) (core1_0.Semaphore, common.VkResult, error)
+	CreateShaderModule(device core1_0.Device, allocationCallbacks *driver.AllocationCallbacks, o core1_0.ShaderModuleCreateOptions) (core1_0.ShaderModule, common.VkResult, error)
 
-	GetQueue(device Device, queueFamilyIndex int, queueIndex int) Queue
-	AllocateMemory(device Device, allocationCallbacks *driver.AllocationCallbacks, o core1_0.MemoryAllocateOptions) (DeviceMemory, common.VkResult, error)
-	FreeMemory(deviceMemory DeviceMemory, allocationCallbacks *driver.AllocationCallbacks)
-	PhysicalDevices(instance Instance) ([]PhysicalDevice, common.VkResult, error)
+	GetQueue(device core1_0.Device, queueFamilyIndex int, queueIndex int) core1_0.Queue
+	AllocateMemory(device core1_0.Device, allocationCallbacks *driver.AllocationCallbacks, o core1_0.MemoryAllocateOptions) (core1_0.DeviceMemory, common.VkResult, error)
+	FreeMemory(deviceMemory core1_0.DeviceMemory, allocationCallbacks *driver.AllocationCallbacks)
+	PhysicalDevices(instance core1_0.Instance) ([]core1_0.PhysicalDevice, common.VkResult, error)
 
-	AllocateCommandBuffers(o core1_0.CommandBufferAllocateOptions) ([]CommandBuffer, common.VkResult, error)
-	FreeCommandBuffers(buffers []CommandBuffer)
-	AllocateDescriptorSets(o core1_0.DescriptorSetAllocateOptions) ([]DescriptorSet, common.VkResult, error)
-	FreeDescriptorSets(sets []DescriptorSet) (common.VkResult, error)
+	AllocateCommandBuffers(o core1_0.CommandBufferAllocateOptions) ([]core1_0.CommandBuffer, common.VkResult, error)
+	FreeCommandBuffers(buffers []core1_0.CommandBuffer)
+	AllocateDescriptorSets(o core1_0.DescriptorSetAllocateOptions) ([]core1_0.DescriptorSet, common.VkResult, error)
+	FreeDescriptorSets(sets []core1_0.DescriptorSet) (common.VkResult, error)
 }
 
 type Loader1_1 interface {
-	CreateDescriptorUpdateTemplate(device Device, o core1_1.DescriptorUpdateTemplateCreateOptions, allocator *driver.AllocationCallbacks) (DescriptorUpdateTemplate, common.VkResult, error)
-	CreateSamplerYcbcrConversion(device Device, o core1_1.SamplerYcbcrConversionCreateOptions, allocator *driver.AllocationCallbacks) (SamplerYcbcrConversion, common.VkResult, error)
+	CreateDescriptorUpdateTemplate(device core1_0.Device, o core1_1.DescriptorUpdateTemplateCreateOptions, allocator *driver.AllocationCallbacks) (core1_1.DescriptorUpdateTemplate, common.VkResult, error)
+	CreateSamplerYcbcrConversion(device core1_0.Device, o core1_1.SamplerYcbcrConversionCreateOptions, allocator *driver.AllocationCallbacks) (core1_1.SamplerYcbcrConversion, common.VkResult, error)
 
-	GetQueue(device Device, o core1_1.DeviceQueueOptions) (Queue, error)
+	GetQueue(device core1_0.Device, o core1_1.DeviceQueueOptions) (core1_0.Queue, error)
 }
 
 func CreateStaticLinkedLoader() (*VulkanLoader1_0, error) {

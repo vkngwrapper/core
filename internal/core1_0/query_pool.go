@@ -13,7 +13,7 @@ import (
 )
 
 type VulkanQueryPool struct {
-	Driver          driver.Driver
+	DeviceDriver    driver.Driver
 	QueryPoolHandle driver.VkQueryPool
 	Device          driver.VkDevice
 
@@ -24,9 +24,17 @@ func (p *VulkanQueryPool) Handle() driver.VkQueryPool {
 	return p.QueryPoolHandle
 }
 
+func (p *VulkanQueryPool) Driver() driver.Driver {
+	return p.DeviceDriver
+}
+
+func (p *VulkanQueryPool) APIVersion() common.APIVersion {
+	return p.MaximumAPIVersion
+}
+
 func (p *VulkanQueryPool) Destroy(callbacks *driver.AllocationCallbacks) {
-	p.Driver.VkDestroyQueryPool(p.Device, p.QueryPoolHandle, callbacks.Handle())
-	p.Driver.ObjectStore().Delete(driver.VulkanHandle(p.QueryPoolHandle), p)
+	p.DeviceDriver.VkDestroyQueryPool(p.Device, p.QueryPoolHandle, callbacks.Handle())
+	p.DeviceDriver.ObjectStore().Delete(driver.VulkanHandle(p.QueryPoolHandle))
 }
 
 func (p *VulkanQueryPool) PopulateResults(firstQuery, queryCount int, results []byte, resultStride int, flags common.QueryResultFlags) (common.VkResult, error) {
@@ -37,7 +45,7 @@ func (p *VulkanQueryPool) PopulateResults(firstQuery, queryCount int, results []
 
 	inPointer := arena.Malloc(resultSize)
 
-	res, err := p.Driver.VkGetQueryPoolResults(p.Device, p.QueryPoolHandle, driver.Uint32(firstQuery), driver.Uint32(queryCount), driver.Size(resultSize), inPointer, driver.VkDeviceSize(resultStride), driver.VkQueryResultFlags(flags))
+	res, err := p.DeviceDriver.VkGetQueryPoolResults(p.Device, p.QueryPoolHandle, driver.Uint32(firstQuery), driver.Uint32(queryCount), driver.Size(resultSize), inPointer, driver.VkDeviceSize(resultStride), driver.VkQueryResultFlags(flags))
 	if err != nil {
 		return res, err
 	}

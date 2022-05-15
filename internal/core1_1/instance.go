@@ -15,10 +15,32 @@ import (
 )
 
 type VulkanInstance struct {
+	core1_0.Instance
+
 	InstanceDriver driver.Driver
 	InstanceHandle driver.VkInstance
 
 	MaximumVersion common.APIVersion
+}
+
+func PromoteInstance(instance core1_0.Instance) core1_1.Instance {
+	if !instance.APIVersion().IsAtLeast(common.Vulkan1_1) {
+		return nil
+	}
+
+	return instance.Driver().ObjectStore().GetOrCreate(
+		driver.VulkanHandle(instance.Handle()),
+		driver.Core1_1,
+		func() any {
+			return &VulkanInstance{
+				Instance: instance,
+
+				InstanceDriver: instance.Driver(),
+				InstanceHandle: instance.Handle(),
+
+				MaximumVersion: instance.APIVersion(),
+			}
+		}).(core1_1.Instance)
 }
 
 func (i *VulkanInstance) attemptEnumeratePhysicalDeviceGroups(outDataFactory func() *core1_1.DeviceGroupOutData) ([]*core1_1.DeviceGroupOutData, common.VkResult, error) {

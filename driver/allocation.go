@@ -71,7 +71,7 @@ func CreateAllocationCallbacks(o *common.AllocationCallbackOptions) *AllocationC
 }
 
 type AllocationCallbacks struct {
-	userData           interface{}
+	userData           any
 	allocation         common.AllocationFunction
 	reallocation       common.ReallocationFunction
 	free               common.FreeFunction

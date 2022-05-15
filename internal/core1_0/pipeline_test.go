@@ -203,7 +203,7 @@ func TestVulkanLoader1_0_CreateGraphicsPipelines_ShaderStagesSuccess(t *testing.
 					Name:   "another shader 2",
 					Stage:  core1_0.StageFragment,
 					Shader: shaderModule2,
-					SpecializationInfo: map[uint32]interface{}{
+					SpecializationInfo: map[uint32]any{
 						1: true,
 						2: float64(7.6),
 					},
@@ -244,7 +244,7 @@ func TestVulkanLoader1_0_CreateGraphicsPipelines_ShaderStagesFailure_InvalidSpec
 					Name:   "another shader 2",
 					Stage:  core1_0.StageFragment,
 					Shader: shaderModule2,
-					SpecializationInfo: map[uint32]interface{}{
+					SpecializationInfo: map[uint32]any{
 						1: "wow, this is invalid",
 						2: float64(7.6),
 					},
@@ -1068,7 +1068,7 @@ func TestVulkanLoader1_0_CreateComputePipelines_EmptySuccess(t *testing.T) {
 				Name:   "some compute shader",
 				Stage:  core1_0.StageCompute,
 				Shader: shaderModule,
-				SpecializationInfo: map[uint32]interface{}{
+				SpecializationInfo: map[uint32]any{
 					1: true,
 					2: float64(7.6),
 				},

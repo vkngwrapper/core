@@ -13,7 +13,7 @@ type VulkanLoader1_1 struct {
 	driver driver.Driver
 }
 
-func (l *VulkanLoader1_1) CreateDescriptorUpdateTemplate(device Device, o core1_1.DescriptorUpdateTemplateCreateOptions, allocator *driver.AllocationCallbacks) (DescriptorUpdateTemplate, common.VkResult, error) {
+func (l *VulkanLoader1_1) CreateDescriptorUpdateTemplate(device core1_0.Device, o core1_1.DescriptorUpdateTemplateCreateOptions, allocator *driver.AllocationCallbacks) (core1_1.DescriptorUpdateTemplate, common.VkResult, error) {
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
@@ -35,7 +35,7 @@ func (l *VulkanLoader1_1) CreateDescriptorUpdateTemplate(device Device, o core1_
 	return objects.CreateDescriptorUpdateTemplate(device.Driver(), device.Handle(), templateHandle, device.APIVersion()), res, nil
 }
 
-func (l *VulkanLoader1_1) CreateSamplerYcbcrConversion(device Device, o core1_1.SamplerYcbcrConversionCreateOptions, allocator *driver.AllocationCallbacks) (SamplerYcbcrConversion, common.VkResult, error) {
+func (l *VulkanLoader1_1) CreateSamplerYcbcrConversion(device core1_0.Device, o core1_1.SamplerYcbcrConversionCreateOptions, allocator *driver.AllocationCallbacks) (core1_1.SamplerYcbcrConversion, common.VkResult, error) {
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
@@ -58,7 +58,7 @@ func (l *VulkanLoader1_1) CreateSamplerYcbcrConversion(device Device, o core1_1.
 	return objects.CreateSamplerYcbcrConversion(device.Driver(), device.Handle(), ycbcrHandle, device.APIVersion()), res, nil
 }
 
-func (l *VulkanLoader1_1) GetQueue(device Device, o core1_1.DeviceQueueOptions) (Queue, error) {
+func (l *VulkanLoader1_1) GetQueue(device core1_0.Device, o core1_1.DeviceQueueOptions) (core1_0.Queue, error) {
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 

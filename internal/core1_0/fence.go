@@ -14,9 +14,9 @@ import (
 )
 
 type VulkanFence struct {
-	Driver      driver.Driver
-	Device      driver.VkDevice
-	FenceHandle driver.VkFence
+	DeviceDriver driver.Driver
+	Device       driver.VkDevice
+	FenceHandle  driver.VkFence
 
 	MaximumAPIVersion common.APIVersion
 }
@@ -25,9 +25,17 @@ func (f *VulkanFence) Handle() driver.VkFence {
 	return f.FenceHandle
 }
 
+func (f *VulkanFence) Driver() driver.Driver {
+	return f.DeviceDriver
+}
+
+func (f *VulkanFence) APIVersion() common.APIVersion {
+	return f.MaximumAPIVersion
+}
+
 func (f *VulkanFence) Destroy(callbacks *driver.AllocationCallbacks) {
-	f.Driver.VkDestroyFence(f.Device, f.FenceHandle, callbacks.Handle())
-	f.Driver.ObjectStore().Delete(driver.VulkanHandle(f.FenceHandle), f)
+	f.DeviceDriver.VkDestroyFence(f.Device, f.FenceHandle, callbacks.Handle())
+	f.DeviceDriver.ObjectStore().Delete(driver.VulkanHandle(f.FenceHandle))
 }
 
 func (f *VulkanFence) Wait(timeout time.Duration) (common.VkResult, error) {
@@ -41,7 +49,7 @@ func (f *VulkanFence) Wait(timeout time.Duration) (common.VkResult, error) {
 	fenceSlice := ([]driver.VkFence)(unsafe.Slice(fencePtr, 1))
 	fenceSlice[0] = f.FenceHandle
 
-	return f.Driver.VkWaitForFences(f.Device, driver.Uint32(1), fencePtr, driver.VkBool32(C.VK_TRUE), driver.Uint64(common.TimeoutNanoseconds(timeout)))
+	return f.DeviceDriver.VkWaitForFences(f.Device, driver.Uint32(1), fencePtr, driver.VkBool32(C.VK_TRUE), driver.Uint64(common.TimeoutNanoseconds(timeout)))
 }
 
 func (f *VulkanFence) Reset() (common.VkResult, error) {
@@ -54,9 +62,9 @@ func (f *VulkanFence) Reset() (common.VkResult, error) {
 	fenceSlice := ([]driver.VkFence)(unsafe.Slice(fencePtr, 1))
 	fenceSlice[0] = f.FenceHandle
 
-	return f.Driver.VkResetFences(f.Device, driver.Uint32(1), fencePtr)
+	return f.DeviceDriver.VkResetFences(f.Device, driver.Uint32(1), fencePtr)
 }
 
 func (f *VulkanFence) Status() (common.VkResult, error) {
-	return f.Driver.VkGetFenceStatus(f.Device, f.FenceHandle)
+	return f.DeviceDriver.VkGetFenceStatus(f.Device, f.FenceHandle)
 }
