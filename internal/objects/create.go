@@ -179,7 +179,7 @@ func CreateDescriptorSetLayout(coreDriver driver.Driver, device driver.VkDevice,
 }
 
 func CreateDescriptorUpdateTemplate(coreDriver driver.Driver, device driver.VkDevice, handle driver.VkDescriptorUpdateTemplate, version common.APIVersion) *internal1_1.VulkanDescriptorUpdateTemplate {
-	return coreDriver.ObjectStore().GetOrCreate(driver.VulkanHandle(handle), driver.Core1_0,
+	return coreDriver.ObjectStore().GetOrCreate(driver.VulkanHandle(handle), driver.Core1_1,
 		func() any {
 			template := &internal1_1.VulkanDescriptorUpdateTemplate{
 				DeviceDriver:             coreDriver,
@@ -377,7 +377,7 @@ func CreateSampler(coreDriver driver.Driver, device driver.VkDevice, handle driv
 }
 
 func CreateSamplerYcbcrConversion(coreDriver driver.Driver, device driver.VkDevice, handle driver.VkSamplerYcbcrConversion, version common.APIVersion) *internal1_1.VulkanSamplerYcbcrConversion {
-	return coreDriver.ObjectStore().GetOrCreate(driver.VulkanHandle(handle), driver.Core1_0,
+	return coreDriver.ObjectStore().GetOrCreate(driver.VulkanHandle(handle), driver.Core1_1,
 		func() any {
 			return &internal1_1.VulkanSamplerYcbcrConversion{
 				DeviceDriver:      coreDriver,
