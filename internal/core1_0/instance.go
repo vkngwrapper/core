@@ -14,6 +14,8 @@ type VulkanInstance struct {
 	InstanceDriver driver.Driver
 	InstanceHandle driver.VkInstance
 	MaximumVersion common.APIVersion
+
+	ActiveInstanceExtensions map[string]struct{}
 }
 
 func (i *VulkanInstance) Driver() driver.Driver {
@@ -32,4 +34,9 @@ func (i *VulkanInstance) Destroy(callbacks *driver.AllocationCallbacks) {
 	i.InstanceDriver.VkDestroyInstance(i.InstanceHandle, callbacks.Handle())
 	i.InstanceDriver.ObjectStore().Delete(driver.VulkanHandle(i.InstanceHandle))
 	i.InstanceDriver.Destroy()
+}
+
+func (i *VulkanInstance) IsInstanceExtensionActive(extensionName string) bool {
+	_, active := i.ActiveInstanceExtensions[extensionName]
+	return active
 }

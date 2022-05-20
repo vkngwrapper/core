@@ -1565,6 +1565,20 @@ func (mr *Device1_1MockRecorder) InvalidateMappedMemoryRanges(ranges interface{}
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "InvalidateMappedMemoryRanges", reflect.TypeOf((*Device1_1)(nil).InvalidateMappedMemoryRanges), ranges)
 }
 
+// IsDeviceExtensionActive mocks base method.
+func (m *Device1_1) IsDeviceExtensionActive(extensionName string) bool {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "IsDeviceExtensionActive", extensionName)
+	ret0, _ := ret[0].(bool)
+	return ret0
+}
+
+// IsDeviceExtensionActive indicates an expected call of IsDeviceExtensionActive.
+func (mr *Device1_1MockRecorder) IsDeviceExtensionActive(extensionName interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "IsDeviceExtensionActive", reflect.TypeOf((*Device1_1)(nil).IsDeviceExtensionActive), extensionName)
+}
+
 // ResetFences mocks base method.
 func (m *Device1_1) ResetFences(fences []core1_0.Fence) (common.VkResult, error) {
 	m.ctrl.T.Helper()
@@ -2522,6 +2536,20 @@ func (m *Instance1_1) Handle() driver.VkInstance {
 func (mr *Instance1_1MockRecorder) Handle() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Handle", reflect.TypeOf((*Instance1_1)(nil).Handle))
+}
+
+// IsInstanceExtensionActive mocks base method.
+func (m *Instance1_1) IsInstanceExtensionActive(extensionName string) bool {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "IsInstanceExtensionActive", extensionName)
+	ret0, _ := ret[0].(bool)
+	return ret0
+}
+
+// IsInstanceExtensionActive indicates an expected call of IsInstanceExtensionActive.
+func (mr *Instance1_1MockRecorder) IsInstanceExtensionActive(extensionName interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "IsInstanceExtensionActive", reflect.TypeOf((*Instance1_1)(nil).IsInstanceExtensionActive), extensionName)
 }
 
 // PhysicalDeviceGroups mocks base method.

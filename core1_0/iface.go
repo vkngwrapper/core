@@ -145,6 +145,8 @@ type Device interface {
 	Driver() driver.Driver
 	APIVersion() common.APIVersion
 
+	IsDeviceExtensionActive(extensionName string) bool
+
 	Destroy(callbacks *driver.AllocationCallbacks)
 	WaitForIdle() (common.VkResult, error)
 	WaitForFences(waitForAll bool, timeout time.Duration, fences []Fence) (common.VkResult, error)
@@ -208,6 +210,8 @@ type Instance interface {
 	Handle() driver.VkInstance
 	Driver() driver.Driver
 	APIVersion() common.APIVersion
+
+	IsInstanceExtensionActive(extensionName string) bool
 
 	Destroy(callbacks *driver.AllocationCallbacks)
 }

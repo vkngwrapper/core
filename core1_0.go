@@ -221,6 +221,10 @@ func (l *VulkanLoader1_0) CreateInstance(allocationCallbacks *driver.AllocationC
 	version := l.APIVersion().Min(options.VulkanVersion)
 	instance := objects.CreateInstance(instanceDriver, instanceHandle, version)
 
+	for _, extension := range options.ExtensionNames {
+		instance.ActiveInstanceExtensions[extension] = struct{}{}
+	}
+
 	return instance, res, nil
 }
 
@@ -245,6 +249,10 @@ func (l *VulkanLoader1_0) CreateDevice(physicalDevice core1_0.PhysicalDevice, al
 	}
 
 	device := objects.CreateDevice(deviceDriver, deviceHandle, physicalDevice.DeviceAPIVersion())
+
+	for _, extension := range options.ExtensionNames {
+		device.ActiveDeviceExtensions[extension] = struct{}{}
+	}
 
 	return device, res, nil
 }

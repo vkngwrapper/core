@@ -12,9 +12,10 @@ func CreateInstance(instanceDriver driver.Driver, handle driver.VkInstance, vers
 	return instanceDriver.ObjectStore().GetOrCreate(driver.VulkanHandle(handle), driver.Core1_0,
 		func() any {
 			instance := &internal1_0.VulkanInstance{
-				InstanceDriver: instanceDriver,
-				InstanceHandle: handle,
-				MaximumVersion: version,
+				InstanceDriver:           instanceDriver,
+				InstanceHandle:           handle,
+				MaximumVersion:           version,
+				ActiveInstanceExtensions: make(map[string]struct{}),
 			}
 
 			return instance
@@ -57,9 +58,10 @@ func CreateDevice(deviceDriver driver.Driver, handle driver.VkDevice, version co
 	return deviceDriver.ObjectStore().GetOrCreate(driver.VulkanHandle(handle), driver.Core1_0,
 		func() any {
 			device := &internal1_0.VulkanDevice{
-				DeviceDriver:      deviceDriver,
-				DeviceHandle:      handle,
-				MaximumAPIVersion: version,
+				DeviceDriver:           deviceDriver,
+				DeviceHandle:           handle,
+				MaximumAPIVersion:      version,
+				ActiveDeviceExtensions: make(map[string]struct{}),
 			}
 
 			return device
