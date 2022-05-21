@@ -1245,7 +1245,7 @@ func TestVulkanDevice_CreateDeviceWithFeatures(t *testing.T) {
 		ExtensionNames: []string{"a", "b"},
 		LayerNames:     []string{"c"},
 	}
-	features := core1_1.DeviceFeatureOptions{
+	features := core1_1.DeviceFeaturesOptions{
 		Features: core1_0.PhysicalDeviceFeatures{
 			TextureCompressionEtc2: true,
 			DepthBounds:            true,
@@ -1697,7 +1697,7 @@ func TestPhysicalDeviceShaderDrawParametersFeaturesOutData(t *testing.T) {
 	}, outData)
 }
 
-func TestVariablePointersFeatureOptions(t *testing.T) {
+func TestVariablePointersFeaturesOptions(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
@@ -1742,7 +1742,7 @@ func TestVariablePointersFeatureOptions(t *testing.T) {
 			},
 		},
 
-		HaveNext: common.HaveNext{Next: core1_1.PhysicalDeviceVariablePointersFeatureOptions{
+		HaveNext: common.HaveNext{Next: core1_1.PhysicalDeviceVariablePointersFeaturesOptions{
 			VariablePointers:              true,
 			VariablePointersStorageBuffer: false,
 		}},
@@ -1752,7 +1752,7 @@ func TestVariablePointersFeatureOptions(t *testing.T) {
 	require.Equal(t, mockDevice.Handle(), device.Handle())
 }
 
-func TestVariablePointersFeatureOutData(t *testing.T) {
+func TestVariablePointersFeaturesOutData(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
@@ -1761,7 +1761,7 @@ func TestVariablePointersFeatureOutData(t *testing.T) {
 	require.NoError(t, err)
 	physicalDevice := core1_1.PromotePhysicalDevice(dummies.EasyDummyPhysicalDevice(t, loader))
 
-	var pointersOutData core1_1.PhysicalDeviceVariablePointersFeatureOutData
+	var pointersOutData core1_1.PhysicalDeviceVariablePointersFeaturesOutData
 
 	coreDriver.EXPECT().VkGetPhysicalDeviceFeatures2(
 		physicalDevice.Handle(),
