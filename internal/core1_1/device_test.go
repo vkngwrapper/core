@@ -1,7 +1,6 @@
 package internal1_1_test
 
 import (
-	"github.com/CannibalVox/VKng/core"
 	"github.com/CannibalVox/VKng/core/common"
 	"github.com/CannibalVox/VKng/core/core1_0"
 	"github.com/CannibalVox/VKng/core/core1_1"
@@ -359,14 +358,13 @@ func TestDeviceGroupBindSparseOptions(t *testing.T) {
 
 	coreDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_1)
 	device := dummies.EasyDummyDevice(coreDriver)
-	mockQueue := mocks.EasyMockQueue(ctrl)
 	fence := mocks.EasyMockFence(ctrl)
 
 	semaphore1 := mocks.EasyMockSemaphore(ctrl)
 	semaphore2 := mocks.EasyMockSemaphore(ctrl)
 	semaphore3 := mocks.EasyMockSemaphore(ctrl)
 
-	queue := core.CreateQueue(coreDriver, device.Handle(), mockQueue.Handle(), common.Vulkan1_0)
+	queue := dummies.EasyDummyQueue(coreDriver, device)
 
 	coreDriver.EXPECT().VkQueueBindSparse(
 		queue.Handle(),

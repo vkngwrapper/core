@@ -1,7 +1,6 @@
 package internal1_1_test
 
 import (
-	"github.com/CannibalVox/VKng/core"
 	"github.com/CannibalVox/VKng/core/common"
 	"github.com/CannibalVox/VKng/core/core1_0"
 	"github.com/CannibalVox/VKng/core/core1_1"
@@ -58,9 +57,7 @@ func TestDeviceGroupCommandBufferBeginOptions(t *testing.T) {
 	coreDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_0)
 	device := mocks.EasyMockDevice(ctrl, coreDriver)
 	commandPool := mocks.EasyMockCommandPool(ctrl, device)
-	mockCommandBuffer := mocks.EasyMockCommandBuffer(ctrl)
-
-	commandBuffer := core.CreateCommandBuffer(coreDriver, commandPool.Handle(), device.Handle(), mockCommandBuffer.Handle(), common.Vulkan1_0)
+	commandBuffer := dummies.EasyDummyCommandBuffer(coreDriver, device, commandPool)
 
 	coreDriver.EXPECT().VkBeginCommandBuffer(
 		commandBuffer.Handle(),
