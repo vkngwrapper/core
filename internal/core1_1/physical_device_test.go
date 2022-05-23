@@ -229,7 +229,7 @@ func TestVulkanPhysicalDevice_Features(t *testing.T) {
 		})
 
 	outData := &core1_1.DeviceFeaturesOutData{}
-	err := physicalDevice.InstanceScopedPhysicalDevice1_1().Features(outData)
+	err := physicalDevice.InstanceScopedPhysicalDevice1_1().Features2(outData)
 	require.NoError(t, err)
 
 	features := outData.Features
@@ -318,7 +318,7 @@ func TestVulkanPhysicalDevice_FormatProperties(t *testing.T) {
 	})
 
 	outData := core1_1.FormatPropertiesOutData{}
-	err := physicalDevice.InstanceScopedPhysicalDevice1_1().FormatProperties(
+	err := physicalDevice.InstanceScopedPhysicalDevice1_1().FormatProperties2(
 		core1_0.DataFormatA2B10G10R10UnsignedNormalizedPacked,
 		&outData)
 	require.NoError(t, err)
@@ -369,7 +369,7 @@ func TestVulkanPhysicalDevice_ImageFormatProperties(t *testing.T) {
 		})
 
 	outData := core1_1.ImageFormatPropertiesOutData{}
-	_, err := physicalDevice.InstanceScopedPhysicalDevice1_1().ImageFormatProperties(core1_1.ImageFormatOptions{
+	_, err := physicalDevice.InstanceScopedPhysicalDevice1_1().ImageFormatProperties2(core1_1.ImageFormatOptions{
 		Format: core1_0.DataFormatA2B10G10R10UnsignedIntPacked,
 		Type:   core1_0.ImageType2D,
 		Tiling: core1_0.ImageTilingOptimal,
@@ -416,7 +416,7 @@ func TestVulkanPhysicalDevice_MemoryProperties(t *testing.T) {
 		})
 
 	outData := core1_1.MemoryPropertiesOutData{}
-	err := physicalDevice.InstanceScopedPhysicalDevice1_1().MemoryProperties(&outData)
+	err := physicalDevice.InstanceScopedPhysicalDevice1_1().MemoryProperties2(&outData)
 	require.NoError(t, err)
 	require.Equal(t, []common.MemoryType{
 		{
@@ -494,7 +494,7 @@ func TestVulkanPhysicalDevice_Properties(t *testing.T) {
 		})
 
 	outData := core1_1.DevicePropertiesOutData{}
-	err = physicalDevice.InstanceScopedPhysicalDevice1_1().Properties(&outData)
+	err = physicalDevice.InstanceScopedPhysicalDevice1_1().Properties2(&outData)
 	require.NoError(t, err)
 
 	require.Equal(t, common.Vulkan1_1, outData.Properties.APIVersion)
@@ -568,7 +568,7 @@ func TestVulkanPhysicalDevice_QueueFamilyProperties(t *testing.T) {
 			*(*uint32)(unsafe.Pointer(propertyExtent.FieldByName("depth").UnsafeAddr())) = uint32(31)
 		})
 
-	outData, err := physicalDevice.InstanceScopedPhysicalDevice1_1().QueueFamilyProperties(nil)
+	outData, err := physicalDevice.InstanceScopedPhysicalDevice1_1().QueueFamilyProperties2(nil)
 	require.NoError(t, err)
 
 	require.Equal(t, []*core1_1.QueueFamilyOutData{
@@ -664,7 +664,7 @@ func TestVulkanPhysicalDevice_SparseImageFormatProperties(t *testing.T) {
 		*(*uint32)(unsafe.Pointer(sparseProps.FieldByName("flags").UnsafeAddr())) = uint32(4) // VK_SPARSE_IMAGE_FORMAT_NONSTANDARD_BLOCK_SIZE_BIT
 	})
 
-	outData, err := physicalDevice.InstanceScopedPhysicalDevice1_1().SparseImageFormatProperties(
+	outData, err := physicalDevice.InstanceScopedPhysicalDevice1_1().SparseImageFormatProperties2(
 		core1_1.SparseImageFormatOptions{
 			Format:  core1_0.DataFormatA2B10G10R10UnsignedScaledPacked,
 			Type:    core1_0.ImageType3D,
@@ -740,7 +740,7 @@ func TestPhysicalDeviceIDOutData(t *testing.T) {
 	var outData core1_1.PhysicalDeviceIDOutData
 	properties.HaveNext = common.HaveNext{&outData}
 
-	err = physicalDevice.InstanceScopedPhysicalDevice1_1().Properties(
+	err = physicalDevice.InstanceScopedPhysicalDevice1_1().Properties2(
 		&properties,
 	)
 	require.NoError(t, err)
@@ -784,7 +784,7 @@ func TestMaintenance3OutData(t *testing.T) {
 	outData := &core1_1.DevicePropertiesOutData{
 		HaveNext: common.HaveNext{Next: maintOutData},
 	}
-	err := physicalDevice.InstanceScopedPhysicalDevice1_1().Properties(outData)
+	err := physicalDevice.InstanceScopedPhysicalDevice1_1().Properties2(outData)
 	require.NoError(t, err)
 
 	require.Equal(t, uint32(3), outData.Properties.VendorID)
@@ -823,7 +823,7 @@ func TestMultiviewPropertiesOutData(t *testing.T) {
 		HaveNext: common.HaveNext{&outData},
 	}
 
-	err := physicalDevice.InstanceScopedPhysicalDevice1_1().Properties(&properties)
+	err := physicalDevice.InstanceScopedPhysicalDevice1_1().Properties2(&properties)
 	require.NoError(t, err)
 	require.Equal(t, core1_1.PhysicalDeviceMultiviewOutData{
 		MaxMultiviewInstanceIndex: 3,
@@ -865,7 +865,7 @@ func TestPointClippingOutData(t *testing.T) {
 		HaveNext: common.HaveNext{Next: pointClipping},
 	}
 
-	err := physicalDevice.InstanceScopedPhysicalDevice1_1().Properties(properties)
+	err := physicalDevice.InstanceScopedPhysicalDevice1_1().Properties2(properties)
 	require.NoError(t, err)
 
 	require.Equal(t, uint32(3), properties.Properties.VendorID)
@@ -908,7 +908,7 @@ func TestPhysicalDeviceProtectedMemoryOutData(t *testing.T) {
 		HaveNext: common.HaveNext{Next: protectedMemory},
 	}
 
-	err := physicalDevice.InstanceScopedPhysicalDevice1_1().Properties(properties)
+	err := physicalDevice.InstanceScopedPhysicalDevice1_1().Properties2(properties)
 	require.NoError(t, err)
 
 	require.Equal(t, uint32(3), properties.Properties.VendorID)
@@ -957,7 +957,7 @@ func TestPhysicalDeviceSubgroupOutData(t *testing.T) {
 		HaveNext: common.HaveNext{Next: subgroups},
 	}
 
-	err := physicalDevice.InstanceScopedPhysicalDevice1_1().Properties(properties)
+	err := physicalDevice.InstanceScopedPhysicalDevice1_1().Properties2(properties)
 	require.NoError(t, err)
 
 	require.Equal(t, uint32(3), properties.Properties.VendorID)
@@ -1046,7 +1046,7 @@ func TestVulkanExtension_PhysicalDeviceFeatures(t *testing.T) {
 		})
 
 	outData := &core1_1.DeviceFeaturesOutData{}
-	err := physicalDevice.InstanceScopedPhysicalDevice1_1().Features(outData)
+	err := physicalDevice.InstanceScopedPhysicalDevice1_1().Features2(outData)
 	require.NoError(t, err)
 
 	features := outData.Features
@@ -1270,7 +1270,7 @@ func TestDevice16BitStorageOutData(t *testing.T) {
 		HaveNext: common.HaveNext{Next: outData},
 	}
 
-	err := physicalDevice.InstanceScopedPhysicalDevice1_1().Features(features)
+	err := physicalDevice.InstanceScopedPhysicalDevice1_1().Features2(features)
 	require.NoError(t, err)
 
 	require.True(t, outData.StoragePushConstant16)
@@ -1376,7 +1376,7 @@ func TestMultiviewFeaturesOutData(t *testing.T) {
 		HaveNext: common.HaveNext{&outData},
 	}
 
-	err := physicalDevice.InstanceScopedPhysicalDevice1_1().Features(&features)
+	err := physicalDevice.InstanceScopedPhysicalDevice1_1().Features2(&features)
 	require.NoError(t, err)
 	require.Equal(t, core1_1.PhysicalDeviceMultiviewFeaturesOutData{
 		Multiview:                   true,
@@ -1474,7 +1474,7 @@ func TestPhysicalDeviceProtectedMemoryFeaturesOutData(t *testing.T) {
 		HaveNext: common.HaveNext{&outData},
 	}
 
-	err := physicalDevice.InstanceScopedPhysicalDevice1_1().Features(&features)
+	err := physicalDevice.InstanceScopedPhysicalDevice1_1().Features2(&features)
 	require.NoError(t, err)
 	require.Equal(t, core1_1.PhysicalDeviceProtectedMemoryFeaturesOutData{
 		ProtectedMemory: true,
@@ -1562,7 +1562,7 @@ func TestSamplerYcbcrFeaturesOutData(t *testing.T) {
 
 	var outData core1_1.PhysicalDeviceSamplerYcbcrFeaturesOutData
 
-	err := physicalDevice.InstanceScopedPhysicalDevice1_1().Features(
+	err := physicalDevice.InstanceScopedPhysicalDevice1_1().Features2(
 		&core1_1.DeviceFeaturesOutData{
 			HaveNext: common.HaveNext{
 				&outData,
@@ -1663,7 +1663,7 @@ func TestPhysicalDeviceShaderDrawParametersFeaturesOutData(t *testing.T) {
 		HaveNext: common.HaveNext{&outData},
 	}
 
-	err := physicalDevice.InstanceScopedPhysicalDevice1_1().Features(&features)
+	err := physicalDevice.InstanceScopedPhysicalDevice1_1().Features2(&features)
 	require.NoError(t, err)
 	require.Equal(t, core1_1.PhysicalDeviceShaderDrawParametersFeaturesOutData{
 		ShaderDrawParameters: true,
@@ -1756,7 +1756,7 @@ func TestVariablePointersFeaturesOutData(t *testing.T) {
 			*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("variablePointersStorageBuffer").UnsafeAddr())) = driver.VkBool32(1)
 		})
 
-	err := physicalDevice.InstanceScopedPhysicalDevice1_1().Features(&core1_1.DeviceFeaturesOutData{
+	err := physicalDevice.InstanceScopedPhysicalDevice1_1().Features2(&core1_1.DeviceFeaturesOutData{
 		HaveNext: common.HaveNext{Next: &pointersOutData},
 	})
 	require.NoError(t, err)

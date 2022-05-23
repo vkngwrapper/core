@@ -319,7 +319,7 @@ func TestExternalImageFormatOptions(t *testing.T) {
 	format := core1_1.ImageFormatPropertiesOutData{
 		HaveNext: common.HaveNext{&outData},
 	}
-	_, err := physicalDevice.InstanceScopedPhysicalDevice1_1().ImageFormatProperties(
+	_, err := physicalDevice.InstanceScopedPhysicalDevice1_1().ImageFormatProperties2(
 		core1_1.ImageFormatOptions{
 			Format: core1_0.DataFormatA2B10G10R10UnsignedIntPacked,
 			HaveNext: common.HaveNext{

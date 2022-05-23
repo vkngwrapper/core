@@ -103,19 +103,19 @@ type Instance interface {
 }
 
 type InstanceScopedPhysicalDevice interface {
-	PhysicalDevice() core1_0.PhysicalDevice
+	core1_0.PhysicalDevice
 
 	ExternalFenceProperties(o ExternalFenceOptions, outData *ExternalFenceOutData) error
 	ExternalBufferProperties(o ExternalBufferOptions, outData *ExternalBufferOutData) error
 	ExternalSemaphoreProperties(o ExternalSemaphoreOptions, outData *ExternalSemaphoreOutData) error
 
-	Features(out *DeviceFeaturesOutData) error
-	FormatProperties(format common.DataFormat, out *FormatPropertiesOutData) error
-	ImageFormatProperties(o ImageFormatOptions, out *ImageFormatPropertiesOutData) (common.VkResult, error)
-	MemoryProperties(out *MemoryPropertiesOutData) error
-	Properties(out *DevicePropertiesOutData) error
-	QueueFamilyProperties(outDataFactory func() *QueueFamilyOutData) ([]*QueueFamilyOutData, error)
-	SparseImageFormatProperties(o SparseImageFormatOptions, outDataFactory func() *SparseImageFormatPropertiesOutData) ([]*SparseImageFormatPropertiesOutData, error)
+	Features2(out *DeviceFeaturesOutData) error
+	FormatProperties2(format common.DataFormat, out *FormatPropertiesOutData) error
+	ImageFormatProperties2(o ImageFormatOptions, out *ImageFormatPropertiesOutData) (common.VkResult, error)
+	MemoryProperties2(out *MemoryPropertiesOutData) error
+	Properties2(out *DevicePropertiesOutData) error
+	QueueFamilyProperties2(outDataFactory func() *QueueFamilyOutData) ([]*QueueFamilyOutData, error)
+	SparseImageFormatProperties2(o SparseImageFormatOptions, outDataFactory func() *SparseImageFormatPropertiesOutData) ([]*SparseImageFormatPropertiesOutData, error)
 }
 
 type PhysicalDevice interface {

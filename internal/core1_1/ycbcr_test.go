@@ -158,7 +158,7 @@ func TestSamplerYcbcrImageFormatOutData(t *testing.T) {
 		})
 
 	var outData core1_1.SamplerYcbcrImageFormatOutData
-	_, err := physicalDevice.InstanceScopedPhysicalDevice1_1().ImageFormatProperties(
+	_, err := physicalDevice.InstanceScopedPhysicalDevice1_1().ImageFormatProperties2(
 		core1_1.ImageFormatOptions{},
 		&core1_1.ImageFormatPropertiesOutData{
 			HaveNext: common.HaveNext{&outData},

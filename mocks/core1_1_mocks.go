@@ -3059,6 +3059,98 @@ func (m *MockInstanceScopedPhysicalDevice) EXPECT() *MockInstanceScopedPhysicalD
 	return m.recorder
 }
 
+// AvailableExtensions mocks base method.
+func (m *MockInstanceScopedPhysicalDevice) AvailableExtensions() (map[string]*common.ExtensionProperties, common.VkResult, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "AvailableExtensions")
+	ret0, _ := ret[0].(map[string]*common.ExtensionProperties)
+	ret1, _ := ret[1].(common.VkResult)
+	ret2, _ := ret[2].(error)
+	return ret0, ret1, ret2
+}
+
+// AvailableExtensions indicates an expected call of AvailableExtensions.
+func (mr *MockInstanceScopedPhysicalDeviceMockRecorder) AvailableExtensions() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AvailableExtensions", reflect.TypeOf((*MockInstanceScopedPhysicalDevice)(nil).AvailableExtensions))
+}
+
+// AvailableExtensionsForLayer mocks base method.
+func (m *MockInstanceScopedPhysicalDevice) AvailableExtensionsForLayer(layerName string) (map[string]*common.ExtensionProperties, common.VkResult, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "AvailableExtensionsForLayer", layerName)
+	ret0, _ := ret[0].(map[string]*common.ExtensionProperties)
+	ret1, _ := ret[1].(common.VkResult)
+	ret2, _ := ret[2].(error)
+	return ret0, ret1, ret2
+}
+
+// AvailableExtensionsForLayer indicates an expected call of AvailableExtensionsForLayer.
+func (mr *MockInstanceScopedPhysicalDeviceMockRecorder) AvailableExtensionsForLayer(layerName interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AvailableExtensionsForLayer", reflect.TypeOf((*MockInstanceScopedPhysicalDevice)(nil).AvailableExtensionsForLayer), layerName)
+}
+
+// AvailableLayers mocks base method.
+func (m *MockInstanceScopedPhysicalDevice) AvailableLayers() (map[string]*common.LayerProperties, common.VkResult, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "AvailableLayers")
+	ret0, _ := ret[0].(map[string]*common.LayerProperties)
+	ret1, _ := ret[1].(common.VkResult)
+	ret2, _ := ret[2].(error)
+	return ret0, ret1, ret2
+}
+
+// AvailableLayers indicates an expected call of AvailableLayers.
+func (mr *MockInstanceScopedPhysicalDeviceMockRecorder) AvailableLayers() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AvailableLayers", reflect.TypeOf((*MockInstanceScopedPhysicalDevice)(nil).AvailableLayers))
+}
+
+// CreateDevice mocks base method.
+func (m *MockInstanceScopedPhysicalDevice) CreateDevice(allocationCallbacks *driver.AllocationCallbacks, options core1_0.DeviceCreateOptions) (core1_0.Device, common.VkResult, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreateDevice", allocationCallbacks, options)
+	ret0, _ := ret[0].(core1_0.Device)
+	ret1, _ := ret[1].(common.VkResult)
+	ret2, _ := ret[2].(error)
+	return ret0, ret1, ret2
+}
+
+// CreateDevice indicates an expected call of CreateDevice.
+func (mr *MockInstanceScopedPhysicalDeviceMockRecorder) CreateDevice(allocationCallbacks, options interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateDevice", reflect.TypeOf((*MockInstanceScopedPhysicalDevice)(nil).CreateDevice), allocationCallbacks, options)
+}
+
+// DeviceAPIVersion mocks base method.
+func (m *MockInstanceScopedPhysicalDevice) DeviceAPIVersion() common.APIVersion {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DeviceAPIVersion")
+	ret0, _ := ret[0].(common.APIVersion)
+	return ret0
+}
+
+// DeviceAPIVersion indicates an expected call of DeviceAPIVersion.
+func (mr *MockInstanceScopedPhysicalDeviceMockRecorder) DeviceAPIVersion() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeviceAPIVersion", reflect.TypeOf((*MockInstanceScopedPhysicalDevice)(nil).DeviceAPIVersion))
+}
+
+// Driver mocks base method.
+func (m *MockInstanceScopedPhysicalDevice) Driver() driver.Driver {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Driver")
+	ret0, _ := ret[0].(driver.Driver)
+	return ret0
+}
+
+// Driver indicates an expected call of Driver.
+func (mr *MockInstanceScopedPhysicalDeviceMockRecorder) Driver() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Driver", reflect.TypeOf((*MockInstanceScopedPhysicalDevice)(nil).Driver))
+}
+
 // ExternalBufferProperties mocks base method.
 func (m *MockInstanceScopedPhysicalDevice) ExternalBufferProperties(o core1_1.ExternalBufferOptions, outData *core1_1.ExternalBufferOutData) error {
 	m.ctrl.T.Helper()
@@ -3102,118 +3194,233 @@ func (mr *MockInstanceScopedPhysicalDeviceMockRecorder) ExternalSemaphorePropert
 }
 
 // Features mocks base method.
-func (m *MockInstanceScopedPhysicalDevice) Features(out *core1_1.DeviceFeaturesOutData) error {
+func (m *MockInstanceScopedPhysicalDevice) Features() *core1_0.PhysicalDeviceFeatures {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Features", out)
-	ret0, _ := ret[0].(error)
+	ret := m.ctrl.Call(m, "Features")
+	ret0, _ := ret[0].(*core1_0.PhysicalDeviceFeatures)
 	return ret0
 }
 
 // Features indicates an expected call of Features.
-func (mr *MockInstanceScopedPhysicalDeviceMockRecorder) Features(out interface{}) *gomock.Call {
+func (mr *MockInstanceScopedPhysicalDeviceMockRecorder) Features() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Features", reflect.TypeOf((*MockInstanceScopedPhysicalDevice)(nil).Features), out)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Features", reflect.TypeOf((*MockInstanceScopedPhysicalDevice)(nil).Features))
 }
 
-// FormatProperties mocks base method.
-func (m *MockInstanceScopedPhysicalDevice) FormatProperties(format common.DataFormat, out *core1_1.FormatPropertiesOutData) error {
+// Features2 mocks base method.
+func (m *MockInstanceScopedPhysicalDevice) Features2(out *core1_1.DeviceFeaturesOutData) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "FormatProperties", format, out)
+	ret := m.ctrl.Call(m, "Features2", out)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
-// FormatProperties indicates an expected call of FormatProperties.
-func (mr *MockInstanceScopedPhysicalDeviceMockRecorder) FormatProperties(format, out interface{}) *gomock.Call {
+// Features2 indicates an expected call of Features2.
+func (mr *MockInstanceScopedPhysicalDeviceMockRecorder) Features2(out interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FormatProperties", reflect.TypeOf((*MockInstanceScopedPhysicalDevice)(nil).FormatProperties), format, out)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Features2", reflect.TypeOf((*MockInstanceScopedPhysicalDevice)(nil).Features2), out)
+}
+
+// FormatProperties mocks base method.
+func (m *MockInstanceScopedPhysicalDevice) FormatProperties(format common.DataFormat) *core1_0.FormatProperties {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "FormatProperties", format)
+	ret0, _ := ret[0].(*core1_0.FormatProperties)
+	return ret0
+}
+
+// FormatProperties indicates an expected call of FormatProperties.
+func (mr *MockInstanceScopedPhysicalDeviceMockRecorder) FormatProperties(format interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FormatProperties", reflect.TypeOf((*MockInstanceScopedPhysicalDevice)(nil).FormatProperties), format)
+}
+
+// FormatProperties2 mocks base method.
+func (m *MockInstanceScopedPhysicalDevice) FormatProperties2(format common.DataFormat, out *core1_1.FormatPropertiesOutData) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "FormatProperties2", format, out)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// FormatProperties2 indicates an expected call of FormatProperties2.
+func (mr *MockInstanceScopedPhysicalDeviceMockRecorder) FormatProperties2(format, out interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FormatProperties2", reflect.TypeOf((*MockInstanceScopedPhysicalDevice)(nil).FormatProperties2), format, out)
+}
+
+// Handle mocks base method.
+func (m *MockInstanceScopedPhysicalDevice) Handle() driver.VkPhysicalDevice {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Handle")
+	ret0, _ := ret[0].(driver.VkPhysicalDevice)
+	return ret0
+}
+
+// Handle indicates an expected call of Handle.
+func (mr *MockInstanceScopedPhysicalDeviceMockRecorder) Handle() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Handle", reflect.TypeOf((*MockInstanceScopedPhysicalDevice)(nil).Handle))
 }
 
 // ImageFormatProperties mocks base method.
-func (m *MockInstanceScopedPhysicalDevice) ImageFormatProperties(o core1_1.ImageFormatOptions, out *core1_1.ImageFormatPropertiesOutData) (common.VkResult, error) {
+func (m *MockInstanceScopedPhysicalDevice) ImageFormatProperties(format common.DataFormat, imageType common.ImageType, tiling common.ImageTiling, usages common.ImageUsages, flags common.ImageCreateFlags) (*core1_0.ImageFormatProperties, common.VkResult, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "ImageFormatProperties", o, out)
+	ret := m.ctrl.Call(m, "ImageFormatProperties", format, imageType, tiling, usages, flags)
+	ret0, _ := ret[0].(*core1_0.ImageFormatProperties)
+	ret1, _ := ret[1].(common.VkResult)
+	ret2, _ := ret[2].(error)
+	return ret0, ret1, ret2
+}
+
+// ImageFormatProperties indicates an expected call of ImageFormatProperties.
+func (mr *MockInstanceScopedPhysicalDeviceMockRecorder) ImageFormatProperties(format, imageType, tiling, usages, flags interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ImageFormatProperties", reflect.TypeOf((*MockInstanceScopedPhysicalDevice)(nil).ImageFormatProperties), format, imageType, tiling, usages, flags)
+}
+
+// ImageFormatProperties2 mocks base method.
+func (m *MockInstanceScopedPhysicalDevice) ImageFormatProperties2(o core1_1.ImageFormatOptions, out *core1_1.ImageFormatPropertiesOutData) (common.VkResult, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ImageFormatProperties2", o, out)
 	ret0, _ := ret[0].(common.VkResult)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// ImageFormatProperties indicates an expected call of ImageFormatProperties.
-func (mr *MockInstanceScopedPhysicalDeviceMockRecorder) ImageFormatProperties(o, out interface{}) *gomock.Call {
+// ImageFormatProperties2 indicates an expected call of ImageFormatProperties2.
+func (mr *MockInstanceScopedPhysicalDeviceMockRecorder) ImageFormatProperties2(o, out interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ImageFormatProperties", reflect.TypeOf((*MockInstanceScopedPhysicalDevice)(nil).ImageFormatProperties), o, out)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ImageFormatProperties2", reflect.TypeOf((*MockInstanceScopedPhysicalDevice)(nil).ImageFormatProperties2), o, out)
+}
+
+// InstanceAPIVersion mocks base method.
+func (m *MockInstanceScopedPhysicalDevice) InstanceAPIVersion() common.APIVersion {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "InstanceAPIVersion")
+	ret0, _ := ret[0].(common.APIVersion)
+	return ret0
+}
+
+// InstanceAPIVersion indicates an expected call of InstanceAPIVersion.
+func (mr *MockInstanceScopedPhysicalDeviceMockRecorder) InstanceAPIVersion() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "InstanceAPIVersion", reflect.TypeOf((*MockInstanceScopedPhysicalDevice)(nil).InstanceAPIVersion))
 }
 
 // MemoryProperties mocks base method.
-func (m *MockInstanceScopedPhysicalDevice) MemoryProperties(out *core1_1.MemoryPropertiesOutData) error {
+func (m *MockInstanceScopedPhysicalDevice) MemoryProperties() *core1_0.PhysicalDeviceMemoryProperties {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "MemoryProperties", out)
-	ret0, _ := ret[0].(error)
+	ret := m.ctrl.Call(m, "MemoryProperties")
+	ret0, _ := ret[0].(*core1_0.PhysicalDeviceMemoryProperties)
 	return ret0
 }
 
 // MemoryProperties indicates an expected call of MemoryProperties.
-func (mr *MockInstanceScopedPhysicalDeviceMockRecorder) MemoryProperties(out interface{}) *gomock.Call {
+func (mr *MockInstanceScopedPhysicalDeviceMockRecorder) MemoryProperties() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "MemoryProperties", reflect.TypeOf((*MockInstanceScopedPhysicalDevice)(nil).MemoryProperties), out)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "MemoryProperties", reflect.TypeOf((*MockInstanceScopedPhysicalDevice)(nil).MemoryProperties))
 }
 
-// PhysicalDevice mocks base method.
-func (m *MockInstanceScopedPhysicalDevice) PhysicalDevice() core1_0.PhysicalDevice {
+// MemoryProperties2 mocks base method.
+func (m *MockInstanceScopedPhysicalDevice) MemoryProperties2(out *core1_1.MemoryPropertiesOutData) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "PhysicalDevice")
-	ret0, _ := ret[0].(core1_0.PhysicalDevice)
-	return ret0
-}
-
-// PhysicalDevice indicates an expected call of PhysicalDevice.
-func (mr *MockInstanceScopedPhysicalDeviceMockRecorder) PhysicalDevice() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "PhysicalDevice", reflect.TypeOf((*MockInstanceScopedPhysicalDevice)(nil).PhysicalDevice))
-}
-
-// Properties mocks base method.
-func (m *MockInstanceScopedPhysicalDevice) Properties(out *core1_1.DevicePropertiesOutData) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Properties", out)
+	ret := m.ctrl.Call(m, "MemoryProperties2", out)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
-// Properties indicates an expected call of Properties.
-func (mr *MockInstanceScopedPhysicalDeviceMockRecorder) Properties(out interface{}) *gomock.Call {
+// MemoryProperties2 indicates an expected call of MemoryProperties2.
+func (mr *MockInstanceScopedPhysicalDeviceMockRecorder) MemoryProperties2(out interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Properties", reflect.TypeOf((*MockInstanceScopedPhysicalDevice)(nil).Properties), out)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "MemoryProperties2", reflect.TypeOf((*MockInstanceScopedPhysicalDevice)(nil).MemoryProperties2), out)
+}
+
+// Properties mocks base method.
+func (m *MockInstanceScopedPhysicalDevice) Properties() (*core1_0.PhysicalDeviceProperties, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Properties")
+	ret0, _ := ret[0].(*core1_0.PhysicalDeviceProperties)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// Properties indicates an expected call of Properties.
+func (mr *MockInstanceScopedPhysicalDeviceMockRecorder) Properties() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Properties", reflect.TypeOf((*MockInstanceScopedPhysicalDevice)(nil).Properties))
+}
+
+// Properties2 mocks base method.
+func (m *MockInstanceScopedPhysicalDevice) Properties2(out *core1_1.DevicePropertiesOutData) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Properties2", out)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// Properties2 indicates an expected call of Properties2.
+func (mr *MockInstanceScopedPhysicalDeviceMockRecorder) Properties2(out interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Properties2", reflect.TypeOf((*MockInstanceScopedPhysicalDevice)(nil).Properties2), out)
 }
 
 // QueueFamilyProperties mocks base method.
-func (m *MockInstanceScopedPhysicalDevice) QueueFamilyProperties(outDataFactory func() *core1_1.QueueFamilyOutData) ([]*core1_1.QueueFamilyOutData, error) {
+func (m *MockInstanceScopedPhysicalDevice) QueueFamilyProperties() []*core1_0.QueueFamily {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "QueueFamilyProperties", outDataFactory)
+	ret := m.ctrl.Call(m, "QueueFamilyProperties")
+	ret0, _ := ret[0].([]*core1_0.QueueFamily)
+	return ret0
+}
+
+// QueueFamilyProperties indicates an expected call of QueueFamilyProperties.
+func (mr *MockInstanceScopedPhysicalDeviceMockRecorder) QueueFamilyProperties() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "QueueFamilyProperties", reflect.TypeOf((*MockInstanceScopedPhysicalDevice)(nil).QueueFamilyProperties))
+}
+
+// QueueFamilyProperties2 mocks base method.
+func (m *MockInstanceScopedPhysicalDevice) QueueFamilyProperties2(outDataFactory func() *core1_1.QueueFamilyOutData) ([]*core1_1.QueueFamilyOutData, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "QueueFamilyProperties2", outDataFactory)
 	ret0, _ := ret[0].([]*core1_1.QueueFamilyOutData)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// QueueFamilyProperties indicates an expected call of QueueFamilyProperties.
-func (mr *MockInstanceScopedPhysicalDeviceMockRecorder) QueueFamilyProperties(outDataFactory interface{}) *gomock.Call {
+// QueueFamilyProperties2 indicates an expected call of QueueFamilyProperties2.
+func (mr *MockInstanceScopedPhysicalDeviceMockRecorder) QueueFamilyProperties2(outDataFactory interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "QueueFamilyProperties", reflect.TypeOf((*MockInstanceScopedPhysicalDevice)(nil).QueueFamilyProperties), outDataFactory)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "QueueFamilyProperties2", reflect.TypeOf((*MockInstanceScopedPhysicalDevice)(nil).QueueFamilyProperties2), outDataFactory)
 }
 
 // SparseImageFormatProperties mocks base method.
-func (m *MockInstanceScopedPhysicalDevice) SparseImageFormatProperties(o core1_1.SparseImageFormatOptions, outDataFactory func() *core1_1.SparseImageFormatPropertiesOutData) ([]*core1_1.SparseImageFormatPropertiesOutData, error) {
+func (m *MockInstanceScopedPhysicalDevice) SparseImageFormatProperties(format common.DataFormat, imageType common.ImageType, samples common.SampleCounts, usages common.ImageUsages, tiling common.ImageTiling) []core1_0.SparseImageFormatProperties {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SparseImageFormatProperties", o, outDataFactory)
+	ret := m.ctrl.Call(m, "SparseImageFormatProperties", format, imageType, samples, usages, tiling)
+	ret0, _ := ret[0].([]core1_0.SparseImageFormatProperties)
+	return ret0
+}
+
+// SparseImageFormatProperties indicates an expected call of SparseImageFormatProperties.
+func (mr *MockInstanceScopedPhysicalDeviceMockRecorder) SparseImageFormatProperties(format, imageType, samples, usages, tiling interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SparseImageFormatProperties", reflect.TypeOf((*MockInstanceScopedPhysicalDevice)(nil).SparseImageFormatProperties), format, imageType, samples, usages, tiling)
+}
+
+// SparseImageFormatProperties2 mocks base method.
+func (m *MockInstanceScopedPhysicalDevice) SparseImageFormatProperties2(o core1_1.SparseImageFormatOptions, outDataFactory func() *core1_1.SparseImageFormatPropertiesOutData) ([]*core1_1.SparseImageFormatPropertiesOutData, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "SparseImageFormatProperties2", o, outDataFactory)
 	ret0, _ := ret[0].([]*core1_1.SparseImageFormatPropertiesOutData)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// SparseImageFormatProperties indicates an expected call of SparseImageFormatProperties.
-func (mr *MockInstanceScopedPhysicalDeviceMockRecorder) SparseImageFormatProperties(o, outDataFactory interface{}) *gomock.Call {
+// SparseImageFormatProperties2 indicates an expected call of SparseImageFormatProperties2.
+func (mr *MockInstanceScopedPhysicalDeviceMockRecorder) SparseImageFormatProperties2(o, outDataFactory interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SparseImageFormatProperties", reflect.TypeOf((*MockInstanceScopedPhysicalDevice)(nil).SparseImageFormatProperties), o, outDataFactory)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SparseImageFormatProperties2", reflect.TypeOf((*MockInstanceScopedPhysicalDevice)(nil).SparseImageFormatProperties2), o, outDataFactory)
 }
 
 // PhysicalDevice1_1 is a mock of PhysicalDevice interface.
