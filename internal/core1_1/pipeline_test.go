@@ -1,12 +1,12 @@
 package internal1_1_test
 
 import (
-	"github.com/CannibalVox/VKng/core"
 	"github.com/CannibalVox/VKng/core/common"
 	"github.com/CannibalVox/VKng/core/core1_0"
 	"github.com/CannibalVox/VKng/core/core1_1"
 	"github.com/CannibalVox/VKng/core/driver"
 	mock_driver "github.com/CannibalVox/VKng/core/driver/mocks"
+	"github.com/CannibalVox/VKng/core/internal/dummies"
 	"github.com/CannibalVox/VKng/core/mocks"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/require"
@@ -20,10 +20,7 @@ func TestTessellationDomainOriginOptions(t *testing.T) {
 	defer ctrl.Finish()
 
 	coreDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_0)
-	loader, err := core.CreateLoaderFromDriver(coreDriver)
-	require.NoError(t, err)
-
-	device := mocks.EasyMockDevice(ctrl, coreDriver)
+	device := dummies.EasyDummyDevice(coreDriver)
 	expectedPipeline := mocks.EasyMockPipeline(ctrl)
 
 	coreDriver.EXPECT().VkCreateGraphicsPipelines(device.Handle(), driver.VkPipelineCache(0), driver.Uint32(1), gomock.Not(gomock.Nil()), gomock.Nil(), gomock.Not(gomock.Nil())).
@@ -57,7 +54,7 @@ func TestTessellationDomainOriginOptions(t *testing.T) {
 	domainOriginState := core1_1.PipelineTessellationDomainOriginStateOptions{
 		DomainOrigin: core1_1.TessellationDomainOriginLowerLeft,
 	}
-	pipelines, _, err := loader.CreateGraphicsPipelines(device, nil, nil, []core1_0.GraphicsPipelineCreateOptions{
+	pipelines, _, err := device.CreateGraphicsPipelines(nil, nil, []core1_0.GraphicsPipelineCreateOptions{
 		{
 			Tessellation: &core1_0.TessellationStateOptions{
 				PatchControlPoints: 1,

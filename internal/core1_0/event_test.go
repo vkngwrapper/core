@@ -1,7 +1,6 @@
 package internal1_0_test
 
 import (
-	"github.com/CannibalVox/VKng/core"
 	"github.com/CannibalVox/VKng/core/common"
 	"github.com/CannibalVox/VKng/core/core1_0"
 	"github.com/CannibalVox/VKng/core/driver"
@@ -19,10 +18,7 @@ func TestVulkanLoader1_0_CreateEvent(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_0)
-	loader, err := core.CreateLoaderFromDriver(mockDriver)
-	require.NoError(t, err)
-
-	device := internal_mocks.EasyDummyDevice(t, ctrl, loader)
+	device := internal_mocks.EasyDummyDevice(mockDriver)
 	eventHandle := mocks.NewFakeEventHandle()
 
 	mockDriver.EXPECT().VkCreateEvent(device.Handle(), gomock.Not(nil), nil, gomock.Not(nil)).DoAndReturn(
@@ -37,7 +33,7 @@ func TestVulkanLoader1_0_CreateEvent(t *testing.T) {
 			return core1_0.VKSuccess, nil
 		})
 
-	event, _, err := loader.CreateEvent(device, nil, core1_0.EventCreateOptions{
+	event, _, err := device.CreateEvent(nil, core1_0.EventCreateOptions{
 		Flags: 0,
 	})
 	require.NoError(t, err)
@@ -50,15 +46,12 @@ func TestVulkanEvent_Set(t *testing.T) {
 	defer ctrl.Finish()
 
 	driver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_0)
-	loader, err := core.CreateLoaderFromDriver(driver)
-	require.NoError(t, err)
-
 	device := mocks.EasyMockDevice(ctrl, driver)
-	event := internal_mocks.EasyDummyEvent(t, loader, device)
+	event := internal_mocks.EasyDummyEvent(driver, device)
 
 	driver.EXPECT().VkSetEvent(device.Handle(), event.Handle()).Return(core1_0.VKSuccess, nil)
 
-	_, err = event.Set()
+	_, err := event.Set()
 	require.NoError(t, err)
 }
 
@@ -67,15 +60,12 @@ func TestVulkanEvent_Reset(t *testing.T) {
 	defer ctrl.Finish()
 
 	driver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_0)
-	loader, err := core.CreateLoaderFromDriver(driver)
-	require.NoError(t, err)
-
 	device := mocks.EasyMockDevice(ctrl, driver)
-	event := internal_mocks.EasyDummyEvent(t, loader, device)
+	event := internal_mocks.EasyDummyEvent(driver, device)
 
 	driver.EXPECT().VkResetEvent(device.Handle(), event.Handle()).Return(core1_0.VKSuccess, nil)
 
-	_, err = event.Reset()
+	_, err := event.Reset()
 	require.NoError(t, err)
 }
 
@@ -84,11 +74,8 @@ func TestVulkanEvent_Status(t *testing.T) {
 	defer ctrl.Finish()
 
 	driver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_0)
-	loader, err := core.CreateLoaderFromDriver(driver)
-	require.NoError(t, err)
-
 	device := mocks.EasyMockDevice(ctrl, driver)
-	event := internal_mocks.EasyDummyEvent(t, loader, device)
+	event := internal_mocks.EasyDummyEvent(driver, device)
 
 	driver.EXPECT().VkGetEventStatus(device.Handle(), event.Handle()).Return(core1_0.VKEventReset, nil)
 

@@ -54,6 +54,11 @@ type Device interface {
 	DescriptorSetLayoutSupport(o core1_0.DescriptorSetLayoutCreateOptions, outData *DescriptorSetLayoutSupportOutData) error
 
 	DeviceGroupPeerMemoryFeatures(heapIndex, localDeviceIndex, remoteDeviceIndex int) PeerMemoryFeatures
+
+	CreateDescriptorUpdateTemplate(o DescriptorUpdateTemplateCreateOptions, allocator *driver.AllocationCallbacks) (DescriptorUpdateTemplate, common.VkResult, error)
+	CreateSamplerYcbcrConversion(o SamplerYcbcrConversionCreateOptions, allocator *driver.AllocationCallbacks) (SamplerYcbcrConversion, common.VkResult, error)
+
+	GetQueue2(o DeviceQueueOptions) (core1_0.Queue, error)
 }
 
 type DeviceMemory interface {

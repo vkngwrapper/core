@@ -1,17 +1,15 @@
-package objects
+package internal1_0
 
 import (
 	"github.com/CannibalVox/VKng/core/common"
 	"github.com/CannibalVox/VKng/core/core1_0"
 	"github.com/CannibalVox/VKng/core/driver"
-	internal1_0 "github.com/CannibalVox/VKng/core/internal/core1_0"
-	"github.com/CannibalVox/VKng/core/internal/core1_1"
 )
 
-func CreateInstance(instanceDriver driver.Driver, handle driver.VkInstance, version common.APIVersion) *internal1_0.VulkanInstance {
+func CreateInstanceObject(instanceDriver driver.Driver, handle driver.VkInstance, version common.APIVersion) *VulkanInstance {
 	return instanceDriver.ObjectStore().GetOrCreate(driver.VulkanHandle(handle), driver.Core1_0,
 		func() any {
-			instance := &internal1_0.VulkanInstance{
+			instance := &VulkanInstance{
 				InstanceDriver:           instanceDriver,
 				InstanceHandle:           handle,
 				MaximumVersion:           version,
@@ -19,13 +17,13 @@ func CreateInstance(instanceDriver driver.Driver, handle driver.VkInstance, vers
 			}
 
 			return instance
-		}).(*internal1_0.VulkanInstance)
+		}).(*VulkanInstance)
 }
 
-func CreatePhysicalDevice(coreDriver driver.Driver, instance driver.VkInstance, handle driver.VkPhysicalDevice, instanceVersion, deviceVersion common.APIVersion) *internal1_0.VulkanPhysicalDevice {
+func CreatePhysicalDeviceObject(coreDriver driver.Driver, instance driver.VkInstance, handle driver.VkPhysicalDevice, instanceVersion, deviceVersion common.APIVersion) *VulkanPhysicalDevice {
 	physicalDevice := coreDriver.ObjectStore().GetOrCreate(driver.VulkanHandle(handle), driver.Core1_0,
 		func() any {
-			device := &internal1_0.VulkanPhysicalDevice{
+			device := &VulkanPhysicalDevice{
 				InstanceDriver:       coreDriver,
 				PhysicalDeviceHandle: handle,
 				InstanceVersion:      instanceVersion,
@@ -33,7 +31,7 @@ func CreatePhysicalDevice(coreDriver driver.Driver, instance driver.VkInstance, 
 			}
 
 			return device
-		}).(*internal1_0.VulkanPhysicalDevice)
+		}).(*VulkanPhysicalDevice)
 	coreDriver.ObjectStore().SetParent(driver.VulkanHandle(instance), driver.VulkanHandle(handle))
 	return physicalDevice
 }
@@ -41,7 +39,7 @@ func CreatePhysicalDevice(coreDriver driver.Driver, instance driver.VkInstance, 
 func createPhysicalDeviceCore1_0(coreDriver driver.Driver, instance driver.VkInstance, handle driver.VkPhysicalDevice, instanceVersion, deviceVersion common.APIVersion) core1_0.PhysicalDevice {
 	physicalDevice := coreDriver.ObjectStore().GetOrCreate(driver.VulkanHandle(handle), driver.Core1_0,
 		func() any {
-			device := &internal1_0.VulkanPhysicalDevice{
+			device := &VulkanPhysicalDevice{
 				InstanceDriver:       coreDriver,
 				PhysicalDeviceHandle: handle,
 				InstanceVersion:      instanceVersion,
@@ -49,15 +47,15 @@ func createPhysicalDeviceCore1_0(coreDriver driver.Driver, instance driver.VkIns
 			}
 
 			return device
-		}).(*internal1_0.VulkanPhysicalDevice)
+		}).(*VulkanPhysicalDevice)
 	coreDriver.ObjectStore().SetParent(driver.VulkanHandle(instance), driver.VulkanHandle(handle))
 	return physicalDevice
 }
 
-func CreateDevice(deviceDriver driver.Driver, handle driver.VkDevice, version common.APIVersion) *internal1_0.VulkanDevice {
+func CreateDeviceObject(deviceDriver driver.Driver, handle driver.VkDevice, version common.APIVersion) *VulkanDevice {
 	return deviceDriver.ObjectStore().GetOrCreate(driver.VulkanHandle(handle), driver.Core1_0,
 		func() any {
-			device := &internal1_0.VulkanDevice{
+			device := &VulkanDevice{
 				DeviceDriver:           deviceDriver,
 				DeviceHandle:           handle,
 				MaximumAPIVersion:      version,
@@ -65,13 +63,13 @@ func CreateDevice(deviceDriver driver.Driver, handle driver.VkDevice, version co
 			}
 
 			return device
-		}).(*internal1_0.VulkanDevice)
+		}).(*VulkanDevice)
 }
 
-func CreateBuffer(coreDriver driver.Driver, device driver.VkDevice, handle driver.VkBuffer, version common.APIVersion) *internal1_0.VulkanBuffer {
+func CreateBufferObject(coreDriver driver.Driver, device driver.VkDevice, handle driver.VkBuffer, version common.APIVersion) *VulkanBuffer {
 	return coreDriver.ObjectStore().GetOrCreate(driver.VulkanHandle(handle), driver.Core1_0,
 		func() any {
-			buffer := &internal1_0.VulkanBuffer{
+			buffer := &VulkanBuffer{
 				DeviceDriver:      coreDriver,
 				Device:            device,
 				BufferHandle:      handle,
@@ -79,13 +77,13 @@ func CreateBuffer(coreDriver driver.Driver, device driver.VkDevice, handle drive
 			}
 
 			return buffer
-		}).(*internal1_0.VulkanBuffer)
+		}).(*VulkanBuffer)
 }
 
-func CreateBufferView(coreDriver driver.Driver, device driver.VkDevice, handle driver.VkBufferView, version common.APIVersion) *internal1_0.VulkanBufferView {
+func CreateBufferViewObject(coreDriver driver.Driver, device driver.VkDevice, handle driver.VkBufferView, version common.APIVersion) *VulkanBufferView {
 	return coreDriver.ObjectStore().GetOrCreate(driver.VulkanHandle(handle), driver.Core1_0,
 		func() any {
-			bufferView := &internal1_0.VulkanBufferView{
+			bufferView := &VulkanBufferView{
 				DeviceDriver:      coreDriver,
 				Device:            device,
 				BufferViewHandle:  handle,
@@ -93,17 +91,17 @@ func CreateBufferView(coreDriver driver.Driver, device driver.VkDevice, handle d
 			}
 
 			return bufferView
-		}).(*internal1_0.VulkanBufferView)
+		}).(*VulkanBufferView)
 }
 
-func CreateCommandBuffer(coreDriver driver.Driver, commandPool driver.VkCommandPool, device driver.VkDevice, handle driver.VkCommandBuffer, version common.APIVersion) *internal1_0.VulkanCommandBuffer {
+func CreateCommandBufferObject(coreDriver driver.Driver, commandPool driver.VkCommandPool, device driver.VkDevice, handle driver.VkCommandBuffer, version common.APIVersion) *VulkanCommandBuffer {
 	commandBuffer := coreDriver.ObjectStore().GetOrCreate(driver.VulkanHandle(handle), driver.Core1_0,
 		func() any {
 			var commandCount int
 			var drawCount int
 			var dispatchCount int
 
-			commandBuffer := &internal1_0.VulkanCommandBuffer{
+			commandBuffer := &VulkanCommandBuffer{
 				DeviceDriver:        coreDriver,
 				Device:              device,
 				CommandBufferHandle: handle,
@@ -116,15 +114,15 @@ func CreateCommandBuffer(coreDriver driver.Driver, commandPool driver.VkCommandP
 			}
 
 			return commandBuffer
-		}).(*internal1_0.VulkanCommandBuffer)
+		}).(*VulkanCommandBuffer)
 	coreDriver.ObjectStore().SetParent(driver.VulkanHandle(commandPool), driver.VulkanHandle(handle))
 	return commandBuffer
 }
 
-func CreateCommandPool(coreDriver driver.Driver, device driver.VkDevice, handle driver.VkCommandPool, version common.APIVersion) *internal1_0.VulkanCommandPool {
+func CreateCommandPoolObject(coreDriver driver.Driver, device driver.VkDevice, handle driver.VkCommandPool, version common.APIVersion) *VulkanCommandPool {
 	return coreDriver.ObjectStore().GetOrCreate(driver.VulkanHandle(handle), driver.Core1_0,
 		func() any {
-			commandPool := &internal1_0.VulkanCommandPool{
+			commandPool := &VulkanCommandPool{
 				DeviceDriver:      coreDriver,
 				Device:            device,
 				CommandPoolHandle: handle,
@@ -132,13 +130,13 @@ func CreateCommandPool(coreDriver driver.Driver, device driver.VkDevice, handle 
 			}
 
 			return commandPool
-		}).(*internal1_0.VulkanCommandPool)
+		}).(*VulkanCommandPool)
 }
 
-func CreateDescriptorPool(coreDriver driver.Driver, device driver.VkDevice, handle driver.VkDescriptorPool, version common.APIVersion) *internal1_0.VulkanDescriptorPool {
+func CreateDescriptorPoolObject(coreDriver driver.Driver, device driver.VkDevice, handle driver.VkDescriptorPool, version common.APIVersion) *VulkanDescriptorPool {
 	return coreDriver.ObjectStore().GetOrCreate(driver.VulkanHandle(handle), driver.Core1_0,
 		func() any {
-			descriptorPool := &internal1_0.VulkanDescriptorPool{
+			descriptorPool := &VulkanDescriptorPool{
 				DeviceDriver:         coreDriver,
 				Device:               device,
 				DescriptorPoolHandle: handle,
@@ -146,13 +144,13 @@ func CreateDescriptorPool(coreDriver driver.Driver, device driver.VkDevice, hand
 			}
 
 			return descriptorPool
-		}).(*internal1_0.VulkanDescriptorPool)
+		}).(*VulkanDescriptorPool)
 }
 
-func CreateDescriptorSet(coreDriver driver.Driver, device driver.VkDevice, descriptorPool driver.VkDescriptorPool, handle driver.VkDescriptorSet, version common.APIVersion) *internal1_0.VulkanDescriptorSet {
+func CreateDescriptorSetObject(coreDriver driver.Driver, device driver.VkDevice, descriptorPool driver.VkDescriptorPool, handle driver.VkDescriptorSet, version common.APIVersion) *VulkanDescriptorSet {
 	descriptorSet := coreDriver.ObjectStore().GetOrCreate(driver.VulkanHandle(handle), driver.Core1_0,
 		func() any {
-			descriptorSet := &internal1_0.VulkanDescriptorSet{
+			descriptorSet := &VulkanDescriptorSet{
 				DeviceDriver:        coreDriver,
 				Device:              device,
 				DescriptorSetHandle: handle,
@@ -161,15 +159,15 @@ func CreateDescriptorSet(coreDriver driver.Driver, device driver.VkDevice, descr
 			}
 
 			return descriptorSet
-		}).(*internal1_0.VulkanDescriptorSet)
+		}).(*VulkanDescriptorSet)
 	coreDriver.ObjectStore().SetParent(driver.VulkanHandle(descriptorPool), driver.VulkanHandle(handle))
 	return descriptorSet
 }
 
-func CreateDescriptorSetLayout(coreDriver driver.Driver, device driver.VkDevice, handle driver.VkDescriptorSetLayout, version common.APIVersion) *internal1_0.VulkanDescriptorSetLayout {
+func CreateDescriptorSetLayoutObject(coreDriver driver.Driver, device driver.VkDevice, handle driver.VkDescriptorSetLayout, version common.APIVersion) *VulkanDescriptorSetLayout {
 	return coreDriver.ObjectStore().GetOrCreate(driver.VulkanHandle(handle), driver.Core1_0,
 		func() any {
-			descriptorSetLayout := &internal1_0.VulkanDescriptorSetLayout{
+			descriptorSetLayout := &VulkanDescriptorSetLayout{
 				DeviceDriver:              coreDriver,
 				Device:                    device,
 				DescriptorSetLayoutHandle: handle,
@@ -177,27 +175,13 @@ func CreateDescriptorSetLayout(coreDriver driver.Driver, device driver.VkDevice,
 			}
 
 			return descriptorSetLayout
-		}).(*internal1_0.VulkanDescriptorSetLayout)
+		}).(*VulkanDescriptorSetLayout)
 }
 
-func CreateDescriptorUpdateTemplate(coreDriver driver.Driver, device driver.VkDevice, handle driver.VkDescriptorUpdateTemplate, version common.APIVersion) *internal1_1.VulkanDescriptorUpdateTemplate {
-	return coreDriver.ObjectStore().GetOrCreate(driver.VulkanHandle(handle), driver.Core1_1,
-		func() any {
-			template := &internal1_1.VulkanDescriptorUpdateTemplate{
-				DeviceDriver:             coreDriver,
-				Device:                   device,
-				DescriptorTemplateHandle: handle,
-				MaximumAPIVersion:        version,
-			}
-
-			return template
-		}).(*internal1_1.VulkanDescriptorUpdateTemplate)
-}
-
-func CreateDeviceMemory(coreDriver driver.Driver, device driver.VkDevice, handle driver.VkDeviceMemory, version common.APIVersion, size int) *internal1_0.VulkanDeviceMemory {
+func CreateDeviceMemoryObject(coreDriver driver.Driver, device driver.VkDevice, handle driver.VkDeviceMemory, version common.APIVersion, size int) *VulkanDeviceMemory {
 	return coreDriver.ObjectStore().GetOrCreate(driver.VulkanHandle(handle), driver.Core1_0,
 		func() any {
-			deviceMemory := &internal1_0.VulkanDeviceMemory{
+			deviceMemory := &VulkanDeviceMemory{
 				DeviceDriver:       coreDriver,
 				Device:             device,
 				DeviceMemoryHandle: handle,
@@ -206,13 +190,13 @@ func CreateDeviceMemory(coreDriver driver.Driver, device driver.VkDevice, handle
 			}
 
 			return deviceMemory
-		}).(*internal1_0.VulkanDeviceMemory)
+		}).(*VulkanDeviceMemory)
 }
 
-func CreateEvent(coreDriver driver.Driver, device driver.VkDevice, handle driver.VkEvent, version common.APIVersion) *internal1_0.VulkanEvent {
+func CreateEventObject(coreDriver driver.Driver, device driver.VkDevice, handle driver.VkEvent, version common.APIVersion) *VulkanEvent {
 	return coreDriver.ObjectStore().GetOrCreate(driver.VulkanHandle(handle), driver.Core1_0,
 		func() any {
-			event := &internal1_0.VulkanEvent{
+			event := &VulkanEvent{
 				DeviceDriver:      coreDriver,
 				Device:            device,
 				EventHandle:       handle,
@@ -220,13 +204,13 @@ func CreateEvent(coreDriver driver.Driver, device driver.VkDevice, handle driver
 			}
 
 			return event
-		}).(*internal1_0.VulkanEvent)
+		}).(*VulkanEvent)
 }
 
-func CreateFence(coreDriver driver.Driver, device driver.VkDevice, handle driver.VkFence, version common.APIVersion) *internal1_0.VulkanFence {
+func CreateFenceObject(coreDriver driver.Driver, device driver.VkDevice, handle driver.VkFence, version common.APIVersion) *VulkanFence {
 	return coreDriver.ObjectStore().GetOrCreate(driver.VulkanHandle(handle), driver.Core1_0,
 		func() any {
-			fence := &internal1_0.VulkanFence{
+			fence := &VulkanFence{
 				DeviceDriver:      coreDriver,
 				Device:            device,
 				FenceHandle:       handle,
@@ -234,13 +218,13 @@ func CreateFence(coreDriver driver.Driver, device driver.VkDevice, handle driver
 			}
 
 			return fence
-		}).(*internal1_0.VulkanFence)
+		}).(*VulkanFence)
 }
 
-func CreateFramebuffer(coreDriver driver.Driver, device driver.VkDevice, handle driver.VkFramebuffer, version common.APIVersion) *internal1_0.VulkanFramebuffer {
+func CreateFramebufferObject(coreDriver driver.Driver, device driver.VkDevice, handle driver.VkFramebuffer, version common.APIVersion) *VulkanFramebuffer {
 	return coreDriver.ObjectStore().GetOrCreate(driver.VulkanHandle(handle), driver.Core1_0,
 		func() any {
-			framebuffer := &internal1_0.VulkanFramebuffer{
+			framebuffer := &VulkanFramebuffer{
 				DeviceDriver:      coreDriver,
 				Device:            device,
 				FramebufferHandle: handle,
@@ -248,13 +232,13 @@ func CreateFramebuffer(coreDriver driver.Driver, device driver.VkDevice, handle 
 			}
 
 			return framebuffer
-		}).(*internal1_0.VulkanFramebuffer)
+		}).(*VulkanFramebuffer)
 }
 
-func CreateImage(coreDriver driver.Driver, device driver.VkDevice, handle driver.VkImage, version common.APIVersion) *internal1_0.VulkanImage {
+func CreateImageObject(coreDriver driver.Driver, device driver.VkDevice, handle driver.VkImage, version common.APIVersion) *VulkanImage {
 	return coreDriver.ObjectStore().GetOrCreate(driver.VulkanHandle(handle), driver.Core1_0,
 		func() any {
-			image := &internal1_0.VulkanImage{
+			image := &VulkanImage{
 				DeviceDriver:      coreDriver,
 				Device:            device,
 				ImageHandle:       handle,
@@ -262,13 +246,13 @@ func CreateImage(coreDriver driver.Driver, device driver.VkDevice, handle driver
 			}
 
 			return image
-		}).(*internal1_0.VulkanImage)
+		}).(*VulkanImage)
 }
 
-func CreateImageView(coreDriver driver.Driver, device driver.VkDevice, handle driver.VkImageView, version common.APIVersion) *internal1_0.VulkanImageView {
+func CreateImageViewObject(coreDriver driver.Driver, device driver.VkDevice, handle driver.VkImageView, version common.APIVersion) *VulkanImageView {
 	return coreDriver.ObjectStore().GetOrCreate(driver.VulkanHandle(handle), driver.Core1_0,
 		func() any {
-			imageView := &internal1_0.VulkanImageView{
+			imageView := &VulkanImageView{
 				DeviceDriver:      coreDriver,
 				Device:            device,
 				ImageViewHandle:   handle,
@@ -276,13 +260,13 @@ func CreateImageView(coreDriver driver.Driver, device driver.VkDevice, handle dr
 			}
 
 			return imageView
-		}).(*internal1_0.VulkanImageView)
+		}).(*VulkanImageView)
 }
 
-func CreatePipeline(coreDriver driver.Driver, device driver.VkDevice, handle driver.VkPipeline, version common.APIVersion) *internal1_0.VulkanPipeline {
+func CreatePipelineObject(coreDriver driver.Driver, device driver.VkDevice, handle driver.VkPipeline, version common.APIVersion) *VulkanPipeline {
 	return coreDriver.ObjectStore().GetOrCreate(driver.VulkanHandle(handle), driver.Core1_0,
 		func() any {
-			pipeline := &internal1_0.VulkanPipeline{
+			pipeline := &VulkanPipeline{
 				DeviceDriver:      coreDriver,
 				Device:            device,
 				PipelineHandle:    handle,
@@ -290,13 +274,13 @@ func CreatePipeline(coreDriver driver.Driver, device driver.VkDevice, handle dri
 			}
 
 			return pipeline
-		}).(*internal1_0.VulkanPipeline)
+		}).(*VulkanPipeline)
 }
 
-func CreatePipelineCache(coreDriver driver.Driver, device driver.VkDevice, handle driver.VkPipelineCache, version common.APIVersion) *internal1_0.VulkanPipelineCache {
+func CreatePipelineCacheObject(coreDriver driver.Driver, device driver.VkDevice, handle driver.VkPipelineCache, version common.APIVersion) *VulkanPipelineCache {
 	return coreDriver.ObjectStore().GetOrCreate(driver.VulkanHandle(handle), driver.Core1_0,
 		func() any {
-			pipelineCache := &internal1_0.VulkanPipelineCache{
+			pipelineCache := &VulkanPipelineCache{
 				DeviceDriver:        coreDriver,
 				Device:              device,
 				PipelineCacheHandle: handle,
@@ -304,13 +288,13 @@ func CreatePipelineCache(coreDriver driver.Driver, device driver.VkDevice, handl
 			}
 
 			return pipelineCache
-		}).(*internal1_0.VulkanPipelineCache)
+		}).(*VulkanPipelineCache)
 }
 
-func CreatePipelineLayout(coreDriver driver.Driver, device driver.VkDevice, handle driver.VkPipelineLayout, version common.APIVersion) *internal1_0.VulkanPipelineLayout {
+func CreatePipelineLayoutObject(coreDriver driver.Driver, device driver.VkDevice, handle driver.VkPipelineLayout, version common.APIVersion) *VulkanPipelineLayout {
 	return coreDriver.ObjectStore().GetOrCreate(driver.VulkanHandle(handle), driver.Core1_0,
 		func() any {
-			pipelineLayout := &internal1_0.VulkanPipelineLayout{
+			pipelineLayout := &VulkanPipelineLayout{
 				DeviceDriver:         coreDriver,
 				Device:               device,
 				PipelineLayoutHandle: handle,
@@ -318,13 +302,13 @@ func CreatePipelineLayout(coreDriver driver.Driver, device driver.VkDevice, hand
 			}
 
 			return pipelineLayout
-		}).(*internal1_0.VulkanPipelineLayout)
+		}).(*VulkanPipelineLayout)
 }
 
-func CreateQueryPool(coreDriver driver.Driver, device driver.VkDevice, handle driver.VkQueryPool, version common.APIVersion) *internal1_0.VulkanQueryPool {
+func CreateQueryPoolObject(coreDriver driver.Driver, device driver.VkDevice, handle driver.VkQueryPool, version common.APIVersion) *VulkanQueryPool {
 	return coreDriver.ObjectStore().GetOrCreate(driver.VulkanHandle(handle), driver.Core1_0,
 		func() any {
-			pipeline := &internal1_0.VulkanQueryPool{
+			pipeline := &VulkanQueryPool{
 				DeviceDriver:      coreDriver,
 				Device:            device,
 				QueryPoolHandle:   handle,
@@ -332,28 +316,28 @@ func CreateQueryPool(coreDriver driver.Driver, device driver.VkDevice, handle dr
 			}
 
 			return pipeline
-		}).(*internal1_0.VulkanQueryPool)
+		}).(*VulkanQueryPool)
 }
 
-func CreateQueue(coreDriver driver.Driver, device driver.VkDevice, handle driver.VkQueue, version common.APIVersion) *internal1_0.VulkanQueue {
+func CreateQueueObject(coreDriver driver.Driver, device driver.VkDevice, handle driver.VkQueue, version common.APIVersion) *VulkanQueue {
 	queue := coreDriver.ObjectStore().GetOrCreate(driver.VulkanHandle(handle), driver.Core1_0,
 		func() any {
-			queue := &internal1_0.VulkanQueue{
+			queue := &VulkanQueue{
 				DeviceDriver:      coreDriver,
 				QueueHandle:       handle,
 				MaximumAPIVersion: version,
 			}
 
 			return queue
-		}).(*internal1_0.VulkanQueue)
+		}).(*VulkanQueue)
 	coreDriver.ObjectStore().SetParent(driver.VulkanHandle(device), driver.VulkanHandle(handle))
 	return queue
 }
 
-func CreateRenderPass(coreDriver driver.Driver, device driver.VkDevice, handle driver.VkRenderPass, version common.APIVersion) *internal1_0.VulkanRenderPass {
+func CreateRenderPassObject(coreDriver driver.Driver, device driver.VkDevice, handle driver.VkRenderPass, version common.APIVersion) *VulkanRenderPass {
 	return coreDriver.ObjectStore().GetOrCreate(driver.VulkanHandle(handle), driver.Core1_0,
 		func() any {
-			renderPass := &internal1_0.VulkanRenderPass{
+			renderPass := &VulkanRenderPass{
 				DeviceDriver:      coreDriver,
 				Device:            device,
 				RenderPassHandle:  handle,
@@ -361,13 +345,13 @@ func CreateRenderPass(coreDriver driver.Driver, device driver.VkDevice, handle d
 			}
 
 			return renderPass
-		}).(*internal1_0.VulkanRenderPass)
+		}).(*VulkanRenderPass)
 }
 
-func CreateSampler(coreDriver driver.Driver, device driver.VkDevice, handle driver.VkSampler, version common.APIVersion) *internal1_0.VulkanSampler {
+func CreateSamplerObject(coreDriver driver.Driver, device driver.VkDevice, handle driver.VkSampler, version common.APIVersion) *VulkanSampler {
 	return coreDriver.ObjectStore().GetOrCreate(driver.VulkanHandle(handle), driver.Core1_0,
 		func() any {
-			pipeline := &internal1_0.VulkanSampler{
+			pipeline := &VulkanSampler{
 				DeviceDriver:      coreDriver,
 				Device:            device,
 				SamplerHandle:     handle,
@@ -375,25 +359,13 @@ func CreateSampler(coreDriver driver.Driver, device driver.VkDevice, handle driv
 			}
 
 			return pipeline
-		}).(*internal1_0.VulkanSampler)
+		}).(*VulkanSampler)
 }
 
-func CreateSamplerYcbcrConversion(coreDriver driver.Driver, device driver.VkDevice, handle driver.VkSamplerYcbcrConversion, version common.APIVersion) *internal1_1.VulkanSamplerYcbcrConversion {
-	return coreDriver.ObjectStore().GetOrCreate(driver.VulkanHandle(handle), driver.Core1_1,
-		func() any {
-			return &internal1_1.VulkanSamplerYcbcrConversion{
-				DeviceDriver:      coreDriver,
-				Device:            device,
-				YcbcrHandle:       handle,
-				MaximumAPIVersion: version,
-			}
-		}).(*internal1_1.VulkanSamplerYcbcrConversion)
-}
-
-func CreateSemaphore(coreDriver driver.Driver, device driver.VkDevice, handle driver.VkSemaphore, version common.APIVersion) *internal1_0.VulkanSemaphore {
+func CreateSemaphoreObject(coreDriver driver.Driver, device driver.VkDevice, handle driver.VkSemaphore, version common.APIVersion) *VulkanSemaphore {
 	return coreDriver.ObjectStore().GetOrCreate(driver.VulkanHandle(handle), driver.Core1_0,
 		func() any {
-			pipeline := &internal1_0.VulkanSemaphore{
+			pipeline := &VulkanSemaphore{
 				DeviceDriver:      coreDriver,
 				Device:            device,
 				SemaphoreHandle:   handle,
@@ -401,13 +373,13 @@ func CreateSemaphore(coreDriver driver.Driver, device driver.VkDevice, handle dr
 			}
 
 			return pipeline
-		}).(*internal1_0.VulkanSemaphore)
+		}).(*VulkanSemaphore)
 }
 
-func CreateShaderModule(coreDriver driver.Driver, device driver.VkDevice, handle driver.VkShaderModule, version common.APIVersion) *internal1_0.VulkanShaderModule {
+func CreateShaderModuleObject(coreDriver driver.Driver, device driver.VkDevice, handle driver.VkShaderModule, version common.APIVersion) *VulkanShaderModule {
 	return coreDriver.ObjectStore().GetOrCreate(driver.VulkanHandle(handle), driver.Core1_0,
 		func() any {
-			pipeline := &internal1_0.VulkanShaderModule{
+			pipeline := &VulkanShaderModule{
 				DeviceDriver:       coreDriver,
 				Device:             device,
 				ShaderModuleHandle: handle,
@@ -415,5 +387,5 @@ func CreateShaderModule(coreDriver driver.Driver, device driver.VkDevice, handle
 			}
 
 			return pipeline
-		}).(*internal1_0.VulkanShaderModule)
+		}).(*VulkanShaderModule)
 }

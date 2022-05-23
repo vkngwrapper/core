@@ -1,12 +1,12 @@
 package internal1_1_test
 
 import (
-	"github.com/CannibalVox/VKng/core"
 	"github.com/CannibalVox/VKng/core/common"
 	"github.com/CannibalVox/VKng/core/core1_0"
 	"github.com/CannibalVox/VKng/core/core1_1"
 	"github.com/CannibalVox/VKng/core/driver"
 	mock_driver "github.com/CannibalVox/VKng/core/driver/mocks"
+	"github.com/CannibalVox/VKng/core/internal/dummies"
 	"github.com/CannibalVox/VKng/core/mocks"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/require"
@@ -19,9 +19,7 @@ func TestExportFenceOptions(t *testing.T) {
 	defer ctrl.Finish()
 
 	coreDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_0)
-	loader, err := core.CreateLoaderFromDriver(coreDriver)
-	require.NoError(t, err)
-	device := mocks.EasyMockDevice(ctrl, coreDriver)
+	device := dummies.EasyDummyDevice(coreDriver)
 	mockFence := mocks.EasyMockFence(ctrl)
 
 	coreDriver.EXPECT().VkCreateFence(
@@ -46,8 +44,7 @@ func TestExportFenceOptions(t *testing.T) {
 		return core1_0.VKSuccess, nil
 	})
 
-	fence, _, err := loader.CreateFence(
-		device,
+	fence, _, err := device.CreateFence(
 		nil,
 		core1_0.FenceCreateOptions{
 			Flags: core1_0.FenceCreateSignaled,

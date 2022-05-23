@@ -1,7 +1,6 @@
 package internal1_0_test
 
 import (
-	"github.com/CannibalVox/VKng/core"
 	"github.com/CannibalVox/VKng/core/common"
 	"github.com/CannibalVox/VKng/core/core1_0"
 	"github.com/CannibalVox/VKng/core/driver"
@@ -19,14 +18,11 @@ func TestVulkanDescriptorSet_Free(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_0)
-	loader, err := core.CreateLoaderFromDriver(mockDriver)
-	require.NoError(t, err)
 
 	device := mocks.EasyMockDevice(ctrl, mockDriver)
-	pool := internal_mocks.EasyDummyDescriptorPool(t, loader, device)
-	layout := mocks.EasyMockDescriptorSetLayout(ctrl)
+	pool := mocks.EasyMockDescriptorPool(ctrl, device)
 
-	set := internal_mocks.EasyDummyDescriptorSet(t, loader, pool, layout)
+	set := internal_mocks.EasyDummyDescriptorSet(mockDriver, pool)
 
 	mockDriver.EXPECT().VkFreeDescriptorSets(device.Handle(), pool.Handle(), driver.Uint32(1), gomock.Not(unsafe.Pointer(nil))).DoAndReturn(
 		func(device driver.VkDevice, descriptorPool driver.VkDescriptorPool, descriptorSetCount driver.Uint32, pDescriptorSets *driver.VkDescriptorSet) (common.VkResult, error) {
@@ -36,6 +32,6 @@ func TestVulkanDescriptorSet_Free(t *testing.T) {
 			return core1_0.VKSuccess, nil
 		})
 
-	_, err = set.Free()
+	_, err := set.Free()
 	require.NoError(t, err)
 }

@@ -7,6 +7,7 @@ import (
 	"github.com/CannibalVox/VKng/core/core1_1"
 	"github.com/CannibalVox/VKng/core/driver"
 	mock_driver "github.com/CannibalVox/VKng/core/driver/mocks"
+	"github.com/CannibalVox/VKng/core/internal/dummies"
 	"github.com/CannibalVox/VKng/core/mocks"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/require"
@@ -20,10 +21,7 @@ func TestInputAttachmentAspectOptions(t *testing.T) {
 	defer ctrl.Finish()
 
 	coreDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_1)
-	loader, err := core.CreateLoaderFromDriver(coreDriver)
-	require.NoError(t, err)
-
-	device := mocks.EasyMockDevice(ctrl, coreDriver)
+	device := dummies.EasyDummyDevice(coreDriver)
 	expectedRenderPass := mocks.EasyMockRenderPass(ctrl)
 
 	coreDriver.EXPECT().VkCreateRenderPass(device.Handle(), gomock.Not(gomock.Nil()), gomock.Nil(), gomock.Not(gomock.Nil())).
@@ -69,7 +67,7 @@ func TestInputAttachmentAspectOptions(t *testing.T) {
 			},
 		},
 	}
-	renderPass, _, err := loader.CreateRenderPass(device, nil, core1_0.RenderPassCreateOptions{
+	renderPass, _, err := device.CreateRenderPass(nil, core1_0.RenderPassCreateOptions{
 		HaveNext: common.HaveNext{Next: aspectOptions},
 	})
 	require.NoError(t, err)
@@ -158,10 +156,8 @@ func TestRenderPassMultiviewOptions(t *testing.T) {
 	defer ctrl.Finish()
 
 	coreDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_1)
-	loader, err := core.CreateLoaderFromDriver(coreDriver)
-	require.NoError(t, err)
+	device := dummies.EasyDummyDevice(coreDriver)
 	mockRenderPass := mocks.EasyMockRenderPass(ctrl)
-	device := mocks.EasyMockDevice(ctrl, coreDriver)
 
 	coreDriver.EXPECT().VkCreateRenderPass(
 		device.Handle(),
@@ -202,7 +198,7 @@ func TestRenderPassMultiviewOptions(t *testing.T) {
 		return core1_0.VKSuccess, nil
 	})
 
-	renderPass, _, err := loader.CreateRenderPass(device, nil, core1_0.RenderPassCreateOptions{
+	renderPass, _, err := device.CreateRenderPass(nil, core1_0.RenderPassCreateOptions{
 		HaveNext: common.HaveNext{
 			core1_1.RenderPassMultiviewOptions{
 				SubpassViewMasks:      []uint32{1, 2, 7},

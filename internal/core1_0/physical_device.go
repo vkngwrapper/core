@@ -300,3 +300,32 @@ func (d *VulkanPhysicalDevice) SparseImageFormatProperties(format common.DataFor
 
 	return outReqs
 }
+
+func (d *VulkanPhysicalDevice) CreateDevice(allocationCallbacks *driver.AllocationCallbacks, options core1_0.DeviceCreateOptions) (core1_0.Device, common.VkResult, error) {
+	arena := cgoparam.GetAlloc()
+	defer cgoparam.ReturnAlloc(arena)
+
+	createInfo, err := common.AllocOptions(arena, options)
+	if err != nil {
+		return nil, core1_0.VKErrorUnknown, err
+	}
+
+	var deviceHandle driver.VkDevice
+	res, err := d.InstanceDriver.VkCreateDevice(d.PhysicalDeviceHandle, (*driver.VkDeviceCreateInfo)(createInfo), allocationCallbacks.Handle(), &deviceHandle)
+	if err != nil {
+		return nil, res, err
+	}
+
+	deviceDriver, err := d.InstanceDriver.CreateDeviceDriver(deviceHandle)
+	if err != nil {
+		return nil, core1_0.VKErrorUnknown, err
+	}
+
+	device := CreateDeviceObject(deviceDriver, deviceHandle, d.MaximumDeviceVersion)
+
+	for _, extension := range options.ExtensionNames {
+		device.ActiveDeviceExtensions[extension] = struct{}{}
+	}
+
+	return device, res, nil
+}

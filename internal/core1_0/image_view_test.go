@@ -1,7 +1,6 @@
 package internal1_0_test
 
 import (
-	"github.com/CannibalVox/VKng/core"
 	"github.com/CannibalVox/VKng/core/common"
 	"github.com/CannibalVox/VKng/core/core1_0"
 	"github.com/CannibalVox/VKng/core/driver"
@@ -20,10 +19,7 @@ func TestVulkanLoader1_0_CreateImageView(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_0)
-	loader, err := core.CreateLoaderFromDriver(mockDriver)
-	require.NoError(t, err)
-
-	device := internal_mocks.EasyDummyDevice(t, ctrl, loader)
+	device := internal_mocks.EasyDummyDevice(mockDriver)
 	imageViewHandle := mocks.NewFakeImageViewHandle()
 	image := mocks.EasyMockImage(ctrl)
 
@@ -54,7 +50,7 @@ func TestVulkanLoader1_0_CreateImageView(t *testing.T) {
 			return core1_0.VKSuccess, nil
 		})
 
-	imageView, _, err := loader.CreateImageView(device, nil, core1_0.ImageViewCreateOptions{
+	imageView, _, err := device.CreateImageView(nil, core1_0.ImageViewCreateOptions{
 		Image:    image,
 		ViewType: core1_0.ViewType2D,
 		Format:   core1_0.DataFormatA2B10G10R10SignedScaledPacked,

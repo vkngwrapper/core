@@ -1,12 +1,12 @@
 package internal1_1_test
 
 import (
-	"github.com/CannibalVox/VKng/core"
 	"github.com/CannibalVox/VKng/core/common"
 	"github.com/CannibalVox/VKng/core/core1_0"
 	"github.com/CannibalVox/VKng/core/core1_1"
 	"github.com/CannibalVox/VKng/core/driver"
 	mock_driver "github.com/CannibalVox/VKng/core/driver/mocks"
+	"github.com/CannibalVox/VKng/core/internal/dummies"
 	"github.com/CannibalVox/VKng/core/mocks"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/require"
@@ -20,10 +20,8 @@ func TestVulkanExtension_CreateDescriptorUpdateTemplate(t *testing.T) {
 	defer ctrl.Finish()
 
 	coreDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_1)
-	loader, err := core.CreateLoaderFromDriver(coreDriver)
-	require.NoError(t, err)
 
-	device := mocks.EasyMockDevice(ctrl, coreDriver)
+	device := core1_1.PromoteDevice(dummies.EasyDummyDevice(coreDriver))
 	descriptorLayout := mocks.EasyMockDescriptorSetLayout(ctrl)
 	pipelineLayout := mocks.EasyMockPipelineLayout(ctrl)
 
@@ -81,7 +79,7 @@ func TestVulkanExtension_CreateDescriptorUpdateTemplate(t *testing.T) {
 		gomock.Nil(),
 	)
 
-	template, _, err := loader.Core1_1().CreateDescriptorUpdateTemplate(device, core1_1.DescriptorUpdateTemplateCreateOptions{
+	template, _, err := device.CreateDescriptorUpdateTemplate(core1_1.DescriptorUpdateTemplateCreateOptions{
 		Entries: []core1_1.DescriptorUpdateTemplateEntry{
 			{
 				DstBinding:      1,
@@ -118,10 +116,8 @@ func TestVulkanDescriptorTemplate_UpdateDescriptorSetFromBuffer(t *testing.T) {
 	defer ctrl.Finish()
 
 	coreDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_1)
-	loader, err := core.CreateLoaderFromDriver(coreDriver)
-	require.NoError(t, err)
 
-	device := mocks.EasyMockDevice(ctrl, coreDriver)
+	device := core1_1.PromoteDevice(dummies.EasyDummyDevice(coreDriver))
 	descriptorSet := mocks.EasyMockDescriptorSet(ctrl)
 	buffer := mocks.EasyMockBuffer(ctrl)
 
@@ -161,7 +157,7 @@ func TestVulkanDescriptorTemplate_UpdateDescriptorSetFromBuffer(t *testing.T) {
 		require.Equal(t, uint64(3), info.FieldByName("_range").Uint())
 	})
 
-	template, _, err := loader.Core1_1().CreateDescriptorUpdateTemplate(device, core1_1.DescriptorUpdateTemplateCreateOptions{}, nil)
+	template, _, err := device.CreateDescriptorUpdateTemplate(core1_1.DescriptorUpdateTemplateCreateOptions{}, nil)
 	require.NoError(t, err)
 	require.NotNil(t, template)
 
@@ -177,10 +173,8 @@ func TestVulkanDescriptorTemplate_UpdateDescriptorSetFromImage(t *testing.T) {
 	defer ctrl.Finish()
 
 	coreDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_1)
-	loader, err := core.CreateLoaderFromDriver(coreDriver)
-	require.NoError(t, err)
 
-	device := mocks.EasyMockDevice(ctrl, coreDriver)
+	device := core1_1.PromoteDevice(dummies.EasyDummyDevice(coreDriver))
 	descriptorSet := mocks.EasyMockDescriptorSet(ctrl)
 	sampler := mocks.EasyMockSampler(ctrl)
 	imageView := mocks.EasyMockImageView(ctrl)
@@ -221,7 +215,7 @@ func TestVulkanDescriptorTemplate_UpdateDescriptorSetFromImage(t *testing.T) {
 		require.Equal(t, uint64(7), info.FieldByName("imageLayout").Uint()) // VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL
 	})
 
-	template, _, err := loader.Core1_1().CreateDescriptorUpdateTemplate(device, core1_1.DescriptorUpdateTemplateCreateOptions{}, nil)
+	template, _, err := device.CreateDescriptorUpdateTemplate(core1_1.DescriptorUpdateTemplateCreateOptions{}, nil)
 	require.NoError(t, err)
 	require.NotNil(t, template)
 
@@ -237,10 +231,8 @@ func TestVulkanDescriptorTemplate_UpdateDescriptorSetFromObjectHandle(t *testing
 	defer ctrl.Finish()
 
 	coreDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_1)
-	loader, err := core.CreateLoaderFromDriver(coreDriver)
-	require.NoError(t, err)
 
-	device := mocks.EasyMockDevice(ctrl, coreDriver)
+	device := core1_1.PromoteDevice(dummies.EasyDummyDevice(coreDriver))
 	descriptorSet := mocks.EasyMockDescriptorSet(ctrl)
 	bufferView := mocks.EasyMockBufferView(ctrl)
 
@@ -277,7 +269,7 @@ func TestVulkanDescriptorTemplate_UpdateDescriptorSetFromObjectHandle(t *testing
 		require.Equal(t, bufferView.Handle(), info)
 	})
 
-	template, _, err := loader.Core1_1().CreateDescriptorUpdateTemplate(device, core1_1.DescriptorUpdateTemplateCreateOptions{}, nil)
+	template, _, err := device.CreateDescriptorUpdateTemplate(core1_1.DescriptorUpdateTemplateCreateOptions{}, nil)
 	require.NoError(t, err)
 	require.NotNil(t, template)
 

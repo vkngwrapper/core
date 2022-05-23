@@ -20,11 +20,9 @@ func TestVulkanExtension_CmdDispatchBase(t *testing.T) {
 	defer ctrl.Finish()
 
 	coreDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_1)
-	loader, err := core.CreateLoaderFromDriver(coreDriver)
-	require.NoError(t, err)
 	device := mocks.EasyMockDevice(ctrl, coreDriver)
 	commandPool := mocks.EasyMockCommandPool(ctrl, device)
-	commandBuffer := core1_1.PromoteCommandBuffer(dummies.EasyDummyCommandBuffer(t, loader, device, commandPool))
+	commandBuffer := core1_1.PromoteCommandBuffer(dummies.EasyDummyCommandBuffer(coreDriver, device, commandPool))
 
 	coreDriver.EXPECT().VkCmdDispatchBase(
 		commandBuffer.Handle(),
@@ -44,11 +42,9 @@ func TestVulkanExtension_CmdSetDeviceMask(t *testing.T) {
 	defer ctrl.Finish()
 
 	coreDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_1)
-	loader, err := core.CreateLoaderFromDriver(coreDriver)
-	require.NoError(t, err)
 	device := mocks.EasyMockDevice(ctrl, coreDriver)
 	commandPool := mocks.EasyMockCommandPool(ctrl, device)
-	commandBuffer := core1_1.PromoteCommandBuffer(dummies.EasyDummyCommandBuffer(t, loader, device, commandPool))
+	commandBuffer := core1_1.PromoteCommandBuffer(dummies.EasyDummyCommandBuffer(coreDriver, device, commandPool))
 
 	coreDriver.EXPECT().VkCmdSetDeviceMask(commandBuffer.Handle(), driver.Uint32(3))
 

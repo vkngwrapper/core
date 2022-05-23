@@ -1,7 +1,6 @@
 package internal1_0_test
 
 import (
-	"github.com/CannibalVox/VKng/core"
 	"github.com/CannibalVox/VKng/core/common"
 	"github.com/CannibalVox/VKng/core/core1_0"
 	"github.com/CannibalVox/VKng/core/driver"
@@ -20,10 +19,7 @@ func TestVulkanLoader1_0_CreateFrameBuffer(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_0)
-	loader, err := core.CreateLoaderFromDriver(mockDriver)
-	require.NoError(t, err)
-
-	device := internal_mocks.EasyDummyDevice(t, ctrl, loader)
+	device := internal_mocks.EasyDummyDevice(mockDriver)
 	renderPass := mocks.EasyMockRenderPass(ctrl)
 	imageView1 := mocks.EasyMockImageView(ctrl)
 	imageView2 := mocks.EasyMockImageView(ctrl)
@@ -52,7 +48,7 @@ func TestVulkanLoader1_0_CreateFrameBuffer(t *testing.T) {
 			return core1_0.VKSuccess, nil
 		})
 
-	framebuffer, _, err := loader.CreateFrameBuffer(device, nil, core1_0.FramebufferCreateOptions{
+	framebuffer, _, err := device.CreateFrameBuffer(nil, core1_0.FramebufferCreateOptions{
 		Flags:      0,
 		RenderPass: renderPass,
 		Width:      3,

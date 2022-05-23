@@ -1,11 +1,11 @@
 package internal1_0_test
 
 import (
-	"github.com/CannibalVox/VKng/core"
 	"github.com/CannibalVox/VKng/core/common"
 	"github.com/CannibalVox/VKng/core/core1_0"
 	"github.com/CannibalVox/VKng/core/driver"
 	mock_driver "github.com/CannibalVox/VKng/core/driver/mocks"
+	"github.com/CannibalVox/VKng/core/internal/dummies"
 	"github.com/CannibalVox/VKng/core/mocks"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/require"
@@ -19,13 +19,10 @@ func TestDescriptorSetLayout_Create_SingleBinding(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_0)
-	loader, err := core.CreateLoaderFromDriver(mockDriver)
-	require.NoError(t, err)
-
-	mockDevice := mocks.EasyMockDevice(ctrl, mockDriver)
+	device := dummies.EasyDummyDevice(mockDriver)
 	layoutHandle := mocks.NewFakeDescriptorSetLayout()
 
-	mockDriver.EXPECT().VkCreateDescriptorSetLayout(mockDevice.Handle(), gomock.Not(nil), nil, gomock.Not(nil)).DoAndReturn(
+	mockDriver.EXPECT().VkCreateDescriptorSetLayout(device.Handle(), gomock.Not(nil), nil, gomock.Not(nil)).DoAndReturn(
 		func(device driver.VkDevice, pCreateInfo *driver.VkDescriptorSetLayoutCreateInfo, pAllocator *driver.VkAllocationCallbacks, pDescriptorSetLayout *driver.VkDescriptorSetLayout) (common.VkResult, error) {
 			v := reflect.ValueOf(*pCreateInfo)
 			require.Equal(t, uint64(32), v.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO
@@ -47,7 +44,7 @@ func TestDescriptorSetLayout_Create_SingleBinding(t *testing.T) {
 			return core1_0.VKSuccess, nil
 		})
 
-	layout, _, err := loader.CreateDescriptorSetLayout(mockDevice, nil, core1_0.DescriptorSetLayoutCreateOptions{
+	layout, _, err := device.CreateDescriptorSetLayout(nil, core1_0.DescriptorSetLayoutCreateOptions{
 		Flags: 0,
 		Bindings: []core1_0.DescriptorLayoutBinding{
 			{
@@ -69,10 +66,7 @@ func TestDescriptorSetLayout_Create_SingleBindingImmutableSamplers(t *testing.T)
 	defer ctrl.Finish()
 
 	mockDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_0)
-	loader, err := core.CreateLoaderFromDriver(mockDriver)
-	require.NoError(t, err)
-
-	mockDevice := mocks.EasyMockDevice(ctrl, mockDriver)
+	device := dummies.EasyDummyDevice(mockDriver)
 	layoutHandle := mocks.NewFakeDescriptorSetLayout()
 
 	sampler1 := mocks.EasyMockSampler(ctrl)
@@ -80,7 +74,7 @@ func TestDescriptorSetLayout_Create_SingleBindingImmutableSamplers(t *testing.T)
 	sampler3 := mocks.EasyMockSampler(ctrl)
 	sampler4 := mocks.EasyMockSampler(ctrl)
 
-	mockDriver.EXPECT().VkCreateDescriptorSetLayout(mockDevice.Handle(), gomock.Not(nil), nil, gomock.Not(nil)).DoAndReturn(
+	mockDriver.EXPECT().VkCreateDescriptorSetLayout(device.Handle(), gomock.Not(nil), nil, gomock.Not(nil)).DoAndReturn(
 		func(device driver.VkDevice, pCreateInfo *driver.VkDescriptorSetLayoutCreateInfo, pAllocator *driver.VkAllocationCallbacks, pDescriptorSetLayout *driver.VkDescriptorSetLayout) (common.VkResult, error) {
 			v := reflect.ValueOf(*pCreateInfo)
 			require.Equal(t, uint64(32), v.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO
@@ -109,7 +103,7 @@ func TestDescriptorSetLayout_Create_SingleBindingImmutableSamplers(t *testing.T)
 			return core1_0.VKSuccess, nil
 		})
 
-	layout, _, err := loader.CreateDescriptorSetLayout(mockDevice, nil, core1_0.DescriptorSetLayoutCreateOptions{
+	layout, _, err := device.CreateDescriptorSetLayout(nil, core1_0.DescriptorSetLayoutCreateOptions{
 		Flags: 0,
 		Bindings: []core1_0.DescriptorLayoutBinding{
 			{
@@ -134,17 +128,14 @@ func TestDescriptorSetLayout_Create_FailBindingSamplerMismatch(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_0)
-	loader, err := core.CreateLoaderFromDriver(mockDriver)
-	require.NoError(t, err)
-
-	mockDevice := mocks.EasyMockDevice(ctrl, mockDriver)
+	device := dummies.EasyDummyDevice(mockDriver)
 
 	sampler1 := mocks.EasyMockSampler(ctrl)
 	sampler2 := mocks.EasyMockSampler(ctrl)
 	sampler3 := mocks.EasyMockSampler(ctrl)
 	sampler4 := mocks.EasyMockSampler(ctrl)
 
-	_, _, err = loader.CreateDescriptorSetLayout(mockDevice, nil, core1_0.DescriptorSetLayoutCreateOptions{
+	_, _, err := device.CreateDescriptorSetLayout(nil, core1_0.DescriptorSetLayoutCreateOptions{
 		Flags: 0,
 		Bindings: []core1_0.DescriptorLayoutBinding{
 			{
@@ -167,13 +158,10 @@ func TestDescriptorSetLayout_Create_MultiBinding(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_0)
-	loader, err := core.CreateLoaderFromDriver(mockDriver)
-	require.NoError(t, err)
-
-	mockDevice := mocks.EasyMockDevice(ctrl, mockDriver)
+	device := dummies.EasyDummyDevice(mockDriver)
 	layoutHandle := mocks.NewFakeDescriptorSetLayout()
 
-	mockDriver.EXPECT().VkCreateDescriptorSetLayout(mockDevice.Handle(), gomock.Not(nil), nil, gomock.Not(nil)).DoAndReturn(
+	mockDriver.EXPECT().VkCreateDescriptorSetLayout(device.Handle(), gomock.Not(nil), nil, gomock.Not(nil)).DoAndReturn(
 		func(device driver.VkDevice, pCreateInfo *driver.VkDescriptorSetLayoutCreateInfo, pAllocator *driver.VkAllocationCallbacks, pDescriptorSetLayout *driver.VkDescriptorSetLayout) (common.VkResult, error) {
 			v := reflect.ValueOf(*pCreateInfo)
 			require.Equal(t, uint64(32), v.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO
@@ -209,7 +197,7 @@ func TestDescriptorSetLayout_Create_MultiBinding(t *testing.T) {
 			return core1_0.VKSuccess, nil
 		})
 
-	layout, _, err := loader.CreateDescriptorSetLayout(mockDevice, nil, core1_0.DescriptorSetLayoutCreateOptions{
+	layout, _, err := device.CreateDescriptorSetLayout(nil, core1_0.DescriptorSetLayoutCreateOptions{
 		Flags: 0,
 		Bindings: []core1_0.DescriptorLayoutBinding{
 			{

@@ -1,12 +1,12 @@
 package internal1_0_test
 
 import (
-	"github.com/CannibalVox/VKng/core"
 	"github.com/CannibalVox/VKng/core/common"
 	"github.com/CannibalVox/VKng/core/core1_0"
 	"github.com/CannibalVox/VKng/core/driver"
 	mock_driver "github.com/CannibalVox/VKng/core/driver/mocks"
 	internal_mocks "github.com/CannibalVox/VKng/core/internal/dummies"
+	"github.com/CannibalVox/VKng/core/mocks"
 	"github.com/golang/mock/gomock"
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/require"
@@ -28,10 +28,8 @@ func TestVulkanPhysicalDevice_AvailableExtensionsForLayer(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_0)
-	loader, err := core.CreateLoaderFromDriver(mockDriver)
-	require.NoError(t, err)
-
-	physicalDevice := internal_mocks.EasyDummyPhysicalDevice(t, loader)
+	instance := mocks.EasyMockInstance(ctrl, mockDriver)
+	physicalDevice := internal_mocks.EasyDummyPhysicalDevice(mockDriver, instance)
 
 	mockDriver.EXPECT().VkEnumerateDeviceExtensionProperties(physicalDevice.Handle(), gomock.Not(gomock.Nil()), gomock.Not(gomock.Nil()), gomock.Nil()).DoAndReturn(
 		func(physDevice driver.VkPhysicalDevice, pLayerName *driver.Char, pPropertyCount *driver.Uint32, pProperties *driver.VkExtensionProperties) (common.VkResult, error) {
@@ -93,10 +91,8 @@ func TestVulkanPhysicalDevice_AvailableExtensions(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_0)
-	loader, err := core.CreateLoaderFromDriver(mockDriver)
-	require.NoError(t, err)
-
-	physicalDevice := internal_mocks.EasyDummyPhysicalDevice(t, loader)
+	instance := mocks.EasyMockInstance(ctrl, mockDriver)
+	physicalDevice := internal_mocks.EasyDummyPhysicalDevice(mockDriver, instance)
 
 	mockDriver.EXPECT().VkEnumerateDeviceExtensionProperties(physicalDevice.Handle(), gomock.Nil(), gomock.Not(gomock.Nil()), gomock.Nil()).DoAndReturn(
 		func(physDevice driver.VkPhysicalDevice, pLayerName *driver.Char, pPropertyCount *driver.Uint32, pProperties *driver.VkExtensionProperties) (common.VkResult, error) {
@@ -142,10 +138,8 @@ func TestVulkanPhysicalDevice_AvailableExtensions_Incomplete(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_0)
-	loader, err := core.CreateLoaderFromDriver(mockDriver)
-	require.NoError(t, err)
-
-	physicalDevice := internal_mocks.EasyDummyPhysicalDevice(t, loader)
+	instance := mocks.EasyMockInstance(ctrl, mockDriver)
+	physicalDevice := internal_mocks.EasyDummyPhysicalDevice(mockDriver, instance)
 
 	mockDriver.EXPECT().VkEnumerateDeviceExtensionProperties(physicalDevice.Handle(), nil, gomock.Not(gomock.Nil()), gomock.Nil()).DoAndReturn(
 		func(physDevice driver.VkPhysicalDevice, pLayerName *driver.Char, pPropertyCount *driver.Uint32, pProperties *driver.VkExtensionProperties) (common.VkResult, error) {
@@ -201,10 +195,8 @@ func TestVulkanPhysicalDevice_AvailableLayers(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_0)
-	loader, err := core.CreateLoaderFromDriver(mockDriver)
-	require.NoError(t, err)
-
-	physicalDevice := internal_mocks.EasyDummyPhysicalDevice(t, loader)
+	instance := mocks.EasyMockInstance(ctrl, mockDriver)
+	physicalDevice := internal_mocks.EasyDummyPhysicalDevice(mockDriver, instance)
 
 	mockDriver.EXPECT().VkEnumerateDeviceLayerProperties(physicalDevice.Handle(), gomock.Not(gomock.Nil()), gomock.Nil()).DoAndReturn(
 		func(physicalDevice driver.VkPhysicalDevice, pPropertyCount *driver.Uint32, pProperties *driver.VkLayerProperties) (common.VkResult, error) {
@@ -262,10 +254,8 @@ func TestVulkanPhysicalDevice_AvailableLayers_Incomplete(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_0)
-	loader, err := core.CreateLoaderFromDriver(mockDriver)
-	require.NoError(t, err)
-
-	physicalDevice := internal_mocks.EasyDummyPhysicalDevice(t, loader)
+	instance := mocks.EasyMockInstance(ctrl, mockDriver)
+	physicalDevice := internal_mocks.EasyDummyPhysicalDevice(mockDriver, instance)
 
 	mockDriver.EXPECT().VkEnumerateDeviceLayerProperties(physicalDevice.Handle(), gomock.Not(gomock.Nil()), gomock.Nil()).DoAndReturn(
 		func(physicalDevice driver.VkPhysicalDevice, pPropertyCount *driver.Uint32, pProperties *driver.VkLayerProperties) (common.VkResult, error) {
@@ -333,10 +323,8 @@ func TestVulkanPhysicalDevice_QueueFamilyProperties(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_0)
-	loader, err := core.CreateLoaderFromDriver(mockDriver)
-	require.NoError(t, err)
-
-	physicalDevice := internal_mocks.EasyDummyPhysicalDevice(t, loader)
+	instance := mocks.EasyMockInstance(ctrl, mockDriver)
+	physicalDevice := internal_mocks.EasyDummyPhysicalDevice(mockDriver, instance)
 
 	mockDriver.EXPECT().VkGetPhysicalDeviceQueueFamilyProperties(physicalDevice.Handle(), gomock.Not(gomock.Nil()), gomock.Nil()).DoAndReturn(
 		func(device driver.VkPhysicalDevice, pPropertyCount *driver.Uint32, pProperties *driver.VkQueueFamilyProperties) {
@@ -372,10 +360,8 @@ func TestVulkanPhysicalDevice_Properties(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_0)
-	loader, err := core.CreateLoaderFromDriver(mockDriver)
-	require.NoError(t, err)
-
-	physicalDevice := internal_mocks.EasyDummyPhysicalDevice(t, loader)
+	instance := mocks.EasyMockInstance(ctrl, mockDriver)
+	physicalDevice := internal_mocks.EasyDummyPhysicalDevice(mockDriver, instance)
 
 	deviceUUID, err := uuid.NewUUID()
 	require.NoError(t, err)
@@ -456,10 +442,8 @@ func TestVulkanPhysicalDevice_Features(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_0)
-	loader, err := core.CreateLoaderFromDriver(mockDriver)
-	require.NoError(t, err)
-
-	physicalDevice := internal_mocks.EasyDummyPhysicalDevice(t, loader)
+	instance := mocks.EasyMockInstance(ctrl, mockDriver)
+	physicalDevice := internal_mocks.EasyDummyPhysicalDevice(mockDriver, instance)
 
 	mockDriver.EXPECT().VkGetPhysicalDeviceFeatures(physicalDevice.Handle(), gomock.Not(gomock.Nil())).DoAndReturn(
 		func(physicalDevice driver.VkPhysicalDevice, pFeatures *driver.VkPhysicalDeviceFeatures) {
@@ -587,10 +571,8 @@ func TestVulkanPhysicalDevice_FormatProperties(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_0)
-	loader, err := core.CreateLoaderFromDriver(mockDriver)
-	require.NoError(t, err)
-
-	physicalDevice := internal_mocks.EasyDummyPhysicalDevice(t, loader)
+	instance := mocks.EasyMockInstance(ctrl, mockDriver)
+	physicalDevice := internal_mocks.EasyDummyPhysicalDevice(mockDriver, instance)
 
 	mockDriver.EXPECT().VkGetPhysicalDeviceFormatProperties(physicalDevice.Handle(),
 		driver.VkFormat(57), // VK_FORMAT_A8B8G8R8_SRGB_PACK32
@@ -615,10 +597,8 @@ func TestVulkanPhysicalDevice_ImageFormatProperties(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_0)
-	loader, err := core.CreateLoaderFromDriver(mockDriver)
-	require.NoError(t, err)
-
-	physicalDevice := internal_mocks.EasyDummyPhysicalDevice(t, loader)
+	instance := mocks.EasyMockInstance(ctrl, mockDriver)
+	physicalDevice := internal_mocks.EasyDummyPhysicalDevice(mockDriver, instance)
 
 	mockDriver.EXPECT().VkGetPhysicalDeviceImageFormatProperties(physicalDevice.Handle(),
 		driver.VkFormat(57),                   // VK_FORMAT_A8B8G8R8_SRGB_PACK32
@@ -666,10 +646,8 @@ func TestVulkanPhysicalDevice_SparseImageFormatProperties(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_0)
-	loader, err := core.CreateLoaderFromDriver(mockDriver)
-	require.NoError(t, err)
-
-	physicalDevice := internal_mocks.EasyDummyPhysicalDevice(t, loader)
+	instance := mocks.EasyMockInstance(ctrl, mockDriver)
+	physicalDevice := internal_mocks.EasyDummyPhysicalDevice(mockDriver, instance)
 
 	mockDriver.EXPECT().VkGetPhysicalDeviceSparseImageFormatProperties(physicalDevice.Handle(),
 		driver.VkFormat(68),                  // VK_FORMAT_A2B10G10R10_UINT_PACK32
@@ -736,10 +714,8 @@ func TestVulkanPhysicalDevice_MemoryProperties(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_0)
-	loader, err := core.CreateLoaderFromDriver(mockDriver)
-	require.NoError(t, err)
-
-	physicalDevice := internal_mocks.EasyDummyPhysicalDevice(t, loader)
+	instance := mocks.EasyMockInstance(ctrl, mockDriver)
+	physicalDevice := internal_mocks.EasyDummyPhysicalDevice(mockDriver, instance)
 
 	mockDriver.EXPECT().VkGetPhysicalDeviceMemoryProperties(physicalDevice.Handle(), gomock.Not(nil)).DoAndReturn(
 		func(physicalDevice driver.VkPhysicalDevice, pProperties *driver.VkPhysicalDeviceMemoryProperties) {

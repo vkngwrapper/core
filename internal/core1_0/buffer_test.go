@@ -1,7 +1,6 @@
 package internal1_0_test
 
 import (
-	"github.com/CannibalVox/VKng/core"
 	"github.com/CannibalVox/VKng/core/common"
 	"github.com/CannibalVox/VKng/core/core1_0"
 	"github.com/CannibalVox/VKng/core/driver"
@@ -20,10 +19,7 @@ func TestBuffer_Create_NilIndices(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_0)
-	loader, err := core.CreateLoaderFromDriver(mockDriver)
-	require.NoError(t, err)
-
-	device := mocks.EasyMockDevice(ctrl, mockDriver)
+	device := internal_mocks.EasyDummyDevice(mockDriver)
 
 	expectedBuffer := mocks.NewFakeBufferHandle()
 
@@ -45,7 +41,7 @@ func TestBuffer_Create_NilIndices(t *testing.T) {
 			return core1_0.VKSuccess, nil
 		})
 
-	buffer, res, err := loader.CreateBuffer(device, nil, core1_0.BufferCreateOptions{
+	buffer, res, err := device.CreateBuffer(nil, core1_0.BufferCreateOptions{
 		BufferSize:         5,
 		Usage:              core1_0.BufferUsageVertexBuffer | core1_0.BufferUsageTransferSrc,
 		SharingMode:        core1_0.SharingExclusive,
@@ -62,10 +58,7 @@ func TestBasicBuffer_Create_QueueFamilyIndices(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_0)
-	loader, err := core.CreateLoaderFromDriver(mockDriver)
-	require.NoError(t, err)
-
-	device := mocks.EasyMockDevice(ctrl, mockDriver)
+	device := internal_mocks.EasyDummyDevice(mockDriver)
 
 	expectedBuffer := mocks.NewFakeBufferHandle()
 
@@ -91,7 +84,7 @@ func TestBasicBuffer_Create_QueueFamilyIndices(t *testing.T) {
 			return core1_0.VKSuccess, nil
 		})
 
-	buffer, res, err := loader.CreateBuffer(device, nil, core1_0.BufferCreateOptions{
+	buffer, res, err := device.CreateBuffer(nil, core1_0.BufferCreateOptions{
 		BufferSize:         5,
 		Usage:              core1_0.BufferUsageVertexBuffer | core1_0.BufferUsageTransferSrc,
 		SharingMode:        core1_0.SharingExclusive,
@@ -109,11 +102,9 @@ func TestBuffer_MemoryRequirements(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_0)
-	loader, err := core.CreateLoaderFromDriver(mockDriver)
-	require.NoError(t, err)
 
 	device := mocks.EasyMockDevice(ctrl, mockDriver)
-	buffer := internal_mocks.EasyDummyBuffer(t, loader, device)
+	buffer := internal_mocks.EasyDummyBuffer(mockDriver, device)
 
 	mockDriver.EXPECT().VkGetBufferMemoryRequirements(device.Handle(), buffer.Handle(), gomock.Not(nil)).DoAndReturn(
 		func(device driver.VkDevice, buffer driver.VkBuffer, requirements *driver.VkMemoryRequirements) {
@@ -127,7 +118,6 @@ func TestBuffer_MemoryRequirements(t *testing.T) {
 	require.Equal(t, 5, reqs.Size)
 	require.Equal(t, 8, reqs.Alignment)
 	require.Equal(t, uint32(0xFF), reqs.MemoryType)
-	require.NoError(t, err)
 }
 
 func TestBuffer_BindBufferMemory_Success(t *testing.T) {
@@ -135,15 +125,13 @@ func TestBuffer_BindBufferMemory_Success(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_0)
-	loader, err := core.CreateLoaderFromDriver(mockDriver)
-	require.NoError(t, err)
 
 	device := mocks.EasyMockDevice(ctrl, mockDriver)
-	buffer := internal_mocks.EasyDummyBuffer(t, loader, device)
+	buffer := internal_mocks.EasyDummyBuffer(mockDriver, device)
 	memory := mocks.EasyMockDeviceMemory(ctrl)
 
 	mockDriver.EXPECT().VkBindBufferMemory(device.Handle(), buffer.Handle(), memory.Handle(), driver.VkDeviceSize(3)).Return(core1_0.VKSuccess, nil)
-	_, err = buffer.BindBufferMemory(memory, 3)
+	_, err := buffer.BindBufferMemory(memory, 3)
 	require.NoError(t, err)
 }
 
@@ -152,12 +140,10 @@ func TestBuffer_BindBufferMemory_FailNilMemory(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_0)
-	loader, err := core.CreateLoaderFromDriver(mockDriver)
-	require.NoError(t, err)
 
 	device := mocks.EasyMockDevice(ctrl, mockDriver)
-	buffer := internal_mocks.EasyDummyBuffer(t, loader, device)
+	buffer := internal_mocks.EasyDummyBuffer(mockDriver, device)
 
-	_, err = buffer.BindBufferMemory(nil, 3)
+	_, err := buffer.BindBufferMemory(nil, 3)
 	require.EqualError(t, err, "received nil DeviceMemory")
 }

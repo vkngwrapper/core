@@ -1,7 +1,6 @@
 package internal1_1_test
 
 import (
-	"github.com/CannibalVox/VKng/core"
 	"github.com/CannibalVox/VKng/core/common"
 	"github.com/CannibalVox/VKng/core/core1_0"
 	"github.com/CannibalVox/VKng/core/core1_1"
@@ -22,27 +21,7 @@ func TestMemoryDedicatedAllocateOptions(t *testing.T) {
 
 	coreDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_1)
 	coreDriver.EXPECT().CreateDeviceDriver(gomock.Any()).Return(coreDriver, nil).AnyTimes()
-	loader, err := core.CreateLoaderFromDriver(coreDriver)
-	require.NoError(t, err)
-
-	physicalDevice := mocks.EasyMockPhysicalDevice(ctrl, coreDriver)
-	deviceHandle := mocks.EasyMockDevice(ctrl, coreDriver)
-
-	coreDriver.EXPECT().VkCreateDevice(gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any()).
-		DoAndReturn(func(physicalDevice driver.VkPhysicalDevice, pCreateInfo *driver.VkDeviceCreateInfo, pAllocator *driver.VkAllocationCallbacks, pDevice *driver.VkDevice) (common.VkResult, error) {
-			*pDevice = deviceHandle.Handle()
-
-			return core1_0.VKSuccess, nil
-		})
-
-	device, _, err := loader.CreateDevice(physicalDevice, nil, core1_0.DeviceCreateOptions{
-		QueueFamilies: []core1_0.DeviceQueueCreateOptions{
-			{
-				CreatedQueuePriorities: []float32{0},
-			},
-		},
-	})
-	require.NoError(t, err)
+	device := dummies.EasyDummyDevice(coreDriver)
 
 	buffer := mocks.EasyMockBuffer(ctrl)
 	expectedMemory := mocks.EasyMockDeviceMemory(ctrl)
@@ -67,7 +46,7 @@ func TestMemoryDedicatedAllocateOptions(t *testing.T) {
 			return core1_0.VKSuccess, nil
 		})
 
-	memory, _, err := loader.AllocateMemory(device, nil, core1_0.MemoryAllocateOptions{
+	memory, _, err := device.AllocateMemory(nil, core1_0.MemoryAllocateOptions{
 		AllocationSize:  1,
 		MemoryTypeIndex: 3,
 		HaveNext: common.HaveNext{Next: core1_1.MemoryDedicatedAllocationOptions{
@@ -83,10 +62,8 @@ func TestDedicatedMemoryRequirementsOutData_Buffer(t *testing.T) {
 	defer ctrl.Finish()
 
 	coreDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_1)
-	loader, err := core.CreateLoaderFromDriver(coreDriver)
-	require.NoError(t, err)
 
-	device := core1_1.PromoteDevice(dummies.EasyDummyDevice(t, ctrl, loader))
+	device := core1_1.PromoteDevice(dummies.EasyDummyDevice(coreDriver))
 	buffer := mocks.EasyMockBuffer(ctrl)
 
 	coreDriver.EXPECT().VkGetBufferMemoryRequirements2(
@@ -122,7 +99,7 @@ func TestDedicatedMemoryRequirementsOutData_Buffer(t *testing.T) {
 	var outData = core1_1.MemoryRequirementsOutData{
 		HaveNext: common.HaveNext{Next: &memReqs},
 	}
-	err = device.BufferMemoryRequirements(
+	err := device.BufferMemoryRequirements(
 		core1_1.BufferMemoryRequirementsOptions{
 			Buffer: buffer,
 		}, &outData)
@@ -140,9 +117,7 @@ func TestDedicatedMemoryRequirementsOutData_Image(t *testing.T) {
 	defer ctrl.Finish()
 
 	coreDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_1)
-	loader, err := core.CreateLoaderFromDriver(coreDriver)
-	require.NoError(t, err)
-	device := core1_1.PromoteDevice(dummies.EasyDummyDevice(t, ctrl, loader))
+	device := core1_1.PromoteDevice(dummies.EasyDummyDevice(coreDriver))
 	image := mocks.EasyMockImage(ctrl)
 
 	coreDriver.EXPECT().VkGetImageMemoryRequirements2(
@@ -178,7 +153,7 @@ func TestDedicatedMemoryRequirementsOutData_Image(t *testing.T) {
 	var outData = core1_1.MemoryRequirementsOutData{
 		HaveNext: common.HaveNext{Next: &memReqs},
 	}
-	err = device.ImageMemoryRequirements(
+	err := device.ImageMemoryRequirements(
 		core1_1.ImageMemoryRequirementsOptions{
 			Image: image,
 		}, &outData)
@@ -196,9 +171,7 @@ func TestExternalMemoryBufferOptions(t *testing.T) {
 	defer ctrl.Finish()
 
 	coreDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_1)
-	loader, err := core.CreateLoaderFromDriver(coreDriver)
-	require.NoError(t, err)
-	device := mocks.EasyMockDevice(ctrl, coreDriver)
+	device := dummies.EasyDummyDevice(coreDriver)
 	mockBuffer := mocks.EasyMockBuffer(ctrl)
 
 	coreDriver.EXPECT().VkCreateBuffer(
@@ -229,8 +202,7 @@ func TestExternalMemoryBufferOptions(t *testing.T) {
 			return core1_0.VKSuccess, nil
 		})
 
-	buffer, _, err := loader.CreateBuffer(
-		device,
+	buffer, _, err := device.CreateBuffer(
 		nil,
 		core1_0.BufferCreateOptions{
 			BufferSize: 1,
@@ -251,9 +223,7 @@ func TestExternalMemoryImageOptions(t *testing.T) {
 	defer ctrl.Finish()
 
 	coreDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_1)
-	loader, err := core.CreateLoaderFromDriver(coreDriver)
-	require.NoError(t, err)
-	device := mocks.EasyMockDevice(ctrl, coreDriver)
+	device := dummies.EasyDummyDevice(coreDriver)
 	mockImage := mocks.EasyMockImage(ctrl)
 
 	coreDriver.EXPECT().VkCreateImage(
@@ -284,8 +254,7 @@ func TestExternalMemoryImageOptions(t *testing.T) {
 			return core1_0.VKSuccess, nil
 		})
 
-	image, _, err := loader.CreateImage(
-		device,
+	image, _, err := device.CreateImage(
 		nil,
 		core1_0.ImageCreateOptions{
 			MipLevels:   1,
@@ -306,9 +275,8 @@ func TestExternalImageFormatOptions(t *testing.T) {
 	defer ctrl.Finish()
 
 	coreDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_1)
-	loader, err := core.CreateLoaderFromDriver(coreDriver)
-	require.NoError(t, err)
-	physicalDevice := core1_1.PromotePhysicalDevice(dummies.EasyDummyPhysicalDevice(t, loader))
+	instance := mocks.EasyMockInstance(ctrl, coreDriver)
+	physicalDevice := core1_1.PromotePhysicalDevice(dummies.EasyDummyPhysicalDevice(coreDriver, instance))
 
 	coreDriver.EXPECT().VkGetPhysicalDeviceImageFormatProperties2(
 		physicalDevice.Handle(),
@@ -351,7 +319,7 @@ func TestExternalImageFormatOptions(t *testing.T) {
 	format := core1_1.ImageFormatPropertiesOutData{
 		HaveNext: common.HaveNext{&outData},
 	}
-	_, err = physicalDevice.InstanceScopedPhysicalDevice1_1().ImageFormatProperties(
+	_, err := physicalDevice.InstanceScopedPhysicalDevice1_1().ImageFormatProperties(
 		core1_1.ImageFormatOptions{
 			Format: core1_0.DataFormatA2B10G10R10UnsignedIntPacked,
 			HaveNext: common.HaveNext{
@@ -377,9 +345,7 @@ func TestExternalMemoryAllocateOptions(t *testing.T) {
 	defer ctrl.Finish()
 
 	coreDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_0)
-	loader, err := core.CreateLoaderFromDriver(coreDriver)
-	require.NoError(t, err)
-	device := mocks.EasyMockDevice(ctrl, coreDriver)
+	device := dummies.EasyDummyDevice(coreDriver)
 	mockMemory := mocks.EasyMockDeviceMemory(ctrl)
 
 	coreDriver.EXPECT().VkAllocateMemory(
@@ -410,7 +376,7 @@ func TestExternalMemoryAllocateOptions(t *testing.T) {
 			return core1_0.VKSuccess, nil
 		})
 
-	memory, _, err := loader.AllocateMemory(device, nil, core1_0.MemoryAllocateOptions{
+	memory, _, err := device.AllocateMemory(nil, core1_0.MemoryAllocateOptions{
 		AllocationSize:  1,
 		MemoryTypeIndex: 3,
 		HaveNext: common.HaveNext{

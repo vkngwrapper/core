@@ -1,7 +1,6 @@
 package internal1_1_test
 
 import (
-	"github.com/CannibalVox/VKng/core"
 	"github.com/CannibalVox/VKng/core/common"
 	"github.com/CannibalVox/VKng/core/core1_0"
 	"github.com/CannibalVox/VKng/core/core1_1"
@@ -21,8 +20,6 @@ func TestDeviceGroupSubmitOptions(t *testing.T) {
 	defer ctrl.Finish()
 
 	coreDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_1)
-	loader, err := core.CreateLoaderFromDriver(coreDriver)
-	require.NoError(t, err)
 
 	device := mocks.EasyMockDevice(ctrl, coreDriver)
 	fence := mocks.EasyMockFence(ctrl)
@@ -32,7 +29,7 @@ func TestDeviceGroupSubmitOptions(t *testing.T) {
 	semaphore2 := mocks.EasyMockSemaphore(ctrl)
 	semaphore3 := mocks.EasyMockSemaphore(ctrl)
 
-	queue := dummies.EasyDummyQueue(loader, device)
+	queue := dummies.EasyDummyQueue(coreDriver, device)
 
 	coreDriver.EXPECT().VkQueueSubmit(
 		queue.Handle(),
@@ -75,7 +72,7 @@ func TestDeviceGroupSubmitOptions(t *testing.T) {
 		return core1_0.VKSuccess, nil
 	})
 
-	_, err = queue.SubmitToQueue(fence, []core1_0.SubmitOptions{
+	_, err := queue.SubmitToQueue(fence, []core1_0.SubmitOptions{
 		{
 			CommandBuffers:   []core1_0.CommandBuffer{commandBuffer},
 			WaitSemaphores:   []core1_0.Semaphore{semaphore1},
@@ -99,8 +96,6 @@ func TestProtectedMemorySubmitOptions(t *testing.T) {
 	defer ctrl.Finish()
 
 	coreDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_1)
-	loader, err := core.CreateLoaderFromDriver(coreDriver)
-	require.NoError(t, err)
 
 	device := mocks.EasyMockDevice(ctrl, coreDriver)
 	fence := mocks.EasyMockFence(ctrl)
@@ -110,7 +105,7 @@ func TestProtectedMemorySubmitOptions(t *testing.T) {
 	semaphore2 := mocks.EasyMockSemaphore(ctrl)
 	semaphore3 := mocks.EasyMockSemaphore(ctrl)
 
-	queue := dummies.EasyDummyQueue(loader, device)
+	queue := dummies.EasyDummyQueue(coreDriver, device)
 
 	coreDriver.EXPECT().VkQueueSubmit(
 		queue.Handle(),
@@ -144,7 +139,7 @@ func TestProtectedMemorySubmitOptions(t *testing.T) {
 		return core1_0.VKSuccess, nil
 	})
 
-	_, err = queue.SubmitToQueue(fence, []core1_0.SubmitOptions{
+	_, err := queue.SubmitToQueue(fence, []core1_0.SubmitOptions{
 		{
 			CommandBuffers:   []core1_0.CommandBuffer{commandBuffer},
 			WaitSemaphores:   []core1_0.Semaphore{semaphore1},

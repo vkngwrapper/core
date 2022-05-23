@@ -1,7 +1,6 @@
 package internal1_1_test
 
 import (
-	"github.com/CannibalVox/VKng/core"
 	"github.com/CannibalVox/VKng/core/common"
 	"github.com/CannibalVox/VKng/core/core1_0"
 	"github.com/CannibalVox/VKng/core/core1_1"
@@ -21,9 +20,7 @@ func TestVulkanInstance_EnumeratePhysicalDeviceGroups(t *testing.T) {
 	defer ctrl.Finish()
 
 	coreDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_1)
-	loader, err := core.CreateLoaderFromDriver(coreDriver)
-	require.NoError(t, err)
-	instance := core1_1.PromoteInstance(dummies.EasyDummyInstance(t, loader))
+	instance := core1_1.PromoteInstance(dummies.EasyDummyInstance(coreDriver))
 
 	physicalDevice1 := mocks.EasyMockPhysicalDevice(ctrl, coreDriver)
 	physicalDevice2 := mocks.EasyMockPhysicalDevice(ctrl, coreDriver)
@@ -144,9 +141,7 @@ func TestVulkanInstance_EnumeratePhysicalDeviceGroups_Incomplete(t *testing.T) {
 	defer ctrl.Finish()
 
 	coreDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_1)
-	loader, err := core.CreateLoaderFromDriver(coreDriver)
-	require.NoError(t, err)
-	instance := core1_1.PromoteInstance(dummies.EasyDummyInstance(t, loader))
+	instance := core1_1.PromoteInstance(dummies.EasyDummyInstance(coreDriver))
 
 	physicalDevice1 := mocks.EasyMockPhysicalDevice(ctrl, coreDriver)
 	physicalDevice2 := mocks.EasyMockPhysicalDevice(ctrl, coreDriver)

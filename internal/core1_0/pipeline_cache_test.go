@@ -1,7 +1,6 @@
 package internal1_0_test
 
 import (
-	"github.com/CannibalVox/VKng/core"
 	"github.com/CannibalVox/VKng/core/common"
 	"github.com/CannibalVox/VKng/core/core1_0"
 	"github.com/CannibalVox/VKng/core/driver"
@@ -20,10 +19,7 @@ func TestVulkanLoader1_0_CreatePipelineCache(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_0)
-	loader, err := core.CreateLoaderFromDriver(mockDriver)
-	require.NoError(t, err)
-
-	device := mocks.EasyMockDevice(ctrl, mockDriver)
+	device := internal_mocks.EasyDummyDevice(mockDriver)
 	pipelineCacheHandle := mocks.NewFakePipelineCache()
 
 	mockDriver.EXPECT().VkCreatePipelineCache(device.Handle(), gomock.Not(nil), nil, gomock.Not(nil)).DoAndReturn(
@@ -47,7 +43,7 @@ func TestVulkanLoader1_0_CreatePipelineCache(t *testing.T) {
 			return core1_0.VKSuccess, nil
 		})
 
-	pipelineCache, _, err := loader.CreatePipelineCache(device, nil, core1_0.PipelineCacheCreateOptions{
+	pipelineCache, _, err := device.CreatePipelineCache(nil, core1_0.PipelineCacheCreateOptions{
 		Flags:       0,
 		InitialData: []byte{1, 3, 5, 7},
 	})
@@ -61,11 +57,8 @@ func TestVulkanPipelineCache_CacheData(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_0)
-	loader, err := core.CreateLoaderFromDriver(mockDriver)
-	require.NoError(t, err)
-
 	device := mocks.EasyMockDevice(ctrl, mockDriver)
-	pipelineCache := internal_mocks.EasyDummyPipelineCache(t, device, loader)
+	pipelineCache := internal_mocks.EasyDummyPipelineCache(mockDriver, device)
 
 	mockDriver.EXPECT().VkGetPipelineCacheData(device.Handle(), pipelineCache.Handle(), gomock.Not(nil), unsafe.Pointer(nil)).DoAndReturn(
 		func(device driver.VkDevice, pipelineCache driver.VkPipelineCache, pSize *driver.Size, pCacheData unsafe.Pointer) (common.VkResult, error) {
@@ -90,11 +83,8 @@ func TestVulkanPipelineCache_MergePipelineCaches(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_0)
-	loader, err := core.CreateLoaderFromDriver(mockDriver)
-	require.NoError(t, err)
-
 	device := mocks.EasyMockDevice(ctrl, mockDriver)
-	pipelineCache := internal_mocks.EasyDummyPipelineCache(t, device, loader)
+	pipelineCache := internal_mocks.EasyDummyPipelineCache(mockDriver, device)
 
 	srcPipeline1 := mocks.EasyMockPipelineCache(ctrl)
 	srcPipeline2 := mocks.EasyMockPipelineCache(ctrl)
@@ -111,7 +101,7 @@ func TestVulkanPipelineCache_MergePipelineCaches(t *testing.T) {
 			return core1_0.VKSuccess, nil
 		})
 
-	_, err = pipelineCache.MergePipelineCaches([]core1_0.PipelineCache{
+	_, err := pipelineCache.MergePipelineCaches([]core1_0.PipelineCache{
 		srcPipeline1, srcPipeline2, srcPipeline3,
 	})
 	require.NoError(t, err)

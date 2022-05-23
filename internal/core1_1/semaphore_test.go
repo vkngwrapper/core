@@ -1,12 +1,12 @@
 package internal1_1_test
 
 import (
-	"github.com/CannibalVox/VKng/core"
 	"github.com/CannibalVox/VKng/core/common"
 	"github.com/CannibalVox/VKng/core/core1_0"
 	"github.com/CannibalVox/VKng/core/core1_1"
 	"github.com/CannibalVox/VKng/core/driver"
 	mock_driver "github.com/CannibalVox/VKng/core/driver/mocks"
+	"github.com/CannibalVox/VKng/core/internal/dummies"
 	"github.com/CannibalVox/VKng/core/mocks"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/require"
@@ -19,9 +19,7 @@ func TestExportSemaphoreOptions(t *testing.T) {
 	defer ctrl.Finish()
 
 	coreDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_0)
-	loader, err := core.CreateLoaderFromDriver(coreDriver)
-	require.NoError(t, err)
-	device := mocks.EasyMockDevice(ctrl, coreDriver)
+	device := dummies.EasyDummyDevice(coreDriver)
 	mockSemaphore := mocks.EasyMockSemaphore(ctrl)
 
 	coreDriver.EXPECT().VkCreateSemaphore(
@@ -49,7 +47,7 @@ func TestExportSemaphoreOptions(t *testing.T) {
 		return core1_0.VKSuccess, nil
 	})
 
-	semaphore, _, err := loader.CreateSemaphore(device, nil, core1_0.SemaphoreCreateOptions{
+	semaphore, _, err := device.CreateSemaphore(nil, core1_0.SemaphoreCreateOptions{
 		HaveNext: common.HaveNext{
 			core1_1.ExportSemaphoreOptions{
 				HandleTypes: core1_1.ExternalSemaphoreHandleTypeOpaqueWin32KMT,

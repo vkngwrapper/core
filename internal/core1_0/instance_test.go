@@ -107,10 +107,8 @@ func TestVulkanInstance_PhysicalDevices(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_2)
-	loader, err := core.CreateLoaderFromDriver(mockDriver)
-	require.NoError(t, err)
 
-	instance := internal_mocks.EasyDummyInstance(t, loader)
+	instance := internal_mocks.EasyDummyInstance(mockDriver)
 	device1 := mocks.NewFakePhysicalDeviceHandle()
 	device2 := mocks.NewFakePhysicalDeviceHandle()
 
@@ -144,7 +142,7 @@ func TestVulkanInstance_PhysicalDevices(t *testing.T) {
 			*(*uint32)(unsafe.Pointer(val.FieldByName("apiVersion").UnsafeAddr())) = uint32(1<<22 | 2<<12)
 		})
 
-	devices, _, err := loader.PhysicalDevices(instance)
+	devices, _, err := instance.PhysicalDevices()
 	require.NoError(t, err)
 	require.Len(t, devices, 2)
 	require.Equal(t, device1, devices[0].Handle())

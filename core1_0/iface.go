@@ -147,6 +147,35 @@ type Device interface {
 
 	IsDeviceExtensionActive(extensionName string) bool
 
+	CreateBuffer(allocationCallbacks *driver.AllocationCallbacks, o BufferCreateOptions) (Buffer, common.VkResult, error)
+	CreateBufferView(allocationCallbacks *driver.AllocationCallbacks, o BufferViewCreateOptions) (BufferView, common.VkResult, error)
+	CreateCommandPool(allocationCallbacks *driver.AllocationCallbacks, o CommandPoolCreateOptions) (CommandPool, common.VkResult, error)
+	CreateDescriptorPool(allocationCallbacks *driver.AllocationCallbacks, o DescriptorPoolCreateOptions) (DescriptorPool, common.VkResult, error)
+	CreateDescriptorSetLayout(allocationCallbacks *driver.AllocationCallbacks, o DescriptorSetLayoutCreateOptions) (DescriptorSetLayout, common.VkResult, error)
+	CreateEvent(allocationCallbacks *driver.AllocationCallbacks, options EventCreateOptions) (Event, common.VkResult, error)
+	CreateFence(allocationCallbacks *driver.AllocationCallbacks, o FenceCreateOptions) (Fence, common.VkResult, error)
+	CreateFrameBuffer(allocationCallbacks *driver.AllocationCallbacks, o FramebufferCreateOptions) (Framebuffer, common.VkResult, error)
+	CreateGraphicsPipelines(pipelineCache PipelineCache, allocationCallbacks *driver.AllocationCallbacks, o []GraphicsPipelineCreateOptions) ([]Pipeline, common.VkResult, error)
+	CreateComputePipelines(pipelineCache PipelineCache, allocationCallbacks *driver.AllocationCallbacks, o []ComputePipelineCreateOptions) ([]Pipeline, common.VkResult, error)
+	CreateImage(allocationCallbacks *driver.AllocationCallbacks, options ImageCreateOptions) (Image, common.VkResult, error)
+	CreateImageView(allocationCallbacks *driver.AllocationCallbacks, o ImageViewCreateOptions) (ImageView, common.VkResult, error)
+	CreatePipelineCache(allocationCallbacks *driver.AllocationCallbacks, o PipelineCacheCreateOptions) (PipelineCache, common.VkResult, error)
+	CreatePipelineLayout(allocationCallbacks *driver.AllocationCallbacks, o PipelineLayoutCreateOptions) (PipelineLayout, common.VkResult, error)
+	CreateQueryPool(allocationCallbacks *driver.AllocationCallbacks, o QueryPoolCreateOptions) (QueryPool, common.VkResult, error)
+	CreateRenderPass(allocationCallbacks *driver.AllocationCallbacks, o RenderPassCreateOptions) (RenderPass, common.VkResult, error)
+	CreateSampler(allocationCallbacks *driver.AllocationCallbacks, o SamplerCreateOptions) (Sampler, common.VkResult, error)
+	CreateSemaphore(allocationCallbacks *driver.AllocationCallbacks, o SemaphoreCreateOptions) (Semaphore, common.VkResult, error)
+	CreateShaderModule(allocationCallbacks *driver.AllocationCallbacks, o ShaderModuleCreateOptions) (ShaderModule, common.VkResult, error)
+
+	GetQueue(queueFamilyIndex int, queueIndex int) Queue
+	AllocateMemory(allocationCallbacks *driver.AllocationCallbacks, o MemoryAllocateOptions) (DeviceMemory, common.VkResult, error)
+	FreeMemory(deviceMemory DeviceMemory, allocationCallbacks *driver.AllocationCallbacks)
+
+	AllocateCommandBuffers(o CommandBufferAllocateOptions) ([]CommandBuffer, common.VkResult, error)
+	FreeCommandBuffers(buffers []CommandBuffer)
+	AllocateDescriptorSets(o DescriptorSetAllocateOptions) ([]DescriptorSet, common.VkResult, error)
+	FreeDescriptorSets(sets []DescriptorSet) (common.VkResult, error)
+
 	Destroy(callbacks *driver.AllocationCallbacks)
 	WaitForIdle() (common.VkResult, error)
 	WaitForFences(waitForAll bool, timeout time.Duration, fences []Fence) (common.VkResult, error)
@@ -212,6 +241,7 @@ type Instance interface {
 	APIVersion() common.APIVersion
 
 	IsInstanceExtensionActive(extensionName string) bool
+	PhysicalDevices() ([]PhysicalDevice, common.VkResult, error)
 
 	Destroy(callbacks *driver.AllocationCallbacks)
 }
@@ -221,6 +251,8 @@ type PhysicalDevice interface {
 	Driver() driver.Driver
 	InstanceAPIVersion() common.APIVersion
 	DeviceAPIVersion() common.APIVersion
+
+	CreateDevice(allocationCallbacks *driver.AllocationCallbacks, options DeviceCreateOptions) (Device, common.VkResult, error)
 
 	QueueFamilyProperties() []*QueueFamily
 	Properties() (*PhysicalDeviceProperties, error)

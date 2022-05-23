@@ -37,6 +37,16 @@ func EasyMockCommandPool(ctrl *gomock.Controller, device core1_0.Device) *MockCo
 	return commandPool
 }
 
+func EasyMockDescriptorPool(ctrl *gomock.Controller, device core1_0.Device) *MockDescriptorPool {
+	descriptorPool := NewMockDescriptorPool(ctrl)
+	descriptorPool.EXPECT().Handle().Return(NewFakeDescriptorPool()).AnyTimes()
+	descriptorPool.EXPECT().Driver().Return(device.Driver()).AnyTimes()
+	descriptorPool.EXPECT().DeviceHandle().Return(device.Handle()).AnyTimes()
+	descriptorPool.EXPECT().APIVersion().Return(device.APIVersion()).AnyTimes()
+
+	return descriptorPool
+}
+
 func EasyMockDescriptorSet(ctrl *gomock.Controller) *MockDescriptorSet {
 	set := NewMockDescriptorSet(ctrl)
 	set.EXPECT().Handle().Return(NewFakeDescriptorSet()).AnyTimes()

@@ -1,11 +1,11 @@
 package internal1_0_test
 
 import (
-	"github.com/CannibalVox/VKng/core"
 	"github.com/CannibalVox/VKng/core/common"
 	"github.com/CannibalVox/VKng/core/core1_0"
 	"github.com/CannibalVox/VKng/core/driver"
 	mock_driver "github.com/CannibalVox/VKng/core/driver/mocks"
+	internal_mocks "github.com/CannibalVox/VKng/core/internal/dummies"
 	"github.com/CannibalVox/VKng/core/mocks"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/require"
@@ -18,10 +18,7 @@ func TestVulkanLoader1_0_CreateSampler(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_0)
-	loader, err := core.CreateLoaderFromDriver(mockDriver)
-	require.NoError(t, err)
-
-	device := mocks.EasyMockDevice(ctrl, mockDriver)
+	device := internal_mocks.EasyDummyDevice(mockDriver)
 	samplerHandle := mocks.NewFakeSamplerHandle()
 
 	mockDriver.EXPECT().VkCreateSampler(device.Handle(), gomock.Not(nil), nil, gomock.Not(nil)).DoAndReturn(
@@ -51,7 +48,7 @@ func TestVulkanLoader1_0_CreateSampler(t *testing.T) {
 			return core1_0.VKSuccess, nil
 		})
 
-	sampler, _, err := loader.CreateSampler(device, nil, core1_0.SamplerCreateOptions{
+	sampler, _, err := device.CreateSampler(nil, core1_0.SamplerCreateOptions{
 		Flags:                   0,
 		MagFilter:               core1_0.FilterNearest,
 		MinFilter:               core1_0.FilterLinear,

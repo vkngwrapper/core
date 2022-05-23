@@ -1,7 +1,6 @@
 package internal1_0_test
 
 import (
-	"github.com/CannibalVox/VKng/core"
 	"github.com/CannibalVox/VKng/core/common"
 	"github.com/CannibalVox/VKng/core/core1_0"
 	"github.com/CannibalVox/VKng/core/driver"
@@ -20,12 +19,9 @@ func TestVulkanDeviceMemory_MapMemory(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_0)
-	loader, err := core.CreateLoaderFromDriver(mockDriver)
-	require.NoError(t, err)
 
-	device := internal_mocks.EasyDummyDevice(t, ctrl, loader)
-
-	memory := internal_mocks.EasyDummyDeviceMemory(t, loader, device, 1)
+	device := mocks.EasyMockDevice(ctrl, mockDriver)
+	memory := internal_mocks.EasyDummyDeviceMemory(mockDriver, device, 1)
 	memoryPtr := unsafe.Pointer(t)
 
 	mockDriver.EXPECT().VkMapMemory(device.Handle(), memory.Handle(), driver.VkDeviceSize(1), driver.VkDeviceSize(3), driver.VkMemoryMapFlags(0), gomock.Not(nil)).DoAndReturn(
@@ -45,11 +41,9 @@ func TestVulkanDeviceMemory_UnmapMemory(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_0)
-	loader, err := core.CreateLoaderFromDriver(mockDriver)
-	require.NoError(t, err)
 
-	device := internal_mocks.EasyDummyDevice(t, ctrl, loader)
-	memory := internal_mocks.EasyDummyDeviceMemory(t, loader, device, 1)
+	device := mocks.EasyMockDevice(ctrl, mockDriver)
+	memory := internal_mocks.EasyDummyDeviceMemory(mockDriver, device, 1)
 
 	mockDriver.EXPECT().VkUnmapMemory(device.Handle(), memory.Handle())
 
@@ -61,11 +55,9 @@ func TestVulkanDeviceMemory_Commitment(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_0)
-	loader, err := core.CreateLoaderFromDriver(mockDriver)
-	require.NoError(t, err)
 
-	device := internal_mocks.EasyDummyDevice(t, ctrl, loader)
-	memory := internal_mocks.EasyDummyDeviceMemory(t, loader, device, 1)
+	device := mocks.EasyMockDevice(ctrl, mockDriver)
+	memory := internal_mocks.EasyDummyDeviceMemory(mockDriver, device, 1)
 
 	mockDriver.EXPECT().VkGetDeviceMemoryCommitment(device.Handle(), memory.Handle(), gomock.Not(nil)).DoAndReturn(
 		func(device driver.VkDevice, memory driver.VkDeviceMemory, pCommitment *driver.VkDeviceSize) {
@@ -80,11 +72,9 @@ func TestVulkanDeviceMemory_Flush(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_0)
-	loader, err := core.CreateLoaderFromDriver(mockDriver)
-	require.NoError(t, err)
 
-	device := internal_mocks.EasyDummyDevice(t, ctrl, loader)
-	memory := internal_mocks.EasyDummyDeviceMemory(t, loader, device, 113)
+	device := mocks.EasyMockDevice(ctrl, mockDriver)
+	memory := internal_mocks.EasyDummyDeviceMemory(mockDriver, device, 113)
 
 	mockDriver.EXPECT().VkFlushMappedMemoryRanges(device.Handle(), driver.Uint32(1), gomock.Not(nil)).DoAndReturn(
 		func(device driver.VkDevice, memoryRangeCount driver.Uint32, pMemoryRanges *driver.VkMappedMemoryRange) (common.VkResult, error) {
@@ -99,7 +89,7 @@ func TestVulkanDeviceMemory_Flush(t *testing.T) {
 			return core1_0.VKSuccess, nil
 		})
 
-	_, err = memory.FlushAll()
+	_, err := memory.FlushAll()
 	require.NoError(t, err)
 }
 
@@ -108,11 +98,9 @@ func TestVulkanDeviceMemory_Invalidate(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_0)
-	loader, err := core.CreateLoaderFromDriver(mockDriver)
-	require.NoError(t, err)
 
-	device := internal_mocks.EasyDummyDevice(t, ctrl, loader)
-	memory := internal_mocks.EasyDummyDeviceMemory(t, loader, device, 113)
+	device := mocks.EasyMockDevice(ctrl, mockDriver)
+	memory := internal_mocks.EasyDummyDeviceMemory(mockDriver, device, 113)
 
 	mockDriver.EXPECT().VkInvalidateMappedMemoryRanges(device.Handle(), driver.Uint32(1), gomock.Not(nil)).DoAndReturn(
 		func(device driver.VkDevice, memoryRangeCount driver.Uint32, pMemoryRanges *driver.VkMappedMemoryRange) (common.VkResult, error) {
@@ -127,7 +115,7 @@ func TestVulkanDeviceMemory_Invalidate(t *testing.T) {
 			return core1_0.VKSuccess, nil
 		})
 
-	_, err = memory.InvalidateAll()
+	_, err := memory.InvalidateAll()
 	require.NoError(t, err)
 }
 
@@ -136,10 +124,7 @@ func TestVulkanDeviceMemory_AllocateAndFreeMemory(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_0)
-	loader, err := core.CreateLoaderFromDriver(mockDriver)
-	require.NoError(t, err)
-
-	device := internal_mocks.EasyDummyDevice(t, ctrl, loader)
+	device := internal_mocks.EasyDummyDevice(mockDriver)
 	memoryHandle := mocks.NewFakeDeviceMemoryHandle()
 
 	mockDriver.EXPECT().VkAllocateMemory(device.Handle(), gomock.Not(nil), nil, gomock.Not(nil)).DoAndReturn(
@@ -155,7 +140,7 @@ func TestVulkanDeviceMemory_AllocateAndFreeMemory(t *testing.T) {
 		})
 	mockDriver.EXPECT().VkFreeMemory(device.Handle(), memoryHandle, nil)
 
-	memory, _, err := loader.AllocateMemory(device, nil, core1_0.MemoryAllocateOptions{
+	memory, _, err := device.AllocateMemory(nil, core1_0.MemoryAllocateOptions{
 		AllocationSize:  7,
 		MemoryTypeIndex: 3,
 	})

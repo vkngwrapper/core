@@ -3,7 +3,6 @@ package internal1_0_test
 import (
 	"bytes"
 	"encoding/binary"
-	"github.com/CannibalVox/VKng/core"
 	"github.com/CannibalVox/VKng/core/common"
 	"github.com/CannibalVox/VKng/core/core1_0"
 	"github.com/CannibalVox/VKng/core/driver"
@@ -21,11 +20,8 @@ func setup(t *testing.T, ctrl *gomock.Controller) (*mock_driver.MockDriver, core
 	mockDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_0)
 	mockDevice := mocks.EasyMockDevice(ctrl, mockDriver)
 
-	loader, err := core.CreateLoaderFromDriver(mockDriver)
-	require.NoError(t, err)
-
-	pool := internal_mocks.EasyDummyCommandPool(t, loader, mockDevice)
-	buffer := internal_mocks.EasyDummyCommandBuffer(t, loader, mockDevice, pool)
+	pool := internal_mocks.EasyDummyCommandPool(mockDriver, mockDevice)
+	buffer := internal_mocks.EasyDummyCommandBuffer(mockDriver, mockDevice, pool)
 
 	return mockDriver, buffer
 }
@@ -34,13 +30,10 @@ func setupWithRenderPass(t *testing.T, ctrl *gomock.Controller) (*mock_driver.Mo
 	mockDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_0)
 	mockDevice := mocks.EasyMockDevice(ctrl, mockDriver)
 
-	loader, err := core.CreateLoaderFromDriver(mockDriver)
-	require.NoError(t, err)
-
-	pool := internal_mocks.EasyDummyCommandPool(t, loader, mockDevice)
-	buffer := internal_mocks.EasyDummyCommandBuffer(t, loader, mockDevice, pool)
-	renderPass := internal_mocks.EasyDummyRenderPass(t, loader, mockDevice)
-	framebuffer := internal_mocks.EasyDummyFramebuffer(t, loader, mockDevice)
+	pool := internal_mocks.EasyDummyCommandPool(mockDriver, mockDevice)
+	buffer := internal_mocks.EasyDummyCommandBuffer(mockDriver, mockDevice, pool)
+	renderPass := internal_mocks.EasyDummyRenderPass(mockDriver, mockDevice)
+	framebuffer := internal_mocks.EasyDummyFramebuffer(mockDriver, mockDevice)
 
 	return mockDriver, buffer, renderPass, framebuffer
 }
@@ -176,12 +169,9 @@ func TestCommandBuffer_CmdBindGraphicsPipeline(t *testing.T) {
 	mockDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_0)
 	mockDevice := mocks.EasyMockDevice(ctrl, mockDriver)
 
-	loader, err := core.CreateLoaderFromDriver(mockDriver)
-	require.NoError(t, err)
-
-	pool := internal_mocks.EasyDummyCommandPool(t, loader, mockDevice)
-	buffer := internal_mocks.EasyDummyCommandBuffer(t, loader, mockDevice, pool)
-	pipeline := internal_mocks.EasyDummyGraphicsPipeline(t, loader, mockDevice)
+	pool := internal_mocks.EasyDummyCommandPool(mockDriver, mockDevice)
+	buffer := internal_mocks.EasyDummyCommandBuffer(mockDriver, mockDevice, pool)
+	pipeline := internal_mocks.EasyDummyPipeline(mockDriver, mockDevice)
 
 	mockDriver.EXPECT().VkCmdBindPipeline(buffer.Handle(), driver.VkPipelineBindPoint(0), pipeline.Handle())
 

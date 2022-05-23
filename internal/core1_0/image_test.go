@@ -1,7 +1,6 @@
 package internal1_0_test
 
 import (
-	"github.com/CannibalVox/VKng/core"
 	"github.com/CannibalVox/VKng/core/common"
 	"github.com/CannibalVox/VKng/core/core1_0"
 	"github.com/CannibalVox/VKng/core/driver"
@@ -20,10 +19,7 @@ func TestVulkanLoader1_0_CreateImage(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_0)
-	loader, err := core.CreateLoaderFromDriver(mockDriver)
-	require.NoError(t, err)
-
-	device := mocks.EasyMockDevice(ctrl, mockDriver)
+	device := internal_mocks.EasyDummyDevice(mockDriver)
 	imageHandle := mocks.NewFakeImageHandle()
 
 	mockDriver.EXPECT().VkCreateImage(device.Handle(), gomock.Not(nil), nil, gomock.Not(nil)).DoAndReturn(
@@ -58,7 +54,7 @@ func TestVulkanLoader1_0_CreateImage(t *testing.T) {
 			return core1_0.VKSuccess, nil
 		})
 
-	image, _, err := loader.CreateImage(device, nil, core1_0.ImageCreateOptions{
+	image, _, err := device.CreateImage(nil, core1_0.ImageCreateOptions{
 		Flags:     core1_0.ImageCreateCubeCompatible,
 		ImageType: core1_0.ImageType2D,
 		Format:    core1_0.DataFormatA2R10G10B10SignedNormalizedPacked,
@@ -86,11 +82,8 @@ func TestVulkanImage_MemoryRequirements(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_0)
-	loader, err := core.CreateLoaderFromDriver(mockDriver)
-	require.NoError(t, err)
-
 	device := mocks.EasyMockDevice(ctrl, mockDriver)
-	image := internal_mocks.EasyDummyImage(t, loader, device)
+	image := internal_mocks.EasyDummyImage(mockDriver, device)
 
 	mockDriver.EXPECT().VkGetImageMemoryRequirements(device.Handle(), image.Handle(), gomock.Not(nil)).DoAndReturn(
 		func(device driver.VkDevice, image driver.VkImage, pRequirements *driver.VkMemoryRequirements) {
@@ -113,16 +106,13 @@ func TestVulkanImage_BindImageMemory(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_0)
-	loader, err := core.CreateLoaderFromDriver(mockDriver)
-	require.NoError(t, err)
-
 	device := mocks.EasyMockDevice(ctrl, mockDriver)
 	memory := mocks.EasyMockDeviceMemory(ctrl)
-	image := internal_mocks.EasyDummyImage(t, loader, device)
+	image := internal_mocks.EasyDummyImage(mockDriver, device)
 
 	mockDriver.EXPECT().VkBindImageMemory(device.Handle(), image.Handle(), memory.Handle(), driver.VkDeviceSize(3)).Return(core1_0.VKSuccess, nil)
 
-	_, err = image.BindImageMemory(memory, 3)
+	_, err := image.BindImageMemory(memory, 3)
 	require.NoError(t, err)
 }
 
@@ -131,11 +121,8 @@ func TestVulkanImage_SubresourceLayout(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_0)
-	loader, err := core.CreateLoaderFromDriver(mockDriver)
-	require.NoError(t, err)
-
 	device := mocks.EasyMockDevice(ctrl, mockDriver)
-	image := internal_mocks.EasyDummyImage(t, loader, device)
+	image := internal_mocks.EasyDummyImage(mockDriver, device)
 
 	mockDriver.EXPECT().VkGetImageSubresourceLayout(device.Handle(), image.Handle(), gomock.Not(nil), gomock.Not(nil)).DoAndReturn(
 		func(device driver.VkDevice, image driver.VkImage, pSubresource *driver.VkImageSubresource, pLayout *driver.VkSubresourceLayout) {
@@ -171,11 +158,8 @@ func TestVulkanImage_SparseMemoryRequirements(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_0)
-	loader, err := core.CreateLoaderFromDriver(mockDriver)
-	require.NoError(t, err)
-
 	device := mocks.EasyMockDevice(ctrl, mockDriver)
-	image := internal_mocks.EasyDummyImage(t, loader, device)
+	image := internal_mocks.EasyDummyImage(mockDriver, device)
 
 	mockDriver.EXPECT().VkGetImageSparseMemoryRequirements(device.Handle(), image.Handle(), gomock.Not(nil), nil).DoAndReturn(
 		func(device driver.VkDevice, image driver.VkImage, pReqCount *driver.Uint32, pRequirements *driver.VkSparseImageMemoryRequirements) {

@@ -1,7 +1,6 @@
 package internal1_0_test
 
 import (
-	"github.com/CannibalVox/VKng/core"
 	"github.com/CannibalVox/VKng/core/common"
 	"github.com/CannibalVox/VKng/core/core1_0"
 	"github.com/CannibalVox/VKng/core/driver"
@@ -20,15 +19,12 @@ func TestVulkanQueue_WaitForIdle(t *testing.T) {
 	defer ctrl.Finish()
 
 	driver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_0)
-	loader, err := core.CreateLoaderFromDriver(driver)
-	require.NoError(t, err)
-
-	device := internal_mocks.EasyDummyDevice(t, ctrl, loader)
-	queue := internal_mocks.EasyDummyQueue(loader, device)
+	device := mocks.EasyMockDevice(ctrl, driver)
+	queue := internal_mocks.EasyDummyQueue(driver, device)
 
 	driver.EXPECT().VkQueueWaitIdle(queue.Handle()).Return(core1_0.VKSuccess, nil)
 
-	_, err = queue.WaitForIdle()
+	_, err := queue.WaitForIdle()
 	require.NoError(t, err)
 }
 
@@ -37,11 +33,8 @@ func TestVulkanQueue_BindSparse(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_0)
-	loader, err := core.CreateLoaderFromDriver(mockDriver)
-	require.NoError(t, err)
-
-	device := internal_mocks.EasyDummyDevice(t, ctrl, loader)
-	queue := internal_mocks.EasyDummyQueue(loader, device)
+	device := mocks.EasyMockDevice(ctrl, mockDriver)
+	queue := internal_mocks.EasyDummyQueue(mockDriver, device)
 
 	semaphore1 := mocks.EasyMockSemaphore(ctrl)
 	semaphore2 := mocks.EasyMockSemaphore(ctrl)
@@ -154,7 +147,7 @@ func TestVulkanQueue_BindSparse(t *testing.T) {
 			return core1_0.VKSuccess, nil
 		})
 
-	_, err = queue.BindSparse(nil, []core1_0.BindSparseOptions{
+	_, err := queue.BindSparse(nil, []core1_0.BindSparseOptions{
 		{
 			WaitSemaphores:   []core1_0.Semaphore{semaphore1},
 			SignalSemaphores: []core1_0.Semaphore{semaphore2, semaphore3},
