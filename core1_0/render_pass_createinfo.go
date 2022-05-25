@@ -13,7 +13,7 @@ import (
 )
 
 const (
-	AttachmentMayAlias common.AttachmentDescriptionFlags = C.VK_ATTACHMENT_DESCRIPTION_MAY_ALIAS_BIT
+	AttachmentDescriptionMayAlias common.AttachmentDescriptionFlags = C.VK_ATTACHMENT_DESCRIPTION_MAY_ALIAS_BIT
 
 	LoadOpLoad     common.AttachmentLoadOp = C.VK_ATTACHMENT_LOAD_OP_LOAD
 	LoadOpClear    common.AttachmentLoadOp = C.VK_ATTACHMENT_LOAD_OP_CLEAR
@@ -31,7 +31,7 @@ const (
 )
 
 func init() {
-	AttachmentMayAlias.Register("May Alias")
+	AttachmentDescriptionMayAlias.Register("May Alias")
 
 	LoadOpLoad.Register("Load")
 	LoadOpClear.Register("Clear")
@@ -73,8 +73,8 @@ type SubPassDependency struct {
 	DstAccessMask common.AccessFlags
 }
 
-type SubPass struct {
-	Flags     common.SubPassFlags
+type SubPassDescription struct {
+	Flags     common.SubPassDescriptionFlags
 	BindPoint common.PipelineBindPoint
 
 	InputAttachments           []common.AttachmentReference
@@ -87,7 +87,7 @@ type SubPass struct {
 type RenderPassCreateOptions struct {
 	Flags               common.RenderPassCreateFlags
 	Attachments         []AttachmentDescription
-	SubPasses           []SubPass
+	SubPassDescriptions []SubPassDescription
 	SubPassDependencies []SubPassDependency
 
 	common.HaveNext
@@ -125,7 +125,7 @@ func (o RenderPassCreateOptions) PopulateCPointer(allocator *cgoparam.Allocator,
 		}
 	}
 
-	subPassCount := len(o.SubPasses)
+	subPassCount := len(o.SubPassDescriptions)
 	createInfo.subpassCount = C.uint32_t(subPassCount)
 
 	if subPassCount == 0 {
@@ -136,29 +136,29 @@ func (o RenderPassCreateOptions) PopulateCPointer(allocator *cgoparam.Allocator,
 		subPassSlice := ([]C.VkSubpassDescription)(unsafe.Slice(subPassPtr, subPassCount))
 
 		for i := 0; i < subPassCount; i++ {
-			resolveAttachmentCount := len(o.SubPasses[i].ResolveAttachments)
-			colorAttachmentCount := len(o.SubPasses[i].ColorAttachments)
+			resolveAttachmentCount := len(o.SubPassDescriptions[i].ResolveAttachments)
+			colorAttachmentCount := len(o.SubPassDescriptions[i].ColorAttachments)
 
 			if resolveAttachmentCount > 0 && resolveAttachmentCount != colorAttachmentCount {
 				return nil, errors.Newf("in subpass %d, %d color attachments are defined, but %d resolve attachments are defined", i, colorAttachmentCount, resolveAttachmentCount)
 			}
 
-			subPassSlice[i].flags = C.VkSubpassDescriptionFlags(o.SubPasses[i].Flags)
-			subPassSlice[i].pipelineBindPoint = C.VkPipelineBindPoint(o.SubPasses[i].BindPoint)
-			subPassSlice[i].inputAttachmentCount = C.uint32_t(len(o.SubPasses[i].InputAttachments))
-			subPassSlice[i].pInputAttachments = createAttachmentReferences(allocator, o.SubPasses[i].InputAttachments)
+			subPassSlice[i].flags = C.VkSubpassDescriptionFlags(o.SubPassDescriptions[i].Flags)
+			subPassSlice[i].pipelineBindPoint = C.VkPipelineBindPoint(o.SubPassDescriptions[i].BindPoint)
+			subPassSlice[i].inputAttachmentCount = C.uint32_t(len(o.SubPassDescriptions[i].InputAttachments))
+			subPassSlice[i].pInputAttachments = createAttachmentReferences(allocator, o.SubPassDescriptions[i].InputAttachments)
 			subPassSlice[i].colorAttachmentCount = C.uint32_t(colorAttachmentCount)
-			subPassSlice[i].pColorAttachments = createAttachmentReferences(allocator, o.SubPasses[i].ColorAttachments)
-			subPassSlice[i].pResolveAttachments = createAttachmentReferences(allocator, o.SubPasses[i].ResolveAttachments)
+			subPassSlice[i].pColorAttachments = createAttachmentReferences(allocator, o.SubPassDescriptions[i].ColorAttachments)
+			subPassSlice[i].pResolveAttachments = createAttachmentReferences(allocator, o.SubPassDescriptions[i].ResolveAttachments)
 			subPassSlice[i].pDepthStencilAttachment = nil
 
-			if o.SubPasses[i].DepthStencilAttachment != nil {
+			if o.SubPassDescriptions[i].DepthStencilAttachment != nil {
 				subPassSlice[i].pDepthStencilAttachment = createAttachmentReferences(allocator, []common.AttachmentReference{
-					*o.SubPasses[i].DepthStencilAttachment,
+					*o.SubPassDescriptions[i].DepthStencilAttachment,
 				})
 			}
 
-			preserveAttachmentCount := len(o.SubPasses[i].PreservedAttachmentIndices)
+			preserveAttachmentCount := len(o.SubPassDescriptions[i].PreservedAttachmentIndices)
 			subPassSlice[i].preserveAttachmentCount = C.uint32_t(preserveAttachmentCount)
 			if preserveAttachmentCount == 0 {
 				subPassSlice[i].pPreserveAttachments = nil
@@ -168,7 +168,7 @@ func (o RenderPassCreateOptions) PopulateCPointer(allocator *cgoparam.Allocator,
 				preserveAttachmentSlice := ([]C.uint32_t)(unsafe.Slice(preserveAttachmentPtr, preserveAttachmentCount))
 
 				for attInd := 0; attInd < preserveAttachmentCount; attInd++ {
-					preserveAttachmentSlice[attInd] = C.uint32_t(o.SubPasses[i].PreservedAttachmentIndices[attInd])
+					preserveAttachmentSlice[attInd] = C.uint32_t(o.SubPassDescriptions[i].PreservedAttachmentIndices[attInd])
 				}
 			}
 		}

@@ -144,7 +144,7 @@ func TestVulkanLoader1_0_CreateRenderPass_Success(t *testing.T) {
 		Flags: 0,
 		Attachments: []core1_0.AttachmentDescription{
 			{
-				Flags:          core1_0.AttachmentMayAlias,
+				Flags:          core1_0.AttachmentDescriptionMayAlias,
 				Format:         core1_0.DataFormatA2B10G10R10SignedIntPacked,
 				Samples:        core1_0.Samples4,
 				LoadOp:         core1_0.LoadOpClear,
@@ -166,7 +166,7 @@ func TestVulkanLoader1_0_CreateRenderPass_Success(t *testing.T) {
 				FinalLayout:    core1_0.ImageLayoutColorAttachmentOptimal,
 			},
 		},
-		SubPasses: []core1_0.SubPass{
+		SubPassDescriptions: []core1_0.SubPassDescription{
 			{
 				Flags:     0,
 				BindPoint: core1_0.BindCompute,
@@ -356,7 +356,7 @@ func TestVulkanLoader1_0_CreateRenderPass_SuccessNoNonColorAttachments(t *testin
 		Flags: 0,
 		Attachments: []core1_0.AttachmentDescription{
 			{
-				Flags:          core1_0.AttachmentMayAlias,
+				Flags:          core1_0.AttachmentDescriptionMayAlias,
 				Format:         core1_0.DataFormatA2B10G10R10SignedIntPacked,
 				Samples:        core1_0.Samples4,
 				LoadOp:         core1_0.LoadOpClear,
@@ -378,7 +378,7 @@ func TestVulkanLoader1_0_CreateRenderPass_SuccessNoNonColorAttachments(t *testin
 				FinalLayout:    core1_0.ImageLayoutColorAttachmentOptimal,
 			},
 		},
-		SubPasses: []core1_0.SubPass{
+		SubPassDescriptions: []core1_0.SubPassDescription{
 			{
 				Flags:     0,
 				BindPoint: core1_0.BindCompute,
@@ -448,7 +448,7 @@ func TestVulkanLoader1_0_CreateRenderPass_MismatchResolve(t *testing.T) {
 		Flags: 0,
 		Attachments: []core1_0.AttachmentDescription{
 			{
-				Flags:          core1_0.AttachmentMayAlias,
+				Flags:          core1_0.AttachmentDescriptionMayAlias,
 				Format:         core1_0.DataFormatA2B10G10R10SignedIntPacked,
 				Samples:        core1_0.Samples4,
 				LoadOp:         core1_0.LoadOpClear,
@@ -470,7 +470,7 @@ func TestVulkanLoader1_0_CreateRenderPass_MismatchResolve(t *testing.T) {
 				FinalLayout:    core1_0.ImageLayoutColorAttachmentOptimal,
 			},
 		},
-		SubPasses: []core1_0.SubPass{
+		SubPassDescriptions: []core1_0.SubPassDescription{
 			{
 				Flags:     0,
 				BindPoint: core1_0.BindCompute,

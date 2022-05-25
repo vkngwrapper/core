@@ -635,14 +635,14 @@ func (f StencilFaces) String() string {
 
 ////
 
-type SubPassFlags int32
+type SubPassDescriptionFlags int32
 
-var subPassFlagsMapping = NewFlagStringMapping[SubPassFlags]()
+var subPassFlagsMapping = NewFlagStringMapping[SubPassDescriptionFlags]()
 
-func (f SubPassFlags) Register(str string) {
+func (f SubPassDescriptionFlags) Register(str string) {
 	subPassFlagsMapping.Register(f, str)
 }
 
-func (f SubPassFlags) String() string {
+func (f SubPassDescriptionFlags) String() string {
 	return subPassFlagsMapping.FlagsToString(f)
 }
