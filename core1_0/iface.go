@@ -154,7 +154,7 @@ type Device interface {
 	CreateDescriptorSetLayout(allocationCallbacks *driver.AllocationCallbacks, o DescriptorSetLayoutCreateOptions) (DescriptorSetLayout, common.VkResult, error)
 	CreateEvent(allocationCallbacks *driver.AllocationCallbacks, options EventCreateOptions) (Event, common.VkResult, error)
 	CreateFence(allocationCallbacks *driver.AllocationCallbacks, o FenceCreateOptions) (Fence, common.VkResult, error)
-	CreateFrameBuffer(allocationCallbacks *driver.AllocationCallbacks, o FramebufferCreateOptions) (Framebuffer, common.VkResult, error)
+	CreateFramebuffer(allocationCallbacks *driver.AllocationCallbacks, o FramebufferCreateOptions) (Framebuffer, common.VkResult, error)
 	CreateGraphicsPipelines(pipelineCache PipelineCache, allocationCallbacks *driver.AllocationCallbacks, o []GraphicsPipelineCreateOptions) ([]Pipeline, common.VkResult, error)
 	CreateComputePipelines(pipelineCache PipelineCache, allocationCallbacks *driver.AllocationCallbacks, o []ComputePipelineCreateOptions) ([]Pipeline, common.VkResult, error)
 	CreateImage(allocationCallbacks *driver.AllocationCallbacks, options ImageCreateOptions) (Image, common.VkResult, error)

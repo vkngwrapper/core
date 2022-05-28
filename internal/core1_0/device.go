@@ -349,7 +349,7 @@ func (d *VulkanDevice) CreateEvent(allocationCallbacks *driver.AllocationCallbac
 	return event, res, nil
 }
 
-func (d *VulkanDevice) CreateFrameBuffer(allocationCallbacks *driver.AllocationCallbacks, o core1_0.FramebufferCreateOptions) (core1_0.Framebuffer, common.VkResult, error) {
+func (d *VulkanDevice) CreateFramebuffer(allocationCallbacks *driver.AllocationCallbacks, o core1_0.FramebufferCreateOptions) (core1_0.Framebuffer, common.VkResult, error) {
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 

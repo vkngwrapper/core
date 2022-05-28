@@ -1646,9 +1646,9 @@ func (mr *Device1_1MockRecorder) CreateFence(allocationCallbacks, o interface{})
 }
 
 // CreateFrameBuffer mocks base method.
-func (m *Device1_1) CreateFrameBuffer(allocationCallbacks *driver.AllocationCallbacks, o core1_0.FramebufferCreateOptions) (core1_0.Framebuffer, common.VkResult, error) {
+func (m *Device1_1) CreateFramebuffer(allocationCallbacks *driver.AllocationCallbacks, o core1_0.FramebufferCreateOptions) (core1_0.Framebuffer, common.VkResult, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreateFrameBuffer", allocationCallbacks, o)
+	ret := m.ctrl.Call(m, "CreateFramebuffer", allocationCallbacks, o)
 	ret0, _ := ret[0].(core1_0.Framebuffer)
 	ret1, _ := ret[1].(common.VkResult)
 	ret2, _ := ret[2].(error)
@@ -1658,7 +1658,7 @@ func (m *Device1_1) CreateFrameBuffer(allocationCallbacks *driver.AllocationCall
 // CreateFrameBuffer indicates an expected call of CreateFrameBuffer.
 func (mr *Device1_1MockRecorder) CreateFrameBuffer(allocationCallbacks, o interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateFrameBuffer", reflect.TypeOf((*Device1_1)(nil).CreateFrameBuffer), allocationCallbacks, o)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateFramebuffer", reflect.TypeOf((*Device1_1)(nil).CreateFramebuffer), allocationCallbacks, o)
 }
 
 // CreateGraphicsPipelines mocks base method.

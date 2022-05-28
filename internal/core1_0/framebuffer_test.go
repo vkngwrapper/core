@@ -48,7 +48,7 @@ func TestVulkanLoader1_0_CreateFrameBuffer(t *testing.T) {
 			return core1_0.VKSuccess, nil
 		})
 
-	framebuffer, _, err := device.CreateFrameBuffer(nil, core1_0.FramebufferCreateOptions{
+	framebuffer, _, err := device.CreateFramebuffer(nil, core1_0.FramebufferCreateOptions{
 		Flags:      0,
 		RenderPass: renderPass,
 		Width:      3,
