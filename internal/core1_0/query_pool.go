@@ -28,6 +28,10 @@ func (p *VulkanQueryPool) Driver() driver.Driver {
 	return p.DeviceDriver
 }
 
+func (p *VulkanQueryPool) DeviceHandle() driver.VkDevice {
+	return p.Device
+}
+
 func (p *VulkanQueryPool) APIVersion() common.APIVersion {
 	return p.MaximumAPIVersion
 }

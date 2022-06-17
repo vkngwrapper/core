@@ -15,6 +15,7 @@ import (
 
 type VulkanQueue struct {
 	DeviceDriver driver.Driver
+	Device       driver.VkDevice
 	QueueHandle  driver.VkQueue
 
 	MaximumAPIVersion common.APIVersion
@@ -26,6 +27,10 @@ func (q *VulkanQueue) Handle() driver.VkQueue {
 
 func (q *VulkanQueue) Driver() driver.Driver {
 	return q.DeviceDriver
+}
+
+func (q *VulkanQueue) DeviceHandle() driver.VkDevice {
+	return q.Device
 }
 
 func (q *VulkanQueue) APIVersion() common.APIVersion {

@@ -325,6 +325,7 @@ func CreateQueueObject(coreDriver driver.Driver, device driver.VkDevice, handle 
 			queue := &VulkanQueue{
 				DeviceDriver:      coreDriver,
 				QueueHandle:       handle,
+				Device:            device,
 				MaximumAPIVersion: version,
 			}
 

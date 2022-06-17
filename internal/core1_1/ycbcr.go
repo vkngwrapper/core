@@ -21,6 +21,10 @@ func (y *VulkanSamplerYcbcrConversion) Driver() driver.Driver {
 	return y.DeviceDriver
 }
 
+func (y *VulkanSamplerYcbcrConversion) DeviceHandle() driver.VkDevice {
+	return y.Device
+}
+
 func (y *VulkanSamplerYcbcrConversion) APIVersion() common.APIVersion {
 	return y.MaximumAPIVersion
 }

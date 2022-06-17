@@ -67,6 +67,7 @@ type DeviceMemory interface {
 
 type DescriptorUpdateTemplate interface {
 	Handle() driver.VkDescriptorUpdateTemplate
+	DeviceHandle() driver.VkDevice
 	Driver() driver.Driver
 	APIVersion() common.APIVersion
 
@@ -154,6 +155,7 @@ type Sampler interface {
 
 type SamplerYcbcrConversion interface {
 	Handle() driver.VkSamplerYcbcrConversion
+	DeviceHandle() driver.VkDevice
 	Driver() driver.Driver
 	APIVersion() common.APIVersion
 

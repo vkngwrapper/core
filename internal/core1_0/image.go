@@ -26,6 +26,10 @@ func (i *VulkanImage) Handle() driver.VkImage {
 	return i.ImageHandle
 }
 
+func (i *VulkanImage) DeviceHandle() driver.VkDevice {
+	return i.Device
+}
+
 func (i *VulkanImage) APIVersion() common.APIVersion {
 	return i.MaximumAPIVersion
 }

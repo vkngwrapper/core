@@ -22,6 +22,10 @@ func (b *VulkanFramebuffer) Handle() driver.VkFramebuffer {
 	return b.FramebufferHandle
 }
 
+func (b *VulkanFramebuffer) DeviceHandle() driver.VkDevice {
+	return b.Device
+}
+
 func (b *VulkanFramebuffer) Driver() driver.Driver {
 	return b.DeviceDriver
 }

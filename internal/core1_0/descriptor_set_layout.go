@@ -21,6 +21,10 @@ func (h *VulkanDescriptorSetLayout) Driver() driver.Driver {
 	return h.DeviceDriver
 }
 
+func (h *VulkanDescriptorSetLayout) DeviceHandle() driver.VkDevice {
+	return h.Device
+}
+
 func (h *VulkanDescriptorSetLayout) APIVersion() common.APIVersion {
 	return h.MaximumAPIVersion
 }

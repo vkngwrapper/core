@@ -22,6 +22,10 @@ func (s *VulkanSemaphore) Handle() driver.VkSemaphore {
 	return s.SemaphoreHandle
 }
 
+func (s *VulkanSemaphore) DeviceHandle() driver.VkDevice {
+	return s.Device
+}
+
 func (s *VulkanSemaphore) Driver() driver.Driver {
 	return s.DeviceDriver
 }

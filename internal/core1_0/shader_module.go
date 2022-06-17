@@ -26,6 +26,10 @@ func (m *VulkanShaderModule) Driver() driver.Driver {
 	return m.DeviceDriver
 }
 
+func (m *VulkanShaderModule) DeviceHandle() driver.VkDevice {
+	return m.Device
+}
+
 func (m *VulkanShaderModule) APIVersion() common.APIVersion {
 	return m.MaximumAPIVersion
 }

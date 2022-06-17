@@ -11,6 +11,7 @@ import (
 
 type Buffer interface {
 	Handle() driver.VkBuffer
+	DeviceHandle() driver.VkDevice
 	Driver() driver.Driver
 	APIVersion() common.APIVersion
 
@@ -21,6 +22,7 @@ type Buffer interface {
 
 type BufferView interface {
 	Handle() driver.VkBufferView
+	DeviceHandle() driver.VkDevice
 	Driver() driver.Driver
 	APIVersion() common.APIVersion
 
@@ -120,6 +122,7 @@ type DescriptorSet interface {
 
 type DescriptorSetLayout interface {
 	Handle() driver.VkDescriptorSetLayout
+	DeviceHandle() driver.VkDevice
 	Driver() driver.Driver
 	APIVersion() common.APIVersion
 
@@ -187,6 +190,7 @@ type Device interface {
 
 type Event interface {
 	Handle() driver.VkEvent
+	DeviceHandle() driver.VkDevice
 	Driver() driver.Driver
 	APIVersion() common.APIVersion
 
@@ -198,6 +202,7 @@ type Event interface {
 
 type Fence interface {
 	Handle() driver.VkFence
+	DeviceHandle() driver.VkDevice
 	Driver() driver.Driver
 	APIVersion() common.APIVersion
 
@@ -209,6 +214,7 @@ type Fence interface {
 
 type Framebuffer interface {
 	Handle() driver.VkFramebuffer
+	DeviceHandle() driver.VkDevice
 	Driver() driver.Driver
 	APIVersion() common.APIVersion
 
@@ -217,6 +223,7 @@ type Framebuffer interface {
 
 type Image interface {
 	Handle() driver.VkImage
+	DeviceHandle() driver.VkDevice
 	Driver() driver.Driver
 	APIVersion() common.APIVersion
 
@@ -229,6 +236,7 @@ type Image interface {
 
 type ImageView interface {
 	Handle() driver.VkImageView
+	DeviceHandle() driver.VkDevice
 	Driver() driver.Driver
 	APIVersion() common.APIVersion
 
@@ -268,6 +276,7 @@ type PhysicalDevice interface {
 
 type Pipeline interface {
 	Handle() driver.VkPipeline
+	DeviceHandle() driver.VkDevice
 	Driver() driver.Driver
 	APIVersion() common.APIVersion
 
@@ -276,6 +285,7 @@ type Pipeline interface {
 
 type PipelineCache interface {
 	Handle() driver.VkPipelineCache
+	DeviceHandle() driver.VkDevice
 	Driver() driver.Driver
 	APIVersion() common.APIVersion
 
@@ -286,6 +296,7 @@ type PipelineCache interface {
 
 type PipelineLayout interface {
 	Handle() driver.VkPipelineLayout
+	DeviceHandle() driver.VkDevice
 	Driver() driver.Driver
 	APIVersion() common.APIVersion
 
@@ -294,6 +305,7 @@ type PipelineLayout interface {
 
 type QueryPool interface {
 	Handle() driver.VkQueryPool
+	DeviceHandle() driver.VkDevice
 	Driver() driver.Driver
 	APIVersion() common.APIVersion
 
@@ -303,6 +315,7 @@ type QueryPool interface {
 
 type Queue interface {
 	Handle() driver.VkQueue
+	DeviceHandle() driver.VkDevice
 	Driver() driver.Driver
 	APIVersion() common.APIVersion
 
@@ -313,6 +326,7 @@ type Queue interface {
 
 type RenderPass interface {
 	Handle() driver.VkRenderPass
+	DeviceHandle() driver.VkDevice
 	Driver() driver.Driver
 	APIVersion() common.APIVersion
 
@@ -322,6 +336,7 @@ type RenderPass interface {
 
 type Sampler interface {
 	Handle() driver.VkSampler
+	DeviceHandle() driver.VkDevice
 	Driver() driver.Driver
 	APIVersion() common.APIVersion
 
@@ -330,6 +345,7 @@ type Sampler interface {
 
 type Semaphore interface {
 	Handle() driver.VkSemaphore
+	DeviceHandle() driver.VkDevice
 	Driver() driver.Driver
 	APIVersion() common.APIVersion
 
@@ -338,6 +354,7 @@ type Semaphore interface {
 
 type ShaderModule interface {
 	Handle() driver.VkShaderModule
+	DeviceHandle() driver.VkDevice
 	Driver() driver.Driver
 	APIVersion() common.APIVersion
 

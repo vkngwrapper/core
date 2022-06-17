@@ -80,6 +80,20 @@ func (mr *Buffer1_1MockRecorder) Destroy(callbacks interface{}) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Destroy", reflect.TypeOf((*Buffer1_1)(nil).Destroy), callbacks)
 }
 
+// DeviceHandle mocks base method.
+func (m *Buffer1_1) DeviceHandle() driver.VkDevice {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DeviceHandle")
+	ret0, _ := ret[0].(driver.VkDevice)
+	return ret0
+}
+
+// DeviceHandle indicates an expected call of DeviceHandle.
+func (mr *Buffer1_1MockRecorder) DeviceHandle() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeviceHandle", reflect.TypeOf((*Buffer1_1)(nil).DeviceHandle))
+}
+
 // Driver mocks base method.
 func (m *Buffer1_1) Driver() driver.Driver {
 	m.ctrl.T.Helper()
@@ -169,6 +183,20 @@ func (m *BufferView1_1) Destroy(callbacks *driver.AllocationCallbacks) {
 func (mr *BufferView1_1MockRecorder) Destroy(callbacks interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Destroy", reflect.TypeOf((*BufferView1_1)(nil).Destroy), callbacks)
+}
+
+// DeviceHandle mocks base method.
+func (m *BufferView1_1) DeviceHandle() driver.VkDevice {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DeviceHandle")
+	ret0, _ := ret[0].(driver.VkDevice)
+	return ret0
+}
+
+// DeviceHandle indicates an expected call of DeviceHandle.
+func (mr *BufferView1_1MockRecorder) DeviceHandle() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeviceHandle", reflect.TypeOf((*BufferView1_1)(nil).DeviceHandle))
 }
 
 // Driver mocks base method.
@@ -1344,6 +1372,20 @@ func (mr *DescriptorSetLayout1_1MockRecorder) Destroy(callbacks interface{}) *go
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Destroy", reflect.TypeOf((*DescriptorSetLayout1_1)(nil).Destroy), callbacks)
 }
 
+// DeviceHandle mocks base method.
+func (m *DescriptorSetLayout1_1) DeviceHandle() driver.VkDevice {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DeviceHandle")
+	ret0, _ := ret[0].(driver.VkDevice)
+	return ret0
+}
+
+// DeviceHandle indicates an expected call of DeviceHandle.
+func (mr *DescriptorSetLayout1_1MockRecorder) DeviceHandle() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeviceHandle", reflect.TypeOf((*DescriptorSetLayout1_1)(nil).DeviceHandle))
+}
+
 // Driver mocks base method.
 func (m *DescriptorSetLayout1_1) Driver() driver.Driver {
 	m.ctrl.T.Helper()
@@ -1645,7 +1687,7 @@ func (mr *Device1_1MockRecorder) CreateFence(allocationCallbacks, o interface{})
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateFence", reflect.TypeOf((*Device1_1)(nil).CreateFence), allocationCallbacks, o)
 }
 
-// CreateFrameBuffer mocks base method.
+// CreateFramebuffer mocks base method.
 func (m *Device1_1) CreateFramebuffer(allocationCallbacks *driver.AllocationCallbacks, o core1_0.FramebufferCreateOptions) (core1_0.Framebuffer, common.VkResult, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateFramebuffer", allocationCallbacks, o)
@@ -1655,8 +1697,8 @@ func (m *Device1_1) CreateFramebuffer(allocationCallbacks *driver.AllocationCall
 	return ret0, ret1, ret2
 }
 
-// CreateFrameBuffer indicates an expected call of CreateFrameBuffer.
-func (mr *Device1_1MockRecorder) CreateFrameBuffer(allocationCallbacks, o interface{}) *gomock.Call {
+// CreateFramebuffer indicates an expected call of CreateFramebuffer.
+func (mr *Device1_1MockRecorder) CreateFramebuffer(allocationCallbacks, o interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateFramebuffer", reflect.TypeOf((*Device1_1)(nil).CreateFramebuffer), allocationCallbacks, o)
 }
@@ -2430,6 +2472,20 @@ func (mr *Event1_1MockRecorder) Destroy(callbacks interface{}) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Destroy", reflect.TypeOf((*Event1_1)(nil).Destroy), callbacks)
 }
 
+// DeviceHandle mocks base method.
+func (m *Event1_1) DeviceHandle() driver.VkDevice {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DeviceHandle")
+	ret0, _ := ret[0].(driver.VkDevice)
+	return ret0
+}
+
+// DeviceHandle indicates an expected call of DeviceHandle.
+func (mr *Event1_1MockRecorder) DeviceHandle() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeviceHandle", reflect.TypeOf((*Event1_1)(nil).DeviceHandle))
+}
+
 // Driver mocks base method.
 func (m *Event1_1) Driver() driver.Driver {
 	m.ctrl.T.Helper()
@@ -2550,6 +2606,20 @@ func (m *Fence1_1) Destroy(callbacks *driver.AllocationCallbacks) {
 func (mr *Fence1_1MockRecorder) Destroy(callbacks interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Destroy", reflect.TypeOf((*Fence1_1)(nil).Destroy), callbacks)
+}
+
+// DeviceHandle mocks base method.
+func (m *Fence1_1) DeviceHandle() driver.VkDevice {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DeviceHandle")
+	ret0, _ := ret[0].(driver.VkDevice)
+	return ret0
+}
+
+// DeviceHandle indicates an expected call of DeviceHandle.
+func (mr *Fence1_1MockRecorder) DeviceHandle() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeviceHandle", reflect.TypeOf((*Fence1_1)(nil).DeviceHandle))
 }
 
 // Driver mocks base method.
@@ -2674,6 +2744,20 @@ func (mr *Framebuffer1_1MockRecorder) Destroy(callbacks interface{}) *gomock.Cal
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Destroy", reflect.TypeOf((*Framebuffer1_1)(nil).Destroy), callbacks)
 }
 
+// DeviceHandle mocks base method.
+func (m *Framebuffer1_1) DeviceHandle() driver.VkDevice {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DeviceHandle")
+	ret0, _ := ret[0].(driver.VkDevice)
+	return ret0
+}
+
+// DeviceHandle indicates an expected call of DeviceHandle.
+func (mr *Framebuffer1_1MockRecorder) DeviceHandle() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeviceHandle", reflect.TypeOf((*Framebuffer1_1)(nil).DeviceHandle))
+}
+
 // Driver mocks base method.
 func (m *Framebuffer1_1) Driver() driver.Driver {
 	m.ctrl.T.Helper()
@@ -2764,6 +2848,20 @@ func (m *Image1_1) Destroy(callbacks *driver.AllocationCallbacks) {
 func (mr *Image1_1MockRecorder) Destroy(callbacks interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Destroy", reflect.TypeOf((*Image1_1)(nil).Destroy), callbacks)
+}
+
+// DeviceHandle mocks base method.
+func (m *Image1_1) DeviceHandle() driver.VkDevice {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DeviceHandle")
+	ret0, _ := ret[0].(driver.VkDevice)
+	return ret0
+}
+
+// DeviceHandle indicates an expected call of DeviceHandle.
+func (mr *Image1_1MockRecorder) DeviceHandle() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeviceHandle", reflect.TypeOf((*Image1_1)(nil).DeviceHandle))
 }
 
 // Driver mocks base method.
@@ -2883,6 +2981,20 @@ func (m *ImageView1_1) Destroy(callbacks *driver.AllocationCallbacks) {
 func (mr *ImageView1_1MockRecorder) Destroy(callbacks interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Destroy", reflect.TypeOf((*ImageView1_1)(nil).Destroy), callbacks)
+}
+
+// DeviceHandle mocks base method.
+func (m *ImageView1_1) DeviceHandle() driver.VkDevice {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DeviceHandle")
+	ret0, _ := ret[0].(driver.VkDevice)
+	return ret0
+}
+
+// DeviceHandle indicates an expected call of DeviceHandle.
+func (mr *ImageView1_1MockRecorder) DeviceHandle() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeviceHandle", reflect.TypeOf((*ImageView1_1)(nil).DeviceHandle))
 }
 
 // Driver mocks base method.
@@ -3730,6 +3842,20 @@ func (mr *Pipeline1_1MockRecorder) Destroy(callbacks interface{}) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Destroy", reflect.TypeOf((*Pipeline1_1)(nil).Destroy), callbacks)
 }
 
+// DeviceHandle mocks base method.
+func (m *Pipeline1_1) DeviceHandle() driver.VkDevice {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DeviceHandle")
+	ret0, _ := ret[0].(driver.VkDevice)
+	return ret0
+}
+
+// DeviceHandle indicates an expected call of DeviceHandle.
+func (mr *Pipeline1_1MockRecorder) DeviceHandle() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeviceHandle", reflect.TypeOf((*Pipeline1_1)(nil).DeviceHandle))
+}
+
 // Driver mocks base method.
 func (m *Pipeline1_1) Driver() driver.Driver {
 	m.ctrl.T.Helper()
@@ -3821,6 +3947,20 @@ func (m *PipelineCache1_1) Destroy(callbacks *driver.AllocationCallbacks) {
 func (mr *PipelineCache1_1MockRecorder) Destroy(callbacks interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Destroy", reflect.TypeOf((*PipelineCache1_1)(nil).Destroy), callbacks)
+}
+
+// DeviceHandle mocks base method.
+func (m *PipelineCache1_1) DeviceHandle() driver.VkDevice {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DeviceHandle")
+	ret0, _ := ret[0].(driver.VkDevice)
+	return ret0
+}
+
+// DeviceHandle indicates an expected call of DeviceHandle.
+func (mr *PipelineCache1_1MockRecorder) DeviceHandle() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeviceHandle", reflect.TypeOf((*PipelineCache1_1)(nil).DeviceHandle))
 }
 
 // Driver mocks base method.
@@ -3915,6 +4055,20 @@ func (mr *PipelineLayout1_1MockRecorder) Destroy(callbacks interface{}) *gomock.
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Destroy", reflect.TypeOf((*PipelineLayout1_1)(nil).Destroy), callbacks)
 }
 
+// DeviceHandle mocks base method.
+func (m *PipelineLayout1_1) DeviceHandle() driver.VkDevice {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DeviceHandle")
+	ret0, _ := ret[0].(driver.VkDevice)
+	return ret0
+}
+
+// DeviceHandle indicates an expected call of DeviceHandle.
+func (mr *PipelineLayout1_1MockRecorder) DeviceHandle() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeviceHandle", reflect.TypeOf((*PipelineLayout1_1)(nil).DeviceHandle))
+}
+
 // Driver mocks base method.
 func (m *PipelineLayout1_1) Driver() driver.Driver {
 	m.ctrl.T.Helper()
@@ -3990,6 +4144,20 @@ func (m *QueryPool1_1) Destroy(callbacks *driver.AllocationCallbacks) {
 func (mr *QueryPool1_1MockRecorder) Destroy(callbacks interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Destroy", reflect.TypeOf((*QueryPool1_1)(nil).Destroy), callbacks)
+}
+
+// DeviceHandle mocks base method.
+func (m *QueryPool1_1) DeviceHandle() driver.VkDevice {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DeviceHandle")
+	ret0, _ := ret[0].(driver.VkDevice)
+	return ret0
+}
+
+// DeviceHandle indicates an expected call of DeviceHandle.
+func (mr *QueryPool1_1MockRecorder) DeviceHandle() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeviceHandle", reflect.TypeOf((*QueryPool1_1)(nil).DeviceHandle))
 }
 
 // Driver mocks base method.
@@ -4085,6 +4253,20 @@ func (m *Queue1_1) BindSparse(fence core1_0.Fence, bindInfos []core1_0.BindSpars
 func (mr *Queue1_1MockRecorder) BindSparse(fence, bindInfos interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "BindSparse", reflect.TypeOf((*Queue1_1)(nil).BindSparse), fence, bindInfos)
+}
+
+// DeviceHandle mocks base method.
+func (m *Queue1_1) DeviceHandle() driver.VkDevice {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DeviceHandle")
+	ret0, _ := ret[0].(driver.VkDevice)
+	return ret0
+}
+
+// DeviceHandle indicates an expected call of DeviceHandle.
+func (mr *Queue1_1MockRecorder) DeviceHandle() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeviceHandle", reflect.TypeOf((*Queue1_1)(nil).DeviceHandle))
 }
 
 // Driver mocks base method.
@@ -4194,6 +4376,20 @@ func (mr *RenderPass1_1MockRecorder) Destroy(callbacks interface{}) *gomock.Call
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Destroy", reflect.TypeOf((*RenderPass1_1)(nil).Destroy), callbacks)
 }
 
+// DeviceHandle mocks base method.
+func (m *RenderPass1_1) DeviceHandle() driver.VkDevice {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DeviceHandle")
+	ret0, _ := ret[0].(driver.VkDevice)
+	return ret0
+}
+
+// DeviceHandle indicates an expected call of DeviceHandle.
+func (mr *RenderPass1_1MockRecorder) DeviceHandle() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeviceHandle", reflect.TypeOf((*RenderPass1_1)(nil).DeviceHandle))
+}
+
 // Driver mocks base method.
 func (m *RenderPass1_1) Driver() driver.Driver {
 	m.ctrl.T.Helper()
@@ -4283,6 +4479,20 @@ func (m *Sampler1_1) Destroy(callbacks *driver.AllocationCallbacks) {
 func (mr *Sampler1_1MockRecorder) Destroy(callbacks interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Destroy", reflect.TypeOf((*Sampler1_1)(nil).Destroy), callbacks)
+}
+
+// DeviceHandle mocks base method.
+func (m *Sampler1_1) DeviceHandle() driver.VkDevice {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DeviceHandle")
+	ret0, _ := ret[0].(driver.VkDevice)
+	return ret0
+}
+
+// DeviceHandle indicates an expected call of DeviceHandle.
+func (mr *Sampler1_1MockRecorder) DeviceHandle() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeviceHandle", reflect.TypeOf((*Sampler1_1)(nil).DeviceHandle))
 }
 
 // Driver mocks base method.
@@ -4439,6 +4649,20 @@ func (mr *Semaphore1_1MockRecorder) Destroy(callbacks interface{}) *gomock.Call 
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Destroy", reflect.TypeOf((*Semaphore1_1)(nil).Destroy), callbacks)
 }
 
+// DeviceHandle mocks base method.
+func (m *Semaphore1_1) DeviceHandle() driver.VkDevice {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DeviceHandle")
+	ret0, _ := ret[0].(driver.VkDevice)
+	return ret0
+}
+
+// DeviceHandle indicates an expected call of DeviceHandle.
+func (mr *Semaphore1_1MockRecorder) DeviceHandle() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeviceHandle", reflect.TypeOf((*Semaphore1_1)(nil).DeviceHandle))
+}
+
 // Driver mocks base method.
 func (m *Semaphore1_1) Driver() driver.Driver {
 	m.ctrl.T.Helper()
@@ -4514,6 +4738,20 @@ func (m *ShaderModule1_1) Destroy(callbacks *driver.AllocationCallbacks) {
 func (mr *ShaderModule1_1MockRecorder) Destroy(callbacks interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Destroy", reflect.TypeOf((*ShaderModule1_1)(nil).Destroy), callbacks)
+}
+
+// DeviceHandle mocks base method.
+func (m *ShaderModule1_1) DeviceHandle() driver.VkDevice {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DeviceHandle")
+	ret0, _ := ret[0].(driver.VkDevice)
+	return ret0
+}
+
+// DeviceHandle indicates an expected call of DeviceHandle.
+func (mr *ShaderModule1_1MockRecorder) DeviceHandle() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeviceHandle", reflect.TypeOf((*ShaderModule1_1)(nil).DeviceHandle))
 }
 
 // Driver mocks base method.

@@ -22,6 +22,10 @@ func (v *VulkanBufferView) Handle() driver.VkBufferView {
 	return v.BufferViewHandle
 }
 
+func (v *VulkanBufferView) DeviceHandle() driver.VkDevice {
+	return v.Device
+}
+
 func (v *VulkanBufferView) Driver() driver.Driver {
 	return v.DeviceDriver
 }

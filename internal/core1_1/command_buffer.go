@@ -20,6 +20,7 @@ type VulkanCommandBuffer struct {
 	CommandBufferHandle driver.VkCommandBuffer
 
 	CommandCount  *int
+	DrawCallCount *int
 	DispatchCount *int
 }
 
@@ -34,16 +35,19 @@ func PromoteCommandBuffer(commandBuffer core1_0.CommandBuffer) core1_1.CommandBu
 		func() any {
 			var commandCount int
 			var dispatchCount int
+			var drawCallCount int
 
 			// The command/dispatch/draw pointers should be shared between the various
 			// core versions of a command buffer, but if for some reason this isn't a real
 			// vulkan command buffer, feel free to just make up some new pointers
 			commandCountPtr := &commandCount
 			dispatchCountPtr := &dispatchCount
+			drawCallCountPtr := &drawCallCount
 			rootCommandBuffer, isInternalVulkan := commandBuffer.(*internal1_0.VulkanCommandBuffer)
 			if isInternalVulkan {
 				commandCountPtr = rootCommandBuffer.CommandCount
 				dispatchCountPtr = rootCommandBuffer.DispatchCount
+				drawCallCountPtr = rootCommandBuffer.DrawCallCount
 			}
 
 			return &VulkanCommandBuffer{
@@ -54,6 +58,7 @@ func PromoteCommandBuffer(commandBuffer core1_0.CommandBuffer) core1_1.CommandBu
 
 				CommandCount:  commandCountPtr,
 				DispatchCount: dispatchCountPtr,
+				DrawCallCount: drawCallCountPtr,
 			}
 		}).(core1_1.CommandBuffer)
 }

@@ -25,6 +25,10 @@ func (c *VulkanPipelineCache) Handle() driver.VkPipelineCache {
 	return c.PipelineCacheHandle
 }
 
+func (c *VulkanPipelineCache) DeviceHandle() driver.VkDevice {
+	return c.Device
+}
+
 func (c *VulkanPipelineCache) Driver() driver.Driver {
 	return c.DeviceDriver
 }

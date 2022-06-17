@@ -28,6 +28,10 @@ func (p *VulkanRenderPass) Driver() driver.Driver {
 	return p.DeviceDriver
 }
 
+func (p *VulkanRenderPass) DeviceHandle() driver.VkDevice {
+	return p.Device
+}
+
 func (p *VulkanRenderPass) APIVersion() common.APIVersion {
 	return p.MaximumAPIVersion
 }

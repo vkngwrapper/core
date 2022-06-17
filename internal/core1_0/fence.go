@@ -25,6 +25,10 @@ func (f *VulkanFence) Handle() driver.VkFence {
 	return f.FenceHandle
 }
 
+func (f *VulkanFence) DeviceHandle() driver.VkDevice {
+	return f.Device
+}
+
 func (f *VulkanFence) Driver() driver.Driver {
 	return f.DeviceDriver
 }

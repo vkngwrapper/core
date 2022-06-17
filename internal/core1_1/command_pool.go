@@ -6,6 +6,7 @@ package internal1_1
 */
 import "C"
 import (
+	"github.com/CannibalVox/VKng/core/common"
 	"github.com/CannibalVox/VKng/core/core1_0"
 	"github.com/CannibalVox/VKng/core/core1_1"
 	"github.com/CannibalVox/VKng/core/driver"
@@ -27,6 +28,10 @@ func (p *VulkanCommandPool) TrimCommandPool(flags core1_1.CommandPoolTrimFlags) 
 }
 
 func PromoteCommandPool(commandPool core1_0.CommandPool) core1_1.CommandPool {
+	if !commandPool.APIVersion().IsAtLeast(common.Vulkan1_1) {
+		return nil
+	}
+
 	return commandPool.Driver().ObjectStore().GetOrCreate(
 		driver.VulkanHandle(commandPool.Handle()),
 		driver.Core1_1,

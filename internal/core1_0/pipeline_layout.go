@@ -26,6 +26,10 @@ func (l *VulkanPipelineLayout) Driver() driver.Driver {
 	return l.DeviceDriver
 }
 
+func (l *VulkanPipelineLayout) DeviceHandle() driver.VkDevice {
+	return l.Device
+}
+
 func (l *VulkanPipelineLayout) APIVersion() common.APIVersion {
 	return l.MaximumAPIVersion
 }

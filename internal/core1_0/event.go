@@ -22,6 +22,10 @@ func (e *VulkanEvent) Handle() driver.VkEvent {
 	return e.EventHandle
 }
 
+func (e *VulkanEvent) DeviceHandle() driver.VkDevice {
+	return e.Device
+}
+
 func (e *VulkanEvent) Driver() driver.Driver {
 	return e.DeviceDriver
 }

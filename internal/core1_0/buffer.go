@@ -25,6 +25,10 @@ func (b *VulkanBuffer) Handle() driver.VkBuffer {
 	return b.BufferHandle
 }
 
+func (b *VulkanBuffer) DeviceHandle() driver.VkDevice {
+	return b.Device
+}
+
 func (b *VulkanBuffer) Driver() driver.Driver {
 	return b.DeviceDriver
 }

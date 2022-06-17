@@ -26,6 +26,10 @@ func (v *VulkanImageView) Driver() driver.Driver {
 	return v.DeviceDriver
 }
 
+func (v *VulkanImageView) DeviceHandle() driver.VkDevice {
+	return v.Device
+}
+
 func (v *VulkanImageView) APIVersion() common.APIVersion {
 	return v.MaximumAPIVersion
 }

@@ -25,6 +25,10 @@ func (t *VulkanDescriptorUpdateTemplate) Handle() driver.VkDescriptorUpdateTempl
 	return t.DescriptorTemplateHandle
 }
 
+func (t *VulkanDescriptorUpdateTemplate) DeviceHandle() driver.VkDevice {
+	return t.Device
+}
+
 func (t *VulkanDescriptorUpdateTemplate) Driver() driver.Driver {
 	return t.DeviceDriver
 }
