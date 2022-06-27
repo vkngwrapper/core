@@ -7,54 +7,37 @@ package core1_0
 import "C"
 import (
 	"github.com/CannibalVox/VKng/core/common"
-	"github.com/CannibalVox/cgoparam"
-	"github.com/cockroachdb/errors"
-	"unsafe"
+	"github.com/CannibalVox/VKng/core/driver"
 )
 
-const (
-	CommandPoolResetReleaseResources common.CommandPoolResetFlags = C.VK_COMMAND_POOL_RESET_RELEASE_RESOURCES_BIT
-
-	CommandPoolCreateTransient   common.CommandPoolCreateFlags = C.VK_COMMAND_POOL_CREATE_TRANSIENT_BIT
-	CommandPoolCreateResetBuffer common.CommandPoolCreateFlags = C.VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT
-)
-
-func init() {
-	CommandPoolResetReleaseResources.Register("Release Resources")
-
-	CommandPoolCreateTransient.Register("Transient")
-	CommandPoolCreateResetBuffer.Register("Reset Command Buffer")
+type VulkanCommandPool struct {
+	deviceDriver      driver.Driver
+	commandPoolHandle driver.VkCommandPool
+	device            driver.VkDevice
+	maximumAPIVersion common.APIVersion
 }
 
-type CommandPoolCreateOptions struct {
-	GraphicsQueueFamily *int
-	Flags               common.CommandPoolCreateFlags
-
-	common.HaveNext
+func (p *VulkanCommandPool) Handle() driver.VkCommandPool {
+	return p.commandPoolHandle
 }
 
-func (o CommandPoolCreateOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
-	if o.GraphicsQueueFamily == nil {
-		return nil, errors.New("attempted to create a command pool without setting GraphicsQueueFamilyIndex")
-	}
-
-	if preallocatedPointer == unsafe.Pointer(nil) {
-		preallocatedPointer = allocator.Malloc(C.sizeof_struct_VkCommandPoolCreateInfo)
-	}
-
-	familyIndex := *o.GraphicsQueueFamily
-
-	cmdPoolCreate := (*C.VkCommandPoolCreateInfo)(preallocatedPointer)
-	cmdPoolCreate.sType = C.VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO
-	cmdPoolCreate.flags = C.VkCommandPoolCreateFlags(o.Flags)
-	cmdPoolCreate.pNext = next
-
-	cmdPoolCreate.queueFamilyIndex = C.uint32_t(familyIndex)
-
-	return unsafe.Pointer(cmdPoolCreate), nil
+func (p *VulkanCommandPool) DeviceHandle() driver.VkDevice {
+	return p.device
 }
 
-func (o CommandPoolCreateOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
-	createInfo := (*C.VkCommandPoolCreateInfo)(cDataPointer)
-	return createInfo.pNext, nil
+func (p *VulkanCommandPool) Driver() driver.Driver {
+	return p.deviceDriver
+}
+
+func (p *VulkanCommandPool) APIVersion() common.APIVersion {
+	return p.maximumAPIVersion
+}
+
+func (p *VulkanCommandPool) Destroy(callbacks *driver.AllocationCallbacks) {
+	p.deviceDriver.VkDestroyCommandPool(p.device, p.commandPoolHandle, callbacks.Handle())
+	p.deviceDriver.ObjectStore().Delete(driver.VulkanHandle(p.commandPoolHandle))
+}
+
+func (p *VulkanCommandPool) Reset(flags common.CommandPoolResetFlags) (common.VkResult, error) {
+	return p.deviceDriver.VkResetCommandPool(p.device, p.commandPoolHandle, driver.VkCommandPoolResetFlags(flags))
 }

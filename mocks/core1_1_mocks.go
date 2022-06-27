@@ -2359,6 +2359,20 @@ func (mr *DescriptorUpdateTemplate1_1MockRecorder) Destroy(allocator interface{}
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Destroy", reflect.TypeOf((*DescriptorUpdateTemplate1_1)(nil).Destroy), allocator)
 }
 
+// DeviceHandle mocks base method.
+func (m *DescriptorUpdateTemplate1_1) DeviceHandle() driver.VkDevice {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DeviceHandle")
+	ret0, _ := ret[0].(driver.VkDevice)
+	return ret0
+}
+
+// DeviceHandle indicates an expected call of DeviceHandle.
+func (mr *DescriptorUpdateTemplate1_1MockRecorder) DeviceHandle() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeviceHandle", reflect.TypeOf((*DescriptorUpdateTemplate1_1)(nil).DeviceHandle))
+}
+
 // Driver mocks base method.
 func (m *DescriptorUpdateTemplate1_1) Driver() driver.Driver {
 	m.ctrl.T.Helper()
@@ -4570,6 +4584,20 @@ func (m *MockSamplerYcbcrConversion) Destroy(allocator *driver.AllocationCallbac
 func (mr *MockSamplerYcbcrConversionMockRecorder) Destroy(allocator interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Destroy", reflect.TypeOf((*MockSamplerYcbcrConversion)(nil).Destroy), allocator)
+}
+
+// DeviceHandle mocks base method.
+func (m *MockSamplerYcbcrConversion) DeviceHandle() driver.VkDevice {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DeviceHandle")
+	ret0, _ := ret[0].(driver.VkDevice)
+	return ret0
+}
+
+// DeviceHandle indicates an expected call of DeviceHandle.
+func (mr *MockSamplerYcbcrConversionMockRecorder) DeviceHandle() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeviceHandle", reflect.TypeOf((*MockSamplerYcbcrConversion)(nil).DeviceHandle))
 }
 
 // Driver mocks base method.

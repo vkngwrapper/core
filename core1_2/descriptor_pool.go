@@ -1,20 +1,27 @@
 package core1_2
 
-/*
-#include <stdlib.h>
-#include "../vulkan/vulkan.h"
-*/
-import "C"
-import "github.com/CannibalVox/VKng/core/common"
-
-const (
-	DescriptorPoolCreateUpdateAfterBind common.DescriptorPoolCreateFlags = C.VK_DESCRIPTOR_POOL_CREATE_UPDATE_AFTER_BIND_BIT
-
-	VkErrorFragmentation common.VkResult = C.VK_ERROR_FRAGMENTATION
+import (
+	"github.com/CannibalVox/VKng/core/common"
+	"github.com/CannibalVox/VKng/core/core1_0"
+	"github.com/CannibalVox/VKng/core/core1_1"
+	"github.com/CannibalVox/VKng/core/driver"
 )
 
-func init() {
-	DescriptorPoolCreateUpdateAfterBind.Register("Update After Bind")
+type VulkanDescriptorPool struct {
+	core1_1.DescriptorPool
+}
 
-	VkErrorFragmentation.Register("fragmentation")
+func PromoteDescriptorPool(descriptorPool core1_0.DescriptorPool) DescriptorPool {
+	if !descriptorPool.APIVersion().IsAtLeast(common.Vulkan1_2) {
+		return nil
+	}
+
+	promotedDescriptorPool := core1_1.PromoteDescriptorPool(descriptorPool)
+
+	return descriptorPool.Driver().ObjectStore().GetOrCreate(
+		driver.VulkanHandle(descriptorPool.Handle()),
+		driver.Core1_2,
+		func() any {
+			return &VulkanDescriptorPool{promotedDescriptorPool}
+		}).(DescriptorPool)
 }

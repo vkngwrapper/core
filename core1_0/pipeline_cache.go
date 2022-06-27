@@ -7,38 +7,77 @@ package core1_0
 import "C"
 import (
 	"github.com/CannibalVox/VKng/core/common"
+	"github.com/CannibalVox/VKng/core/driver"
 	"github.com/CannibalVox/cgoparam"
 	"unsafe"
 )
 
-type PipelineCacheCreateOptions struct {
-	Flags       common.PipelineCacheCreateFlags
-	InitialData []byte
+type VulkanPipelineCache struct {
+	deviceDriver        driver.Driver
+	device              driver.VkDevice
+	pipelineCacheHandle driver.VkPipelineCache
 
-	common.HaveNext
+	maximumAPIVersion common.APIVersion
 }
 
-func (o PipelineCacheCreateOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
-	if preallocatedPointer == unsafe.Pointer(nil) {
-		preallocatedPointer = allocator.Malloc(C.sizeof_struct_VkPipelineCacheCreateInfo)
-	}
-	createInfo := (*C.VkPipelineCacheCreateInfo)(preallocatedPointer)
-	createInfo.sType = C.VK_STRUCTURE_TYPE_PIPELINE_CACHE_CREATE_INFO
-	createInfo.pNext = next
-	createInfo.flags = C.VkPipelineCacheCreateFlags(o.Flags)
-
-	initialSize := len(o.InitialData)
-	createInfo.initialDataSize = C.size_t(initialSize)
-	createInfo.pInitialData = nil
-
-	if initialSize > 0 {
-		createInfo.pInitialData = allocator.CBytes(o.InitialData)
-	}
-
-	return preallocatedPointer, nil
+func (c *VulkanPipelineCache) Handle() driver.VkPipelineCache {
+	return c.pipelineCacheHandle
 }
 
-func (o PipelineCacheCreateOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
-	createInfo := (*C.VkPipelineCacheCreateInfo)(cDataPointer)
-	return createInfo.pNext, nil
+func (c *VulkanPipelineCache) DeviceHandle() driver.VkDevice {
+	return c.device
+}
+
+func (c *VulkanPipelineCache) Driver() driver.Driver {
+	return c.deviceDriver
+}
+
+func (c *VulkanPipelineCache) APIVersion() common.APIVersion {
+	return c.maximumAPIVersion
+}
+
+func (c *VulkanPipelineCache) Destroy(callbacks *driver.AllocationCallbacks) {
+	c.deviceDriver.VkDestroyPipelineCache(c.device, c.pipelineCacheHandle, callbacks.Handle())
+	c.deviceDriver.ObjectStore().Delete(driver.VulkanHandle(c.pipelineCacheHandle))
+}
+
+func (c *VulkanPipelineCache) CacheData() ([]byte, common.VkResult, error) {
+	arena := cgoparam.GetAlloc()
+	defer cgoparam.ReturnAlloc(arena)
+
+	cacheSizePtr := arena.Malloc(int(unsafe.Sizeof(C.size_t(0))))
+	cacheSize := (*driver.Size)(cacheSizePtr)
+
+	res, err := c.deviceDriver.VkGetPipelineCacheData(c.device, c.pipelineCacheHandle, cacheSize, nil)
+	if err != nil {
+		return nil, res, err
+	}
+
+	cacheDataPtr := arena.Malloc(int(*cacheSize))
+
+	res, err = c.deviceDriver.VkGetPipelineCacheData(c.device, c.pipelineCacheHandle, cacheSize, cacheDataPtr)
+	if err != nil {
+		return nil, res, err
+	}
+
+	outData := make([]byte, *cacheSize)
+	inData := ([]byte)(unsafe.Slice((*byte)(cacheDataPtr), int(*cacheSize)))
+	copy(outData, inData)
+
+	return outData, res, nil
+}
+
+func (c *VulkanPipelineCache) MergePipelineCaches(srcCaches []PipelineCache) (common.VkResult, error) {
+	arena := cgoparam.GetAlloc()
+	defer cgoparam.ReturnAlloc(arena)
+
+	srcCount := len(srcCaches)
+	srcPtr := (*driver.VkPipelineCache)(arena.Malloc(srcCount * int(unsafe.Sizeof([1]driver.VkPipelineCache{}))))
+	srcSlice := ([]driver.VkPipelineCache)(unsafe.Slice(srcPtr, srcCount))
+
+	for i := 0; i < srcCount; i++ {
+		srcSlice[i] = srcCaches[i].Handle()
+	}
+
+	return c.deviceDriver.VkMergePipelineCaches(c.device, c.pipelineCacheHandle, driver.Uint32(srcCount), srcPtr)
 }

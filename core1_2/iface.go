@@ -113,7 +113,7 @@ type PipelineLayout interface {
 type QueryPool interface {
 	core1_1.QueryPool
 
-	ResetQueryPool(firstQuery, queryCount int)
+	Reset(firstQuery, queryCount int)
 }
 
 type Queue interface {
@@ -135,7 +135,7 @@ type SamplerYcbcrConversion interface {
 type Semaphore interface {
 	core1_1.Semaphore
 
-	SemaphoreCounterValue() (uint64, common.VkResult, error)
+	CounterValue() (uint64, common.VkResult, error)
 }
 
 type ShaderModule interface {

@@ -9,7 +9,6 @@ import (
 	"github.com/CannibalVox/VKng/core/common"
 	"github.com/CannibalVox/VKng/core/core1_0"
 	"github.com/CannibalVox/VKng/core/driver"
-	internal1_0 "github.com/CannibalVox/VKng/core/internal/core1_0"
 	"github.com/CannibalVox/cgoparam"
 	"unsafe"
 )
@@ -159,6 +158,9 @@ func (l *VulkanLoader) AvailableLayers() (map[string]*common.LayerProperties, co
 	return layers, result, err
 }
 
+//go:linkname createInstanceObject github.com/CannibalVox/VKng/core/core1_0.createInstanceObject
+func createInstanceObject(instanceDriver driver.Driver, handle driver.VkInstance, version common.APIVersion) *core1_0.VulkanInstance
+
 func (l *VulkanLoader) CreateInstance(allocationCallbacks *driver.AllocationCallbacks, options core1_0.InstanceCreateOptions) (core1_0.Instance, common.VkResult, error) {
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
@@ -181,7 +183,7 @@ func (l *VulkanLoader) CreateInstance(allocationCallbacks *driver.AllocationCall
 	}
 
 	version := l.APIVersion().Min(options.VulkanVersion)
-	instance := internal1_0.CreateInstanceObject(instanceDriver, instanceHandle, version)
+	instance := createInstanceObject(instanceDriver, instanceHandle, version)
 
 	for _, extension := range options.ExtensionNames {
 		instance.ActiveInstanceExtensions[extension] = struct{}{}

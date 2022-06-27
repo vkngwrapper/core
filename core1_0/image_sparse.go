@@ -2,45 +2,55 @@ package core1_0
 
 /*
 #include <stdlib.h>
-#include "vulkan/vulkan.h"
+#include "../vulkan/vulkan.h"
 */
 import "C"
 import (
 	"github.com/CannibalVox/VKng/core/common"
+	"github.com/CannibalVox/VKng/core/driver"
+	"github.com/CannibalVox/cgoparam"
+	"unsafe"
 )
 
-const (
-	SparseImageFormatSingleMipTail        common.SparseImageFormatFlags = C.VK_SPARSE_IMAGE_FORMAT_SINGLE_MIPTAIL_BIT
-	SparseImageFormatAlignedMipSize       common.SparseImageFormatFlags = C.VK_SPARSE_IMAGE_FORMAT_ALIGNED_MIP_SIZE_BIT
-	SparseImageFormatNonstandardBlockSize common.SparseImageFormatFlags = C.VK_SPARSE_IMAGE_FORMAT_NONSTANDARD_BLOCK_SIZE_BIT
+func (i *VulkanImage) SparseMemoryRequirements() []SparseImageMemoryRequirements {
+	arena := cgoparam.GetAlloc()
+	defer cgoparam.ReturnAlloc(arena)
 
-	AspectColor    common.ImageAspectFlags = C.VK_IMAGE_ASPECT_COLOR_BIT
-	AspectDepth    common.ImageAspectFlags = C.VK_IMAGE_ASPECT_DEPTH_BIT
-	AspectStencil  common.ImageAspectFlags = C.VK_IMAGE_ASPECT_STENCIL_BIT
-	AspectMetadata common.ImageAspectFlags = C.VK_IMAGE_ASPECT_METADATA_BIT
-)
+	requirementsCount := (*C.uint32_t)(arena.Malloc(4))
 
-func init() {
-	AspectColor.Register("Color")
-	AspectDepth.Register("Depth")
-	AspectStencil.Register("Stencil")
-	AspectMetadata.Register("Metadata")
+	i.deviceDriver.VkGetImageSparseMemoryRequirements(i.device, i.imageHandle, (*driver.Uint32)(requirementsCount), nil)
 
-	SparseImageFormatSingleMipTail.Register("Single Mip Tail")
-	SparseImageFormatAlignedMipSize.Register("Aligned Mip Size")
-	SparseImageFormatNonstandardBlockSize.Register("Nonstandard Block Size")
-}
+	if *requirementsCount == 0 {
+		return nil
+	}
 
-type SparseImageFormatProperties struct {
-	AspectMask       common.ImageAspectFlags
-	ImageGranularity common.Extent3D
-	Flags            common.SparseImageFormatFlags
-}
+	requirementsPtr := (*C.VkSparseImageMemoryRequirements)(arena.Malloc(int(*requirementsCount) * C.sizeof_struct_VkSparseImageMemoryRequirements))
 
-type SparseImageMemoryRequirements struct {
-	FormatProperties     SparseImageFormatProperties
-	ImageMipTailFirstLod int
-	ImageMipTailSize     int
-	ImageMipTailOffset   int
-	ImageMipTailStride   int
+	i.deviceDriver.VkGetImageSparseMemoryRequirements(i.device, i.imageHandle, (*driver.Uint32)(unsafe.Pointer(requirementsCount)), (*driver.VkSparseImageMemoryRequirements)(unsafe.Pointer(requirementsPtr)))
+
+	requirementsSlice := ([]C.VkSparseImageMemoryRequirements)(unsafe.Slice(requirementsPtr, int(*requirementsCount)))
+
+	var outReqs []SparseImageMemoryRequirements
+	for j := 0; j < int(*requirementsCount); j++ {
+		inReq := requirementsSlice[j]
+		reqs := SparseImageMemoryRequirements{
+			FormatProperties: SparseImageFormatProperties{
+				AspectMask: common.ImageAspectFlags(inReq.formatProperties.aspectMask),
+				ImageGranularity: common.Extent3D{
+					Width:  int(inReq.formatProperties.imageGranularity.width),
+					Height: int(inReq.formatProperties.imageGranularity.height),
+					Depth:  int(inReq.formatProperties.imageGranularity.depth),
+				},
+				Flags: common.SparseImageFormatFlags(inReq.formatProperties.flags),
+			},
+			ImageMipTailFirstLod: int(inReq.imageMipTailFirstLod),
+			ImageMipTailOffset:   int(inReq.imageMipTailOffset),
+			ImageMipTailSize:     int(inReq.imageMipTailSize),
+			ImageMipTailStride:   int(inReq.imageMipTailStride),
+		}
+
+		outReqs = append(outReqs, reqs)
+	}
+
+	return outReqs
 }

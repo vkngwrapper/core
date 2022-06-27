@@ -5,114 +5,86 @@ import (
 	"github.com/CannibalVox/VKng/core/core1_0"
 	"github.com/CannibalVox/VKng/core/core1_1"
 	"github.com/CannibalVox/VKng/core/driver"
-	internal1_0 "github.com/CannibalVox/VKng/core/internal/core1_0"
-	internal1_1 "github.com/CannibalVox/VKng/core/internal/core1_1"
+	_ "unsafe"
 )
 
-func CreateInstanceObject(instanceDriver driver.Driver, handle driver.VkInstance, version common.APIVersion) core1_0.Instance {
-	return internal1_0.CreateInstanceObject(instanceDriver, handle, version)
-}
+//go:linkname CreateInstanceObject github.com/CannibalVox/VKng/core/core1_0.createInstanceObject
+func CreateInstanceObject(instanceDriver driver.Driver, handle driver.VkInstance, version common.APIVersion) *core1_0.VulkanInstance
 
-func CreatePhysicalDeviceObject(coreDriver driver.Driver, instance driver.VkInstance, handle driver.VkPhysicalDevice, instanceVersion, deviceVersion common.APIVersion) core1_0.PhysicalDevice {
-	return internal1_0.CreatePhysicalDeviceObject(coreDriver, instance, handle, instanceVersion, deviceVersion)
-}
+//go:linkname CreatePhysicalDeviceObject github.com/CannibalVox/VKng/core/core1_0.createPhysicalDeviceObject
+func CreatePhysicalDeviceObject(coreDriver driver.Driver, instance driver.VkInstance, handle driver.VkPhysicalDevice, instanceVersion, deviceVersion common.APIVersion) *core1_0.VulkanPhysicalDevice
 
-func CreateDeviceObject(deviceDriver driver.Driver, handle driver.VkDevice, version common.APIVersion) core1_0.Device {
-	return internal1_0.CreateDeviceObject(deviceDriver, handle, version)
-}
+//go:linkname CreateDeviceObject github.com/CannibalVox/VKng/core/core1_0.createDeviceObject
+func CreateDeviceObject(deviceDriver driver.Driver, handle driver.VkDevice, version common.APIVersion) *core1_0.VulkanDevice
 
-func CreateBufferObject(coreDriver driver.Driver, device driver.VkDevice, handle driver.VkBuffer, version common.APIVersion) core1_0.Buffer {
-	return internal1_0.CreateBufferObject(coreDriver, device, handle, version)
-}
+//go:linkname CreateBufferObject github.com/CannibalVox/VKng/core/core1_0.createBufferObject
+func CreateBufferObject(coreDriver driver.Driver, device driver.VkDevice, handle driver.VkBuffer, version common.APIVersion) *core1_0.VulkanBuffer
 
-func CreateBufferViewObject(coreDriver driver.Driver, device driver.VkDevice, handle driver.VkBufferView, version common.APIVersion) core1_0.BufferView {
-	return internal1_0.CreateBufferViewObject(coreDriver, device, handle, version)
-}
+//go:linkname CreateBufferViewObject github.com/CannibalVox/VKng/core/core1_0.createBufferViewObject
+func CreateBufferViewObject(coreDriver driver.Driver, device driver.VkDevice, handle driver.VkBufferView, version common.APIVersion) *core1_0.VulkanBufferView
 
-func CreateCommandBufferObject(coreDriver driver.Driver, commandPool driver.VkCommandPool, device driver.VkDevice, handle driver.VkCommandBuffer, version common.APIVersion) core1_0.CommandBuffer {
-	return internal1_0.CreateCommandBufferObject(coreDriver, commandPool, device, handle, version)
-}
+//go:linkname CreateCommandBufferObject github.com/CannibalVox/VKng/core/core1_0.createCommandBufferObject
+func CreateCommandBufferObject(coreDriver driver.Driver, commandPool driver.VkCommandPool, device driver.VkDevice, handle driver.VkCommandBuffer, version common.APIVersion) *core1_0.VulkanCommandBuffer
 
-func CreateCommandPoolObject(coreDriver driver.Driver, device driver.VkDevice, handle driver.VkCommandPool, version common.APIVersion) core1_0.CommandPool {
-	return internal1_0.CreateCommandPoolObject(coreDriver, device, handle, version)
-}
+//go:linkname CreateCommandPoolObject github.com/CannibalVox/VKng/core/core1_0.createCommandPoolObject
+func CreateCommandPoolObject(coreDriver driver.Driver, device driver.VkDevice, handle driver.VkCommandPool, version common.APIVersion) *core1_0.VulkanCommandPool
 
-func CreateDescriptorPoolObject(coreDriver driver.Driver, device driver.VkDevice, handle driver.VkDescriptorPool, version common.APIVersion) core1_0.DescriptorPool {
-	return internal1_0.CreateDescriptorPoolObject(coreDriver, device, handle, version)
-}
+//go:linkname CreateDescriptorPoolObject github.com/CannibalVox/VKng/core/core1_0.createDescriptorPoolObject
+func CreateDescriptorPoolObject(coreDriver driver.Driver, device driver.VkDevice, handle driver.VkDescriptorPool, version common.APIVersion) *core1_0.VulkanDescriptorPool
 
-func CreateDescriptorSetObject(coreDriver driver.Driver, device driver.VkDevice, descriptorPool driver.VkDescriptorPool, handle driver.VkDescriptorSet, version common.APIVersion) core1_0.DescriptorSet {
-	return internal1_0.CreateDescriptorSetObject(coreDriver, device, descriptorPool, handle, version)
-}
+//go:linkname CreateDescriptorSetObject github.com/CannibalVox/VKng/core/core1_0.createDescriptorSetObject
+func CreateDescriptorSetObject(coreDriver driver.Driver, device driver.VkDevice, descriptorPool driver.VkDescriptorPool, handle driver.VkDescriptorSet, version common.APIVersion) *core1_0.VulkanDescriptorSet
 
-func CreateDescriptorSetLayoutObject(coreDriver driver.Driver, device driver.VkDevice, handle driver.VkDescriptorSetLayout, version common.APIVersion) core1_0.DescriptorSetLayout {
-	return internal1_0.CreateDescriptorSetLayoutObject(coreDriver, device, handle, version)
-}
+//go:linkname CreateDescriptorSetLayoutObject github.com/CannibalVox/VKng/core/core1_0.createDescriptorSetLayoutObject
+func CreateDescriptorSetLayoutObject(coreDriver driver.Driver, device driver.VkDevice, handle driver.VkDescriptorSetLayout, version common.APIVersion) *core1_0.VulkanDescriptorSetLayout
 
-func CreateDescriptorUpdateTemplateObject(coreDriver driver.Driver, device driver.VkDevice, handle driver.VkDescriptorUpdateTemplate, version common.APIVersion) core1_1.DescriptorUpdateTemplate {
-	return internal1_1.CreateDescriptorUpdateTemplate(coreDriver, device, handle, version)
-}
+//go:linkname CreateDescriptorUpdateTemplateObject github.com/CannibalVox/VKng/core/core1_0.createDescriptorUpdateTemplateObject
+func CreateDescriptorUpdateTemplateObject(coreDriver driver.Driver, device driver.VkDevice, handle driver.VkDescriptorUpdateTemplate, version common.APIVersion) core1_1.DescriptorUpdateTemplate
 
-func CreateDeviceMemoryObject(coreDriver driver.Driver, device driver.VkDevice, handle driver.VkDeviceMemory, version common.APIVersion, size int) core1_0.DeviceMemory {
-	return internal1_0.CreateDeviceMemoryObject(coreDriver, device, handle, version, size)
-}
+//go:linkname CreateDeviceMemoryObject github.com/CannibalVox/VKng/core/core1_0.createDeviceMemoryObject
+func CreateDeviceMemoryObject(coreDriver driver.Driver, device driver.VkDevice, handle driver.VkDeviceMemory, version common.APIVersion, size int) *core1_0.VulkanDeviceMemory
 
-func CreateEventObject(coreDriver driver.Driver, device driver.VkDevice, handle driver.VkEvent, version common.APIVersion) core1_0.Event {
-	return internal1_0.CreateEventObject(coreDriver, device, handle, version)
-}
+//go:linkname CreateEventObject github.com/CannibalVox/VKng/core/core1_0.createEventObject
+func CreateEventObject(coreDriver driver.Driver, device driver.VkDevice, handle driver.VkEvent, version common.APIVersion) *core1_0.VulkanEvent
 
-func CreateFenceObject(coreDriver driver.Driver, device driver.VkDevice, handle driver.VkFence, version common.APIVersion) core1_0.Fence {
-	return internal1_0.CreateFenceObject(coreDriver, device, handle, version)
-}
+//go:linkname CreateFenceObject github.com/CannibalVox/VKng/core/core1_0.createFenceObject
+func CreateFenceObject(coreDriver driver.Driver, device driver.VkDevice, handle driver.VkFence, version common.APIVersion) *core1_0.VulkanFence
 
-func CreateFramebufferObject(coreDriver driver.Driver, device driver.VkDevice, handle driver.VkFramebuffer, version common.APIVersion) core1_0.Framebuffer {
-	return internal1_0.CreateFramebufferObject(coreDriver, device, handle, version)
-}
+//go:linkname CreateFramebufferObject github.com/CannibalVox/VKng/core/core1_0.createFramebufferObject
+func CreateFramebufferObject(coreDriver driver.Driver, device driver.VkDevice, handle driver.VkFramebuffer, version common.APIVersion) *core1_0.VulkanFramebuffer
 
-func CreateImageObject(coreDriver driver.Driver, device driver.VkDevice, handle driver.VkImage, version common.APIVersion) core1_0.Image {
-	return internal1_0.CreateImageObject(coreDriver, device, handle, version)
-}
+//go:linkname CreateImageObject github.com/CannibalVox/VKng/core/core1_0.createImageObject
+func CreateImageObject(coreDriver driver.Driver, device driver.VkDevice, handle driver.VkImage, version common.APIVersion) *core1_0.VulkanImage
 
-func CreateImageViewObject(coreDriver driver.Driver, device driver.VkDevice, handle driver.VkImageView, version common.APIVersion) core1_0.ImageView {
-	return internal1_0.CreateImageViewObject(coreDriver, device, handle, version)
-}
+//go:linkname CreateImageViewObject github.com/CannibalVox/VKng/core/core1_0.createImageViewObject
+func CreateImageViewObject(coreDriver driver.Driver, device driver.VkDevice, handle driver.VkImageView, version common.APIVersion) *core1_0.VulkanImageView
 
-func CreatePipelineObject(coreDriver driver.Driver, device driver.VkDevice, handle driver.VkPipeline, version common.APIVersion) core1_0.Pipeline {
-	return internal1_0.CreatePipelineObject(coreDriver, device, handle, version)
-}
+//go:linkname CreatePipelineObject github.com/CannibalVox/VKng/core/core1_0.createPipelineObject
+func CreatePipelineObject(coreDriver driver.Driver, device driver.VkDevice, handle driver.VkPipeline, version common.APIVersion) *core1_0.VulkanPipeline
 
-func CreatePipelineCacheObject(coreDriver driver.Driver, device driver.VkDevice, handle driver.VkPipelineCache, version common.APIVersion) core1_0.PipelineCache {
-	return internal1_0.CreatePipelineCacheObject(coreDriver, device, handle, version)
-}
+//go:linkname CreatePipelineCacheObject github.com/CannibalVox/VKng/core/core1_0.createPipelineCacheObject
+func CreatePipelineCacheObject(coreDriver driver.Driver, device driver.VkDevice, handle driver.VkPipelineCache, version common.APIVersion) *core1_0.VulkanPipelineCache
 
-func CreatePipelineLayoutObject(coreDriver driver.Driver, device driver.VkDevice, handle driver.VkPipelineLayout, version common.APIVersion) core1_0.PipelineLayout {
-	return internal1_0.CreatePipelineLayoutObject(coreDriver, device, handle, version)
-}
+//go:linkname CreatePipelineLayoutObject github.com/CannibalVox/VKng/core/core1_0.createPipelineLayoutObject
+func CreatePipelineLayoutObject(coreDriver driver.Driver, device driver.VkDevice, handle driver.VkPipelineLayout, version common.APIVersion) *core1_0.VulkanPipelineLayout
 
-func CreateQueryPoolObject(coreDriver driver.Driver, device driver.VkDevice, handle driver.VkQueryPool, version common.APIVersion) core1_0.QueryPool {
-	return internal1_0.CreateQueryPoolObject(coreDriver, device, handle, version)
-}
+//go:linkname CreateQueryPoolObject github.com/CannibalVox/VKng/core/core1_0.createQueryPoolObject
+func CreateQueryPoolObject(coreDriver driver.Driver, device driver.VkDevice, handle driver.VkQueryPool, version common.APIVersion) *core1_0.VulkanQueryPool
 
-func CreateQueueObject(coreDriver driver.Driver, device driver.VkDevice, handle driver.VkQueue, version common.APIVersion) core1_0.Queue {
-	return internal1_0.CreateQueueObject(coreDriver, device, handle, version)
-}
+//go:linkname CreateQueueObject github.com/CannibalVox/VKng/core/core1_0.createQueueObject
+func CreateQueueObject(coreDriver driver.Driver, device driver.VkDevice, handle driver.VkQueue, version common.APIVersion) *core1_0.VulkanQueue
 
-func CreateRenderPassObject(coreDriver driver.Driver, device driver.VkDevice, handle driver.VkRenderPass, version common.APIVersion) core1_0.RenderPass {
-	return internal1_0.CreateRenderPassObject(coreDriver, device, handle, version)
-}
+//go:linkname CreateRenderPassObject github.com/CannibalVox/VKng/core/core1_0.createRenderPassObject
+func CreateRenderPassObject(coreDriver driver.Driver, device driver.VkDevice, handle driver.VkRenderPass, version common.APIVersion) *core1_0.VulkanRenderPass
 
-func CreateSamplerObject(coreDriver driver.Driver, device driver.VkDevice, handle driver.VkSampler, version common.APIVersion) core1_0.Sampler {
-	return internal1_0.CreateSamplerObject(coreDriver, device, handle, version)
-}
+//go:linkname CreateSamplerObject github.com/CannibalVox/VKng/core/core1_0.createSamplerObject
+func CreateSamplerObject(coreDriver driver.Driver, device driver.VkDevice, handle driver.VkSampler, version common.APIVersion) *core1_0.VulkanSampler
 
-func CreateSamplerYcbcrConversionObject(coreDriver driver.Driver, device driver.VkDevice, handle driver.VkSamplerYcbcrConversion, version common.APIVersion) core1_1.SamplerYcbcrConversion {
-	return internal1_1.CreateSamplerYcbcrConversion(coreDriver, device, handle, version)
-}
+//go:linkname CreateSamplerYcbcrConversionObject github.com/CannibalVox/VKng/core/core1_0.createSamplerYcbcrConversionObject
+func CreateSamplerYcbcrConversionObject(coreDriver driver.Driver, device driver.VkDevice, handle driver.VkSamplerYcbcrConversion, version common.APIVersion) core1_1.SamplerYcbcrConversion
 
-func CreateSemaphoreObject(coreDriver driver.Driver, device driver.VkDevice, handle driver.VkSemaphore, version common.APIVersion) core1_0.Semaphore {
-	return internal1_0.CreateSemaphoreObject(coreDriver, device, handle, version)
-}
+//go:linkname CreateSemaphoreObject github.com/CannibalVox/VKng/core/core1_0.createSemaphoreObject
+func CreateSemaphoreObject(coreDriver driver.Driver, device driver.VkDevice, handle driver.VkSemaphore, version common.APIVersion) *core1_0.VulkanSemaphore
 
-func CreateShaderModuleObject(coreDriver driver.Driver, device driver.VkDevice, handle driver.VkShaderModule, version common.APIVersion) core1_0.ShaderModule {
-	return internal1_0.CreateShaderModuleObject(coreDriver, device, handle, version)
-}
+//go:linkname CreateShaderModuleObject github.com/CannibalVox/VKng/core/core1_0.createShaderModuleObject
+func CreateShaderModuleObject(coreDriver driver.Driver, device driver.VkDevice, handle driver.VkShaderModule, version common.APIVersion) *core1_0.VulkanShaderModule

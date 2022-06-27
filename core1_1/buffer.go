@@ -1,18 +1,26 @@
 package core1_1
 
-/*
-#include <stdlib.h>
-#include "vulkan/vulkan.h"
-*/
-import "C"
 import (
 	"github.com/CannibalVox/VKng/core/common"
+	"github.com/CannibalVox/VKng/core/core1_0"
+	"github.com/CannibalVox/VKng/core/driver"
 )
 
-const (
-	BufferCreateProtected common.BufferCreateFlags = C.VK_BUFFER_CREATE_PROTECTED_BIT
-)
+type VulkanBuffer struct {
+	core1_0.Buffer
+}
 
-func init() {
-	BufferCreateProtected.Register("Protected")
+func PromoteBuffer(buffer core1_0.Buffer) Buffer {
+	if !buffer.APIVersion().IsAtLeast(common.Vulkan1_1) {
+		return nil
+	}
+
+	return buffer.Driver().ObjectStore().GetOrCreate(
+		driver.VulkanHandle(buffer.Handle()),
+		driver.Core1_1,
+		func() any {
+			return &VulkanBuffer{
+				Buffer: buffer,
+			}
+		}).(Buffer)
 }

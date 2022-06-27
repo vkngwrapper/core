@@ -7,36 +7,34 @@ package core1_0
 import "C"
 import (
 	"github.com/CannibalVox/VKng/core/common"
-	"github.com/CannibalVox/cgoparam"
-	"unsafe"
+	"github.com/CannibalVox/VKng/core/driver"
 )
 
-type BufferViewCreateOptions struct {
-	Buffer Buffer
-	Format common.DataFormat
-	Offset int
-	Range  int
+type VulkanBufferView struct {
+	deviceDriver     driver.Driver
+	device           driver.VkDevice
+	bufferViewHandle driver.VkBufferView
 
-	common.HaveNext
+	maximumAPIVersion common.APIVersion
 }
 
-func (o BufferViewCreateOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
-	if preallocatedPointer == unsafe.Pointer(nil) {
-		preallocatedPointer = allocator.Malloc(C.sizeof_struct_VkBufferViewCreateInfo)
-	}
-	createInfo := (*C.VkBufferViewCreateInfo)(preallocatedPointer)
-	createInfo.sType = C.VK_STRUCTURE_TYPE_BUFFER_VIEW_CREATE_INFO
-	createInfo.pNext = next
-	createInfo.flags = 0
-	createInfo.buffer = C.VkBuffer(unsafe.Pointer(o.Buffer.Handle()))
-	createInfo.format = C.VkFormat(o.Format)
-	createInfo.offset = C.VkDeviceSize(o.Offset)
-	createInfo._range = C.VkDeviceSize(o.Range)
-
-	return unsafe.Pointer(createInfo), nil
+func (v *VulkanBufferView) Handle() driver.VkBufferView {
+	return v.bufferViewHandle
 }
 
-func (o BufferViewCreateOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
-	createInfo := (*C.VkBufferViewCreateInfo)(cDataPointer)
-	return createInfo.pNext, nil
+func (v *VulkanBufferView) DeviceHandle() driver.VkDevice {
+	return v.device
+}
+
+func (v *VulkanBufferView) Driver() driver.Driver {
+	return v.deviceDriver
+}
+
+func (v *VulkanBufferView) APIVersion() common.APIVersion {
+	return v.maximumAPIVersion
+}
+
+func (v *VulkanBufferView) Destroy(callbacks *driver.AllocationCallbacks) {
+	v.deviceDriver.VkDestroyBufferView(v.device, v.bufferViewHandle, callbacks.Handle())
+	v.deviceDriver.ObjectStore().Delete(driver.VulkanHandle(v.bufferViewHandle))
 }

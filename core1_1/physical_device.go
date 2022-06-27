@@ -8,526 +8,290 @@ import "C"
 import (
 	"github.com/CannibalVox/VKng/core/common"
 	"github.com/CannibalVox/VKng/core/core1_0"
+	"github.com/CannibalVox/VKng/core/driver"
 	"github.com/CannibalVox/cgoparam"
-	"github.com/cockroachdb/errors"
-	"github.com/google/uuid"
 	"unsafe"
 )
 
-type PointClippingBehavior int32
+type VulkanPhysicalDevice struct {
+	core1_0.PhysicalDevice
 
-var pointClippingBehaviorMapping = make(map[PointClippingBehavior]string)
-
-func (e PointClippingBehavior) Register(str string) {
-	pointClippingBehaviorMapping[e] = str
+	InstanceScoped1_1 InstanceScopedPhysicalDevice
 }
 
-func (e PointClippingBehavior) String() string {
-	return pointClippingBehaviorMapping[e]
+func (p *VulkanPhysicalDevice) InstanceScopedPhysicalDevice1_1() InstanceScopedPhysicalDevice {
+	return p.InstanceScoped1_1
 }
 
-////
-
-type SubgroupFeatures int32
-
-var subgroupFeaturesMapping = common.NewFlagStringMapping[SubgroupFeatures]()
-
-func (f SubgroupFeatures) Register(str string) {
-	subgroupFeaturesMapping.Register(f, str)
-}
-func (f SubgroupFeatures) String() string {
-	return subgroupFeaturesMapping.FlagsToString(f)
-}
-
-////
-
-const (
-	LUIDSize     int = C.VK_LUID_SIZE
-	MaxGroupSize int = C.VK_MAX_DEVICE_GROUP_SIZE
-
-	PointClippingAllClipPlanes      PointClippingBehavior = C.VK_POINT_CLIPPING_BEHAVIOR_ALL_CLIP_PLANES
-	PointClippingUserClipPlanesOnly PointClippingBehavior = C.VK_POINT_CLIPPING_BEHAVIOR_USER_CLIP_PLANES_ONLY
-
-	SubgroupFeatureBasic           SubgroupFeatures = C.VK_SUBGROUP_FEATURE_BASIC_BIT
-	SubgroupFeatureVote            SubgroupFeatures = C.VK_SUBGROUP_FEATURE_VOTE_BIT
-	SubgroupFeatureArithmetic      SubgroupFeatures = C.VK_SUBGROUP_FEATURE_ARITHMETIC_BIT
-	SubgroupFeatureBallot          SubgroupFeatures = C.VK_SUBGROUP_FEATURE_BALLOT_BIT
-	SubgroupFeatureShuffle         SubgroupFeatures = C.VK_SUBGROUP_FEATURE_SHUFFLE_BIT
-	SubgroupFeatureShuffleRelative SubgroupFeatures = C.VK_SUBGROUP_FEATURE_SHUFFLE_RELATIVE_BIT
-	SubgroupFeatureClustered       SubgroupFeatures = C.VK_SUBGROUP_FEATURE_CLUSTERED_BIT
-	SubgroupFeatureQuad            SubgroupFeatures = C.VK_SUBGROUP_FEATURE_QUAD_BIT
-)
-
-func init() {
-	PointClippingAllClipPlanes.Register("All Clip Planes")
-	PointClippingUserClipPlanesOnly.Register("User Clip Planes Only")
-
-	SubgroupFeatureBasic.Register("Basic")
-	SubgroupFeatureVote.Register("Vote")
-	SubgroupFeatureArithmetic.Register("Arithmetic")
-	SubgroupFeatureBallot.Register("Ballot")
-	SubgroupFeatureShuffle.Register("Shuffle")
-	SubgroupFeatureShuffleRelative.Register("Shuffle (Relative)")
-	SubgroupFeatureClustered.Register("Clustered")
-	SubgroupFeatureQuad.Register("Quad")
-}
-
-////
-
-type FormatPropertiesOutData struct {
-	FormatProperties core1_0.FormatProperties
-	common.HaveNext
-}
-
-func (o *FormatPropertiesOutData) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
-	if preallocatedPointer == nil {
-		preallocatedPointer = allocator.Malloc(int(unsafe.Sizeof(C.VkFormatProperties2{})))
+func PromotePhysicalDevice(physicalDevice core1_0.PhysicalDevice) PhysicalDevice {
+	if !physicalDevice.DeviceAPIVersion().IsAtLeast(common.Vulkan1_1) {
+		return nil
 	}
 
-	data := (*C.VkFormatProperties2)(preallocatedPointer)
-	data.sType = C.VK_STRUCTURE_TYPE_FORMAT_PROPERTIES_2
-	data.pNext = next
+	instanceScoped := PromoteInstanceScopedPhysicalDevice(physicalDevice)
 
-	return preallocatedPointer, nil
+	return physicalDevice.Driver().ObjectStore().GetOrCreate(
+		driver.VulkanHandle(physicalDevice.Handle()),
+		driver.Core1_1,
+		func() any {
+			return &VulkanPhysicalDevice{
+				PhysicalDevice: physicalDevice,
+
+				InstanceScoped1_1: instanceScoped,
+			}
+		}).(PhysicalDevice)
 }
 
-func (o *FormatPropertiesOutData) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
-	data := (*C.VkFormatProperties2)(cDataPointer)
-	o.FormatProperties.LinearTilingFeatures = common.FormatFeatures(data.formatProperties.linearTilingFeatures)
-	o.FormatProperties.OptimalTilingFeatures = common.FormatFeatures(data.formatProperties.optimalTilingFeatures)
-	o.FormatProperties.BufferFeatures = common.FormatFeatures(data.formatProperties.bufferFeatures)
+type VulkanInstanceScopedPhysicalDevice struct {
+	core1_0.PhysicalDevice
 
-	return data.pNext, nil
+	InstanceDriver       driver.Driver
+	PhysicalDeviceHandle driver.VkPhysicalDevice
 }
 
-////
-
-type ImageFormatOptions struct {
-	Format common.DataFormat
-	Type   common.ImageType
-	Tiling common.ImageTiling
-	Usage  common.ImageUsages
-	Flags  common.ImageCreateFlags
-
-	common.HaveNext
-}
-
-func (o ImageFormatOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
-	if preallocatedPointer == nil {
-		preallocatedPointer = allocator.Malloc(int(unsafe.Sizeof(C.VkPhysicalDeviceImageFormatInfo2{})))
-	}
-	info := (*C.VkPhysicalDeviceImageFormatInfo2)(preallocatedPointer)
-	info.sType = C.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_FORMAT_INFO_2
-	info.pNext = next
-	info.format = C.VkFormat(o.Format)
-	info._type = C.VkImageType(o.Type)
-	info.tiling = C.VkImageTiling(o.Tiling)
-	info.usage = C.VkImageUsageFlags(o.Usage)
-	info.flags = C.VkImageCreateFlags(o.Flags)
-
-	return preallocatedPointer, nil
-}
-
-func (o ImageFormatOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
-	info := (*C.VkPhysicalDeviceImageFormatInfo2)(cDataPointer)
-	return info.pNext, nil
-}
-
-////
-
-type ImageFormatPropertiesOutData struct {
-	ImageFormatProperties core1_0.ImageFormatProperties
-
-	common.HaveNext
-}
-
-func (o *ImageFormatPropertiesOutData) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
-	if preallocatedPointer == nil {
-		preallocatedPointer = allocator.Malloc(int(unsafe.Sizeof(C.VkImageFormatProperties2{})))
+func PromoteInstanceScopedPhysicalDevice(physicalDevice core1_0.PhysicalDevice) InstanceScopedPhysicalDevice {
+	if !physicalDevice.InstanceAPIVersion().IsAtLeast(common.Vulkan1_1) {
+		return nil
 	}
 
-	data := (*C.VkImageFormatProperties2)(preallocatedPointer)
-	data.sType = C.VK_STRUCTURE_TYPE_IMAGE_FORMAT_PROPERTIES_2
-	data.pNext = next
+	return physicalDevice.Driver().ObjectStore().GetOrCreate(
+		driver.VulkanHandle(physicalDevice.Handle()),
+		driver.Core1_1InstanceScope,
+		func() any {
+			return &VulkanInstanceScopedPhysicalDevice{
+				PhysicalDevice: physicalDevice,
 
-	return preallocatedPointer, nil
+				InstanceDriver:       physicalDevice.Driver(),
+				PhysicalDeviceHandle: physicalDevice.Handle(),
+			}
+		}).(InstanceScopedPhysicalDevice)
 }
 
-func (o *ImageFormatPropertiesOutData) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
-	data := (*C.VkImageFormatProperties2)(cDataPointer)
-	o.ImageFormatProperties.MaxExtent = common.Extent3D{
-		Width:  int(data.imageFormatProperties.maxExtent.width),
-		Height: int(data.imageFormatProperties.maxExtent.height),
-		Depth:  int(data.imageFormatProperties.maxExtent.depth),
-	}
-	o.ImageFormatProperties.MaxMipLevels = int(data.imageFormatProperties.maxMipLevels)
-	o.ImageFormatProperties.MaxArrayLayers = int(data.imageFormatProperties.maxArrayLayers)
-	o.ImageFormatProperties.SampleCounts = common.SampleCounts(data.imageFormatProperties.sampleCounts)
-	o.ImageFormatProperties.MaxResourceSize = int(data.imageFormatProperties.maxResourceSize)
+func (p *VulkanInstanceScopedPhysicalDevice) ExternalFenceProperties(o ExternalFenceOptions, outData *ExternalFenceOutData) error {
+	arena := cgoparam.GetAlloc()
+	defer cgoparam.ReturnAlloc(arena)
 
-	return data.pNext, nil
-}
-
-////
-
-type MemoryPropertiesOutData struct {
-	MemoryProperties core1_0.PhysicalDeviceMemoryProperties
-
-	common.HaveNext
-}
-
-func (o *MemoryPropertiesOutData) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
-	if preallocatedPointer == nil {
-		preallocatedPointer = allocator.Malloc(int(unsafe.Sizeof(C.VkPhysicalDeviceMemoryProperties2{})))
-	}
-	data := (*C.VkPhysicalDeviceMemoryProperties2)(preallocatedPointer)
-	data.sType = C.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MEMORY_PROPERTIES_2
-	data.pNext = next
-
-	return preallocatedPointer, nil
-}
-
-func (o *MemoryPropertiesOutData) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
-	data := (*C.VkPhysicalDeviceMemoryProperties2)(cDataPointer)
-
-	memoryTypeCount := int(data.memoryProperties.memoryTypeCount)
-	o.MemoryProperties.MemoryTypes = make([]common.MemoryType, memoryTypeCount)
-
-	for i := 0; i < memoryTypeCount; i++ {
-		o.MemoryProperties.MemoryTypes[i].Properties = common.MemoryProperties(data.memoryProperties.memoryTypes[i].propertyFlags)
-		o.MemoryProperties.MemoryTypes[i].HeapIndex = int(data.memoryProperties.memoryTypes[i].heapIndex)
-	}
-
-	memoryHeapCount := int(data.memoryProperties.memoryHeapCount)
-	o.MemoryProperties.MemoryHeaps = make([]common.MemoryHeap, memoryHeapCount)
-
-	for i := 0; i < memoryHeapCount; i++ {
-		o.MemoryProperties.MemoryHeaps[i].Size = int(data.memoryProperties.memoryHeaps[i].size)
-		o.MemoryProperties.MemoryHeaps[i].Flags = common.MemoryHeapFlags(data.memoryProperties.memoryHeaps[i].flags)
-	}
-
-	return data.pNext, nil
-}
-
-////
-
-type DevicePropertiesOutData struct {
-	Properties core1_0.PhysicalDeviceProperties
-
-	common.HaveNext
-}
-
-func (o *DevicePropertiesOutData) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
-	if preallocatedPointer == nil {
-		preallocatedPointer = allocator.Malloc(int(unsafe.Sizeof(C.VkPhysicalDeviceProperties2{})))
-	}
-
-	data := (*C.VkPhysicalDeviceProperties2)(preallocatedPointer)
-	data.sType = C.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PROPERTIES_2
-	data.pNext = next
-
-	return preallocatedPointer, nil
-}
-
-func (o *DevicePropertiesOutData) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
-	data := (*C.VkPhysicalDeviceProperties2)(cDataPointer)
-
-	err = (&o.Properties).PopulateFromCPointer(unsafe.Pointer(&data.properties))
-	return data.pNext, err
-}
-
-////
-
-type QueueFamilyOutData struct {
-	QueueFamily core1_0.QueueFamily
-
-	common.HaveNext
-}
-
-func (o *QueueFamilyOutData) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
-	if preallocatedPointer == nil {
-		preallocatedPointer = allocator.Malloc(int(unsafe.Sizeof(C.VkQueueFamilyProperties2{})))
-	}
-
-	data := (*C.VkQueueFamilyProperties2)(preallocatedPointer)
-	data.sType = C.VK_STRUCTURE_TYPE_QUEUE_FAMILY_PROPERTIES_2
-	data.pNext = next
-
-	return preallocatedPointer, nil
-}
-
-func (o *QueueFamilyOutData) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
-	data := (*C.VkQueueFamilyProperties2)(cDataPointer)
-
-	o.QueueFamily.Flags = common.QueueFlags(data.queueFamilyProperties.queueFlags)
-	o.QueueFamily.QueueCount = int(data.queueFamilyProperties.queueCount)
-	o.QueueFamily.TimestampValidBits = uint32(data.queueFamilyProperties.timestampValidBits)
-	o.QueueFamily.MinImageTransferGranularity = common.Extent3D{
-		Width:  int(data.queueFamilyProperties.minImageTransferGranularity.width),
-		Height: int(data.queueFamilyProperties.minImageTransferGranularity.height),
-		Depth:  int(data.queueFamilyProperties.minImageTransferGranularity.depth),
-	}
-
-	return data.pNext, nil
-}
-
-////
-
-type SparseImageFormatOptions struct {
-	Format  common.DataFormat
-	Type    common.ImageType
-	Samples common.SampleCounts
-	Usage   common.ImageUsages
-	Tiling  common.ImageTiling
-
-	common.HaveNext
-}
-
-func (o SparseImageFormatOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
-	if preallocatedPointer == nil {
-		preallocatedPointer = allocator.Malloc(int(unsafe.Sizeof(C.VkPhysicalDeviceSparseImageFormatInfo2{})))
-	}
-
-	createInfo := (*C.VkPhysicalDeviceSparseImageFormatInfo2)(preallocatedPointer)
-	createInfo.sType = C.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SPARSE_IMAGE_FORMAT_INFO_2
-	createInfo.pNext = next
-	createInfo.format = C.VkFormat(o.Format)
-	createInfo._type = C.VkImageType(o.Type)
-	createInfo.samples = C.VkSampleCountFlagBits(o.Samples)
-	createInfo.usage = C.VkImageUsageFlags(o.Usage)
-	createInfo.tiling = C.VkImageTiling(o.Tiling)
-
-	return preallocatedPointer, nil
-}
-
-func (o SparseImageFormatOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
-	createInfo := (*C.VkPhysicalDeviceSparseImageFormatInfo2)(cDataPointer)
-
-	return unsafe.Pointer(createInfo.pNext), nil
-}
-
-////
-
-type SparseImageFormatPropertiesOutData struct {
-	SparseImageFormatProperties core1_0.SparseImageFormatProperties
-	common.HaveNext
-}
-
-func (o *SparseImageFormatPropertiesOutData) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
-	if preallocatedPointer == nil {
-		preallocatedPointer = allocator.Malloc(int(unsafe.Sizeof(C.VkSparseImageFormatProperties2{})))
-	}
-
-	data := (*C.VkSparseImageFormatProperties2)(preallocatedPointer)
-	data.sType = C.VK_STRUCTURE_TYPE_SPARSE_IMAGE_FORMAT_PROPERTIES_2
-	data.pNext = next
-
-	return preallocatedPointer, nil
-}
-
-func (o *SparseImageFormatPropertiesOutData) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
-	data := (*C.VkSparseImageFormatProperties2)(cDataPointer)
-
-	o.SparseImageFormatProperties.AspectMask = common.ImageAspectFlags(data.properties.aspectMask)
-	o.SparseImageFormatProperties.Flags = common.SparseImageFormatFlags(data.properties.flags)
-	o.SparseImageFormatProperties.ImageGranularity = common.Extent3D{
-		Width:  int(data.properties.imageGranularity.width),
-		Height: int(data.properties.imageGranularity.height),
-		Depth:  int(data.properties.imageGranularity.depth),
-	}
-
-	return data.pNext, nil
-}
-
-////
-
-type PhysicalDeviceIDOutData struct {
-	DeviceUUID      uuid.UUID
-	DriverUUID      uuid.UUID
-	DeviceLUID      uint64
-	DeviceNodeMask  uint32
-	DeviceLUIDValid bool
-
-	common.HaveNext
-}
-
-func (o *PhysicalDeviceIDOutData) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
-	if preallocatedPointer == nil {
-		preallocatedPointer = allocator.Malloc(int(unsafe.Sizeof(C.VkPhysicalDeviceIDProperties{})))
-	}
-	info := (*C.VkPhysicalDeviceIDProperties)(preallocatedPointer)
-	info.sType = C.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_ID_PROPERTIES
-	info.pNext = next
-
-	return preallocatedPointer, nil
-}
-
-func (o *PhysicalDeviceIDOutData) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
-	info := (*C.VkPhysicalDeviceIDProperties)(cDataPointer)
-
-	deviceUUIDBytes := C.GoBytes(unsafe.Pointer(&info.deviceUUID[0]), C.VK_UUID_SIZE)
-	o.DeviceUUID, err = uuid.FromBytes(deviceUUIDBytes)
+	infoPtr, err := common.AllocOptions(arena, o)
 	if err != nil {
-		return nil, errors.Wrap(err, "vulkan provided invalid device uuid")
+		return err
 	}
 
-	driverUUIDBytes := C.GoBytes(unsafe.Pointer(&info.driverUUID[0]), C.VK_UUID_SIZE)
-	o.DriverUUID, err = uuid.FromBytes(driverUUIDBytes)
+	outDataPtr, err := common.AllocOptions(arena, outData)
 	if err != nil {
-		return nil, errors.Wrap(err, "vulkan provided invalid driver uuid")
+		return err
 	}
 
-	o.DeviceLUID = *(*uint64)(unsafe.Pointer(&info.deviceLUID[0]))
-	o.DeviceNodeMask = uint32(info.deviceNodeMask)
-	o.DeviceLUIDValid = info.deviceLUIDValid != C.VkBool32(0)
+	p.InstanceDriver.VkGetPhysicalDeviceExternalFenceProperties(
+		p.PhysicalDeviceHandle,
+		(*driver.VkPhysicalDeviceExternalFenceInfo)(infoPtr),
+		(*driver.VkExternalFenceProperties)(outDataPtr),
+	)
 
-	return info.pNext, nil
+	return common.PopulateOutData(outData, outDataPtr)
 }
 
-////
+func (p *VulkanInstanceScopedPhysicalDevice) ExternalBufferProperties(o ExternalBufferOptions, outData *ExternalBufferOutData) error {
+	arena := cgoparam.GetAlloc()
+	defer cgoparam.ReturnAlloc(arena)
 
-type PhysicalDeviceMaintenance3OutData struct {
-	MaxPerSetDescriptors    int
-	MaxMemoryAllocationSize int
-
-	common.HaveNext
-}
-
-func (o *PhysicalDeviceMaintenance3OutData) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
-	if preallocatedPointer == nil {
-		preallocatedPointer = allocator.Malloc(int(unsafe.Sizeof(C.VkPhysicalDeviceMaintenance3Properties{})))
+	optionsPtr, err := common.AllocOptions(arena, o)
+	if err != nil {
+		return err
 	}
 
-	outData := (*C.VkPhysicalDeviceMaintenance3Properties)(preallocatedPointer)
-	outData.sType = C.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_3_PROPERTIES
-	outData.pNext = next
-
-	return preallocatedPointer, nil
-}
-
-func (o *PhysicalDeviceMaintenance3OutData) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
-	outData := (*C.VkPhysicalDeviceMaintenance3Properties)(cDataPointer)
-
-	o.MaxMemoryAllocationSize = int(outData.maxMemoryAllocationSize)
-	o.MaxPerSetDescriptors = int(outData.maxPerSetDescriptors)
-
-	return outData.pNext, nil
-}
-
-////
-
-type PhysicalDeviceMultiviewOutData struct {
-	MaxMultiviewViewCount     int
-	MaxMultiviewInstanceIndex int
-
-	common.HaveNext
-}
-
-func (o *PhysicalDeviceMultiviewOutData) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
-	if preallocatedPointer == nil {
-		preallocatedPointer = allocator.Malloc(int(unsafe.Sizeof(C.VkPhysicalDeviceMultiviewProperties{})))
+	outDataPtr, err := common.AllocOptions(arena, outData)
+	if err != nil {
+		return err
 	}
 
-	info := (*C.VkPhysicalDeviceMultiviewProperties)(preallocatedPointer)
-	info.sType = C.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTIVIEW_PROPERTIES
-	info.pNext = next
+	p.InstanceDriver.VkGetPhysicalDeviceExternalBufferProperties(p.PhysicalDeviceHandle,
+		(*driver.VkPhysicalDeviceExternalBufferInfo)(optionsPtr),
+		(*driver.VkExternalBufferProperties)(outDataPtr))
 
-	return preallocatedPointer, nil
+	return common.PopulateOutData(outData, outDataPtr)
 }
 
-func (o *PhysicalDeviceMultiviewOutData) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
-	info := (*C.VkPhysicalDeviceMultiviewProperties)(cDataPointer)
-	o.MaxMultiviewViewCount = int(info.maxMultiviewViewCount)
-	o.MaxMultiviewInstanceIndex = int(info.maxMultiviewInstanceIndex)
+func (p *VulkanInstanceScopedPhysicalDevice) ExternalSemaphoreProperties(o ExternalSemaphoreOptions, outData *ExternalSemaphoreOutData) error {
+	arena := cgoparam.GetAlloc()
+	defer cgoparam.ReturnAlloc(arena)
 
-	return info.pNext, nil
-}
-
-////
-
-type PhysicalDevicePointClippingOutData struct {
-	PointClippingBehavior PointClippingBehavior
-
-	common.HaveNext
-}
-
-func (o *PhysicalDevicePointClippingOutData) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
-	if preallocatedPointer == nil {
-		preallocatedPointer = allocator.Malloc(int(unsafe.Sizeof(C.VkPhysicalDevicePointClippingProperties{})))
+	infoPtr, err := common.AllocOptions(arena, o)
+	if err != nil {
+		return err
 	}
 
-	properties := (*C.VkPhysicalDevicePointClippingProperties)(preallocatedPointer)
-	properties.sType = C.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_POINT_CLIPPING_PROPERTIES
-	properties.pNext = next
-
-	return preallocatedPointer, nil
-}
-
-func (o *PhysicalDevicePointClippingOutData) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
-	properties := (*C.VkPhysicalDevicePointClippingProperties)(cDataPointer)
-	o.PointClippingBehavior = PointClippingBehavior(properties.pointClippingBehavior)
-
-	return properties.pNext, nil
-}
-
-////
-
-type PhysicalDeviceProtectedMemoryOutData struct {
-	ProtectedNoFault bool
-
-	common.HaveNext
-}
-
-func (o *PhysicalDeviceProtectedMemoryOutData) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
-	if preallocatedPointer == nil {
-		preallocatedPointer = allocator.Malloc(C.sizeof_struct_VkPhysicalDeviceProtectedMemoryProperties)
+	outDataPtr, err := common.AllocOptions(arena, outData)
+	if err != nil {
+		return err
 	}
 
-	properties := (*C.VkPhysicalDeviceProtectedMemoryProperties)(preallocatedPointer)
-	properties.sType = C.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PROTECTED_MEMORY_PROPERTIES
-	properties.pNext = next
+	p.InstanceDriver.VkGetPhysicalDeviceExternalSemaphoreProperties(
+		p.PhysicalDeviceHandle,
+		(*driver.VkPhysicalDeviceExternalSemaphoreInfo)(infoPtr),
+		(*driver.VkExternalSemaphoreProperties)(outDataPtr),
+	)
 
-	return preallocatedPointer, nil
+	return common.PopulateOutData(outData, outDataPtr)
 }
 
-func (o *PhysicalDeviceProtectedMemoryOutData) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
-	properties := (*C.VkPhysicalDeviceProtectedMemoryProperties)(cDataPointer)
+func (p *VulkanInstanceScopedPhysicalDevice) Features2(out *DeviceFeaturesOutData) error {
+	arena := cgoparam.GetAlloc()
+	defer cgoparam.ReturnAlloc(arena)
 
-	o.ProtectedNoFault = properties.protectedNoFault != C.VkBool32(0)
-
-	return properties.pNext, nil
-}
-
-////
-
-type PhysicalDeviceSubgroupOutData struct {
-	SubgroupSize              int
-	SupportedStages           common.ShaderStages
-	SupportedOperations       SubgroupFeatures
-	QuadOperationsInAllStages bool
-
-	common.HaveNext
-}
-
-func (o *PhysicalDeviceSubgroupOutData) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
-	if preallocatedPointer == nil {
-		preallocatedPointer = allocator.Malloc(C.sizeof_struct_VkPhysicalDeviceSubgroupProperties)
+	outData, err := common.AllocOptions(arena, out)
+	if err != nil {
+		return err
 	}
 
-	properties := (*C.VkPhysicalDeviceSubgroupProperties)(preallocatedPointer)
-	properties.sType = C.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBGROUP_PROPERTIES
-	properties.pNext = next
+	p.InstanceDriver.VkGetPhysicalDeviceFeatures2(p.PhysicalDeviceHandle, (*driver.VkPhysicalDeviceFeatures2)(outData))
 
-	return preallocatedPointer, nil
+	return common.PopulateOutData(out, outData)
 }
 
-func (o *PhysicalDeviceSubgroupOutData) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
-	properties := (*C.VkPhysicalDeviceSubgroupProperties)(cDataPointer)
+func (p *VulkanInstanceScopedPhysicalDevice) FormatProperties2(format common.DataFormat, out *FormatPropertiesOutData) error {
+	arena := cgoparam.GetAlloc()
+	defer cgoparam.ReturnAlloc(arena)
 
-	o.SubgroupSize = int(properties.subgroupSize)
-	o.SupportedStages = common.ShaderStages(properties.supportedStages)
-	o.SupportedOperations = SubgroupFeatures(properties.supportedOperations)
-	o.QuadOperationsInAllStages = properties.quadOperationsInAllStages != C.VkBool32(0)
+	outData, err := common.AllocOptions(arena, out)
+	if err != nil {
+		return err
+	}
 
-	return properties.pNext, nil
+	p.InstanceDriver.VkGetPhysicalDeviceFormatProperties2(p.PhysicalDeviceHandle, driver.VkFormat(format), (*driver.VkFormatProperties2)(outData))
+
+	return common.PopulateOutData(out, outData)
+}
+
+func (p *VulkanInstanceScopedPhysicalDevice) ImageFormatProperties2(o ImageFormatOptions, out *ImageFormatPropertiesOutData) (common.VkResult, error) {
+	arena := cgoparam.GetAlloc()
+	defer cgoparam.ReturnAlloc(arena)
+
+	optionData, err := common.AllocOptions(arena, o)
+	if err != nil {
+		return core1_0.VKErrorUnknown, err
+	}
+
+	outData, err := common.AllocOptions(arena, out)
+	if err != nil {
+		return core1_0.VKErrorUnknown, err
+	}
+
+	res, err := p.InstanceDriver.VkGetPhysicalDeviceImageFormatProperties2(p.PhysicalDeviceHandle,
+		(*driver.VkPhysicalDeviceImageFormatInfo2)(optionData),
+		(*driver.VkImageFormatProperties2)(outData),
+	)
+	if err != nil {
+		return res, err
+	}
+
+	err = common.PopulateOutData(out, outData)
+	if err != nil {
+		return core1_0.VKErrorUnknown, err
+	}
+
+	return res, nil
+}
+
+func (p *VulkanInstanceScopedPhysicalDevice) MemoryProperties2(out *MemoryPropertiesOutData) error {
+	arena := cgoparam.GetAlloc()
+	defer cgoparam.ReturnAlloc(arena)
+
+	outData, err := common.AllocOptions(arena, out)
+	if err != nil {
+		return err
+	}
+
+	p.InstanceDriver.VkGetPhysicalDeviceMemoryProperties2(p.PhysicalDeviceHandle, (*driver.VkPhysicalDeviceMemoryProperties2)(outData))
+
+	return common.PopulateOutData(out, outData)
+}
+
+func (p *VulkanInstanceScopedPhysicalDevice) Properties2(out *DevicePropertiesOutData) error {
+	arena := cgoparam.GetAlloc()
+	defer cgoparam.ReturnAlloc(arena)
+
+	outData, err := common.AllocOptions(arena, out)
+	if err != nil {
+		return err
+	}
+
+	p.InstanceDriver.VkGetPhysicalDeviceProperties2(p.PhysicalDeviceHandle,
+		(*driver.VkPhysicalDeviceProperties2)(outData))
+
+	return common.PopulateOutData(out, outData)
+}
+
+func (p *VulkanInstanceScopedPhysicalDevice) QueueFamilyProperties2(outDataFactory func() *QueueFamilyOutData) ([]*QueueFamilyOutData, error) {
+	arena := cgoparam.GetAlloc()
+	defer cgoparam.ReturnAlloc(arena)
+
+	outDataCountPtr := (*driver.Uint32)(arena.Malloc(int(unsafe.Sizeof(C.uint32_t(0)))))
+
+	p.InstanceDriver.VkGetPhysicalDeviceQueueFamilyProperties2(p.PhysicalDeviceHandle, outDataCountPtr, nil)
+
+	outDataCount := int(*outDataCountPtr)
+	if outDataCount == 0 {
+		return nil, nil
+	}
+
+	out := make([]*QueueFamilyOutData, outDataCount)
+	for i := 0; i < outDataCount; i++ {
+		if outDataFactory != nil {
+			out[i] = outDataFactory()
+		} else {
+			out[i] = &QueueFamilyOutData{}
+		}
+	}
+
+	outData, err := common.AllocOptionSlice[C.VkQueueFamilyProperties2, *QueueFamilyOutData](arena, out)
+	if err != nil {
+		return nil, err
+	}
+
+	p.InstanceDriver.VkGetPhysicalDeviceQueueFamilyProperties2(p.PhysicalDeviceHandle, outDataCountPtr, (*driver.VkQueueFamilyProperties2)(unsafe.Pointer(outData)))
+
+	err = common.PopulateOutDataSlice[C.VkQueueFamilyProperties2, *QueueFamilyOutData](out, unsafe.Pointer(outData))
+	return out, err
+}
+
+func (p *VulkanInstanceScopedPhysicalDevice) SparseImageFormatProperties2(o SparseImageFormatOptions, outDataFactory func() *SparseImageFormatPropertiesOutData) ([]*SparseImageFormatPropertiesOutData, error) {
+	arena := cgoparam.GetAlloc()
+	defer cgoparam.ReturnAlloc(arena)
+
+	outDataCountPtr := (*driver.Uint32)(arena.Malloc(int(unsafe.Sizeof(C.uint32_t(0)))))
+	optionData, err := common.AllocOptions(arena, o)
+	if err != nil {
+		return nil, err
+	}
+
+	p.InstanceDriver.VkGetPhysicalDeviceSparseImageFormatProperties2(p.PhysicalDeviceHandle, (*driver.VkPhysicalDeviceSparseImageFormatInfo2)(optionData), outDataCountPtr, nil)
+
+	outDataCount := int(*outDataCountPtr)
+	if outDataCount == 0 {
+		return nil, nil
+	}
+
+	out := make([]*SparseImageFormatPropertiesOutData, outDataCount)
+	for i := 0; i < outDataCount; i++ {
+		if outDataFactory != nil {
+			out[i] = outDataFactory()
+		} else {
+			out[i] = &SparseImageFormatPropertiesOutData{}
+		}
+	}
+
+	outData, err := common.AllocOptionSlice[C.VkSparseImageFormatProperties2, *SparseImageFormatPropertiesOutData](arena, out)
+	if err != nil {
+		return nil, err
+	}
+
+	p.InstanceDriver.VkGetPhysicalDeviceSparseImageFormatProperties2(p.PhysicalDeviceHandle,
+		(*driver.VkPhysicalDeviceSparseImageFormatInfo2)(optionData),
+		outDataCountPtr,
+		(*driver.VkSparseImageFormatProperties2)(unsafe.Pointer(outData)),
+	)
+
+	err = common.PopulateOutDataSlice[C.VkSparseImageFormatProperties2, *SparseImageFormatPropertiesOutData](out, unsafe.Pointer(outData))
+
+	return out, err
 }

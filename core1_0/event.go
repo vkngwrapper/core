@@ -7,29 +7,46 @@ package core1_0
 import "C"
 import (
 	"github.com/CannibalVox/VKng/core/common"
-	"github.com/CannibalVox/cgoparam"
-	"unsafe"
+	"github.com/CannibalVox/VKng/core/driver"
 )
 
-type EventCreateOptions struct {
-	Flags common.EventCreateFlags
+type VulkanEvent struct {
+	eventHandle  driver.VkEvent
+	device       driver.VkDevice
+	deviceDriver driver.Driver
 
-	common.HaveNext
+	maximumAPIVersion common.APIVersion
 }
 
-func (o EventCreateOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
-	if preallocatedPointer == unsafe.Pointer(nil) {
-		preallocatedPointer = allocator.Malloc(C.sizeof_struct_VkEventCreateInfo)
-	}
-	createInfo := (*C.VkEventCreateInfo)(preallocatedPointer)
-	createInfo.sType = C.VK_STRUCTURE_TYPE_EVENT_CREATE_INFO
-	createInfo.flags = C.VkEventCreateFlags(o.Flags)
-	createInfo.pNext = next
-
-	return unsafe.Pointer(createInfo), nil
+func (e *VulkanEvent) Handle() driver.VkEvent {
+	return e.eventHandle
 }
 
-func (o EventCreateOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
-	createInfo := (*C.VkEventCreateInfo)(cDataPointer)
-	return createInfo.pNext, nil
+func (e *VulkanEvent) DeviceHandle() driver.VkDevice {
+	return e.device
+}
+
+func (e *VulkanEvent) Driver() driver.Driver {
+	return e.deviceDriver
+}
+
+func (e *VulkanEvent) APIVersion() common.APIVersion {
+	return e.maximumAPIVersion
+}
+
+func (e *VulkanEvent) Destroy(callbacks *driver.AllocationCallbacks) {
+	e.deviceDriver.VkDestroyEvent(e.device, e.eventHandle, callbacks.Handle())
+	e.deviceDriver.ObjectStore().Delete(driver.VulkanHandle(e.eventHandle))
+}
+
+func (e *VulkanEvent) Set() (common.VkResult, error) {
+	return e.deviceDriver.VkSetEvent(e.device, e.eventHandle)
+}
+
+func (e *VulkanEvent) Reset() (common.VkResult, error) {
+	return e.deviceDriver.VkResetEvent(e.device, e.eventHandle)
+}
+
+func (e *VulkanEvent) Status() (common.VkResult, error) {
+	return e.deviceDriver.VkGetEventStatus(e.device, e.eventHandle)
 }

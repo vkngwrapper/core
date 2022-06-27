@@ -7,63 +7,38 @@ package core1_0
 import "C"
 import (
 	"github.com/CannibalVox/VKng/core/common"
-	"github.com/CannibalVox/cgoparam"
-	"unsafe"
+	"github.com/CannibalVox/VKng/core/driver"
 )
 
-const (
-	DescriptorPoolCreateFreeDescriptorSet common.DescriptorPoolCreateFlags = C.VK_DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT
-)
+type VulkanDescriptorPool struct {
+	deviceDriver         driver.Driver
+	descriptorPoolHandle driver.VkDescriptorPool
+	device               driver.VkDevice
 
-func init() {
-	DescriptorPoolCreateFreeDescriptorSet.Register("Free Descriptor Set")
+	maximumAPIVersion common.APIVersion
 }
 
-type PoolSize struct {
-	Type            common.DescriptorType
-	DescriptorCount int
+func (p *VulkanDescriptorPool) Handle() driver.VkDescriptorPool {
+	return p.descriptorPoolHandle
 }
 
-type DescriptorPoolCreateOptions struct {
-	Flags common.DescriptorPoolCreateFlags
-
-	MaxSets   int
-	PoolSizes []PoolSize
-
-	common.HaveNext
+func (p *VulkanDescriptorPool) DeviceHandle() driver.VkDevice {
+	return p.device
 }
 
-func (o DescriptorPoolCreateOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
-	if preallocatedPointer == unsafe.Pointer(nil) {
-		preallocatedPointer = allocator.Malloc(C.sizeof_struct_VkDescriptorPoolCreateInfo)
-	}
-
-	createInfo := (*C.VkDescriptorPoolCreateInfo)(preallocatedPointer)
-	createInfo.sType = C.VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO
-	createInfo.flags = C.VkDescriptorPoolCreateFlags(o.Flags)
-	createInfo.pNext = next
-
-	createInfo.maxSets = C.uint32_t(o.MaxSets)
-	sizeCount := len(o.PoolSizes)
-	createInfo.poolSizeCount = C.uint32_t(sizeCount)
-	createInfo.pPoolSizes = nil
-
-	if sizeCount > 0 {
-		poolsPtr := (*C.VkDescriptorPoolSize)(allocator.Malloc(sizeCount * C.sizeof_struct_VkDescriptorPoolSize))
-		poolsSlice := ([]C.VkDescriptorPoolSize)(unsafe.Slice(poolsPtr, sizeCount))
-
-		for i := 0; i < sizeCount; i++ {
-			poolsSlice[i]._type = C.VkDescriptorType(o.PoolSizes[i].Type)
-			poolsSlice[i].descriptorCount = C.uint32_t(o.PoolSizes[i].DescriptorCount)
-		}
-
-		createInfo.pPoolSizes = poolsPtr
-	}
-
-	return unsafe.Pointer(createInfo), nil
+func (p *VulkanDescriptorPool) Driver() driver.Driver {
+	return p.deviceDriver
 }
 
-func (o DescriptorPoolCreateOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
-	createInfo := (*C.VkDescriptorPoolCreateInfo)(cDataPointer)
-	return createInfo.pNext, nil
+func (p *VulkanDescriptorPool) APIVersion() common.APIVersion {
+	return p.maximumAPIVersion
+}
+
+func (p *VulkanDescriptorPool) Destroy(callbacks *driver.AllocationCallbacks) {
+	p.deviceDriver.VkDestroyDescriptorPool(p.device, p.descriptorPoolHandle, callbacks.Handle())
+	p.deviceDriver.ObjectStore().Delete(driver.VulkanHandle(p.descriptorPoolHandle))
+}
+
+func (p *VulkanDescriptorPool) Reset(flags common.DescriptorPoolResetFlags) (common.VkResult, error) {
+	return p.deviceDriver.VkResetDescriptorPool(p.device, p.descriptorPoolHandle, driver.VkDescriptorPoolResetFlags(flags))
 }

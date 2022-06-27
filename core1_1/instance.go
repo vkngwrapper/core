@@ -10,81 +10,97 @@ import (
 	"github.com/CannibalVox/VKng/core/core1_0"
 	"github.com/CannibalVox/VKng/core/driver"
 	"github.com/CannibalVox/cgoparam"
-	"github.com/cockroachdb/errors"
 	"unsafe"
 )
 
-type DeviceGroupOutData struct {
-	PhysicalDevices  []core1_0.PhysicalDevice
-	SubsetAllocation bool
+type VulkanInstance struct {
+	core1_0.Instance
 
-	common.HaveNext
+	InstanceDriver driver.Driver
+	InstanceHandle driver.VkInstance
+
+	MaximumVersion common.APIVersion
 }
 
-func (o *DeviceGroupOutData) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
-	if preallocatedPointer == nil {
-		preallocatedPointer = allocator.Malloc(int(unsafe.Sizeof(C.VkPhysicalDeviceGroupProperties{})))
+func PromoteInstance(instance core1_0.Instance) Instance {
+	if !instance.APIVersion().IsAtLeast(common.Vulkan1_1) {
+		return nil
 	}
 
-	createInfo := (*C.VkPhysicalDeviceGroupProperties)(preallocatedPointer)
-	createInfo.sType = C.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_GROUP_PROPERTIES
-	createInfo.pNext = next
+	return instance.Driver().ObjectStore().GetOrCreate(
+		driver.VulkanHandle(instance.Handle()),
+		driver.Core1_1,
+		func() any {
+			return &VulkanInstance{
+				Instance: instance,
 
-	return preallocatedPointer, nil
+				InstanceDriver: instance.Driver(),
+				InstanceHandle: instance.Handle(),
+
+				MaximumVersion: instance.APIVersion(),
+			}
+		}).(Instance)
 }
 
-// We had a circular dependency problem here- objects.Create* methods all must interact with
-// every core/core* version, which creates zany circular dependencies between the versions.
-// In order to keep the dep graph acyclical, dependency flow must be very particular:
-// core/core* may only include lower versions of core/core*. core/internal/core* may only
-// include HIGHER versions of core/internal/core* but can include any version of core/core*.
-//
-// This is all no problem when objects.Create* is only included from core and core/internal/core*,
-// but it poses a serious problem right here, in core/core*. I'm breaking the circular dependency
-// by using a go:linkname and may god have mercy on my soul.
-
-//go:linkname createPhysicalDevice github.com/CannibalVox/VKng/core/internal/core1_0.createPhysicalDeviceCore1_0
-func createPhysicalDevice(coreDriver driver.Driver, instance driver.VkInstance, handle driver.VkPhysicalDevice, instanceVersion, deviceVersion common.APIVersion) core1_0.PhysicalDevice
-
-func (o *DeviceGroupOutData) PopulateOutData(cPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
+func (i *VulkanInstance) attemptEnumeratePhysicalDeviceGroups(outDataFactory func() *DeviceGroupOutData) ([]*DeviceGroupOutData, common.VkResult, error) {
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
-	createInfo := (*C.VkPhysicalDeviceGroupProperties)(cPointer)
-	o.SubsetAllocation = createInfo.subsetAllocation != C.VkBool32(0)
+	countPtr := (*driver.Uint32)(arena.Malloc(int(unsafe.Sizeof(C.uint32_t(0)))))
 
-	instanceHandle, ok := common.OfType[driver.VkInstance](helpers)
-	if !ok {
-		return nil, errors.New("outdata population requires an instance handle passed to populate helpers")
-	}
-	instanceDriver, ok := common.OfType[driver.Driver](helpers)
-	if !ok {
-		return nil, errors.New("outdata population requires an instance driver passed to populate helpers")
-	}
-	instanceVersion, ok := common.OfType[common.APIVersion](helpers)
-	if !ok {
-		return nil, errors.New("outdata population requires an instance version passed to populate helpers")
+	res, err := i.InstanceDriver.VkEnumeratePhysicalDeviceGroups(
+		i.InstanceHandle,
+		countPtr,
+		nil,
+	)
+	if err != nil {
+		return nil, res, err
 	}
 
-	count := int(createInfo.physicalDeviceCount)
-	o.PhysicalDevices = make([]core1_0.PhysicalDevice, count)
+	count := int(*countPtr)
+	if count == 0 {
+		return nil, core1_0.VKSuccess, nil
+	}
 
-	propertiesUnsafe := arena.Malloc(C.sizeof_struct_VkPhysicalDeviceProperties)
-
+	outDataSlice := make([]*DeviceGroupOutData, count)
 	for i := 0; i < count; i++ {
-		handle := driver.VkPhysicalDevice(unsafe.Pointer(createInfo.physicalDevices[i]))
-		instanceDriver.VkGetPhysicalDeviceProperties(handle, (*driver.VkPhysicalDeviceProperties)(propertiesUnsafe))
-
-		var properties core1_0.PhysicalDeviceProperties
-		err = (&properties).PopulateFromCPointer(propertiesUnsafe)
-		if err != nil {
-			return nil, err
+		if outDataFactory != nil {
+			outDataSlice[i] = outDataFactory()
+		} else {
+			outDataSlice[i] = &DeviceGroupOutData{}
 		}
-
-		deviceVersion := instanceVersion.Min(properties.APIVersion)
-
-		o.PhysicalDevices[i] = createPhysicalDevice(instanceDriver, instanceHandle, handle, instanceVersion, deviceVersion)
 	}
 
-	return createInfo.pNext, nil
+	outData, err := common.AllocOptionSlice[C.VkPhysicalDeviceGroupProperties, *DeviceGroupOutData](arena, outDataSlice)
+	if err != nil {
+		return nil, core1_0.VKErrorUnknown, err
+	}
+
+	res, err = i.InstanceDriver.VkEnumeratePhysicalDeviceGroups(
+		i.InstanceHandle,
+		countPtr,
+		(*driver.VkPhysicalDeviceGroupProperties)(unsafe.Pointer(outData)),
+	)
+	if err != nil {
+		return nil, res, err
+	}
+
+	err = common.PopulateOutDataSlice[C.VkPhysicalDeviceGroupProperties, *DeviceGroupOutData](outDataSlice, unsafe.Pointer(outData),
+		i.InstanceDriver, i.InstanceHandle, i.MaximumVersion)
+	if err != nil {
+		return nil, core1_0.VKErrorUnknown, err
+	}
+
+	return outDataSlice, res, nil
+}
+
+func (i *VulkanInstance) PhysicalDeviceGroups(outDataFactory func() *DeviceGroupOutData) ([]*DeviceGroupOutData, common.VkResult, error) {
+	var outData []*DeviceGroupOutData
+	var result common.VkResult
+	var err error
+
+	for doWhile := true; doWhile; doWhile = (result == core1_0.VKIncomplete) {
+		outData, result, err = i.attemptEnumeratePhysicalDeviceGroups(outDataFactory)
+	}
+	return outData, result, err
 }

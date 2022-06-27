@@ -7,58 +7,34 @@ package core1_0
 import "C"
 import (
 	"github.com/CannibalVox/VKng/core/common"
-	"github.com/CannibalVox/cgoparam"
-	"unsafe"
+	"github.com/CannibalVox/VKng/core/driver"
 )
 
-type FramebufferCreateOptions struct {
-	Attachments []ImageView
-	Flags       common.FramebufferCreateFlags
+type VulkanFramebuffer struct {
+	deviceDriver      driver.Driver
+	device            driver.VkDevice
+	framebufferHandle driver.VkFramebuffer
 
-	Width  int
-	Height int
-	Layers uint32
-
-	RenderPass RenderPass
-
-	common.HaveNext
+	maximumAPIVersion common.APIVersion
 }
 
-func (o FramebufferCreateOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
-	if preallocatedPointer == unsafe.Pointer(nil) {
-		preallocatedPointer = allocator.Malloc(C.sizeof_struct_VkFramebufferCreateInfo)
-	}
-	createInfo := (*C.VkFramebufferCreateInfo)(preallocatedPointer)
-	createInfo.sType = C.VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO
-	createInfo.flags = 0
-	createInfo.pNext = next
-
-	if o.RenderPass != nil {
-		createInfo.renderPass = (C.VkRenderPass)(unsafe.Pointer(o.RenderPass.Handle()))
-	}
-
-	attachmentCount := len(o.Attachments)
-	createInfo.attachmentCount = C.uint32_t(attachmentCount)
-	if attachmentCount > 0 {
-		attachmentsPtr := (*C.VkImageView)(allocator.Malloc(attachmentCount * int(unsafe.Sizeof([1]C.VkImageView{}))))
-		attachmentsSlice := ([]C.VkImageView)(unsafe.Slice(attachmentsPtr, attachmentCount))
-
-		for i := 0; i < attachmentCount; i++ {
-			attachmentsSlice[i] = C.VkImageView(unsafe.Pointer(o.Attachments[i].Handle()))
-		}
-
-		createInfo.pAttachments = attachmentsPtr
-	}
-
-	createInfo.width = C.uint32_t(o.Width)
-	createInfo.height = C.uint32_t(o.Height)
-	createInfo.layers = C.uint32_t(o.Layers)
-	createInfo.flags = C.VkFramebufferCreateFlags(o.Flags)
-
-	return unsafe.Pointer(createInfo), nil
+func (b *VulkanFramebuffer) Handle() driver.VkFramebuffer {
+	return b.framebufferHandle
 }
 
-func (o FramebufferCreateOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
-	createInfo := (*C.VkFramebufferCreateInfo)(cDataPointer)
-	return createInfo.pNext, nil
+func (b *VulkanFramebuffer) DeviceHandle() driver.VkDevice {
+	return b.device
+}
+
+func (b *VulkanFramebuffer) Driver() driver.Driver {
+	return b.deviceDriver
+}
+
+func (b *VulkanFramebuffer) APIVersion() common.APIVersion {
+	return b.maximumAPIVersion
+}
+
+func (b *VulkanFramebuffer) Destroy(callbacks *driver.AllocationCallbacks) {
+	b.deviceDriver.VkDestroyFramebuffer(b.device, b.framebufferHandle, callbacks.Handle())
+	b.deviceDriver.ObjectStore().Delete(driver.VulkanHandle(b.framebufferHandle))
 }

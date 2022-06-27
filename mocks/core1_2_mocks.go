@@ -2517,6 +2517,20 @@ func (mr *DescriptorUpdateTemplate1_2MockRecorder) Destroy(allocator interface{}
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Destroy", reflect.TypeOf((*DescriptorUpdateTemplate1_2)(nil).Destroy), allocator)
 }
 
+// DeviceHandle mocks base method.
+func (m *DescriptorUpdateTemplate1_2) DeviceHandle() driver.VkDevice {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DeviceHandle")
+	ret0, _ := ret[0].(driver.VkDevice)
+	return ret0
+}
+
+// DeviceHandle indicates an expected call of DeviceHandle.
+func (mr *DescriptorUpdateTemplate1_2MockRecorder) DeviceHandle() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeviceHandle", reflect.TypeOf((*DescriptorUpdateTemplate1_2)(nil).DeviceHandle))
+}
+
 // Driver mocks base method.
 func (m *DescriptorUpdateTemplate1_2) Driver() driver.Driver {
 	m.ctrl.T.Helper()
@@ -4375,16 +4389,16 @@ func (mr *QueryPool1_2MockRecorder) PopulateResults(firstQuery, queryCount, resu
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "PopulateResults", reflect.TypeOf((*QueryPool1_2)(nil).PopulateResults), firstQuery, queryCount, results, resultStride, flags)
 }
 
-// ResetQueryPool mocks base method.
-func (m *QueryPool1_2) ResetQueryPool(firstQuery, queryCount int) {
+// Reset mocks base method.
+func (m *QueryPool1_2) Reset(firstQuery, queryCount int) {
 	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "ResetQueryPool", firstQuery, queryCount)
+	m.ctrl.Call(m, "Reset", firstQuery, queryCount)
 }
 
-// ResetQueryPool indicates an expected call of ResetQueryPool.
-func (mr *QueryPool1_2MockRecorder) ResetQueryPool(firstQuery, queryCount interface{}) *gomock.Call {
+// Reset indicates an expected call of Reset.
+func (mr *QueryPool1_2MockRecorder) Reset(firstQuery, queryCount interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ResetQueryPool", reflect.TypeOf((*QueryPool1_2)(nil).ResetQueryPool), firstQuery, queryCount)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Reset", reflect.TypeOf((*QueryPool1_2)(nil).Reset), firstQuery, queryCount)
 }
 
 // Queue1_2 is a mock of Queue interface.
@@ -4756,6 +4770,20 @@ func (mr *SamplerYcbcrConversion1_2MockRecorder) Destroy(allocator interface{}) 
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Destroy", reflect.TypeOf((*SamplerYcbcrConversion1_2)(nil).Destroy), allocator)
 }
 
+// DeviceHandle mocks base method.
+func (m *SamplerYcbcrConversion1_2) DeviceHandle() driver.VkDevice {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DeviceHandle")
+	ret0, _ := ret[0].(driver.VkDevice)
+	return ret0
+}
+
+// DeviceHandle indicates an expected call of DeviceHandle.
+func (mr *SamplerYcbcrConversion1_2MockRecorder) DeviceHandle() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeviceHandle", reflect.TypeOf((*SamplerYcbcrConversion1_2)(nil).DeviceHandle))
+}
+
 // Driver mocks base method.
 func (m *SamplerYcbcrConversion1_2) Driver() driver.Driver {
 	m.ctrl.T.Helper()
@@ -4821,6 +4849,22 @@ func (mr *Semaphore1_2MockRecorder) APIVersion() *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "APIVersion", reflect.TypeOf((*Semaphore1_2)(nil).APIVersion))
 }
 
+// CounterValue mocks base method.
+func (m *Semaphore1_2) CounterValue() (uint64, common.VkResult, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CounterValue")
+	ret0, _ := ret[0].(uint64)
+	ret1, _ := ret[1].(common.VkResult)
+	ret2, _ := ret[2].(error)
+	return ret0, ret1, ret2
+}
+
+// CounterValue indicates an expected call of CounterValue.
+func (mr *Semaphore1_2MockRecorder) CounterValue() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CounterValue", reflect.TypeOf((*Semaphore1_2)(nil).CounterValue))
+}
+
 // Destroy mocks base method.
 func (m *Semaphore1_2) Destroy(callbacks *driver.AllocationCallbacks) {
 	m.ctrl.T.Helper()
@@ -4873,22 +4917,6 @@ func (m *Semaphore1_2) Handle() driver.VkSemaphore {
 func (mr *Semaphore1_2MockRecorder) Handle() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Handle", reflect.TypeOf((*Semaphore1_2)(nil).Handle))
-}
-
-// SemaphoreCounterValue mocks base method.
-func (m *Semaphore1_2) SemaphoreCounterValue() (uint64, common.VkResult, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SemaphoreCounterValue")
-	ret0, _ := ret[0].(uint64)
-	ret1, _ := ret[1].(common.VkResult)
-	ret2, _ := ret[2].(error)
-	return ret0, ret1, ret2
-}
-
-// SemaphoreCounterValue indicates an expected call of SemaphoreCounterValue.
-func (mr *Semaphore1_2MockRecorder) SemaphoreCounterValue() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SemaphoreCounterValue", reflect.TypeOf((*Semaphore1_2)(nil).SemaphoreCounterValue))
 }
 
 // ShaderModule1_2 is a mock of ShaderModule interface.

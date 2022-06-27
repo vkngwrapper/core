@@ -1,36 +1,24 @@
 package core1_1
 
-/*
-#include <stdlib.h>
-#include "vulkan/vulkan.h"
-*/
-import "C"
 import (
 	"github.com/CannibalVox/VKng/core/common"
-	"github.com/CannibalVox/cgoparam"
-	"unsafe"
+	"github.com/CannibalVox/VKng/core/core1_0"
+	"github.com/CannibalVox/VKng/core/driver"
 )
 
-type ImageViewUsageOptions struct {
-	Usage common.ImageUsages
-
-	common.HaveNext
+type VulkanImageView struct {
+	core1_0.ImageView
 }
 
-func (o ImageViewUsageOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
-	if preallocatedPointer == nil {
-		preallocatedPointer = allocator.Malloc(int(unsafe.Sizeof(C.VkImageViewUsageCreateInfo{})))
+func PromoteImageView(imageView core1_0.ImageView) ImageView {
+	if !imageView.APIVersion().IsAtLeast(common.Vulkan1_1) {
+		return nil
 	}
 
-	createInfo := (*C.VkImageViewUsageCreateInfo)(preallocatedPointer)
-	createInfo.sType = C.VK_STRUCTURE_TYPE_IMAGE_VIEW_USAGE_CREATE_INFO
-	createInfo.pNext = next
-	createInfo.usage = C.VkImageUsageFlags(o.Usage)
-
-	return preallocatedPointer, nil
-}
-
-func (o ImageViewUsageOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
-	createInfo := (*C.VkImageViewUsageCreateInfo)(cDataPointer)
-	return createInfo.pNext, nil
+	return imageView.Driver().ObjectStore().GetOrCreate(
+		driver.VulkanHandle(imageView.Handle()),
+		driver.Core1_1,
+		func() any {
+			return &VulkanImageView{imageView}
+		}).(ImageView)
 }

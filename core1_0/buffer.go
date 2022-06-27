@@ -7,89 +7,64 @@ package core1_0
 import "C"
 import (
 	"github.com/CannibalVox/VKng/core/common"
+	"github.com/CannibalVox/VKng/core/driver"
 	"github.com/CannibalVox/cgoparam"
-	"unsafe"
+	"github.com/cockroachdb/errors"
 )
 
-const (
-	BufferCreateSparseBinding   common.BufferCreateFlags = C.VK_BUFFER_CREATE_SPARSE_BINDING_BIT
-	BufferCreateSparseResidency common.BufferCreateFlags = C.VK_BUFFER_CREATE_SPARSE_RESIDENCY_BIT
-	BufferCreateSparseAliased   common.BufferCreateFlags = C.VK_BUFFER_CREATE_SPARSE_ALIASED_BIT
+type VulkanBuffer struct {
+	deviceDriver driver.Driver
+	device       driver.VkDevice
+	bufferHandle driver.VkBuffer
 
-	BufferUsageTransferSrc        common.BufferUsages = C.VK_BUFFER_USAGE_TRANSFER_SRC_BIT
-	BufferUsageTransferDst        common.BufferUsages = C.VK_BUFFER_USAGE_TRANSFER_DST_BIT
-	BufferUsageUniformTexelBuffer common.BufferUsages = C.VK_BUFFER_USAGE_UNIFORM_TEXEL_BUFFER_BIT
-	BufferUsageStorageTexelBuffer common.BufferUsages = C.VK_BUFFER_USAGE_STORAGE_TEXEL_BUFFER_BIT
-	BufferUsageUniformBuffer      common.BufferUsages = C.VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT
-	BufferUsageStorageBuffer      common.BufferUsages = C.VK_BUFFER_USAGE_STORAGE_BUFFER_BIT
-	BufferUsageIndexBuffer        common.BufferUsages = C.VK_BUFFER_USAGE_INDEX_BUFFER_BIT
-	BufferUsageVertexBuffer       common.BufferUsages = C.VK_BUFFER_USAGE_VERTEX_BUFFER_BIT
-	BufferUsageIndirectBuffer     common.BufferUsages = C.VK_BUFFER_USAGE_INDIRECT_BUFFER_BIT
-
-	SharingExclusive  common.SharingMode = C.VK_SHARING_MODE_EXCLUSIVE
-	SharingConcurrent common.SharingMode = C.VK_SHARING_MODE_CONCURRENT
-)
-
-func init() {
-	BufferCreateSparseBinding.Register("Sparse Binding")
-	BufferCreateSparseResidency.Register("Sparse Residency")
-	BufferCreateSparseAliased.Register("Sparse Aliased")
-
-	BufferUsageTransferSrc.Register("Transfer Source")
-	BufferUsageTransferDst.Register("Transfer Destination")
-	BufferUsageUniformTexelBuffer.Register("Uniform Texel Buffer")
-	BufferUsageStorageTexelBuffer.Register("Storage Texel Buffer")
-	BufferUsageUniformBuffer.Register("Uniform Buffer")
-	BufferUsageStorageBuffer.Register("Storage Buffer")
-	BufferUsageIndexBuffer.Register("Index Buffer")
-	BufferUsageVertexBuffer.Register("Vertex Buffer")
-	BufferUsageIndirectBuffer.Register("Indirect Buffer")
-
-	SharingExclusive.Register("Exclusive")
-	SharingConcurrent.Register("Concurrent")
+	maximumAPIVersion common.APIVersion
 }
 
-type BufferCreateOptions struct {
-	Flags              common.BufferCreateFlags
-	BufferSize         int
-	Usage              common.BufferUsages
-	SharingMode        common.SharingMode
-	QueueFamilyIndices []int
-
-	common.HaveNext
+func (b *VulkanBuffer) Handle() driver.VkBuffer {
+	return b.bufferHandle
 }
 
-func (o BufferCreateOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
-	if preallocatedPointer == unsafe.Pointer(nil) {
-		preallocatedPointer = allocator.Malloc(C.sizeof_struct_VkBufferCreateInfo)
+func (b *VulkanBuffer) DeviceHandle() driver.VkDevice {
+	return b.device
+}
+
+func (b *VulkanBuffer) Driver() driver.Driver {
+	return b.deviceDriver
+}
+
+func (b *VulkanBuffer) APIVersion() common.APIVersion {
+	return b.maximumAPIVersion
+}
+
+func (b *VulkanBuffer) Destroy(allocationCallbacks *driver.AllocationCallbacks) {
+	arena := cgoparam.GetAlloc()
+	defer cgoparam.ReturnAlloc(arena)
+
+	b.deviceDriver.VkDestroyBuffer(b.device, b.bufferHandle, allocationCallbacks.Handle())
+	b.deviceDriver.ObjectStore().Delete(driver.VulkanHandle(b.bufferHandle))
+}
+
+func (b *VulkanBuffer) MemoryRequirements() *MemoryRequirements {
+	allocator := cgoparam.GetAlloc()
+	defer cgoparam.ReturnAlloc(allocator)
+
+	requirementsUnsafe := allocator.Malloc(C.sizeof_struct_VkMemoryRequirements)
+
+	b.deviceDriver.VkGetBufferMemoryRequirements(b.device, b.bufferHandle, (*driver.VkMemoryRequirements)(requirementsUnsafe))
+
+	requirements := (*C.VkMemoryRequirements)(requirementsUnsafe)
+
+	return &MemoryRequirements{
+		Size:       int(requirements.size),
+		Alignment:  int(requirements.alignment),
+		MemoryType: uint32(requirements.memoryTypeBits),
 	}
-	createInfo := (*C.VkBufferCreateInfo)(preallocatedPointer)
-	createInfo.sType = C.VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO
-	createInfo.flags = C.VkBufferCreateFlags(o.Flags)
-	createInfo.pNext = next
-	createInfo.size = C.VkDeviceSize(o.BufferSize)
-	createInfo.usage = C.VkBufferUsageFlags(o.Usage)
-	createInfo.sharingMode = C.VkSharingMode(o.SharingMode)
+}
 
-	queueFamilyCount := len(o.QueueFamilyIndices)
-	createInfo.queueFamilyIndexCount = C.uint32_t(queueFamilyCount)
-	createInfo.pQueueFamilyIndices = nil
-
-	if queueFamilyCount > 0 {
-		indicesPtr := (*C.uint32_t)(allocator.Malloc(queueFamilyCount * int(unsafe.Sizeof(C.uint32_t(0)))))
-		indicesSlice := ([]C.uint32_t)(unsafe.Slice(indicesPtr, queueFamilyCount))
-
-		for i := 0; i < queueFamilyCount; i++ {
-			indicesSlice[i] = C.uint32_t(o.QueueFamilyIndices[i])
-		}
-
-		createInfo.pQueueFamilyIndices = indicesPtr
+func (b *VulkanBuffer) BindBufferMemory(memory DeviceMemory, offset int) (common.VkResult, error) {
+	if memory == nil {
+		return VKErrorUnknown, errors.New("received nil DeviceMemory")
 	}
 
-	return preallocatedPointer, nil
-}
-
-func (o BufferCreateOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
-	createInfo := (*C.VkBufferCreateInfo)(cDataPointer)
-	return createInfo.pNext, nil
+	return b.deviceDriver.VkBindBufferMemory(b.device, b.bufferHandle, memory.Handle(), driver.VkDeviceSize(offset))
 }
