@@ -6,17 +6,16 @@ package core1_0
 */
 import "C"
 import (
-	"github.com/CannibalVox/VKng/core/common"
 	"github.com/CannibalVox/cgoparam"
 	"unsafe"
 )
 
 type ImageCopy struct {
-	SrcSubresource common.ImageSubresourceLayers
-	SrcOffset      common.Offset3D
-	DstSubresource common.ImageSubresourceLayers
-	DstOffset      common.Offset3D
-	Extent         common.Extent3D
+	SrcSubresource ImageSubresourceLayers
+	SrcOffset      Offset3D
+	DstSubresource ImageSubresourceLayers
+	DstOffset      Offset3D
+	Extent         Extent3D
 }
 
 func (c ImageCopy) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer) (unsafe.Pointer, error) {

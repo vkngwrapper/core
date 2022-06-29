@@ -12,8 +12,8 @@ import (
 )
 
 const (
-	RateVertex   common.InputRate = C.VK_VERTEX_INPUT_RATE_VERTEX
-	RateInstance common.InputRate = C.VK_VERTEX_INPUT_RATE_INSTANCE
+	RateVertex   InputRate = C.VK_VERTEX_INPUT_RATE_VERTEX
+	RateInstance InputRate = C.VK_VERTEX_INPUT_RATE_INSTANCE
 )
 
 func init() {
@@ -22,7 +22,7 @@ func init() {
 }
 
 type VertexBindingDescription struct {
-	InputRate common.InputRate
+	InputRate InputRate
 	Binding   int
 	Stride    int
 }
@@ -30,7 +30,7 @@ type VertexBindingDescription struct {
 type VertexAttributeDescription struct {
 	Location uint32
 	Binding  int
-	Format   common.DataFormat
+	Format   DataFormat
 	Offset   int
 }
 

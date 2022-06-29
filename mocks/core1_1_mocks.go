@@ -280,7 +280,7 @@ func (mr *CommandBuffer1_1MockRecorder) Begin(o interface{}) *gomock.Call {
 }
 
 // CmdBeginQuery mocks base method.
-func (m *CommandBuffer1_1) CmdBeginQuery(queryPool core1_0.QueryPool, query int, flags common.QueryControlFlags) {
+func (m *CommandBuffer1_1) CmdBeginQuery(queryPool core1_0.QueryPool, query int, flags core1_0.QueryControlFlags) {
 	m.ctrl.T.Helper()
 	m.ctrl.Call(m, "CmdBeginQuery", queryPool, query, flags)
 }
@@ -292,7 +292,7 @@ func (mr *CommandBuffer1_1MockRecorder) CmdBeginQuery(queryPool, query, flags in
 }
 
 // CmdBeginRenderPass mocks base method.
-func (m *CommandBuffer1_1) CmdBeginRenderPass(contents common.SubpassContents, o core1_0.RenderPassBeginOptions) error {
+func (m *CommandBuffer1_1) CmdBeginRenderPass(contents core1_0.SubpassContents, o core1_0.RenderPassBeginOptions) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CmdBeginRenderPass", contents, o)
 	ret0, _ := ret[0].(error)
@@ -306,7 +306,7 @@ func (mr *CommandBuffer1_1MockRecorder) CmdBeginRenderPass(contents, o interface
 }
 
 // CmdBindDescriptorSets mocks base method.
-func (m *CommandBuffer1_1) CmdBindDescriptorSets(bindPoint common.PipelineBindPoint, layout core1_0.PipelineLayout, sets []core1_0.DescriptorSet, dynamicOffsets []int) {
+func (m *CommandBuffer1_1) CmdBindDescriptorSets(bindPoint core1_0.PipelineBindPoint, layout core1_0.PipelineLayout, sets []core1_0.DescriptorSet, dynamicOffsets []int) {
 	m.ctrl.T.Helper()
 	m.ctrl.Call(m, "CmdBindDescriptorSets", bindPoint, layout, sets, dynamicOffsets)
 }
@@ -318,7 +318,7 @@ func (mr *CommandBuffer1_1MockRecorder) CmdBindDescriptorSets(bindPoint, layout,
 }
 
 // CmdBindIndexBuffer mocks base method.
-func (m *CommandBuffer1_1) CmdBindIndexBuffer(buffer core1_0.Buffer, offset int, indexType common.IndexType) {
+func (m *CommandBuffer1_1) CmdBindIndexBuffer(buffer core1_0.Buffer, offset int, indexType core1_0.IndexType) {
 	m.ctrl.T.Helper()
 	m.ctrl.Call(m, "CmdBindIndexBuffer", buffer, offset, indexType)
 }
@@ -330,7 +330,7 @@ func (mr *CommandBuffer1_1MockRecorder) CmdBindIndexBuffer(buffer, offset, index
 }
 
 // CmdBindPipeline mocks base method.
-func (m *CommandBuffer1_1) CmdBindPipeline(bindPoint common.PipelineBindPoint, pipeline core1_0.Pipeline) {
+func (m *CommandBuffer1_1) CmdBindPipeline(bindPoint core1_0.PipelineBindPoint, pipeline core1_0.Pipeline) {
 	m.ctrl.T.Helper()
 	m.ctrl.Call(m, "CmdBindPipeline", bindPoint, pipeline)
 }
@@ -354,7 +354,7 @@ func (mr *CommandBuffer1_1MockRecorder) CmdBindVertexBuffers(buffers, bufferOffs
 }
 
 // CmdBlitImage mocks base method.
-func (m *CommandBuffer1_1) CmdBlitImage(sourceImage core1_0.Image, sourceImageLayout common.ImageLayout, destinationImage core1_0.Image, destinationImageLayout common.ImageLayout, regions []core1_0.ImageBlit, filter common.Filter) error {
+func (m *CommandBuffer1_1) CmdBlitImage(sourceImage core1_0.Image, sourceImageLayout core1_0.ImageLayout, destinationImage core1_0.Image, destinationImageLayout core1_0.ImageLayout, regions []core1_0.ImageBlit, filter core1_0.Filter) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CmdBlitImage", sourceImage, sourceImageLayout, destinationImage, destinationImageLayout, regions, filter)
 	ret0, _ := ret[0].(error)
@@ -382,7 +382,7 @@ func (mr *CommandBuffer1_1MockRecorder) CmdClearAttachments(attachments, rects i
 }
 
 // CmdClearColorImage mocks base method.
-func (m *CommandBuffer1_1) CmdClearColorImage(image core1_0.Image, imageLayout common.ImageLayout, color common.ClearColorValue, ranges []common.ImageSubresourceRange) {
+func (m *CommandBuffer1_1) CmdClearColorImage(image core1_0.Image, imageLayout core1_0.ImageLayout, color core1_0.ClearColorValue, ranges []core1_0.ImageSubresourceRange) {
 	m.ctrl.T.Helper()
 	m.ctrl.Call(m, "CmdClearColorImage", image, imageLayout, color, ranges)
 }
@@ -394,7 +394,7 @@ func (mr *CommandBuffer1_1MockRecorder) CmdClearColorImage(image, imageLayout, c
 }
 
 // CmdClearDepthStencilImage mocks base method.
-func (m *CommandBuffer1_1) CmdClearDepthStencilImage(image core1_0.Image, imageLayout common.ImageLayout, depthStencil *common.ClearValueDepthStencil, ranges []common.ImageSubresourceRange) {
+func (m *CommandBuffer1_1) CmdClearDepthStencilImage(image core1_0.Image, imageLayout core1_0.ImageLayout, depthStencil *core1_0.ClearValueDepthStencil, ranges []core1_0.ImageSubresourceRange) {
 	m.ctrl.T.Helper()
 	m.ctrl.Call(m, "CmdClearDepthStencilImage", image, imageLayout, depthStencil, ranges)
 }
@@ -420,7 +420,7 @@ func (mr *CommandBuffer1_1MockRecorder) CmdCopyBuffer(srcBuffer, dstBuffer, copy
 }
 
 // CmdCopyBufferToImage mocks base method.
-func (m *CommandBuffer1_1) CmdCopyBufferToImage(buffer core1_0.Buffer, image core1_0.Image, layout common.ImageLayout, regions []core1_0.BufferImageCopy) error {
+func (m *CommandBuffer1_1) CmdCopyBufferToImage(buffer core1_0.Buffer, image core1_0.Image, layout core1_0.ImageLayout, regions []core1_0.BufferImageCopy) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CmdCopyBufferToImage", buffer, image, layout, regions)
 	ret0, _ := ret[0].(error)
@@ -434,7 +434,7 @@ func (mr *CommandBuffer1_1MockRecorder) CmdCopyBufferToImage(buffer, image, layo
 }
 
 // CmdCopyImage mocks base method.
-func (m *CommandBuffer1_1) CmdCopyImage(srcImage core1_0.Image, srcImageLayout common.ImageLayout, dstImage core1_0.Image, dstImageLayout common.ImageLayout, regions []core1_0.ImageCopy) error {
+func (m *CommandBuffer1_1) CmdCopyImage(srcImage core1_0.Image, srcImageLayout core1_0.ImageLayout, dstImage core1_0.Image, dstImageLayout core1_0.ImageLayout, regions []core1_0.ImageCopy) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CmdCopyImage", srcImage, srcImageLayout, dstImage, dstImageLayout, regions)
 	ret0, _ := ret[0].(error)
@@ -448,7 +448,7 @@ func (mr *CommandBuffer1_1MockRecorder) CmdCopyImage(srcImage, srcImageLayout, d
 }
 
 // CmdCopyImageToBuffer mocks base method.
-func (m *CommandBuffer1_1) CmdCopyImageToBuffer(srcImage core1_0.Image, srcImageLayout common.ImageLayout, dstBuffer core1_0.Buffer, regions []core1_0.BufferImageCopy) error {
+func (m *CommandBuffer1_1) CmdCopyImageToBuffer(srcImage core1_0.Image, srcImageLayout core1_0.ImageLayout, dstBuffer core1_0.Buffer, regions []core1_0.BufferImageCopy) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CmdCopyImageToBuffer", srcImage, srcImageLayout, dstBuffer, regions)
 	ret0, _ := ret[0].(error)
@@ -462,7 +462,7 @@ func (mr *CommandBuffer1_1MockRecorder) CmdCopyImageToBuffer(srcImage, srcImageL
 }
 
 // CmdCopyQueryPoolResults mocks base method.
-func (m *CommandBuffer1_1) CmdCopyQueryPoolResults(queryPool core1_0.QueryPool, firstQuery, queryCount int, dstBuffer core1_0.Buffer, dstOffset, stride int, flags common.QueryResultFlags) {
+func (m *CommandBuffer1_1) CmdCopyQueryPoolResults(queryPool core1_0.QueryPool, firstQuery, queryCount int, dstBuffer core1_0.Buffer, dstOffset, stride int, flags core1_0.QueryResultFlags) {
 	m.ctrl.T.Helper()
 	m.ctrl.Call(m, "CmdCopyQueryPoolResults", queryPool, firstQuery, queryCount, dstBuffer, dstOffset, stride, flags)
 }
@@ -606,7 +606,7 @@ func (mr *CommandBuffer1_1MockRecorder) CmdFillBuffer(dstBuffer, dstOffset, size
 }
 
 // CmdNextSubpass mocks base method.
-func (m *CommandBuffer1_1) CmdNextSubpass(contents common.SubpassContents) {
+func (m *CommandBuffer1_1) CmdNextSubpass(contents core1_0.SubpassContents) {
 	m.ctrl.T.Helper()
 	m.ctrl.Call(m, "CmdNextSubpass", contents)
 }
@@ -618,7 +618,7 @@ func (mr *CommandBuffer1_1MockRecorder) CmdNextSubpass(contents interface{}) *go
 }
 
 // CmdPipelineBarrier mocks base method.
-func (m *CommandBuffer1_1) CmdPipelineBarrier(srcStageMask, dstStageMask common.PipelineStages, dependencies common.DependencyFlags, memoryBarriers []core1_0.MemoryBarrierOptions, bufferMemoryBarriers []core1_0.BufferMemoryBarrierOptions, imageMemoryBarriers []core1_0.ImageMemoryBarrierOptions) error {
+func (m *CommandBuffer1_1) CmdPipelineBarrier(srcStageMask, dstStageMask core1_0.PipelineStages, dependencies core1_0.DependencyFlags, memoryBarriers []core1_0.MemoryBarrierOptions, bufferMemoryBarriers []core1_0.BufferMemoryBarrierOptions, imageMemoryBarriers []core1_0.ImageMemoryBarrierOptions) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CmdPipelineBarrier", srcStageMask, dstStageMask, dependencies, memoryBarriers, bufferMemoryBarriers, imageMemoryBarriers)
 	ret0, _ := ret[0].(error)
@@ -632,7 +632,7 @@ func (mr *CommandBuffer1_1MockRecorder) CmdPipelineBarrier(srcStageMask, dstStag
 }
 
 // CmdPushConstants mocks base method.
-func (m *CommandBuffer1_1) CmdPushConstants(layout core1_0.PipelineLayout, stageFlags common.ShaderStages, offset int, valueBytes []byte) {
+func (m *CommandBuffer1_1) CmdPushConstants(layout core1_0.PipelineLayout, stageFlags core1_0.ShaderStages, offset int, valueBytes []byte) {
 	m.ctrl.T.Helper()
 	m.ctrl.Call(m, "CmdPushConstants", layout, stageFlags, offset, valueBytes)
 }
@@ -644,7 +644,7 @@ func (mr *CommandBuffer1_1MockRecorder) CmdPushConstants(layout, stageFlags, off
 }
 
 // CmdResetEvent mocks base method.
-func (m *CommandBuffer1_1) CmdResetEvent(event core1_0.Event, stageMask common.PipelineStages) {
+func (m *CommandBuffer1_1) CmdResetEvent(event core1_0.Event, stageMask core1_0.PipelineStages) {
 	m.ctrl.T.Helper()
 	m.ctrl.Call(m, "CmdResetEvent", event, stageMask)
 }
@@ -668,7 +668,7 @@ func (mr *CommandBuffer1_1MockRecorder) CmdResetQueryPool(queryPool, startQuery,
 }
 
 // CmdResolveImage mocks base method.
-func (m *CommandBuffer1_1) CmdResolveImage(srcImage core1_0.Image, srcImageLayout common.ImageLayout, dstImage core1_0.Image, dstImageLayout common.ImageLayout, regions []core1_0.ImageResolve) error {
+func (m *CommandBuffer1_1) CmdResolveImage(srcImage core1_0.Image, srcImageLayout core1_0.ImageLayout, dstImage core1_0.Image, dstImageLayout core1_0.ImageLayout, regions []core1_0.ImageResolve) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CmdResolveImage", srcImage, srcImageLayout, dstImage, dstImageLayout, regions)
 	ret0, _ := ret[0].(error)
@@ -730,7 +730,7 @@ func (mr *CommandBuffer1_1MockRecorder) CmdSetDeviceMask(deviceMask interface{})
 }
 
 // CmdSetEvent mocks base method.
-func (m *CommandBuffer1_1) CmdSetEvent(event core1_0.Event, stageMask common.PipelineStages) {
+func (m *CommandBuffer1_1) CmdSetEvent(event core1_0.Event, stageMask core1_0.PipelineStages) {
 	m.ctrl.T.Helper()
 	m.ctrl.Call(m, "CmdSetEvent", event, stageMask)
 }
@@ -754,7 +754,7 @@ func (mr *CommandBuffer1_1MockRecorder) CmdSetLineWidth(lineWidth interface{}) *
 }
 
 // CmdSetScissor mocks base method.
-func (m *CommandBuffer1_1) CmdSetScissor(scissors []common.Rect2D) {
+func (m *CommandBuffer1_1) CmdSetScissor(scissors []core1_0.Rect2D) {
 	m.ctrl.T.Helper()
 	m.ctrl.Call(m, "CmdSetScissor", scissors)
 }
@@ -766,7 +766,7 @@ func (mr *CommandBuffer1_1MockRecorder) CmdSetScissor(scissors interface{}) *gom
 }
 
 // CmdSetStencilCompareMask mocks base method.
-func (m *CommandBuffer1_1) CmdSetStencilCompareMask(faceMask common.StencilFaces, compareMask uint32) {
+func (m *CommandBuffer1_1) CmdSetStencilCompareMask(faceMask core1_0.StencilFaces, compareMask uint32) {
 	m.ctrl.T.Helper()
 	m.ctrl.Call(m, "CmdSetStencilCompareMask", faceMask, compareMask)
 }
@@ -778,7 +778,7 @@ func (mr *CommandBuffer1_1MockRecorder) CmdSetStencilCompareMask(faceMask, compa
 }
 
 // CmdSetStencilReference mocks base method.
-func (m *CommandBuffer1_1) CmdSetStencilReference(faceMask common.StencilFaces, reference uint32) {
+func (m *CommandBuffer1_1) CmdSetStencilReference(faceMask core1_0.StencilFaces, reference uint32) {
 	m.ctrl.T.Helper()
 	m.ctrl.Call(m, "CmdSetStencilReference", faceMask, reference)
 }
@@ -790,7 +790,7 @@ func (mr *CommandBuffer1_1MockRecorder) CmdSetStencilReference(faceMask, referen
 }
 
 // CmdSetStencilWriteMask mocks base method.
-func (m *CommandBuffer1_1) CmdSetStencilWriteMask(faceMask common.StencilFaces, writeMask uint32) {
+func (m *CommandBuffer1_1) CmdSetStencilWriteMask(faceMask core1_0.StencilFaces, writeMask uint32) {
 	m.ctrl.T.Helper()
 	m.ctrl.Call(m, "CmdSetStencilWriteMask", faceMask, writeMask)
 }
@@ -802,7 +802,7 @@ func (mr *CommandBuffer1_1MockRecorder) CmdSetStencilWriteMask(faceMask, writeMa
 }
 
 // CmdSetViewport mocks base method.
-func (m *CommandBuffer1_1) CmdSetViewport(viewports []common.Viewport) {
+func (m *CommandBuffer1_1) CmdSetViewport(viewports []core1_0.Viewport) {
 	m.ctrl.T.Helper()
 	m.ctrl.Call(m, "CmdSetViewport", viewports)
 }
@@ -826,7 +826,7 @@ func (mr *CommandBuffer1_1MockRecorder) CmdUpdateBuffer(dstBuffer, dstOffset, da
 }
 
 // CmdWaitEvents mocks base method.
-func (m *CommandBuffer1_1) CmdWaitEvents(events []core1_0.Event, srcStageMask, dstStageMask common.PipelineStages, memoryBarriers []core1_0.MemoryBarrierOptions, bufferMemoryBarriers []core1_0.BufferMemoryBarrierOptions, imageMemoryBarriers []core1_0.ImageMemoryBarrierOptions) error {
+func (m *CommandBuffer1_1) CmdWaitEvents(events []core1_0.Event, srcStageMask, dstStageMask core1_0.PipelineStages, memoryBarriers []core1_0.MemoryBarrierOptions, bufferMemoryBarriers []core1_0.BufferMemoryBarrierOptions, imageMemoryBarriers []core1_0.ImageMemoryBarrierOptions) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CmdWaitEvents", events, srcStageMask, dstStageMask, memoryBarriers, bufferMemoryBarriers, imageMemoryBarriers)
 	ret0, _ := ret[0].(error)
@@ -840,7 +840,7 @@ func (mr *CommandBuffer1_1MockRecorder) CmdWaitEvents(events, srcStageMask, dstS
 }
 
 // CmdWriteTimestamp mocks base method.
-func (m *CommandBuffer1_1) CmdWriteTimestamp(pipelineStage common.PipelineStages, queryPool core1_0.QueryPool, query int) {
+func (m *CommandBuffer1_1) CmdWriteTimestamp(pipelineStage core1_0.PipelineStages, queryPool core1_0.QueryPool, query int) {
 	m.ctrl.T.Helper()
 	m.ctrl.Call(m, "CmdWriteTimestamp", pipelineStage, queryPool, query)
 }
@@ -977,7 +977,7 @@ func (mr *CommandBuffer1_1MockRecorder) Handle() *gomock.Call {
 }
 
 // Reset mocks base method.
-func (m *CommandBuffer1_1) Reset(flags common.CommandBufferResetFlags) (common.VkResult, error) {
+func (m *CommandBuffer1_1) Reset(flags core1_0.CommandBufferResetFlags) (common.VkResult, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Reset", flags)
 	ret0, _ := ret[0].(common.VkResult)
@@ -1083,7 +1083,7 @@ func (mr *CommandPool1_1MockRecorder) Handle() *gomock.Call {
 }
 
 // Reset mocks base method.
-func (m *CommandPool1_1) Reset(flags common.CommandPoolResetFlags) (common.VkResult, error) {
+func (m *CommandPool1_1) Reset(flags core1_0.CommandPoolResetFlags) (common.VkResult, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Reset", flags)
 	ret0, _ := ret[0].(common.VkResult)
@@ -1201,7 +1201,7 @@ func (mr *DescriptorPool1_1MockRecorder) Handle() *gomock.Call {
 }
 
 // Reset mocks base method.
-func (m *DescriptorPool1_1) Reset(flags common.DescriptorPoolResetFlags) (common.VkResult, error) {
+func (m *DescriptorPool1_1) Reset(flags core1_0.DescriptorPoolResetFlags) (common.VkResult, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Reset", flags)
 	ret0, _ := ret[0].(common.VkResult)
@@ -2935,10 +2935,10 @@ func (mr *Image1_1MockRecorder) SparseMemoryRequirements() *gomock.Call {
 }
 
 // SubresourceLayout mocks base method.
-func (m *Image1_1) SubresourceLayout(subresource *common.ImageSubresource) *common.SubresourceLayout {
+func (m *Image1_1) SubresourceLayout(subresource *core1_0.ImageSubresource) *core1_0.SubresourceLayout {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "SubresourceLayout", subresource)
-	ret0, _ := ret[0].(*common.SubresourceLayout)
+	ret0, _ := ret[0].(*core1_0.SubresourceLayout)
 	return ret0
 }
 
@@ -3186,10 +3186,10 @@ func (m *MockInstanceScopedPhysicalDevice) EXPECT() *MockInstanceScopedPhysicalD
 }
 
 // AvailableExtensions mocks base method.
-func (m *MockInstanceScopedPhysicalDevice) AvailableExtensions() (map[string]*common.ExtensionProperties, common.VkResult, error) {
+func (m *MockInstanceScopedPhysicalDevice) AvailableExtensions() (map[string]*core1_0.ExtensionProperties, common.VkResult, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "AvailableExtensions")
-	ret0, _ := ret[0].(map[string]*common.ExtensionProperties)
+	ret0, _ := ret[0].(map[string]*core1_0.ExtensionProperties)
 	ret1, _ := ret[1].(common.VkResult)
 	ret2, _ := ret[2].(error)
 	return ret0, ret1, ret2
@@ -3202,10 +3202,10 @@ func (mr *MockInstanceScopedPhysicalDeviceMockRecorder) AvailableExtensions() *g
 }
 
 // AvailableExtensionsForLayer mocks base method.
-func (m *MockInstanceScopedPhysicalDevice) AvailableExtensionsForLayer(layerName string) (map[string]*common.ExtensionProperties, common.VkResult, error) {
+func (m *MockInstanceScopedPhysicalDevice) AvailableExtensionsForLayer(layerName string) (map[string]*core1_0.ExtensionProperties, common.VkResult, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "AvailableExtensionsForLayer", layerName)
-	ret0, _ := ret[0].(map[string]*common.ExtensionProperties)
+	ret0, _ := ret[0].(map[string]*core1_0.ExtensionProperties)
 	ret1, _ := ret[1].(common.VkResult)
 	ret2, _ := ret[2].(error)
 	return ret0, ret1, ret2
@@ -3218,10 +3218,10 @@ func (mr *MockInstanceScopedPhysicalDeviceMockRecorder) AvailableExtensionsForLa
 }
 
 // AvailableLayers mocks base method.
-func (m *MockInstanceScopedPhysicalDevice) AvailableLayers() (map[string]*common.LayerProperties, common.VkResult, error) {
+func (m *MockInstanceScopedPhysicalDevice) AvailableLayers() (map[string]*core1_0.LayerProperties, common.VkResult, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "AvailableLayers")
-	ret0, _ := ret[0].(map[string]*common.LayerProperties)
+	ret0, _ := ret[0].(map[string]*core1_0.LayerProperties)
 	ret1, _ := ret[1].(common.VkResult)
 	ret2, _ := ret[2].(error)
 	return ret0, ret1, ret2
@@ -3348,7 +3348,7 @@ func (mr *MockInstanceScopedPhysicalDeviceMockRecorder) Features2(out interface{
 }
 
 // FormatProperties mocks base method.
-func (m *MockInstanceScopedPhysicalDevice) FormatProperties(format common.DataFormat) *core1_0.FormatProperties {
+func (m *MockInstanceScopedPhysicalDevice) FormatProperties(format core1_0.DataFormat) *core1_0.FormatProperties {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "FormatProperties", format)
 	ret0, _ := ret[0].(*core1_0.FormatProperties)
@@ -3362,7 +3362,7 @@ func (mr *MockInstanceScopedPhysicalDeviceMockRecorder) FormatProperties(format 
 }
 
 // FormatProperties2 mocks base method.
-func (m *MockInstanceScopedPhysicalDevice) FormatProperties2(format common.DataFormat, out *core1_1.FormatPropertiesOutData) error {
+func (m *MockInstanceScopedPhysicalDevice) FormatProperties2(format core1_0.DataFormat, out *core1_1.FormatPropertiesOutData) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "FormatProperties2", format, out)
 	ret0, _ := ret[0].(error)
@@ -3390,7 +3390,7 @@ func (mr *MockInstanceScopedPhysicalDeviceMockRecorder) Handle() *gomock.Call {
 }
 
 // ImageFormatProperties mocks base method.
-func (m *MockInstanceScopedPhysicalDevice) ImageFormatProperties(format common.DataFormat, imageType common.ImageType, tiling common.ImageTiling, usages common.ImageUsages, flags common.ImageCreateFlags) (*core1_0.ImageFormatProperties, common.VkResult, error) {
+func (m *MockInstanceScopedPhysicalDevice) ImageFormatProperties(format core1_0.DataFormat, imageType core1_0.ImageType, tiling core1_0.ImageTiling, usages core1_0.ImageUsages, flags core1_0.ImageCreateFlags) (*core1_0.ImageFormatProperties, common.VkResult, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ImageFormatProperties", format, imageType, tiling, usages, flags)
 	ret0, _ := ret[0].(*core1_0.ImageFormatProperties)
@@ -3521,7 +3521,7 @@ func (mr *MockInstanceScopedPhysicalDeviceMockRecorder) QueueFamilyProperties2(o
 }
 
 // SparseImageFormatProperties mocks base method.
-func (m *MockInstanceScopedPhysicalDevice) SparseImageFormatProperties(format common.DataFormat, imageType common.ImageType, samples common.SampleCounts, usages common.ImageUsages, tiling common.ImageTiling) []core1_0.SparseImageFormatProperties {
+func (m *MockInstanceScopedPhysicalDevice) SparseImageFormatProperties(format core1_0.DataFormat, imageType core1_0.ImageType, samples core1_0.SampleCounts, usages core1_0.ImageUsages, tiling core1_0.ImageTiling) []core1_0.SparseImageFormatProperties {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "SparseImageFormatProperties", format, imageType, samples, usages, tiling)
 	ret0, _ := ret[0].([]core1_0.SparseImageFormatProperties)
@@ -3573,10 +3573,10 @@ func (m *PhysicalDevice1_1) EXPECT() *PhysicalDevice1_1MockRecorder {
 }
 
 // AvailableExtensions mocks base method.
-func (m *PhysicalDevice1_1) AvailableExtensions() (map[string]*common.ExtensionProperties, common.VkResult, error) {
+func (m *PhysicalDevice1_1) AvailableExtensions() (map[string]*core1_0.ExtensionProperties, common.VkResult, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "AvailableExtensions")
-	ret0, _ := ret[0].(map[string]*common.ExtensionProperties)
+	ret0, _ := ret[0].(map[string]*core1_0.ExtensionProperties)
 	ret1, _ := ret[1].(common.VkResult)
 	ret2, _ := ret[2].(error)
 	return ret0, ret1, ret2
@@ -3589,10 +3589,10 @@ func (mr *PhysicalDevice1_1MockRecorder) AvailableExtensions() *gomock.Call {
 }
 
 // AvailableExtensionsForLayer mocks base method.
-func (m *PhysicalDevice1_1) AvailableExtensionsForLayer(layerName string) (map[string]*common.ExtensionProperties, common.VkResult, error) {
+func (m *PhysicalDevice1_1) AvailableExtensionsForLayer(layerName string) (map[string]*core1_0.ExtensionProperties, common.VkResult, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "AvailableExtensionsForLayer", layerName)
-	ret0, _ := ret[0].(map[string]*common.ExtensionProperties)
+	ret0, _ := ret[0].(map[string]*core1_0.ExtensionProperties)
 	ret1, _ := ret[1].(common.VkResult)
 	ret2, _ := ret[2].(error)
 	return ret0, ret1, ret2
@@ -3605,10 +3605,10 @@ func (mr *PhysicalDevice1_1MockRecorder) AvailableExtensionsForLayer(layerName i
 }
 
 // AvailableLayers mocks base method.
-func (m *PhysicalDevice1_1) AvailableLayers() (map[string]*common.LayerProperties, common.VkResult, error) {
+func (m *PhysicalDevice1_1) AvailableLayers() (map[string]*core1_0.LayerProperties, common.VkResult, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "AvailableLayers")
-	ret0, _ := ret[0].(map[string]*common.LayerProperties)
+	ret0, _ := ret[0].(map[string]*core1_0.LayerProperties)
 	ret1, _ := ret[1].(common.VkResult)
 	ret2, _ := ret[2].(error)
 	return ret0, ret1, ret2
@@ -3679,7 +3679,7 @@ func (mr *PhysicalDevice1_1MockRecorder) Features() *gomock.Call {
 }
 
 // FormatProperties mocks base method.
-func (m *PhysicalDevice1_1) FormatProperties(format common.DataFormat) *core1_0.FormatProperties {
+func (m *PhysicalDevice1_1) FormatProperties(format core1_0.DataFormat) *core1_0.FormatProperties {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "FormatProperties", format)
 	ret0, _ := ret[0].(*core1_0.FormatProperties)
@@ -3707,7 +3707,7 @@ func (mr *PhysicalDevice1_1MockRecorder) Handle() *gomock.Call {
 }
 
 // ImageFormatProperties mocks base method.
-func (m *PhysicalDevice1_1) ImageFormatProperties(format common.DataFormat, imageType common.ImageType, tiling common.ImageTiling, usages common.ImageUsages, flags common.ImageCreateFlags) (*core1_0.ImageFormatProperties, common.VkResult, error) {
+func (m *PhysicalDevice1_1) ImageFormatProperties(format core1_0.DataFormat, imageType core1_0.ImageType, tiling core1_0.ImageTiling, usages core1_0.ImageUsages, flags core1_0.ImageCreateFlags) (*core1_0.ImageFormatProperties, common.VkResult, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ImageFormatProperties", format, imageType, tiling, usages, flags)
 	ret0, _ := ret[0].(*core1_0.ImageFormatProperties)
@@ -3794,7 +3794,7 @@ func (mr *PhysicalDevice1_1MockRecorder) QueueFamilyProperties() *gomock.Call {
 }
 
 // SparseImageFormatProperties mocks base method.
-func (m *PhysicalDevice1_1) SparseImageFormatProperties(format common.DataFormat, imageType common.ImageType, samples common.SampleCounts, usages common.ImageUsages, tiling common.ImageTiling) []core1_0.SparseImageFormatProperties {
+func (m *PhysicalDevice1_1) SparseImageFormatProperties(format core1_0.DataFormat, imageType core1_0.ImageType, samples core1_0.SampleCounts, usages core1_0.ImageUsages, tiling core1_0.ImageTiling) []core1_0.SparseImageFormatProperties {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "SparseImageFormatProperties", format, imageType, samples, usages, tiling)
 	ret0, _ := ret[0].([]core1_0.SparseImageFormatProperties)
@@ -4203,7 +4203,7 @@ func (mr *QueryPool1_1MockRecorder) Handle() *gomock.Call {
 }
 
 // PopulateResults mocks base method.
-func (m *QueryPool1_1) PopulateResults(firstQuery, queryCount int, results []byte, resultStride int, flags common.QueryResultFlags) (common.VkResult, error) {
+func (m *QueryPool1_1) PopulateResults(firstQuery, queryCount int, results []byte, resultStride int, flags core1_0.QueryResultFlags) (common.VkResult, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "PopulateResults", firstQuery, queryCount, results, resultStride, flags)
 	ret0, _ := ret[0].(common.VkResult)
@@ -4433,10 +4433,10 @@ func (mr *RenderPass1_1MockRecorder) Handle() *gomock.Call {
 }
 
 // RenderAreaGranularity mocks base method.
-func (m *RenderPass1_1) RenderAreaGranularity() common.Extent2D {
+func (m *RenderPass1_1) RenderAreaGranularity() core1_0.Extent2D {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "RenderAreaGranularity")
-	ret0, _ := ret[0].(common.Extent2D)
+	ret0, _ := ret[0].(core1_0.Extent2D)
 	return ret0
 }
 

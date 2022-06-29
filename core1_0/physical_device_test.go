@@ -702,7 +702,7 @@ func TestVulkanPhysicalDevice_SparseImageFormatProperties(t *testing.T) {
 	require.Equal(t, 5, props[0].ImageGranularity.Depth)
 
 	require.Equal(t, core1_0.AspectColor, props[1].AspectMask)
-	require.Equal(t, common.SparseImageFormatFlags(0), props[1].Flags)
+	require.Equal(t, core1_0.SparseImageFormatFlags(0), props[1].Flags)
 	require.Equal(t, 7, props[1].ImageGranularity.Width)
 	require.Equal(t, 11, props[1].ImageGranularity.Height)
 	require.Equal(t, 13, props[1].ImageGranularity.Depth)

@@ -12,32 +12,32 @@ import (
 )
 
 const (
-	BorderColorFloatTransparentBlack common.BorderColor = C.VK_BORDER_COLOR_FLOAT_TRANSPARENT_BLACK
-	BorderColorIntTransparentBlack   common.BorderColor = C.VK_BORDER_COLOR_INT_TRANSPARENT_BLACK
-	BorderColorFloatOpaqueBlack      common.BorderColor = C.VK_BORDER_COLOR_FLOAT_OPAQUE_BLACK
-	BorderColorIntOpaqueBlack        common.BorderColor = C.VK_BORDER_COLOR_INT_OPAQUE_BLACK
-	BorderColorFloatOpaqueWhite      common.BorderColor = C.VK_BORDER_COLOR_FLOAT_OPAQUE_WHITE
-	BorderColorIntOpaqueWhite        common.BorderColor = C.VK_BORDER_COLOR_INT_OPAQUE_WHITE
+	BorderColorFloatTransparentBlack BorderColor = C.VK_BORDER_COLOR_FLOAT_TRANSPARENT_BLACK
+	BorderColorIntTransparentBlack   BorderColor = C.VK_BORDER_COLOR_INT_TRANSPARENT_BLACK
+	BorderColorFloatOpaqueBlack      BorderColor = C.VK_BORDER_COLOR_FLOAT_OPAQUE_BLACK
+	BorderColorIntOpaqueBlack        BorderColor = C.VK_BORDER_COLOR_INT_OPAQUE_BLACK
+	BorderColorFloatOpaqueWhite      BorderColor = C.VK_BORDER_COLOR_FLOAT_OPAQUE_WHITE
+	BorderColorIntOpaqueWhite        BorderColor = C.VK_BORDER_COLOR_INT_OPAQUE_WHITE
 
-	CompareNever          common.CompareOp = C.VK_COMPARE_OP_NEVER
-	CompareLess           common.CompareOp = C.VK_COMPARE_OP_LESS
-	CompareEqual          common.CompareOp = C.VK_COMPARE_OP_EQUAL
-	CompareLessOrEqual    common.CompareOp = C.VK_COMPARE_OP_LESS_OR_EQUAL
-	CompareGreater        common.CompareOp = C.VK_COMPARE_OP_GREATER
-	CompareNotEqual       common.CompareOp = C.VK_COMPARE_OP_NOT_EQUAL
-	CompareGreaterOrEqual common.CompareOp = C.VK_COMPARE_OP_GREATER_OR_EQUAL
-	CompareAlways         common.CompareOp = C.VK_COMPARE_OP_ALWAYS
+	CompareNever          CompareOp = C.VK_COMPARE_OP_NEVER
+	CompareLess           CompareOp = C.VK_COMPARE_OP_LESS
+	CompareEqual          CompareOp = C.VK_COMPARE_OP_EQUAL
+	CompareLessOrEqual    CompareOp = C.VK_COMPARE_OP_LESS_OR_EQUAL
+	CompareGreater        CompareOp = C.VK_COMPARE_OP_GREATER
+	CompareNotEqual       CompareOp = C.VK_COMPARE_OP_NOT_EQUAL
+	CompareGreaterOrEqual CompareOp = C.VK_COMPARE_OP_GREATER_OR_EQUAL
+	CompareAlways         CompareOp = C.VK_COMPARE_OP_ALWAYS
 
-	FilterNearest common.Filter = C.VK_FILTER_NEAREST
-	FilterLinear  common.Filter = C.VK_FILTER_LINEAR
+	FilterNearest Filter = C.VK_FILTER_NEAREST
+	FilterLinear  Filter = C.VK_FILTER_LINEAR
 
-	MipmapNearest common.MipmapMode = C.VK_SAMPLER_MIPMAP_MODE_NEAREST
-	MipmapLinear  common.MipmapMode = C.VK_SAMPLER_MIPMAP_MODE_LINEAR
+	MipmapNearest MipmapMode = C.VK_SAMPLER_MIPMAP_MODE_NEAREST
+	MipmapLinear  MipmapMode = C.VK_SAMPLER_MIPMAP_MODE_LINEAR
 
-	SamplerAddressModeRepeat         common.SamplerAddressMode = C.VK_SAMPLER_ADDRESS_MODE_REPEAT
-	SamplerAddressModeMirroredRepeat common.SamplerAddressMode = C.VK_SAMPLER_ADDRESS_MODE_MIRRORED_REPEAT
-	SamplerAddressModeClampToEdge    common.SamplerAddressMode = C.VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE
-	SamplerAddressModeClampToBorder  common.SamplerAddressMode = C.VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER
+	SamplerAddressModeRepeat         SamplerAddressMode = C.VK_SAMPLER_ADDRESS_MODE_REPEAT
+	SamplerAddressModeMirroredRepeat SamplerAddressMode = C.VK_SAMPLER_ADDRESS_MODE_MIRRORED_REPEAT
+	SamplerAddressModeClampToEdge    SamplerAddressMode = C.VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE
+	SamplerAddressModeClampToBorder  SamplerAddressMode = C.VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER
 )
 
 func init() {
@@ -70,13 +70,13 @@ func init() {
 }
 
 type SamplerCreateOptions struct {
-	Flags        common.SamplerCreateFlags
-	MagFilter    common.Filter
-	MinFilter    common.Filter
-	MipmapMode   common.MipmapMode
-	AddressModeU common.SamplerAddressMode
-	AddressModeV common.SamplerAddressMode
-	AddressModeW common.SamplerAddressMode
+	Flags        SamplerCreateFlags
+	MagFilter    Filter
+	MinFilter    Filter
+	MipmapMode   MipmapMode
+	AddressModeU SamplerAddressMode
+	AddressModeV SamplerAddressMode
+	AddressModeW SamplerAddressMode
 
 	MipLodBias float32
 	MinLod     float32
@@ -86,9 +86,9 @@ type SamplerCreateOptions struct {
 	MaxAnisotropy    float32
 
 	CompareEnable bool
-	CompareOp     common.CompareOp
+	CompareOp     CompareOp
 
-	BorderColor             common.BorderColor
+	BorderColor             BorderColor
 	UnnormalizedCoordinates bool
 
 	common.HaveNext

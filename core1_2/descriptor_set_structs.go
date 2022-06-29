@@ -7,6 +7,7 @@ package core1_2
 import "C"
 import (
 	"github.com/CannibalVox/VKng/core/common"
+	"github.com/CannibalVox/VKng/core/core1_0"
 	"github.com/CannibalVox/cgoparam"
 	"unsafe"
 )
@@ -30,7 +31,7 @@ const (
 	DescriptorBindingUpdateUnusedWhilePending DescriptorBindingFlags = C.VK_DESCRIPTOR_BINDING_UPDATE_UNUSED_WHILE_PENDING_BIT
 	DescriptorBindingVariableDescriptorCount  DescriptorBindingFlags = C.VK_DESCRIPTOR_BINDING_VARIABLE_DESCRIPTOR_COUNT_BIT
 
-	DescriptorSetLayoutCreateUpdateAfterBindPool common.DescriptorSetLayoutCreateFlags = C.VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT
+	DescriptorSetLayoutCreateUpdateAfterBindPool core1_0.DescriptorSetLayoutCreateFlags = C.VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT
 )
 
 func init() {

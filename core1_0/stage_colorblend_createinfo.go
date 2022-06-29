@@ -12,47 +12,47 @@ import (
 )
 
 const (
-	BlendZero                  common.BlendFactor = C.VK_BLEND_FACTOR_ZERO
-	BlendOne                   common.BlendFactor = C.VK_BLEND_FACTOR_ONE
-	BlendSrcColor              common.BlendFactor = C.VK_BLEND_FACTOR_SRC_COLOR
-	BlendOneMinusSrcColor      common.BlendFactor = C.VK_BLEND_FACTOR_ONE_MINUS_SRC_COLOR
-	BlendDstColor              common.BlendFactor = C.VK_BLEND_FACTOR_DST_COLOR
-	BlendOneMinusDstColor      common.BlendFactor = C.VK_BLEND_FACTOR_ONE_MINUS_DST_COLOR
-	BlendSrcAlpha              common.BlendFactor = C.VK_BLEND_FACTOR_SRC_ALPHA
-	BlendOneMinusSrcAlpha      common.BlendFactor = C.VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA
-	BlendDstAlpha              common.BlendFactor = C.VK_BLEND_FACTOR_DST_ALPHA
-	BlendOneMinusDstAlpha      common.BlendFactor = C.VK_BLEND_FACTOR_ONE_MINUS_DST_ALPHA
-	BlendConstantColor         common.BlendFactor = C.VK_BLEND_FACTOR_CONSTANT_COLOR
-	BlendOneMinusConstantColor common.BlendFactor = C.VK_BLEND_FACTOR_ONE_MINUS_CONSTANT_COLOR
-	BlendConstantAlpha         common.BlendFactor = C.VK_BLEND_FACTOR_CONSTANT_ALPHA
-	BlendOneMinusConstantAlpha common.BlendFactor = C.VK_BLEND_FACTOR_ONE_MINUS_CONSTANT_ALPHA
-	BlendSrcAlphaSaturate      common.BlendFactor = C.VK_BLEND_FACTOR_SRC_ALPHA_SATURATE
-	BlendSrc1Color             common.BlendFactor = C.VK_BLEND_FACTOR_SRC1_COLOR
-	BlendOneMinusSrc1Color     common.BlendFactor = C.VK_BLEND_FACTOR_ONE_MINUS_SRC1_COLOR
-	BlendSrc1Alpha             common.BlendFactor = C.VK_BLEND_FACTOR_SRC1_ALPHA
-	BlendOneMinusSrc1Alpha     common.BlendFactor = C.VK_BLEND_FACTOR_ONE_MINUS_SRC1_ALPHA
+	BlendZero                  BlendFactor = C.VK_BLEND_FACTOR_ZERO
+	BlendOne                   BlendFactor = C.VK_BLEND_FACTOR_ONE
+	BlendSrcColor              BlendFactor = C.VK_BLEND_FACTOR_SRC_COLOR
+	BlendOneMinusSrcColor      BlendFactor = C.VK_BLEND_FACTOR_ONE_MINUS_SRC_COLOR
+	BlendDstColor              BlendFactor = C.VK_BLEND_FACTOR_DST_COLOR
+	BlendOneMinusDstColor      BlendFactor = C.VK_BLEND_FACTOR_ONE_MINUS_DST_COLOR
+	BlendSrcAlpha              BlendFactor = C.VK_BLEND_FACTOR_SRC_ALPHA
+	BlendOneMinusSrcAlpha      BlendFactor = C.VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA
+	BlendDstAlpha              BlendFactor = C.VK_BLEND_FACTOR_DST_ALPHA
+	BlendOneMinusDstAlpha      BlendFactor = C.VK_BLEND_FACTOR_ONE_MINUS_DST_ALPHA
+	BlendConstantColor         BlendFactor = C.VK_BLEND_FACTOR_CONSTANT_COLOR
+	BlendOneMinusConstantColor BlendFactor = C.VK_BLEND_FACTOR_ONE_MINUS_CONSTANT_COLOR
+	BlendConstantAlpha         BlendFactor = C.VK_BLEND_FACTOR_CONSTANT_ALPHA
+	BlendOneMinusConstantAlpha BlendFactor = C.VK_BLEND_FACTOR_ONE_MINUS_CONSTANT_ALPHA
+	BlendSrcAlphaSaturate      BlendFactor = C.VK_BLEND_FACTOR_SRC_ALPHA_SATURATE
+	BlendSrc1Color             BlendFactor = C.VK_BLEND_FACTOR_SRC1_COLOR
+	BlendOneMinusSrc1Color     BlendFactor = C.VK_BLEND_FACTOR_ONE_MINUS_SRC1_COLOR
+	BlendSrc1Alpha             BlendFactor = C.VK_BLEND_FACTOR_SRC1_ALPHA
+	BlendOneMinusSrc1Alpha     BlendFactor = C.VK_BLEND_FACTOR_ONE_MINUS_SRC1_ALPHA
 
-	BlendOpAdd      common.BlendOp = C.VK_BLEND_OP_ADD
-	BlendOpSubtract common.BlendOp = C.VK_BLEND_OP_SUBTRACT
-	BlendOpMin      common.BlendOp = C.VK_BLEND_OP_MIN
-	BlendOpMax      common.BlendOp = C.VK_BLEND_OP_MAX
+	BlendOpAdd      BlendOp = C.VK_BLEND_OP_ADD
+	BlendOpSubtract BlendOp = C.VK_BLEND_OP_SUBTRACT
+	BlendOpMin      BlendOp = C.VK_BLEND_OP_MIN
+	BlendOpMax      BlendOp = C.VK_BLEND_OP_MAX
 
-	LogicOpClear        common.LogicOp = C.VK_LOGIC_OP_CLEAR
-	LogicOpAnd          common.LogicOp = C.VK_LOGIC_OP_AND
-	LogicOpAndReverse   common.LogicOp = C.VK_LOGIC_OP_AND_REVERSE
-	LogicOpCopy         common.LogicOp = C.VK_LOGIC_OP_COPY
-	LogicOpAndInverted  common.LogicOp = C.VK_LOGIC_OP_AND_INVERTED
-	LogicOpNoop         common.LogicOp = C.VK_LOGIC_OP_NO_OP
-	LogicOpXor          common.LogicOp = C.VK_LOGIC_OP_XOR
-	LogicOpOr           common.LogicOp = C.VK_LOGIC_OP_OR
-	LogicOpNor          common.LogicOp = C.VK_LOGIC_OP_NOR
-	LogicOpEquivalent   common.LogicOp = C.VK_LOGIC_OP_EQUIVALENT
-	LogicOpInvert       common.LogicOp = C.VK_LOGIC_OP_INVERT
-	LogicOpOrReverse    common.LogicOp = C.VK_LOGIC_OP_OR_REVERSE
-	LogicOpCopyInverted common.LogicOp = C.VK_LOGIC_OP_COPY_INVERTED
-	LogicOpOrInverted   common.LogicOp = C.VK_LOGIC_OP_OR_INVERTED
-	LogicOpNand         common.LogicOp = C.VK_LOGIC_OP_NAND
-	LogicOpSet          common.LogicOp = C.VK_LOGIC_OP_SET
+	LogicOpClear        LogicOp = C.VK_LOGIC_OP_CLEAR
+	LogicOpAnd          LogicOp = C.VK_LOGIC_OP_AND
+	LogicOpAndReverse   LogicOp = C.VK_LOGIC_OP_AND_REVERSE
+	LogicOpCopy         LogicOp = C.VK_LOGIC_OP_COPY
+	LogicOpAndInverted  LogicOp = C.VK_LOGIC_OP_AND_INVERTED
+	LogicOpNoop         LogicOp = C.VK_LOGIC_OP_NO_OP
+	LogicOpXor          LogicOp = C.VK_LOGIC_OP_XOR
+	LogicOpOr           LogicOp = C.VK_LOGIC_OP_OR
+	LogicOpNor          LogicOp = C.VK_LOGIC_OP_NOR
+	LogicOpEquivalent   LogicOp = C.VK_LOGIC_OP_EQUIVALENT
+	LogicOpInvert       LogicOp = C.VK_LOGIC_OP_INVERT
+	LogicOpOrReverse    LogicOp = C.VK_LOGIC_OP_OR_REVERSE
+	LogicOpCopyInverted LogicOp = C.VK_LOGIC_OP_COPY_INVERTED
+	LogicOpOrInverted   LogicOp = C.VK_LOGIC_OP_OR_INVERTED
+	LogicOpNand         LogicOp = C.VK_LOGIC_OP_NAND
+	LogicOpSet          LogicOp = C.VK_LOGIC_OP_SET
 )
 
 func init() {
@@ -102,20 +102,20 @@ func init() {
 type ColorBlendAttachment struct {
 	BlendEnabled bool
 
-	SrcColor     common.BlendFactor
-	DstColor     common.BlendFactor
-	ColorBlendOp common.BlendOp
+	SrcColor     BlendFactor
+	DstColor     BlendFactor
+	ColorBlendOp BlendOp
 
-	SrcAlpha     common.BlendFactor
-	DstAlpha     common.BlendFactor
-	AlphaBlendOp common.BlendOp
+	SrcAlpha     BlendFactor
+	DstAlpha     BlendFactor
+	AlphaBlendOp BlendOp
 
-	WriteMask common.ColorComponents
+	WriteMask ColorComponents
 }
 
 type ColorBlendStateOptions struct {
 	LogicOpEnabled bool
-	LogicOp        common.LogicOp
+	LogicOp        LogicOp
 
 	BlendConstants [4]float32
 	Attachments    []ColorBlendAttachment

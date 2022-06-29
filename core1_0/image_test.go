@@ -58,7 +58,7 @@ func TestVulkanLoader1_0_CreateImage(t *testing.T) {
 		Flags:     core1_0.ImageCreateCubeCompatible,
 		ImageType: core1_0.ImageType2D,
 		Format:    core1_0.DataFormatA2R10G10B10SignedNormalizedPacked,
-		Extent: common.Extent3D{
+		Extent: core1_0.Extent3D{
 			Width:  1,
 			Height: 3,
 			Depth:  5,
@@ -140,7 +140,7 @@ func TestVulkanImage_SubresourceLayout(t *testing.T) {
 			*(*uint64)(unsafe.Pointer(val.FieldByName("arrayPitch").UnsafeAddr())) = 17
 		})
 
-	layout := image.SubresourceLayout(&common.ImageSubresource{
+	layout := image.SubresourceLayout(&core1_0.ImageSubresource{
 		AspectMask: core1_0.AspectDepth,
 		MipLevel:   1,
 		ArrayLayer: 3,
@@ -203,7 +203,7 @@ func TestVulkanImage_SparseMemoryRequirements(t *testing.T) {
 		{
 			FormatProperties: core1_0.SparseImageFormatProperties{
 				AspectMask:       core1_0.AspectColor,
-				ImageGranularity: common.Extent3D{1, 3, 5},
+				ImageGranularity: core1_0.Extent3D{1, 3, 5},
 				Flags:            core1_0.SparseImageFormatNonstandardBlockSize,
 			},
 			ImageMipTailFirstLod: 7,
@@ -214,7 +214,7 @@ func TestVulkanImage_SparseMemoryRequirements(t *testing.T) {
 		{
 			FormatProperties: core1_0.SparseImageFormatProperties{
 				AspectMask:       core1_0.AspectDepth,
-				ImageGranularity: common.Extent3D{19, 23, 29},
+				ImageGranularity: core1_0.Extent3D{19, 23, 29},
 				Flags:            core1_0.SparseImageFormatAlignedMipSize,
 			},
 			ImageMipTailFirstLod: 31,

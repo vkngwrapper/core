@@ -101,7 +101,7 @@ func TestImageFormatListCreateOptions(t *testing.T) {
 		core1_0.ImageCreateOptions{
 			HaveNext: common.HaveNext{
 				core1_2.ImageFormatListCreateOptions{
-					ViewFormats: []common.DataFormat{
+					ViewFormats: []core1_0.DataFormat{
 						core1_0.DataFormatA2B10G10R10UnsignedNormalizedPacked,
 						core1_0.DataFormatA8B8G8R8SRGBPacked,
 						core1_0.DataFormatA8B8G8R8SignedNormalizedPacked,

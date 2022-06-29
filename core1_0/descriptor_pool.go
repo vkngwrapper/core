@@ -39,6 +39,6 @@ func (p *VulkanDescriptorPool) Destroy(callbacks *driver.AllocationCallbacks) {
 	p.deviceDriver.ObjectStore().Delete(driver.VulkanHandle(p.descriptorPoolHandle))
 }
 
-func (p *VulkanDescriptorPool) Reset(flags common.DescriptorPoolResetFlags) (common.VkResult, error) {
+func (p *VulkanDescriptorPool) Reset(flags DescriptorPoolResetFlags) (common.VkResult, error) {
 	return p.deviceDriver.VkResetDescriptorPool(p.device, p.descriptorPoolHandle, driver.VkDescriptorPoolResetFlags(flags))
 }

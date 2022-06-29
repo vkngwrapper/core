@@ -1,4 +1,4 @@
-package common
+package core1_0
 
 const AttachmentUnused int = -1
 

@@ -56,7 +56,7 @@ func (o DescriptorSetAllocateOptions) PopulateOutData(cDataPointer unsafe.Pointe
 type DescriptorImageInfo struct {
 	Sampler     Sampler
 	ImageView   ImageView
-	ImageLayout common.ImageLayout
+	ImageLayout ImageLayout
 }
 
 type DescriptorBufferInfo struct {
@@ -70,7 +70,7 @@ type WriteDescriptorSetOptions struct {
 	DstBinding      int
 	DstArrayElement int
 
-	DescriptorType common.DescriptorType
+	DescriptorType DescriptorType
 
 	ImageInfo       []DescriptorImageInfo
 	BufferInfo      []DescriptorBufferInfo

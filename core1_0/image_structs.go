@@ -12,45 +12,45 @@ import (
 )
 
 const (
-	ImageCreateSparseBinding   common.ImageCreateFlags = C.VK_IMAGE_CREATE_SPARSE_BINDING_BIT
-	ImageCreateSparseResidency common.ImageCreateFlags = C.VK_IMAGE_CREATE_SPARSE_RESIDENCY_BIT
-	ImageCreateSparseAliased   common.ImageCreateFlags = C.VK_IMAGE_CREATE_SPARSE_ALIASED_BIT
-	ImageCreateMutableFormat   common.ImageCreateFlags = C.VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT
-	ImageCreateCubeCompatible  common.ImageCreateFlags = C.VK_IMAGE_CREATE_CUBE_COMPATIBLE_BIT
+	ImageCreateSparseBinding   ImageCreateFlags = C.VK_IMAGE_CREATE_SPARSE_BINDING_BIT
+	ImageCreateSparseResidency ImageCreateFlags = C.VK_IMAGE_CREATE_SPARSE_RESIDENCY_BIT
+	ImageCreateSparseAliased   ImageCreateFlags = C.VK_IMAGE_CREATE_SPARSE_ALIASED_BIT
+	ImageCreateMutableFormat   ImageCreateFlags = C.VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT
+	ImageCreateCubeCompatible  ImageCreateFlags = C.VK_IMAGE_CREATE_CUBE_COMPATIBLE_BIT
 
-	ImageLayoutUndefined                     common.ImageLayout = C.VK_IMAGE_LAYOUT_UNDEFINED
-	ImageLayoutGeneral                       common.ImageLayout = C.VK_IMAGE_LAYOUT_GENERAL
-	ImageLayoutColorAttachmentOptimal        common.ImageLayout = C.VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL
-	ImageLayoutDepthStencilAttachmentOptimal common.ImageLayout = C.VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL
-	ImageLayoutDepthStencilReadOnlyOptimal   common.ImageLayout = C.VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL
-	ImageLayoutShaderReadOnlyOptimal         common.ImageLayout = C.VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL
-	ImageLayoutTransferSrcOptimal            common.ImageLayout = C.VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL
-	ImageLayoutTransferDstOptimal            common.ImageLayout = C.VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL
-	ImageLayoutPreInitialized                common.ImageLayout = C.VK_IMAGE_LAYOUT_PREINITIALIZED
+	ImageLayoutUndefined                     ImageLayout = C.VK_IMAGE_LAYOUT_UNDEFINED
+	ImageLayoutGeneral                       ImageLayout = C.VK_IMAGE_LAYOUT_GENERAL
+	ImageLayoutColorAttachmentOptimal        ImageLayout = C.VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL
+	ImageLayoutDepthStencilAttachmentOptimal ImageLayout = C.VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL
+	ImageLayoutDepthStencilReadOnlyOptimal   ImageLayout = C.VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL
+	ImageLayoutShaderReadOnlyOptimal         ImageLayout = C.VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL
+	ImageLayoutTransferSrcOptimal            ImageLayout = C.VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL
+	ImageLayoutTransferDstOptimal            ImageLayout = C.VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL
+	ImageLayoutPreInitialized                ImageLayout = C.VK_IMAGE_LAYOUT_PREINITIALIZED
 
-	ImageTilingOptimal common.ImageTiling = C.VK_IMAGE_TILING_OPTIMAL
-	ImageTilingLinear  common.ImageTiling = C.VK_IMAGE_TILING_LINEAR
+	ImageTilingOptimal ImageTiling = C.VK_IMAGE_TILING_OPTIMAL
+	ImageTilingLinear  ImageTiling = C.VK_IMAGE_TILING_LINEAR
 
-	ImageType1D common.ImageType = C.VK_IMAGE_TYPE_1D
-	ImageType2D common.ImageType = C.VK_IMAGE_TYPE_2D
-	ImageType3D common.ImageType = C.VK_IMAGE_TYPE_3D
+	ImageType1D ImageType = C.VK_IMAGE_TYPE_1D
+	ImageType2D ImageType = C.VK_IMAGE_TYPE_2D
+	ImageType3D ImageType = C.VK_IMAGE_TYPE_3D
 
-	ImageUsageTransferSrc            common.ImageUsages = C.VK_IMAGE_USAGE_TRANSFER_SRC_BIT
-	ImageUsageTransferDst            common.ImageUsages = C.VK_IMAGE_USAGE_TRANSFER_DST_BIT
-	ImageUsageSampled                common.ImageUsages = C.VK_IMAGE_USAGE_SAMPLED_BIT
-	ImageUsageStorage                common.ImageUsages = C.VK_IMAGE_USAGE_STORAGE_BIT
-	ImageUsageColorAttachment        common.ImageUsages = C.VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT
-	ImageUsageDepthStencilAttachment common.ImageUsages = C.VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT
-	ImageUsageTransientAttachment    common.ImageUsages = C.VK_IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT
-	ImageUsageInputAttachment        common.ImageUsages = C.VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT
+	ImageUsageTransferSrc            ImageUsages = C.VK_IMAGE_USAGE_TRANSFER_SRC_BIT
+	ImageUsageTransferDst            ImageUsages = C.VK_IMAGE_USAGE_TRANSFER_DST_BIT
+	ImageUsageSampled                ImageUsages = C.VK_IMAGE_USAGE_SAMPLED_BIT
+	ImageUsageStorage                ImageUsages = C.VK_IMAGE_USAGE_STORAGE_BIT
+	ImageUsageColorAttachment        ImageUsages = C.VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT
+	ImageUsageDepthStencilAttachment ImageUsages = C.VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT
+	ImageUsageTransientAttachment    ImageUsages = C.VK_IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT
+	ImageUsageInputAttachment        ImageUsages = C.VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT
 
-	Samples1  common.SampleCounts = C.VK_SAMPLE_COUNT_1_BIT
-	Samples2  common.SampleCounts = C.VK_SAMPLE_COUNT_2_BIT
-	Samples4  common.SampleCounts = C.VK_SAMPLE_COUNT_4_BIT
-	Samples8  common.SampleCounts = C.VK_SAMPLE_COUNT_8_BIT
-	Samples16 common.SampleCounts = C.VK_SAMPLE_COUNT_16_BIT
-	Samples32 common.SampleCounts = C.VK_SAMPLE_COUNT_32_BIT
-	Samples64 common.SampleCounts = C.VK_SAMPLE_COUNT_64_BIT
+	Samples1  SampleCounts = C.VK_SAMPLE_COUNT_1_BIT
+	Samples2  SampleCounts = C.VK_SAMPLE_COUNT_2_BIT
+	Samples4  SampleCounts = C.VK_SAMPLE_COUNT_4_BIT
+	Samples8  SampleCounts = C.VK_SAMPLE_COUNT_8_BIT
+	Samples16 SampleCounts = C.VK_SAMPLE_COUNT_16_BIT
+	Samples32 SampleCounts = C.VK_SAMPLE_COUNT_32_BIT
+	Samples64 SampleCounts = C.VK_SAMPLE_COUNT_64_BIT
 )
 
 func init() {
@@ -96,22 +96,22 @@ func init() {
 }
 
 type ImageCreateOptions struct {
-	Flags     common.ImageCreateFlags
-	ImageType common.ImageType
-	Format    common.DataFormat
-	Extent    common.Extent3D
+	Flags     ImageCreateFlags
+	ImageType ImageType
+	Format    DataFormat
+	Extent    Extent3D
 
 	MipLevels   int
 	ArrayLayers int
 
-	Samples     common.SampleCounts
-	Tiling      common.ImageTiling
-	Usage       common.ImageUsages
-	SharingMode common.SharingMode
+	Samples     SampleCounts
+	Tiling      ImageTiling
+	Usage       ImageUsages
+	SharingMode SharingMode
 
 	QueueFamilies []uint32
 
-	InitialLayout common.ImageLayout
+	InitialLayout ImageLayout
 
 	common.HaveNext
 }

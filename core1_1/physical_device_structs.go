@@ -93,9 +93,9 @@ func (o *FormatPropertiesOutData) PopulateCPointer(allocator *cgoparam.Allocator
 
 func (o *FormatPropertiesOutData) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
 	data := (*C.VkFormatProperties2)(cDataPointer)
-	o.FormatProperties.LinearTilingFeatures = common.FormatFeatures(data.formatProperties.linearTilingFeatures)
-	o.FormatProperties.OptimalTilingFeatures = common.FormatFeatures(data.formatProperties.optimalTilingFeatures)
-	o.FormatProperties.BufferFeatures = common.FormatFeatures(data.formatProperties.bufferFeatures)
+	o.FormatProperties.LinearTilingFeatures = core1_0.FormatFeatures(data.formatProperties.linearTilingFeatures)
+	o.FormatProperties.OptimalTilingFeatures = core1_0.FormatFeatures(data.formatProperties.optimalTilingFeatures)
+	o.FormatProperties.BufferFeatures = core1_0.FormatFeatures(data.formatProperties.bufferFeatures)
 
 	return data.pNext, nil
 }
@@ -103,11 +103,11 @@ func (o *FormatPropertiesOutData) PopulateOutData(cDataPointer unsafe.Pointer, h
 ////
 
 type ImageFormatOptions struct {
-	Format common.DataFormat
-	Type   common.ImageType
-	Tiling common.ImageTiling
-	Usage  common.ImageUsages
-	Flags  common.ImageCreateFlags
+	Format core1_0.DataFormat
+	Type   core1_0.ImageType
+	Tiling core1_0.ImageTiling
+	Usage  core1_0.ImageUsages
+	Flags  core1_0.ImageCreateFlags
 
 	common.HaveNext
 }
@@ -155,14 +155,14 @@ func (o *ImageFormatPropertiesOutData) PopulateCPointer(allocator *cgoparam.Allo
 
 func (o *ImageFormatPropertiesOutData) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
 	data := (*C.VkImageFormatProperties2)(cDataPointer)
-	o.ImageFormatProperties.MaxExtent = common.Extent3D{
+	o.ImageFormatProperties.MaxExtent = core1_0.Extent3D{
 		Width:  int(data.imageFormatProperties.maxExtent.width),
 		Height: int(data.imageFormatProperties.maxExtent.height),
 		Depth:  int(data.imageFormatProperties.maxExtent.depth),
 	}
 	o.ImageFormatProperties.MaxMipLevels = int(data.imageFormatProperties.maxMipLevels)
 	o.ImageFormatProperties.MaxArrayLayers = int(data.imageFormatProperties.maxArrayLayers)
-	o.ImageFormatProperties.SampleCounts = common.SampleCounts(data.imageFormatProperties.sampleCounts)
+	o.ImageFormatProperties.SampleCounts = core1_0.SampleCounts(data.imageFormatProperties.sampleCounts)
 	o.ImageFormatProperties.MaxResourceSize = int(data.imageFormatProperties.maxResourceSize)
 
 	return data.pNext, nil
@@ -191,19 +191,19 @@ func (o *MemoryPropertiesOutData) PopulateOutData(cDataPointer unsafe.Pointer, h
 	data := (*C.VkPhysicalDeviceMemoryProperties2)(cDataPointer)
 
 	memoryTypeCount := int(data.memoryProperties.memoryTypeCount)
-	o.MemoryProperties.MemoryTypes = make([]common.MemoryType, memoryTypeCount)
+	o.MemoryProperties.MemoryTypes = make([]core1_0.MemoryType, memoryTypeCount)
 
 	for i := 0; i < memoryTypeCount; i++ {
-		o.MemoryProperties.MemoryTypes[i].Properties = common.MemoryProperties(data.memoryProperties.memoryTypes[i].propertyFlags)
+		o.MemoryProperties.MemoryTypes[i].Properties = core1_0.MemoryProperties(data.memoryProperties.memoryTypes[i].propertyFlags)
 		o.MemoryProperties.MemoryTypes[i].HeapIndex = int(data.memoryProperties.memoryTypes[i].heapIndex)
 	}
 
 	memoryHeapCount := int(data.memoryProperties.memoryHeapCount)
-	o.MemoryProperties.MemoryHeaps = make([]common.MemoryHeap, memoryHeapCount)
+	o.MemoryProperties.MemoryHeaps = make([]core1_0.MemoryHeap, memoryHeapCount)
 
 	for i := 0; i < memoryHeapCount; i++ {
 		o.MemoryProperties.MemoryHeaps[i].Size = int(data.memoryProperties.memoryHeaps[i].size)
-		o.MemoryProperties.MemoryHeaps[i].Flags = common.MemoryHeapFlags(data.memoryProperties.memoryHeaps[i].flags)
+		o.MemoryProperties.MemoryHeaps[i].Flags = core1_0.MemoryHeapFlags(data.memoryProperties.memoryHeaps[i].flags)
 	}
 
 	return data.pNext, nil
@@ -259,10 +259,10 @@ func (o *QueueFamilyOutData) PopulateCPointer(allocator *cgoparam.Allocator, pre
 func (o *QueueFamilyOutData) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
 	data := (*C.VkQueueFamilyProperties2)(cDataPointer)
 
-	o.QueueFamily.Flags = common.QueueFlags(data.queueFamilyProperties.queueFlags)
+	o.QueueFamily.Flags = core1_0.QueueFlags(data.queueFamilyProperties.queueFlags)
 	o.QueueFamily.QueueCount = int(data.queueFamilyProperties.queueCount)
 	o.QueueFamily.TimestampValidBits = uint32(data.queueFamilyProperties.timestampValidBits)
-	o.QueueFamily.MinImageTransferGranularity = common.Extent3D{
+	o.QueueFamily.MinImageTransferGranularity = core1_0.Extent3D{
 		Width:  int(data.queueFamilyProperties.minImageTransferGranularity.width),
 		Height: int(data.queueFamilyProperties.minImageTransferGranularity.height),
 		Depth:  int(data.queueFamilyProperties.minImageTransferGranularity.depth),
@@ -274,11 +274,11 @@ func (o *QueueFamilyOutData) PopulateOutData(cDataPointer unsafe.Pointer, helper
 ////
 
 type SparseImageFormatOptions struct {
-	Format  common.DataFormat
-	Type    common.ImageType
-	Samples common.SampleCounts
-	Usage   common.ImageUsages
-	Tiling  common.ImageTiling
+	Format  core1_0.DataFormat
+	Type    core1_0.ImageType
+	Samples core1_0.SampleCounts
+	Usage   core1_0.ImageUsages
+	Tiling  core1_0.ImageTiling
 
 	common.HaveNext
 }
@@ -328,9 +328,9 @@ func (o *SparseImageFormatPropertiesOutData) PopulateCPointer(allocator *cgopara
 func (o *SparseImageFormatPropertiesOutData) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
 	data := (*C.VkSparseImageFormatProperties2)(cDataPointer)
 
-	o.SparseImageFormatProperties.AspectMask = common.ImageAspectFlags(data.properties.aspectMask)
-	o.SparseImageFormatProperties.Flags = common.SparseImageFormatFlags(data.properties.flags)
-	o.SparseImageFormatProperties.ImageGranularity = common.Extent3D{
+	o.SparseImageFormatProperties.AspectMask = core1_0.ImageAspectFlags(data.properties.aspectMask)
+	o.SparseImageFormatProperties.Flags = core1_0.SparseImageFormatFlags(data.properties.flags)
+	o.SparseImageFormatProperties.ImageGranularity = core1_0.Extent3D{
 		Width:  int(data.properties.imageGranularity.width),
 		Height: int(data.properties.imageGranularity.height),
 		Depth:  int(data.properties.imageGranularity.depth),
@@ -502,7 +502,7 @@ func (o *PhysicalDeviceProtectedMemoryOutData) PopulateOutData(cDataPointer unsa
 
 type PhysicalDeviceSubgroupOutData struct {
 	SubgroupSize              int
-	SupportedStages           common.ShaderStages
+	SupportedStages           core1_0.ShaderStages
 	SupportedOperations       SubgroupFeatures
 	QuadOperationsInAllStages bool
 
@@ -525,7 +525,7 @@ func (o *PhysicalDeviceSubgroupOutData) PopulateOutData(cDataPointer unsafe.Poin
 	properties := (*C.VkPhysicalDeviceSubgroupProperties)(cDataPointer)
 
 	o.SubgroupSize = int(properties.subgroupSize)
-	o.SupportedStages = common.ShaderStages(properties.supportedStages)
+	o.SupportedStages = core1_0.ShaderStages(properties.supportedStages)
 	o.SupportedOperations = SubgroupFeatures(properties.supportedOperations)
 	o.QuadOperationsInAllStages = properties.quadOperationsInAllStages != C.VkBool32(0)
 

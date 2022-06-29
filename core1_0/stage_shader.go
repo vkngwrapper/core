@@ -15,14 +15,14 @@ import (
 )
 
 const (
-	StageVertex                 common.ShaderStages = C.VK_SHADER_STAGE_VERTEX_BIT
-	StageTessellationControl    common.ShaderStages = C.VK_SHADER_STAGE_TESSELLATION_CONTROL_BIT
-	StageTessellationEvaluation common.ShaderStages = C.VK_SHADER_STAGE_TESSELLATION_EVALUATION_BIT
-	StageGeometry               common.ShaderStages = C.VK_SHADER_STAGE_GEOMETRY_BIT
-	StageFragment               common.ShaderStages = C.VK_SHADER_STAGE_FRAGMENT_BIT
-	StageCompute                common.ShaderStages = C.VK_SHADER_STAGE_COMPUTE_BIT
-	StageAllGraphics            common.ShaderStages = C.VK_SHADER_STAGE_ALL_GRAPHICS
-	StageAll                    common.ShaderStages = C.VK_SHADER_STAGE_ALL
+	StageVertex                 ShaderStages = C.VK_SHADER_STAGE_VERTEX_BIT
+	StageTessellationControl    ShaderStages = C.VK_SHADER_STAGE_TESSELLATION_CONTROL_BIT
+	StageTessellationEvaluation ShaderStages = C.VK_SHADER_STAGE_TESSELLATION_EVALUATION_BIT
+	StageGeometry               ShaderStages = C.VK_SHADER_STAGE_GEOMETRY_BIT
+	StageFragment               ShaderStages = C.VK_SHADER_STAGE_FRAGMENT_BIT
+	StageCompute                ShaderStages = C.VK_SHADER_STAGE_COMPUTE_BIT
+	StageAllGraphics            ShaderStages = C.VK_SHADER_STAGE_ALL_GRAPHICS
+	StageAll                    ShaderStages = C.VK_SHADER_STAGE_ALL
 )
 
 func init() {
@@ -35,9 +35,9 @@ func init() {
 }
 
 type ShaderStageOptions struct {
-	Flags              common.ShaderStageCreateFlags
+	Flags              ShaderStageCreateFlags
 	Name               string
-	Stage              common.ShaderStages
+	Stage              ShaderStages
 	Shader             ShaderModule
 	SpecializationInfo map[uint32]any
 

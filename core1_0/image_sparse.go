@@ -6,7 +6,6 @@ package core1_0
 */
 import "C"
 import (
-	"github.com/CannibalVox/VKng/core/common"
 	"github.com/CannibalVox/VKng/core/driver"
 	"github.com/CannibalVox/cgoparam"
 	"unsafe"
@@ -35,13 +34,13 @@ func (i *VulkanImage) SparseMemoryRequirements() []SparseImageMemoryRequirements
 		inReq := requirementsSlice[j]
 		reqs := SparseImageMemoryRequirements{
 			FormatProperties: SparseImageFormatProperties{
-				AspectMask: common.ImageAspectFlags(inReq.formatProperties.aspectMask),
-				ImageGranularity: common.Extent3D{
+				AspectMask: ImageAspectFlags(inReq.formatProperties.aspectMask),
+				ImageGranularity: Extent3D{
 					Width:  int(inReq.formatProperties.imageGranularity.width),
 					Height: int(inReq.formatProperties.imageGranularity.height),
 					Depth:  int(inReq.formatProperties.imageGranularity.depth),
 				},
-				Flags: common.SparseImageFormatFlags(inReq.formatProperties.flags),
+				Flags: SparseImageFormatFlags(inReq.formatProperties.flags),
 			},
 			ImageMipTailFirstLod: int(inReq.imageMipTailFirstLod),
 			ImageMipTailOffset:   int(inReq.imageMipTailOffset),

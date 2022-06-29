@@ -132,14 +132,14 @@ func TestDeviceGroupRenderPassBeginOptions(t *testing.T) {
 			HaveNext: common.HaveNext{
 				core1_1.DeviceGroupRenderPassBeginOptions{
 					DeviceMask: 7,
-					DeviceRenderAreas: []common.Rect2D{
+					DeviceRenderAreas: []core1_0.Rect2D{
 						{
-							Offset: common.Offset2D{X: 1, Y: 3},
-							Extent: common.Extent2D{Width: 5, Height: 7},
+							Offset: core1_0.Offset2D{X: 1, Y: 3},
+							Extent: core1_0.Extent2D{Width: 5, Height: 7},
 						},
 						{
-							Offset: common.Offset2D{X: 11, Y: 13},
-							Extent: common.Extent2D{Width: 17, Height: 19},
+							Offset: core1_0.Offset2D{X: 11, Y: 13},
+							Extent: core1_0.Extent2D{Width: 17, Height: 19},
 						},
 					},
 				},

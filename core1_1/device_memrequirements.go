@@ -13,9 +13,9 @@ import (
 )
 
 const (
-	MemoryHeapMultiInstance common.MemoryHeapFlags = C.VK_MEMORY_HEAP_MULTI_INSTANCE_BIT
+	MemoryHeapMultiInstance core1_0.MemoryHeapFlags = C.VK_MEMORY_HEAP_MULTI_INSTANCE_BIT
 
-	MemoryPropertyProtected common.MemoryProperties = C.VK_MEMORY_PROPERTY_PROTECTED_BIT
+	MemoryPropertyProtected core1_0.MemoryProperties = C.VK_MEMORY_PROPERTY_PROTECTED_BIT
 )
 
 func init() {
@@ -152,13 +152,13 @@ func (o *SparseImageMemoryRequirementsOutData) PopulateCPointer(allocator *cgopa
 
 func (o *SparseImageMemoryRequirementsOutData) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
 	outData := (*C.VkSparseImageMemoryRequirements2)(cDataPointer)
-	o.MemoryRequirements.FormatProperties.Flags = common.SparseImageFormatFlags(outData.memoryRequirements.formatProperties.flags)
-	o.MemoryRequirements.FormatProperties.ImageGranularity = common.Extent3D{
+	o.MemoryRequirements.FormatProperties.Flags = core1_0.SparseImageFormatFlags(outData.memoryRequirements.formatProperties.flags)
+	o.MemoryRequirements.FormatProperties.ImageGranularity = core1_0.Extent3D{
 		Width:  int(outData.memoryRequirements.formatProperties.imageGranularity.width),
 		Height: int(outData.memoryRequirements.formatProperties.imageGranularity.height),
 		Depth:  int(outData.memoryRequirements.formatProperties.imageGranularity.depth),
 	}
-	o.MemoryRequirements.FormatProperties.AspectMask = common.ImageAspectFlags(outData.memoryRequirements.formatProperties.aspectMask)
+	o.MemoryRequirements.FormatProperties.AspectMask = core1_0.ImageAspectFlags(outData.memoryRequirements.formatProperties.aspectMask)
 	o.MemoryRequirements.ImageMipTailSize = int(outData.memoryRequirements.imageMipTailSize)
 	o.MemoryRequirements.ImageMipTailStride = int(outData.memoryRequirements.imageMipTailStride)
 	o.MemoryRequirements.ImageMipTailOffset = int(outData.memoryRequirements.imageMipTailOffset)

@@ -14,7 +14,7 @@ import (
 )
 
 type SubpassBeginOptions struct {
-	Contents common.SubpassContents
+	Contents core1_0.SubpassContents
 
 	common.HaveNext
 }
@@ -63,15 +63,15 @@ func (o SubpassEndOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers 
 ////
 
 type AttachmentDescriptionOptions struct {
-	Flags          common.AttachmentDescriptionFlags
-	Format         common.DataFormat
-	Samples        common.SampleCounts
-	LoadOp         common.AttachmentLoadOp
-	StoreOp        common.AttachmentStoreOp
-	StencilLoadOp  common.AttachmentLoadOp
-	StencilStoreOp common.AttachmentStoreOp
-	InitialLayout  common.ImageLayout
-	FinalLayout    common.ImageLayout
+	Flags          core1_0.AttachmentDescriptionFlags
+	Format         core1_0.DataFormat
+	Samples        core1_0.SampleCounts
+	LoadOp         core1_0.AttachmentLoadOp
+	StoreOp        core1_0.AttachmentStoreOp
+	StencilLoadOp  core1_0.AttachmentLoadOp
+	StencilStoreOp core1_0.AttachmentStoreOp
+	InitialLayout  core1_0.ImageLayout
+	FinalLayout    core1_0.ImageLayout
 
 	common.HaveNext
 }
@@ -106,8 +106,8 @@ func (o AttachmentDescriptionOptions) PopulateOutData(cDataPointer unsafe.Pointe
 
 type AttachmentReferenceOptions struct {
 	Attachment int
-	Layout     common.ImageLayout
-	AspectMask common.ImageAspectFlags
+	Layout     core1_0.ImageLayout
+	AspectMask core1_0.ImageAspectFlags
 
 	common.HaveNext
 }
@@ -135,8 +135,8 @@ func (o AttachmentReferenceOptions) PopulateOutData(cDataPointer unsafe.Pointer,
 ////
 
 type SubpassDescriptionOptions struct {
-	Flags                  common.SubPassDescriptionFlags
-	PipelineBindPoint      common.PipelineBindPoint
+	Flags                  core1_0.SubPassDescriptionFlags
+	PipelineBindPoint      core1_0.PipelineBindPoint
 	ViewMask               uint32
 	InputAttachments       []AttachmentReferenceOptions
 	ColorAttachments       []AttachmentReferenceOptions
@@ -228,11 +228,11 @@ func (o SubpassDescriptionOptions) PopulateOutData(cDataPointer unsafe.Pointer, 
 type SubpassDependencyOptions struct {
 	SrcSubpassIndex int
 	DstSubpassIndex int
-	SrcStageMask    common.PipelineStages
-	DstStageMask    common.PipelineStages
-	SrcAccessMask   common.AccessFlags
-	DstAccessMask   common.AccessFlags
-	DependencyFlags common.DependencyFlags
+	SrcStageMask    core1_0.PipelineStages
+	DstStageMask    core1_0.PipelineStages
+	SrcAccessMask   core1_0.AccessFlags
+	DstAccessMask   core1_0.AccessFlags
+	DependencyFlags core1_0.DependencyFlags
 	ViewOffset      int
 
 	common.HaveNext
@@ -266,7 +266,7 @@ func (o SubpassDependencyOptions) PopulateOutData(cDataPointer unsafe.Pointer, h
 ////
 
 type RenderPassCreateOptions struct {
-	Flags common.RenderPassCreateFlags
+	Flags core1_0.RenderPassCreateFlags
 
 	Attachments  []AttachmentDescriptionOptions
 	Subpasses    []SubpassDescriptionOptions
@@ -343,8 +343,8 @@ func (o RenderPassCreateOptions) PopulateOutData(cDataPointer unsafe.Pointer, he
 ////
 
 type AttachmentDescriptionStencilLayoutOptions struct {
-	StencilInitialLayout common.ImageLayout
-	StencilFinalLayout   common.ImageLayout
+	StencilInitialLayout core1_0.ImageLayout
+	StencilFinalLayout   core1_0.ImageLayout
 
 	common.HaveNext
 }
@@ -371,7 +371,7 @@ func (o AttachmentDescriptionStencilLayoutOptions) PopulateOutData(cDataPointer 
 ////
 
 type AttachmentReferenceStencilLayoutOptions struct {
-	StencilLayout common.ImageLayout
+	StencilLayout core1_0.ImageLayout
 
 	common.HaveNext
 }

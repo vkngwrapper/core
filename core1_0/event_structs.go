@@ -12,7 +12,7 @@ import (
 )
 
 type EventCreateOptions struct {
-	Flags common.EventCreateFlags
+	Flags EventCreateFlags
 
 	common.HaveNext
 }

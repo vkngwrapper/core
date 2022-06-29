@@ -63,8 +63,8 @@ func TestCommandBuffer_CmdBeginRenderPass2(t *testing.T) {
 		core1_0.RenderPassBeginOptions{
 			RenderPass:  renderPass,
 			Framebuffer: framebuffer,
-			RenderArea:  common.Rect2D{Offset: common.Offset2D{1, 3}, Extent: common.Extent2D{5, 7}},
-			ClearValues: []common.ClearValue{common.ClearValueFloat{1, 3, 5, 7}},
+			RenderArea:  core1_0.Rect2D{Offset: core1_0.Offset2D{1, 3}, Extent: core1_0.Extent2D{5, 7}},
+			ClearValues: []core1_0.ClearValue{core1_0.ClearValueFloat{1, 3, 5, 7}},
 		},
 		core1_2.SubpassBeginOptions{
 			Contents: core1_0.SubpassContentsSecondaryCommandBuffers,

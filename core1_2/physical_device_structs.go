@@ -7,6 +7,7 @@ package core1_2
 import "C"
 import (
 	"github.com/CannibalVox/VKng/core/common"
+	"github.com/CannibalVox/VKng/core/core1_0"
 	"github.com/CannibalVox/VKng/core/core1_1"
 	"github.com/CannibalVox/cgoparam"
 	"github.com/cockroachdb/errors"
@@ -413,7 +414,7 @@ type PhysicalDeviceVulkan11OutData struct {
 	DeviceLUIDValid bool
 
 	SubgroupSize                      int
-	SubgroupSupportedStages           common.ShaderStages
+	SubgroupSupportedStages           core1_0.ShaderStages
 	SubgroupSupportedOperations       core1_1.SubgroupFeatures
 	SubgroupQuadOperationsInAllStages bool
 
@@ -458,7 +459,7 @@ func (o *PhysicalDeviceVulkan11OutData) PopulateOutData(cDataPointer unsafe.Poin
 	o.DeviceNodeMask = uint32(info.deviceNodeMask)
 	o.DeviceLUIDValid = info.deviceLUIDValid != C.VkBool32(0)
 	o.SubgroupSize = int(info.subgroupSize)
-	o.SubgroupSupportedStages = common.ShaderStages(info.subgroupSupportedStages)
+	o.SubgroupSupportedStages = core1_0.ShaderStages(info.subgroupSupportedStages)
 	o.SubgroupSupportedOperations = core1_1.SubgroupFeatures(info.subgroupSupportedOperations)
 	o.SubgroupQuadOperationsInAllStages = info.subgroupQuadOperationsInAllStages != C.VkBool32(0)
 	o.PointClippingBehavior = core1_1.PointClippingBehavior(info.pointClippingBehavior)
@@ -534,7 +535,7 @@ type PhysicalDeviceVulkan12OutData struct {
 	FilterMinmaxImageComponentMapping  bool
 
 	MaxTimelineSemaphoreValueDifference uint64
-	FramebufferIntegerColorSampleCounts common.SampleCounts
+	FramebufferIntegerColorSampleCounts core1_0.SampleCounts
 
 	common.HaveNext
 }
@@ -618,7 +619,7 @@ func (o *PhysicalDeviceVulkan12OutData) PopulateOutData(cDataPointer unsafe.Poin
 	o.FilterMinmaxImageComponentMapping = outData.filterMinmaxImageComponentMapping != C.VkBool32(0)
 
 	o.MaxTimelineSemaphoreValueDifference = uint64(outData.maxTimelineSemaphoreValueDifference)
-	o.FramebufferIntegerColorSampleCounts = common.SampleCounts(outData.framebufferIntegerColorSampleCounts)
+	o.FramebufferIntegerColorSampleCounts = core1_0.SampleCounts(outData.framebufferIntegerColorSampleCounts)
 
 	return outData.pNext, nil
 }

@@ -12,9 +12,9 @@ import (
 )
 
 const (
-	PipelineCreateDisableOptimization common.PipelineCreateFlags = C.VK_PIPELINE_CREATE_DISABLE_OPTIMIZATION_BIT
-	PipelineCreateAllowDerivatives    common.PipelineCreateFlags = C.VK_PIPELINE_CREATE_ALLOW_DERIVATIVES_BIT
-	PipelineCreateDerivative          common.PipelineCreateFlags = C.VK_PIPELINE_CREATE_DERIVATIVE_BIT
+	PipelineCreateDisableOptimization PipelineCreateFlags = C.VK_PIPELINE_CREATE_DISABLE_OPTIMIZATION_BIT
+	PipelineCreateAllowDerivatives    PipelineCreateFlags = C.VK_PIPELINE_CREATE_ALLOW_DERIVATIVES_BIT
+	PipelineCreateDerivative          PipelineCreateFlags = C.VK_PIPELINE_CREATE_DERIVATIVE_BIT
 )
 
 func init() {
@@ -24,7 +24,7 @@ func init() {
 }
 
 type GraphicsPipelineCreateOptions struct {
-	Flags common.PipelineCreateFlags
+	Flags PipelineCreateFlags
 
 	ShaderStages  []ShaderStageOptions
 	VertexInput   *VertexInputStateOptions
@@ -184,7 +184,7 @@ func (o GraphicsPipelineCreateOptions) PopulateOutData(cDataPointer unsafe.Point
 }
 
 type ComputePipelineCreateOptions struct {
-	Flags  common.PipelineCreateFlags
+	Flags  PipelineCreateFlags
 	Shader ShaderStageOptions
 	Layout PipelineLayout
 

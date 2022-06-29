@@ -7,6 +7,7 @@ package core1_1
 import "C"
 import (
 	"github.com/CannibalVox/VKng/core/common"
+	"github.com/CannibalVox/VKng/core/core1_0"
 	"github.com/CannibalVox/cgoparam"
 	"unsafe"
 )
@@ -29,8 +30,8 @@ const (
 	TessellationDomainOriginUpperLeft TessellationDomainOrigin = C.VK_TESSELLATION_DOMAIN_ORIGIN_UPPER_LEFT
 	TessellationDomainOriginLowerLeft TessellationDomainOrigin = C.VK_TESSELLATION_DOMAIN_ORIGIN_LOWER_LEFT
 
-	PipelineCreateDispatchBase             common.PipelineCreateFlags = C.VK_PIPELINE_CREATE_DISPATCH_BASE
-	PipelineCreateViewIndexFromDeviceIndex common.PipelineCreateFlags = C.VK_PIPELINE_CREATE_VIEW_INDEX_FROM_DEVICE_INDEX_BIT
+	PipelineCreateDispatchBase             core1_0.PipelineCreateFlags = C.VK_PIPELINE_CREATE_DISPATCH_BASE
+	PipelineCreateViewIndexFromDeviceIndex core1_0.PipelineCreateFlags = C.VK_PIPELINE_CREATE_VIEW_INDEX_FROM_DEVICE_INDEX_BIT
 )
 
 func init() {

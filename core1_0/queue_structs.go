@@ -12,7 +12,7 @@ import (
 )
 
 const (
-	SparseMemoryBindMetadata common.SparseMemoryBindFlags = C.VK_SPARSE_MEMORY_BIND_METADATA_BIT
+	SparseMemoryBindMetadata SparseMemoryBindFlags = C.VK_SPARSE_MEMORY_BIND_METADATA_BIT
 )
 
 func init() {
@@ -26,7 +26,7 @@ type SparseMemoryBind struct {
 	Memory       DeviceMemory
 	MemoryOffset int
 
-	Flags common.SparseMemoryBindFlags
+	Flags SparseMemoryBindFlags
 }
 
 func (b SparseMemoryBind) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer) (unsafe.Pointer, error) {
@@ -55,14 +55,14 @@ type SparseImageOpaqueMemoryBindInfo struct {
 }
 
 type SparseImageMemoryBind struct {
-	Subresource common.ImageSubresource
-	Offset      common.Offset3D
-	Extent      common.Extent3D
+	Subresource ImageSubresource
+	Offset      Offset3D
+	Extent      Extent3D
 
 	Memory       DeviceMemory
 	MemoryOffset int
 
-	Flags common.SparseMemoryBindFlags
+	Flags SparseMemoryBindFlags
 }
 
 type SparseImageMemoryBindInfo struct {

@@ -13,16 +13,16 @@ import (
 )
 
 const (
-	CommandBufferResetReleaseResources common.CommandBufferResetFlags = C.VK_COMMAND_BUFFER_RESET_RELEASE_RESOURCES_BIT
+	CommandBufferResetReleaseResources CommandBufferResetFlags = C.VK_COMMAND_BUFFER_RESET_RELEASE_RESOURCES_BIT
 
-	LevelPrimary   common.CommandBufferLevel = C.VK_COMMAND_BUFFER_LEVEL_PRIMARY
-	LevelSecondary common.CommandBufferLevel = C.VK_COMMAND_BUFFER_LEVEL_SECONDARY
+	LevelPrimary   CommandBufferLevel = C.VK_COMMAND_BUFFER_LEVEL_PRIMARY
+	LevelSecondary CommandBufferLevel = C.VK_COMMAND_BUFFER_LEVEL_SECONDARY
 
-	IndexUInt16 common.IndexType = C.VK_INDEX_TYPE_UINT16
-	IndexUInt32 common.IndexType = C.VK_INDEX_TYPE_UINT32
+	IndexUInt16 IndexType = C.VK_INDEX_TYPE_UINT16
+	IndexUInt32 IndexType = C.VK_INDEX_TYPE_UINT32
 
-	StencilFaceFront common.StencilFaces = C.VK_STENCIL_FACE_FRONT_BIT
-	StencilFaceBack  common.StencilFaces = C.VK_STENCIL_FACE_BACK_BIT
+	StencilFaceFront StencilFaces = C.VK_STENCIL_FACE_FRONT_BIT
+	StencilFaceBack  StencilFaces = C.VK_STENCIL_FACE_BACK_BIT
 )
 
 func init() {
@@ -39,7 +39,7 @@ func init() {
 }
 
 type CommandBufferAllocateOptions struct {
-	Level       common.CommandBufferLevel
+	Level       CommandBufferLevel
 	BufferCount int
 	CommandPool CommandPool
 

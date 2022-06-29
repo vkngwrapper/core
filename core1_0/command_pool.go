@@ -38,6 +38,6 @@ func (p *VulkanCommandPool) Destroy(callbacks *driver.AllocationCallbacks) {
 	p.deviceDriver.ObjectStore().Delete(driver.VulkanHandle(p.commandPoolHandle))
 }
 
-func (p *VulkanCommandPool) Reset(flags common.CommandPoolResetFlags) (common.VkResult, error) {
+func (p *VulkanCommandPool) Reset(flags CommandPoolResetFlags) (common.VkResult, error) {
 	return p.deviceDriver.VkResetCommandPool(p.device, p.commandPoolHandle, driver.VkCommandPoolResetFlags(flags))
 }

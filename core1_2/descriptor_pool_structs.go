@@ -5,10 +5,13 @@ package core1_2
 #include "../vulkan/vulkan.h"
 */
 import "C"
-import "github.com/CannibalVox/VKng/core/common"
+import (
+	"github.com/CannibalVox/VKng/core/common"
+	"github.com/CannibalVox/VKng/core/core1_0"
+)
 
 const (
-	DescriptorPoolCreateUpdateAfterBind common.DescriptorPoolCreateFlags = C.VK_DESCRIPTOR_POOL_CREATE_UPDATE_AFTER_BIND_BIT
+	DescriptorPoolCreateUpdateAfterBind core1_0.DescriptorPoolCreateFlags = C.VK_DESCRIPTOR_POOL_CREATE_UPDATE_AFTER_BIND_BIT
 
 	VkErrorFragmentation common.VkResult = C.VK_ERROR_FRAGMENTATION
 )

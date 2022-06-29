@@ -7,6 +7,7 @@ package core1_1
 import "C"
 import (
 	"github.com/CannibalVox/VKng/core/common"
+	"github.com/CannibalVox/VKng/core/core1_0"
 	"github.com/CannibalVox/cgoparam"
 	"unsafe"
 )
@@ -100,8 +101,8 @@ func (o *ExternalMemoryProperties) PopulateOutData(cDataPointer unsafe.Pointer) 
 ////
 
 type ExternalBufferOptions struct {
-	Flags      common.BufferCreateFlags
-	Usage      common.BufferUsages
+	Flags      core1_0.BufferCreateFlags
+	Usage      core1_0.BufferUsages
 	HandleType ExternalMemoryHandleTypes
 
 	common.HaveNext

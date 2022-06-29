@@ -15,9 +15,9 @@ import (
 )
 
 const (
-	BufferCreateDeviceAddressCaptureReplay common.BufferCreateFlags = C.VK_BUFFER_CREATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT
+	BufferCreateDeviceAddressCaptureReplay core1_0.BufferCreateFlags = C.VK_BUFFER_CREATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT
 
-	BufferUsageShaderDeviceAddress common.BufferUsages = C.VK_BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT
+	BufferUsageShaderDeviceAddress core1_0.BufferUsages = C.VK_BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT
 
 	MemoryAllocateDeviceAddress              core1_1.MemoryAllocateFlags = C.VK_MEMORY_ALLOCATE_DEVICE_ADDRESS_BIT
 	MemoryAllocateDeviceAddressCaptureReplay core1_1.MemoryAllocateFlags = C.VK_MEMORY_ALLOCATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT

@@ -13,10 +13,10 @@ import (
 )
 
 const (
-	CommandPoolResetReleaseResources common.CommandPoolResetFlags = C.VK_COMMAND_POOL_RESET_RELEASE_RESOURCES_BIT
+	CommandPoolResetReleaseResources CommandPoolResetFlags = C.VK_COMMAND_POOL_RESET_RELEASE_RESOURCES_BIT
 
-	CommandPoolCreateTransient   common.CommandPoolCreateFlags = C.VK_COMMAND_POOL_CREATE_TRANSIENT_BIT
-	CommandPoolCreateResetBuffer common.CommandPoolCreateFlags = C.VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT
+	CommandPoolCreateTransient   CommandPoolCreateFlags = C.VK_COMMAND_POOL_CREATE_TRANSIENT_BIT
+	CommandPoolCreateResetBuffer CommandPoolCreateFlags = C.VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT
 )
 
 func init() {
@@ -28,7 +28,7 @@ func init() {
 
 type CommandPoolCreateOptions struct {
 	GraphicsQueueFamily *int
-	Flags               common.CommandPoolCreateFlags
+	Flags               CommandPoolCreateFlags
 
 	common.HaveNext
 }

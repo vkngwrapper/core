@@ -13,19 +13,19 @@ import (
 )
 
 const (
-	AttachmentDescriptionMayAlias common.AttachmentDescriptionFlags = C.VK_ATTACHMENT_DESCRIPTION_MAY_ALIAS_BIT
+	AttachmentDescriptionMayAlias AttachmentDescriptionFlags = C.VK_ATTACHMENT_DESCRIPTION_MAY_ALIAS_BIT
 
-	LoadOpLoad     common.AttachmentLoadOp = C.VK_ATTACHMENT_LOAD_OP_LOAD
-	LoadOpClear    common.AttachmentLoadOp = C.VK_ATTACHMENT_LOAD_OP_CLEAR
-	LoadOpDontCare common.AttachmentLoadOp = C.VK_ATTACHMENT_LOAD_OP_DONT_CARE
+	LoadOpLoad     AttachmentLoadOp = C.VK_ATTACHMENT_LOAD_OP_LOAD
+	LoadOpClear    AttachmentLoadOp = C.VK_ATTACHMENT_LOAD_OP_CLEAR
+	LoadOpDontCare AttachmentLoadOp = C.VK_ATTACHMENT_LOAD_OP_DONT_CARE
 
-	StoreOpStore    common.AttachmentStoreOp = C.VK_ATTACHMENT_STORE_OP_STORE
-	StoreOpDontCare common.AttachmentStoreOp = C.VK_ATTACHMENT_STORE_OP_DONT_CARE
+	StoreOpStore    AttachmentStoreOp = C.VK_ATTACHMENT_STORE_OP_STORE
+	StoreOpDontCare AttachmentStoreOp = C.VK_ATTACHMENT_STORE_OP_DONT_CARE
 
-	DependencyByRegion common.DependencyFlags = C.VK_DEPENDENCY_BY_REGION_BIT
+	DependencyByRegion DependencyFlags = C.VK_DEPENDENCY_BY_REGION_BIT
 
-	BindGraphics common.PipelineBindPoint = C.VK_PIPELINE_BIND_POINT_GRAPHICS
-	BindCompute  common.PipelineBindPoint = C.VK_PIPELINE_BIND_POINT_COMPUTE
+	BindGraphics PipelineBindPoint = C.VK_PIPELINE_BIND_POINT_GRAPHICS
+	BindCompute  PipelineBindPoint = C.VK_PIPELINE_BIND_POINT_COMPUTE
 
 	SubpassExternal = int(C.VK_SUBPASS_EXTERNAL)
 )
@@ -47,45 +47,45 @@ func init() {
 }
 
 type AttachmentDescription struct {
-	Flags   common.AttachmentDescriptionFlags
-	Format  common.DataFormat
-	Samples common.SampleCounts
+	Flags   AttachmentDescriptionFlags
+	Format  DataFormat
+	Samples SampleCounts
 
-	LoadOp         common.AttachmentLoadOp
-	StoreOp        common.AttachmentStoreOp
-	StencilLoadOp  common.AttachmentLoadOp
-	StencilStoreOp common.AttachmentStoreOp
+	LoadOp         AttachmentLoadOp
+	StoreOp        AttachmentStoreOp
+	StencilLoadOp  AttachmentLoadOp
+	StencilStoreOp AttachmentStoreOp
 
-	InitialLayout common.ImageLayout
-	FinalLayout   common.ImageLayout
+	InitialLayout ImageLayout
+	FinalLayout   ImageLayout
 }
 
 type SubPassDependency struct {
-	Flags common.DependencyFlags
+	Flags DependencyFlags
 
 	SrcSubPassIndex int
 	DstSubPassIndex int
 
-	SrcStageMask common.PipelineStages
-	DstStageMask common.PipelineStages
+	SrcStageMask PipelineStages
+	DstStageMask PipelineStages
 
-	SrcAccessMask common.AccessFlags
-	DstAccessMask common.AccessFlags
+	SrcAccessMask AccessFlags
+	DstAccessMask AccessFlags
 }
 
 type SubPassDescription struct {
-	Flags     common.SubPassDescriptionFlags
-	BindPoint common.PipelineBindPoint
+	Flags     SubPassDescriptionFlags
+	BindPoint PipelineBindPoint
 
-	InputAttachments           []common.AttachmentReference
-	ColorAttachments           []common.AttachmentReference
-	ResolveAttachments         []common.AttachmentReference
-	DepthStencilAttachment     *common.AttachmentReference
+	InputAttachments           []AttachmentReference
+	ColorAttachments           []AttachmentReference
+	ResolveAttachments         []AttachmentReference
+	DepthStencilAttachment     *AttachmentReference
 	PreservedAttachmentIndices []int
 }
 
 type RenderPassCreateOptions struct {
-	Flags               common.RenderPassCreateFlags
+	Flags               RenderPassCreateFlags
 	Attachments         []AttachmentDescription
 	SubPassDescriptions []SubPassDescription
 	SubPassDependencies []SubPassDependency
@@ -153,7 +153,7 @@ func (o RenderPassCreateOptions) PopulateCPointer(allocator *cgoparam.Allocator,
 			subPassSlice[i].pDepthStencilAttachment = nil
 
 			if o.SubPassDescriptions[i].DepthStencilAttachment != nil {
-				subPassSlice[i].pDepthStencilAttachment = createAttachmentReferences(allocator, []common.AttachmentReference{
+				subPassSlice[i].pDepthStencilAttachment = createAttachmentReferences(allocator, []AttachmentReference{
 					*o.SubPassDescriptions[i].DepthStencilAttachment,
 				})
 			}
@@ -203,7 +203,7 @@ func (o RenderPassCreateOptions) PopulateOutData(cDataPointer unsafe.Pointer, he
 	return createInfo.pNext, nil
 }
 
-func createAttachmentReferences(allocator *cgoparam.Allocator, references []common.AttachmentReference) *C.VkAttachmentReference {
+func createAttachmentReferences(allocator *cgoparam.Allocator, references []AttachmentReference) *C.VkAttachmentReference {
 	count := len(references)
 	if count == 0 {
 		return nil

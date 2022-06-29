@@ -41,7 +41,7 @@ func (p *VulkanQueryPool) Destroy(callbacks *driver.AllocationCallbacks) {
 	p.deviceDriver.ObjectStore().Delete(driver.VulkanHandle(p.queryPoolHandle))
 }
 
-func (p *VulkanQueryPool) PopulateResults(firstQuery, queryCount int, results []byte, resultStride int, flags common.QueryResultFlags) (common.VkResult, error) {
+func (p *VulkanQueryPool) PopulateResults(firstQuery, queryCount int, results []byte, resultStride int, flags QueryResultFlags) (common.VkResult, error) {
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 

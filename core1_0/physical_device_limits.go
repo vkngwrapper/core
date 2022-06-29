@@ -5,7 +5,6 @@ package core1_0
 #include "vulkan/vulkan.h"
 */
 import "C"
-import "github.com/CannibalVox/VKng/core/common"
 
 type PhysicalDeviceLimits struct {
 	MaxImageDimension1D    int
@@ -106,17 +105,17 @@ type PhysicalDeviceLimits struct {
 	MaxFramebufferHeight int
 	MaxFramebufferLayers int
 
-	FramebufferColorSampleCounts         common.SampleCounts
-	FramebufferDepthSampleCounts         common.SampleCounts
-	FramebufferStencilSampleCounts       common.SampleCounts
-	FramebufferNoAttachmentsSampleCounts common.SampleCounts
+	FramebufferColorSampleCounts         SampleCounts
+	FramebufferDepthSampleCounts         SampleCounts
+	FramebufferStencilSampleCounts       SampleCounts
+	FramebufferNoAttachmentsSampleCounts SampleCounts
 
 	MaxColorAttachments             int
-	SampledImageColorSampleCounts   common.SampleCounts
-	SampledImageIntegerSampleCounts common.SampleCounts
-	SampledImageDepthSampleCounts   common.SampleCounts
-	SampledImageStencilSampleCounts common.SampleCounts
-	StorageImageSampleCounts        common.SampleCounts
+	SampledImageColorSampleCounts   SampleCounts
+	SampledImageIntegerSampleCounts SampleCounts
+	SampledImageDepthSampleCounts   SampleCounts
+	SampledImageStencilSampleCounts SampleCounts
+	StorageImageSampleCounts        SampleCounts
 	MaxSampleMaskWords              int
 
 	TimestampComputeAndGraphics bool

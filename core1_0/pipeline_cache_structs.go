@@ -12,7 +12,7 @@ import (
 )
 
 type PipelineCacheCreateOptions struct {
-	Flags       common.PipelineCacheCreateFlags
+	Flags       PipelineCacheCreateFlags
 	InitialData []byte
 
 	common.HaveNext

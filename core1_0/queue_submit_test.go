@@ -76,7 +76,7 @@ func TestSubmitToQueue_SignalSuccess(t *testing.T) {
 		{
 			CommandBuffers:   []core1_0.CommandBuffer{buffer},
 			WaitSemaphores:   []core1_0.Semaphore{waitSemaphore1, waitSemaphore2},
-			WaitDstStages:    []common.PipelineStages{core1_0.PipelineStageVertexShader, core1_0.PipelineStageFragmentShader},
+			WaitDstStages:    []core1_0.PipelineStages{core1_0.PipelineStageVertexShader, core1_0.PipelineStageFragmentShader},
 			SignalSemaphores: []core1_0.Semaphore{signalSemaphore1, signalSemaphore2, signalSemaphore3},
 		},
 	})
@@ -123,7 +123,7 @@ func TestSubmitToQueue_NoSignalSuccess(t *testing.T) {
 		{
 			CommandBuffers:   []core1_0.CommandBuffer{buffer},
 			WaitSemaphores:   []core1_0.Semaphore{},
-			WaitDstStages:    []common.PipelineStages{},
+			WaitDstStages:    []core1_0.PipelineStages{},
 			SignalSemaphores: []core1_0.Semaphore{},
 		},
 	})
@@ -148,7 +148,7 @@ func TestSubmitToQueue_MismatchWaitSemaphores(t *testing.T) {
 		{
 			CommandBuffers:   []core1_0.CommandBuffer{buffer},
 			WaitSemaphores:   []core1_0.Semaphore{waitSemaphore1, waitSemaphore2},
-			WaitDstStages:    []common.PipelineStages{core1_0.PipelineStageFragmentShader},
+			WaitDstStages:    []core1_0.PipelineStages{core1_0.PipelineStageFragmentShader},
 			SignalSemaphores: []core1_0.Semaphore{},
 		},
 	})

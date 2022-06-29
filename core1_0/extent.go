@@ -1,4 +1,4 @@
-package common
+package core1_0
 
 type Extent2D struct {
 	Width  int

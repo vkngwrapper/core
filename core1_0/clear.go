@@ -6,15 +6,14 @@ package core1_0
 */
 import "C"
 import (
-	"github.com/CannibalVox/VKng/core/common"
 	"github.com/CannibalVox/cgoparam"
 	"unsafe"
 )
 
 type ClearAttachment struct {
-	AspectMask      common.ImageAspectFlags
+	AspectMask      ImageAspectFlags
 	ColorAttachment int
-	ClearValue      common.ClearValue
+	ClearValue      ClearValue
 }
 
 func (c ClearAttachment) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer) (unsafe.Pointer, error) {
@@ -31,7 +30,7 @@ func (c ClearAttachment) PopulateCPointer(allocator *cgoparam.Allocator, preallo
 }
 
 type ClearRect struct {
-	Rect           common.Rect2D
+	Rect           Rect2D
 	BaseArrayLayer int
 	LayerCount     int
 }

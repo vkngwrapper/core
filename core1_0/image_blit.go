@@ -6,17 +6,16 @@ package core1_0
 */
 import "C"
 import (
-	"github.com/CannibalVox/VKng/core/common"
 	"github.com/CannibalVox/cgoparam"
 	"unsafe"
 )
 
 type ImageBlit struct {
-	SourceSubresource common.ImageSubresourceLayers
-	SourceOffsets     [2]common.Offset3D
+	SourceSubresource ImageSubresourceLayers
+	SourceOffsets     [2]Offset3D
 
-	DestinationSubresource common.ImageSubresourceLayers
-	DestinationOffsets     [2]common.Offset3D
+	DestinationSubresource ImageSubresourceLayers
+	DestinationOffsets     [2]Offset3D
 }
 
 func (b ImageBlit) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer) (unsafe.Pointer, error) {

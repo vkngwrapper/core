@@ -13,7 +13,7 @@ import (
 
 type FramebufferCreateOptions struct {
 	Attachments []ImageView
-	Flags       common.FramebufferCreateFlags
+	Flags       FramebufferCreateFlags
 
 	Width  int
 	Height int

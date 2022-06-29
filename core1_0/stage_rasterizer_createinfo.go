@@ -12,15 +12,15 @@ import (
 )
 
 const (
-	PolygonModeFill  common.PolygonMode = C.VK_POLYGON_MODE_FILL
-	PolygonModeLine  common.PolygonMode = C.VK_POLYGON_MODE_LINE
-	PolygonModePoint common.PolygonMode = C.VK_POLYGON_MODE_POINT
+	PolygonModeFill  PolygonMode = C.VK_POLYGON_MODE_FILL
+	PolygonModeLine  PolygonMode = C.VK_POLYGON_MODE_LINE
+	PolygonModePoint PolygonMode = C.VK_POLYGON_MODE_POINT
 
-	CullFront common.CullModes = C.VK_CULL_MODE_FRONT_BIT
-	CullBack  common.CullModes = C.VK_CULL_MODE_BACK_BIT
+	CullFront CullModes = C.VK_CULL_MODE_FRONT_BIT
+	CullBack  CullModes = C.VK_CULL_MODE_BACK_BIT
 
-	FrontFaceCounterClockwise common.FrontFace = C.VK_FRONT_FACE_COUNTER_CLOCKWISE
-	FrontFaceClockwise        common.FrontFace = C.VK_FRONT_FACE_CLOCKWISE
+	FrontFaceCounterClockwise FrontFace = C.VK_FRONT_FACE_COUNTER_CLOCKWISE
+	FrontFaceClockwise        FrontFace = C.VK_FRONT_FACE_CLOCKWISE
 )
 
 func init() {
@@ -39,9 +39,9 @@ type RasterizationStateOptions struct {
 	DepthClamp        bool
 	RasterizerDiscard bool
 
-	PolygonMode common.PolygonMode
-	CullMode    common.CullModes
-	FrontFace   common.FrontFace
+	PolygonMode PolygonMode
+	CullMode    CullModes
+	FrontFace   FrontFace
 
 	DepthBias               bool
 	DepthBiasClamp          float32

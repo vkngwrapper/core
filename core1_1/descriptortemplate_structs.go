@@ -54,7 +54,7 @@ type DescriptorUpdateTemplateEntry struct {
 	DstArrayElement int
 	DescriptorCount int
 
-	DescriptorType common.DescriptorType
+	DescriptorType core1_0.DescriptorType
 
 	Offset int
 	Stride int
@@ -83,7 +83,7 @@ type DescriptorUpdateTemplateCreateOptions struct {
 
 	DescriptorSetLayout core1_0.DescriptorSetLayout
 
-	PipelineBindPoint common.PipelineBindPoint
+	PipelineBindPoint core1_0.PipelineBindPoint
 	PipelineLayout    core1_0.PipelineLayout
 	Set               int
 

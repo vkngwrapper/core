@@ -13,17 +13,17 @@ import (
 )
 
 const (
-	DescriptorSampler              common.DescriptorType = C.VK_DESCRIPTOR_TYPE_SAMPLER
-	DescriptorCombinedImageSampler common.DescriptorType = C.VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER
-	DescriptorSampledImage         common.DescriptorType = C.VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE
-	DescriptorStorageImage         common.DescriptorType = C.VK_DESCRIPTOR_TYPE_STORAGE_IMAGE
-	DescriptorUniformTexelBuffer   common.DescriptorType = C.VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER
-	DescriptorStorageTexelBuffer   common.DescriptorType = C.VK_DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER
-	DescriptorUniformBuffer        common.DescriptorType = C.VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER
-	DescriptorStorageBuffer        common.DescriptorType = C.VK_DESCRIPTOR_TYPE_STORAGE_BUFFER
-	DescriptorUniformBufferDynamic common.DescriptorType = C.VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC
-	DescriptorStorageBufferDynamic common.DescriptorType = C.VK_DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC
-	DescriptorInputAttachment      common.DescriptorType = C.VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT
+	DescriptorSampler              DescriptorType = C.VK_DESCRIPTOR_TYPE_SAMPLER
+	DescriptorCombinedImageSampler DescriptorType = C.VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER
+	DescriptorSampledImage         DescriptorType = C.VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE
+	DescriptorStorageImage         DescriptorType = C.VK_DESCRIPTOR_TYPE_STORAGE_IMAGE
+	DescriptorUniformTexelBuffer   DescriptorType = C.VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER
+	DescriptorStorageTexelBuffer   DescriptorType = C.VK_DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER
+	DescriptorUniformBuffer        DescriptorType = C.VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER
+	DescriptorStorageBuffer        DescriptorType = C.VK_DESCRIPTOR_TYPE_STORAGE_BUFFER
+	DescriptorUniformBufferDynamic DescriptorType = C.VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC
+	DescriptorStorageBufferDynamic DescriptorType = C.VK_DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC
+	DescriptorInputAttachment      DescriptorType = C.VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT
 )
 
 func init() {
@@ -42,15 +42,15 @@ func init() {
 
 type DescriptorLayoutBinding struct {
 	Binding         int
-	DescriptorType  common.DescriptorType
+	DescriptorType  DescriptorType
 	DescriptorCount int
-	StageFlags      common.ShaderStages
+	StageFlags      ShaderStages
 
 	ImmutableSamplers []Sampler
 }
 
 type DescriptorSetLayoutCreateOptions struct {
-	Flags    common.DescriptorSetLayoutCreateFlags
+	Flags    DescriptorSetLayoutCreateFlags
 	Bindings []DescriptorLayoutBinding
 
 	common.HaveNext

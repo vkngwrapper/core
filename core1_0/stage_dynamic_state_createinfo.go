@@ -12,15 +12,15 @@ import (
 )
 
 const (
-	DynamicStateViewport           common.DynamicState = C.VK_DYNAMIC_STATE_VIEWPORT
-	DynamicStateScissor            common.DynamicState = C.VK_DYNAMIC_STATE_SCISSOR
-	DynamicStateLineWidth          common.DynamicState = C.VK_DYNAMIC_STATE_LINE_WIDTH
-	DynamicStateDepthBias          common.DynamicState = C.VK_DYNAMIC_STATE_DEPTH_BIAS
-	DynamicStateBlendConstants     common.DynamicState = C.VK_DYNAMIC_STATE_BLEND_CONSTANTS
-	DynamicStateDepthBounds        common.DynamicState = C.VK_DYNAMIC_STATE_DEPTH_BOUNDS
-	DynamicStateStencilCompareMask common.DynamicState = C.VK_DYNAMIC_STATE_STENCIL_COMPARE_MASK
-	DynamicStateStencilWriteMask   common.DynamicState = C.VK_DYNAMIC_STATE_STENCIL_WRITE_MASK
-	DynamicStateStencilReference   common.DynamicState = C.VK_DYNAMIC_STATE_STENCIL_REFERENCE
+	DynamicStateViewport           DynamicState = C.VK_DYNAMIC_STATE_VIEWPORT
+	DynamicStateScissor            DynamicState = C.VK_DYNAMIC_STATE_SCISSOR
+	DynamicStateLineWidth          DynamicState = C.VK_DYNAMIC_STATE_LINE_WIDTH
+	DynamicStateDepthBias          DynamicState = C.VK_DYNAMIC_STATE_DEPTH_BIAS
+	DynamicStateBlendConstants     DynamicState = C.VK_DYNAMIC_STATE_BLEND_CONSTANTS
+	DynamicStateDepthBounds        DynamicState = C.VK_DYNAMIC_STATE_DEPTH_BOUNDS
+	DynamicStateStencilCompareMask DynamicState = C.VK_DYNAMIC_STATE_STENCIL_COMPARE_MASK
+	DynamicStateStencilWriteMask   DynamicState = C.VK_DYNAMIC_STATE_STENCIL_WRITE_MASK
+	DynamicStateStencilReference   DynamicState = C.VK_DYNAMIC_STATE_STENCIL_REFERENCE
 )
 
 func init() {
@@ -36,7 +36,7 @@ func init() {
 }
 
 type DynamicStateOptions struct {
-	DynamicStates []common.DynamicState
+	DynamicStates []DynamicState
 
 	common.HaveNext
 }

@@ -58,13 +58,13 @@ const (
 	ChromaLocationCositedEven ChromaLocation = C.VK_CHROMA_LOCATION_COSITED_EVEN
 	ChromaLocationMidpoint    ChromaLocation = C.VK_CHROMA_LOCATION_MIDPOINT
 
-	FormatFeatureCositedChromaSamples                                             common.FormatFeatures = C.VK_FORMAT_FEATURE_COSITED_CHROMA_SAMPLES_BIT
-	FormatFeatureDisjoint                                                         common.FormatFeatures = C.VK_FORMAT_FEATURE_DISJOINT_BIT
-	FormatFeatureMidpointChromaSamples                                            common.FormatFeatures = C.VK_FORMAT_FEATURE_MIDPOINT_CHROMA_SAMPLES_BIT
-	FormatFeatureSampledImageYcbcrConversionChromaReconstructionExplicit          common.FormatFeatures = C.VK_FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_BIT
-	FormatFeatureSampledImageYcbcrConversionChromaReconstructionExplicitForceable common.FormatFeatures = C.VK_FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_FORCEABLE_BIT
-	FormatFeatureSampledImageYcbcrConversionLinearFilter                          common.FormatFeatures = C.VK_FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_LINEAR_FILTER_BIT
-	FormatFeatureSampledImageYcbcrConversionSeparateReconstructionFilter          common.FormatFeatures = C.VK_FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_SEPARATE_RECONSTRUCTION_FILTER_BIT
+	FormatFeatureCositedChromaSamples                                             core1_0.FormatFeatures = C.VK_FORMAT_FEATURE_COSITED_CHROMA_SAMPLES_BIT
+	FormatFeatureDisjoint                                                         core1_0.FormatFeatures = C.VK_FORMAT_FEATURE_DISJOINT_BIT
+	FormatFeatureMidpointChromaSamples                                            core1_0.FormatFeatures = C.VK_FORMAT_FEATURE_MIDPOINT_CHROMA_SAMPLES_BIT
+	FormatFeatureSampledImageYcbcrConversionChromaReconstructionExplicit          core1_0.FormatFeatures = C.VK_FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_BIT
+	FormatFeatureSampledImageYcbcrConversionChromaReconstructionExplicitForceable core1_0.FormatFeatures = C.VK_FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_FORCEABLE_BIT
+	FormatFeatureSampledImageYcbcrConversionLinearFilter                          core1_0.FormatFeatures = C.VK_FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_LINEAR_FILTER_BIT
+	FormatFeatureSampledImageYcbcrConversionSeparateReconstructionFilter          core1_0.FormatFeatures = C.VK_FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_SEPARATE_RECONSTRUCTION_FILTER_BIT
 
 	SamplerYcbcrModelConversionRGBIdentity   SamplerYcbcrModelConversion = C.VK_SAMPLER_YCBCR_MODEL_CONVERSION_RGB_IDENTITY
 	SamplerYcbcrModelConversionYcbcr2020     SamplerYcbcrModelConversion = C.VK_SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_2020
@@ -99,13 +99,13 @@ func init() {
 }
 
 type SamplerYcbcrConversionCreateOptions struct {
-	Format                      common.DataFormat
+	Format                      core1_0.DataFormat
 	YcbcrModel                  SamplerYcbcrModelConversion
 	YcbcrRange                  SamplerYcbcrRange
 	Components                  core1_0.ComponentMapping
 	ChromaOffsetX               ChromaLocation
 	ChromaOffsetY               ChromaLocation
-	ChromaFilter                common.Filter
+	ChromaFilter                core1_0.Filter
 	ForceExplicitReconstruction bool
 
 	common.HaveNext
@@ -174,7 +174,7 @@ func (o *SamplerYcbcrImageFormatOutData) PopulateOutData(cDataPointer unsafe.Poi
 ////
 
 type ImagePlaneMemoryRequirementsOptions struct {
-	PlaneAspect common.ImageAspectFlags
+	PlaneAspect core1_0.ImageAspectFlags
 
 	common.HaveNext
 }

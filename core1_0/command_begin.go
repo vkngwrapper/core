@@ -12,23 +12,23 @@ import (
 )
 
 const (
-	BeginInfoOneTimeSubmit      common.BeginInfoFlags = C.VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT
-	BeginInfoRenderPassContinue common.BeginInfoFlags = C.VK_COMMAND_BUFFER_USAGE_RENDER_PASS_CONTINUE_BIT
-	BeginInfoSimultaneousUse    common.BeginInfoFlags = C.VK_COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT
+	BeginInfoOneTimeSubmit      BeginInfoFlags = C.VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT
+	BeginInfoRenderPassContinue BeginInfoFlags = C.VK_COMMAND_BUFFER_USAGE_RENDER_PASS_CONTINUE_BIT
+	BeginInfoSimultaneousUse    BeginInfoFlags = C.VK_COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT
 
-	QueryPrecise common.QueryControlFlags = C.VK_QUERY_CONTROL_PRECISE_BIT
+	QueryPrecise QueryControlFlags = C.VK_QUERY_CONTROL_PRECISE_BIT
 
-	QueryStatisticInputAssemblyVertices                   common.QueryPipelineStatisticFlags = C.VK_QUERY_PIPELINE_STATISTIC_INPUT_ASSEMBLY_VERTICES_BIT
-	QueryStatisticInputAssemblyPrimitives                 common.QueryPipelineStatisticFlags = C.VK_QUERY_PIPELINE_STATISTIC_INPUT_ASSEMBLY_PRIMITIVES_BIT
-	QueryStatisticVertexShaderInvocations                 common.QueryPipelineStatisticFlags = C.VK_QUERY_PIPELINE_STATISTIC_VERTEX_SHADER_INVOCATIONS_BIT
-	QueryStatisticGeometryShaderInvocations               common.QueryPipelineStatisticFlags = C.VK_QUERY_PIPELINE_STATISTIC_GEOMETRY_SHADER_INVOCATIONS_BIT
-	QueryStatisticGeometryShaderPrimitives                common.QueryPipelineStatisticFlags = C.VK_QUERY_PIPELINE_STATISTIC_GEOMETRY_SHADER_PRIMITIVES_BIT
-	QueryStatisticClippingInvocations                     common.QueryPipelineStatisticFlags = C.VK_QUERY_PIPELINE_STATISTIC_CLIPPING_INVOCATIONS_BIT
-	QueryStatisticClippingPrimitives                      common.QueryPipelineStatisticFlags = C.VK_QUERY_PIPELINE_STATISTIC_CLIPPING_PRIMITIVES_BIT
-	QueryStatisticFragmentShaderInvocations               common.QueryPipelineStatisticFlags = C.VK_QUERY_PIPELINE_STATISTIC_FRAGMENT_SHADER_INVOCATIONS_BIT
-	QueryStatisticTessellationControlShaderPatches        common.QueryPipelineStatisticFlags = C.VK_QUERY_PIPELINE_STATISTIC_TESSELLATION_CONTROL_SHADER_PATCHES_BIT
-	QueryStatisticTessellationEvaluationShaderInvocations common.QueryPipelineStatisticFlags = C.VK_QUERY_PIPELINE_STATISTIC_TESSELLATION_EVALUATION_SHADER_INVOCATIONS_BIT
-	QueryStatisticComputeShaderInvocations                common.QueryPipelineStatisticFlags = C.VK_QUERY_PIPELINE_STATISTIC_COMPUTE_SHADER_INVOCATIONS_BIT
+	QueryStatisticInputAssemblyVertices                   QueryPipelineStatisticFlags = C.VK_QUERY_PIPELINE_STATISTIC_INPUT_ASSEMBLY_VERTICES_BIT
+	QueryStatisticInputAssemblyPrimitives                 QueryPipelineStatisticFlags = C.VK_QUERY_PIPELINE_STATISTIC_INPUT_ASSEMBLY_PRIMITIVES_BIT
+	QueryStatisticVertexShaderInvocations                 QueryPipelineStatisticFlags = C.VK_QUERY_PIPELINE_STATISTIC_VERTEX_SHADER_INVOCATIONS_BIT
+	QueryStatisticGeometryShaderInvocations               QueryPipelineStatisticFlags = C.VK_QUERY_PIPELINE_STATISTIC_GEOMETRY_SHADER_INVOCATIONS_BIT
+	QueryStatisticGeometryShaderPrimitives                QueryPipelineStatisticFlags = C.VK_QUERY_PIPELINE_STATISTIC_GEOMETRY_SHADER_PRIMITIVES_BIT
+	QueryStatisticClippingInvocations                     QueryPipelineStatisticFlags = C.VK_QUERY_PIPELINE_STATISTIC_CLIPPING_INVOCATIONS_BIT
+	QueryStatisticClippingPrimitives                      QueryPipelineStatisticFlags = C.VK_QUERY_PIPELINE_STATISTIC_CLIPPING_PRIMITIVES_BIT
+	QueryStatisticFragmentShaderInvocations               QueryPipelineStatisticFlags = C.VK_QUERY_PIPELINE_STATISTIC_FRAGMENT_SHADER_INVOCATIONS_BIT
+	QueryStatisticTessellationControlShaderPatches        QueryPipelineStatisticFlags = C.VK_QUERY_PIPELINE_STATISTIC_TESSELLATION_CONTROL_SHADER_PATCHES_BIT
+	QueryStatisticTessellationEvaluationShaderInvocations QueryPipelineStatisticFlags = C.VK_QUERY_PIPELINE_STATISTIC_TESSELLATION_EVALUATION_SHADER_INVOCATIONS_BIT
+	QueryStatisticComputeShaderInvocations                QueryPipelineStatisticFlags = C.VK_QUERY_PIPELINE_STATISTIC_COMPUTE_SHADER_INVOCATIONS_BIT
 )
 
 func init() {
@@ -57,8 +57,8 @@ type InheritanceOptions struct {
 	SubPass     int
 
 	OcclusionQueryEnable bool
-	QueryFlags           common.QueryControlFlags
-	PipelineStatistics   common.QueryPipelineStatisticFlags
+	QueryFlags           QueryControlFlags
+	PipelineStatistics   QueryPipelineStatisticFlags
 
 	common.HaveNext
 }
@@ -102,7 +102,7 @@ func (o InheritanceOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers
 }
 
 type BeginOptions struct {
-	Flags           common.BeginInfoFlags
+	Flags           BeginInfoFlags
 	InheritanceInfo *InheritanceOptions
 
 	common.HaveNext

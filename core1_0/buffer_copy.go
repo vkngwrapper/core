@@ -6,7 +6,6 @@ package core1_0
 */
 import "C"
 import (
-	"github.com/CannibalVox/VKng/core/common"
 	"github.com/CannibalVox/cgoparam"
 	"github.com/cockroachdb/errors"
 	"unsafe"
@@ -36,9 +35,9 @@ type BufferImageCopy struct {
 	BufferRowLength   int
 	BufferImageHeight int
 
-	ImageSubresource common.ImageSubresourceLayers
-	ImageOffset      common.Offset3D
-	ImageExtent      common.Extent3D
+	ImageSubresource ImageSubresourceLayers
+	ImageOffset      Offset3D
+	ImageExtent      Extent3D
 }
 
 func (c BufferImageCopy) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer) (unsafe.Pointer, error) {

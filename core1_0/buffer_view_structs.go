@@ -13,7 +13,7 @@ import (
 
 type BufferViewCreateOptions struct {
 	Buffer Buffer
-	Format common.DataFormat
+	Format DataFormat
 	Offset int
 	Range  int
 

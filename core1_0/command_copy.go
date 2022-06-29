@@ -25,7 +25,7 @@ func (c *VulkanCommandBuffer) CmdCopyBuffer(srcBuffer Buffer, dstBuffer Buffer, 
 	return nil
 }
 
-func (c *VulkanCommandBuffer) CmdCopyImage(srcImage Image, srcImageLayout common.ImageLayout, dstImage Image, dstImageLayout common.ImageLayout, regions []ImageCopy) error {
+func (c *VulkanCommandBuffer) CmdCopyImage(srcImage Image, srcImageLayout ImageLayout, dstImage Image, dstImageLayout ImageLayout, regions []ImageCopy) error {
 	allocator := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(allocator)
 

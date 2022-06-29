@@ -111,7 +111,7 @@ type InstanceScopedPhysicalDevice interface {
 	ExternalSemaphoreProperties(o ExternalSemaphoreOptions, outData *ExternalSemaphoreOutData) error
 
 	Features2(out *DeviceFeaturesOutData) error
-	FormatProperties2(format common.DataFormat, out *FormatPropertiesOutData) error
+	FormatProperties2(format core1_0.DataFormat, out *FormatPropertiesOutData) error
 	ImageFormatProperties2(o ImageFormatOptions, out *ImageFormatPropertiesOutData) (common.VkResult, error)
 	MemoryProperties2(out *MemoryPropertiesOutData) error
 	Properties2(out *DevicePropertiesOutData) error

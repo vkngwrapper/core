@@ -12,7 +12,7 @@ import (
 )
 
 const (
-	DescriptorPoolCreateFreeDescriptorSet common.DescriptorPoolCreateFlags = C.VK_DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT
+	DescriptorPoolCreateFreeDescriptorSet DescriptorPoolCreateFlags = C.VK_DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT
 )
 
 func init() {
@@ -20,12 +20,12 @@ func init() {
 }
 
 type PoolSize struct {
-	Type            common.DescriptorType
+	Type            DescriptorType
 	DescriptorCount int
 }
 
 type DescriptorPoolCreateOptions struct {
-	Flags common.DescriptorPoolCreateFlags
+	Flags DescriptorPoolCreateFlags
 
 	MaxSets   int
 	PoolSizes []PoolSize

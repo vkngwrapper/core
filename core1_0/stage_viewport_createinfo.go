@@ -12,8 +12,8 @@ import (
 )
 
 type ViewportStateOptions struct {
-	Viewports []common.Viewport
-	Scissors  []common.Rect2D
+	Viewports []Viewport
+	Scissors  []Rect2D
 
 	common.HaveNext
 }

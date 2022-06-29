@@ -170,13 +170,13 @@ func TestVulkanLoader1_0_CreateRenderPass_Success(t *testing.T) {
 			{
 				Flags:     0,
 				BindPoint: core1_0.BindCompute,
-				InputAttachments: []common.AttachmentReference{
+				InputAttachments: []core1_0.AttachmentReference{
 					{
 						AttachmentIndex: 0,
 						Layout:          core1_0.ImageLayoutGeneral,
 					},
 				},
-				ColorAttachments: []common.AttachmentReference{
+				ColorAttachments: []core1_0.AttachmentReference{
 					{
 						AttachmentIndex: 1,
 						Layout:          core1_0.ImageLayoutPreInitialized,
@@ -186,7 +186,7 @@ func TestVulkanLoader1_0_CreateRenderPass_Success(t *testing.T) {
 						Layout:          core1_0.ImageLayoutDepthStencilAttachmentOptimal,
 					},
 				},
-				ResolveAttachments: []common.AttachmentReference{
+				ResolveAttachments: []core1_0.AttachmentReference{
 					{
 						AttachmentIndex: 3,
 						Layout:          core1_0.ImageLayoutDepthStencilReadOnlyOptimal,
@@ -196,7 +196,7 @@ func TestVulkanLoader1_0_CreateRenderPass_Success(t *testing.T) {
 						Layout:          core1_0.ImageLayoutShaderReadOnlyOptimal,
 					},
 				},
-				DepthStencilAttachment: &common.AttachmentReference{
+				DepthStencilAttachment: &core1_0.AttachmentReference{
 					AttachmentIndex: 11,
 					Layout:          core1_0.ImageLayoutTransferSrcOptimal,
 				},
@@ -382,13 +382,13 @@ func TestVulkanLoader1_0_CreateRenderPass_SuccessNoNonColorAttachments(t *testin
 			{
 				Flags:     0,
 				BindPoint: core1_0.BindCompute,
-				InputAttachments: []common.AttachmentReference{
+				InputAttachments: []core1_0.AttachmentReference{
 					{
 						AttachmentIndex: 0,
 						Layout:          core1_0.ImageLayoutGeneral,
 					},
 				},
-				ColorAttachments: []common.AttachmentReference{
+				ColorAttachments: []core1_0.AttachmentReference{
 					{
 						AttachmentIndex: 1,
 						Layout:          core1_0.ImageLayoutTransferDstOptimal,
@@ -398,7 +398,7 @@ func TestVulkanLoader1_0_CreateRenderPass_SuccessNoNonColorAttachments(t *testin
 						Layout:          core1_0.ImageLayoutDepthStencilAttachmentOptimal,
 					},
 				},
-				ResolveAttachments:         []common.AttachmentReference{},
+				ResolveAttachments:         []core1_0.AttachmentReference{},
 				PreservedAttachmentIndices: []int{17},
 			},
 		},
@@ -474,13 +474,13 @@ func TestVulkanLoader1_0_CreateRenderPass_MismatchResolve(t *testing.T) {
 			{
 				Flags:     0,
 				BindPoint: core1_0.BindCompute,
-				InputAttachments: []common.AttachmentReference{
+				InputAttachments: []core1_0.AttachmentReference{
 					{
 						AttachmentIndex: 0,
 						Layout:          core1_0.ImageLayoutGeneral,
 					},
 				},
-				ColorAttachments: []common.AttachmentReference{
+				ColorAttachments: []core1_0.AttachmentReference{
 					{
 						AttachmentIndex: 1,
 						Layout:          core1_0.ImageLayoutDepthStencilReadOnlyOptimal,
@@ -490,7 +490,7 @@ func TestVulkanLoader1_0_CreateRenderPass_MismatchResolve(t *testing.T) {
 						Layout:          core1_0.ImageLayoutDepthStencilAttachmentOptimal,
 					},
 				},
-				ResolveAttachments: []common.AttachmentReference{
+				ResolveAttachments: []core1_0.AttachmentReference{
 					{
 						AttachmentIndex: 3,
 						Layout:          core1_0.ImageLayoutDepthStencilReadOnlyOptimal,
@@ -504,7 +504,7 @@ func TestVulkanLoader1_0_CreateRenderPass_MismatchResolve(t *testing.T) {
 						Layout:          core1_0.ImageLayoutUndefined,
 					},
 				},
-				DepthStencilAttachment: &common.AttachmentReference{
+				DepthStencilAttachment: &core1_0.AttachmentReference{
 					AttachmentIndex: 11,
 					Layout:          core1_0.ImageLayoutTransferSrcOptimal,
 				},

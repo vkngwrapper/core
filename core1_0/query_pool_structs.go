@@ -12,26 +12,26 @@ import (
 )
 
 const (
-	PipelineStatisticInputAssemblyVertices                   common.PipelineStatistics = C.VK_QUERY_PIPELINE_STATISTIC_INPUT_ASSEMBLY_VERTICES_BIT
-	PipelineStatisticInputAssemblyPrimitives                 common.PipelineStatistics = C.VK_QUERY_PIPELINE_STATISTIC_INPUT_ASSEMBLY_PRIMITIVES_BIT
-	PipelineStatisticVertexShaderInvocations                 common.PipelineStatistics = C.VK_QUERY_PIPELINE_STATISTIC_VERTEX_SHADER_INVOCATIONS_BIT
-	PipelineStatisticGeometryShaderInvocations               common.PipelineStatistics = C.VK_QUERY_PIPELINE_STATISTIC_GEOMETRY_SHADER_INVOCATIONS_BIT
-	PipelineStatisticGeometryShaderPrimitives                common.PipelineStatistics = C.VK_QUERY_PIPELINE_STATISTIC_GEOMETRY_SHADER_PRIMITIVES_BIT
-	PipelineStatisticClippingInvocations                     common.PipelineStatistics = C.VK_QUERY_PIPELINE_STATISTIC_CLIPPING_INVOCATIONS_BIT
-	PipelineStatisticClippingPrimitives                      common.PipelineStatistics = C.VK_QUERY_PIPELINE_STATISTIC_CLIPPING_PRIMITIVES_BIT
-	PipelineStatisticFragmentShaderInvocations               common.PipelineStatistics = C.VK_QUERY_PIPELINE_STATISTIC_FRAGMENT_SHADER_INVOCATIONS_BIT
-	PipelineStatisticTessellationControlShaderPatches        common.PipelineStatistics = C.VK_QUERY_PIPELINE_STATISTIC_TESSELLATION_CONTROL_SHADER_PATCHES_BIT
-	PipelineStatisticTessellationEvaluationShaderInvocations common.PipelineStatistics = C.VK_QUERY_PIPELINE_STATISTIC_TESSELLATION_EVALUATION_SHADER_INVOCATIONS_BIT
-	PipelineStatisticComputeShaderInvocations                common.PipelineStatistics = C.VK_QUERY_PIPELINE_STATISTIC_COMPUTE_SHADER_INVOCATIONS_BIT
+	PipelineStatisticInputAssemblyVertices                   PipelineStatistics = C.VK_QUERY_PIPELINE_STATISTIC_INPUT_ASSEMBLY_VERTICES_BIT
+	PipelineStatisticInputAssemblyPrimitives                 PipelineStatistics = C.VK_QUERY_PIPELINE_STATISTIC_INPUT_ASSEMBLY_PRIMITIVES_BIT
+	PipelineStatisticVertexShaderInvocations                 PipelineStatistics = C.VK_QUERY_PIPELINE_STATISTIC_VERTEX_SHADER_INVOCATIONS_BIT
+	PipelineStatisticGeometryShaderInvocations               PipelineStatistics = C.VK_QUERY_PIPELINE_STATISTIC_GEOMETRY_SHADER_INVOCATIONS_BIT
+	PipelineStatisticGeometryShaderPrimitives                PipelineStatistics = C.VK_QUERY_PIPELINE_STATISTIC_GEOMETRY_SHADER_PRIMITIVES_BIT
+	PipelineStatisticClippingInvocations                     PipelineStatistics = C.VK_QUERY_PIPELINE_STATISTIC_CLIPPING_INVOCATIONS_BIT
+	PipelineStatisticClippingPrimitives                      PipelineStatistics = C.VK_QUERY_PIPELINE_STATISTIC_CLIPPING_PRIMITIVES_BIT
+	PipelineStatisticFragmentShaderInvocations               PipelineStatistics = C.VK_QUERY_PIPELINE_STATISTIC_FRAGMENT_SHADER_INVOCATIONS_BIT
+	PipelineStatisticTessellationControlShaderPatches        PipelineStatistics = C.VK_QUERY_PIPELINE_STATISTIC_TESSELLATION_CONTROL_SHADER_PATCHES_BIT
+	PipelineStatisticTessellationEvaluationShaderInvocations PipelineStatistics = C.VK_QUERY_PIPELINE_STATISTIC_TESSELLATION_EVALUATION_SHADER_INVOCATIONS_BIT
+	PipelineStatisticComputeShaderInvocations                PipelineStatistics = C.VK_QUERY_PIPELINE_STATISTIC_COMPUTE_SHADER_INVOCATIONS_BIT
 
-	QueryTypeOcclusion          common.QueryType = C.VK_QUERY_TYPE_OCCLUSION
-	QueryTypePipelineStatistics common.QueryType = C.VK_QUERY_TYPE_PIPELINE_STATISTICS
-	QueryTypeTimestamp          common.QueryType = C.VK_QUERY_TYPE_TIMESTAMP
+	QueryTypeOcclusion          QueryType = C.VK_QUERY_TYPE_OCCLUSION
+	QueryTypePipelineStatistics QueryType = C.VK_QUERY_TYPE_PIPELINE_STATISTICS
+	QueryTypeTimestamp          QueryType = C.VK_QUERY_TYPE_TIMESTAMP
 
-	QueryResult64Bit            common.QueryResultFlags = C.VK_QUERY_RESULT_64_BIT
-	QueryResultWait             common.QueryResultFlags = C.VK_QUERY_RESULT_WAIT_BIT
-	QueryResultWithAvailability common.QueryResultFlags = C.VK_QUERY_RESULT_WITH_AVAILABILITY_BIT
-	QueryResultPartial          common.QueryResultFlags = C.VK_QUERY_RESULT_PARTIAL_BIT
+	QueryResult64Bit            QueryResultFlags = C.VK_QUERY_RESULT_64_BIT
+	QueryResultWait             QueryResultFlags = C.VK_QUERY_RESULT_WAIT_BIT
+	QueryResultWithAvailability QueryResultFlags = C.VK_QUERY_RESULT_WITH_AVAILABILITY_BIT
+	QueryResultPartial          QueryResultFlags = C.VK_QUERY_RESULT_PARTIAL_BIT
 )
 
 func init() {
@@ -58,9 +58,9 @@ func init() {
 }
 
 type QueryPoolCreateOptions struct {
-	QueryType          common.QueryType
+	QueryType          QueryType
 	QueryCount         int
-	PipelineStatistics common.PipelineStatistics
+	PipelineStatistics PipelineStatistics
 
 	common.HaveNext
 }

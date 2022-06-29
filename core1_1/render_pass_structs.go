@@ -7,6 +7,7 @@ package core1_1
 import "C"
 import (
 	"github.com/CannibalVox/VKng/core/common"
+	"github.com/CannibalVox/VKng/core/core1_0"
 	"github.com/CannibalVox/cgoparam"
 	"github.com/cockroachdb/errors"
 	"unsafe"
@@ -15,7 +16,7 @@ import (
 type InputAttachmentAspectReference struct {
 	Subpass              int
 	InputAttachmentIndex int
-	AspectMask           common.ImageAspectFlags
+	AspectMask           core1_0.ImageAspectFlags
 }
 
 func (ref InputAttachmentAspectReference) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer) (unsafe.Pointer, error) {
@@ -70,7 +71,7 @@ func (o RenderPassInputAttachmentAspectOptions) PopulateOutData(cDataPointer uns
 
 type DeviceGroupRenderPassBeginOptions struct {
 	DeviceMask        uint32
-	DeviceRenderAreas []common.Rect2D
+	DeviceRenderAreas []core1_0.Rect2D
 
 	common.HaveNext
 }

@@ -13,17 +13,17 @@ import (
 )
 
 const (
-	TopologyPointList                  common.PrimitiveTopology = C.VK_PRIMITIVE_TOPOLOGY_POINT_LIST
-	TopologyLineList                   common.PrimitiveTopology = C.VK_PRIMITIVE_TOPOLOGY_LINE_LIST
-	TopologyLineStrip                  common.PrimitiveTopology = C.VK_PRIMITIVE_TOPOLOGY_LINE_STRIP
-	TopologyTriangleList               common.PrimitiveTopology = C.VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST
-	TopologyTriangleStrip              common.PrimitiveTopology = C.VK_PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP
-	TopologyTriangleFan                common.PrimitiveTopology = C.VK_PRIMITIVE_TOPOLOGY_TRIANGLE_FAN
-	TopologyLineListWithAdjacency      common.PrimitiveTopology = C.VK_PRIMITIVE_TOPOLOGY_LINE_LIST_WITH_ADJACENCY
-	TopologyLineStripWithAdjacency     common.PrimitiveTopology = C.VK_PRIMITIVE_TOPOLOGY_LINE_STRIP_WITH_ADJACENCY
-	TopologyTriangleListWithAdjacency  common.PrimitiveTopology = C.VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST_WITH_ADJACENCY
-	TopologyTriangleStripWithAdjacency common.PrimitiveTopology = C.VK_PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP_WITH_ADJACENCY
-	TopologyPatchlist                  common.PrimitiveTopology = C.VK_PRIMITIVE_TOPOLOGY_PATCH_LIST
+	TopologyPointList                  PrimitiveTopology = C.VK_PRIMITIVE_TOPOLOGY_POINT_LIST
+	TopologyLineList                   PrimitiveTopology = C.VK_PRIMITIVE_TOPOLOGY_LINE_LIST
+	TopologyLineStrip                  PrimitiveTopology = C.VK_PRIMITIVE_TOPOLOGY_LINE_STRIP
+	TopologyTriangleList               PrimitiveTopology = C.VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST
+	TopologyTriangleStrip              PrimitiveTopology = C.VK_PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP
+	TopologyTriangleFan                PrimitiveTopology = C.VK_PRIMITIVE_TOPOLOGY_TRIANGLE_FAN
+	TopologyLineListWithAdjacency      PrimitiveTopology = C.VK_PRIMITIVE_TOPOLOGY_LINE_LIST_WITH_ADJACENCY
+	TopologyLineStripWithAdjacency     PrimitiveTopology = C.VK_PRIMITIVE_TOPOLOGY_LINE_STRIP_WITH_ADJACENCY
+	TopologyTriangleListWithAdjacency  PrimitiveTopology = C.VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST_WITH_ADJACENCY
+	TopologyTriangleStripWithAdjacency PrimitiveTopology = C.VK_PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP_WITH_ADJACENCY
+	TopologyPatchlist                  PrimitiveTopology = C.VK_PRIMITIVE_TOPOLOGY_PATCH_LIST
 )
 
 func init() {
@@ -41,7 +41,7 @@ func init() {
 }
 
 type InputAssemblyStateOptions struct {
-	Topology               common.PrimitiveTopology
+	Topology               PrimitiveTopology
 	EnablePrimitiveRestart bool
 
 	common.HaveNext

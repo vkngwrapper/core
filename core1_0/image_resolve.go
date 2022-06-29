@@ -6,17 +6,16 @@ package core1_0
 */
 import "C"
 import (
-	"github.com/CannibalVox/VKng/core/common"
 	"github.com/CannibalVox/cgoparam"
 	"unsafe"
 )
 
 type ImageResolve struct {
-	SrcSubresource common.ImageSubresourceLayers
-	SrcOffset      common.Offset3D
-	DstSubresource common.ImageSubresourceLayers
-	DstOffset      common.Offset3D
-	Extent         common.Extent3D
+	SrcSubresource ImageSubresourceLayers
+	SrcOffset      Offset3D
+	DstSubresource ImageSubresourceLayers
+	DstOffset      Offset3D
+	Extent         Extent3D
 }
 
 func (r ImageResolve) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer) (unsafe.Pointer, error) {

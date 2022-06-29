@@ -5,19 +5,16 @@ package core1_0
 #include "vulkan/vulkan.h"
 */
 import "C"
-import (
-	"github.com/CannibalVox/VKng/core/common"
-)
 
 const (
-	SparseImageFormatSingleMipTail        common.SparseImageFormatFlags = C.VK_SPARSE_IMAGE_FORMAT_SINGLE_MIPTAIL_BIT
-	SparseImageFormatAlignedMipSize       common.SparseImageFormatFlags = C.VK_SPARSE_IMAGE_FORMAT_ALIGNED_MIP_SIZE_BIT
-	SparseImageFormatNonstandardBlockSize common.SparseImageFormatFlags = C.VK_SPARSE_IMAGE_FORMAT_NONSTANDARD_BLOCK_SIZE_BIT
+	SparseImageFormatSingleMipTail        SparseImageFormatFlags = C.VK_SPARSE_IMAGE_FORMAT_SINGLE_MIPTAIL_BIT
+	SparseImageFormatAlignedMipSize       SparseImageFormatFlags = C.VK_SPARSE_IMAGE_FORMAT_ALIGNED_MIP_SIZE_BIT
+	SparseImageFormatNonstandardBlockSize SparseImageFormatFlags = C.VK_SPARSE_IMAGE_FORMAT_NONSTANDARD_BLOCK_SIZE_BIT
 
-	AspectColor    common.ImageAspectFlags = C.VK_IMAGE_ASPECT_COLOR_BIT
-	AspectDepth    common.ImageAspectFlags = C.VK_IMAGE_ASPECT_DEPTH_BIT
-	AspectStencil  common.ImageAspectFlags = C.VK_IMAGE_ASPECT_STENCIL_BIT
-	AspectMetadata common.ImageAspectFlags = C.VK_IMAGE_ASPECT_METADATA_BIT
+	AspectColor    ImageAspectFlags = C.VK_IMAGE_ASPECT_COLOR_BIT
+	AspectDepth    ImageAspectFlags = C.VK_IMAGE_ASPECT_DEPTH_BIT
+	AspectStencil  ImageAspectFlags = C.VK_IMAGE_ASPECT_STENCIL_BIT
+	AspectMetadata ImageAspectFlags = C.VK_IMAGE_ASPECT_METADATA_BIT
 )
 
 func init() {
@@ -32,9 +29,9 @@ func init() {
 }
 
 type SparseImageFormatProperties struct {
-	AspectMask       common.ImageAspectFlags
-	ImageGranularity common.Extent3D
-	Flags            common.SparseImageFormatFlags
+	AspectMask       ImageAspectFlags
+	ImageGranularity Extent3D
+	Flags            SparseImageFormatFlags
 }
 
 type SparseImageMemoryRequirements struct {

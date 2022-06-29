@@ -12,7 +12,7 @@ import (
 )
 
 type PushConstantRange struct {
-	Stages common.ShaderStages
+	Stages ShaderStages
 	Offset int
 	Size   int
 }

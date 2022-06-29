@@ -7,15 +7,16 @@ package core1_2
 import "C"
 import (
 	"github.com/CannibalVox/VKng/core/common"
+	"github.com/CannibalVox/VKng/core/core1_0"
 	"github.com/CannibalVox/cgoparam"
 	"unsafe"
 )
 
 const (
-	ImageLayoutDepthAttachmentOptimal   common.ImageLayout = C.VK_IMAGE_LAYOUT_DEPTH_ATTACHMENT_OPTIMAL
-	ImageLayoutDepthReadOnlyOptimal     common.ImageLayout = C.VK_IMAGE_LAYOUT_DEPTH_READ_ONLY_OPTIMAL
-	ImageLayoutStencilAttachmentOptimal common.ImageLayout = C.VK_IMAGE_LAYOUT_STENCIL_ATTACHMENT_OPTIMAL
-	ImageLayoutStencilReadOnlyOptimal   common.ImageLayout = C.VK_IMAGE_LAYOUT_STENCIL_READ_ONLY_OPTIMAL
+	ImageLayoutDepthAttachmentOptimal   core1_0.ImageLayout = C.VK_IMAGE_LAYOUT_DEPTH_ATTACHMENT_OPTIMAL
+	ImageLayoutDepthReadOnlyOptimal     core1_0.ImageLayout = C.VK_IMAGE_LAYOUT_DEPTH_READ_ONLY_OPTIMAL
+	ImageLayoutStencilAttachmentOptimal core1_0.ImageLayout = C.VK_IMAGE_LAYOUT_STENCIL_ATTACHMENT_OPTIMAL
+	ImageLayoutStencilReadOnlyOptimal   core1_0.ImageLayout = C.VK_IMAGE_LAYOUT_STENCIL_READ_ONLY_OPTIMAL
 )
 
 func init() {
@@ -28,7 +29,7 @@ func init() {
 ////
 
 type ImageStencilUsageCreateOptions struct {
-	StencilUsage common.ImageUsages
+	StencilUsage core1_0.ImageUsages
 
 	common.HaveNext
 }
@@ -54,7 +55,7 @@ func (o ImageStencilUsageCreateOptions) PopulateOutData(cDataPointer unsafe.Poin
 ////
 
 type ImageFormatListCreateOptions struct {
-	ViewFormats []common.DataFormat
+	ViewFormats []core1_0.DataFormat
 
 	common.HaveNext
 }

@@ -13,7 +13,7 @@ import (
 )
 
 type MultisampleStateOptions struct {
-	RasterizationSamples common.SampleCounts
+	RasterizationSamples SampleCounts
 
 	SampleShading    bool
 	MinSampleShading float32

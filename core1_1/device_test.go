@@ -286,14 +286,14 @@ func TestBindImageMemoryDeviceGroupOptions(t *testing.T) {
 			HaveNext: common.HaveNext{
 				core1_1.BindImageMemoryDeviceGroupOptions{
 					DeviceIndices: []int{1, 2, 7},
-					SplitInstanceBindRegions: []common.Rect2D{
+					SplitInstanceBindRegions: []core1_0.Rect2D{
 						{
-							Offset: common.Offset2D{X: 3, Y: 5},
-							Extent: common.Extent2D{Width: 7, Height: 11},
+							Offset: core1_0.Offset2D{X: 3, Y: 5},
+							Extent: core1_0.Extent2D{Width: 7, Height: 11},
 						},
 						{
-							Offset: common.Offset2D{X: 13, Y: 17},
-							Extent: common.Extent2D{Width: 19, Height: 23},
+							Offset: core1_0.Offset2D{X: 13, Y: 17},
+							Extent: core1_0.Extent2D{Width: 19, Height: 23},
 						},
 					},
 				},
@@ -598,7 +598,7 @@ func TestVulkanExtension_SparseImageMemoryRequirements(t *testing.T) {
 			MemoryRequirements: core1_0.SparseImageMemoryRequirements{
 				FormatProperties: core1_0.SparseImageFormatProperties{
 					AspectMask: core1_0.AspectMetadata,
-					ImageGranularity: common.Extent3D{
+					ImageGranularity: core1_0.Extent3D{
 						Width:  1,
 						Height: 3,
 						Depth:  5,
@@ -615,7 +615,7 @@ func TestVulkanExtension_SparseImageMemoryRequirements(t *testing.T) {
 			MemoryRequirements: core1_0.SparseImageMemoryRequirements{
 				FormatProperties: core1_0.SparseImageFormatProperties{
 					AspectMask: core1_0.AspectStencil,
-					ImageGranularity: common.Extent3D{
+					ImageGranularity: core1_0.Extent3D{
 						Width:  19,
 						Height: 23,
 						Depth:  29,

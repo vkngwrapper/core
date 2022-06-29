@@ -39,55 +39,55 @@ type CommandBuffer interface {
 	Free()
 	Begin(o BeginOptions) (common.VkResult, error)
 	End() (common.VkResult, error)
-	Reset(flags common.CommandBufferResetFlags) (common.VkResult, error)
+	Reset(flags CommandBufferResetFlags) (common.VkResult, error)
 	CommandsRecorded() int
 	DrawsRecorded() int
 	DispatchesRecorded() int
 
-	CmdBeginRenderPass(contents common.SubpassContents, o RenderPassBeginOptions) error
+	CmdBeginRenderPass(contents SubpassContents, o RenderPassBeginOptions) error
 	CmdEndRenderPass()
-	CmdBindPipeline(bindPoint common.PipelineBindPoint, pipeline Pipeline)
+	CmdBindPipeline(bindPoint PipelineBindPoint, pipeline Pipeline)
 	CmdDraw(vertexCount, instanceCount int, firstVertex, firstInstance uint32)
 	CmdDrawIndexed(indexCount, instanceCount int, firstIndex uint32, vertexOffset int, firstInstance uint32)
 	CmdBindVertexBuffers(buffers []Buffer, bufferOffsets []int)
-	CmdBindIndexBuffer(buffer Buffer, offset int, indexType common.IndexType)
+	CmdBindIndexBuffer(buffer Buffer, offset int, indexType IndexType)
 	CmdCopyBuffer(srcBuffer Buffer, dstBuffer Buffer, copyRegions []BufferCopy) error
-	CmdBindDescriptorSets(bindPoint common.PipelineBindPoint, layout PipelineLayout, sets []DescriptorSet, dynamicOffsets []int)
-	CmdPipelineBarrier(srcStageMask, dstStageMask common.PipelineStages, dependencies common.DependencyFlags, memoryBarriers []MemoryBarrierOptions, bufferMemoryBarriers []BufferMemoryBarrierOptions, imageMemoryBarriers []ImageMemoryBarrierOptions) error
-	CmdCopyBufferToImage(buffer Buffer, image Image, layout common.ImageLayout, regions []BufferImageCopy) error
-	CmdBlitImage(sourceImage Image, sourceImageLayout common.ImageLayout, destinationImage Image, destinationImageLayout common.ImageLayout, regions []ImageBlit, filter common.Filter) error
-	CmdPushConstants(layout PipelineLayout, stageFlags common.ShaderStages, offset int, valueBytes []byte)
-	CmdSetViewport(viewports []common.Viewport)
-	CmdSetScissor(scissors []common.Rect2D)
-	CmdCopyImage(srcImage Image, srcImageLayout common.ImageLayout, dstImage Image, dstImageLayout common.ImageLayout, regions []ImageCopy) error
-	CmdNextSubpass(contents common.SubpassContents)
-	CmdWaitEvents(events []Event, srcStageMask common.PipelineStages, dstStageMask common.PipelineStages, memoryBarriers []MemoryBarrierOptions, bufferMemoryBarriers []BufferMemoryBarrierOptions, imageMemoryBarriers []ImageMemoryBarrierOptions) error
-	CmdSetEvent(event Event, stageMask common.PipelineStages)
-	CmdClearColorImage(image Image, imageLayout common.ImageLayout, color common.ClearColorValue, ranges []common.ImageSubresourceRange)
+	CmdBindDescriptorSets(bindPoint PipelineBindPoint, layout PipelineLayout, sets []DescriptorSet, dynamicOffsets []int)
+	CmdPipelineBarrier(srcStageMask, dstStageMask PipelineStages, dependencies DependencyFlags, memoryBarriers []MemoryBarrierOptions, bufferMemoryBarriers []BufferMemoryBarrierOptions, imageMemoryBarriers []ImageMemoryBarrierOptions) error
+	CmdCopyBufferToImage(buffer Buffer, image Image, layout ImageLayout, regions []BufferImageCopy) error
+	CmdBlitImage(sourceImage Image, sourceImageLayout ImageLayout, destinationImage Image, destinationImageLayout ImageLayout, regions []ImageBlit, filter Filter) error
+	CmdPushConstants(layout PipelineLayout, stageFlags ShaderStages, offset int, valueBytes []byte)
+	CmdSetViewport(viewports []Viewport)
+	CmdSetScissor(scissors []Rect2D)
+	CmdCopyImage(srcImage Image, srcImageLayout ImageLayout, dstImage Image, dstImageLayout ImageLayout, regions []ImageCopy) error
+	CmdNextSubpass(contents SubpassContents)
+	CmdWaitEvents(events []Event, srcStageMask PipelineStages, dstStageMask PipelineStages, memoryBarriers []MemoryBarrierOptions, bufferMemoryBarriers []BufferMemoryBarrierOptions, imageMemoryBarriers []ImageMemoryBarrierOptions) error
+	CmdSetEvent(event Event, stageMask PipelineStages)
+	CmdClearColorImage(image Image, imageLayout ImageLayout, color ClearColorValue, ranges []ImageSubresourceRange)
 	CmdResetQueryPool(queryPool QueryPool, startQuery, queryCount int)
-	CmdBeginQuery(queryPool QueryPool, query int, flags common.QueryControlFlags)
+	CmdBeginQuery(queryPool QueryPool, query int, flags QueryControlFlags)
 	CmdEndQuery(queryPool QueryPool, query int)
-	CmdCopyQueryPoolResults(queryPool QueryPool, firstQuery, queryCount int, dstBuffer Buffer, dstOffset, stride int, flags common.QueryResultFlags)
+	CmdCopyQueryPoolResults(queryPool QueryPool, firstQuery, queryCount int, dstBuffer Buffer, dstOffset, stride int, flags QueryResultFlags)
 	CmdExecuteCommands(commandBuffers []CommandBuffer)
 	CmdClearAttachments(attachments []ClearAttachment, rects []ClearRect) error
-	CmdClearDepthStencilImage(image Image, imageLayout common.ImageLayout, depthStencil *common.ClearValueDepthStencil, ranges []common.ImageSubresourceRange)
-	CmdCopyImageToBuffer(srcImage Image, srcImageLayout common.ImageLayout, dstBuffer Buffer, regions []BufferImageCopy) error
+	CmdClearDepthStencilImage(image Image, imageLayout ImageLayout, depthStencil *ClearValueDepthStencil, ranges []ImageSubresourceRange)
+	CmdCopyImageToBuffer(srcImage Image, srcImageLayout ImageLayout, dstBuffer Buffer, regions []BufferImageCopy) error
 	CmdDispatch(groupCountX, groupCountY, groupCountZ int)
 	CmdDispatchIndirect(buffer Buffer, offset int)
 	CmdDrawIndexedIndirect(buffer Buffer, offset int, drawCount, stride int)
 	CmdDrawIndirect(buffer Buffer, offset int, drawCount, stride int)
 	CmdFillBuffer(dstBuffer Buffer, dstOffset int, size int, data uint32)
-	CmdResetEvent(event Event, stageMask common.PipelineStages)
-	CmdResolveImage(srcImage Image, srcImageLayout common.ImageLayout, dstImage Image, dstImageLayout common.ImageLayout, regions []ImageResolve) error
+	CmdResetEvent(event Event, stageMask PipelineStages)
+	CmdResolveImage(srcImage Image, srcImageLayout ImageLayout, dstImage Image, dstImageLayout ImageLayout, regions []ImageResolve) error
 	CmdSetBlendConstants(blendConstants [4]float32)
 	CmdSetDepthBias(depthBiasConstantFactor, depthBiasClamp, depthBiasSlopeFactor float32)
 	CmdSetDepthBounds(min, max float32)
 	CmdSetLineWidth(lineWidth float32)
-	CmdSetStencilCompareMask(faceMask common.StencilFaces, compareMask uint32)
-	CmdSetStencilReference(faceMask common.StencilFaces, reference uint32)
-	CmdSetStencilWriteMask(faceMask common.StencilFaces, writeMask uint32)
+	CmdSetStencilCompareMask(faceMask StencilFaces, compareMask uint32)
+	CmdSetStencilReference(faceMask StencilFaces, reference uint32)
+	CmdSetStencilWriteMask(faceMask StencilFaces, writeMask uint32)
 	CmdUpdateBuffer(dstBuffer Buffer, dstOffset int, dataSize int, data []byte)
-	CmdWriteTimestamp(pipelineStage common.PipelineStages, queryPool QueryPool, query int)
+	CmdWriteTimestamp(pipelineStage PipelineStages, queryPool QueryPool, query int)
 }
 
 type CommandPool interface {
@@ -97,7 +97,7 @@ type CommandPool interface {
 	APIVersion() common.APIVersion
 
 	Destroy(callbacks *driver.AllocationCallbacks)
-	Reset(flags common.CommandPoolResetFlags) (common.VkResult, error)
+	Reset(flags CommandPoolResetFlags) (common.VkResult, error)
 }
 
 type DescriptorPool interface {
@@ -107,7 +107,7 @@ type DescriptorPool interface {
 	APIVersion() common.APIVersion
 
 	Destroy(callbacks *driver.AllocationCallbacks)
-	Reset(flags common.DescriptorPoolResetFlags) (common.VkResult, error)
+	Reset(flags DescriptorPoolResetFlags) (common.VkResult, error)
 }
 
 type DescriptorSet interface {
@@ -230,7 +230,7 @@ type Image interface {
 	Destroy(callbacks *driver.AllocationCallbacks)
 	MemoryRequirements() *MemoryRequirements
 	BindImageMemory(memory DeviceMemory, offset int) (common.VkResult, error)
-	SubresourceLayout(subresource *common.ImageSubresource) *common.SubresourceLayout
+	SubresourceLayout(subresource *ImageSubresource) *SubresourceLayout
 	SparseMemoryRequirements() []SparseImageMemoryRequirements
 }
 
@@ -265,13 +265,13 @@ type PhysicalDevice interface {
 	QueueFamilyProperties() []*QueueFamily
 	Properties() (*PhysicalDeviceProperties, error)
 	Features() *PhysicalDeviceFeatures
-	AvailableExtensions() (map[string]*common.ExtensionProperties, common.VkResult, error)
-	AvailableExtensionsForLayer(layerName string) (map[string]*common.ExtensionProperties, common.VkResult, error)
-	AvailableLayers() (map[string]*common.LayerProperties, common.VkResult, error)
+	AvailableExtensions() (map[string]*ExtensionProperties, common.VkResult, error)
+	AvailableExtensionsForLayer(layerName string) (map[string]*ExtensionProperties, common.VkResult, error)
+	AvailableLayers() (map[string]*LayerProperties, common.VkResult, error)
 	MemoryProperties() *PhysicalDeviceMemoryProperties
-	FormatProperties(format common.DataFormat) *FormatProperties
-	ImageFormatProperties(format common.DataFormat, imageType common.ImageType, tiling common.ImageTiling, usages common.ImageUsages, flags common.ImageCreateFlags) (*ImageFormatProperties, common.VkResult, error)
-	SparseImageFormatProperties(format common.DataFormat, imageType common.ImageType, samples common.SampleCounts, usages common.ImageUsages, tiling common.ImageTiling) []SparseImageFormatProperties
+	FormatProperties(format DataFormat) *FormatProperties
+	ImageFormatProperties(format DataFormat, imageType ImageType, tiling ImageTiling, usages ImageUsages, flags ImageCreateFlags) (*ImageFormatProperties, common.VkResult, error)
+	SparseImageFormatProperties(format DataFormat, imageType ImageType, samples SampleCounts, usages ImageUsages, tiling ImageTiling) []SparseImageFormatProperties
 }
 
 type Pipeline interface {
@@ -310,7 +310,7 @@ type QueryPool interface {
 	APIVersion() common.APIVersion
 
 	Destroy(callbacks *driver.AllocationCallbacks)
-	PopulateResults(firstQuery, queryCount int, results []byte, resultStride int, flags common.QueryResultFlags) (common.VkResult, error)
+	PopulateResults(firstQuery, queryCount int, results []byte, resultStride int, flags QueryResultFlags) (common.VkResult, error)
 }
 
 type Queue interface {
@@ -331,7 +331,7 @@ type RenderPass interface {
 	APIVersion() common.APIVersion
 
 	Destroy(callbacks *driver.AllocationCallbacks)
-	RenderAreaGranularity() common.Extent2D
+	RenderAreaGranularity() Extent2D
 }
 
 type Sampler interface {

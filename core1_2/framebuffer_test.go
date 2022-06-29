@@ -94,7 +94,7 @@ func TestFramebufferAttachmentsCreateOptions(t *testing.T) {
 							Width:      1,
 							Height:     3,
 							LayerCount: 5,
-							ViewFormats: []common.DataFormat{
+							ViewFormats: []core1_0.DataFormat{
 								core1_0.DataFormatA2B10G10R10UnsignedIntPacked,
 								core1_0.DataFormatA8B8G8R8UnsignedScaledPacked,
 							},
@@ -105,7 +105,7 @@ func TestFramebufferAttachmentsCreateOptions(t *testing.T) {
 							Width:      7,
 							Height:     11,
 							LayerCount: 13,
-							ViewFormats: []common.DataFormat{
+							ViewFormats: []core1_0.DataFormat{
 								core1_0.DataFormatASTC5x5_UnsignedNormalized,
 								core1_0.DataFormatASTC6x5_sRGB,
 								core1_0.DataFormatASTC6x5_UnsignedNormalized,

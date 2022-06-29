@@ -18,9 +18,9 @@ type Loader interface {
 	Driver() driver.Driver
 	APIVersion() common.APIVersion
 
-	AvailableExtensions() (map[string]*common.ExtensionProperties, common.VkResult, error)
-	AvailableExtensionsForLayer(layerName string) (map[string]*common.ExtensionProperties, common.VkResult, error)
-	AvailableLayers() (map[string]*common.LayerProperties, common.VkResult, error)
+	AvailableExtensions() (map[string]*core1_0.ExtensionProperties, common.VkResult, error)
+	AvailableExtensionsForLayer(layerName string) (map[string]*core1_0.ExtensionProperties, common.VkResult, error)
+	AvailableLayers() (map[string]*core1_0.LayerProperties, common.VkResult, error)
 
 	CreateInstance(allocationCallbacks *driver.AllocationCallbacks, options core1_0.InstanceCreateOptions) (core1_0.Instance, common.VkResult, error)
 }

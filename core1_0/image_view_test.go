@@ -61,7 +61,7 @@ func TestVulkanLoader1_0_CreateImageView(t *testing.T) {
 			G: core1_0.SwizzleGreen,
 			B: core1_0.SwizzleBlue,
 		},
-		SubresourceRange: common.ImageSubresourceRange{
+		SubresourceRange: core1_0.ImageSubresourceRange{
 			BaseMipLevel:   1,
 			LevelCount:     2,
 			BaseArrayLayer: 3,

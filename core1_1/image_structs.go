@@ -5,23 +5,23 @@ package core1_1
 #include "vulkan/vulkan.h"
 */
 import "C"
-import "github.com/CannibalVox/VKng/core/common"
+import "github.com/CannibalVox/VKng/core/core1_0"
 
 const (
-	ImageAspectPlane0 common.ImageAspectFlags = C.VK_IMAGE_ASPECT_PLANE_0_BIT
-	ImageAspectPlane1 common.ImageAspectFlags = C.VK_IMAGE_ASPECT_PLANE_1_BIT
-	ImageAspectPlane2 common.ImageAspectFlags = C.VK_IMAGE_ASPECT_PLANE_2_BIT
+	ImageAspectPlane0 core1_0.ImageAspectFlags = C.VK_IMAGE_ASPECT_PLANE_0_BIT
+	ImageAspectPlane1 core1_0.ImageAspectFlags = C.VK_IMAGE_ASPECT_PLANE_1_BIT
+	ImageAspectPlane2 core1_0.ImageAspectFlags = C.VK_IMAGE_ASPECT_PLANE_2_BIT
 
-	ImageCreate2DArrayCompatible        common.ImageCreateFlags = C.VK_IMAGE_CREATE_2D_ARRAY_COMPATIBLE_BIT
-	ImageCreateAlias                    common.ImageCreateFlags = C.VK_IMAGE_CREATE_ALIAS_BIT
-	ImageCreateBlockTexelViewCompatible common.ImageCreateFlags = C.VK_IMAGE_CREATE_BLOCK_TEXEL_VIEW_COMPATIBLE_BIT
-	ImageCreateDisjoint                 common.ImageCreateFlags = C.VK_IMAGE_CREATE_DISJOINT_BIT
-	ImageCreateExtendedUsage            common.ImageCreateFlags = C.VK_IMAGE_CREATE_EXTENDED_USAGE_BIT
-	ImageCreateProtected                common.ImageCreateFlags = C.VK_IMAGE_CREATE_PROTECTED_BIT
-	ImageCreateSplitInstanceBindRegions common.ImageCreateFlags = C.VK_IMAGE_CREATE_SPLIT_INSTANCE_BIND_REGIONS_BIT
+	ImageCreate2DArrayCompatible        core1_0.ImageCreateFlags = C.VK_IMAGE_CREATE_2D_ARRAY_COMPATIBLE_BIT
+	ImageCreateAlias                    core1_0.ImageCreateFlags = C.VK_IMAGE_CREATE_ALIAS_BIT
+	ImageCreateBlockTexelViewCompatible core1_0.ImageCreateFlags = C.VK_IMAGE_CREATE_BLOCK_TEXEL_VIEW_COMPATIBLE_BIT
+	ImageCreateDisjoint                 core1_0.ImageCreateFlags = C.VK_IMAGE_CREATE_DISJOINT_BIT
+	ImageCreateExtendedUsage            core1_0.ImageCreateFlags = C.VK_IMAGE_CREATE_EXTENDED_USAGE_BIT
+	ImageCreateProtected                core1_0.ImageCreateFlags = C.VK_IMAGE_CREATE_PROTECTED_BIT
+	ImageCreateSplitInstanceBindRegions core1_0.ImageCreateFlags = C.VK_IMAGE_CREATE_SPLIT_INSTANCE_BIND_REGIONS_BIT
 
-	ImageLayoutDepthAttachmentStencilReadOnlyOptimal common.ImageLayout = C.VK_IMAGE_LAYOUT_DEPTH_ATTACHMENT_STENCIL_READ_ONLY_OPTIMAL
-	ImageLayoutDepthReadOnlyStencilAttachmentOptimal common.ImageLayout = C.VK_IMAGE_LAYOUT_DEPTH_READ_ONLY_STENCIL_ATTACHMENT_OPTIMAL
+	ImageLayoutDepthAttachmentStencilReadOnlyOptimal core1_0.ImageLayout = C.VK_IMAGE_LAYOUT_DEPTH_ATTACHMENT_STENCIL_READ_ONLY_OPTIMAL
+	ImageLayoutDepthReadOnlyStencilAttachmentOptimal core1_0.ImageLayout = C.VK_IMAGE_LAYOUT_DEPTH_READ_ONLY_STENCIL_ATTACHMENT_OPTIMAL
 )
 
 func init() {

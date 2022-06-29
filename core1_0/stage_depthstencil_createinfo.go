@@ -13,14 +13,14 @@ import (
 )
 
 const (
-	StencilKeep              common.StencilOp = C.VK_STENCIL_OP_KEEP
-	StencilZero              common.StencilOp = C.VK_STENCIL_OP_ZERO
-	StencilReplace           common.StencilOp = C.VK_STENCIL_OP_REPLACE
-	StencilIncrementAndClamp common.StencilOp = C.VK_STENCIL_OP_INCREMENT_AND_CLAMP
-	StencilDecrementAndClamp common.StencilOp = C.VK_STENCIL_OP_DECREMENT_AND_CLAMP
-	StencilInvert            common.StencilOp = C.VK_STENCIL_OP_INVERT
-	StencilIncrementAndWrap  common.StencilOp = C.VK_STENCIL_OP_INCREMENT_AND_WRAP
-	StencilDecrementAndWrap  common.StencilOp = C.VK_STENCIL_OP_DECREMENT_AND_WRAP
+	StencilKeep              StencilOp = C.VK_STENCIL_OP_KEEP
+	StencilZero              StencilOp = C.VK_STENCIL_OP_ZERO
+	StencilReplace           StencilOp = C.VK_STENCIL_OP_REPLACE
+	StencilIncrementAndClamp StencilOp = C.VK_STENCIL_OP_INCREMENT_AND_CLAMP
+	StencilDecrementAndClamp StencilOp = C.VK_STENCIL_OP_DECREMENT_AND_CLAMP
+	StencilInvert            StencilOp = C.VK_STENCIL_OP_INVERT
+	StencilIncrementAndWrap  StencilOp = C.VK_STENCIL_OP_INCREMENT_AND_WRAP
+	StencilDecrementAndWrap  StencilOp = C.VK_STENCIL_OP_DECREMENT_AND_WRAP
 )
 
 func init() {
@@ -35,11 +35,11 @@ func init() {
 }
 
 type StencilOpState struct {
-	FailOp      common.StencilOp
-	PassOp      common.StencilOp
-	DepthFailOp common.StencilOp
+	FailOp      StencilOp
+	PassOp      StencilOp
+	DepthFailOp StencilOp
 
-	CompareOp   common.CompareOp
+	CompareOp   CompareOp
 	CompareMask uint32
 	WriteMask   uint32
 
@@ -49,7 +49,7 @@ type StencilOpState struct {
 type DepthStencilStateOptions struct {
 	DepthTestEnable  bool
 	DepthWriteEnable bool
-	DepthCompareOp   common.CompareOp
+	DepthCompareOp   CompareOp
 
 	DepthBoundsTestEnable bool
 	StencilTestEnable     bool

@@ -14,23 +14,23 @@ import (
 )
 
 const (
-	PipelineStageTopOfPipe                    common.PipelineStages = C.VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT
-	PipelineStageDrawIndirect                 common.PipelineStages = C.VK_PIPELINE_STAGE_DRAW_INDIRECT_BIT
-	PipelineStageVertexInput                  common.PipelineStages = C.VK_PIPELINE_STAGE_VERTEX_INPUT_BIT
-	PipelineStageVertexShader                 common.PipelineStages = C.VK_PIPELINE_STAGE_VERTEX_SHADER_BIT
-	PipelineStageTessellationControlShader    common.PipelineStages = C.VK_PIPELINE_STAGE_TESSELLATION_CONTROL_SHADER_BIT
-	PipelineStageTessellationEvaluationShader common.PipelineStages = C.VK_PIPELINE_STAGE_TESSELLATION_EVALUATION_SHADER_BIT
-	PipelineStageGeometryShader               common.PipelineStages = C.VK_PIPELINE_STAGE_GEOMETRY_SHADER_BIT
-	PipelineStageFragmentShader               common.PipelineStages = C.VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT
-	PipelineStageEarlyFragmentTests           common.PipelineStages = C.VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT
-	PipelineStageLateFragmentTests            common.PipelineStages = C.VK_PIPELINE_STAGE_LATE_FRAGMENT_TESTS_BIT
-	PipelineStageColorAttachmentOutput        common.PipelineStages = C.VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT
-	PipelineStageComputeShader                common.PipelineStages = C.VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT
-	PipelineStageTransfer                     common.PipelineStages = C.VK_PIPELINE_STAGE_TRANSFER_BIT
-	PipelineStageBottomOfPipe                 common.PipelineStages = C.VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT
-	PipelineStageHost                         common.PipelineStages = C.VK_PIPELINE_STAGE_HOST_BIT
-	PipelineStageAllGraphics                  common.PipelineStages = C.VK_PIPELINE_STAGE_ALL_GRAPHICS_BIT
-	PipelineStageAllCommands                  common.PipelineStages = C.VK_PIPELINE_STAGE_ALL_COMMANDS_BIT
+	PipelineStageTopOfPipe                    PipelineStages = C.VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT
+	PipelineStageDrawIndirect                 PipelineStages = C.VK_PIPELINE_STAGE_DRAW_INDIRECT_BIT
+	PipelineStageVertexInput                  PipelineStages = C.VK_PIPELINE_STAGE_VERTEX_INPUT_BIT
+	PipelineStageVertexShader                 PipelineStages = C.VK_PIPELINE_STAGE_VERTEX_SHADER_BIT
+	PipelineStageTessellationControlShader    PipelineStages = C.VK_PIPELINE_STAGE_TESSELLATION_CONTROL_SHADER_BIT
+	PipelineStageTessellationEvaluationShader PipelineStages = C.VK_PIPELINE_STAGE_TESSELLATION_EVALUATION_SHADER_BIT
+	PipelineStageGeometryShader               PipelineStages = C.VK_PIPELINE_STAGE_GEOMETRY_SHADER_BIT
+	PipelineStageFragmentShader               PipelineStages = C.VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT
+	PipelineStageEarlyFragmentTests           PipelineStages = C.VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT
+	PipelineStageLateFragmentTests            PipelineStages = C.VK_PIPELINE_STAGE_LATE_FRAGMENT_TESTS_BIT
+	PipelineStageColorAttachmentOutput        PipelineStages = C.VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT
+	PipelineStageComputeShader                PipelineStages = C.VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT
+	PipelineStageTransfer                     PipelineStages = C.VK_PIPELINE_STAGE_TRANSFER_BIT
+	PipelineStageBottomOfPipe                 PipelineStages = C.VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT
+	PipelineStageHost                         PipelineStages = C.VK_PIPELINE_STAGE_HOST_BIT
+	PipelineStageAllGraphics                  PipelineStages = C.VK_PIPELINE_STAGE_ALL_GRAPHICS_BIT
+	PipelineStageAllCommands                  PipelineStages = C.VK_PIPELINE_STAGE_ALL_COMMANDS_BIT
 )
 
 func init() {
@@ -56,7 +56,7 @@ func init() {
 type SubmitOptions struct {
 	CommandBuffers   []CommandBuffer
 	WaitSemaphores   []Semaphore
-	WaitDstStages    []common.PipelineStages
+	WaitDstStages    []PipelineStages
 	SignalSemaphores []Semaphore
 
 	common.HaveNext

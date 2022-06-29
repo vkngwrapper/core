@@ -142,11 +142,11 @@ func TestCommandBuffer_BeginRenderPass(t *testing.T) {
 	err := buffer.CmdBeginRenderPass(core1_0.SubpassContentsSecondaryCommandBuffers, core1_0.RenderPassBeginOptions{
 		RenderPass:  renderPass,
 		Framebuffer: framebuffer,
-		RenderArea: common.Rect2D{
-			Offset: common.Offset2D{X: 1, Y: 2},
-			Extent: common.Extent2D{Width: 30, Height: 50},
+		RenderArea: core1_0.Rect2D{
+			Offset: core1_0.Offset2D{X: 1, Y: 2},
+			Extent: core1_0.Extent2D{Width: 30, Height: 50},
 		},
-		ClearValues: []common.ClearValue{common.ClearValueFloat{5, 6, 7, 8}},
+		ClearValues: []core1_0.ClearValue{core1_0.ClearValueFloat{5, 6, 7, 8}},
 	})
 	require.NoError(t, err)
 }
@@ -416,7 +416,7 @@ func TestVulkanCommandBuffer_CmdPipelineBarrier(t *testing.T) {
 				SrcQueueFamilyIndex: 11,
 				DstQueueFamilyIndex: 13,
 				Image:               mockImage,
-				SubresourceRange: common.ImageSubresourceRange{
+				SubresourceRange: core1_0.ImageSubresourceRange{
 					AspectMask:     core1_0.AspectMetadata,
 					BaseMipLevel:   17,
 					LevelCount:     19,
@@ -494,18 +494,18 @@ func TestVulkanCommandBuffer_CmdCopyBufferToImage(t *testing.T) {
 			BufferOffset:      1,
 			BufferRowLength:   3,
 			BufferImageHeight: 5,
-			ImageSubresource: common.ImageSubresourceLayers{
+			ImageSubresource: core1_0.ImageSubresourceLayers{
 				AspectMask:     core1_0.AspectDepth,
 				MipLevel:       7,
 				BaseArrayLayer: 11,
 				LayerCount:     13,
 			},
-			ImageOffset: common.Offset3D{
+			ImageOffset: core1_0.Offset3D{
 				X: 17,
 				Y: 19,
 				Z: 23,
 			},
-			ImageExtent: common.Extent3D{
+			ImageExtent: core1_0.Extent3D{
 				Width:  29,
 				Height: 31,
 				Depth:  37,
@@ -515,18 +515,18 @@ func TestVulkanCommandBuffer_CmdCopyBufferToImage(t *testing.T) {
 			BufferOffset:      41,
 			BufferRowLength:   43,
 			BufferImageHeight: 47,
-			ImageSubresource: common.ImageSubresourceLayers{
+			ImageSubresource: core1_0.ImageSubresourceLayers{
 				AspectMask:     core1_0.AspectColor,
 				MipLevel:       53,
 				BaseArrayLayer: 59,
 				LayerCount:     61,
 			},
-			ImageOffset: common.Offset3D{
+			ImageOffset: core1_0.Offset3D{
 				X: 67,
 				Y: 71,
 				Z: 73,
 			},
-			ImageExtent: common.Extent3D{
+			ImageExtent: core1_0.Extent3D{
 				Width:  79,
 				Height: 83,
 				Depth:  89,
@@ -605,13 +605,13 @@ func TestVulkanCommandBuffer_CmdBlitImage(t *testing.T) {
 		core1_0.ImageLayoutColorAttachmentOptimal,
 		[]core1_0.ImageBlit{
 			{
-				SourceSubresource: common.ImageSubresourceLayers{
+				SourceSubresource: core1_0.ImageSubresourceLayers{
 					AspectMask:     core1_0.AspectMetadata,
 					MipLevel:       1,
 					BaseArrayLayer: 3,
 					LayerCount:     5,
 				},
-				SourceOffsets: [2]common.Offset3D{
+				SourceOffsets: [2]core1_0.Offset3D{
 					{
 						X: 7,
 						Y: 11,
@@ -623,13 +623,13 @@ func TestVulkanCommandBuffer_CmdBlitImage(t *testing.T) {
 						Z: 23,
 					},
 				},
-				DestinationSubresource: common.ImageSubresourceLayers{
+				DestinationSubresource: core1_0.ImageSubresourceLayers{
 					AspectMask:     core1_0.AspectStencil,
 					MipLevel:       29,
 					BaseArrayLayer: 31,
 					LayerCount:     37,
 				},
-				DestinationOffsets: [2]common.Offset3D{
+				DestinationOffsets: [2]core1_0.Offset3D{
 					{
 						X: 41,
 						Y: 43,
@@ -720,7 +720,7 @@ func TestVulkanCommandBuffer_CmdSetViewport(t *testing.T) {
 			require.InDelta(t, 41, viewport.FieldByName("maxDepth").Float(), 0.0001)
 		})
 
-	buffer.CmdSetViewport([]common.Viewport{
+	buffer.CmdSetViewport([]core1_0.Viewport{
 		{
 			X:        3,
 			Y:        5,
@@ -773,14 +773,14 @@ func TestVulkanCommandBuffer_CmdSetScissor(t *testing.T) {
 			require.Equal(t, uint64(23), extent.FieldByName("height").Uint())
 		})
 
-	buffer.CmdSetScissor([]common.Rect2D{
+	buffer.CmdSetScissor([]core1_0.Rect2D{
 		{
-			Offset: common.Offset2D{3, 5},
-			Extent: common.Extent2D{7, 11},
+			Offset: core1_0.Offset2D{3, 5},
+			Extent: core1_0.Extent2D{7, 11},
 		},
 		{
-			Offset: common.Offset2D{13, 17},
-			Extent: common.Extent2D{19, 23},
+			Offset: core1_0.Offset2D{13, 17},
+			Extent: core1_0.Extent2D{19, 23},
 		},
 	})
 }
@@ -866,38 +866,38 @@ func TestVulkanCommandBuffer_CmdCopyImage(t *testing.T) {
 
 	err := buffer.CmdCopyImage(srcImage, core1_0.ImageLayoutTransferDstOptimal, dstImage, core1_0.ImageLayoutShaderReadOnlyOptimal, []core1_0.ImageCopy{
 		{
-			SrcSubresource: common.ImageSubresourceLayers{
+			SrcSubresource: core1_0.ImageSubresourceLayers{
 				AspectMask:     core1_0.AspectMetadata,
 				MipLevel:       1,
 				BaseArrayLayer: 3,
 				LayerCount:     5,
 			},
-			DstSubresource: common.ImageSubresourceLayers{
+			DstSubresource: core1_0.ImageSubresourceLayers{
 				AspectMask:     core1_0.AspectStencil,
 				MipLevel:       7,
 				BaseArrayLayer: 11,
 				LayerCount:     13,
 			},
-			SrcOffset: common.Offset3D{17, 19, 23},
-			DstOffset: common.Offset3D{29, 31, 37},
-			Extent:    common.Extent3D{41, 43, 47},
+			SrcOffset: core1_0.Offset3D{17, 19, 23},
+			DstOffset: core1_0.Offset3D{29, 31, 37},
+			Extent:    core1_0.Extent3D{41, 43, 47},
 		},
 		{
-			SrcSubresource: common.ImageSubresourceLayers{
+			SrcSubresource: core1_0.ImageSubresourceLayers{
 				AspectMask:     core1_0.AspectColor,
 				MipLevel:       53,
 				BaseArrayLayer: 59,
 				LayerCount:     61,
 			},
-			DstSubresource: common.ImageSubresourceLayers{
+			DstSubresource: core1_0.ImageSubresourceLayers{
 				AspectMask:     core1_0.AspectDepth,
 				MipLevel:       67,
 				BaseArrayLayer: 71,
 				LayerCount:     73,
 			},
-			SrcOffset: common.Offset3D{79, 83, 89},
-			DstOffset: common.Offset3D{97, 101, 103},
-			Extent:    common.Extent3D{107, 109, 113},
+			SrcOffset: core1_0.Offset3D{79, 83, 89},
+			DstOffset: core1_0.Offset3D{97, 101, 103},
+			Extent:    core1_0.Extent3D{107, 109, 113},
 		},
 	})
 	require.NoError(t, err)
@@ -1028,7 +1028,7 @@ func TestVulkanCommandBuffer_CmdWaitEvents(t *testing.T) {
 				SrcQueueFamilyIndex: 11,
 				DstQueueFamilyIndex: 13,
 				Image:               mockImage,
-				SubresourceRange: common.ImageSubresourceRange{
+				SubresourceRange: core1_0.ImageSubresourceRange{
 					AspectMask:     core1_0.AspectDepth,
 					BaseMipLevel:   17,
 					LevelCount:     19,
@@ -1090,7 +1090,7 @@ func TestVulkanCommandBuffer_CmdClearColorImage(t *testing.T) {
 			require.Equal(t, uint64(19), r.FieldByName("layerCount").Uint())
 		})
 
-	buffer.CmdClearColorImage(image, core1_0.ImageLayoutDepthStencilAttachmentOptimal, &common.ClearValueFloat{0.2, 0.3, 0.4, 0.5}, []common.ImageSubresourceRange{
+	buffer.CmdClearColorImage(image, core1_0.ImageLayoutDepthStencilAttachmentOptimal, &core1_0.ClearValueFloat{0.2, 0.3, 0.4, 0.5}, []core1_0.ImageSubresourceRange{
 		{
 			AspectMask:     core1_0.AspectMetadata,
 			BaseMipLevel:   1,
@@ -1275,23 +1275,23 @@ func TestVulkanCommandBuffer_CmdClearAttachments(t *testing.T) {
 		{
 			AspectMask:      core1_0.AspectColor,
 			ColorAttachment: 3,
-			ClearValue:      common.ClearValueFloat{5, 7, 11, 13},
+			ClearValue:      core1_0.ClearValueFloat{5, 7, 11, 13},
 		},
 	}, []core1_0.ClearRect{
 		{
 			BaseArrayLayer: 17,
 			LayerCount:     19,
-			Rect: common.Rect2D{
-				Offset: common.Offset2D{23, 29},
-				Extent: common.Extent2D{31, 37},
+			Rect: core1_0.Rect2D{
+				Offset: core1_0.Offset2D{23, 29},
+				Extent: core1_0.Extent2D{31, 37},
 			},
 		},
 		{
 			BaseArrayLayer: 41,
 			LayerCount:     43,
-			Rect: common.Rect2D{
-				Offset: common.Offset2D{47, 53},
-				Extent: common.Extent2D{59, 61},
+			Rect: core1_0.Rect2D{
+				Offset: core1_0.Offset2D{47, 53},
+				Extent: core1_0.Extent2D{59, 61},
 			},
 		},
 	})
@@ -1332,10 +1332,10 @@ func TestVulkanCommandBuffer_CmdClearDepthStencilImage(t *testing.T) {
 		require.Equal(t, uint64(29), val.FieldByName("layerCount").Uint())
 	})
 
-	buffer.CmdClearDepthStencilImage(image, core1_0.ImageLayoutShaderReadOnlyOptimal, &common.ClearValueDepthStencil{
+	buffer.CmdClearDepthStencilImage(image, core1_0.ImageLayoutShaderReadOnlyOptimal, &core1_0.ClearValueDepthStencil{
 		Depth:   0.5,
 		Stencil: 3,
-	}, []common.ImageSubresourceRange{
+	}, []core1_0.ImageSubresourceRange{
 		{
 			AspectMask:     core1_0.AspectColor,
 			BaseMipLevel:   5,
@@ -1392,14 +1392,14 @@ func TestVulkanCommandBuffer_CmdCopyImageToBuffer(t *testing.T) {
 			BufferOffset:      1,
 			BufferRowLength:   3,
 			BufferImageHeight: 5,
-			ImageSubresource: common.ImageSubresourceLayers{
+			ImageSubresource: core1_0.ImageSubresourceLayers{
 				AspectMask:     core1_0.AspectColor,
 				MipLevel:       7,
 				BaseArrayLayer: 11,
 				LayerCount:     13,
 			},
-			ImageOffset: common.Offset3D{17, 19, 23},
-			ImageExtent: common.Extent3D{29, 31, 37},
+			ImageOffset: core1_0.Offset3D{17, 19, 23},
+			ImageExtent: core1_0.Extent3D{29, 31, 37},
 		},
 	})
 	require.NoError(t, err)
@@ -1553,38 +1553,38 @@ func TestVulkanCommandBuffer_CmdResolveImage(t *testing.T) {
 		core1_0.ImageLayoutColorAttachmentOptimal,
 		[]core1_0.ImageResolve{
 			{
-				SrcSubresource: common.ImageSubresourceLayers{
+				SrcSubresource: core1_0.ImageSubresourceLayers{
 					AspectMask:     core1_0.AspectColor,
 					MipLevel:       1,
 					BaseArrayLayer: 3,
 					LayerCount:     5,
 				},
-				SrcOffset: common.Offset3D{7, 11, 13},
-				DstSubresource: common.ImageSubresourceLayers{
+				SrcOffset: core1_0.Offset3D{7, 11, 13},
+				DstSubresource: core1_0.ImageSubresourceLayers{
 					AspectMask:     core1_0.AspectDepth,
 					MipLevel:       17,
 					BaseArrayLayer: 19,
 					LayerCount:     23,
 				},
-				DstOffset: common.Offset3D{29, 31, 37},
-				Extent:    common.Extent3D{41, 43, 47},
+				DstOffset: core1_0.Offset3D{29, 31, 37},
+				Extent:    core1_0.Extent3D{41, 43, 47},
 			},
 			{
-				SrcSubresource: common.ImageSubresourceLayers{
+				SrcSubresource: core1_0.ImageSubresourceLayers{
 					AspectMask:     core1_0.AspectMetadata,
 					MipLevel:       53,
 					BaseArrayLayer: 59,
 					LayerCount:     61,
 				},
-				SrcOffset: common.Offset3D{67, 71, 73},
-				DstSubresource: common.ImageSubresourceLayers{
+				SrcOffset: core1_0.Offset3D{67, 71, 73},
+				DstSubresource: core1_0.ImageSubresourceLayers{
 					AspectMask:     core1_0.AspectStencil,
 					MipLevel:       79,
 					BaseArrayLayer: 83,
 					LayerCount:     89,
 				},
-				DstOffset: common.Offset3D{97, 101, 103},
-				Extent:    common.Extent3D{107, 109, 113},
+				DstOffset: core1_0.Offset3D{97, 101, 103},
+				Extent:    core1_0.Extent3D{107, 109, 113},
 			},
 		})
 }

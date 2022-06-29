@@ -35,7 +35,7 @@ func (l *VulkanLoader) Driver() driver.Driver {
 	return l.driver
 }
 
-func (l *VulkanLoader) attemptAvailableExtensions(layerName *driver.Char) (map[string]*common.ExtensionProperties, common.VkResult, error) {
+func (l *VulkanLoader) attemptAvailableExtensions(layerName *driver.Char) (map[string]*core1_0.ExtensionProperties, common.VkResult, error) {
 	alloc := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(alloc)
 
@@ -55,11 +55,11 @@ func (l *VulkanLoader) attemptAvailableExtensions(layerName *driver.Char) (map[s
 
 	intExtensionCount := int(*extensionCount)
 	extensionArray := ([]C.VkExtensionProperties)(unsafe.Slice((*C.VkExtensionProperties)(extensionsUnsafe), intExtensionCount))
-	outExtensions := make(map[string]*common.ExtensionProperties)
+	outExtensions := make(map[string]*core1_0.ExtensionProperties)
 	for i := 0; i < intExtensionCount; i++ {
 		extension := extensionArray[i]
 
-		outExtension := &common.ExtensionProperties{
+		outExtension := &core1_0.ExtensionProperties{
 			ExtensionName: C.GoString((*C.char)(&extension.extensionName[0])),
 			SpecVersion:   common.Version(extension.specVersion),
 		}
@@ -74,11 +74,11 @@ func (l *VulkanLoader) attemptAvailableExtensions(layerName *driver.Char) (map[s
 	return outExtensions, res, nil
 }
 
-func (l *VulkanLoader) AvailableExtensions() (map[string]*common.ExtensionProperties, common.VkResult, error) {
+func (l *VulkanLoader) AvailableExtensions() (map[string]*core1_0.ExtensionProperties, common.VkResult, error) {
 	// There may be a race condition that adds new available extensions between getting the
 	// extension count & pulling the extensions, in which case, attemptAvailableExtensions will return
 	// VK_INCOMPLETE.  In this case, we should try again.
-	var layers map[string]*common.ExtensionProperties
+	var layers map[string]*core1_0.ExtensionProperties
 	var result common.VkResult
 	var err error
 	for doWhile := true; doWhile; doWhile = (result == core1_0.VKIncomplete) {
@@ -87,11 +87,11 @@ func (l *VulkanLoader) AvailableExtensions() (map[string]*common.ExtensionProper
 	return layers, result, err
 }
 
-func (l *VulkanLoader) AvailableExtensionsForLayer(layerName string) (map[string]*common.ExtensionProperties, common.VkResult, error) {
+func (l *VulkanLoader) AvailableExtensionsForLayer(layerName string) (map[string]*core1_0.ExtensionProperties, common.VkResult, error) {
 	// There may be a race condition that adds new available extensions between getting the
 	// extension count & pulling the extensions, in which case, attemptAvailableExtensions will return
 	// VK_INCOMPLETE.  In this case, we should try again.
-	var layers map[string]*common.ExtensionProperties
+	var layers map[string]*core1_0.ExtensionProperties
 	var result common.VkResult
 	var err error
 	allocator := cgoparam.GetAlloc()
@@ -104,7 +104,7 @@ func (l *VulkanLoader) AvailableExtensionsForLayer(layerName string) (map[string
 	return layers, result, err
 }
 
-func (l *VulkanLoader) attemptAvailableLayers() (map[string]*common.LayerProperties, common.VkResult, error) {
+func (l *VulkanLoader) attemptAvailableLayers() (map[string]*core1_0.LayerProperties, common.VkResult, error) {
 	alloc := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(alloc)
 
@@ -124,11 +124,11 @@ func (l *VulkanLoader) attemptAvailableLayers() (map[string]*common.LayerPropert
 
 	intLayerCount := int(*layerCount)
 	layerArray := ([]C.VkLayerProperties)(unsafe.Slice((*C.VkLayerProperties)(layersUnsafe), intLayerCount))
-	outLayers := make(map[string]*common.LayerProperties)
+	outLayers := make(map[string]*core1_0.LayerProperties)
 	for i := 0; i < intLayerCount; i++ {
 		layer := layerArray[i]
 
-		outLayer := &common.LayerProperties{
+		outLayer := &core1_0.LayerProperties{
 			LayerName:             C.GoString((*C.char)(&layer.layerName[0])),
 			SpecVersion:           common.Version(layer.specVersion),
 			ImplementationVersion: common.Version(layer.implementationVersion),
@@ -145,11 +145,11 @@ func (l *VulkanLoader) attemptAvailableLayers() (map[string]*common.LayerPropert
 	return outLayers, res, nil
 }
 
-func (l *VulkanLoader) AvailableLayers() (map[string]*common.LayerProperties, common.VkResult, error) {
+func (l *VulkanLoader) AvailableLayers() (map[string]*core1_0.LayerProperties, common.VkResult, error) {
 	// There may be a race condition that adds new available layers between getting the
 	// layer count & pulling the layers, in which case, attemptAvailableLayers will return
 	// VK_INCOMPLETE.  In this case, we should try again.
-	var layers map[string]*common.LayerProperties
+	var layers map[string]*core1_0.LayerProperties
 	var result common.VkResult
 	var err error
 	for doWhile := true; doWhile; doWhile = (result == core1_0.VKIncomplete) {

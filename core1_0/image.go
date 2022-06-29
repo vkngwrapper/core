@@ -70,7 +70,7 @@ func (i *VulkanImage) BindImageMemory(memory DeviceMemory, offset int) (common.V
 	return i.deviceDriver.VkBindImageMemory(i.device, i.imageHandle, memory.Handle(), driver.VkDeviceSize(offset))
 }
 
-func (i *VulkanImage) SubresourceLayout(subresource *common.ImageSubresource) *common.SubresourceLayout {
+func (i *VulkanImage) SubresourceLayout(subresource *ImageSubresource) *SubresourceLayout {
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
@@ -84,7 +84,7 @@ func (i *VulkanImage) SubresourceLayout(subresource *common.ImageSubresource) *c
 	i.deviceDriver.VkGetImageSubresourceLayout(i.device, i.imageHandle, (*driver.VkImageSubresource)(unsafe.Pointer(subresourcePtr)), (*driver.VkSubresourceLayout)(subresourceLayoutUnsafe))
 
 	subresourceLayout := (*C.VkSubresourceLayout)(subresourceLayoutUnsafe)
-	return &common.SubresourceLayout{
+	return &SubresourceLayout{
 		Offset:     int(subresourceLayout.offset),
 		Size:       int(subresourceLayout.size),
 		RowPitch:   int(subresourceLayout.rowPitch),

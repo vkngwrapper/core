@@ -13,7 +13,7 @@ import (
 )
 
 type DeviceQueueCreateOptions struct {
-	Flags                  common.DeviceQueueCreateFlags
+	Flags                  DeviceQueueCreateFlags
 	QueueFamilyIndex       int
 	CreatedQueuePriorities []float32
 

@@ -12,7 +12,7 @@ import (
 )
 
 const (
-	FenceCreateSignaled common.FenceCreateFlags = C.VK_FENCE_CREATE_SIGNALED_BIT
+	FenceCreateSignaled FenceCreateFlags = C.VK_FENCE_CREATE_SIGNALED_BIT
 )
 
 func init() {
@@ -20,7 +20,7 @@ func init() {
 }
 
 type FenceCreateOptions struct {
-	Flags common.FenceCreateFlags
+	Flags FenceCreateFlags
 
 	common.HaveNext
 }

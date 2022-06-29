@@ -12,21 +12,21 @@ import (
 )
 
 const (
-	SwizzleIdentity common.ComponentSwizzle = C.VK_COMPONENT_SWIZZLE_IDENTITY
-	SwizzleZero     common.ComponentSwizzle = C.VK_COMPONENT_SWIZZLE_ZERO
-	SwizzleOne      common.ComponentSwizzle = C.VK_COMPONENT_SWIZZLE_ONE
-	SwizzleRed      common.ComponentSwizzle = C.VK_COMPONENT_SWIZZLE_R
-	SwizzleGreen    common.ComponentSwizzle = C.VK_COMPONENT_SWIZZLE_G
-	SwizzleBlue     common.ComponentSwizzle = C.VK_COMPONENT_SWIZZLE_B
-	SwizzleAlpha    common.ComponentSwizzle = C.VK_COMPONENT_SWIZZLE_A
+	SwizzleIdentity ComponentSwizzle = C.VK_COMPONENT_SWIZZLE_IDENTITY
+	SwizzleZero     ComponentSwizzle = C.VK_COMPONENT_SWIZZLE_ZERO
+	SwizzleOne      ComponentSwizzle = C.VK_COMPONENT_SWIZZLE_ONE
+	SwizzleRed      ComponentSwizzle = C.VK_COMPONENT_SWIZZLE_R
+	SwizzleGreen    ComponentSwizzle = C.VK_COMPONENT_SWIZZLE_G
+	SwizzleBlue     ComponentSwizzle = C.VK_COMPONENT_SWIZZLE_B
+	SwizzleAlpha    ComponentSwizzle = C.VK_COMPONENT_SWIZZLE_A
 
-	ViewType1D        common.ImageViewType = C.VK_IMAGE_VIEW_TYPE_1D
-	ViewType2D        common.ImageViewType = C.VK_IMAGE_VIEW_TYPE_2D
-	ViewType3D        common.ImageViewType = C.VK_IMAGE_VIEW_TYPE_3D
-	ViewTypeCube      common.ImageViewType = C.VK_IMAGE_VIEW_TYPE_CUBE
-	ViewType1DArray   common.ImageViewType = C.VK_IMAGE_VIEW_TYPE_1D_ARRAY
-	ViewType2DArray   common.ImageViewType = C.VK_IMAGE_VIEW_TYPE_2D_ARRAY
-	ViewTypeCubeArray common.ImageViewType = C.VK_IMAGE_VIEW_TYPE_CUBE_ARRAY
+	ViewType1D        ImageViewType = C.VK_IMAGE_VIEW_TYPE_1D
+	ViewType2D        ImageViewType = C.VK_IMAGE_VIEW_TYPE_2D
+	ViewType3D        ImageViewType = C.VK_IMAGE_VIEW_TYPE_3D
+	ViewTypeCube      ImageViewType = C.VK_IMAGE_VIEW_TYPE_CUBE
+	ViewType1DArray   ImageViewType = C.VK_IMAGE_VIEW_TYPE_1D_ARRAY
+	ViewType2DArray   ImageViewType = C.VK_IMAGE_VIEW_TYPE_2D_ARRAY
+	ViewTypeCubeArray ImageViewType = C.VK_IMAGE_VIEW_TYPE_CUBE_ARRAY
 )
 
 func init() {
@@ -48,20 +48,20 @@ func init() {
 }
 
 type ComponentMapping struct {
-	R common.ComponentSwizzle
-	G common.ComponentSwizzle
-	B common.ComponentSwizzle
-	A common.ComponentSwizzle
+	R ComponentSwizzle
+	G ComponentSwizzle
+	B ComponentSwizzle
+	A ComponentSwizzle
 }
 
 type ImageViewCreateOptions struct {
 	Image Image
 
-	Flags            common.ImageViewCreateFlags
-	ViewType         common.ImageViewType
-	Format           common.DataFormat
+	Flags            ImageViewCreateFlags
+	ViewType         ImageViewType
+	Format           DataFormat
 	Components       ComponentMapping
-	SubresourceRange common.ImageSubresourceRange
+	SubresourceRange ImageSubresourceRange
 
 	common.HaveNext
 }

@@ -82,7 +82,7 @@ func (c *VulkanCommandBuffer) End() (common.VkResult, error) {
 	return c.deviceDriver.VkEndCommandBuffer(c.commandBufferHandle)
 }
 
-func (c *VulkanCommandBuffer) CmdBeginRenderPass(contents common.SubpassContents, o RenderPassBeginOptions) error {
+func (c *VulkanCommandBuffer) CmdBeginRenderPass(contents SubpassContents, o RenderPassBeginOptions) error {
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
@@ -101,7 +101,7 @@ func (c *VulkanCommandBuffer) CmdEndRenderPass() {
 	c.commandCounter.CommandCount++
 }
 
-func (c *VulkanCommandBuffer) CmdBindPipeline(bindPoint common.PipelineBindPoint, pipeline Pipeline) {
+func (c *VulkanCommandBuffer) CmdBindPipeline(bindPoint PipelineBindPoint, pipeline Pipeline) {
 	c.deviceDriver.VkCmdBindPipeline(c.commandBufferHandle, driver.VkPipelineBindPoint(bindPoint), pipeline.Handle())
 	c.commandCounter.CommandCount++
 }
@@ -142,12 +142,12 @@ func (c *VulkanCommandBuffer) CmdBindVertexBuffers(buffers []Buffer, bufferOffse
 	c.commandCounter.CommandCount++
 }
 
-func (c *VulkanCommandBuffer) CmdBindIndexBuffer(buffer Buffer, offset int, indexType common.IndexType) {
+func (c *VulkanCommandBuffer) CmdBindIndexBuffer(buffer Buffer, offset int, indexType IndexType) {
 	c.deviceDriver.VkCmdBindIndexBuffer(c.commandBufferHandle, buffer.Handle(), driver.VkDeviceSize(offset), driver.VkIndexType(indexType))
 	c.commandCounter.CommandCount++
 }
 
-func (c *VulkanCommandBuffer) CmdBindDescriptorSets(bindPoint common.PipelineBindPoint, layout PipelineLayout, sets []DescriptorSet, dynamicOffsets []int) {
+func (c *VulkanCommandBuffer) CmdBindDescriptorSets(bindPoint PipelineBindPoint, layout PipelineLayout, sets []DescriptorSet, dynamicOffsets []int) {
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
@@ -185,7 +185,7 @@ func (c *VulkanCommandBuffer) CmdBindDescriptorSets(bindPoint common.PipelineBin
 	c.commandCounter.CommandCount++
 }
 
-func (c *VulkanCommandBuffer) CmdPipelineBarrier(srcStageMask, dstStageMask common.PipelineStages, dependencies common.DependencyFlags, memoryBarriers []MemoryBarrierOptions, bufferMemoryBarriers []BufferMemoryBarrierOptions, imageMemoryBarriers []ImageMemoryBarrierOptions) error {
+func (c *VulkanCommandBuffer) CmdPipelineBarrier(srcStageMask, dstStageMask PipelineStages, dependencies DependencyFlags, memoryBarriers []MemoryBarrierOptions, bufferMemoryBarriers []BufferMemoryBarrierOptions, imageMemoryBarriers []ImageMemoryBarrierOptions) error {
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
@@ -224,7 +224,7 @@ func (c *VulkanCommandBuffer) CmdPipelineBarrier(srcStageMask, dstStageMask comm
 	return nil
 }
 
-func (c *VulkanCommandBuffer) CmdCopyBufferToImage(buffer Buffer, image Image, layout common.ImageLayout, regions []BufferImageCopy) error {
+func (c *VulkanCommandBuffer) CmdCopyBufferToImage(buffer Buffer, image Image, layout ImageLayout, regions []BufferImageCopy) error {
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
@@ -244,7 +244,7 @@ func (c *VulkanCommandBuffer) CmdCopyBufferToImage(buffer Buffer, image Image, l
 	return nil
 }
 
-func (c *VulkanCommandBuffer) CmdBlitImage(sourceImage Image, sourceImageLayout common.ImageLayout, destinationImage Image, destinationImageLayout common.ImageLayout, regions []ImageBlit, filter common.Filter) error {
+func (c *VulkanCommandBuffer) CmdBlitImage(sourceImage Image, sourceImageLayout ImageLayout, destinationImage Image, destinationImageLayout ImageLayout, regions []ImageBlit, filter Filter) error {
 	allocator := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(allocator)
 
@@ -268,7 +268,7 @@ func (c *VulkanCommandBuffer) CmdBlitImage(sourceImage Image, sourceImageLayout 
 	return nil
 }
 
-func (c *VulkanCommandBuffer) CmdPushConstants(layout PipelineLayout, stageFlags common.ShaderStages, offset int, valueBytes []byte) {
+func (c *VulkanCommandBuffer) CmdPushConstants(layout PipelineLayout, stageFlags ShaderStages, offset int, valueBytes []byte) {
 	alloc := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(alloc)
 
@@ -278,7 +278,7 @@ func (c *VulkanCommandBuffer) CmdPushConstants(layout PipelineLayout, stageFlags
 	c.commandCounter.CommandCount++
 }
 
-func (c *VulkanCommandBuffer) CmdSetViewport(viewports []common.Viewport) {
+func (c *VulkanCommandBuffer) CmdSetViewport(viewports []Viewport) {
 	allocator := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(allocator)
 
@@ -304,7 +304,7 @@ func (c *VulkanCommandBuffer) CmdSetViewport(viewports []common.Viewport) {
 	c.commandCounter.CommandCount++
 }
 
-func (c *VulkanCommandBuffer) CmdSetScissor(scissors []common.Rect2D) {
+func (c *VulkanCommandBuffer) CmdSetScissor(scissors []Rect2D) {
 	allocator := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(allocator)
 
@@ -328,12 +328,12 @@ func (c *VulkanCommandBuffer) CmdSetScissor(scissors []common.Rect2D) {
 	c.commandCounter.CommandCount++
 }
 
-func (c *VulkanCommandBuffer) CmdNextSubpass(contents common.SubpassContents) {
+func (c *VulkanCommandBuffer) CmdNextSubpass(contents SubpassContents) {
 	c.deviceDriver.VkCmdNextSubpass(c.commandBufferHandle, driver.VkSubpassContents(contents))
 	c.commandCounter.CommandCount++
 }
 
-func (c *VulkanCommandBuffer) CmdWaitEvents(events []Event, srcStageMask common.PipelineStages, dstStageMask common.PipelineStages, memoryBarriers []MemoryBarrierOptions, bufferMemoryBarriers []BufferMemoryBarrierOptions, imageMemoryBarriers []ImageMemoryBarrierOptions) error {
+func (c *VulkanCommandBuffer) CmdWaitEvents(events []Event, srcStageMask PipelineStages, dstStageMask PipelineStages, memoryBarriers []MemoryBarrierOptions, bufferMemoryBarriers []BufferMemoryBarrierOptions, imageMemoryBarriers []ImageMemoryBarrierOptions) error {
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
@@ -383,12 +383,12 @@ func (c *VulkanCommandBuffer) CmdWaitEvents(events []Event, srcStageMask common.
 	return nil
 }
 
-func (c *VulkanCommandBuffer) CmdSetEvent(event Event, stageMask common.PipelineStages) {
+func (c *VulkanCommandBuffer) CmdSetEvent(event Event, stageMask PipelineStages) {
 	c.deviceDriver.VkCmdSetEvent(c.commandBufferHandle, event.Handle(), driver.VkPipelineStageFlags(stageMask))
 	c.commandCounter.CommandCount++
 }
 
-func (c *VulkanCommandBuffer) CmdClearColorImage(image Image, imageLayout common.ImageLayout, color common.ClearColorValue, ranges []common.ImageSubresourceRange) {
+func (c *VulkanCommandBuffer) CmdClearColorImage(image Image, imageLayout ImageLayout, color ClearColorValue, ranges []ImageSubresourceRange) {
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
@@ -423,7 +423,7 @@ func (c *VulkanCommandBuffer) CmdResetQueryPool(queryPool QueryPool, startQuery,
 	c.commandCounter.CommandCount++
 }
 
-func (c *VulkanCommandBuffer) CmdBeginQuery(queryPool QueryPool, query int, flags common.QueryControlFlags) {
+func (c *VulkanCommandBuffer) CmdBeginQuery(queryPool QueryPool, query int, flags QueryControlFlags) {
 	c.deviceDriver.VkCmdBeginQuery(c.commandBufferHandle, queryPool.Handle(), driver.Uint32(query), driver.VkQueryControlFlags(flags))
 	c.commandCounter.CommandCount++
 }
@@ -433,7 +433,7 @@ func (c *VulkanCommandBuffer) CmdEndQuery(queryPool QueryPool, query int) {
 	c.commandCounter.CommandCount++
 }
 
-func (c *VulkanCommandBuffer) CmdCopyQueryPoolResults(queryPool QueryPool, firstQuery, queryCount int, dstBuffer Buffer, dstOffset, stride int, flags common.QueryResultFlags) {
+func (c *VulkanCommandBuffer) CmdCopyQueryPoolResults(queryPool QueryPool, firstQuery, queryCount int, dstBuffer Buffer, dstOffset, stride int, flags QueryResultFlags) {
 	c.deviceDriver.VkCmdCopyQueryPoolResults(c.commandBufferHandle, queryPool.Handle(), driver.Uint32(firstQuery), driver.Uint32(queryCount), dstBuffer.Handle(), driver.VkDeviceSize(dstOffset), driver.VkDeviceSize(stride), driver.VkQueryResultFlags(flags))
 	c.commandCounter.CommandCount++
 }
@@ -481,7 +481,7 @@ func (c *VulkanCommandBuffer) CmdClearAttachments(attachments []ClearAttachment,
 	return nil
 }
 
-func (c *VulkanCommandBuffer) CmdClearDepthStencilImage(image Image, imageLayout common.ImageLayout, depthStencil *common.ClearValueDepthStencil, ranges []common.ImageSubresourceRange) {
+func (c *VulkanCommandBuffer) CmdClearDepthStencilImage(image Image, imageLayout ImageLayout, depthStencil *ClearValueDepthStencil, ranges []ImageSubresourceRange) {
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
@@ -505,7 +505,7 @@ func (c *VulkanCommandBuffer) CmdClearDepthStencilImage(image Image, imageLayout
 	c.commandCounter.CommandCount++
 }
 
-func (c *VulkanCommandBuffer) CmdCopyImageToBuffer(srcImage Image, srcImageLayout common.ImageLayout, dstBuffer Buffer, regions []BufferImageCopy) error {
+func (c *VulkanCommandBuffer) CmdCopyImageToBuffer(srcImage Image, srcImageLayout ImageLayout, dstBuffer Buffer, regions []BufferImageCopy) error {
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
@@ -549,12 +549,12 @@ func (c *VulkanCommandBuffer) CmdFillBuffer(dstBuffer Buffer, dstOffset int, siz
 	c.commandCounter.CommandCount++
 }
 
-func (c *VulkanCommandBuffer) CmdResetEvent(event Event, stageMask common.PipelineStages) {
+func (c *VulkanCommandBuffer) CmdResetEvent(event Event, stageMask PipelineStages) {
 	c.deviceDriver.VkCmdResetEvent(c.commandBufferHandle, event.Handle(), driver.VkPipelineStageFlags(stageMask))
 	c.commandCounter.CommandCount++
 }
 
-func (c *VulkanCommandBuffer) CmdResolveImage(srcImage Image, srcImageLayout common.ImageLayout, dstImage Image, dstImageLayout common.ImageLayout, regions []ImageResolve) error {
+func (c *VulkanCommandBuffer) CmdResolveImage(srcImage Image, srcImageLayout ImageLayout, dstImage Image, dstImageLayout ImageLayout, regions []ImageResolve) error {
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
@@ -599,17 +599,17 @@ func (c *VulkanCommandBuffer) CmdSetLineWidth(lineWidth float32) {
 	c.commandCounter.CommandCount++
 }
 
-func (c *VulkanCommandBuffer) CmdSetStencilCompareMask(faceMask common.StencilFaces, compareMask uint32) {
+func (c *VulkanCommandBuffer) CmdSetStencilCompareMask(faceMask StencilFaces, compareMask uint32) {
 	c.deviceDriver.VkCmdSetStencilCompareMask(c.commandBufferHandle, driver.VkStencilFaceFlags(faceMask), driver.Uint32(compareMask))
 	c.commandCounter.CommandCount++
 }
 
-func (c *VulkanCommandBuffer) CmdSetStencilReference(faceMask common.StencilFaces, reference uint32) {
+func (c *VulkanCommandBuffer) CmdSetStencilReference(faceMask StencilFaces, reference uint32) {
 	c.deviceDriver.VkCmdSetStencilReference(c.commandBufferHandle, driver.VkStencilFaceFlags(faceMask), driver.Uint32(reference))
 	c.commandCounter.CommandCount++
 }
 
-func (c *VulkanCommandBuffer) CmdSetStencilWriteMask(faceMask common.StencilFaces, writeMask uint32) {
+func (c *VulkanCommandBuffer) CmdSetStencilWriteMask(faceMask StencilFaces, writeMask uint32) {
 	c.deviceDriver.VkCmdSetStencilWriteMask(c.commandBufferHandle, driver.VkStencilFaceFlags(faceMask), driver.Uint32(writeMask))
 	c.commandCounter.CommandCount++
 }
@@ -627,12 +627,12 @@ func (c *VulkanCommandBuffer) CmdUpdateBuffer(dstBuffer Buffer, dstOffset int, d
 	c.commandCounter.CommandCount++
 }
 
-func (c *VulkanCommandBuffer) CmdWriteTimestamp(pipelineStage common.PipelineStages, queryPool QueryPool, query int) {
+func (c *VulkanCommandBuffer) CmdWriteTimestamp(pipelineStage PipelineStages, queryPool QueryPool, query int) {
 	c.deviceDriver.VkCmdWriteTimestamp(c.commandBufferHandle, driver.VkPipelineStageFlags(pipelineStage), queryPool.Handle(), driver.Uint32(query))
 	c.commandCounter.CommandCount++
 }
 
-func (c *VulkanCommandBuffer) Reset(flags common.CommandBufferResetFlags) (common.VkResult, error) {
+func (c *VulkanCommandBuffer) Reset(flags CommandBufferResetFlags) (common.VkResult, error) {
 	return c.deviceDriver.VkResetCommandBuffer(c.commandBufferHandle, driver.VkCommandBufferResetFlags(flags))
 }
 

@@ -5,26 +5,25 @@ package core1_0
 #include "vulkan/vulkan.h"
 */
 import "C"
-import "github.com/CannibalVox/VKng/core/common"
 
 const (
-	AccessIndirectCommandRead         common.AccessFlags = C.VK_ACCESS_INDIRECT_COMMAND_READ_BIT
-	AccessIndexRead                   common.AccessFlags = C.VK_ACCESS_INDEX_READ_BIT
-	AccessVertexAttributeRead         common.AccessFlags = C.VK_ACCESS_VERTEX_ATTRIBUTE_READ_BIT
-	AccessUniformRead                 common.AccessFlags = C.VK_ACCESS_UNIFORM_READ_BIT
-	AccessInputAttachmentRead         common.AccessFlags = C.VK_ACCESS_INPUT_ATTACHMENT_READ_BIT
-	AccessShaderRead                  common.AccessFlags = C.VK_ACCESS_SHADER_READ_BIT
-	AccessShaderWrite                 common.AccessFlags = C.VK_ACCESS_SHADER_WRITE_BIT
-	AccessColorAttachmentRead         common.AccessFlags = C.VK_ACCESS_COLOR_ATTACHMENT_READ_BIT
-	AccessColorAttachmentWrite        common.AccessFlags = C.VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT
-	AccessDepthStencilAttachmentRead  common.AccessFlags = C.VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_READ_BIT
-	AccessDepthStencilAttachmentWrite common.AccessFlags = C.VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT
-	AccessTransferRead                common.AccessFlags = C.VK_ACCESS_TRANSFER_READ_BIT
-	AccessTransferWrite               common.AccessFlags = C.VK_ACCESS_TRANSFER_WRITE_BIT
-	AccessHostRead                    common.AccessFlags = C.VK_ACCESS_HOST_READ_BIT
-	AccessHostWrite                   common.AccessFlags = C.VK_ACCESS_HOST_WRITE_BIT
-	AccessMemoryRead                  common.AccessFlags = C.VK_ACCESS_MEMORY_READ_BIT
-	AccessMemoryWrite                 common.AccessFlags = C.VK_ACCESS_MEMORY_WRITE_BIT
+	AccessIndirectCommandRead         AccessFlags = C.VK_ACCESS_INDIRECT_COMMAND_READ_BIT
+	AccessIndexRead                   AccessFlags = C.VK_ACCESS_INDEX_READ_BIT
+	AccessVertexAttributeRead         AccessFlags = C.VK_ACCESS_VERTEX_ATTRIBUTE_READ_BIT
+	AccessUniformRead                 AccessFlags = C.VK_ACCESS_UNIFORM_READ_BIT
+	AccessInputAttachmentRead         AccessFlags = C.VK_ACCESS_INPUT_ATTACHMENT_READ_BIT
+	AccessShaderRead                  AccessFlags = C.VK_ACCESS_SHADER_READ_BIT
+	AccessShaderWrite                 AccessFlags = C.VK_ACCESS_SHADER_WRITE_BIT
+	AccessColorAttachmentRead         AccessFlags = C.VK_ACCESS_COLOR_ATTACHMENT_READ_BIT
+	AccessColorAttachmentWrite        AccessFlags = C.VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT
+	AccessDepthStencilAttachmentRead  AccessFlags = C.VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_READ_BIT
+	AccessDepthStencilAttachmentWrite AccessFlags = C.VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT
+	AccessTransferRead                AccessFlags = C.VK_ACCESS_TRANSFER_READ_BIT
+	AccessTransferWrite               AccessFlags = C.VK_ACCESS_TRANSFER_WRITE_BIT
+	AccessHostRead                    AccessFlags = C.VK_ACCESS_HOST_READ_BIT
+	AccessHostWrite                   AccessFlags = C.VK_ACCESS_HOST_WRITE_BIT
+	AccessMemoryRead                  AccessFlags = C.VK_ACCESS_MEMORY_READ_BIT
+	AccessMemoryWrite                 AccessFlags = C.VK_ACCESS_MEMORY_WRITE_BIT
 )
 
 func init() {

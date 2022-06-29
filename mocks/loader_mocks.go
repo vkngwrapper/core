@@ -51,10 +51,10 @@ func (mr *MockLoaderMockRecorder) APIVersion() *gomock.Call {
 }
 
 // AvailableExtensions mocks base method.
-func (m *MockLoader) AvailableExtensions() (map[string]*common.ExtensionProperties, common.VkResult, error) {
+func (m *MockLoader) AvailableExtensions() (map[string]*core1_0.ExtensionProperties, common.VkResult, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "AvailableExtensions")
-	ret0, _ := ret[0].(map[string]*common.ExtensionProperties)
+	ret0, _ := ret[0].(map[string]*core1_0.ExtensionProperties)
 	ret1, _ := ret[1].(common.VkResult)
 	ret2, _ := ret[2].(error)
 	return ret0, ret1, ret2
@@ -67,10 +67,10 @@ func (mr *MockLoaderMockRecorder) AvailableExtensions() *gomock.Call {
 }
 
 // AvailableExtensionsForLayer mocks base method.
-func (m *MockLoader) AvailableExtensionsForLayer(layerName string) (map[string]*common.ExtensionProperties, common.VkResult, error) {
+func (m *MockLoader) AvailableExtensionsForLayer(layerName string) (map[string]*core1_0.ExtensionProperties, common.VkResult, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "AvailableExtensionsForLayer", layerName)
-	ret0, _ := ret[0].(map[string]*common.ExtensionProperties)
+	ret0, _ := ret[0].(map[string]*core1_0.ExtensionProperties)
 	ret1, _ := ret[1].(common.VkResult)
 	ret2, _ := ret[2].(error)
 	return ret0, ret1, ret2
@@ -83,10 +83,10 @@ func (mr *MockLoaderMockRecorder) AvailableExtensionsForLayer(layerName interfac
 }
 
 // AvailableLayers mocks base method.
-func (m *MockLoader) AvailableLayers() (map[string]*common.LayerProperties, common.VkResult, error) {
+func (m *MockLoader) AvailableLayers() (map[string]*core1_0.LayerProperties, common.VkResult, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "AvailableLayers")
-	ret0, _ := ret[0].(map[string]*common.LayerProperties)
+	ret0, _ := ret[0].(map[string]*core1_0.LayerProperties)
 	ret1, _ := ret[1].(common.VkResult)
 	ret2, _ := ret[2].(error)
 	return ret0, ret1, ret2

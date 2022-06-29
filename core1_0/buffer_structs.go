@@ -12,22 +12,22 @@ import (
 )
 
 const (
-	BufferCreateSparseBinding   common.BufferCreateFlags = C.VK_BUFFER_CREATE_SPARSE_BINDING_BIT
-	BufferCreateSparseResidency common.BufferCreateFlags = C.VK_BUFFER_CREATE_SPARSE_RESIDENCY_BIT
-	BufferCreateSparseAliased   common.BufferCreateFlags = C.VK_BUFFER_CREATE_SPARSE_ALIASED_BIT
+	BufferCreateSparseBinding   BufferCreateFlags = C.VK_BUFFER_CREATE_SPARSE_BINDING_BIT
+	BufferCreateSparseResidency BufferCreateFlags = C.VK_BUFFER_CREATE_SPARSE_RESIDENCY_BIT
+	BufferCreateSparseAliased   BufferCreateFlags = C.VK_BUFFER_CREATE_SPARSE_ALIASED_BIT
 
-	BufferUsageTransferSrc        common.BufferUsages = C.VK_BUFFER_USAGE_TRANSFER_SRC_BIT
-	BufferUsageTransferDst        common.BufferUsages = C.VK_BUFFER_USAGE_TRANSFER_DST_BIT
-	BufferUsageUniformTexelBuffer common.BufferUsages = C.VK_BUFFER_USAGE_UNIFORM_TEXEL_BUFFER_BIT
-	BufferUsageStorageTexelBuffer common.BufferUsages = C.VK_BUFFER_USAGE_STORAGE_TEXEL_BUFFER_BIT
-	BufferUsageUniformBuffer      common.BufferUsages = C.VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT
-	BufferUsageStorageBuffer      common.BufferUsages = C.VK_BUFFER_USAGE_STORAGE_BUFFER_BIT
-	BufferUsageIndexBuffer        common.BufferUsages = C.VK_BUFFER_USAGE_INDEX_BUFFER_BIT
-	BufferUsageVertexBuffer       common.BufferUsages = C.VK_BUFFER_USAGE_VERTEX_BUFFER_BIT
-	BufferUsageIndirectBuffer     common.BufferUsages = C.VK_BUFFER_USAGE_INDIRECT_BUFFER_BIT
+	BufferUsageTransferSrc        BufferUsages = C.VK_BUFFER_USAGE_TRANSFER_SRC_BIT
+	BufferUsageTransferDst        BufferUsages = C.VK_BUFFER_USAGE_TRANSFER_DST_BIT
+	BufferUsageUniformTexelBuffer BufferUsages = C.VK_BUFFER_USAGE_UNIFORM_TEXEL_BUFFER_BIT
+	BufferUsageStorageTexelBuffer BufferUsages = C.VK_BUFFER_USAGE_STORAGE_TEXEL_BUFFER_BIT
+	BufferUsageUniformBuffer      BufferUsages = C.VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT
+	BufferUsageStorageBuffer      BufferUsages = C.VK_BUFFER_USAGE_STORAGE_BUFFER_BIT
+	BufferUsageIndexBuffer        BufferUsages = C.VK_BUFFER_USAGE_INDEX_BUFFER_BIT
+	BufferUsageVertexBuffer       BufferUsages = C.VK_BUFFER_USAGE_VERTEX_BUFFER_BIT
+	BufferUsageIndirectBuffer     BufferUsages = C.VK_BUFFER_USAGE_INDIRECT_BUFFER_BIT
 
-	SharingExclusive  common.SharingMode = C.VK_SHARING_MODE_EXCLUSIVE
-	SharingConcurrent common.SharingMode = C.VK_SHARING_MODE_CONCURRENT
+	SharingExclusive  SharingMode = C.VK_SHARING_MODE_EXCLUSIVE
+	SharingConcurrent SharingMode = C.VK_SHARING_MODE_CONCURRENT
 )
 
 func init() {
@@ -50,10 +50,10 @@ func init() {
 }
 
 type BufferCreateOptions struct {
-	Flags              common.BufferCreateFlags
+	Flags              BufferCreateFlags
 	BufferSize         int
-	Usage              common.BufferUsages
-	SharingMode        common.SharingMode
+	Usage              BufferUsages
+	SharingMode        SharingMode
 	QueueFamilyIndices []int
 
 	common.HaveNext

@@ -189,13 +189,13 @@ func TestVulkanQueue_BindSparse(t *testing.T) {
 					Image: image2,
 					Binds: []core1_0.SparseImageMemoryBind{
 						{
-							Subresource: common.ImageSubresource{
+							Subresource: core1_0.ImageSubresource{
 								AspectMask: core1_0.AspectColor,
 								MipLevel:   29,
 								ArrayLayer: 31,
 							},
-							Offset:       common.Offset3D{37, 41, 43},
-							Extent:       common.Extent3D{47, 53, 59},
+							Offset:       core1_0.Offset3D{37, 41, 43},
+							Extent:       core1_0.Extent3D{47, 53, 59},
 							Memory:       memory4,
 							MemoryOffset: 61,
 							Flags:        core1_0.SparseMemoryBindMetadata,

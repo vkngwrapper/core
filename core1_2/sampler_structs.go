@@ -7,6 +7,7 @@ package core1_2
 import "C"
 import (
 	"github.com/CannibalVox/VKng/core/common"
+	"github.com/CannibalVox/VKng/core/core1_0"
 	"github.com/CannibalVox/cgoparam"
 	"unsafe"
 )
@@ -26,7 +27,7 @@ func (e SamplerReductionMode) String() string {
 ////
 
 const (
-	SamplerAddressModeMirrorClampToEdge common.SamplerAddressMode = C.VK_SAMPLER_ADDRESS_MODE_MIRROR_CLAMP_TO_EDGE
+	SamplerAddressModeMirrorClampToEdge core1_0.SamplerAddressMode = C.VK_SAMPLER_ADDRESS_MODE_MIRROR_CLAMP_TO_EDGE
 )
 
 func init() {
@@ -36,7 +37,7 @@ func init() {
 ////
 
 const (
-	FormatFeatureSampledImageFilterMinmax common.FormatFeatures = C.VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_MINMAX_BIT
+	FormatFeatureSampledImageFilterMinmax core1_0.FormatFeatures = C.VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_MINMAX_BIT
 
 	SamplerReductionModeMax             SamplerReductionMode = C.VK_SAMPLER_REDUCTION_MODE_MAX
 	SamplerReductionModeMin             SamplerReductionMode = C.VK_SAMPLER_REDUCTION_MODE_MIN

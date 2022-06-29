@@ -148,7 +148,7 @@ func (p *VulkanInstanceScopedPhysicalDevice) Features2(out *DeviceFeaturesOutDat
 	return common.PopulateOutData(out, outData)
 }
 
-func (p *VulkanInstanceScopedPhysicalDevice) FormatProperties2(format common.DataFormat, out *FormatPropertiesOutData) error {
+func (p *VulkanInstanceScopedPhysicalDevice) FormatProperties2(format core1_0.DataFormat, out *FormatPropertiesOutData) error {
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 

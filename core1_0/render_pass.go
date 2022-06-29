@@ -41,7 +41,7 @@ func (p *VulkanRenderPass) Destroy(callbacks *driver.AllocationCallbacks) {
 	p.deviceDriver.ObjectStore().Delete(driver.VulkanHandle(p.renderPassHandle))
 }
 
-func (p *VulkanRenderPass) RenderAreaGranularity() common.Extent2D {
+func (p *VulkanRenderPass) RenderAreaGranularity() Extent2D {
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
@@ -49,7 +49,7 @@ func (p *VulkanRenderPass) RenderAreaGranularity() common.Extent2D {
 
 	p.deviceDriver.VkGetRenderAreaGranularity(p.device, p.renderPassHandle, (*driver.VkExtent2D)(unsafe.Pointer(extentPtr)))
 
-	return common.Extent2D{
+	return Extent2D{
 		Width:  int(extentPtr.width),
 		Height: int(extentPtr.height),
 	}

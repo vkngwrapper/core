@@ -479,7 +479,7 @@ func TestVulkanLoader1_0_CreateGraphicsPipelines_ViewportSuccess(t *testing.T) {
 			Layout:     layout,
 			RenderPass: renderPass,
 			Viewport: &core1_0.ViewportStateOptions{
-				Viewports: []common.Viewport{
+				Viewports: []core1_0.Viewport{
 					{
 						X:        1,
 						Y:        3,
@@ -489,14 +489,14 @@ func TestVulkanLoader1_0_CreateGraphicsPipelines_ViewportSuccess(t *testing.T) {
 						MaxDepth: 13,
 					},
 				},
-				Scissors: []common.Rect2D{
+				Scissors: []core1_0.Rect2D{
 					{
-						Offset: common.Offset2D{X: 17, Y: 19},
-						Extent: common.Extent2D{Width: 23, Height: 29},
+						Offset: core1_0.Offset2D{X: 17, Y: 19},
+						Extent: core1_0.Extent2D{Width: 23, Height: 29},
 					},
 					{
-						Offset: common.Offset2D{X: 31, Y: 37},
-						Extent: common.Extent2D{Width: 41, Height: 43},
+						Offset: core1_0.Offset2D{X: 31, Y: 37},
+						Extent: core1_0.Extent2D{Width: 41, Height: 43},
 					},
 				},
 			},
@@ -858,7 +858,7 @@ func TestVulkanLoader1_0_CreateGraphicsPipelines_ColorBlendSuccess(t *testing.T)
 						SrcAlpha:     core1_0.BlendSrc1Alpha,
 						DstAlpha:     core1_0.BlendSrcAlpha,
 						AlphaBlendOp: core1_0.BlendOpMin,
-						WriteMask:    common.ComponentAlpha,
+						WriteMask:    core1_0.ComponentAlpha,
 					},
 					{
 						BlendEnabled: false,
@@ -868,7 +868,7 @@ func TestVulkanLoader1_0_CreateGraphicsPipelines_ColorBlendSuccess(t *testing.T)
 						SrcAlpha:     core1_0.BlendConstantAlpha,
 						DstAlpha:     core1_0.BlendOne,
 						AlphaBlendOp: core1_0.BlendOpMax,
-						WriteMask:    common.ComponentRed,
+						WriteMask:    core1_0.ComponentRed,
 					},
 				},
 			},
@@ -916,7 +916,7 @@ func TestVulkanLoader1_0_CreateGraphicsPipelines_DynamicStateSuccess(t *testing.
 			Layout:     layout,
 			RenderPass: renderPass,
 			DynamicState: &core1_0.DynamicStateOptions{
-				DynamicStates: []common.DynamicState{
+				DynamicStates: []core1_0.DynamicState{
 					core1_0.DynamicStateDepthBounds, core1_0.DynamicStateStencilWriteMask,
 				},
 			},

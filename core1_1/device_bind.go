@@ -114,7 +114,7 @@ func (o BindBufferMemoryDeviceGroupOptions) PopulateOutData(cDataPointer unsafe.
 
 type BindImageMemoryDeviceGroupOptions struct {
 	DeviceIndices            []int
-	SplitInstanceBindRegions []common.Rect2D
+	SplitInstanceBindRegions []core1_0.Rect2D
 
 	common.HaveNext
 }
@@ -170,7 +170,7 @@ func (o BindImageMemoryDeviceGroupOptions) PopulateOutData(cDataPointer unsafe.P
 ////
 
 type BindImagePlaneMemoryOptions struct {
-	PlaneAspect common.ImageAspectFlags
+	PlaneAspect core1_0.ImageAspectFlags
 
 	common.HaveNext
 }

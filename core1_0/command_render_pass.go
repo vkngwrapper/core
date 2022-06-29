@@ -12,8 +12,8 @@ import (
 )
 
 const (
-	SubpassContentsInline                  common.SubpassContents = C.VK_SUBPASS_CONTENTS_INLINE
-	SubpassContentsSecondaryCommandBuffers common.SubpassContents = C.VK_SUBPASS_CONTENTS_SECONDARY_COMMAND_BUFFERS
+	SubpassContentsInline                  SubpassContents = C.VK_SUBPASS_CONTENTS_INLINE
+	SubpassContentsSecondaryCommandBuffers SubpassContents = C.VK_SUBPASS_CONTENTS_SECONDARY_COMMAND_BUFFERS
 )
 
 func init() {
@@ -25,8 +25,8 @@ type RenderPassBeginOptions struct {
 	RenderPass  RenderPass
 	Framebuffer Framebuffer
 
-	RenderArea  common.Rect2D
-	ClearValues []common.ClearValue
+	RenderArea  Rect2D
+	ClearValues []ClearValue
 
 	common.HaveNext
 }

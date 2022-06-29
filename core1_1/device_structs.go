@@ -7,6 +7,7 @@ package core1_1
 import "C"
 import (
 	"github.com/CannibalVox/VKng/core/common"
+	"github.com/CannibalVox/VKng/core/core1_0"
 	"github.com/CannibalVox/cgoparam"
 	"unsafe"
 )
@@ -32,8 +33,8 @@ const (
 
 	QueueFamilyExternal int = C.VK_QUEUE_FAMILY_EXTERNAL
 
-	DependencyDeviceGroup common.DependencyFlags = C.VK_DEPENDENCY_DEVICE_GROUP_BIT
-	DependencyViewLocal   common.DependencyFlags = C.VK_DEPENDENCY_VIEW_LOCAL_BIT
+	DependencyDeviceGroup core1_0.DependencyFlags = C.VK_DEPENDENCY_DEVICE_GROUP_BIT
+	DependencyViewLocal   core1_0.DependencyFlags = C.VK_DEPENDENCY_VIEW_LOCAL_BIT
 )
 
 func init() {

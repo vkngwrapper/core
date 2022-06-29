@@ -13,23 +13,23 @@ import (
 )
 
 const (
-	QueueGraphics      common.QueueFlags = C.VK_QUEUE_GRAPHICS_BIT
-	QueueCompute       common.QueueFlags = C.VK_QUEUE_COMPUTE_BIT
-	QueueTransfer      common.QueueFlags = C.VK_QUEUE_TRANSFER_BIT
-	QueueSparseBinding common.QueueFlags = C.VK_QUEUE_SPARSE_BINDING_BIT
+	QueueGraphics      QueueFlags = C.VK_QUEUE_GRAPHICS_BIT
+	QueueCompute       QueueFlags = C.VK_QUEUE_COMPUTE_BIT
+	QueueTransfer      QueueFlags = C.VK_QUEUE_TRANSFER_BIT
+	QueueSparseBinding QueueFlags = C.VK_QUEUE_SPARSE_BINDING_BIT
 
-	MemoryPropertyDeviceLocal     common.MemoryProperties = C.VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT
-	MemoryPropertyHostVisible     common.MemoryProperties = C.VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT
-	MemoryPropertyHostCoherent    common.MemoryProperties = C.VK_MEMORY_PROPERTY_HOST_COHERENT_BIT
-	MemoryPropertyLazilyAllocated common.MemoryProperties = C.VK_MEMORY_PROPERTY_LAZILY_ALLOCATED_BIT
+	MemoryPropertyDeviceLocal     MemoryProperties = C.VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT
+	MemoryPropertyHostVisible     MemoryProperties = C.VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT
+	MemoryPropertyHostCoherent    MemoryProperties = C.VK_MEMORY_PROPERTY_HOST_COHERENT_BIT
+	MemoryPropertyLazilyAllocated MemoryProperties = C.VK_MEMORY_PROPERTY_LAZILY_ALLOCATED_BIT
 
-	MemoryHeapDeviceLocal common.MemoryHeapFlags = C.VK_MEMORY_HEAP_DEVICE_LOCAL_BIT
+	MemoryHeapDeviceLocal MemoryHeapFlags = C.VK_MEMORY_HEAP_DEVICE_LOCAL_BIT
 
-	DeviceOther         common.PhysicalDeviceType = C.VK_PHYSICAL_DEVICE_TYPE_OTHER
-	DeviceIntegratedGPU common.PhysicalDeviceType = C.VK_PHYSICAL_DEVICE_TYPE_INTEGRATED_GPU
-	DeviceDiscreteGPU   common.PhysicalDeviceType = C.VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU
-	DeviceVirtualGPU    common.PhysicalDeviceType = C.VK_PHYSICAL_DEVICE_TYPE_VIRTUAL_GPU
-	DeviceCPU           common.PhysicalDeviceType = C.VK_PHYSICAL_DEVICE_TYPE_CPU
+	DeviceOther         PhysicalDeviceType = C.VK_PHYSICAL_DEVICE_TYPE_OTHER
+	DeviceIntegratedGPU PhysicalDeviceType = C.VK_PHYSICAL_DEVICE_TYPE_INTEGRATED_GPU
+	DeviceDiscreteGPU   PhysicalDeviceType = C.VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU
+	DeviceVirtualGPU    PhysicalDeviceType = C.VK_PHYSICAL_DEVICE_TYPE_VIRTUAL_GPU
+	DeviceCPU           PhysicalDeviceType = C.VK_PHYSICAL_DEVICE_TYPE_CPU
 )
 
 func init() {
@@ -61,7 +61,7 @@ type PhysicalDeviceSparseProperties struct {
 }
 
 type PhysicalDeviceProperties struct {
-	Type common.PhysicalDeviceType
+	Type PhysicalDeviceType
 	Name string
 
 	APIVersion    common.APIVersion
@@ -83,7 +83,7 @@ func (p *PhysicalDeviceProperties) PopulateFromCPointer(cPointer unsafe.Pointer)
 		return errors.Wrap(err, "vulkan provided invalid pipeline cache uuid")
 	}
 
-	p.Type = common.PhysicalDeviceType(pData.deviceType)
+	p.Type = PhysicalDeviceType(pData.deviceType)
 	p.Name = C.GoString((*C.char)(&pData.deviceName[0]))
 	p.APIVersion = common.APIVersion(pData.apiVersion)
 	p.DriverVersion = common.Version(pData.driverVersion)
@@ -97,15 +97,15 @@ func (p *PhysicalDeviceProperties) PopulateFromCPointer(cPointer unsafe.Pointer)
 }
 
 type QueueFamily struct {
-	Flags                       common.QueueFlags
+	Flags                       QueueFlags
 	QueueCount                  int
 	TimestampValidBits          uint32
-	MinImageTransferGranularity common.Extent3D
+	MinImageTransferGranularity Extent3D
 }
 
 type PhysicalDeviceMemoryProperties struct {
-	MemoryTypes []common.MemoryType
-	MemoryHeaps []common.MemoryHeap
+	MemoryTypes []MemoryType
+	MemoryHeaps []MemoryHeap
 }
 
 func createPhysicalDeviceLimits(l *C.VkPhysicalDeviceLimits) *PhysicalDeviceLimits {
@@ -186,16 +186,16 @@ func createPhysicalDeviceLimits(l *C.VkPhysicalDeviceLimits) *PhysicalDeviceLimi
 		MaxFramebufferWidth:                             int(l.maxFramebufferWidth),
 		MaxFramebufferHeight:                            int(l.maxFramebufferHeight),
 		MaxFramebufferLayers:                            int(l.maxFramebufferLayers),
-		FramebufferColorSampleCounts:                    common.SampleCounts(l.framebufferColorSampleCounts),
-		FramebufferDepthSampleCounts:                    common.SampleCounts(l.framebufferDepthSampleCounts),
-		FramebufferStencilSampleCounts:                  common.SampleCounts(l.framebufferStencilSampleCounts),
-		FramebufferNoAttachmentsSampleCounts:            common.SampleCounts(l.framebufferNoAttachmentsSampleCounts),
+		FramebufferColorSampleCounts:                    SampleCounts(l.framebufferColorSampleCounts),
+		FramebufferDepthSampleCounts:                    SampleCounts(l.framebufferDepthSampleCounts),
+		FramebufferStencilSampleCounts:                  SampleCounts(l.framebufferStencilSampleCounts),
+		FramebufferNoAttachmentsSampleCounts:            SampleCounts(l.framebufferNoAttachmentsSampleCounts),
 		MaxColorAttachments:                             int(l.maxColorAttachments),
-		SampledImageColorSampleCounts:                   common.SampleCounts(l.sampledImageColorSampleCounts),
-		SampledImageIntegerSampleCounts:                 common.SampleCounts(l.sampledImageIntegerSampleCounts),
-		SampledImageDepthSampleCounts:                   common.SampleCounts(l.sampledImageDepthSampleCounts),
-		SampledImageStencilSampleCounts:                 common.SampleCounts(l.sampledImageStencilSampleCounts),
-		StorageImageSampleCounts:                        common.SampleCounts(l.storageImageSampleCounts),
+		SampledImageColorSampleCounts:                   SampleCounts(l.sampledImageColorSampleCounts),
+		SampledImageIntegerSampleCounts:                 SampleCounts(l.sampledImageIntegerSampleCounts),
+		SampledImageDepthSampleCounts:                   SampleCounts(l.sampledImageDepthSampleCounts),
+		SampledImageStencilSampleCounts:                 SampleCounts(l.sampledImageStencilSampleCounts),
+		StorageImageSampleCounts:                        SampleCounts(l.storageImageSampleCounts),
 		MaxSampleMaskWords:                              int(l.maxSampleMaskWords),
 		TimestampComputeAndGraphics:                     l.timestampComputeAndGraphics != C.VK_FALSE,
 		TimestampPeriod:                                 float32(l.timestampPeriod),

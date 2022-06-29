@@ -5,11 +5,11 @@ package core1_1
 #include "vulkan/vulkan.h"
 */
 import "C"
-import "github.com/CannibalVox/VKng/core/common"
+import "github.com/CannibalVox/VKng/core/core1_0"
 
 const (
-	ObjectTypeDescriptorTemplate     common.ObjectType = C.VK_OBJECT_TYPE_DESCRIPTOR_UPDATE_TEMPLATE
-	ObjectTypeSamplerYcbcrConversion common.ObjectType = C.VK_OBJECT_TYPE_SAMPLER_YCBCR_CONVERSION
+	ObjectTypeDescriptorTemplate     core1_0.ObjectType = C.VK_OBJECT_TYPE_DESCRIPTOR_UPDATE_TEMPLATE
+	ObjectTypeSamplerYcbcrConversion core1_0.ObjectType = C.VK_OBJECT_TYPE_SAMPLER_YCBCR_CONVERSION
 )
 
 func init() {

@@ -12,8 +12,8 @@ import (
 )
 
 type MemoryBarrierOptions struct {
-	SrcAccessMask common.AccessFlags
-	DstAccessMask common.AccessFlags
+	SrcAccessMask AccessFlags
+	DstAccessMask AccessFlags
 
 	common.HaveNext
 }
@@ -37,8 +37,8 @@ func (o MemoryBarrierOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpe
 }
 
 type BufferMemoryBarrierOptions struct {
-	SrcAccessMask common.AccessFlags
-	DstAccessMask common.AccessFlags
+	SrcAccessMask AccessFlags
+	DstAccessMask AccessFlags
 
 	SrcQueueFamilyIndex int
 	DstQueueFamilyIndex int
@@ -75,17 +75,17 @@ func (o BufferMemoryBarrierOptions) PopulateOutData(cDataPointer unsafe.Pointer,
 }
 
 type ImageMemoryBarrierOptions struct {
-	SrcAccessMask common.AccessFlags
-	DstAccessMask common.AccessFlags
+	SrcAccessMask AccessFlags
+	DstAccessMask AccessFlags
 
-	OldLayout common.ImageLayout
-	NewLayout common.ImageLayout
+	OldLayout ImageLayout
+	NewLayout ImageLayout
 
 	SrcQueueFamilyIndex int
 	DstQueueFamilyIndex int
 
 	Image            Image
-	SubresourceRange common.ImageSubresourceRange
+	SubresourceRange ImageSubresourceRange
 
 	common.HaveNext
 }
