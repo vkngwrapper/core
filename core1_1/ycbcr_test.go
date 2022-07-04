@@ -55,7 +55,7 @@ func TestImagePlaneMemoryRequirementsOptions(t *testing.T) {
 	err := device.ImageMemoryRequirements(
 		core1_1.ImageMemoryRequirementsOptions{
 			Image: image,
-			HaveNext: common.HaveNext{
+			NextOptions: common.NextOptions{
 				core1_1.ImagePlaneMemoryRequirementsOptions{
 					PlaneAspect: core1_1.ImageAspectPlane1,
 				},
@@ -114,7 +114,7 @@ func TestSamplerYcbcrConversionOptions(t *testing.T) {
 			Image:  image,
 			Format: core1_1.DataFormatB16G16R16G16HorizontalChroma,
 
-			HaveNext: common.HaveNext{
+			NextOptions: common.NextOptions{
 				core1_1.SamplerYcbcrConversionOptions{
 					Conversion: ycbcr,
 				},
@@ -161,7 +161,7 @@ func TestSamplerYcbcrImageFormatOutData(t *testing.T) {
 	_, err := physicalDevice.InstanceScopedPhysicalDevice1_1().ImageFormatProperties2(
 		core1_1.ImageFormatOptions{},
 		&core1_1.ImageFormatPropertiesOutData{
-			HaveNext: common.HaveNext{&outData},
+			NextOutData: common.NextOutData{&outData},
 		})
 	require.NoError(t, err)
 	require.Equal(t, core1_1.SamplerYcbcrImageFormatOutData{

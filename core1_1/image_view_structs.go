@@ -15,7 +15,7 @@ import (
 type ImageViewUsageOptions struct {
 	Usage core1_0.ImageUsages
 
-	common.HaveNext
+	common.NextOptions
 }
 
 func (o ImageViewUsageOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
@@ -29,9 +29,4 @@ func (o ImageViewUsageOptions) PopulateCPointer(allocator *cgoparam.Allocator, p
 	createInfo.usage = C.VkImageUsageFlags(o.Usage)
 
 	return preallocatedPointer, nil
-}
-
-func (o ImageViewUsageOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
-	createInfo := (*C.VkImageViewUsageCreateInfo)(cDataPointer)
-	return createInfo.pNext, nil
 }

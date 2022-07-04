@@ -17,7 +17,7 @@ type BufferViewCreateOptions struct {
 	Offset int
 	Range  int
 
-	common.HaveNext
+	common.NextOptions
 }
 
 func (o BufferViewCreateOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
@@ -34,9 +34,4 @@ func (o BufferViewCreateOptions) PopulateCPointer(allocator *cgoparam.Allocator,
 	createInfo._range = C.VkDeviceSize(o.Range)
 
 	return unsafe.Pointer(createInfo), nil
-}
-
-func (o BufferViewCreateOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
-	createInfo := (*C.VkBufferViewCreateInfo)(cDataPointer)
-	return createInfo.pNext, nil
 }

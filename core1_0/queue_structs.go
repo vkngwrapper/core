@@ -78,7 +78,7 @@ type BindSparseOptions struct {
 	ImageOpaqueBinds []SparseImageOpaqueMemoryBindInfo
 	ImageBinds       []SparseImageMemoryBindInfo
 
-	common.HaveNext
+	common.NextOptions
 }
 
 func (b BindSparseOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
@@ -208,9 +208,4 @@ func (b BindSparseOptions) PopulateCPointer(allocator *cgoparam.Allocator, preal
 	}
 
 	return preallocatedPointer, nil
-}
-
-func (o BindSparseOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
-	createInfo := (*C.VkBindSparseInfo)(cDataPointer)
-	return createInfo.pNext, nil
 }

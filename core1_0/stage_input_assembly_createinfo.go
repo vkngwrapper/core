@@ -44,7 +44,7 @@ type InputAssemblyStateOptions struct {
 	Topology               PrimitiveTopology
 	EnablePrimitiveRestart bool
 
-	common.HaveNext
+	common.NextOptions
 }
 
 func (o InputAssemblyStateOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
@@ -63,9 +63,4 @@ func (o InputAssemblyStateOptions) PopulateCPointer(allocator *cgoparam.Allocato
 	}
 
 	return preallocatedPointer, nil
-}
-
-func (o InputAssemblyStateOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
-	createInfo := (*C.VkPipelineInputAssemblyStateCreateInfo)(cDataPointer)
-	return createInfo.pNext, nil
 }

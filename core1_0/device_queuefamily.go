@@ -17,7 +17,7 @@ type DeviceQueueCreateOptions struct {
 	QueueFamilyIndex       int
 	CreatedQueuePriorities []float32
 
-	common.HaveNext
+	common.NextOptions
 }
 
 func (o DeviceQueueCreateOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
@@ -45,9 +45,4 @@ func (o DeviceQueueCreateOptions) PopulateCPointer(allocator *cgoparam.Allocator
 	createInfo.pQueuePriorities = (*C.float)(prioritiesPtr)
 
 	return preallocatedPointer, nil
-}
-
-func (o DeviceQueueCreateOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
-	createInfo := (*C.VkDeviceQueueCreateInfo)(cDataPointer)
-	return createInfo.pNext, nil
 }

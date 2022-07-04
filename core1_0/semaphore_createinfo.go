@@ -11,8 +11,24 @@ import (
 	"unsafe"
 )
 
+type SemaphoreCreateFlags int32
+
+var semaphoreCreateFlagsMapping = common.NewFlagStringMapping[SemaphoreCreateFlags]()
+
+func (f SemaphoreCreateFlags) Register(str string) {
+	semaphoreCreateFlagsMapping.Register(f, str)
+}
+
+func (f SemaphoreCreateFlags) String() string {
+	return semaphoreCreateFlagsMapping.FlagsToString(f)
+}
+
+////
+
 type SemaphoreCreateOptions struct {
-	common.HaveNext
+	Flags SemaphoreCreateFlags
+
+	common.NextOptions
 }
 
 func (o SemaphoreCreateOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
@@ -21,13 +37,8 @@ func (o SemaphoreCreateOptions) PopulateCPointer(allocator *cgoparam.Allocator, 
 	}
 	createInfo := (*C.VkSemaphoreCreateInfo)(preallocatedPointer)
 	createInfo.sType = C.VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO
-	createInfo.flags = 0
+	createInfo.flags = C.VkSemaphoreCreateFlags(o.Flags)
 	createInfo.pNext = next
 
 	return unsafe.Pointer(createInfo), nil
-}
-
-func (o SemaphoreCreateOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
-	createInfo := (*C.VkSemaphoreCreateInfo)(cDataPointer)
-	return createInfo.pNext, nil
 }

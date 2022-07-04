@@ -52,10 +52,10 @@ func init() {
 type DescriptorSetLayoutSupportOutData struct {
 	Supported bool
 
-	common.HaveNext
+	common.NextOutData
 }
 
-func (o *DescriptorSetLayoutSupportOutData) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o *DescriptorSetLayoutSupportOutData) PopulateHeader(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == nil {
 		preallocatedPointer = allocator.Malloc(int(unsafe.Sizeof(C.VkDescriptorSetLayoutSupport{})))
 	}

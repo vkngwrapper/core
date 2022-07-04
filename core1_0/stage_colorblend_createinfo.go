@@ -120,7 +120,7 @@ type ColorBlendStateOptions struct {
 	BlendConstants [4]float32
 	Attachments    []ColorBlendAttachment
 
-	common.HaveNext
+	common.NextOptions
 }
 
 func (o ColorBlendStateOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
@@ -170,9 +170,4 @@ func (o ColorBlendStateOptions) PopulateCPointer(allocator *cgoparam.Allocator, 
 	}
 
 	return preallocatedPointer, nil
-}
-
-func (o ColorBlendStateOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
-	createInfo := (*C.VkPipelineColorBlendStateCreateInfo)(cDataPointer)
-	return createInfo.pNext, nil
 }

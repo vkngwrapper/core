@@ -12,13 +12,14 @@ import (
 	"unsafe"
 )
 
-type DeviceFeaturesOutData struct {
+type DeviceFeatures struct {
 	Features core1_0.PhysicalDeviceFeatures
 
-	common.HaveNext
+	common.NextOptions
+	common.NextOutData
 }
 
-func (o *DeviceFeaturesOutData) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o *DeviceFeatures) PopulateHeader(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == nil {
 		preallocatedPointer = allocator.Malloc(int(unsafe.Sizeof(C.VkPhysicalDeviceFeatures2{})))
 	}
@@ -30,7 +31,7 @@ func (o *DeviceFeaturesOutData) PopulateCPointer(allocator *cgoparam.Allocator, 
 	return preallocatedPointer, nil
 }
 
-func (o *DeviceFeaturesOutData) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
+func (o *DeviceFeatures) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
 	data := (*C.VkPhysicalDeviceFeatures2)(cDataPointer)
 
 	(&o.Features).PopulateFromCPointer(unsafe.Pointer(&data.features))
@@ -38,15 +39,7 @@ func (o *DeviceFeaturesOutData) PopulateOutData(cDataPointer unsafe.Pointer, hel
 	return data.pNext, nil
 }
 
-////
-
-type DeviceFeaturesOptions struct {
-	Features core1_0.PhysicalDeviceFeatures
-
-	common.HaveNext
-}
-
-func (o DeviceFeaturesOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o DeviceFeatures) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == nil {
 		preallocatedPointer = allocator.Malloc(int(unsafe.Sizeof(C.VkPhysicalDeviceFeatures2{})))
 	}
@@ -59,24 +52,19 @@ func (o DeviceFeaturesOptions) PopulateCPointer(allocator *cgoparam.Allocator, p
 	return preallocatedPointer, err
 }
 
-func (o DeviceFeaturesOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
-	data := (*C.VkPhysicalDeviceFeatures2)(cDataPointer)
-
-	return data.pNext, nil
-}
-
 ////
 
-type PhysicalDevice16BitStorageFeaturesOutData struct {
+type PhysicalDevice16BitStorageFeatures struct {
 	StorageBuffer16BitAccess           bool
 	UniformAndStorageBuffer16BitAccess bool
 	StoragePushConstant16              bool
 	StorageInputOutput16               bool
 
-	common.HaveNext
+	common.NextOptions
+	common.NextOutData
 }
 
-func (o *PhysicalDevice16BitStorageFeaturesOutData) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o *PhysicalDevice16BitStorageFeatures) PopulateHeader(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == nil {
 		preallocatedPointer = allocator.Malloc(int(unsafe.Sizeof(C.VkPhysicalDevice16BitStorageFeatures{})))
 	}
@@ -88,7 +76,7 @@ func (o *PhysicalDevice16BitStorageFeaturesOutData) PopulateCPointer(allocator *
 	return preallocatedPointer, nil
 }
 
-func (o *PhysicalDevice16BitStorageFeaturesOutData) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
+func (o *PhysicalDevice16BitStorageFeatures) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
 	data := (*C.VkPhysicalDevice16BitStorageFeatures)(cDataPointer)
 
 	o.StorageBuffer16BitAccess = data.storageBuffer16BitAccess != C.VkBool32(0)
@@ -99,17 +87,72 @@ func (o *PhysicalDevice16BitStorageFeaturesOutData) PopulateOutData(cDataPointer
 	return data.pNext, nil
 }
 
+func (o PhysicalDevice16BitStorageFeatures) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+	if preallocatedPointer == nil {
+		preallocatedPointer = allocator.Malloc(int(unsafe.Sizeof(C.VkPhysicalDevice16BitStorageFeatures{})))
+	}
+
+	data := (*C.VkPhysicalDevice16BitStorageFeatures)(preallocatedPointer)
+	data.sType = C.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_16BIT_STORAGE_FEATURES
+	data.pNext = next
+
+	data.storageBuffer16BitAccess = C.VkBool32(0)
+	data.uniformAndStorageBuffer16BitAccess = C.VkBool32(0)
+	data.storagePushConstant16 = C.VkBool32(0)
+	data.storageInputOutput16 = C.VkBool32(0)
+
+	if o.StorageBuffer16BitAccess {
+		data.storageBuffer16BitAccess = C.VkBool32(1)
+	}
+
+	if o.UniformAndStorageBuffer16BitAccess {
+		data.uniformAndStorageBuffer16BitAccess = C.VkBool32(1)
+	}
+
+	if o.StoragePushConstant16 {
+		data.storagePushConstant16 = C.VkBool32(1)
+	}
+
+	if o.StorageInputOutput16 {
+		data.storageInputOutput16 = C.VkBool32(1)
+	}
+
+	return preallocatedPointer, nil
+}
+
 ////
 
-type PhysicalDeviceMultiviewFeaturesOptions struct {
+type PhysicalDeviceMultiviewFeatures struct {
 	Multiview                   bool
 	MultiviewGeometryShader     bool
 	MultiviewTessellationShader bool
 
-	common.HaveNext
+	common.NextOptions
+	common.NextOutData
 }
 
-func (o PhysicalDeviceMultiviewFeaturesOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o *PhysicalDeviceMultiviewFeatures) PopulateHeader(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+	if preallocatedPointer == nil {
+		preallocatedPointer = allocator.Malloc(int(unsafe.Sizeof(C.VkPhysicalDeviceMultiviewFeatures{})))
+	}
+	info := (*C.VkPhysicalDeviceMultiviewFeatures)(preallocatedPointer)
+	info.sType = C.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTIVIEW_FEATURES
+	info.pNext = next
+
+	return preallocatedPointer, nil
+}
+
+func (o *PhysicalDeviceMultiviewFeatures) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
+	info := (*C.VkPhysicalDeviceMultiviewFeatures)(cDataPointer)
+
+	o.Multiview = info.multiview != C.VkBool32(0)
+	o.MultiviewGeometryShader = info.multiviewGeometryShader != C.VkBool32(0)
+	o.MultiviewTessellationShader = info.multiviewTessellationShader != C.VkBool32(0)
+
+	return info.pNext, nil
+}
+
+func (o PhysicalDeviceMultiviewFeatures) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == nil {
 		preallocatedPointer = allocator.Malloc(int(unsafe.Sizeof(C.VkPhysicalDeviceMultiviewFeatures{})))
 	}
@@ -135,51 +178,36 @@ func (o PhysicalDeviceMultiviewFeaturesOptions) PopulateCPointer(allocator *cgop
 	return preallocatedPointer, nil
 }
 
-func (o PhysicalDeviceMultiviewFeaturesOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
-	info := (*C.VkPhysicalDeviceMultiviewFeatures)(cDataPointer)
-	return info.pNext, nil
-}
-
 ////
 
-type PhysicalDeviceMultiviewFeaturesOutData struct {
-	Multiview                   bool
-	MultiviewGeometryShader     bool
-	MultiviewTessellationShader bool
+type PhysicalDeviceProtectedMemoryFeatures struct {
+	ProtectedMemory bool
 
-	common.HaveNext
+	common.NextOptions
+	common.NextOutData
 }
 
-func (o *PhysicalDeviceMultiviewFeaturesOutData) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o *PhysicalDeviceProtectedMemoryFeatures) PopulateHeader(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == nil {
-		preallocatedPointer = allocator.Malloc(int(unsafe.Sizeof(C.VkPhysicalDeviceMultiviewFeatures{})))
+		preallocatedPointer = allocator.Malloc(C.sizeof_struct_VkPhysicalDeviceProtectedMemoryFeatures)
 	}
-	info := (*C.VkPhysicalDeviceMultiviewFeatures)(preallocatedPointer)
-	info.sType = C.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTIVIEW_FEATURES
+
+	info := (*C.VkPhysicalDeviceProtectedMemoryFeatures)(preallocatedPointer)
+	info.sType = C.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PROTECTED_MEMORY_FEATURES
 	info.pNext = next
 
 	return preallocatedPointer, nil
 }
 
-func (o *PhysicalDeviceMultiviewFeaturesOutData) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
-	info := (*C.VkPhysicalDeviceMultiviewFeatures)(cDataPointer)
+func (o *PhysicalDeviceProtectedMemoryFeatures) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
+	info := (*C.VkPhysicalDeviceProtectedMemoryFeatures)(cDataPointer)
 
-	o.Multiview = info.multiview != C.VkBool32(0)
-	o.MultiviewGeometryShader = info.multiviewGeometryShader != C.VkBool32(0)
-	o.MultiviewTessellationShader = info.multiviewTessellationShader != C.VkBool32(0)
+	o.ProtectedMemory = info.protectedMemory != C.VkBool32(0)
 
 	return info.pNext, nil
 }
 
-////
-
-type PhysicalDeviceProtectedMemoryFeaturesOptions struct {
-	ProtectedMemory bool
-
-	common.HaveNext
-}
-
-func (o PhysicalDeviceProtectedMemoryFeaturesOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o PhysicalDeviceProtectedMemoryFeatures) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == nil {
 		preallocatedPointer = allocator.Malloc(C.sizeof_struct_VkPhysicalDeviceProtectedMemoryFeatures)
 	}
@@ -196,48 +224,16 @@ func (o PhysicalDeviceProtectedMemoryFeaturesOptions) PopulateCPointer(allocator
 	return preallocatedPointer, nil
 }
 
-func (o PhysicalDeviceProtectedMemoryFeaturesOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
-	info := (*C.VkPhysicalDeviceProtectedMemoryFeatures)(cDataPointer)
-	return info.pNext, nil
-}
-
 ////
 
-type PhysicalDeviceProtectedMemoryFeaturesOutData struct {
-	ProtectedMemory bool
-
-	common.HaveNext
-}
-
-func (o *PhysicalDeviceProtectedMemoryFeaturesOutData) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
-	if preallocatedPointer == nil {
-		preallocatedPointer = allocator.Malloc(C.sizeof_struct_VkPhysicalDeviceProtectedMemoryFeatures)
-	}
-
-	info := (*C.VkPhysicalDeviceProtectedMemoryFeatures)(preallocatedPointer)
-	info.sType = C.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PROTECTED_MEMORY_FEATURES
-	info.pNext = next
-
-	return preallocatedPointer, nil
-}
-
-func (o *PhysicalDeviceProtectedMemoryFeaturesOutData) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
-	info := (*C.VkPhysicalDeviceProtectedMemoryFeatures)(cDataPointer)
-
-	o.ProtectedMemory = info.protectedMemory != C.VkBool32(0)
-
-	return info.pNext, nil
-}
-
-////
-
-type PhysicalDeviceSamplerYcbcrFeaturesOutData struct {
+type PhysicalDeviceSamplerYcbcrFeatures struct {
 	SamplerYcbcrConversion bool
 
-	common.HaveNext
+	common.NextOptions
+	common.NextOutData
 }
 
-func (o *PhysicalDeviceSamplerYcbcrFeaturesOutData) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o *PhysicalDeviceSamplerYcbcrFeatures) PopulateHeader(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == nil {
 		preallocatedPointer = allocator.Malloc(int(unsafe.Sizeof(C.VkPhysicalDeviceSamplerYcbcrConversionFeatures{})))
 	}
@@ -249,22 +245,14 @@ func (o *PhysicalDeviceSamplerYcbcrFeaturesOutData) PopulateCPointer(allocator *
 	return preallocatedPointer, nil
 }
 
-func (o *PhysicalDeviceSamplerYcbcrFeaturesOutData) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
+func (o *PhysicalDeviceSamplerYcbcrFeatures) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
 	info := (*C.VkPhysicalDeviceSamplerYcbcrConversionFeatures)(cDataPointer)
 	o.SamplerYcbcrConversion = info.samplerYcbcrConversion != C.VkBool32(0)
 
 	return info.pNext, nil
 }
 
-////
-
-type PhysicalDeviceSamplerYcbcrFeaturesOptions struct {
-	SamplerYcbcrConversion bool
-
-	common.HaveNext
-}
-
-func (o PhysicalDeviceSamplerYcbcrFeaturesOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o PhysicalDeviceSamplerYcbcrFeatures) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == nil {
 		preallocatedPointer = allocator.Malloc(int(unsafe.Sizeof(C.VkPhysicalDeviceSamplerYcbcrConversionFeatures{})))
 	}
@@ -281,20 +269,36 @@ func (o PhysicalDeviceSamplerYcbcrFeaturesOptions) PopulateCPointer(allocator *c
 	return preallocatedPointer, nil
 }
 
-func (o PhysicalDeviceSamplerYcbcrFeaturesOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
-	info := (*C.VkPhysicalDeviceSamplerYcbcrConversionFeatures)(cDataPointer)
+////
+
+type PhysicalDeviceShaderDrawParametersFeatures struct {
+	ShaderDrawParameters bool
+
+	common.NextOptions
+	common.NextOutData
+}
+
+func (o *PhysicalDeviceShaderDrawParametersFeatures) PopulateHeader(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+	if preallocatedPointer == nil {
+		preallocatedPointer = allocator.Malloc(C.sizeof_struct_VkPhysicalDeviceShaderDrawParametersFeatures)
+	}
+
+	info := (*C.VkPhysicalDeviceShaderDrawParametersFeatures)(preallocatedPointer)
+	info.sType = C.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_DRAW_PARAMETERS_FEATURES
+	info.pNext = next
+
+	return preallocatedPointer, nil
+}
+
+func (o *PhysicalDeviceShaderDrawParametersFeatures) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
+	info := (*C.VkPhysicalDeviceShaderDrawParametersFeatures)(cDataPointer)
+
+	o.ShaderDrawParameters = info.shaderDrawParameters != C.VkBool32(0)
+
 	return info.pNext, nil
 }
 
-////
-
-type PhysicalDeviceShaderDrawParametersFeaturesOptions struct {
-	ShaderDrawParameters bool
-
-	common.HaveNext
-}
-
-func (o PhysicalDeviceShaderDrawParametersFeaturesOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o PhysicalDeviceShaderDrawParametersFeatures) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == nil {
 		preallocatedPointer = allocator.Malloc(C.sizeof_struct_VkPhysicalDeviceShaderDrawParametersFeatures)
 	}
@@ -311,49 +315,44 @@ func (o PhysicalDeviceShaderDrawParametersFeaturesOptions) PopulateCPointer(allo
 	return preallocatedPointer, nil
 }
 
-func (o PhysicalDeviceShaderDrawParametersFeaturesOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
-	info := (*C.VkPhysicalDeviceShaderDrawParametersFeatures)(cDataPointer)
-	return info.pNext, nil
-}
-
 ////
 
-type PhysicalDeviceShaderDrawParametersFeaturesOutData struct {
-	ShaderDrawParameters bool
+type PhysicalDeviceVariablePointersFeatures struct {
+	VariablePointersStorageBuffer bool
+	VariablePointers              bool
 
-	common.HaveNext
+	common.NextOptions
+	common.NextOutData
 }
 
-func (o *PhysicalDeviceShaderDrawParametersFeaturesOutData) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o *PhysicalDeviceVariablePointersFeatures) PopulateHeader(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == nil {
-		preallocatedPointer = allocator.Malloc(C.sizeof_struct_VkPhysicalDeviceShaderDrawParametersFeatures)
+		preallocatedPointer = allocator.Malloc(int(unsafe.Sizeof(C.VkPhysicalDeviceVariablePointersFeatures{})))
 	}
 
-	info := (*C.VkPhysicalDeviceShaderDrawParametersFeatures)(preallocatedPointer)
-	info.sType = C.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_DRAW_PARAMETERS_FEATURES
-	info.pNext = next
+	createInfo := (*C.VkPhysicalDeviceVariablePointersFeatures)(preallocatedPointer)
+	createInfo.sType = C.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VARIABLE_POINTERS_FEATURES
+	createInfo.pNext = next
 
 	return preallocatedPointer, nil
 }
 
-func (o *PhysicalDeviceShaderDrawParametersFeaturesOutData) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
-	info := (*C.VkPhysicalDeviceShaderDrawParametersFeatures)(cDataPointer)
+func (o *PhysicalDeviceVariablePointersFeatures) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
+	createInfo := (*C.VkPhysicalDeviceVariablePointersFeatures)(cDataPointer)
+	o.VariablePointers = false
+	o.VariablePointersStorageBuffer = false
 
-	o.ShaderDrawParameters = info.shaderDrawParameters != C.VkBool32(0)
+	if createInfo.variablePointersStorageBuffer != C.VkBool32(0) {
+		o.VariablePointersStorageBuffer = true
+	}
+	if createInfo.variablePointers != C.VkBool32(0) {
+		o.VariablePointers = true
+	}
 
-	return info.pNext, nil
+	return createInfo.pNext, nil
 }
 
-////
-
-type PhysicalDeviceVariablePointersFeaturesOptions struct {
-	VariablePointersStorageBuffer bool
-	VariablePointers              bool
-
-	common.HaveNext
-}
-
-func (o PhysicalDeviceVariablePointersFeaturesOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o PhysicalDeviceVariablePointersFeatures) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == nil {
 		preallocatedPointer = allocator.Malloc(int(unsafe.Sizeof(C.VkPhysicalDeviceVariablePointersFeatures{})))
 	}
@@ -372,45 +371,4 @@ func (o PhysicalDeviceVariablePointersFeaturesOptions) PopulateCPointer(allocato
 	}
 
 	return preallocatedPointer, nil
-}
-
-func (o PhysicalDeviceVariablePointersFeaturesOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
-	createInfo := (*C.VkPhysicalDeviceVariablePointersFeatures)(cDataPointer)
-	return createInfo.pNext, nil
-}
-
-////
-
-type PhysicalDeviceVariablePointersFeaturesOutData struct {
-	VariablePointersStorageBuffer bool
-	VariablePointers              bool
-
-	common.HaveNext
-}
-
-func (o *PhysicalDeviceVariablePointersFeaturesOutData) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
-	if preallocatedPointer == nil {
-		preallocatedPointer = allocator.Malloc(int(unsafe.Sizeof(C.VkPhysicalDeviceVariablePointersFeatures{})))
-	}
-
-	createInfo := (*C.VkPhysicalDeviceVariablePointersFeatures)(preallocatedPointer)
-	createInfo.sType = C.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VARIABLE_POINTERS_FEATURES
-	createInfo.pNext = next
-
-	return preallocatedPointer, nil
-}
-
-func (o *PhysicalDeviceVariablePointersFeaturesOutData) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
-	createInfo := (*C.VkPhysicalDeviceVariablePointersFeatures)(cDataPointer)
-	o.VariablePointers = false
-	o.VariablePointersStorageBuffer = false
-
-	if createInfo.variablePointersStorageBuffer != C.VkBool32(0) {
-		o.VariablePointersStorageBuffer = true
-	}
-	if createInfo.variablePointers != C.VkBool32(0) {
-		o.VariablePointers = true
-	}
-
-	return createInfo.pNext, nil
 }

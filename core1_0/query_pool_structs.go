@@ -62,7 +62,7 @@ type QueryPoolCreateOptions struct {
 	QueryCount         int
 	PipelineStatistics PipelineStatistics
 
-	common.HaveNext
+	common.NextOptions
 }
 
 func (o QueryPoolCreateOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
@@ -78,9 +78,4 @@ func (o QueryPoolCreateOptions) PopulateCPointer(allocator *cgoparam.Allocator, 
 	createInfo.pipelineStatistics = C.VkQueryPipelineStatisticFlags(o.PipelineStatistics)
 
 	return preallocatedPointer, nil
-}
-
-func (o QueryPoolCreateOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
-	createInfo := (*C.VkQueryPoolCreateInfo)(cDataPointer)
-	return createInfo.pNext, nil
 }

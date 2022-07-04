@@ -60,7 +60,7 @@ type DepthStencilStateOptions struct {
 	MinDepthBounds float32
 	MaxDepthBounds float32
 
-	common.HaveNext
+	common.NextOptions
 }
 
 func (o DepthStencilStateOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
@@ -110,9 +110,4 @@ func (o DepthStencilStateOptions) PopulateCPointer(allocator *cgoparam.Allocator
 	createInfo.back.reference = C.uint32_t(o.BackStencilState.Reference)
 
 	return preallocatedPointer, nil
-}
-
-func (o DepthStencilStateOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
-	createInfo := (*C.VkPipelineDepthStencilStateCreateInfo)(cDataPointer)
-	return createInfo.pNext, nil
 }

@@ -63,7 +63,7 @@ type ImageViewCreateOptions struct {
 	Components       ComponentMapping
 	SubresourceRange ImageSubresourceRange
 
-	common.HaveNext
+	common.NextOptions
 }
 
 func (o ImageViewCreateOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
@@ -89,9 +89,4 @@ func (o ImageViewCreateOptions) PopulateCPointer(allocator *cgoparam.Allocator, 
 	createInfo.subresourceRange.layerCount = C.uint32_t(o.SubresourceRange.LayerCount)
 
 	return preallocatedPointer, nil
-}
-
-func (o ImageViewCreateOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
-	createInfo := (*C.VkImageViewCreateInfo)(cDataPointer)
-	return createInfo.pNext, nil
 }

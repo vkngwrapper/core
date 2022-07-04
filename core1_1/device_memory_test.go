@@ -49,7 +49,7 @@ func TestMemoryDedicatedAllocateOptions(t *testing.T) {
 	memory, _, err := device.AllocateMemory(nil, core1_0.MemoryAllocateOptions{
 		AllocationSize:  1,
 		MemoryTypeIndex: 3,
-		HaveNext: common.HaveNext{Next: core1_1.MemoryDedicatedAllocationOptions{
+		NextOptions: common.NextOptions{Next: core1_1.MemoryDedicatedAllocationOptions{
 			Buffer: buffer,
 		}},
 	})
@@ -97,7 +97,7 @@ func TestDedicatedMemoryRequirementsOutData_Buffer(t *testing.T) {
 
 	var memReqs core1_1.MemoryDedicatedAllocationOutData
 	var outData = core1_1.MemoryRequirementsOutData{
-		HaveNext: common.HaveNext{Next: &memReqs},
+		NextOutData: common.NextOutData{Next: &memReqs},
 	}
 	err := device.BufferMemoryRequirements(
 		core1_1.BufferMemoryRequirementsOptions{
@@ -151,7 +151,7 @@ func TestDedicatedMemoryRequirementsOutData_Image(t *testing.T) {
 
 	var memReqs core1_1.MemoryDedicatedAllocationOutData
 	var outData = core1_1.MemoryRequirementsOutData{
-		HaveNext: common.HaveNext{Next: &memReqs},
+		NextOutData: common.NextOutData{Next: &memReqs},
 	}
 	err := device.ImageMemoryRequirements(
 		core1_1.ImageMemoryRequirementsOptions{
@@ -208,7 +208,7 @@ func TestExternalMemoryBufferOptions(t *testing.T) {
 			BufferSize: 1,
 			Usage:      core1_0.BufferUsageStorageTexelBuffer,
 
-			HaveNext: common.HaveNext{
+			NextOptions: common.NextOptions{
 				core1_1.ExternalMemoryBufferOptions{
 					HandleTypes: core1_1.ExternalMemoryHandleTypeD3D11Texture,
 				},
@@ -260,7 +260,7 @@ func TestExternalMemoryImageOptions(t *testing.T) {
 			MipLevels:   1,
 			ArrayLayers: 3,
 
-			HaveNext: common.HaveNext{
+			NextOptions: common.NextOptions{
 				core1_1.ExternalMemoryImageOptions{
 					HandleTypes: core1_1.ExternalMemoryHandleTypeD3D12Heap,
 				},
@@ -317,12 +317,12 @@ func TestExternalImageFormatOptions(t *testing.T) {
 
 	var outData core1_1.ExternalImageFormatOutData
 	format := core1_1.ImageFormatPropertiesOutData{
-		HaveNext: common.HaveNext{&outData},
+		NextOutData: common.NextOutData{&outData},
 	}
 	_, err := physicalDevice.InstanceScopedPhysicalDevice1_1().ImageFormatProperties2(
 		core1_1.ImageFormatOptions{
 			Format: core1_0.DataFormatA2B10G10R10UnsignedIntPacked,
-			HaveNext: common.HaveNext{
+			NextOptions: common.NextOptions{
 				core1_1.PhysicalDeviceExternalImageFormatOptions{
 					HandleType: core1_1.ExternalMemoryHandleTypeOpaqueFD,
 				},
@@ -379,7 +379,7 @@ func TestExternalMemoryAllocateOptions(t *testing.T) {
 	memory, _, err := device.AllocateMemory(nil, core1_0.MemoryAllocateOptions{
 		AllocationSize:  1,
 		MemoryTypeIndex: 3,
-		HaveNext: common.HaveNext{
+		NextOptions: common.NextOptions{
 			core1_1.ExportMemoryAllocateOptions{
 				HandleTypes: core1_1.ExternalMemoryHandleTypeD3D11TextureKMT,
 			},

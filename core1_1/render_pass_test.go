@@ -67,7 +67,7 @@ func TestInputAttachmentAspectOptions(t *testing.T) {
 		},
 	}
 	renderPass, _, err := device.CreateRenderPass(nil, core1_0.RenderPassCreateOptions{
-		HaveNext: common.HaveNext{Next: aspectOptions},
+		NextOptions: common.NextOptions{Next: aspectOptions},
 	})
 	require.NoError(t, err)
 	require.Equal(t, expectedRenderPass.Handle(), renderPass.Handle())
@@ -129,7 +129,7 @@ func TestDeviceGroupRenderPassBeginOptions(t *testing.T) {
 		core1_0.RenderPassBeginOptions{
 			RenderPass:  renderPass,
 			Framebuffer: framebuffer,
-			HaveNext: common.HaveNext{
+			NextOptions: common.NextOptions{
 				core1_1.DeviceGroupRenderPassBeginOptions{
 					DeviceMask: 7,
 					DeviceRenderAreas: []core1_0.Rect2D{
@@ -197,7 +197,7 @@ func TestRenderPassMultiviewOptions(t *testing.T) {
 	})
 
 	renderPass, _, err := device.CreateRenderPass(nil, core1_0.RenderPassCreateOptions{
-		HaveNext: common.HaveNext{
+		NextOptions: common.NextOptions{
 			core1_1.RenderPassMultiviewOptions{
 				SubpassViewMasks:      []uint32{1, 2, 7},
 				DependencyViewOffsets: []int{11, 13},

@@ -43,7 +43,7 @@ type CommandBufferAllocateOptions struct {
 	BufferCount int
 	CommandPool CommandPool
 
-	common.HaveNext
+	common.NextOptions
 }
 
 func (o CommandBufferAllocateOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
@@ -64,9 +64,4 @@ func (o CommandBufferAllocateOptions) PopulateCPointer(allocator *cgoparam.Alloc
 	createInfo.commandPool = C.VkCommandPool(unsafe.Pointer(o.CommandPool.Handle()))
 
 	return unsafe.Pointer(createInfo), nil
-}
-
-func (o CommandBufferAllocateOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
-	createInfo := (*C.VkCommandBufferAllocateInfo)(cDataPointer)
-	return createInfo.pNext, nil
 }

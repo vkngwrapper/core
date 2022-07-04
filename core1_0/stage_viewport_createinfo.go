@@ -15,7 +15,7 @@ type ViewportStateOptions struct {
 	Viewports []Viewport
 	Scissors  []Rect2D
 
-	common.HaveNext
+	common.NextOptions
 }
 
 func (o ViewportStateOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
@@ -59,9 +59,4 @@ func (o ViewportStateOptions) PopulateCPointer(allocator *cgoparam.Allocator, pr
 	}
 
 	return preallocatedPointer, nil
-}
-
-func (o ViewportStateOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
-	createInfo := (*C.VkPipelineViewportStateCreateInfo)(cDataPointer)
-	return createInfo.pNext, nil
 }

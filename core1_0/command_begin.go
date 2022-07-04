@@ -60,7 +60,7 @@ type InheritanceOptions struct {
 	QueryFlags           QueryControlFlags
 	PipelineStatistics   QueryPipelineStatisticFlags
 
-	common.HaveNext
+	common.NextOptions
 }
 
 func (o InheritanceOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
@@ -96,16 +96,11 @@ func (o InheritanceOptions) PopulateCPointer(allocator *cgoparam.Allocator, prea
 	return unsafe.Pointer(createInfo), nil
 }
 
-func (o InheritanceOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
-	createInfo := (*C.VkCommandBufferInheritanceInfo)(cDataPointer)
-	return createInfo.pNext, nil
-}
-
 type BeginOptions struct {
 	Flags           BeginInfoFlags
 	InheritanceInfo *InheritanceOptions
 
-	common.HaveNext
+	common.NextOptions
 }
 
 func (o BeginOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
@@ -121,7 +116,7 @@ func (o BeginOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocat
 	createInfo.pInheritanceInfo = nil
 
 	if o.InheritanceInfo != nil {
-		info, err := common.AllocOptions(allocator, o.InheritanceInfo)
+		info, err := common.AllocOptions(allocator, *o.InheritanceInfo)
 		if err != nil {
 			return nil, err
 		}
@@ -129,9 +124,4 @@ func (o BeginOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocat
 	}
 
 	return unsafe.Pointer(createInfo), nil
-}
-
-func (o BeginOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
-	createInfo := (*C.VkCommandBufferBeginInfo)(cDataPointer)
-	return createInfo.pNext, nil
 }

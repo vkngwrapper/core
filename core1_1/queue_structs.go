@@ -31,7 +31,7 @@ type DeviceQueueOptions struct {
 	QueueFamilyIndex int
 	QueueIndex       int
 
-	common.HaveNext
+	common.NextOptions
 }
 
 func (o DeviceQueueOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
@@ -49,11 +49,6 @@ func (o DeviceQueueOptions) PopulateCPointer(allocator *cgoparam.Allocator, prea
 	return preallocatedPointer, nil
 }
 
-func (o DeviceQueueOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
-	info := (*C.VkDeviceQueueInfo2)(cDataPointer)
-	return info.pNext, nil
-}
-
 ////
 
 type DeviceGroupSubmitOptions struct {
@@ -61,7 +56,7 @@ type DeviceGroupSubmitOptions struct {
 	CommandBufferDeviceMasks     []uint32
 	SignalSemaphoreDeviceIndices []int
 
-	common.HaveNext
+	common.NextOptions
 }
 
 func (o DeviceGroupSubmitOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
@@ -118,17 +113,12 @@ func (o DeviceGroupSubmitOptions) PopulateCPointer(allocator *cgoparam.Allocator
 	return preallocatedPointer, nil
 }
 
-func (o DeviceGroupSubmitOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
-	info := (*C.VkDeviceGroupSubmitInfo)(cDataPointer)
-	return info.pNext, nil
-}
-
 ////
 
 type ProtectedSubmitOptions struct {
 	ProtectedSubmit bool
 
-	common.HaveNext
+	common.NextOptions
 }
 
 func (o ProtectedSubmitOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
@@ -146,9 +136,4 @@ func (o ProtectedSubmitOptions) PopulateCPointer(allocator *cgoparam.Allocator, 
 	}
 
 	return preallocatedPointer, nil
-}
-
-func (o ProtectedSubmitOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
-	info := (*C.VkProtectedSubmitInfo)(cDataPointer)
-	return info.pNext, nil
 }

@@ -38,7 +38,7 @@ type VertexInputStateOptions struct {
 	VertexBindingDescriptions   []VertexBindingDescription
 	VertexAttributeDescriptions []VertexAttributeDescription
 
-	common.HaveNext
+	common.NextOptions
 }
 
 func (o VertexInputStateOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
@@ -84,9 +84,4 @@ func (o VertexInputStateOptions) PopulateCPointer(allocator *cgoparam.Allocator,
 	}
 
 	return unsafe.Pointer(createInfo), nil
-}
-
-func (o VertexInputStateOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
-	createInfo := (*C.VkPipelineVertexInputStateCreateInfo)(cDataPointer)
-	return createInfo.pNext, nil
 }

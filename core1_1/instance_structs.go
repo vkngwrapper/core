@@ -18,10 +18,10 @@ type DeviceGroupOutData struct {
 	PhysicalDevices  []core1_0.PhysicalDevice
 	SubsetAllocation bool
 
-	common.HaveNext
+	common.NextOutData
 }
 
-func (o *DeviceGroupOutData) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o *DeviceGroupOutData) PopulateHeader(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == nil {
 		preallocatedPointer = allocator.Malloc(int(unsafe.Sizeof(C.VkPhysicalDeviceGroupProperties{})))
 	}

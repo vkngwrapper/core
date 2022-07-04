@@ -44,7 +44,7 @@ type GraphicsPipelineCreateOptions struct {
 	BasePipeline      Pipeline
 	BasePipelineIndex int
 
-	common.HaveNext
+	common.NextOptions
 }
 
 func (o GraphicsPipelineCreateOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
@@ -178,11 +178,6 @@ func (o GraphicsPipelineCreateOptions) PopulateCPointer(allocator *cgoparam.Allo
 	return preallocatedPointer, nil
 }
 
-func (o GraphicsPipelineCreateOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
-	createInfo := (*C.VkGraphicsPipelineCreateInfo)(cDataPointer)
-	return createInfo.pNext, nil
-}
-
 type ComputePipelineCreateOptions struct {
 	Flags  PipelineCreateFlags
 	Shader ShaderStageOptions
@@ -191,7 +186,7 @@ type ComputePipelineCreateOptions struct {
 	BasePipeline      Pipeline
 	BasePipelineIndex int
 
-	common.HaveNext
+	common.NextOptions
 }
 
 func (o ComputePipelineCreateOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
@@ -214,9 +209,4 @@ func (o ComputePipelineCreateOptions) PopulateCPointer(allocator *cgoparam.Alloc
 	createInfo.basePipelineIndex = C.int32_t(o.BasePipelineIndex)
 
 	return preallocatedPointer, nil
-}
-
-func (o ComputePipelineCreateOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
-	createInfo := (*C.VkComputePipelineCreateInfo)(cDataPointer)
-	return createInfo.pNext, nil
 }

@@ -17,7 +17,7 @@ type DescriptorSetAllocateOptions struct {
 
 	AllocationLayouts []DescriptorSetLayout
 
-	common.HaveNext
+	common.NextOptions
 }
 
 func (o DescriptorSetAllocateOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
@@ -48,11 +48,6 @@ func (o DescriptorSetAllocateOptions) PopulateCPointer(allocator *cgoparam.Alloc
 	return preallocatedPointer, nil
 }
 
-func (o DescriptorSetAllocateOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
-	createInfo := (*C.VkDescriptorSetAllocateInfo)(cDataPointer)
-	return createInfo.pNext, nil
-}
-
 type DescriptorImageInfo struct {
 	Sampler     Sampler
 	ImageView   ImageView
@@ -76,7 +71,7 @@ type WriteDescriptorSetOptions struct {
 	BufferInfo      []DescriptorBufferInfo
 	TexelBufferView []BufferView
 
-	common.HaveNext
+	common.NextOptions
 }
 
 type WriteDescriptorSetExtensionSource interface {
@@ -102,7 +97,7 @@ func (o WriteDescriptorSetOptions) PopulateCPointer(allocator *cgoparam.Allocato
 			break
 		}
 
-		nextObj = nextObj.NextInChain()
+		nextObj = nextObj.NextOptionsInChain()
 	}
 
 	if imageInfoCount > 0 && texelBufferCount > 0 {
@@ -186,11 +181,6 @@ func (o WriteDescriptorSetOptions) PopulateCPointer(allocator *cgoparam.Allocato
 	return preallocatedPointer, nil
 }
 
-func (o WriteDescriptorSetOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
-	createInfo := (*C.VkWriteDescriptorSet)(cDataPointer)
-	return createInfo.pNext, nil
-}
-
 type CopyDescriptorSetOptions struct {
 	Source             DescriptorSet
 	SourceBinding      int
@@ -202,7 +192,7 @@ type CopyDescriptorSetOptions struct {
 
 	Count int
 
-	common.HaveNext
+	common.NextOptions
 }
 
 func (o CopyDescriptorSetOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
@@ -225,9 +215,4 @@ func (o CopyDescriptorSetOptions) PopulateCPointer(allocator *cgoparam.Allocator
 	createInfo.descriptorCount = C.uint32_t(o.Count)
 
 	return preallocatedPointer, nil
-}
-
-func (o CopyDescriptorSetOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
-	createInfo := (*C.VkCopyDescriptorSet)(cDataPointer)
-	return createInfo.pNext, nil
 }

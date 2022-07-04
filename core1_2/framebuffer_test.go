@@ -85,7 +85,7 @@ func TestFramebufferAttachmentsCreateOptions(t *testing.T) {
 	framebuffer, _, err := device.CreateFramebuffer(
 		nil,
 		core1_0.FramebufferCreateOptions{
-			HaveNext: common.HaveNext{
+			NextOptions: common.NextOptions{
 				core1_2.FramebufferAttachmentsCreateOptions{
 					AttachmentImageInfos: []core1_2.FramebufferAttachmentImageOptions{
 						{

@@ -30,7 +30,7 @@ type DescriptorPoolCreateOptions struct {
 	MaxSets   int
 	PoolSizes []PoolSize
 
-	common.HaveNext
+	common.NextOptions
 }
 
 func (o DescriptorPoolCreateOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
@@ -61,9 +61,4 @@ func (o DescriptorPoolCreateOptions) PopulateCPointer(allocator *cgoparam.Alloca
 	}
 
 	return unsafe.Pointer(createInfo), nil
-}
-
-func (o DescriptorPoolCreateOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
-	createInfo := (*C.VkDescriptorPoolCreateInfo)(cDataPointer)
-	return createInfo.pNext, nil
 }

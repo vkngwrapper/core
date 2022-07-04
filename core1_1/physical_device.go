@@ -76,7 +76,7 @@ func (p *VulkanInstanceScopedPhysicalDevice) ExternalFenceProperties(o ExternalF
 		return err
 	}
 
-	outDataPtr, err := common.AllocOptions(arena, outData)
+	outDataPtr, err := common.AllocOutDataHeader(arena, outData)
 	if err != nil {
 		return err
 	}
@@ -99,7 +99,7 @@ func (p *VulkanInstanceScopedPhysicalDevice) ExternalBufferProperties(o External
 		return err
 	}
 
-	outDataPtr, err := common.AllocOptions(arena, outData)
+	outDataPtr, err := common.AllocOutDataHeader(arena, outData)
 	if err != nil {
 		return err
 	}
@@ -120,7 +120,7 @@ func (p *VulkanInstanceScopedPhysicalDevice) ExternalSemaphoreProperties(o Exter
 		return err
 	}
 
-	outDataPtr, err := common.AllocOptions(arena, outData)
+	outDataPtr, err := common.AllocOutDataHeader(arena, outData)
 	if err != nil {
 		return err
 	}
@@ -134,11 +134,11 @@ func (p *VulkanInstanceScopedPhysicalDevice) ExternalSemaphoreProperties(o Exter
 	return common.PopulateOutData(outData, outDataPtr)
 }
 
-func (p *VulkanInstanceScopedPhysicalDevice) Features2(out *DeviceFeaturesOutData) error {
+func (p *VulkanInstanceScopedPhysicalDevice) Features2(out *DeviceFeatures) error {
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
-	outData, err := common.AllocOptions(arena, out)
+	outData, err := common.AllocOutDataHeader(arena, out)
 	if err != nil {
 		return err
 	}
@@ -152,7 +152,7 @@ func (p *VulkanInstanceScopedPhysicalDevice) FormatProperties2(format core1_0.Da
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
-	outData, err := common.AllocOptions(arena, out)
+	outData, err := common.AllocOutDataHeader(arena, out)
 	if err != nil {
 		return err
 	}
@@ -171,7 +171,7 @@ func (p *VulkanInstanceScopedPhysicalDevice) ImageFormatProperties2(o ImageForma
 		return core1_0.VKErrorUnknown, err
 	}
 
-	outData, err := common.AllocOptions(arena, out)
+	outData, err := common.AllocOutDataHeader(arena, out)
 	if err != nil {
 		return core1_0.VKErrorUnknown, err
 	}
@@ -196,7 +196,7 @@ func (p *VulkanInstanceScopedPhysicalDevice) MemoryProperties2(out *MemoryProper
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
-	outData, err := common.AllocOptions(arena, out)
+	outData, err := common.AllocOutDataHeader(arena, out)
 	if err != nil {
 		return err
 	}
@@ -210,7 +210,7 @@ func (p *VulkanInstanceScopedPhysicalDevice) Properties2(out *DevicePropertiesOu
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
-	outData, err := common.AllocOptions(arena, out)
+	outData, err := common.AllocOutDataHeader(arena, out)
 	if err != nil {
 		return err
 	}
@@ -243,7 +243,7 @@ func (p *VulkanInstanceScopedPhysicalDevice) QueueFamilyProperties2(outDataFacto
 		}
 	}
 
-	outData, err := common.AllocOptionSlice[C.VkQueueFamilyProperties2, *QueueFamilyOutData](arena, out)
+	outData, err := common.AllocOutDataHeaderSlice[C.VkQueueFamilyProperties2, *QueueFamilyOutData](arena, out)
 	if err != nil {
 		return nil, err
 	}
@@ -280,7 +280,7 @@ func (p *VulkanInstanceScopedPhysicalDevice) SparseImageFormatProperties2(o Spar
 		}
 	}
 
-	outData, err := common.AllocOptionSlice[C.VkSparseImageFormatProperties2, *SparseImageFormatPropertiesOutData](arena, out)
+	outData, err := common.AllocOutDataHeaderSlice[C.VkSparseImageFormatProperties2, *SparseImageFormatPropertiesOutData](arena, out)
 	if err != nil {
 		return nil, err
 	}

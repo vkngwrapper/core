@@ -29,7 +29,7 @@ func init() {
 type BufferMemoryRequirementsOptions struct {
 	Buffer core1_0.Buffer
 
-	common.HaveNext
+	common.NextOptions
 }
 
 func (o BufferMemoryRequirementsOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
@@ -45,17 +45,12 @@ func (o BufferMemoryRequirementsOptions) PopulateCPointer(allocator *cgoparam.Al
 	return preallocatedPointer, nil
 }
 
-func (o BufferMemoryRequirementsOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
-	options := (*C.VkBufferMemoryRequirementsInfo2)(cDataPointer)
-	return options.pNext, nil
-}
-
 ////
 
 type ImageMemoryRequirementsOptions struct {
 	Image core1_0.Image
 
-	common.HaveNext
+	common.NextOptions
 }
 
 func (o ImageMemoryRequirementsOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
@@ -71,19 +66,14 @@ func (o ImageMemoryRequirementsOptions) PopulateCPointer(allocator *cgoparam.All
 	return preallocatedPointer, nil
 }
 
-func (o ImageMemoryRequirementsOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
-	options := (*C.VkImageMemoryRequirementsInfo2)(cDataPointer)
-	return options.pNext, nil
-}
-
 ////
 
 type MemoryRequirementsOutData struct {
 	MemoryRequirements core1_0.MemoryRequirements
-	common.HaveNext
+	common.NextOutData
 }
 
-func (o *MemoryRequirementsOutData) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o *MemoryRequirementsOutData) PopulateHeader(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == nil {
 		preallocatedPointer = allocator.Malloc(int(unsafe.Sizeof(C.VkMemoryRequirements2{})))
 	}
@@ -109,7 +99,7 @@ func (o *MemoryRequirementsOutData) PopulateOutData(cDataPointer unsafe.Pointer,
 type ImageSparseMemoryRequirementsOptions struct {
 	Image core1_0.Image
 
-	common.HaveNext
+	common.NextOptions
 }
 
 func (o ImageSparseMemoryRequirementsOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
@@ -125,20 +115,15 @@ func (o ImageSparseMemoryRequirementsOptions) PopulateCPointer(allocator *cgopar
 	return preallocatedPointer, nil
 }
 
-func (o ImageSparseMemoryRequirementsOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
-	options := (*C.VkImageSparseMemoryRequirementsInfo2)(cDataPointer)
-	return options.pNext, nil
-}
-
 ////
 
 type SparseImageMemoryRequirementsOutData struct {
 	MemoryRequirements core1_0.SparseImageMemoryRequirements
 
-	common.HaveNext
+	common.NextOutData
 }
 
-func (o *SparseImageMemoryRequirementsOutData) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o *SparseImageMemoryRequirementsOutData) PopulateHeader(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == nil {
 		preallocatedPointer = allocator.Malloc(int(unsafe.Sizeof(C.VkSparseImageMemoryRequirements2{})))
 	}

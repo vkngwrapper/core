@@ -59,7 +59,7 @@ type SubmitOptions struct {
 	WaitDstStages    []PipelineStages
 	SignalSemaphores []Semaphore
 
-	common.HaveNext
+	common.NextOptions
 }
 
 func (o SubmitOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
@@ -123,9 +123,4 @@ func (o SubmitOptions) PopulateCPointer(allocator *cgoparam.Allocator, prealloca
 	}
 
 	return preallocatedPointer, nil
-}
-
-func (o SubmitOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
-	createInfo := (*C.VkSubmitInfo)(cDataPointer)
-	return createInfo.pNext, nil
 }

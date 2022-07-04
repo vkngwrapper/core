@@ -38,7 +38,7 @@ func init() {
 type DynamicStateOptions struct {
 	DynamicStates []DynamicState
 
-	common.HaveNext
+	common.NextOptions
 }
 
 func (o DynamicStateOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
@@ -65,9 +65,4 @@ func (o DynamicStateOptions) PopulateCPointer(allocator *cgoparam.Allocator, pre
 	}
 
 	return preallocatedPointer, nil
-}
-
-func (o DynamicStateOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
-	createInfo := (*C.VkPipelineDynamicStateCreateInfo)(cDataPointer)
-	return createInfo.pNext, nil
 }

@@ -49,7 +49,7 @@ func TestExportFenceOptions(t *testing.T) {
 		core1_0.FenceCreateOptions{
 			Flags: core1_0.FenceCreateSignaled,
 
-			HaveNext: common.HaveNext{
+			NextOptions: common.NextOptions{
 				core1_1.ExportFenceOptions{
 					HandleTypes: core1_1.ExternalFenceHandleTypeOpaqueWin32,
 				},

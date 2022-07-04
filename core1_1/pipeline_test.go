@@ -58,7 +58,7 @@ func TestTessellationDomainOriginOptions(t *testing.T) {
 		{
 			Tessellation: &core1_0.TessellationStateOptions{
 				PatchControlPoints: 1,
-				HaveNext:           common.HaveNext{Next: domainOriginState},
+				NextOptions:        common.NextOptions{Next: domainOriginState},
 			},
 		},
 	})

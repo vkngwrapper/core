@@ -80,7 +80,7 @@ func init() {
 type ExternalFenceOptions struct {
 	HandleType ExternalFenceHandleTypes
 
-	common.HaveNext
+	common.NextOptions
 }
 
 func (o ExternalFenceOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
@@ -95,11 +95,6 @@ func (o ExternalFenceOptions) PopulateCPointer(allocator *cgoparam.Allocator, pr
 	return preallocatedPointer, nil
 }
 
-func (o ExternalFenceOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
-	info := (*C.VkPhysicalDeviceExternalFenceInfo)(cDataPointer)
-	return info.pNext, nil
-}
-
 ////
 
 type ExternalFenceOutData struct {
@@ -107,10 +102,10 @@ type ExternalFenceOutData struct {
 	CompatibleHandleTypes         ExternalFenceHandleTypes
 	ExternalFenceFeatures         ExternalFenceFeatures
 
-	common.HaveNext
+	common.NextOutData
 }
 
-func (o *ExternalFenceOutData) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o *ExternalFenceOutData) PopulateHeader(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == nil {
 		preallocatedPointer = allocator.Malloc(int(unsafe.Sizeof(C.VkExternalFenceProperties{})))
 	}
@@ -137,7 +132,7 @@ func (o *ExternalFenceOutData) PopulateOutData(cDataPointer unsafe.Pointer, help
 type ExportFenceOptions struct {
 	HandleTypes ExternalFenceHandleTypes
 
-	common.HaveNext
+	common.NextOptions
 }
 
 func (o ExportFenceOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
@@ -151,9 +146,4 @@ func (o ExportFenceOptions) PopulateCPointer(allocator *cgoparam.Allocator, prea
 	info.handleTypes = C.VkExternalFenceHandleTypeFlags(o.HandleTypes)
 
 	return preallocatedPointer, nil
-}
-
-func (o ExportFenceOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
-	info := (*C.VkExportFenceCreateInfo)(cDataPointer)
-	return info.pNext, nil
 }

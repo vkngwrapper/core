@@ -81,7 +81,7 @@ func TestDeviceGroupCommandBufferBeginOptions(t *testing.T) {
 
 	_, err := commandBuffer.Begin(core1_0.BeginOptions{
 		Flags: core1_0.BeginInfoOneTimeSubmit,
-		HaveNext: common.HaveNext{Next: core1_1.DeviceGroupCommandBufferBeginOptions{
+		NextOptions: common.NextOptions{Next: core1_1.DeviceGroupCommandBufferBeginOptions{
 			DeviceMask: 3,
 		}},
 	})

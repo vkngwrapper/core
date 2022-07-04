@@ -18,7 +18,7 @@ type DeviceCreateOptions struct {
 	ExtensionNames  []string
 	LayerNames      []string
 
-	common.HaveNext
+	common.NextOptions
 }
 
 func (o DeviceCreateOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
@@ -75,9 +75,4 @@ func (o DeviceCreateOptions) PopulateCPointer(allocator *cgoparam.Allocator, pre
 	}
 
 	return unsafe.Pointer(createInfo), nil
-}
-
-func (o DeviceCreateOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
-	createInfo := (*C.VkDeviceCreateInfo)(cDataPointer)
-	return createInfo.pNext, nil
 }

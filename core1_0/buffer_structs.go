@@ -56,7 +56,7 @@ type BufferCreateOptions struct {
 	SharingMode        SharingMode
 	QueueFamilyIndices []int
 
-	common.HaveNext
+	common.NextOptions
 }
 
 func (o BufferCreateOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
@@ -87,9 +87,4 @@ func (o BufferCreateOptions) PopulateCPointer(allocator *cgoparam.Allocator, pre
 	}
 
 	return preallocatedPointer, nil
-}
-
-func (o BufferCreateOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
-	createInfo := (*C.VkBufferCreateInfo)(cDataPointer)
-	return createInfo.pNext, nil
 }

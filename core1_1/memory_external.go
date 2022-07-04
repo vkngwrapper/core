@@ -105,7 +105,7 @@ type ExternalBufferOptions struct {
 	Usage      core1_0.BufferUsages
 	HandleType ExternalMemoryHandleTypes
 
-	common.HaveNext
+	common.NextOptions
 }
 
 func (o ExternalBufferOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
@@ -123,20 +123,15 @@ func (o ExternalBufferOptions) PopulateCPointer(allocator *cgoparam.Allocator, p
 	return preallocatedPointer, nil
 }
 
-func (o ExternalBufferOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
-	info := (*C.VkPhysicalDeviceExternalBufferInfo)(cDataPointer)
-	return info.pNext, nil
-}
-
 ////
 
 type ExternalBufferOutData struct {
 	ExternalMemoryProperties ExternalMemoryProperties
 
-	common.HaveNext
+	common.NextOutData
 }
 
-func (o *ExternalBufferOutData) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o *ExternalBufferOutData) PopulateHeader(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == nil {
 		preallocatedPointer = allocator.Malloc(int(unsafe.Sizeof(C.VkExternalBufferProperties{})))
 	}
@@ -159,7 +154,7 @@ func (o *ExternalBufferOutData) PopulateOutData(cDataPointer unsafe.Pointer, hel
 type ExternalMemoryBufferOptions struct {
 	HandleTypes ExternalMemoryHandleTypes
 
-	common.HaveNext
+	common.NextOptions
 }
 
 func (o ExternalMemoryBufferOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
@@ -175,17 +170,12 @@ func (o ExternalMemoryBufferOptions) PopulateCPointer(allocator *cgoparam.Alloca
 	return preallocatedPointer, nil
 }
 
-func (o ExternalMemoryBufferOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
-	info := (*C.VkExternalMemoryBufferCreateInfo)(cDataPointer)
-	return info.pNext, nil
-}
-
 ////
 
 type ExternalMemoryImageOptions struct {
 	HandleTypes ExternalMemoryHandleTypes
 
-	common.HaveNext
+	common.NextOptions
 }
 
 func (o ExternalMemoryImageOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
@@ -201,17 +191,12 @@ func (o ExternalMemoryImageOptions) PopulateCPointer(allocator *cgoparam.Allocat
 	return preallocatedPointer, nil
 }
 
-func (o ExternalMemoryImageOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
-	info := (*C.VkExternalMemoryImageCreateInfo)(cDataPointer)
-	return info.pNext, nil
-}
-
 ////
 
 type PhysicalDeviceExternalImageFormatOptions struct {
 	HandleType ExternalMemoryHandleTypes
 
-	common.HaveNext
+	common.NextOptions
 }
 
 func (o PhysicalDeviceExternalImageFormatOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
@@ -228,17 +213,12 @@ func (o PhysicalDeviceExternalImageFormatOptions) PopulateCPointer(allocator *cg
 	return preallocatedPointer, nil
 }
 
-func (o PhysicalDeviceExternalImageFormatOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
-	info := (*C.VkPhysicalDeviceExternalImageFormatInfo)(cDataPointer)
-	return info.pNext, nil
-}
-
 ////
 
 type ExportMemoryAllocateOptions struct {
 	HandleTypes ExternalMemoryHandleTypes
 
-	common.HaveNext
+	common.NextOptions
 }
 
 func (o ExportMemoryAllocateOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
@@ -254,20 +234,15 @@ func (o ExportMemoryAllocateOptions) PopulateCPointer(allocator *cgoparam.Alloca
 	return preallocatedPointer, nil
 }
 
-func (o ExportMemoryAllocateOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
-	info := (*C.VkExportMemoryAllocateInfo)(cDataPointer)
-	return info.pNext, nil
-}
-
 ////
 
 type ExternalImageFormatOutData struct {
 	ExternalMemoryProperties ExternalMemoryProperties
 
-	common.HaveNext
+	common.NextOutData
 }
 
-func (o *ExternalImageFormatOutData) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o *ExternalImageFormatOutData) PopulateHeader(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == nil {
 		preallocatedPointer = allocator.Malloc(int(unsafe.Sizeof(C.VkExternalImageFormatProperties{})))
 	}

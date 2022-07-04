@@ -68,7 +68,7 @@ func TestPhysicalDeviceDriverOutData(t *testing.T) {
 	var driverOutData core1_2.PhysicalDeviceDriverOutData
 	err := physicalDevice.Properties2(
 		&core1_1.DevicePropertiesOutData{
-			HaveNext: common.HaveNext{&driverOutData},
+			NextOutData: common.NextOutData{&driverOutData},
 		})
 	require.NoError(t, err)
 	require.Equal(t, core1_2.PhysicalDeviceDriverOutData{
@@ -112,7 +112,7 @@ func TestPhysicalDeviceDepthStencilResolveOutData(t *testing.T) {
 	var outData core1_2.PhysicalDeviceDepthStencilResolveOutData
 	err := physicalDevice.Properties2(
 		&core1_1.DevicePropertiesOutData{
-			HaveNext: common.HaveNext{&outData},
+			NextOutData: common.NextOutData{&outData},
 		})
 	require.NoError(t, err)
 	require.Equal(t, core1_2.PhysicalDeviceDepthStencilResolveOutData{
@@ -174,7 +174,7 @@ func TestPhysicalDeviceDescriptorIndexingOutData(t *testing.T) {
 	var outData core1_2.PhysicalDeviceDescriptorIndexingOutData
 	err := physicalDevice.Properties2(
 		&core1_1.DevicePropertiesOutData{
-			HaveNext: common.HaveNext{&outData},
+			NextOutData: common.NextOutData{&outData},
 		})
 	require.NoError(t, err)
 	require.Equal(t,
@@ -254,7 +254,7 @@ func TestPhysicalDeviceFloatControlsOutData(t *testing.T) {
 	var outData core1_2.PhysicalDeviceFloatControlsOutData
 	err := physicalDevice.Properties2(
 		&core1_1.DevicePropertiesOutData{
-			HaveNext: common.HaveNext{&outData},
+			NextOutData: common.NextOutData{&outData},
 		})
 	require.NoError(t, err)
 	require.Equal(t, core1_2.PhysicalDeviceFloatControlsOutData{
@@ -307,7 +307,7 @@ func TestPhysicalDeviceSamplerFilterMinmaxOutData(t *testing.T) {
 	var outData core1_2.PhysicalDeviceSamplerFilterMinmaxOutData
 	err := physicalDevice.Properties2(
 		&core1_1.DevicePropertiesOutData{
-			HaveNext: common.HaveNext{&outData},
+			NextOutData: common.NextOutData{&outData},
 		})
 	require.NoError(t, err)
 	require.Equal(t, core1_2.PhysicalDeviceSamplerFilterMinmaxOutData{
@@ -342,7 +342,7 @@ func TestPhysicalDeviceTimelineSemaphoreOutData(t *testing.T) {
 	var outData core1_2.PhysicalDeviceTimelineSemaphoreOutData
 	err := physicalDevice.Properties2(
 		&core1_1.DevicePropertiesOutData{
-			HaveNext: common.HaveNext{&outData},
+			NextOutData: common.NextOutData{&outData},
 		})
 	require.NoError(t, err)
 	require.Equal(t, core1_2.PhysicalDeviceTimelineSemaphoreOutData{
@@ -408,7 +408,7 @@ func TestPhysicalDeviceVulkan11OutData(t *testing.T) {
 	var outData core1_2.PhysicalDeviceVulkan11OutData
 	err = physicalDevice.Properties2(
 		&core1_1.DevicePropertiesOutData{
-			HaveNext: common.HaveNext{&outData},
+			NextOutData: common.NextOutData{&outData},
 		})
 	require.NoError(t, err)
 	require.Equal(t, core1_2.PhysicalDeviceVulkan11OutData{
@@ -525,7 +525,7 @@ func TestPhysicalDeviceVulkan12OutData(t *testing.T) {
 	var outData core1_2.PhysicalDeviceVulkan12OutData
 	err := physicalDevice.Properties2(
 		&core1_1.DevicePropertiesOutData{
-			HaveNext: common.HaveNext{&outData},
+			NextOutData: common.NextOutData{&outData},
 		})
 	require.NoError(t, err)
 	require.Equal(t, core1_2.PhysicalDeviceVulkan12OutData{

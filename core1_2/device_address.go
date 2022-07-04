@@ -41,7 +41,7 @@ func init() {
 type BufferDeviceAddressOptions struct {
 	Buffer core1_0.Buffer
 
-	common.HaveNext
+	common.NextOptions
 }
 
 func (o BufferDeviceAddressOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
@@ -71,7 +71,7 @@ func (o BufferDeviceAddressOptions) PopulateOutData(cDataPointer unsafe.Pointer,
 type DeviceMemoryOpaqueAddressOptions struct {
 	Memory core1_0.DeviceMemory
 
-	common.HaveNext
+	common.NextOptions
 }
 
 func (o DeviceMemoryOpaqueAddressOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
@@ -87,17 +87,12 @@ func (o DeviceMemoryOpaqueAddressOptions) PopulateCPointer(allocator *cgoparam.A
 	return preallocatedPointer, nil
 }
 
-func (o DeviceMemoryOpaqueAddressOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
-	info := (*C.VkDeviceMemoryOpaqueCaptureAddressInfo)(cDataPointer)
-	return info.pNext, nil
-}
-
 ////
 
 type BufferOpaqueCaptureAddressCreateOptions struct {
 	OpaqueCaptureAddress uint64
 
-	common.HaveNext
+	common.NextOptions
 }
 
 func (o BufferOpaqueCaptureAddressCreateOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
@@ -113,17 +108,12 @@ func (o BufferOpaqueCaptureAddressCreateOptions) PopulateCPointer(allocator *cgo
 	return preallocatedPointer, nil
 }
 
-func (o BufferOpaqueCaptureAddressCreateOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
-	info := (*C.VkBufferOpaqueCaptureAddressCreateInfo)(cDataPointer)
-	return info.pNext, nil
-}
-
 ////
 
 type MemoryOpaqueCaptureAddressAllocateOptions struct {
 	OpaqueCaptureAddress uint64
 
-	common.HaveNext
+	common.NextOptions
 }
 
 func (o MemoryOpaqueCaptureAddressAllocateOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
@@ -137,9 +127,4 @@ func (o MemoryOpaqueCaptureAddressAllocateOptions) PopulateCPointer(allocator *c
 	info.opaqueCaptureAddress = C.uint64_t(o.OpaqueCaptureAddress)
 
 	return preallocatedPointer, nil
-}
-
-func (o MemoryOpaqueCaptureAddressAllocateOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
-	info := (*C.VkMemoryOpaqueCaptureAddressAllocateInfo)(cDataPointer)
-	return info.pNext, nil
 }

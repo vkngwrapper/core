@@ -14,7 +14,7 @@ import (
 type DeviceGroupCommandBufferBeginOptions struct {
 	DeviceMask uint32
 
-	common.HaveNext
+	common.NextOptions
 }
 
 func (o DeviceGroupCommandBufferBeginOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
@@ -28,9 +28,4 @@ func (o DeviceGroupCommandBufferBeginOptions) PopulateCPointer(allocator *cgopar
 	createInfo.deviceMask = C.uint32_t(o.DeviceMask)
 
 	return preallocatedPointer, nil
-}
-
-func (o DeviceGroupCommandBufferBeginOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
-	createInfo := (*C.VkDeviceGroupCommandBufferBeginInfo)(cDataPointer)
-	return createInfo.pNext, nil
 }

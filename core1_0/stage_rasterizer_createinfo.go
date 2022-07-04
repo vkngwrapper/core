@@ -50,7 +50,7 @@ type RasterizationStateOptions struct {
 
 	LineWidth float32
 
-	common.HaveNext
+	common.NextOptions
 }
 
 func (o RasterizationStateOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
@@ -88,9 +88,4 @@ func (o RasterizationStateOptions) PopulateCPointer(allocator *cgoparam.Allocato
 	createInfo.lineWidth = C.float(o.LineWidth)
 
 	return preallocatedPointer, nil
-}
-
-func (o RasterizationStateOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
-	createInfo := (*C.VkPipelineRasterizationStateCreateInfo)(cDataPointer)
-	return createInfo.pNext, nil
 }

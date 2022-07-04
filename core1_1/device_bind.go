@@ -17,7 +17,7 @@ type BindBufferMemoryOptions struct {
 	Memory       core1_0.DeviceMemory
 	MemoryOffset int
 
-	common.HaveNext
+	common.NextOptions
 }
 
 func (o BindBufferMemoryOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
@@ -35,11 +35,6 @@ func (o BindBufferMemoryOptions) PopulateCPointer(allocator *cgoparam.Allocator,
 	return preallocatedPointer, nil
 }
 
-func (o BindBufferMemoryOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
-	createInfo := (*C.VkBindBufferMemoryInfo)(cDataPointer)
-	return createInfo.pNext, nil
-}
-
 ////
 
 type BindImageMemoryOptions struct {
@@ -47,7 +42,7 @@ type BindImageMemoryOptions struct {
 	Memory       core1_0.DeviceMemory
 	MemoryOffset uint64
 
-	common.HaveNext
+	common.NextOptions
 }
 
 func (o BindImageMemoryOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
@@ -65,17 +60,12 @@ func (o BindImageMemoryOptions) PopulateCPointer(allocator *cgoparam.Allocator, 
 	return preallocatedPointer, nil
 }
 
-func (o BindImageMemoryOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
-	createInfo := (*C.VkBindImageMemoryInfo)(cDataPointer)
-	return createInfo.pNext, nil
-}
-
 ////
 
 type BindBufferMemoryDeviceGroupOptions struct {
 	DeviceIndices []int
 
-	common.HaveNext
+	common.NextOptions
 }
 
 func (o BindBufferMemoryDeviceGroupOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
@@ -105,18 +95,13 @@ func (o BindBufferMemoryDeviceGroupOptions) PopulateCPointer(allocator *cgoparam
 	return preallocatedPointer, nil
 }
 
-func (o BindBufferMemoryDeviceGroupOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
-	info := (*C.VkBindBufferMemoryDeviceGroupInfo)(cDataPointer)
-	return info.pNext, nil
-}
-
 ////
 
 type BindImageMemoryDeviceGroupOptions struct {
 	DeviceIndices            []int
 	SplitInstanceBindRegions []core1_0.Rect2D
 
-	common.HaveNext
+	common.NextOptions
 }
 
 func (o BindImageMemoryDeviceGroupOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
@@ -162,17 +147,12 @@ func (o BindImageMemoryDeviceGroupOptions) PopulateCPointer(allocator *cgoparam.
 	return preallocatedPointer, nil
 }
 
-func (o BindImageMemoryDeviceGroupOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
-	info := (*C.VkBindImageMemoryDeviceGroupInfo)(cDataPointer)
-	return info.pNext, nil
-}
-
 ////
 
 type BindImagePlaneMemoryOptions struct {
 	PlaneAspect core1_0.ImageAspectFlags
 
-	common.HaveNext
+	common.NextOptions
 }
 
 func (o BindImagePlaneMemoryOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
@@ -188,18 +168,13 @@ func (o BindImagePlaneMemoryOptions) PopulateCPointer(allocator *cgoparam.Alloca
 	return preallocatedPointer, nil
 }
 
-func (o BindImagePlaneMemoryOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
-	info := (*C.VkBindImagePlaneMemoryInfo)(cDataPointer)
-	return info.pNext, nil
-}
-
 ////
 
 type DeviceGroupBindSparseOptions struct {
 	ResourceDeviceIndex int
 	MemoryDeviceIndex   int
 
-	common.HaveNext
+	common.NextOptions
 }
 
 func (o DeviceGroupBindSparseOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
@@ -214,9 +189,4 @@ func (o DeviceGroupBindSparseOptions) PopulateCPointer(allocator *cgoparam.Alloc
 	createInfo.memoryDeviceIndex = C.uint32_t(o.MemoryDeviceIndex)
 
 	return preallocatedPointer, nil
-}
-
-func (o DeviceGroupBindSparseOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
-	createInfo := (*C.VkDeviceGroupBindSparseInfo)(cDataPointer)
-	return createInfo.pNext, nil
 }

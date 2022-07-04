@@ -91,7 +91,7 @@ type SamplerCreateOptions struct {
 	BorderColor             BorderColor
 	UnnormalizedCoordinates bool
 
-	common.HaveNext
+	common.NextOptions
 }
 
 func (o SamplerCreateOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
@@ -128,9 +128,4 @@ func (o SamplerCreateOptions) PopulateCPointer(allocator *cgoparam.Allocator, pr
 	}
 
 	return preallocatedPointer, nil
-}
-
-func (o SamplerCreateOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
-	createInfo := (*C.VkSamplerCreateInfo)(cDataPointer)
-	return createInfo.pNext, nil
 }

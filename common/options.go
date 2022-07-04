@@ -12,20 +12,77 @@ type CAllocatable interface {
 
 type Options interface {
 	PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error)
-	PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error)
-	NextInChain() Options
+
+	NextOptionsInChain() Options
 }
 
-type HaveNext struct {
+type OutData interface {
+	PopulateHeader(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error)
+	PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error)
+
+	NextOutDataInChain() OutData
+}
+
+type NextOptions struct {
 	Next Options
 }
 
-func (n HaveNext) NextInChain() Options {
+func (n NextOptions) NextOptionsInChain() Options {
 	return n.Next
 }
 
+type NextOutData struct {
+	Next OutData
+}
+
+func (n NextOutData) NextOutDataInChain() OutData {
+	return n.Next
+}
+
+func AllocOutDataHeader(allocator *cgoparam.Allocator, o OutData, preallocatedPointer ...unsafe.Pointer) (unsafe.Pointer, error) {
+	nextPtr, err := allocNextOutData(allocator, o)
+	if err != nil {
+		return nil, err
+	}
+
+	var preallocatedPointerToPass unsafe.Pointer
+	if len(preallocatedPointer) > 0 {
+		preallocatedPointerToPass = preallocatedPointer[0]
+	}
+
+	return o.PopulateHeader(allocator, preallocatedPointerToPass, nextPtr)
+}
+
+func AllocOutDataHeaderSlice[T any, O OutData](allocator *cgoparam.Allocator, o []O) (*T, error) {
+	optionCount := len(o)
+	optionPtr := (*T)(allocator.Malloc(optionCount * int(unsafe.Sizeof([1]T{}))))
+	optionSlice := unsafe.Slice(optionPtr, optionCount)
+	for i := 0; i < optionCount; i++ {
+		next, err := allocNextOutData(allocator, o[i])
+		if err != nil {
+			return nil, err
+		}
+
+		_, err = o[i].PopulateHeader(allocator, unsafe.Pointer(&optionSlice[i]), next)
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	return optionPtr, nil
+}
+
+func allocNextOutData(allocator *cgoparam.Allocator, o OutData) (unsafe.Pointer, error) {
+	next := o.NextOutDataInChain()
+	if next == nil {
+		return nil, nil
+	}
+
+	return AllocOutDataHeader(allocator, next)
+}
+
 func AllocOptions(allocator *cgoparam.Allocator, o Options, preallocatedPointer ...unsafe.Pointer) (unsafe.Pointer, error) {
-	nextPtr, err := allocNext(allocator, o)
+	nextPtr, err := allocNextOptions(allocator, o)
 	if err != nil {
 		return nil, err
 	}
@@ -43,7 +100,7 @@ func AllocOptionSlice[T any, O Options](allocator *cgoparam.Allocator, o []O) (*
 	optionPtr := (*T)(allocator.Malloc(optionCount * int(unsafe.Sizeof([1]T{}))))
 	optionSlice := unsafe.Slice(optionPtr, optionCount)
 	for i := 0; i < optionCount; i++ {
-		next, err := allocNext(allocator, o[i])
+		next, err := allocNextOptions(allocator, o[i])
 		if err != nil {
 			return nil, err
 		}
@@ -57,8 +114,8 @@ func AllocOptionSlice[T any, O Options](allocator *cgoparam.Allocator, o []O) (*
 	return optionPtr, nil
 }
 
-func allocNext(allocator *cgoparam.Allocator, o Options) (unsafe.Pointer, error) {
-	next := o.NextInChain()
+func allocNextOptions(allocator *cgoparam.Allocator, o Options) (unsafe.Pointer, error) {
+	next := o.NextOptionsInChain()
 	if next == nil {
 		return nil, nil
 	}
@@ -84,13 +141,13 @@ func AllocSlice[T any, A CAllocatable](allocator *cgoparam.Allocator, a []A) (*T
 	return (*T)(optionPtr), nil
 }
 
-func PopulateOutData(o Options, cPointer unsafe.Pointer, helpers ...any) error {
+func PopulateOutData(o OutData, cPointer unsafe.Pointer, helpers ...any) error {
 	next, err := o.PopulateOutData(cPointer, helpers...)
 	if err != nil {
 		return err
 	}
 
-	nextOptions := o.NextInChain()
+	nextOptions := o.NextOutDataInChain()
 	if nextOptions != nil {
 		return PopulateOutData(nextOptions, next, helpers...)
 	}
@@ -98,7 +155,7 @@ func PopulateOutData(o Options, cPointer unsafe.Pointer, helpers ...any) error {
 	return nil
 }
 
-func PopulateOutDataSlice[T any, O Options](o []O, cSlicePointer unsafe.Pointer, helpers ...any) error {
+func PopulateOutDataSlice[T any, O OutData](o []O, cSlicePointer unsafe.Pointer, helpers ...any) error {
 	cElementSize := unsafe.Sizeof([1]T{})
 
 	for i := 0; i < len(o); i++ {

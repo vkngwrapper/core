@@ -16,7 +16,7 @@ import (
 type SubpassBeginOptions struct {
 	Contents core1_0.SubpassContents
 
-	common.HaveNext
+	common.NextOptions
 }
 
 func (o SubpassBeginOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
@@ -32,15 +32,10 @@ func (o SubpassBeginOptions) PopulateCPointer(allocator *cgoparam.Allocator, pre
 	return preallocatedPointer, nil
 }
 
-func (o SubpassBeginOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
-	info := (*C.VkSubpassBeginInfo)(cDataPointer)
-	return info.pNext, nil
-}
-
 ////
 
 type SubpassEndOptions struct {
-	common.HaveNext
+	common.NextOptions
 }
 
 func (o SubpassEndOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
@@ -53,11 +48,6 @@ func (o SubpassEndOptions) PopulateCPointer(allocator *cgoparam.Allocator, preal
 	info.pNext = next
 
 	return preallocatedPointer, nil
-}
-
-func (o SubpassEndOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
-	info := (*C.VkSubpassEndInfo)(cDataPointer)
-	return info.pNext, nil
 }
 
 ////
@@ -73,7 +63,7 @@ type AttachmentDescriptionOptions struct {
 	InitialLayout  core1_0.ImageLayout
 	FinalLayout    core1_0.ImageLayout
 
-	common.HaveNext
+	common.NextOptions
 }
 
 func (o AttachmentDescriptionOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
@@ -97,11 +87,6 @@ func (o AttachmentDescriptionOptions) PopulateCPointer(allocator *cgoparam.Alloc
 	return preallocatedPointer, nil
 }
 
-func (o AttachmentDescriptionOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
-	info := (*C.VkAttachmentDescription2)(cDataPointer)
-	return info.pNext, nil
-}
-
 ////
 
 type AttachmentReferenceOptions struct {
@@ -109,7 +94,7 @@ type AttachmentReferenceOptions struct {
 	Layout     core1_0.ImageLayout
 	AspectMask core1_0.ImageAspectFlags
 
-	common.HaveNext
+	common.NextOptions
 }
 
 func (o AttachmentReferenceOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
@@ -127,11 +112,6 @@ func (o AttachmentReferenceOptions) PopulateCPointer(allocator *cgoparam.Allocat
 	return preallocatedPointer, nil
 }
 
-func (o AttachmentReferenceOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
-	info := (*C.VkAttachmentReference2)(cDataPointer)
-	return info.pNext, nil
-}
-
 ////
 
 type SubpassDescriptionOptions struct {
@@ -144,7 +124,7 @@ type SubpassDescriptionOptions struct {
 	DepthStencilAttachment *AttachmentReferenceOptions
 	PreserveAttachments    []int
 
-	common.HaveNext
+	common.NextOptions
 }
 
 func (o SubpassDescriptionOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
@@ -218,11 +198,6 @@ func (o SubpassDescriptionOptions) PopulateCPointer(allocator *cgoparam.Allocato
 	return preallocatedPointer, nil
 }
 
-func (o SubpassDescriptionOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
-	info := (*C.VkSubpassDescription2)(cDataPointer)
-	return info.pNext, nil
-}
-
 ////
 
 type SubpassDependencyOptions struct {
@@ -235,7 +210,7 @@ type SubpassDependencyOptions struct {
 	DependencyFlags core1_0.DependencyFlags
 	ViewOffset      int
 
-	common.HaveNext
+	common.NextOptions
 }
 
 func (o SubpassDependencyOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
@@ -258,11 +233,6 @@ func (o SubpassDependencyOptions) PopulateCPointer(allocator *cgoparam.Allocator
 	return preallocatedPointer, nil
 }
 
-func (o SubpassDependencyOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
-	info := (*C.VkSubpassDependency2)(cDataPointer)
-	return info.pNext, nil
-}
-
 ////
 
 type RenderPassCreateOptions struct {
@@ -274,7 +244,7 @@ type RenderPassCreateOptions struct {
 
 	CorrelatedViewMasks []uint32
 
-	common.HaveNext
+	common.NextOptions
 }
 
 func (o RenderPassCreateOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
@@ -335,18 +305,13 @@ func (o RenderPassCreateOptions) PopulateCPointer(allocator *cgoparam.Allocator,
 	return preallocatedPointer, nil
 }
 
-func (o RenderPassCreateOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
-	info := (*C.VkRenderPassCreateInfo2)(cDataPointer)
-	return info.pNext, nil
-}
-
 ////
 
 type AttachmentDescriptionStencilLayoutOptions struct {
 	StencilInitialLayout core1_0.ImageLayout
 	StencilFinalLayout   core1_0.ImageLayout
 
-	common.HaveNext
+	common.NextOptions
 }
 
 func (o AttachmentDescriptionStencilLayoutOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
@@ -363,17 +328,12 @@ func (o AttachmentDescriptionStencilLayoutOptions) PopulateCPointer(allocator *c
 	return preallocatedPointer, nil
 }
 
-func (o AttachmentDescriptionStencilLayoutOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
-	info := (*C.VkAttachmentDescriptionStencilLayout)(cDataPointer)
-	return info.pNext, nil
-}
-
 ////
 
 type AttachmentReferenceStencilLayoutOptions struct {
 	StencilLayout core1_0.ImageLayout
 
-	common.HaveNext
+	common.NextOptions
 }
 
 func (o AttachmentReferenceStencilLayoutOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
@@ -389,17 +349,12 @@ func (o AttachmentReferenceStencilLayoutOptions) PopulateCPointer(allocator *cgo
 	return preallocatedPointer, nil
 }
 
-func (o AttachmentReferenceStencilLayoutOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
-	info := (*C.VkAttachmentReferenceStencilLayout)(cDataPointer)
-	return info.pNext, nil
-}
-
 ////
 
 type RenderPassAttachmentBeginOptions struct {
 	Attachments []core1_0.ImageView
 
-	common.HaveNext
+	common.NextOptions
 }
 
 func (o RenderPassAttachmentBeginOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
@@ -426,11 +381,6 @@ func (o RenderPassAttachmentBeginOptions) PopulateCPointer(allocator *cgoparam.A
 	return preallocatedPointer, nil
 }
 
-func (o RenderPassAttachmentBeginOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
-	info := (*C.VkRenderPassAttachmentBeginInfo)(cDataPointer)
-	return info.pNext, nil
-}
-
 ////
 
 type SubpassDescriptionDepthStencilResolveOptions struct {
@@ -438,7 +388,7 @@ type SubpassDescriptionDepthStencilResolveOptions struct {
 	StencilResolveMode            ResolveModeFlags
 	DepthStencilResolveAttachment *AttachmentReferenceOptions
 
-	common.HaveNext
+	common.NextOptions
 }
 
 func (o SubpassDescriptionDepthStencilResolveOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
@@ -463,9 +413,4 @@ func (o SubpassDescriptionDepthStencilResolveOptions) PopulateCPointer(allocator
 	}
 
 	return preallocatedPointer, nil
-}
-
-func (o SubpassDescriptionDepthStencilResolveOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
-	info := (*C.VkSubpassDescriptionDepthStencilResolve)(cDataPointer)
-	return info.pNext, nil
 }

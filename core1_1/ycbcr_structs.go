@@ -108,7 +108,7 @@ type SamplerYcbcrConversionCreateOptions struct {
 	ChromaFilter                core1_0.Filter
 	ForceExplicitReconstruction bool
 
-	common.HaveNext
+	common.NextOptions
 }
 
 func (o SamplerYcbcrConversionCreateOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
@@ -138,20 +138,15 @@ func (o SamplerYcbcrConversionCreateOptions) PopulateCPointer(allocator *cgopara
 	return preallocatedPointer, nil
 }
 
-func (o SamplerYcbcrConversionCreateOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
-	info := (*C.VkSamplerYcbcrConversionCreateInfo)(cDataPointer)
-	return info.pNext, nil
-}
-
 ////
 
 type SamplerYcbcrImageFormatOutData struct {
 	CombinedImageSamplerDescriptorCount int
 
-	common.HaveNext
+	common.NextOutData
 }
 
-func (o *SamplerYcbcrImageFormatOutData) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o *SamplerYcbcrImageFormatOutData) PopulateHeader(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == nil {
 		preallocatedPointer = allocator.Malloc(int(unsafe.Sizeof(C.VkSamplerYcbcrConversionImageFormatProperties{})))
 	}
@@ -176,7 +171,7 @@ func (o *SamplerYcbcrImageFormatOutData) PopulateOutData(cDataPointer unsafe.Poi
 type ImagePlaneMemoryRequirementsOptions struct {
 	PlaneAspect core1_0.ImageAspectFlags
 
-	common.HaveNext
+	common.NextOptions
 }
 
 func (o ImagePlaneMemoryRequirementsOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
@@ -192,17 +187,12 @@ func (o ImagePlaneMemoryRequirementsOptions) PopulateCPointer(allocator *cgopara
 	return preallocatedPointer, nil
 }
 
-func (o ImagePlaneMemoryRequirementsOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
-	info := (*C.VkImagePlaneMemoryRequirementsInfo)(cDataPointer)
-	return info.pNext, nil
-}
-
 ////
 
 type SamplerYcbcrConversionOptions struct {
 	Conversion SamplerYcbcrConversion
 
-	common.HaveNext
+	common.NextOptions
 }
 
 func (o SamplerYcbcrConversionOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
@@ -216,9 +206,4 @@ func (o SamplerYcbcrConversionOptions) PopulateCPointer(allocator *cgoparam.Allo
 	info.conversion = C.VkSamplerYcbcrConversion(unsafe.Pointer(o.Conversion.Handle()))
 
 	return preallocatedPointer, nil
-}
-
-func (o SamplerYcbcrConversionOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
-	info := (*C.VkSamplerYcbcrConversionInfo)(cDataPointer)
-	return info.pNext, nil
 }

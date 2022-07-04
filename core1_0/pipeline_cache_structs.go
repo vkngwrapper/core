@@ -15,7 +15,7 @@ type PipelineCacheCreateOptions struct {
 	Flags       PipelineCacheCreateFlags
 	InitialData []byte
 
-	common.HaveNext
+	common.NextOptions
 }
 
 func (o PipelineCacheCreateOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
@@ -36,9 +36,4 @@ func (o PipelineCacheCreateOptions) PopulateCPointer(allocator *cgoparam.Allocat
 	}
 
 	return preallocatedPointer, nil
-}
-
-func (o PipelineCacheCreateOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
-	createInfo := (*C.VkPipelineCacheCreateInfo)(cDataPointer)
-	return createInfo.pNext, nil
 }

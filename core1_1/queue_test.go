@@ -79,7 +79,7 @@ func TestDeviceGroupSubmitOptions(t *testing.T) {
 			SignalSemaphores: []core1_0.Semaphore{semaphore2, semaphore3},
 			WaitDstStages:    []core1_0.PipelineStages{core1_0.PipelineStageBottomOfPipe},
 
-			HaveNext: common.HaveNext{
+			NextOptions: common.NextOptions{
 				core1_1.DeviceGroupSubmitOptions{
 					WaitSemaphoreDeviceIndices:   []int{1},
 					CommandBufferDeviceMasks:     []uint32{2},
@@ -146,7 +146,7 @@ func TestProtectedMemorySubmitOptions(t *testing.T) {
 			SignalSemaphores: []core1_0.Semaphore{semaphore2, semaphore3},
 			WaitDstStages:    []core1_0.PipelineStages{core1_0.PipelineStageBottomOfPipe},
 
-			HaveNext: common.HaveNext{
+			NextOptions: common.NextOptions{
 				core1_1.ProtectedSubmitOptions{
 					ProtectedSubmit: true,
 				},

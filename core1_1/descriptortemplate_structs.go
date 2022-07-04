@@ -87,7 +87,7 @@ type DescriptorUpdateTemplateCreateOptions struct {
 	PipelineLayout    core1_0.PipelineLayout
 	Set               int
 
-	common.HaveNext
+	common.NextOptions
 }
 
 func (o DescriptorUpdateTemplateCreateOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
@@ -125,9 +125,4 @@ func (o DescriptorUpdateTemplateCreateOptions) PopulateCPointer(allocator *cgopa
 	createInfo.set = C.uint32_t(o.Set)
 
 	return preallocatedPointer, nil
-}
-
-func (o DescriptorUpdateTemplateCreateOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
-	createInfo := (*C.VkDescriptorUpdateTemplateCreateInfo)(cDataPointer)
-	return createInfo.pNext, nil
 }

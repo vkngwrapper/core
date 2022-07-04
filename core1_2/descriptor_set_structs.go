@@ -48,7 +48,7 @@ func init() {
 type DescriptorSetVariableDescriptorCountAllocateOptions struct {
 	DescriptorCounts []int
 
-	common.HaveNext
+	common.NextOptions
 }
 
 func (o DescriptorSetVariableDescriptorCountAllocateOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
@@ -75,17 +75,12 @@ func (o DescriptorSetVariableDescriptorCountAllocateOptions) PopulateCPointer(al
 	return preallocatedPointer, nil
 }
 
-func (o DescriptorSetVariableDescriptorCountAllocateOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
-	info := (*C.VkDescriptorSetVariableDescriptorCountAllocateInfo)(cDataPointer)
-	return info.pNext, nil
-}
-
 ////
 
 type DescriptorSetLayoutBindingFlagsCreateOptions struct {
 	BindingFlags []DescriptorBindingFlags
 
-	common.HaveNext
+	common.NextOptions
 }
 
 func (o DescriptorSetLayoutBindingFlagsCreateOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
@@ -113,20 +108,15 @@ func (o DescriptorSetLayoutBindingFlagsCreateOptions) PopulateCPointer(allocator
 	return preallocatedPointer, nil
 }
 
-func (o DescriptorSetLayoutBindingFlagsCreateOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
-	info := (*C.VkDescriptorSetLayoutBindingFlagsCreateInfo)(cDataPointer)
-	return info.pNext, nil
-}
-
 ////
 
 type DescriptorSetVariableDescriptorCountLayoutSupportOutData struct {
 	MaxVariableDescriptorCount int
 
-	common.HaveNext
+	common.NextOutData
 }
 
-func (o *DescriptorSetVariableDescriptorCountLayoutSupportOutData) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o *DescriptorSetVariableDescriptorCountLayoutSupportOutData) PopulateHeader(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == nil {
 		preallocatedPointer = allocator.Malloc(int(unsafe.Sizeof(C.VkDescriptorSetVariableDescriptorCountLayoutSupport{})))
 	}

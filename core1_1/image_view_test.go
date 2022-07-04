@@ -43,7 +43,7 @@ func TestImageViewUsageOptions(t *testing.T) {
 
 	imageView, _, err := device.CreateImageView(nil, core1_0.ImageViewCreateOptions{
 		Image: image,
-		HaveNext: common.HaveNext{Next: core1_1.ImageViewUsageOptions{
+		NextOptions: common.NextOptions{Next: core1_1.ImageViewUsageOptions{
 			Usage: core1_0.ImageUsageInputAttachment,
 		}},
 	})

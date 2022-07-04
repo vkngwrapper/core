@@ -78,7 +78,7 @@ func TestSemaphoreTypeCreateOptions(t *testing.T) {
 	semaphore, _, err := device.CreateSemaphore(
 		nil,
 		core1_0.SemaphoreCreateOptions{
-			HaveNext: common.HaveNext{core1_2.SemaphoreTypeCreateOptions{
+			NextOptions: common.NextOptions{core1_2.SemaphoreTypeCreateOptions{
 				SemaphoreType: core1_2.SemaphoreTypeTimeline,
 				InitialValue:  uint64(13),
 			}},
@@ -131,7 +131,7 @@ func TestTimelineSemaphoreSubmitOptions(t *testing.T) {
 		fence,
 		[]core1_0.SubmitOptions{
 			{
-				HaveNext: common.HaveNext{
+				NextOptions: common.NextOptions{
 					core1_2.TimelineSemaphoreSubmitOptions{
 						WaitSemaphoreValues:   []uint64{3, 5},
 						SignalSemaphoreValues: []uint64{7, 11, 13},

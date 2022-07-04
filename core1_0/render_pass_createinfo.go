@@ -90,7 +90,7 @@ type RenderPassCreateOptions struct {
 	SubPassDescriptions []SubPassDescription
 	SubPassDependencies []SubPassDependency
 
-	common.HaveNext
+	common.NextOptions
 }
 
 func (o RenderPassCreateOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
@@ -196,11 +196,6 @@ func (o RenderPassCreateOptions) PopulateCPointer(allocator *cgoparam.Allocator,
 	}
 
 	return unsafe.Pointer(createInfo), nil
-}
-
-func (o RenderPassCreateOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
-	createInfo := (*C.VkRenderPassCreateInfo)(cDataPointer)
-	return createInfo.pNext, nil
 }
 
 func createAttachmentReferences(allocator *cgoparam.Allocator, references []AttachmentReference) *C.VkAttachmentReference {

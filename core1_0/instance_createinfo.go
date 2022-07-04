@@ -21,7 +21,7 @@ type InstanceCreateOptions struct {
 	ExtensionNames []string
 	LayerNames     []string
 
-	common.HaveNext
+	common.NextOptions
 }
 
 func (o InstanceCreateOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
@@ -69,9 +69,4 @@ func (o InstanceCreateOptions) PopulateCPointer(allocator *cgoparam.Allocator, p
 	createInfo.ppEnabledLayerNames = (**C.char)(layerNamePtr)
 
 	return preallocatedPointer, nil
-}
-
-func (o InstanceCreateOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
-	createInfo := (*C.VkInstanceCreateInfo)(cDataPointer)
-	return createInfo.pNext, nil
 }

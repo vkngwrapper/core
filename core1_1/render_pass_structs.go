@@ -35,7 +35,7 @@ func (ref InputAttachmentAspectReference) PopulateCPointer(allocator *cgoparam.A
 type RenderPassInputAttachmentAspectOptions struct {
 	AspectReferences []InputAttachmentAspectReference
 
-	common.HaveNext
+	common.NextOptions
 }
 
 func (o RenderPassInputAttachmentAspectOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
@@ -62,18 +62,13 @@ func (o RenderPassInputAttachmentAspectOptions) PopulateCPointer(allocator *cgop
 	return preallocatedPointer, nil
 }
 
-func (o RenderPassInputAttachmentAspectOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
-	createInfo := (*C.VkRenderPassInputAttachmentAspectCreateInfo)(cDataPointer)
-	return createInfo.pNext, nil
-}
-
 ////
 
 type DeviceGroupRenderPassBeginOptions struct {
 	DeviceMask        uint32
 	DeviceRenderAreas []core1_0.Rect2D
 
-	common.HaveNext
+	common.NextOptions
 }
 
 func (o DeviceGroupRenderPassBeginOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
@@ -107,11 +102,6 @@ func (o DeviceGroupRenderPassBeginOptions) PopulateCPointer(allocator *cgoparam.
 	return preallocatedPointer, nil
 }
 
-func (o DeviceGroupRenderPassBeginOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
-	info := (*C.VkDeviceGroupRenderPassBeginInfo)(cDataPointer)
-	return info.pNext, nil
-}
-
 ////
 
 type RenderPassMultiviewOptions struct {
@@ -119,7 +109,7 @@ type RenderPassMultiviewOptions struct {
 	DependencyViewOffsets []int
 	CorrelationMasks      []uint32
 
-	common.HaveNext
+	common.NextOptions
 }
 
 func (o RenderPassMultiviewOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
@@ -171,9 +161,4 @@ func (o RenderPassMultiviewOptions) PopulateCPointer(allocator *cgoparam.Allocat
 	}
 
 	return preallocatedPointer, nil
-}
-
-func (o RenderPassMultiviewOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
-	info := (*C.VkRenderPassMultiviewCreateInfo)(cDataPointer)
-	return info.pNext, nil
 }

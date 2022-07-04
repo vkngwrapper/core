@@ -71,7 +71,7 @@ func (i *VulkanInstance) attemptEnumeratePhysicalDeviceGroups(outDataFactory fun
 		}
 	}
 
-	outData, err := common.AllocOptionSlice[C.VkPhysicalDeviceGroupProperties, *DeviceGroupOutData](arena, outDataSlice)
+	outData, err := common.AllocOutDataHeaderSlice[C.VkPhysicalDeviceGroupProperties, *DeviceGroupOutData](arena, outDataSlice)
 	if err != nil {
 		return nil, core1_0.VKErrorUnknown, err
 	}

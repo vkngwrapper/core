@@ -30,7 +30,7 @@ type CommandPoolCreateOptions struct {
 	GraphicsQueueFamily *int
 	Flags               CommandPoolCreateFlags
 
-	common.HaveNext
+	common.NextOptions
 }
 
 func (o CommandPoolCreateOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
@@ -52,9 +52,4 @@ func (o CommandPoolCreateOptions) PopulateCPointer(allocator *cgoparam.Allocator
 	cmdPoolCreate.queueFamilyIndex = C.uint32_t(familyIndex)
 
 	return unsafe.Pointer(cmdPoolCreate), nil
-}
-
-func (o CommandPoolCreateOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
-	createInfo := (*C.VkCommandPoolCreateInfo)(cDataPointer)
-	return createInfo.pNext, nil
 }

@@ -74,7 +74,7 @@ func TestDescriptorSetVariableDescriptorCountAllocateOptions(t *testing.T) {
 			descriptorLayout3,
 			descriptorLayout4,
 		},
-		HaveNext: common.HaveNext{
+		NextOptions: common.NextOptions{
 			core1_2.DescriptorSetVariableDescriptorCountAllocateOptions{
 				DescriptorCounts: []int{1, 3, 5, 7},
 			},
@@ -131,7 +131,7 @@ func TestDescriptorSetLayoutBindingFlagsCreateOptions(t *testing.T) {
 	descriptorSetLayout, _, err := device.CreateDescriptorSetLayout(
 		nil,
 		core1_0.DescriptorSetLayoutCreateOptions{
-			HaveNext: common.HaveNext{
+			NextOptions: common.NextOptions{
 				core1_2.DescriptorSetLayoutBindingFlagsCreateOptions{
 					BindingFlags: []core1_2.DescriptorBindingFlags{
 						core1_2.DescriptorBindingVariableDescriptorCount,
@@ -173,7 +173,7 @@ func TestDescriptorSetVariableDescriptorCountLayoutSupportOutData(t *testing.T) 
 	err := device.DescriptorSetLayoutSupport(
 		core1_0.DescriptorSetLayoutCreateOptions{},
 		&core1_1.DescriptorSetLayoutSupportOutData{
-			HaveNext: common.HaveNext{&outData},
+			NextOutData: common.NextOutData{&outData},
 		})
 	require.NoError(t, err)
 	require.Equal(t, core1_2.DescriptorSetVariableDescriptorCountLayoutSupportOutData{

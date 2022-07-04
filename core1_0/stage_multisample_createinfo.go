@@ -22,7 +22,7 @@ type MultisampleStateOptions struct {
 	AlphaToCoverage bool
 	AlphaToOne      bool
 
-	common.HaveNext
+	common.NextOptions
 }
 
 func (o MultisampleStateOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
@@ -74,9 +74,4 @@ func (o MultisampleStateOptions) PopulateCPointer(allocator *cgoparam.Allocator,
 	}
 
 	return preallocatedPointer, nil
-}
-
-func (o MultisampleStateOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
-	createInfo := (*C.VkPipelineMultisampleStateCreateInfo)(cDataPointer)
-	return createInfo.pNext, nil
 }

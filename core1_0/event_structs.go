@@ -14,7 +14,7 @@ import (
 type EventCreateOptions struct {
 	Flags EventCreateFlags
 
-	common.HaveNext
+	common.NextOptions
 }
 
 func (o EventCreateOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
@@ -27,9 +27,4 @@ func (o EventCreateOptions) PopulateCPointer(allocator *cgoparam.Allocator, prea
 	createInfo.pNext = next
 
 	return unsafe.Pointer(createInfo), nil
-}
-
-func (o EventCreateOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
-	createInfo := (*C.VkEventCreateInfo)(cDataPointer)
-	return createInfo.pNext, nil
 }

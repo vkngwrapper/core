@@ -15,7 +15,7 @@ type MemoryBarrierOptions struct {
 	SrcAccessMask AccessFlags
 	DstAccessMask AccessFlags
 
-	common.HaveNext
+	common.NextOptions
 }
 
 func (o MemoryBarrierOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
@@ -31,11 +31,6 @@ func (o MemoryBarrierOptions) PopulateCPointer(allocator *cgoparam.Allocator, pr
 	return preallocatedPointer, nil
 }
 
-func (o MemoryBarrierOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
-	createInfo := (*C.VkMemoryBarrier)(cDataPointer)
-	return createInfo.pNext, nil
-}
-
 type BufferMemoryBarrierOptions struct {
 	SrcAccessMask AccessFlags
 	DstAccessMask AccessFlags
@@ -48,7 +43,7 @@ type BufferMemoryBarrierOptions struct {
 	Offset int
 	Size   int
 
-	common.HaveNext
+	common.NextOptions
 }
 
 func (o BufferMemoryBarrierOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
@@ -69,11 +64,6 @@ func (o BufferMemoryBarrierOptions) PopulateCPointer(allocator *cgoparam.Allocat
 	return preallocatedPointer, nil
 }
 
-func (o BufferMemoryBarrierOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
-	createInfo := (*C.VkBufferMemoryBarrier)(cDataPointer)
-	return createInfo.pNext, nil
-}
-
 type ImageMemoryBarrierOptions struct {
 	SrcAccessMask AccessFlags
 	DstAccessMask AccessFlags
@@ -87,7 +77,7 @@ type ImageMemoryBarrierOptions struct {
 	Image            Image
 	SubresourceRange ImageSubresourceRange
 
-	common.HaveNext
+	common.NextOptions
 }
 
 func (o ImageMemoryBarrierOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
@@ -111,9 +101,4 @@ func (o ImageMemoryBarrierOptions) PopulateCPointer(allocator *cgoparam.Allocato
 	createInfo.subresourceRange.layerCount = C.uint32_t(o.SubresourceRange.LayerCount)
 
 	return preallocatedPointer, nil
-}
-
-func (o ImageMemoryBarrierOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
-	createInfo := (*C.VkImageMemoryBarrier)(cDataPointer)
-	return createInfo.pNext, nil
 }

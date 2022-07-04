@@ -3492,7 +3492,7 @@ func (mr *InstanceScopedPhysicalDevice1_2MockRecorder) Features() *gomock.Call {
 }
 
 // Features2 mocks base method.
-func (m *InstanceScopedPhysicalDevice1_2) Features2(out *core1_1.DeviceFeaturesOutData) error {
+func (m *InstanceScopedPhysicalDevice1_2) Features2(out *core1_1.DeviceFeatures) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Features2", out)
 	ret0, _ := ret[0].(error)

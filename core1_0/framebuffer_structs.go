@@ -21,7 +21,7 @@ type FramebufferCreateOptions struct {
 
 	RenderPass RenderPass
 
-	common.HaveNext
+	common.NextOptions
 }
 
 func (o FramebufferCreateOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
@@ -56,9 +56,4 @@ func (o FramebufferCreateOptions) PopulateCPointer(allocator *cgoparam.Allocator
 	createInfo.flags = C.VkFramebufferCreateFlags(o.Flags)
 
 	return unsafe.Pointer(createInfo), nil
-}
-
-func (o FramebufferCreateOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
-	createInfo := (*C.VkFramebufferCreateInfo)(cDataPointer)
-	return createInfo.pNext, nil
 }

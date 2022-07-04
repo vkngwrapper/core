@@ -48,7 +48,7 @@ func TestExportSemaphoreOptions(t *testing.T) {
 	})
 
 	semaphore, _, err := device.CreateSemaphore(nil, core1_0.SemaphoreCreateOptions{
-		HaveNext: common.HaveNext{
+		NextOptions: common.NextOptions{
 			core1_1.ExportSemaphoreOptions{
 				HandleTypes: core1_1.ExternalSemaphoreHandleTypeOpaqueWin32KMT,
 			},

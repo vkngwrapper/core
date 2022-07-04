@@ -21,7 +21,7 @@ type PipelineLayoutCreateOptions struct {
 	SetLayouts         []DescriptorSetLayout
 	PushConstantRanges []PushConstantRange
 
-	common.HaveNext
+	common.NextOptions
 }
 
 func (o PipelineLayoutCreateOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
@@ -64,9 +64,4 @@ func (o PipelineLayoutCreateOptions) PopulateCPointer(allocator *cgoparam.Alloca
 	}
 
 	return preallocatedPointer, nil
-}
-
-func (o PipelineLayoutCreateOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
-	createInfo := (*C.VkPipelineLayoutCreateInfo)(cDataPointer)
-	return createInfo.pNext, nil
 }

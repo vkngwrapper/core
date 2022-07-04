@@ -49,7 +49,7 @@ func TestSamplerReductionModeCreateOptions(t *testing.T) {
 	sampler, _, err := device.CreateSampler(
 		nil,
 		core1_0.SamplerCreateOptions{
-			HaveNext: common.HaveNext{core1_2.SamplerReductionModeCreateOptions{
+			NextOptions: common.NextOptions{core1_2.SamplerReductionModeCreateOptions{
 				ReductionMode: core1_2.SamplerReductionModeMax,
 			}},
 		})

@@ -41,7 +41,7 @@ type ShaderStageOptions struct {
 	Shader             ShaderModule
 	SpecializationInfo map[uint32]any
 
-	common.HaveNext
+	common.NextOptions
 }
 
 func (s ShaderStageOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
@@ -95,9 +95,4 @@ func (s ShaderStageOptions) PopulateCPointer(allocator *cgoparam.Allocator, prea
 	}
 
 	return preallocatedPointer, nil
-}
-
-func (o ShaderStageOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
-	createInfo := (*C.VkPipelineShaderStageCreateInfo)(cDataPointer)
-	return createInfo.pNext, nil
 }

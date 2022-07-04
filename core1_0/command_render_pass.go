@@ -28,7 +28,7 @@ type RenderPassBeginOptions struct {
 	RenderArea  Rect2D
 	ClearValues []ClearValue
 
-	common.HaveNext
+	common.NextOptions
 }
 
 func (o RenderPassBeginOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
@@ -71,9 +71,4 @@ func (o RenderPassBeginOptions) PopulateCPointer(allocator *cgoparam.Allocator, 
 	}
 
 	return preallocatedPointer, nil
-}
-
-func (o RenderPassBeginOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
-	createInfo := (*C.VkRenderPassBeginInfo)(cDataPointer)
-	return createInfo.pNext, nil
 }

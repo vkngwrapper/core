@@ -355,7 +355,7 @@ func TestBufferOpaqueCaptureAddressCreateOptions(t *testing.T) {
 	buffer, _, err := device.CreateBuffer(
 		nil,
 		core1_0.BufferCreateOptions{
-			HaveNext: common.HaveNext{
+			NextOptions: common.NextOptions{
 				core1_2.BufferOpaqueCaptureAddressCreateOptions{
 					OpaqueCaptureAddress: 13,
 				},
@@ -401,7 +401,7 @@ func TestMemoryOpaqueCaptureAddressAllocateOptions(t *testing.T) {
 	memory, _, err := device.AllocateMemory(
 		nil,
 		core1_0.MemoryAllocateOptions{
-			HaveNext: common.HaveNext{
+			NextOptions: common.NextOptions{
 				core1_2.MemoryOpaqueCaptureAddressAllocateOptions{
 					OpaqueCaptureAddress: 17,
 				},

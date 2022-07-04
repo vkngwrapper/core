@@ -207,7 +207,7 @@ func TestBindBufferMemoryDeviceGroupOptions(t *testing.T) {
 			Memory:       memory,
 			MemoryOffset: 1,
 
-			HaveNext: common.HaveNext{
+			NextOptions: common.NextOptions{
 				core1_1.BindBufferMemoryDeviceGroupOptions{
 					DeviceIndices: []int{1, 2, 7},
 				},
@@ -283,7 +283,7 @@ func TestBindImageMemoryDeviceGroupOptions(t *testing.T) {
 			Memory:       memory,
 			MemoryOffset: 1,
 
-			HaveNext: common.HaveNext{
+			NextOptions: common.NextOptions{
 				core1_1.BindImageMemoryDeviceGroupOptions{
 					DeviceIndices: []int{1, 2, 7},
 					SplitInstanceBindRegions: []core1_0.Rect2D{
@@ -342,7 +342,7 @@ func TestBindImagePlaneMemoryOptions(t *testing.T) {
 			Image:  image,
 			Memory: memory,
 
-			HaveNext: common.HaveNext{
+			NextOptions: common.NextOptions{
 				core1_1.BindImagePlaneMemoryOptions{
 					PlaneAspect: core1_1.ImageAspectPlane2,
 				},
@@ -404,7 +404,7 @@ func TestDeviceGroupBindSparseOptions(t *testing.T) {
 		{
 			WaitSemaphores:   []core1_0.Semaphore{semaphore1},
 			SignalSemaphores: []core1_0.Semaphore{semaphore2, semaphore3},
-			HaveNext: common.HaveNext{
+			NextOptions: common.NextOptions{
 				core1_1.DeviceGroupBindSparseOptions{
 					ResourceDeviceIndex: 1,
 					MemoryDeviceIndex:   3,

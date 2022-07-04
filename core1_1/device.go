@@ -79,7 +79,7 @@ func (d *VulkanDevice) BufferMemoryRequirements(o BufferMemoryRequirementsOption
 		return err
 	}
 
-	outDataPtr, err := common.AllocOptions(arena, out)
+	outDataPtr, err := common.AllocOutDataHeader(arena, out)
 	if err != nil {
 		return err
 	}
@@ -101,7 +101,7 @@ func (d *VulkanDevice) ImageMemoryRequirements(o ImageMemoryRequirementsOptions,
 		return err
 	}
 
-	outDataPtr, err := common.AllocOptions(arena, out)
+	outDataPtr, err := common.AllocOutDataHeader(arena, out)
 	if err != nil {
 		return err
 	}
@@ -145,7 +145,7 @@ func (d *VulkanDevice) SparseImageMemoryRequirements(o ImageSparseMemoryRequirem
 		}
 	}
 
-	outDataPtr, err := common.AllocOptionSlice[C.VkSparseImageMemoryRequirements2, *SparseImageMemoryRequirementsOutData](arena, outDataSlice)
+	outDataPtr, err := common.AllocOutDataHeaderSlice[C.VkSparseImageMemoryRequirements2, *SparseImageMemoryRequirementsOutData](arena, outDataSlice)
 	if err != nil {
 		return nil, err
 	}
@@ -175,7 +175,7 @@ func (d *VulkanDevice) DescriptorSetLayoutSupport(o core1_0.DescriptorSetLayoutC
 		return err
 	}
 
-	outDataPtr, err := common.AllocOptions(arena, outData)
+	outDataPtr, err := common.AllocOutDataHeader(arena, outData)
 	if err != nil {
 		return err
 	}

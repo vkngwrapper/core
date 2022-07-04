@@ -84,7 +84,7 @@ func init() {
 type ExternalSemaphoreOptions struct {
 	HandleType ExternalSemaphoreHandleTypes
 
-	common.HaveNext
+	common.NextOptions
 }
 
 func (o ExternalSemaphoreOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
@@ -100,11 +100,6 @@ func (o ExternalSemaphoreOptions) PopulateCPointer(allocator *cgoparam.Allocator
 	return preallocatedPointer, nil
 }
 
-func (o ExternalSemaphoreOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
-	info := (*C.VkPhysicalDeviceExternalSemaphoreInfo)(cDataPointer)
-	return info.pNext, nil
-}
-
 ////
 
 type ExternalSemaphoreOutData struct {
@@ -112,10 +107,10 @@ type ExternalSemaphoreOutData struct {
 	CompatibleHandleTypes         ExternalSemaphoreHandleTypes
 	ExternalSemaphoreFeatures     ExternalSemaphoreFeatures
 
-	common.HaveNext
+	common.NextOutData
 }
 
-func (o *ExternalSemaphoreOutData) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o *ExternalSemaphoreOutData) PopulateHeader(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == nil {
 		preallocatedPointer = allocator.Malloc(int(unsafe.Sizeof(C.VkExternalSemaphoreProperties{})))
 	}
@@ -142,7 +137,7 @@ func (o *ExternalSemaphoreOutData) PopulateOutData(cDataPointer unsafe.Pointer, 
 type ExportSemaphoreOptions struct {
 	HandleTypes ExternalSemaphoreHandleTypes
 
-	common.HaveNext
+	common.NextOptions
 }
 
 func (o ExportSemaphoreOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
@@ -156,9 +151,4 @@ func (o ExportSemaphoreOptions) PopulateCPointer(allocator *cgoparam.Allocator, 
 	info.handleTypes = C.VkExternalSemaphoreHandleTypeFlags(o.HandleTypes)
 
 	return preallocatedPointer, nil
-}
-
-func (o ExportSemaphoreOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
-	info := (*C.VkExportSemaphoreCreateInfo)(cDataPointer)
-	return info.pNext, nil
 }

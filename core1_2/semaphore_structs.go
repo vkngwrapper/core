@@ -60,7 +60,7 @@ type SemaphoreSignalOptions struct {
 	Semaphore core1_0.Semaphore
 	Value     uint64
 
-	common.HaveNext
+	common.NextOptions
 }
 
 func (o SemaphoreSignalOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
@@ -81,11 +81,6 @@ func (o SemaphoreSignalOptions) PopulateCPointer(allocator *cgoparam.Allocator, 
 	return preallocatedPointer, nil
 }
 
-func (o SemaphoreSignalOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
-	info := (*C.VkSemaphoreSignalInfo)(cDataPointer)
-	return info.pNext, nil
-}
-
 ////
 
 type SemaphoreWaitOptions struct {
@@ -93,7 +88,7 @@ type SemaphoreWaitOptions struct {
 	Semaphores []core1_0.Semaphore
 	Values     []uint64
 
-	common.HaveNext
+	common.NextOptions
 }
 
 func (o SemaphoreWaitOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
@@ -135,18 +130,13 @@ func (o SemaphoreWaitOptions) PopulateCPointer(allocator *cgoparam.Allocator, pr
 	return preallocatedPointer, nil
 }
 
-func (o SemaphoreWaitOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
-	info := (*C.VkSemaphoreWaitInfo)(cDataPointer)
-	return info.pNext, nil
-}
-
 ////
 
 type SemaphoreTypeCreateOptions struct {
 	SemaphoreType SemaphoreType
 	InitialValue  uint64
 
-	common.HaveNext
+	common.NextOptions
 }
 
 func (o SemaphoreTypeCreateOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
@@ -163,18 +153,13 @@ func (o SemaphoreTypeCreateOptions) PopulateCPointer(allocator *cgoparam.Allocat
 	return preallocatedPointer, nil
 }
 
-func (o SemaphoreTypeCreateOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
-	info := (*C.VkSemaphoreTypeCreateInfo)(cDataPointer)
-	return info.pNext, nil
-}
-
 ////
 
 type TimelineSemaphoreSubmitOptions struct {
 	WaitSemaphoreValues   []uint64
 	SignalSemaphoreValues []uint64
 
-	common.HaveNext
+	common.NextOptions
 }
 
 func (o TimelineSemaphoreSubmitOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
@@ -213,9 +198,4 @@ func (o TimelineSemaphoreSubmitOptions) PopulateCPointer(allocator *cgoparam.All
 	}
 
 	return preallocatedPointer, nil
-}
-
-func (o TimelineSemaphoreSubmitOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
-	info := (*C.VkTimelineSemaphoreSubmitInfo)(cDataPointer)
-	return info.pNext, nil
 }

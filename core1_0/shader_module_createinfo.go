@@ -15,7 +15,7 @@ import (
 type ShaderModuleCreateOptions struct {
 	SpirVByteCode []uint32
 
-	common.HaveNext
+	common.NextOptions
 }
 
 func (o ShaderModuleCreateOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
@@ -44,9 +44,4 @@ func (o ShaderModuleCreateOptions) PopulateCPointer(allocator *cgoparam.Allocato
 	}
 
 	return preallocatedPointer, nil
-}
-
-func (o ShaderModuleCreateOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
-	createInfo := (*C.VkShaderModuleCreateInfo)(cDataPointer)
-	return createInfo.pNext, nil
 }

@@ -22,7 +22,7 @@ func init() {
 type FenceCreateOptions struct {
 	Flags FenceCreateFlags
 
-	common.HaveNext
+	common.NextOptions
 }
 
 func (o FenceCreateOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
@@ -35,9 +35,4 @@ func (o FenceCreateOptions) PopulateCPointer(allocator *cgoparam.Allocator, prea
 	createInfo.pNext = next
 
 	return unsafe.Pointer(createInfo), nil
-}
-
-func (o FenceCreateOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
-	createInfo := (*C.VkFenceCreateInfo)(cDataPointer)
-	return createInfo.pNext, nil
 }

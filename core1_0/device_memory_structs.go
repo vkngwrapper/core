@@ -21,7 +21,7 @@ type MemoryAllocateOptions struct {
 	AllocationSize  int
 	MemoryTypeIndex int
 
-	common.HaveNext
+	common.NextOptions
 }
 
 func (o MemoryAllocateOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
@@ -38,17 +38,12 @@ func (o MemoryAllocateOptions) PopulateCPointer(allocator *cgoparam.Allocator, p
 	return unsafe.Pointer(createInfo), nil
 }
 
-func (o MemoryAllocateOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
-	createInfo := (*C.VkMemoryAllocateInfo)(cDataPointer)
-	return createInfo.pNext, nil
-}
-
 type MappedMemoryRangeOptions struct {
 	Memory DeviceMemory
 	Offset int
 	Size   int
 
-	common.HaveNext
+	common.NextOptions
 }
 
 func (r MappedMemoryRangeOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
@@ -64,9 +59,4 @@ func (r MappedMemoryRangeOptions) PopulateCPointer(allocator *cgoparam.Allocator
 	mappedRange.size = C.VkDeviceSize(r.Size)
 
 	return preallocatedPointer, nil
-}
-
-func (r MappedMemoryRangeOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
-	createInfo := (*C.VkMappedMemoryRange)(cDataPointer)
-	return createInfo.pNext, nil
 }
