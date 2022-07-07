@@ -12,39 +12,39 @@ import (
 	"unsafe"
 )
 
-type DescriptorTemplateType int32
+type DescriptorUpdateTemplateType int32
 
-var descriptorTemplateTypeMapping = make(map[DescriptorTemplateType]string)
+var descriptorTemplateTypeMapping = make(map[DescriptorUpdateTemplateType]string)
 
-func (e DescriptorTemplateType) Register(str string) {
+func (e DescriptorUpdateTemplateType) Register(str string) {
 	descriptorTemplateTypeMapping[e] = str
 }
 
-func (e DescriptorTemplateType) String() string {
+func (e DescriptorUpdateTemplateType) String() string {
 	return descriptorTemplateTypeMapping[e]
 }
 
 ////
 
-type DescriptorTemplateFlags int32
+type DescriptorUpdateTemplateCreateFlags int32
 
-var descriptorTemplateFlagsMapping = common.NewFlagStringMapping[DescriptorTemplateFlags]()
+var descriptorTemplateFlagsMapping = common.NewFlagStringMapping[DescriptorUpdateTemplateCreateFlags]()
 
-func (f DescriptorTemplateFlags) Register(str string) {
+func (f DescriptorUpdateTemplateCreateFlags) Register(str string) {
 	descriptorTemplateFlagsMapping.Register(f, str)
 }
-func (f DescriptorTemplateFlags) String() string {
+func (f DescriptorUpdateTemplateCreateFlags) String() string {
 	return descriptorTemplateFlagsMapping.FlagsToString(f)
 }
 
 ////
 
 const (
-	DescriptorTemplateTypeDescriptorSet DescriptorTemplateType = C.VK_DESCRIPTOR_UPDATE_TEMPLATE_TYPE_DESCRIPTOR_SET
+	DescriptorUpdateTemplateTypeDescriptorSet DescriptorUpdateTemplateType = C.VK_DESCRIPTOR_UPDATE_TEMPLATE_TYPE_DESCRIPTOR_SET
 )
 
 func init() {
-	DescriptorTemplateTypeDescriptorSet.Register("Descriptor Set")
+	DescriptorUpdateTemplateTypeDescriptorSet.Register("Descriptor Set")
 }
 
 ////
@@ -76,10 +76,10 @@ func (e DescriptorUpdateTemplateEntry) PopulateCPointer(allocator *cgoparam.Allo
 	return preallocatedPointer, nil
 }
 
-type DescriptorUpdateTemplateCreateOptions struct {
-	Flags        DescriptorTemplateFlags
-	Entries      []DescriptorUpdateTemplateEntry
-	TemplateType DescriptorTemplateType
+type DescriptorUpdateTemplateCreateInfo struct {
+	Flags                   DescriptorUpdateTemplateCreateFlags
+	DescriptorUpdateEntries []DescriptorUpdateTemplateEntry
+	TemplateType            DescriptorUpdateTemplateType
 
 	DescriptorSetLayout core1_0.DescriptorSetLayout
 
@@ -90,7 +90,7 @@ type DescriptorUpdateTemplateCreateOptions struct {
 	common.NextOptions
 }
 
-func (o DescriptorUpdateTemplateCreateOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o DescriptorUpdateTemplateCreateInfo) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == nil {
 		preallocatedPointer = allocator.Malloc(int(unsafe.Sizeof(C.VkDescriptorUpdateTemplateCreateInfo{})))
 	}
@@ -100,11 +100,11 @@ func (o DescriptorUpdateTemplateCreateOptions) PopulateCPointer(allocator *cgopa
 	createInfo.pNext = next
 	createInfo.flags = C.VkDescriptorUpdateTemplateCreateFlags(o.Flags)
 
-	entryCount := len(o.Entries)
+	entryCount := len(o.DescriptorUpdateEntries)
 	createInfo.descriptorUpdateEntryCount = C.uint32_t(entryCount)
 
 	var err error
-	createInfo.pDescriptorUpdateEntries, err = common.AllocSlice[C.VkDescriptorUpdateTemplateEntry, DescriptorUpdateTemplateEntry](allocator, o.Entries)
+	createInfo.pDescriptorUpdateEntries, err = common.AllocSlice[C.VkDescriptorUpdateTemplateEntry, DescriptorUpdateTemplateEntry](allocator, o.DescriptorUpdateEntries)
 	if err != nil {
 		return nil, err
 	}

@@ -15,14 +15,14 @@ import (
 )
 
 const (
-	StageVertex                 ShaderStages = C.VK_SHADER_STAGE_VERTEX_BIT
-	StageTessellationControl    ShaderStages = C.VK_SHADER_STAGE_TESSELLATION_CONTROL_BIT
-	StageTessellationEvaluation ShaderStages = C.VK_SHADER_STAGE_TESSELLATION_EVALUATION_BIT
-	StageGeometry               ShaderStages = C.VK_SHADER_STAGE_GEOMETRY_BIT
-	StageFragment               ShaderStages = C.VK_SHADER_STAGE_FRAGMENT_BIT
-	StageCompute                ShaderStages = C.VK_SHADER_STAGE_COMPUTE_BIT
-	StageAllGraphics            ShaderStages = C.VK_SHADER_STAGE_ALL_GRAPHICS
-	StageAll                    ShaderStages = C.VK_SHADER_STAGE_ALL
+	StageVertex                 ShaderStageFlags = C.VK_SHADER_STAGE_VERTEX_BIT
+	StageTessellationControl    ShaderStageFlags = C.VK_SHADER_STAGE_TESSELLATION_CONTROL_BIT
+	StageTessellationEvaluation ShaderStageFlags = C.VK_SHADER_STAGE_TESSELLATION_EVALUATION_BIT
+	StageGeometry               ShaderStageFlags = C.VK_SHADER_STAGE_GEOMETRY_BIT
+	StageFragment               ShaderStageFlags = C.VK_SHADER_STAGE_FRAGMENT_BIT
+	StageCompute                ShaderStageFlags = C.VK_SHADER_STAGE_COMPUTE_BIT
+	StageAllGraphics            ShaderStageFlags = C.VK_SHADER_STAGE_ALL_GRAPHICS
+	StageAll                    ShaderStageFlags = C.VK_SHADER_STAGE_ALL
 )
 
 func init() {
@@ -34,17 +34,17 @@ func init() {
 	StageCompute.Register("Compute")
 }
 
-type ShaderStageOptions struct {
+type PipelineShaderStageCreateInfo struct {
 	Flags              ShaderStageCreateFlags
 	Name               string
-	Stage              ShaderStages
-	Shader             ShaderModule
+	Stage              ShaderStageFlags
+	Module             ShaderModule
 	SpecializationInfo map[uint32]any
 
 	common.NextOptions
 }
 
-func (s ShaderStageOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (s PipelineShaderStageCreateInfo) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == unsafe.Pointer(nil) {
 		preallocatedPointer = allocator.Malloc(C.sizeof_struct_VkPipelineShaderStageCreateInfo)
 	}
@@ -54,7 +54,7 @@ func (s ShaderStageOptions) PopulateCPointer(allocator *cgoparam.Allocator, prea
 	createInfo.flags = C.VkPipelineShaderStageCreateFlags(s.Flags)
 	createInfo.pNext = next
 	createInfo.stage = C.VkShaderStageFlagBits(s.Stage)
-	createInfo.module = C.VkShaderModule(unsafe.Pointer(s.Shader.Handle()))
+	createInfo.module = C.VkShaderModule(unsafe.Pointer(s.Module.Handle()))
 	createInfo.pName = (*C.char)(allocator.CString(s.Name))
 	createInfo.pSpecializationInfo = nil
 

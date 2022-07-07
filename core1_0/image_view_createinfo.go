@@ -12,39 +12,39 @@ import (
 )
 
 const (
-	SwizzleIdentity ComponentSwizzle = C.VK_COMPONENT_SWIZZLE_IDENTITY
-	SwizzleZero     ComponentSwizzle = C.VK_COMPONENT_SWIZZLE_ZERO
-	SwizzleOne      ComponentSwizzle = C.VK_COMPONENT_SWIZZLE_ONE
-	SwizzleRed      ComponentSwizzle = C.VK_COMPONENT_SWIZZLE_R
-	SwizzleGreen    ComponentSwizzle = C.VK_COMPONENT_SWIZZLE_G
-	SwizzleBlue     ComponentSwizzle = C.VK_COMPONENT_SWIZZLE_B
-	SwizzleAlpha    ComponentSwizzle = C.VK_COMPONENT_SWIZZLE_A
+	ComponentSwizzleIdentity ComponentSwizzle = C.VK_COMPONENT_SWIZZLE_IDENTITY
+	ComponentSwizzleZero     ComponentSwizzle = C.VK_COMPONENT_SWIZZLE_ZERO
+	ComponentSwizzleOne      ComponentSwizzle = C.VK_COMPONENT_SWIZZLE_ONE
+	ComponentSwizzleRed      ComponentSwizzle = C.VK_COMPONENT_SWIZZLE_R
+	ComponentSwizzleGreen    ComponentSwizzle = C.VK_COMPONENT_SWIZZLE_G
+	ComponentSwizzleBlue     ComponentSwizzle = C.VK_COMPONENT_SWIZZLE_B
+	ComponentSwizzleAlpha    ComponentSwizzle = C.VK_COMPONENT_SWIZZLE_A
 
-	ViewType1D        ImageViewType = C.VK_IMAGE_VIEW_TYPE_1D
-	ViewType2D        ImageViewType = C.VK_IMAGE_VIEW_TYPE_2D
-	ViewType3D        ImageViewType = C.VK_IMAGE_VIEW_TYPE_3D
-	ViewTypeCube      ImageViewType = C.VK_IMAGE_VIEW_TYPE_CUBE
-	ViewType1DArray   ImageViewType = C.VK_IMAGE_VIEW_TYPE_1D_ARRAY
-	ViewType2DArray   ImageViewType = C.VK_IMAGE_VIEW_TYPE_2D_ARRAY
-	ViewTypeCubeArray ImageViewType = C.VK_IMAGE_VIEW_TYPE_CUBE_ARRAY
+	ImageViewType1D        ImageViewType = C.VK_IMAGE_VIEW_TYPE_1D
+	ImageViewType2D        ImageViewType = C.VK_IMAGE_VIEW_TYPE_2D
+	ImageViewType3D        ImageViewType = C.VK_IMAGE_VIEW_TYPE_3D
+	ImageViewTypeCube      ImageViewType = C.VK_IMAGE_VIEW_TYPE_CUBE
+	ImageViewType1DArray   ImageViewType = C.VK_IMAGE_VIEW_TYPE_1D_ARRAY
+	ImageViewType2DArray   ImageViewType = C.VK_IMAGE_VIEW_TYPE_2D_ARRAY
+	ImageViewTypeCubeArray ImageViewType = C.VK_IMAGE_VIEW_TYPE_CUBE_ARRAY
 )
 
 func init() {
-	SwizzleIdentity.Register("Identity")
-	SwizzleZero.Register("Zero")
-	SwizzleOne.Register("One")
-	SwizzleRed.Register("Red")
-	SwizzleGreen.Register("Green")
-	SwizzleBlue.Register("Blue")
-	SwizzleAlpha.Register("Alpha")
+	ComponentSwizzleIdentity.Register("Identity")
+	ComponentSwizzleZero.Register("Zero")
+	ComponentSwizzleOne.Register("One")
+	ComponentSwizzleRed.Register("Red")
+	ComponentSwizzleGreen.Register("Green")
+	ComponentSwizzleBlue.Register("Blue")
+	ComponentSwizzleAlpha.Register("Alpha")
 
-	ViewType1D.Register("1D")
-	ViewType2D.Register("2D")
-	ViewType3D.Register("3D")
-	ViewTypeCube.Register("Cube")
-	ViewType1DArray.Register("1D Array")
-	ViewType2DArray.Register("2D Array")
-	ViewTypeCubeArray.Register("Cube Array")
+	ImageViewType1D.Register("1D")
+	ImageViewType2D.Register("2D")
+	ImageViewType3D.Register("3D")
+	ImageViewTypeCube.Register("Cube")
+	ImageViewType1DArray.Register("1D Array")
+	ImageViewType2DArray.Register("2D Array")
+	ImageViewTypeCubeArray.Register("Cube Array")
 }
 
 type ComponentMapping struct {
@@ -54,19 +54,19 @@ type ComponentMapping struct {
 	A ComponentSwizzle
 }
 
-type ImageViewCreateOptions struct {
+type ImageViewCreateInfo struct {
 	Image Image
 
 	Flags            ImageViewCreateFlags
 	ViewType         ImageViewType
-	Format           DataFormat
+	Format           Format
 	Components       ComponentMapping
 	SubresourceRange ImageSubresourceRange
 
 	common.NextOptions
 }
 
-func (o ImageViewCreateOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o ImageViewCreateInfo) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == unsafe.Pointer(nil) {
 		preallocatedPointer = allocator.Malloc(int(unsafe.Sizeof([1]C.VkImageViewCreateInfo{})))
 	}

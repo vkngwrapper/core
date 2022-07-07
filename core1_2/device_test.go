@@ -152,62 +152,62 @@ func TestDevice_CreateRenderPass(t *testing.T) {
 		nil,
 		core1_2.RenderPassCreateOptions{
 			Flags: 0,
-			Attachments: []core1_2.AttachmentDescriptionOptions{
+			Attachments: []core1_2.AttachmentDescription2{
 				{
 					Flags:          core1_0.AttachmentDescriptionMayAlias,
-					Format:         core1_0.DataFormatA2B10G10R10UnsignedIntPacked,
+					Format:         core1_0.FormatA2B10G10R10UnsignedIntPacked,
 					Samples:        core1_0.Samples8,
-					LoadOp:         core1_0.LoadOpClear,
-					StoreOp:        core1_0.StoreOpDontCare,
-					StencilLoadOp:  core1_0.LoadOpDontCare,
-					StencilStoreOp: core1_0.StoreOpStore,
+					LoadOp:         core1_0.AttachmentLoadOpClear,
+					StoreOp:        core1_0.AttachmentStoreOpDontCare,
+					StencilLoadOp:  core1_0.AttachmentLoadOpDontCare,
+					StencilStoreOp: core1_0.AttachmentStoreOpStore,
 					InitialLayout:  core1_0.ImageLayoutDepthStencilReadOnlyOptimal,
 					FinalLayout:    core1_0.ImageLayoutPreInitialized,
 				},
 			},
-			Subpasses: []core1_2.SubpassDescriptionOptions{
+			Subpasses: []core1_2.SubpassDescription2{
 				{
 					Flags:             0,
-					PipelineBindPoint: core1_0.BindCompute,
+					PipelineBindPoint: core1_0.PipelineBindPointCompute,
 					ViewMask:          1,
-					InputAttachments: []core1_2.AttachmentReferenceOptions{
+					InputAttachments: []core1_2.AttachmentReference2{
 						{
 							Attachment: 3,
 							Layout:     core1_0.ImageLayoutTransferSrcOptimal,
-							AspectMask: core1_0.AspectStencil,
+							AspectMask: core1_0.ImageAspectStencil,
 						},
 						{
 							Attachment: 5,
 							Layout:     core1_0.ImageLayoutTransferSrcOptimal,
-							AspectMask: core1_0.AspectMetadata,
+							AspectMask: core1_0.ImageAspectMetadata,
 						},
 					},
-					ColorAttachments: []core1_2.AttachmentReferenceOptions{
+					ColorAttachments: []core1_2.AttachmentReference2{
 						{
 							Attachment: 41,
 							Layout:     core1_0.ImageLayoutPreInitialized,
-							AspectMask: core1_0.AspectColor,
+							AspectMask: core1_0.ImageAspectColor,
 						},
 					},
-					ResolveAttachments: []core1_2.AttachmentReferenceOptions{
+					ResolveAttachments: []core1_2.AttachmentReference2{
 						{
 							Attachment: 43,
 							Layout:     core1_0.ImageLayoutGeneral,
-							AspectMask: core1_0.AspectDepth,
+							AspectMask: core1_0.ImageAspectDepth,
 						},
 					},
-					DepthStencilAttachment: &core1_2.AttachmentReferenceOptions{
+					DepthStencilAttachment: &core1_2.AttachmentReference2{
 						Attachment: 47,
 						Layout:     core1_0.ImageLayoutTransferDstOptimal,
-						AspectMask: core1_0.AspectColor,
+						AspectMask: core1_0.ImageAspectColor,
 					},
 					PreserveAttachments: []int{59, 61},
 				},
 			},
-			Dependencies: []core1_2.SubpassDependencyOptions{
+			Dependencies: []core1_2.SubpassDependency2{
 				{
-					SrcSubpassIndex: 7,
-					DstSubpassIndex: 11,
+					SrcSubpass:      7,
+					DstSubpass:      11,
 					SrcStageMask:    core1_0.PipelineStageComputeShader,
 					DstStageMask:    core1_0.PipelineStageDrawIndirect,
 					SrcAccessMask:   core1_0.AccessIndexRead,
@@ -216,8 +216,8 @@ func TestDevice_CreateRenderPass(t *testing.T) {
 					ViewOffset:      13,
 				},
 				{
-					SrcSubpassIndex: 17,
-					DstSubpassIndex: 19,
+					SrcSubpass:      17,
+					DstSubpass:      19,
 					SrcStageMask:    core1_0.PipelineStageGeometryShader,
 					DstStageMask:    core1_0.PipelineStageHost,
 					SrcAccessMask:   core1_0.AccessColorAttachmentRead,
@@ -254,7 +254,7 @@ func TestDevice_GetBufferDeviceAddress(t *testing.T) {
 	})
 
 	address, err := device.GetBufferDeviceAddress(
-		core1_2.BufferDeviceAddressOptions{
+		core1_2.BufferDeviceAddressInfo{
 			Buffer: buffer,
 		})
 	require.NoError(t, err)
@@ -283,7 +283,7 @@ func TestDevice_GetBufferOpaqueCaptureAddress(t *testing.T) {
 	})
 
 	address, err := device.GetBufferOpaqueCaptureAddress(
-		core1_2.BufferDeviceAddressOptions{
+		core1_2.BufferDeviceAddressInfo{
 			Buffer: buffer,
 		})
 	require.NoError(t, err)
@@ -312,7 +312,7 @@ func TestDevice_GetDeviceMemoryOpaqueCaptureAddress(t *testing.T) {
 	})
 
 	address, err := device.GetDeviceMemoryOpaqueCaptureAddress(
-		core1_2.DeviceMemoryOpaqueAddressOptions{
+		core1_2.DeviceMemoryOpaqueCaptureAddressInfo{
 			Memory: deviceMemory,
 		})
 	require.NoError(t, err)
@@ -354,9 +354,9 @@ func TestBufferOpaqueCaptureAddressCreateOptions(t *testing.T) {
 
 	buffer, _, err := device.CreateBuffer(
 		nil,
-		core1_0.BufferCreateOptions{
+		core1_0.BufferCreateInfo{
 			NextOptions: common.NextOptions{
-				core1_2.BufferOpaqueCaptureAddressCreateOptions{
+				core1_2.BufferOpaqueCaptureAddressCreateInfo{
 					OpaqueCaptureAddress: 13,
 				},
 			},
@@ -400,9 +400,9 @@ func TestMemoryOpaqueCaptureAddressAllocateOptions(t *testing.T) {
 
 	memory, _, err := device.AllocateMemory(
 		nil,
-		core1_0.MemoryAllocateOptions{
+		core1_0.MemoryAllocateInfo{
 			NextOptions: common.NextOptions{
-				core1_2.MemoryOpaqueCaptureAddressAllocateOptions{
+				core1_2.MemoryOpaqueCaptureAddressAllocateInfo{
 					OpaqueCaptureAddress: 17,
 				},
 			},
@@ -435,7 +435,7 @@ func TestVulkanDevice_SignalSemaphore(t *testing.T) {
 	})
 
 	_, err := device.SignalSemaphore(
-		core1_2.SemaphoreSignalOptions{
+		core1_2.SemaphoreSignalInfo{
 			Semaphore: semaphore,
 			Value:     uint64(13),
 		})
@@ -479,7 +479,7 @@ func TestVulkanDevice_WaitSemaphores(t *testing.T) {
 
 	_, err := device.WaitSemaphores(
 		time.Minute,
-		core1_2.SemaphoreWaitOptions{
+		core1_2.SemaphoreWaitInfo{
 			Flags: core1_2.SemaphoreWaitAny,
 			Semaphores: []core1_0.Semaphore{
 				semaphore1,

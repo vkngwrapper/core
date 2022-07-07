@@ -24,11 +24,11 @@ var systemAllocationScopeToString = map[SystemAllocationScope]string{
 }
 
 const (
-	InternalAllocationExecutable = C.VK_INTERNAL_ALLOCATION_TYPE_EXECUTABLE
+	InternalAllocationTypeExecutable = C.VK_INTERNAL_ALLOCATION_TYPE_EXECUTABLE
 )
 
 var internalAllocationTypeToString = map[InternalAllocationType]string{
-	InternalAllocationExecutable: "Executable Allocation",
+	InternalAllocationTypeExecutable: "Executable Allocation",
 }
 
 type AllocationFunction func(userData any, size int, alignment int, allocationScope SystemAllocationScope) unsafe.Pointer

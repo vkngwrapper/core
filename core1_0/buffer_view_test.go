@@ -42,9 +42,9 @@ func TestVulkanLoader1_0_CreateBufferView(t *testing.T) {
 			return core1_0.VKSuccess, nil
 		})
 
-	bufferView, res, err := device.CreateBufferView(nil, core1_0.BufferViewCreateOptions{
+	bufferView, res, err := device.CreateBufferView(nil, core1_0.BufferViewCreateInfo{
 		Buffer: buffer,
-		Format: core1_0.DataFormatR32G32SignedFloat,
+		Format: core1_0.FormatR32G32SignedFloat,
 		Offset: 5,
 		Range:  7,
 	})

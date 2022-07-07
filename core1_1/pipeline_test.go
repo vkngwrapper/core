@@ -51,12 +51,12 @@ func TestTessellationDomainOriginOptions(t *testing.T) {
 			return core1_0.VKSuccess, nil
 		})
 
-	domainOriginState := core1_1.PipelineTessellationDomainOriginStateOptions{
+	domainOriginState := core1_1.PipelineTessellationDomainOriginStateCreateInfo{
 		DomainOrigin: core1_1.TessellationDomainOriginLowerLeft,
 	}
-	pipelines, _, err := device.CreateGraphicsPipelines(nil, nil, []core1_0.GraphicsPipelineCreateOptions{
+	pipelines, _, err := device.CreateGraphicsPipelines(nil, nil, []core1_0.GraphicsPipelineCreateInfo{
 		{
-			Tessellation: &core1_0.TessellationStateOptions{
+			TessellationState: &core1_0.PipelineTessellationStateCreateInfo{
 				PatchControlPoints: 1,
 				NextOptions:        common.NextOptions{Next: domainOriginState},
 			},

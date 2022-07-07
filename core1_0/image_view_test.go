@@ -50,23 +50,23 @@ func TestVulkanLoader1_0_CreateImageView(t *testing.T) {
 			return core1_0.VKSuccess, nil
 		})
 
-	imageView, _, err := device.CreateImageView(nil, core1_0.ImageViewCreateOptions{
+	imageView, _, err := device.CreateImageView(nil, core1_0.ImageViewCreateInfo{
 		Image:    image,
-		ViewType: core1_0.ViewType2D,
-		Format:   core1_0.DataFormatA2B10G10R10SignedScaledPacked,
+		ViewType: core1_0.ImageViewType2D,
+		Format:   core1_0.FormatA2B10G10R10SignedScaledPacked,
 		Flags:    0,
 		Components: core1_0.ComponentMapping{
-			A: core1_0.SwizzleAlpha,
-			R: core1_0.SwizzleRed,
-			G: core1_0.SwizzleGreen,
-			B: core1_0.SwizzleBlue,
+			A: core1_0.ComponentSwizzleAlpha,
+			R: core1_0.ComponentSwizzleRed,
+			G: core1_0.ComponentSwizzleGreen,
+			B: core1_0.ComponentSwizzleBlue,
 		},
 		SubresourceRange: core1_0.ImageSubresourceRange{
 			BaseMipLevel:   1,
 			LevelCount:     2,
 			BaseArrayLayer: 3,
 			LayerCount:     5,
-			AspectMask:     core1_0.AspectColor | core1_0.AspectDepth,
+			AspectMask:     core1_0.ImageAspectColor | core1_0.ImageAspectDepth,
 		},
 	})
 	require.NoError(t, err)

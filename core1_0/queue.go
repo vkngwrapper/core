@@ -36,7 +36,7 @@ func (q *VulkanQueue) APIVersion() common.APIVersion {
 	return q.maximumAPIVersion
 }
 
-func (q *VulkanQueue) WaitForIdle() (common.VkResult, error) {
+func (q *VulkanQueue) WaitIdle() (common.VkResult, error) {
 	return q.deviceDriver.VkQueueWaitIdle(q.queueHandle)
 }
 

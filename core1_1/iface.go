@@ -44,21 +44,21 @@ type DescriptorSetLayout interface {
 type Device interface {
 	core1_0.Device
 
-	BindBufferMemory(o []BindBufferMemoryOptions) (common.VkResult, error)
-	BindImageMemory(o []BindImageMemoryOptions) (common.VkResult, error)
+	BindBufferMemory2(o []BindBufferMemoryInfo) (common.VkResult, error)
+	BindImageMemory2(o []BindImageMemoryInfo) (common.VkResult, error)
 
-	BufferMemoryRequirements(o BufferMemoryRequirementsOptions, out *MemoryRequirementsOutData) error
-	ImageMemoryRequirements(o ImageMemoryRequirementsOptions, out *MemoryRequirementsOutData) error
-	SparseImageMemoryRequirements(o ImageSparseMemoryRequirementsOptions, outDataFactory func() *SparseImageMemoryRequirementsOutData) ([]*SparseImageMemoryRequirementsOutData, error)
+	BufferMemoryRequirements2(o BufferMemoryRequirementsInfo2, out *MemoryRequirements2) error
+	ImageMemoryRequirements2(o ImageMemoryRequirementsInfo2, out *MemoryRequirements2) error
+	ImageSparseMemoryRequirements2(o ImageSparseMemoryRequirementsInfo2, outDataFactory func() *SparseImageMemoryRequirements2) ([]*SparseImageMemoryRequirements2, error)
 
-	DescriptorSetLayoutSupport(o core1_0.DescriptorSetLayoutCreateOptions, outData *DescriptorSetLayoutSupportOutData) error
+	DescriptorSetLayoutSupport(o core1_0.DescriptorSetLayoutCreateInfo, outData *DescriptorSetLayoutSupport) error
 
-	DeviceGroupPeerMemoryFeatures(heapIndex, localDeviceIndex, remoteDeviceIndex int) PeerMemoryFeatures
+	DeviceGroupPeerMemoryFeatures(heapIndex, localDeviceIndex, remoteDeviceIndex int) PeerMemoryFeatureFlags
 
-	CreateDescriptorUpdateTemplate(o DescriptorUpdateTemplateCreateOptions, allocator *driver.AllocationCallbacks) (DescriptorUpdateTemplate, common.VkResult, error)
-	CreateSamplerYcbcrConversion(o SamplerYcbcrConversionCreateOptions, allocator *driver.AllocationCallbacks) (SamplerYcbcrConversion, common.VkResult, error)
+	CreateDescriptorUpdateTemplate(o DescriptorUpdateTemplateCreateInfo, allocator *driver.AllocationCallbacks) (DescriptorUpdateTemplate, common.VkResult, error)
+	CreateSamplerYcbcrConversion(o SamplerYcbcrConversionCreateInfo, allocator *driver.AllocationCallbacks) (SamplerYcbcrConversion, common.VkResult, error)
 
-	GetQueue2(o DeviceQueueOptions) (core1_0.Queue, error)
+	GetQueue2(o DeviceQueueInfo2) (core1_0.Queue, error)
 }
 
 type DeviceMemory interface {
@@ -100,23 +100,23 @@ type ImageView interface {
 type Instance interface {
 	core1_0.Instance
 
-	PhysicalDeviceGroups(outDataFactory func() *DeviceGroupOutData) ([]*DeviceGroupOutData, common.VkResult, error)
+	EnumeratePhysicalDeviceGroups(outDataFactory func() *PhysicalDeviceGroupProperties) ([]*PhysicalDeviceGroupProperties, common.VkResult, error)
 }
 
 type InstanceScopedPhysicalDevice interface {
 	core1_0.PhysicalDevice
 
-	ExternalFenceProperties(o ExternalFenceOptions, outData *ExternalFenceOutData) error
-	ExternalBufferProperties(o ExternalBufferOptions, outData *ExternalBufferOutData) error
-	ExternalSemaphoreProperties(o ExternalSemaphoreOptions, outData *ExternalSemaphoreOutData) error
+	ExternalFenceProperties(o PhysicalDeviceExternalFenceInfo, outData *ExternalFenceProperties) error
+	ExternalBufferProperties(o PhysicalDeviceExternalBufferInfo, outData *ExternalBufferProperties) error
+	ExternalSemaphoreProperties(o PhysicalDeviceExternalSemaphoreInfo, outData *ExternalSemaphoreProperties) error
 
-	Features2(out *DeviceFeatures) error
-	FormatProperties2(format core1_0.DataFormat, out *FormatPropertiesOutData) error
-	ImageFormatProperties2(o ImageFormatOptions, out *ImageFormatPropertiesOutData) (common.VkResult, error)
-	MemoryProperties2(out *MemoryPropertiesOutData) error
-	Properties2(out *DevicePropertiesOutData) error
-	QueueFamilyProperties2(outDataFactory func() *QueueFamilyOutData) ([]*QueueFamilyOutData, error)
-	SparseImageFormatProperties2(o SparseImageFormatOptions, outDataFactory func() *SparseImageFormatPropertiesOutData) ([]*SparseImageFormatPropertiesOutData, error)
+	Features2(out *PhysicalDeviceFeatures2) error
+	FormatProperties2(format core1_0.Format, out *FormatProperties2) error
+	ImageFormatProperties2(o PhysicalDeviceImageFormatInfo2, out *ImageFormatProperties2) (common.VkResult, error)
+	MemoryProperties2(out *PhysicalDeviceMemoryProperties2) error
+	Properties2(out *PhysicalDeviceProperties2) error
+	QueueFamilyProperties2(outDataFactory func() *QueueFamilyProperties2) ([]*QueueFamilyProperties2, error)
+	SparseImageFormatProperties2(o PhysicalDeviceSparseImageFormatInfo2, outDataFactory func() *SparseImageFormatProperties2) ([]*SparseImageFormatProperties2, error)
 }
 
 type PhysicalDevice interface {

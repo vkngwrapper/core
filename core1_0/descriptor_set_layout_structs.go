@@ -13,50 +13,50 @@ import (
 )
 
 const (
-	DescriptorSampler              DescriptorType = C.VK_DESCRIPTOR_TYPE_SAMPLER
-	DescriptorCombinedImageSampler DescriptorType = C.VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER
-	DescriptorSampledImage         DescriptorType = C.VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE
-	DescriptorStorageImage         DescriptorType = C.VK_DESCRIPTOR_TYPE_STORAGE_IMAGE
-	DescriptorUniformTexelBuffer   DescriptorType = C.VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER
-	DescriptorStorageTexelBuffer   DescriptorType = C.VK_DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER
-	DescriptorUniformBuffer        DescriptorType = C.VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER
-	DescriptorStorageBuffer        DescriptorType = C.VK_DESCRIPTOR_TYPE_STORAGE_BUFFER
-	DescriptorUniformBufferDynamic DescriptorType = C.VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC
-	DescriptorStorageBufferDynamic DescriptorType = C.VK_DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC
-	DescriptorInputAttachment      DescriptorType = C.VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT
+	DescriptorTypeSampler              DescriptorType = C.VK_DESCRIPTOR_TYPE_SAMPLER
+	DescriptorTypeCombinedImageSampler DescriptorType = C.VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER
+	DescriptorTypeSampledImage         DescriptorType = C.VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE
+	DescriptorTypeStorageImage         DescriptorType = C.VK_DESCRIPTOR_TYPE_STORAGE_IMAGE
+	DescriptorTypeUniformTexelBuffer   DescriptorType = C.VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER
+	DescriptorTypeStorageTexelBuffer   DescriptorType = C.VK_DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER
+	DescriptorTypeUniformBuffer        DescriptorType = C.VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER
+	DescriptorTypeStorageBuffer        DescriptorType = C.VK_DESCRIPTOR_TYPE_STORAGE_BUFFER
+	DescriptorTypeUniformBufferDynamic DescriptorType = C.VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC
+	DescriptorTypeStorageBufferDynamic DescriptorType = C.VK_DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC
+	DescriptorTypeInputAttachment      DescriptorType = C.VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT
 )
 
 func init() {
-	DescriptorSampler.Register("Sampler")
-	DescriptorCombinedImageSampler.Register("Combined Image Sampler")
-	DescriptorSampledImage.Register("Sampled Image")
-	DescriptorStorageImage.Register("Storage Image")
-	DescriptorUniformTexelBuffer.Register("Uniform Texel Buffer")
-	DescriptorStorageTexelBuffer.Register("Storage Texel Buffer")
-	DescriptorUniformBuffer.Register("Uniform Buffer")
-	DescriptorStorageBuffer.Register("Storage Buffer")
-	DescriptorUniformBufferDynamic.Register("Uniform Buffer Dynamic")
-	DescriptorStorageBufferDynamic.Register("Storage Buffer Dynamic")
-	DescriptorInputAttachment.Register("Input Attachment")
+	DescriptorTypeSampler.Register("Sampler")
+	DescriptorTypeCombinedImageSampler.Register("Combined Image Sampler")
+	DescriptorTypeSampledImage.Register("Sampled Image")
+	DescriptorTypeStorageImage.Register("Storage Image")
+	DescriptorTypeUniformTexelBuffer.Register("Uniform Texel Buffer")
+	DescriptorTypeStorageTexelBuffer.Register("Storage Texel Buffer")
+	DescriptorTypeUniformBuffer.Register("Uniform Buffer")
+	DescriptorTypeStorageBuffer.Register("Storage Buffer")
+	DescriptorTypeUniformBufferDynamic.Register("Uniform Buffer Dynamic")
+	DescriptorTypeStorageBufferDynamic.Register("Storage Buffer Dynamic")
+	DescriptorTypeInputAttachment.Register("Input Attachment")
 }
 
-type DescriptorLayoutBinding struct {
+type DescriptorSetLayoutBinding struct {
 	Binding         int
 	DescriptorType  DescriptorType
 	DescriptorCount int
-	StageFlags      ShaderStages
+	StageFlags      ShaderStageFlags
 
 	ImmutableSamplers []Sampler
 }
 
-type DescriptorSetLayoutCreateOptions struct {
+type DescriptorSetLayoutCreateInfo struct {
 	Flags    DescriptorSetLayoutCreateFlags
-	Bindings []DescriptorLayoutBinding
+	Bindings []DescriptorSetLayoutBinding
 
 	common.NextOptions
 }
 
-func (o DescriptorSetLayoutCreateOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o DescriptorSetLayoutCreateInfo) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == unsafe.Pointer(nil) {
 		preallocatedPointer = allocator.Malloc(C.sizeof_struct_VkDescriptorSetLayoutCreateInfo)
 	}

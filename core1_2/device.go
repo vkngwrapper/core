@@ -74,7 +74,7 @@ func (d *VulkanDevice) CreateRenderPass2(allocator *driver.AllocationCallbacks, 
 	return renderPass, res, nil
 }
 
-func (d *VulkanDevice) GetBufferDeviceAddress(o BufferDeviceAddressOptions) (uint64, error) {
+func (d *VulkanDevice) GetBufferDeviceAddress(o BufferDeviceAddressInfo) (uint64, error) {
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
@@ -90,7 +90,7 @@ func (d *VulkanDevice) GetBufferDeviceAddress(o BufferDeviceAddressOptions) (uin
 	return uint64(address), nil
 }
 
-func (d *VulkanDevice) GetBufferOpaqueCaptureAddress(o BufferDeviceAddressOptions) (uint64, error) {
+func (d *VulkanDevice) GetBufferOpaqueCaptureAddress(o BufferDeviceAddressInfo) (uint64, error) {
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
@@ -106,7 +106,7 @@ func (d *VulkanDevice) GetBufferOpaqueCaptureAddress(o BufferDeviceAddressOption
 	return uint64(address), nil
 }
 
-func (d *VulkanDevice) GetDeviceMemoryOpaqueCaptureAddress(o DeviceMemoryOpaqueAddressOptions) (uint64, error) {
+func (d *VulkanDevice) GetDeviceMemoryOpaqueCaptureAddress(o DeviceMemoryOpaqueCaptureAddressInfo) (uint64, error) {
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
@@ -122,7 +122,7 @@ func (d *VulkanDevice) GetDeviceMemoryOpaqueCaptureAddress(o DeviceMemoryOpaqueA
 	return uint64(address), nil
 }
 
-func (d *VulkanDevice) SignalSemaphore(o SemaphoreSignalOptions) (common.VkResult, error) {
+func (d *VulkanDevice) SignalSemaphore(o SemaphoreSignalInfo) (common.VkResult, error) {
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
@@ -137,7 +137,7 @@ func (d *VulkanDevice) SignalSemaphore(o SemaphoreSignalOptions) (common.VkResul
 	)
 }
 
-func (d *VulkanDevice) WaitSemaphores(timeout time.Duration, o SemaphoreWaitOptions) (common.VkResult, error) {
+func (d *VulkanDevice) WaitSemaphores(timeout time.Duration, o SemaphoreWaitInfo) (common.VkResult, error) {
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 

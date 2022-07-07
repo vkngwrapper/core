@@ -41,10 +41,10 @@ func TestBuffer_Create_NilIndices(t *testing.T) {
 			return core1_0.VKSuccess, nil
 		})
 
-	buffer, res, err := device.CreateBuffer(nil, core1_0.BufferCreateOptions{
-		BufferSize:         5,
+	buffer, res, err := device.CreateBuffer(nil, core1_0.BufferCreateInfo{
+		Size:               5,
 		Usage:              core1_0.BufferUsageVertexBuffer | core1_0.BufferUsageTransferSrc,
-		SharingMode:        core1_0.SharingExclusive,
+		SharingMode:        core1_0.SharingModeExclusive,
 		QueueFamilyIndices: []int{},
 	})
 
@@ -84,10 +84,10 @@ func TestBasicBuffer_Create_QueueFamilyIndices(t *testing.T) {
 			return core1_0.VKSuccess, nil
 		})
 
-	buffer, res, err := device.CreateBuffer(nil, core1_0.BufferCreateOptions{
-		BufferSize:         5,
+	buffer, res, err := device.CreateBuffer(nil, core1_0.BufferCreateInfo{
+		Size:               5,
 		Usage:              core1_0.BufferUsageVertexBuffer | core1_0.BufferUsageTransferSrc,
-		SharingMode:        core1_0.SharingExclusive,
+		SharingMode:        core1_0.SharingModeExclusive,
 		QueueFamilyIndices: []int{1, 2, 3, 4},
 	})
 
@@ -117,7 +117,7 @@ func TestBuffer_MemoryRequirements(t *testing.T) {
 	reqs := buffer.MemoryRequirements()
 	require.Equal(t, 5, reqs.Size)
 	require.Equal(t, 8, reqs.Alignment)
-	require.Equal(t, uint32(0xFF), reqs.MemoryType)
+	require.Equal(t, uint32(0xFF), reqs.MemoryTypeBits)
 }
 
 func TestBuffer_BindBufferMemory_Success(t *testing.T) {

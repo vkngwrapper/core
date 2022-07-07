@@ -26,15 +26,15 @@ func init() {
 	CommandPoolCreateResetBuffer.Register("Reset Command Buffer")
 }
 
-type CommandPoolCreateOptions struct {
-	GraphicsQueueFamily *int
-	Flags               CommandPoolCreateFlags
+type CommandPoolCreateInfo struct {
+	QueueFamilyIndex *int
+	Flags            CommandPoolCreateFlags
 
 	common.NextOptions
 }
 
-func (o CommandPoolCreateOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
-	if o.GraphicsQueueFamily == nil {
+func (o CommandPoolCreateInfo) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+	if o.QueueFamilyIndex == nil {
 		return nil, errors.New("attempted to create a command pool without setting GraphicsQueueFamilyIndex")
 	}
 
@@ -42,7 +42,7 @@ func (o CommandPoolCreateOptions) PopulateCPointer(allocator *cgoparam.Allocator
 		preallocatedPointer = allocator.Malloc(C.sizeof_struct_VkCommandPoolCreateInfo)
 	}
 
-	familyIndex := *o.GraphicsQueueFamily
+	familyIndex := *o.QueueFamilyIndex
 
 	cmdPoolCreate := (*C.VkCommandPoolCreateInfo)(preallocatedPointer)
 	cmdPoolCreate.sType = C.VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO

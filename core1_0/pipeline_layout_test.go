@@ -63,23 +63,23 @@ func TestVulkanLoader1_0_CreatePipelineLayout(t *testing.T) {
 			return core1_0.VKSuccess, nil
 		})
 
-	layout, _, err := device.CreatePipelineLayout(nil, core1_0.PipelineLayoutCreateOptions{
+	layout, _, err := device.CreatePipelineLayout(nil, core1_0.PipelineLayoutCreateInfo{
 		SetLayouts: []core1_0.DescriptorSetLayout{descriptorSetLayout1, descriptorSetLayout2},
 		PushConstantRanges: []core1_0.PushConstantRange{
 			{
-				Stages: core1_0.StageFragment,
-				Offset: 1,
-				Size:   3,
+				StageFlags: core1_0.StageFragment,
+				Offset:     1,
+				Size:       3,
 			},
 			{
-				Stages: core1_0.StageVertex,
-				Offset: 5,
-				Size:   7,
+				StageFlags: core1_0.StageVertex,
+				Offset:     5,
+				Size:       7,
 			},
 			{
-				Stages: core1_0.StageTessellationControl,
-				Offset: 11,
-				Size:   13,
+				StageFlags: core1_0.StageTessellationControl,
+				Offset:     11,
+				Size:       13,
 			},
 		},
 	})

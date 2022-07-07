@@ -43,7 +43,7 @@ func (i *VulkanInstance) IsInstanceExtensionActive(extensionName string) bool {
 	return active
 }
 
-func (i *VulkanInstance) PhysicalDevices() ([]PhysicalDevice, common.VkResult, error) {
+func (i *VulkanInstance) EnumeratePhysicalDevices() ([]PhysicalDevice, common.VkResult, error) {
 	allocator := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(allocator)
 

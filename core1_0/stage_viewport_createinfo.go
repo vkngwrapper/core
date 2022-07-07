@@ -11,20 +11,35 @@ import (
 	"unsafe"
 )
 
-type ViewportStateOptions struct {
+type PipelineViewportStateCreateFlags uint32
+
+var pipelineViewportStateCreateFlagsMapping = common.NewFlagStringMapping[PipelineViewportStateCreateFlags]()
+
+func (f PipelineViewportStateCreateFlags) Register(str string) {
+	pipelineViewportStateCreateFlagsMapping.Register(f, str)
+}
+
+func (f PipelineViewportStateCreateFlags) String() string {
+	return pipelineViewportStateCreateFlagsMapping.FlagsToString(f)
+}
+
+////
+
+type PipelineViewportStateCreateInfo struct {
 	Viewports []Viewport
 	Scissors  []Rect2D
+	Flags     PipelineViewportStateCreateFlags
 
 	common.NextOptions
 }
 
-func (o ViewportStateOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o PipelineViewportStateCreateInfo) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == unsafe.Pointer(nil) {
 		preallocatedPointer = allocator.Malloc(C.sizeof_struct_VkPipelineViewportStateCreateInfo)
 	}
 	createInfo := (*C.VkPipelineViewportStateCreateInfo)(preallocatedPointer)
 	createInfo.sType = C.VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO
-	createInfo.flags = 0
+	createInfo.flags = C.VkPipelineViewportStateCreateFlags(o.Flags)
 	createInfo.pNext = next
 
 	viewportCount := len(o.Viewports)

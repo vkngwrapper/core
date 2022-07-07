@@ -23,31 +23,31 @@ func init() {
 	PipelineCreateDerivative.Register("Derivative")
 }
 
-type GraphicsPipelineCreateOptions struct {
+type GraphicsPipelineCreateInfo struct {
 	Flags PipelineCreateFlags
 
-	ShaderStages  []ShaderStageOptions
-	VertexInput   *VertexInputStateOptions
-	InputAssembly *InputAssemblyStateOptions
-	Tessellation  *TessellationStateOptions
-	Viewport      *ViewportStateOptions
-	Rasterization *RasterizationStateOptions
-	Multisample   *MultisampleStateOptions
-	DepthStencil  *DepthStencilStateOptions
-	ColorBlend    *ColorBlendStateOptions
-	DynamicState  *DynamicStateOptions
+	Stages             []PipelineShaderStageCreateInfo
+	VertexInputState   *PipelineVertexInputStateCreateInfo
+	InputAssemblyState *PipelineInputAssemblyStateCreateInfo
+	TessellationState  *PipelineTessellationStateCreateInfo
+	ViewportState      *PipelineViewportStateCreateInfo
+	RasterizationState *PipelineRasterizationStateCreateInfo
+	MultisampleState   *PipelineMultisampleStateCreateInfo
+	DepthStencilState  *PipelineDepthStencilStateCreateInfo
+	ColorBlendState    *PipelineColorBlendStateCreateInfo
+	DynamicState       *PipelineDynamicStateCreateInfo
 
 	Layout     PipelineLayout
 	RenderPass RenderPass
 
-	SubPass           int
+	Subpass           int
 	BasePipeline      Pipeline
 	BasePipelineIndex int
 
 	common.NextOptions
 }
 
-func (o GraphicsPipelineCreateOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o GraphicsPipelineCreateInfo) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == unsafe.Pointer(nil) {
 		preallocatedPointer = allocator.Malloc(C.sizeof_struct_VkGraphicsPipelineCreateInfo)
 	}
@@ -56,7 +56,7 @@ func (o GraphicsPipelineCreateOptions) PopulateCPointer(allocator *cgoparam.Allo
 	createInfo.flags = C.VkPipelineCreateFlags(o.Flags)
 	createInfo.pNext = next
 
-	stageCount := len(o.ShaderStages)
+	stageCount := len(o.Stages)
 	createInfo.stageCount = C.uint32_t(stageCount)
 	createInfo.pStages = nil
 	createInfo.pVertexInputState = nil
@@ -70,7 +70,7 @@ func (o GraphicsPipelineCreateOptions) PopulateCPointer(allocator *cgoparam.Allo
 	createInfo.pDynamicState = nil
 	createInfo.layout = nil
 	createInfo.renderPass = nil
-	createInfo.subpass = C.uint32_t(o.SubPass)
+	createInfo.subpass = C.uint32_t(o.Subpass)
 	createInfo.basePipelineHandle = (C.VkPipeline)(C.VK_NULL_HANDLE)
 	createInfo.basePipelineIndex = C.int32_t(o.BasePipelineIndex)
 
@@ -88,14 +88,14 @@ func (o GraphicsPipelineCreateOptions) PopulateCPointer(allocator *cgoparam.Allo
 
 	if stageCount > 0 {
 		var err error
-		createInfo.pStages, err = common.AllocOptionSlice[C.VkPipelineShaderStageCreateInfo, ShaderStageOptions](allocator, o.ShaderStages)
+		createInfo.pStages, err = common.AllocOptionSlice[C.VkPipelineShaderStageCreateInfo, PipelineShaderStageCreateInfo](allocator, o.Stages)
 		if err != nil {
 			return nil, err
 		}
 	}
 
-	if o.VertexInput != nil {
-		vertInput, err := common.AllocOptions(allocator, o.VertexInput)
+	if o.VertexInputState != nil {
+		vertInput, err := common.AllocOptions(allocator, o.VertexInputState)
 		if err != nil {
 			return nil, err
 		}
@@ -103,8 +103,8 @@ func (o GraphicsPipelineCreateOptions) PopulateCPointer(allocator *cgoparam.Allo
 		createInfo.pVertexInputState = (*C.VkPipelineVertexInputStateCreateInfo)(vertInput)
 	}
 
-	if o.InputAssembly != nil {
-		inputAss, err := common.AllocOptions(allocator, o.InputAssembly)
+	if o.InputAssemblyState != nil {
+		inputAss, err := common.AllocOptions(allocator, o.InputAssemblyState)
 		if err != nil {
 			return nil, err
 		}
@@ -112,8 +112,8 @@ func (o GraphicsPipelineCreateOptions) PopulateCPointer(allocator *cgoparam.Allo
 		createInfo.pInputAssemblyState = (*C.VkPipelineInputAssemblyStateCreateInfo)(inputAss)
 	}
 
-	if o.Tessellation != nil {
-		tessellation, err := common.AllocOptions(allocator, o.Tessellation)
+	if o.TessellationState != nil {
+		tessellation, err := common.AllocOptions(allocator, o.TessellationState)
 		if err != nil {
 			return nil, err
 		}
@@ -121,8 +121,8 @@ func (o GraphicsPipelineCreateOptions) PopulateCPointer(allocator *cgoparam.Allo
 		createInfo.pTessellationState = (*C.VkPipelineTessellationStateCreateInfo)(tessellation)
 	}
 
-	if o.Viewport != nil {
-		viewport, err := common.AllocOptions(allocator, o.Viewport)
+	if o.ViewportState != nil {
+		viewport, err := common.AllocOptions(allocator, o.ViewportState)
 		if err != nil {
 			return nil, err
 		}
@@ -130,8 +130,8 @@ func (o GraphicsPipelineCreateOptions) PopulateCPointer(allocator *cgoparam.Allo
 		createInfo.pViewportState = (*C.VkPipelineViewportStateCreateInfo)(viewport)
 	}
 
-	if o.Rasterization != nil {
-		rasterization, err := common.AllocOptions(allocator, o.Rasterization)
+	if o.RasterizationState != nil {
+		rasterization, err := common.AllocOptions(allocator, o.RasterizationState)
 		if err != nil {
 			return nil, err
 		}
@@ -139,8 +139,8 @@ func (o GraphicsPipelineCreateOptions) PopulateCPointer(allocator *cgoparam.Allo
 		createInfo.pRasterizationState = (*C.VkPipelineRasterizationStateCreateInfo)(rasterization)
 	}
 
-	if o.Multisample != nil {
-		multisample, err := common.AllocOptions(allocator, o.Multisample)
+	if o.MultisampleState != nil {
+		multisample, err := common.AllocOptions(allocator, o.MultisampleState)
 		if err != nil {
 			return nil, err
 		}
@@ -148,8 +148,8 @@ func (o GraphicsPipelineCreateOptions) PopulateCPointer(allocator *cgoparam.Allo
 		createInfo.pMultisampleState = (*C.VkPipelineMultisampleStateCreateInfo)(multisample)
 	}
 
-	if o.DepthStencil != nil {
-		depthStencil, err := common.AllocOptions(allocator, o.DepthStencil)
+	if o.DepthStencilState != nil {
+		depthStencil, err := common.AllocOptions(allocator, o.DepthStencilState)
 		if err != nil {
 			return nil, err
 		}
@@ -157,8 +157,8 @@ func (o GraphicsPipelineCreateOptions) PopulateCPointer(allocator *cgoparam.Allo
 		createInfo.pDepthStencilState = (*C.VkPipelineDepthStencilStateCreateInfo)(depthStencil)
 	}
 
-	if o.ColorBlend != nil {
-		colorBlend, err := common.AllocOptions(allocator, o.ColorBlend)
+	if o.ColorBlendState != nil {
+		colorBlend, err := common.AllocOptions(allocator, o.ColorBlendState)
 		if err != nil {
 			return nil, err
 		}
@@ -178,9 +178,9 @@ func (o GraphicsPipelineCreateOptions) PopulateCPointer(allocator *cgoparam.Allo
 	return preallocatedPointer, nil
 }
 
-type ComputePipelineCreateOptions struct {
+type ComputePipelineCreateInfo struct {
 	Flags  PipelineCreateFlags
-	Shader ShaderStageOptions
+	Stage  PipelineShaderStageCreateInfo
 	Layout PipelineLayout
 
 	BasePipeline      Pipeline
@@ -189,7 +189,7 @@ type ComputePipelineCreateOptions struct {
 	common.NextOptions
 }
 
-func (o ComputePipelineCreateOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o ComputePipelineCreateInfo) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == unsafe.Pointer(nil) {
 		preallocatedPointer = allocator.Malloc(C.sizeof_struct_VkComputePipelineCreateInfo)
 	}
@@ -199,7 +199,7 @@ func (o ComputePipelineCreateOptions) PopulateCPointer(allocator *cgoparam.Alloc
 	createInfo.pNext = next
 	createInfo.flags = C.VkPipelineCreateFlags(o.Flags)
 
-	_, err := common.AllocOptions(allocator, &o.Shader, unsafe.Pointer(&createInfo.stage))
+	_, err := common.AllocOptions(allocator, &o.Stage, unsafe.Pointer(&createInfo.stage))
 	if err != nil {
 		return nil, err
 	}

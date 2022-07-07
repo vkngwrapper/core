@@ -16,18 +16,18 @@ const (
 	BufferCreateSparseResidency BufferCreateFlags = C.VK_BUFFER_CREATE_SPARSE_RESIDENCY_BIT
 	BufferCreateSparseAliased   BufferCreateFlags = C.VK_BUFFER_CREATE_SPARSE_ALIASED_BIT
 
-	BufferUsageTransferSrc        BufferUsages = C.VK_BUFFER_USAGE_TRANSFER_SRC_BIT
-	BufferUsageTransferDst        BufferUsages = C.VK_BUFFER_USAGE_TRANSFER_DST_BIT
-	BufferUsageUniformTexelBuffer BufferUsages = C.VK_BUFFER_USAGE_UNIFORM_TEXEL_BUFFER_BIT
-	BufferUsageStorageTexelBuffer BufferUsages = C.VK_BUFFER_USAGE_STORAGE_TEXEL_BUFFER_BIT
-	BufferUsageUniformBuffer      BufferUsages = C.VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT
-	BufferUsageStorageBuffer      BufferUsages = C.VK_BUFFER_USAGE_STORAGE_BUFFER_BIT
-	BufferUsageIndexBuffer        BufferUsages = C.VK_BUFFER_USAGE_INDEX_BUFFER_BIT
-	BufferUsageVertexBuffer       BufferUsages = C.VK_BUFFER_USAGE_VERTEX_BUFFER_BIT
-	BufferUsageIndirectBuffer     BufferUsages = C.VK_BUFFER_USAGE_INDIRECT_BUFFER_BIT
+	BufferUsageTransferSrc        BufferUsageFlags = C.VK_BUFFER_USAGE_TRANSFER_SRC_BIT
+	BufferUsageTransferDst        BufferUsageFlags = C.VK_BUFFER_USAGE_TRANSFER_DST_BIT
+	BufferUsageUniformTexelBuffer BufferUsageFlags = C.VK_BUFFER_USAGE_UNIFORM_TEXEL_BUFFER_BIT
+	BufferUsageStorageTexelBuffer BufferUsageFlags = C.VK_BUFFER_USAGE_STORAGE_TEXEL_BUFFER_BIT
+	BufferUsageUniformBuffer      BufferUsageFlags = C.VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT
+	BufferUsageStorageBuffer      BufferUsageFlags = C.VK_BUFFER_USAGE_STORAGE_BUFFER_BIT
+	BufferUsageIndexBuffer        BufferUsageFlags = C.VK_BUFFER_USAGE_INDEX_BUFFER_BIT
+	BufferUsageVertexBuffer       BufferUsageFlags = C.VK_BUFFER_USAGE_VERTEX_BUFFER_BIT
+	BufferUsageIndirectBuffer     BufferUsageFlags = C.VK_BUFFER_USAGE_INDIRECT_BUFFER_BIT
 
-	SharingExclusive  SharingMode = C.VK_SHARING_MODE_EXCLUSIVE
-	SharingConcurrent SharingMode = C.VK_SHARING_MODE_CONCURRENT
+	SharingModeExclusive  SharingMode = C.VK_SHARING_MODE_EXCLUSIVE
+	SharingModeConcurrent SharingMode = C.VK_SHARING_MODE_CONCURRENT
 )
 
 func init() {
@@ -45,21 +45,21 @@ func init() {
 	BufferUsageVertexBuffer.Register("Vertex Buffer")
 	BufferUsageIndirectBuffer.Register("Indirect Buffer")
 
-	SharingExclusive.Register("Exclusive")
-	SharingConcurrent.Register("Concurrent")
+	SharingModeExclusive.Register("Exclusive")
+	SharingModeConcurrent.Register("Concurrent")
 }
 
-type BufferCreateOptions struct {
+type BufferCreateInfo struct {
 	Flags              BufferCreateFlags
-	BufferSize         int
-	Usage              BufferUsages
+	Size               int
+	Usage              BufferUsageFlags
 	SharingMode        SharingMode
 	QueueFamilyIndices []int
 
 	common.NextOptions
 }
 
-func (o BufferCreateOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o BufferCreateInfo) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == unsafe.Pointer(nil) {
 		preallocatedPointer = allocator.Malloc(C.sizeof_struct_VkBufferCreateInfo)
 	}
@@ -67,7 +67,7 @@ func (o BufferCreateOptions) PopulateCPointer(allocator *cgoparam.Allocator, pre
 	createInfo.sType = C.VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO
 	createInfo.flags = C.VkBufferCreateFlags(o.Flags)
 	createInfo.pNext = next
-	createInfo.size = C.VkDeviceSize(o.BufferSize)
+	createInfo.size = C.VkDeviceSize(o.Size)
 	createInfo.usage = C.VkBufferUsageFlags(o.Usage)
 	createInfo.sharingMode = C.VkSharingMode(o.SharingMode)
 

@@ -37,14 +37,14 @@ type CommandBuffer interface {
 	APIVersion() common.APIVersion
 
 	Free()
-	Begin(o BeginOptions) (common.VkResult, error)
+	Begin(o CommandBufferBeginInfo) (common.VkResult, error)
 	End() (common.VkResult, error)
 	Reset(flags CommandBufferResetFlags) (common.VkResult, error)
 	CommandsRecorded() int
 	DrawsRecorded() int
 	DispatchesRecorded() int
 
-	CmdBeginRenderPass(contents SubpassContents, o RenderPassBeginOptions) error
+	CmdBeginRenderPass(contents SubpassContents, o RenderPassBeginInfo) error
 	CmdEndRenderPass()
 	CmdBindPipeline(bindPoint PipelineBindPoint, pipeline Pipeline)
 	CmdDraw(vertexCount, instanceCount int, firstVertex, firstInstance uint32)
@@ -53,16 +53,16 @@ type CommandBuffer interface {
 	CmdBindIndexBuffer(buffer Buffer, offset int, indexType IndexType)
 	CmdCopyBuffer(srcBuffer Buffer, dstBuffer Buffer, copyRegions []BufferCopy) error
 	CmdBindDescriptorSets(bindPoint PipelineBindPoint, layout PipelineLayout, sets []DescriptorSet, dynamicOffsets []int)
-	CmdPipelineBarrier(srcStageMask, dstStageMask PipelineStages, dependencies DependencyFlags, memoryBarriers []MemoryBarrierOptions, bufferMemoryBarriers []BufferMemoryBarrierOptions, imageMemoryBarriers []ImageMemoryBarrierOptions) error
+	CmdPipelineBarrier(srcStageMask, dstStageMask PipelineStageFlags, dependencies DependencyFlags, memoryBarriers []MemoryBarrier, bufferMemoryBarriers []BufferMemoryBarrier, imageMemoryBarriers []ImageMemoryBarrier) error
 	CmdCopyBufferToImage(buffer Buffer, image Image, layout ImageLayout, regions []BufferImageCopy) error
 	CmdBlitImage(sourceImage Image, sourceImageLayout ImageLayout, destinationImage Image, destinationImageLayout ImageLayout, regions []ImageBlit, filter Filter) error
-	CmdPushConstants(layout PipelineLayout, stageFlags ShaderStages, offset int, valueBytes []byte)
+	CmdPushConstants(layout PipelineLayout, stageFlags ShaderStageFlags, offset int, valueBytes []byte)
 	CmdSetViewport(viewports []Viewport)
 	CmdSetScissor(scissors []Rect2D)
 	CmdCopyImage(srcImage Image, srcImageLayout ImageLayout, dstImage Image, dstImageLayout ImageLayout, regions []ImageCopy) error
 	CmdNextSubpass(contents SubpassContents)
-	CmdWaitEvents(events []Event, srcStageMask PipelineStages, dstStageMask PipelineStages, memoryBarriers []MemoryBarrierOptions, bufferMemoryBarriers []BufferMemoryBarrierOptions, imageMemoryBarriers []ImageMemoryBarrierOptions) error
-	CmdSetEvent(event Event, stageMask PipelineStages)
+	CmdWaitEvents(events []Event, srcStageMask PipelineStageFlags, dstStageMask PipelineStageFlags, memoryBarriers []MemoryBarrier, bufferMemoryBarriers []BufferMemoryBarrier, imageMemoryBarriers []ImageMemoryBarrier) error
+	CmdSetEvent(event Event, stageMask PipelineStageFlags)
 	CmdClearColorImage(image Image, imageLayout ImageLayout, color ClearColorValue, ranges []ImageSubresourceRange)
 	CmdResetQueryPool(queryPool QueryPool, startQuery, queryCount int)
 	CmdBeginQuery(queryPool QueryPool, query int, flags QueryControlFlags)
@@ -77,17 +77,17 @@ type CommandBuffer interface {
 	CmdDrawIndexedIndirect(buffer Buffer, offset int, drawCount, stride int)
 	CmdDrawIndirect(buffer Buffer, offset int, drawCount, stride int)
 	CmdFillBuffer(dstBuffer Buffer, dstOffset int, size int, data uint32)
-	CmdResetEvent(event Event, stageMask PipelineStages)
+	CmdResetEvent(event Event, stageMask PipelineStageFlags)
 	CmdResolveImage(srcImage Image, srcImageLayout ImageLayout, dstImage Image, dstImageLayout ImageLayout, regions []ImageResolve) error
 	CmdSetBlendConstants(blendConstants [4]float32)
 	CmdSetDepthBias(depthBiasConstantFactor, depthBiasClamp, depthBiasSlopeFactor float32)
 	CmdSetDepthBounds(min, max float32)
 	CmdSetLineWidth(lineWidth float32)
-	CmdSetStencilCompareMask(faceMask StencilFaces, compareMask uint32)
-	CmdSetStencilReference(faceMask StencilFaces, reference uint32)
-	CmdSetStencilWriteMask(faceMask StencilFaces, writeMask uint32)
+	CmdSetStencilCompareMask(faceMask StencilFaceFlags, compareMask uint32)
+	CmdSetStencilReference(faceMask StencilFaceFlags, reference uint32)
+	CmdSetStencilWriteMask(faceMask StencilFaceFlags, writeMask uint32)
 	CmdUpdateBuffer(dstBuffer Buffer, dstOffset int, dataSize int, data []byte)
-	CmdWriteTimestamp(pipelineStage PipelineStages, queryPool QueryPool, query int)
+	CmdWriteTimestamp(pipelineStage PipelineStageFlags, queryPool QueryPool, query int)
 }
 
 type CommandPool interface {
@@ -135,8 +135,8 @@ type DeviceMemory interface {
 	Driver() driver.Driver
 	APIVersion() common.APIVersion
 
-	MapMemory(offset int, size int, flags MemoryMapFlags) (unsafe.Pointer, common.VkResult, error)
-	UnmapMemory()
+	Map(offset int, size int, flags MemoryMapFlags) (unsafe.Pointer, common.VkResult, error)
+	Unmap()
 	Free(callbacks *driver.AllocationCallbacks)
 	Commitment() int
 	FlushAll() (common.VkResult, error)
@@ -150,42 +150,42 @@ type Device interface {
 
 	IsDeviceExtensionActive(extensionName string) bool
 
-	CreateBuffer(allocationCallbacks *driver.AllocationCallbacks, o BufferCreateOptions) (Buffer, common.VkResult, error)
-	CreateBufferView(allocationCallbacks *driver.AllocationCallbacks, o BufferViewCreateOptions) (BufferView, common.VkResult, error)
-	CreateCommandPool(allocationCallbacks *driver.AllocationCallbacks, o CommandPoolCreateOptions) (CommandPool, common.VkResult, error)
-	CreateDescriptorPool(allocationCallbacks *driver.AllocationCallbacks, o DescriptorPoolCreateOptions) (DescriptorPool, common.VkResult, error)
-	CreateDescriptorSetLayout(allocationCallbacks *driver.AllocationCallbacks, o DescriptorSetLayoutCreateOptions) (DescriptorSetLayout, common.VkResult, error)
-	CreateEvent(allocationCallbacks *driver.AllocationCallbacks, options EventCreateOptions) (Event, common.VkResult, error)
-	CreateFence(allocationCallbacks *driver.AllocationCallbacks, o FenceCreateOptions) (Fence, common.VkResult, error)
-	CreateFramebuffer(allocationCallbacks *driver.AllocationCallbacks, o FramebufferCreateOptions) (Framebuffer, common.VkResult, error)
-	CreateGraphicsPipelines(pipelineCache PipelineCache, allocationCallbacks *driver.AllocationCallbacks, o []GraphicsPipelineCreateOptions) ([]Pipeline, common.VkResult, error)
-	CreateComputePipelines(pipelineCache PipelineCache, allocationCallbacks *driver.AllocationCallbacks, o []ComputePipelineCreateOptions) ([]Pipeline, common.VkResult, error)
+	CreateBuffer(allocationCallbacks *driver.AllocationCallbacks, o BufferCreateInfo) (Buffer, common.VkResult, error)
+	CreateBufferView(allocationCallbacks *driver.AllocationCallbacks, o BufferViewCreateInfo) (BufferView, common.VkResult, error)
+	CreateCommandPool(allocationCallbacks *driver.AllocationCallbacks, o CommandPoolCreateInfo) (CommandPool, common.VkResult, error)
+	CreateDescriptorPool(allocationCallbacks *driver.AllocationCallbacks, o DescriptorPoolCreateInfo) (DescriptorPool, common.VkResult, error)
+	CreateDescriptorSetLayout(allocationCallbacks *driver.AllocationCallbacks, o DescriptorSetLayoutCreateInfo) (DescriptorSetLayout, common.VkResult, error)
+	CreateEvent(allocationCallbacks *driver.AllocationCallbacks, options EventCreateInfo) (Event, common.VkResult, error)
+	CreateFence(allocationCallbacks *driver.AllocationCallbacks, o FenceCreateInfo) (Fence, common.VkResult, error)
+	CreateFramebuffer(allocationCallbacks *driver.AllocationCallbacks, o FramebufferCreateInfo) (Framebuffer, common.VkResult, error)
+	CreateGraphicsPipelines(pipelineCache PipelineCache, allocationCallbacks *driver.AllocationCallbacks, o []GraphicsPipelineCreateInfo) ([]Pipeline, common.VkResult, error)
+	CreateComputePipelines(pipelineCache PipelineCache, allocationCallbacks *driver.AllocationCallbacks, o []ComputePipelineCreateInfo) ([]Pipeline, common.VkResult, error)
 	CreateImage(allocationCallbacks *driver.AllocationCallbacks, options ImageCreateOptions) (Image, common.VkResult, error)
-	CreateImageView(allocationCallbacks *driver.AllocationCallbacks, o ImageViewCreateOptions) (ImageView, common.VkResult, error)
-	CreatePipelineCache(allocationCallbacks *driver.AllocationCallbacks, o PipelineCacheCreateOptions) (PipelineCache, common.VkResult, error)
-	CreatePipelineLayout(allocationCallbacks *driver.AllocationCallbacks, o PipelineLayoutCreateOptions) (PipelineLayout, common.VkResult, error)
-	CreateQueryPool(allocationCallbacks *driver.AllocationCallbacks, o QueryPoolCreateOptions) (QueryPool, common.VkResult, error)
-	CreateRenderPass(allocationCallbacks *driver.AllocationCallbacks, o RenderPassCreateOptions) (RenderPass, common.VkResult, error)
-	CreateSampler(allocationCallbacks *driver.AllocationCallbacks, o SamplerCreateOptions) (Sampler, common.VkResult, error)
-	CreateSemaphore(allocationCallbacks *driver.AllocationCallbacks, o SemaphoreCreateOptions) (Semaphore, common.VkResult, error)
-	CreateShaderModule(allocationCallbacks *driver.AllocationCallbacks, o ShaderModuleCreateOptions) (ShaderModule, common.VkResult, error)
+	CreateImageView(allocationCallbacks *driver.AllocationCallbacks, o ImageViewCreateInfo) (ImageView, common.VkResult, error)
+	CreatePipelineCache(allocationCallbacks *driver.AllocationCallbacks, o PipelineCacheCreateInfo) (PipelineCache, common.VkResult, error)
+	CreatePipelineLayout(allocationCallbacks *driver.AllocationCallbacks, o PipelineLayoutCreateInfo) (PipelineLayout, common.VkResult, error)
+	CreateQueryPool(allocationCallbacks *driver.AllocationCallbacks, o QueryPoolCreateInfo) (QueryPool, common.VkResult, error)
+	CreateRenderPass(allocationCallbacks *driver.AllocationCallbacks, o RenderPassCreateInfo) (RenderPass, common.VkResult, error)
+	CreateSampler(allocationCallbacks *driver.AllocationCallbacks, o SamplerCreateInfo) (Sampler, common.VkResult, error)
+	CreateSemaphore(allocationCallbacks *driver.AllocationCallbacks, o SemaphoreCreateInfo) (Semaphore, common.VkResult, error)
+	CreateShaderModule(allocationCallbacks *driver.AllocationCallbacks, o ShaderModuleCreateInfo) (ShaderModule, common.VkResult, error)
 
 	GetQueue(queueFamilyIndex int, queueIndex int) Queue
-	AllocateMemory(allocationCallbacks *driver.AllocationCallbacks, o MemoryAllocateOptions) (DeviceMemory, common.VkResult, error)
+	AllocateMemory(allocationCallbacks *driver.AllocationCallbacks, o MemoryAllocateInfo) (DeviceMemory, common.VkResult, error)
 	FreeMemory(deviceMemory DeviceMemory, allocationCallbacks *driver.AllocationCallbacks)
 
-	AllocateCommandBuffers(o CommandBufferAllocateOptions) ([]CommandBuffer, common.VkResult, error)
+	AllocateCommandBuffers(o CommandBufferAllocateInfo) ([]CommandBuffer, common.VkResult, error)
 	FreeCommandBuffers(buffers []CommandBuffer)
-	AllocateDescriptorSets(o DescriptorSetAllocateOptions) ([]DescriptorSet, common.VkResult, error)
+	AllocateDescriptorSets(o DescriptorSetAllocateInfo) ([]DescriptorSet, common.VkResult, error)
 	FreeDescriptorSets(sets []DescriptorSet) (common.VkResult, error)
 
 	Destroy(callbacks *driver.AllocationCallbacks)
-	WaitForIdle() (common.VkResult, error)
+	WaitIdle() (common.VkResult, error)
 	WaitForFences(waitForAll bool, timeout time.Duration, fences []Fence) (common.VkResult, error)
 	ResetFences(fences []Fence) (common.VkResult, error)
-	UpdateDescriptorSets(writes []WriteDescriptorSetOptions, copies []CopyDescriptorSetOptions) error
-	FlushMappedMemoryRanges(ranges []MappedMemoryRangeOptions) (common.VkResult, error)
-	InvalidateMappedMemoryRanges(ranges []MappedMemoryRangeOptions) (common.VkResult, error)
+	UpdateDescriptorSets(writes []WriteDescriptorSet, copies []CopyDescriptorSet) error
+	FlushMappedMemoryRanges(ranges []MappedMemoryRange) (common.VkResult, error)
+	InvalidateMappedMemoryRanges(ranges []MappedMemoryRange) (common.VkResult, error)
 }
 
 type Event interface {
@@ -249,7 +249,7 @@ type Instance interface {
 	APIVersion() common.APIVersion
 
 	IsInstanceExtensionActive(extensionName string) bool
-	PhysicalDevices() ([]PhysicalDevice, common.VkResult, error)
+	EnumeratePhysicalDevices() ([]PhysicalDevice, common.VkResult, error)
 
 	Destroy(callbacks *driver.AllocationCallbacks)
 }
@@ -260,18 +260,18 @@ type PhysicalDevice interface {
 	InstanceAPIVersion() common.APIVersion
 	DeviceAPIVersion() common.APIVersion
 
-	CreateDevice(allocationCallbacks *driver.AllocationCallbacks, options DeviceCreateOptions) (Device, common.VkResult, error)
+	CreateDevice(allocationCallbacks *driver.AllocationCallbacks, options DeviceCreateInfo) (Device, common.VkResult, error)
 
 	QueueFamilyProperties() []*QueueFamily
 	Properties() (*PhysicalDeviceProperties, error)
 	Features() *PhysicalDeviceFeatures
-	AvailableExtensions() (map[string]*ExtensionProperties, common.VkResult, error)
-	AvailableExtensionsForLayer(layerName string) (map[string]*ExtensionProperties, common.VkResult, error)
-	AvailableLayers() (map[string]*LayerProperties, common.VkResult, error)
+	EnumerateDeviceExtensionProperties() (map[string]*ExtensionProperties, common.VkResult, error)
+	EnumerateDeviceExtensionPropertiesForLayer(layerName string) (map[string]*ExtensionProperties, common.VkResult, error)
+	EnumerateDeviceLayerProperties() (map[string]*LayerProperties, common.VkResult, error)
 	MemoryProperties() *PhysicalDeviceMemoryProperties
-	FormatProperties(format DataFormat) *FormatProperties
-	ImageFormatProperties(format DataFormat, imageType ImageType, tiling ImageTiling, usages ImageUsages, flags ImageCreateFlags) (*ImageFormatProperties, common.VkResult, error)
-	SparseImageFormatProperties(format DataFormat, imageType ImageType, samples SampleCounts, usages ImageUsages, tiling ImageTiling) []SparseImageFormatProperties
+	FormatProperties(format Format) *FormatProperties
+	ImageFormatProperties(format Format, imageType ImageType, tiling ImageTiling, usages ImageUsageFlags, flags ImageCreateFlags) (*ImageFormatProperties, common.VkResult, error)
+	SparseImageFormatProperties(format Format, imageType ImageType, samples SampleCountFlags, usages ImageUsageFlags, tiling ImageTiling) []SparseImageFormatProperties
 }
 
 type Pipeline interface {
@@ -319,8 +319,8 @@ type Queue interface {
 	Driver() driver.Driver
 	APIVersion() common.APIVersion
 
-	WaitForIdle() (common.VkResult, error)
-	SubmitToQueue(fence Fence, o []SubmitOptions) (common.VkResult, error)
+	WaitIdle() (common.VkResult, error)
+	Submit(fence Fence, o []SubmitInfo) (common.VkResult, error)
 	BindSparse(fence Fence, bindInfos []BindSparseOptions) (common.VkResult, error)
 }
 

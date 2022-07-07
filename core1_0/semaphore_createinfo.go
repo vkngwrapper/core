@@ -25,13 +25,13 @@ func (f SemaphoreCreateFlags) String() string {
 
 ////
 
-type SemaphoreCreateOptions struct {
+type SemaphoreCreateInfo struct {
 	Flags SemaphoreCreateFlags
 
 	common.NextOptions
 }
 
-func (o SemaphoreCreateOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o SemaphoreCreateInfo) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == unsafe.Pointer(nil) {
 		preallocatedPointer = allocator.Malloc(C.sizeof_struct_VkSemaphoreCreateInfo)
 	}

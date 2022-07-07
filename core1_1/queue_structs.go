@@ -26,7 +26,7 @@ func init() {
 
 ////
 
-type DeviceQueueOptions struct {
+type DeviceQueueInfo2 struct {
 	Flags            core1_0.DeviceQueueCreateFlags
 	QueueFamilyIndex int
 	QueueIndex       int
@@ -34,7 +34,7 @@ type DeviceQueueOptions struct {
 	common.NextOptions
 }
 
-func (o DeviceQueueOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o DeviceQueueInfo2) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == nil {
 		preallocatedPointer = allocator.Malloc(C.sizeof_struct_VkDeviceQueueInfo2)
 	}
@@ -51,7 +51,7 @@ func (o DeviceQueueOptions) PopulateCPointer(allocator *cgoparam.Allocator, prea
 
 ////
 
-type DeviceGroupSubmitOptions struct {
+type DeviceGroupSubmitInfo struct {
 	WaitSemaphoreDeviceIndices   []int
 	CommandBufferDeviceMasks     []uint32
 	SignalSemaphoreDeviceIndices []int
@@ -59,7 +59,7 @@ type DeviceGroupSubmitOptions struct {
 	common.NextOptions
 }
 
-func (o DeviceGroupSubmitOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o DeviceGroupSubmitInfo) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == nil {
 		preallocatedPointer = allocator.Malloc(int(unsafe.Sizeof(C.VkDeviceGroupSubmitInfo{})))
 	}
@@ -115,13 +115,13 @@ func (o DeviceGroupSubmitOptions) PopulateCPointer(allocator *cgoparam.Allocator
 
 ////
 
-type ProtectedSubmitOptions struct {
+type ProtectedSubmitInfo struct {
 	ProtectedSubmit bool
 
 	common.NextOptions
 }
 
-func (o ProtectedSubmitOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o ProtectedSubmitInfo) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == nil {
 		preallocatedPointer = allocator.Malloc(C.sizeof_struct_VkProtectedSubmitInfo)
 	}

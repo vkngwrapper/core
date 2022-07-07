@@ -11,6 +11,20 @@ import (
 	"unsafe"
 )
 
+type PipelineDynamicStateCreateFlags uint32
+
+var pipelineDynamicStateCreateFlagsMapping = common.NewFlagStringMapping[PipelineDynamicStateCreateFlags]()
+
+func (f PipelineDynamicStateCreateFlags) Register(str string) {
+	pipelineDynamicStateCreateFlagsMapping.Register(f, str)
+}
+
+func (f PipelineDynamicStateCreateFlags) String() string {
+	return pipelineDynamicStateCreateFlagsMapping.FlagsToString(f)
+}
+
+////
+
 const (
 	DynamicStateViewport           DynamicState = C.VK_DYNAMIC_STATE_VIEWPORT
 	DynamicStateScissor            DynamicState = C.VK_DYNAMIC_STATE_SCISSOR
@@ -35,19 +49,20 @@ func init() {
 	DynamicStateStencilReference.Register("Stencil Reference")
 }
 
-type DynamicStateOptions struct {
+type PipelineDynamicStateCreateInfo struct {
+	Flags         PipelineDynamicStateCreateFlags
 	DynamicStates []DynamicState
 
 	common.NextOptions
 }
 
-func (o DynamicStateOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o PipelineDynamicStateCreateInfo) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == unsafe.Pointer(nil) {
 		preallocatedPointer = allocator.Malloc(C.sizeof_struct_VkPipelineDynamicStateCreateInfo)
 	}
 	createInfo := (*C.VkPipelineDynamicStateCreateInfo)(preallocatedPointer)
 	createInfo.sType = C.VK_STRUCTURE_TYPE_PIPELINE_DYNAMIC_STATE_CREATE_INFO
-	createInfo.flags = 0
+	createInfo.flags = C.VkPipelineDynamicStateCreateFlags(o.Flags)
 	createInfo.pNext = next
 
 	stateCount := len(o.DynamicStates)

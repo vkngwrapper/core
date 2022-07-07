@@ -141,7 +141,7 @@ func (v ConformanceVersion) IsAtLeast(other ConformanceVersion) bool {
 
 ////
 
-type PhysicalDeviceDriverOutData struct {
+type PhysicalDeviceDriverProperties struct {
 	DriverID           DriverID
 	DriverName         string
 	DriverInfo         string
@@ -150,7 +150,7 @@ type PhysicalDeviceDriverOutData struct {
 	common.NextOutData
 }
 
-func (o *PhysicalDeviceDriverOutData) PopulateHeader(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o *PhysicalDeviceDriverProperties) PopulateHeader(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == nil {
 		preallocatedPointer = allocator.Malloc(int(unsafe.Sizeof(C.VkPhysicalDeviceDriverProperties{})))
 	}
@@ -162,7 +162,7 @@ func (o *PhysicalDeviceDriverOutData) PopulateHeader(allocator *cgoparam.Allocat
 	return preallocatedPointer, nil
 }
 
-func (o *PhysicalDeviceDriverOutData) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
+func (o *PhysicalDeviceDriverProperties) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
 	outData := (*C.VkPhysicalDeviceDriverProperties)(cDataPointer)
 	o.DriverID = DriverID(outData.driverID)
 	o.ConformanceVersion.Major = uint8(outData.conformanceVersion.major)
@@ -177,7 +177,7 @@ func (o *PhysicalDeviceDriverOutData) PopulateOutData(cDataPointer unsafe.Pointe
 
 ////
 
-type PhysicalDeviceDepthStencilResolveOutData struct {
+type PhysicalDeviceDepthStencilResolveProperties struct {
 	SupportedDepthResolveModes   ResolveModeFlags
 	SupportedStencilResolveModes ResolveModeFlags
 	IndependentResolveNone       bool
@@ -186,7 +186,7 @@ type PhysicalDeviceDepthStencilResolveOutData struct {
 	common.NextOutData
 }
 
-func (o *PhysicalDeviceDepthStencilResolveOutData) PopulateHeader(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o *PhysicalDeviceDepthStencilResolveProperties) PopulateHeader(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == nil {
 		preallocatedPointer = allocator.Malloc(int(unsafe.Sizeof(C.VkPhysicalDeviceDepthStencilResolveProperties{})))
 	}
@@ -198,7 +198,7 @@ func (o *PhysicalDeviceDepthStencilResolveOutData) PopulateHeader(allocator *cgo
 	return preallocatedPointer, nil
 }
 
-func (o *PhysicalDeviceDepthStencilResolveOutData) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
+func (o *PhysicalDeviceDepthStencilResolveProperties) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
 	info := (*C.VkPhysicalDeviceDepthStencilResolveProperties)(cDataPointer)
 	o.SupportedStencilResolveModes = ResolveModeFlags(info.supportedStencilResolveModes)
 	o.SupportedDepthResolveModes = ResolveModeFlags(info.supportedDepthResolveModes)
@@ -210,7 +210,7 @@ func (o *PhysicalDeviceDepthStencilResolveOutData) PopulateOutData(cDataPointer 
 
 ////
 
-type PhysicalDeviceDescriptorIndexingOutData struct {
+type PhysicalDeviceDescriptorIndexingProperties struct {
 	MaxUpdateAfterBindDescriptorsInAllPools            int
 	ShaderUniformBufferArrayNonUniformIndexingNative   bool
 	ShaderSampledImageArrayNonUniformIndexingNative    bool
@@ -240,7 +240,7 @@ type PhysicalDeviceDescriptorIndexingOutData struct {
 	common.NextOutData
 }
 
-func (o *PhysicalDeviceDescriptorIndexingOutData) PopulateHeader(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o *PhysicalDeviceDescriptorIndexingProperties) PopulateHeader(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == nil {
 		preallocatedPointer = allocator.Malloc(int(unsafe.Sizeof(C.VkPhysicalDeviceDescriptorIndexingProperties{})))
 	}
@@ -252,7 +252,7 @@ func (o *PhysicalDeviceDescriptorIndexingOutData) PopulateHeader(allocator *cgop
 	return preallocatedPointer, nil
 }
 
-func (o *PhysicalDeviceDescriptorIndexingOutData) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
+func (o *PhysicalDeviceDescriptorIndexingProperties) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
 	info := (*C.VkPhysicalDeviceDescriptorIndexingProperties)(cDataPointer)
 
 	o.MaxUpdateAfterBindDescriptorsInAllPools = int(info.maxUpdateAfterBindDescriptorsInAllPools)
@@ -286,7 +286,7 @@ func (o *PhysicalDeviceDescriptorIndexingOutData) PopulateOutData(cDataPointer u
 
 ////
 
-type PhysicalDeviceFloatControlsOutData struct {
+type PhysicalDeviceFloatControlsProperties struct {
 	DenormBehaviorIndependence ShaderFloatControlsIndependence
 	RoundingMoundIndependence  ShaderFloatControlsIndependence
 
@@ -309,7 +309,7 @@ type PhysicalDeviceFloatControlsOutData struct {
 	common.NextOutData
 }
 
-func (o *PhysicalDeviceFloatControlsOutData) PopulateHeader(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o *PhysicalDeviceFloatControlsProperties) PopulateHeader(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == nil {
 		preallocatedPointer = allocator.Malloc(int(unsafe.Sizeof(C.VkPhysicalDeviceFloatControlsProperties{})))
 	}
@@ -321,7 +321,7 @@ func (o *PhysicalDeviceFloatControlsOutData) PopulateHeader(allocator *cgoparam.
 	return preallocatedPointer, nil
 }
 
-func (o *PhysicalDeviceFloatControlsOutData) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
+func (o *PhysicalDeviceFloatControlsProperties) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
 	info := (*C.VkPhysicalDeviceFloatControlsProperties)(cDataPointer)
 
 	o.DenormBehaviorIndependence = ShaderFloatControlsIndependence(info.denormBehaviorIndependence)
@@ -347,14 +347,14 @@ func (o *PhysicalDeviceFloatControlsOutData) PopulateOutData(cDataPointer unsafe
 
 ////
 
-type PhysicalDeviceSamplerFilterMinmaxOutData struct {
+type PhysicalDeviceSamplerFilterMinmaxProperties struct {
 	FilterMinmaxSingleComponentFormats bool
 	FilterMinmaxImageComponentMapping  bool
 
 	common.NextOutData
 }
 
-func (o *PhysicalDeviceSamplerFilterMinmaxOutData) PopulateHeader(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o *PhysicalDeviceSamplerFilterMinmaxProperties) PopulateHeader(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == nil {
 		preallocatedPointer = allocator.Malloc(int(unsafe.Sizeof(C.VkPhysicalDeviceSamplerFilterMinmaxProperties{})))
 	}
@@ -366,7 +366,7 @@ func (o *PhysicalDeviceSamplerFilterMinmaxOutData) PopulateHeader(allocator *cgo
 	return preallocatedPointer, nil
 }
 
-func (o *PhysicalDeviceSamplerFilterMinmaxOutData) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
+func (o *PhysicalDeviceSamplerFilterMinmaxProperties) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
 	info := (*C.VkPhysicalDeviceSamplerFilterMinmaxProperties)(cDataPointer)
 
 	o.FilterMinmaxSingleComponentFormats = info.filterMinmaxSingleComponentFormats != C.VkBool32(0)
@@ -377,13 +377,13 @@ func (o *PhysicalDeviceSamplerFilterMinmaxOutData) PopulateOutData(cDataPointer 
 
 ////
 
-type PhysicalDeviceTimelineSemaphoreOutData struct {
+type PhysicalDeviceTimelineSemaphoreProperties struct {
 	MaxTimelineSemaphoreValueDifference uint64
 
 	common.NextOutData
 }
 
-func (o *PhysicalDeviceTimelineSemaphoreOutData) PopulateHeader(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o *PhysicalDeviceTimelineSemaphoreProperties) PopulateHeader(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == nil {
 		preallocatedPointer = allocator.Malloc(int(unsafe.Sizeof(C.VkPhysicalDeviceTimelineSemaphoreProperties{})))
 	}
@@ -395,7 +395,7 @@ func (o *PhysicalDeviceTimelineSemaphoreOutData) PopulateHeader(allocator *cgopa
 	return preallocatedPointer, nil
 }
 
-func (o *PhysicalDeviceTimelineSemaphoreOutData) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
+func (o *PhysicalDeviceTimelineSemaphoreProperties) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
 	info := (*C.VkPhysicalDeviceTimelineSemaphoreProperties)(cDataPointer)
 
 	o.MaxTimelineSemaphoreValueDifference = uint64(info.maxTimelineSemaphoreValueDifference)
@@ -405,7 +405,7 @@ func (o *PhysicalDeviceTimelineSemaphoreOutData) PopulateOutData(cDataPointer un
 
 ////
 
-type PhysicalDeviceVulkan11OutData struct {
+type PhysicalDeviceVulkan11Properties struct {
 	DeviceUUID uuid.UUID
 	DriverUUID uuid.UUID
 	DeviceLUID uint64
@@ -414,8 +414,8 @@ type PhysicalDeviceVulkan11OutData struct {
 	DeviceLUIDValid bool
 
 	SubgroupSize                      int
-	SubgroupSupportedStages           core1_0.ShaderStages
-	SubgroupSupportedOperations       core1_1.SubgroupFeatures
+	SubgroupSupportedStages           core1_0.ShaderStageFlags
+	SubgroupSupportedOperations       core1_1.SubgroupFeatureFlags
 	SubgroupQuadOperationsInAllStages bool
 
 	PointClippingBehavior     core1_1.PointClippingBehavior
@@ -428,7 +428,7 @@ type PhysicalDeviceVulkan11OutData struct {
 	common.NextOutData
 }
 
-func (o *PhysicalDeviceVulkan11OutData) PopulateHeader(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o *PhysicalDeviceVulkan11Properties) PopulateHeader(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == nil {
 		preallocatedPointer = allocator.Malloc(C.sizeof_struct_VkPhysicalDeviceVulkan11Properties)
 	}
@@ -440,7 +440,7 @@ func (o *PhysicalDeviceVulkan11OutData) PopulateHeader(allocator *cgoparam.Alloc
 	return preallocatedPointer, nil
 }
 
-func (o *PhysicalDeviceVulkan11OutData) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
+func (o *PhysicalDeviceVulkan11Properties) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
 	info := (*C.VkPhysicalDeviceVulkan11Properties)(cDataPointer)
 
 	deviceUUIDBytes := C.GoBytes(unsafe.Pointer(&info.deviceUUID[0]), C.VK_UUID_SIZE)
@@ -459,8 +459,8 @@ func (o *PhysicalDeviceVulkan11OutData) PopulateOutData(cDataPointer unsafe.Poin
 	o.DeviceNodeMask = uint32(info.deviceNodeMask)
 	o.DeviceLUIDValid = info.deviceLUIDValid != C.VkBool32(0)
 	o.SubgroupSize = int(info.subgroupSize)
-	o.SubgroupSupportedStages = core1_0.ShaderStages(info.subgroupSupportedStages)
-	o.SubgroupSupportedOperations = core1_1.SubgroupFeatures(info.subgroupSupportedOperations)
+	o.SubgroupSupportedStages = core1_0.ShaderStageFlags(info.subgroupSupportedStages)
+	o.SubgroupSupportedOperations = core1_1.SubgroupFeatureFlags(info.subgroupSupportedOperations)
 	o.SubgroupQuadOperationsInAllStages = info.subgroupQuadOperationsInAllStages != C.VkBool32(0)
 	o.PointClippingBehavior = core1_1.PointClippingBehavior(info.pointClippingBehavior)
 	o.MaxMultiviewViewCount = int(info.maxMultiviewViewCount)
@@ -474,7 +474,7 @@ func (o *PhysicalDeviceVulkan11OutData) PopulateOutData(cDataPointer unsafe.Poin
 
 ////
 
-type PhysicalDeviceVulkan12OutData struct {
+type PhysicalDeviceVulkan12Properties struct {
 	DriverID           DriverID
 	DriverName         string
 	DriverInfo         string
@@ -535,12 +535,12 @@ type PhysicalDeviceVulkan12OutData struct {
 	FilterMinmaxImageComponentMapping  bool
 
 	MaxTimelineSemaphoreValueDifference uint64
-	FramebufferIntegerColorSampleCounts core1_0.SampleCounts
+	FramebufferIntegerColorSampleCounts core1_0.SampleCountFlags
 
 	common.NextOutData
 }
 
-func (o *PhysicalDeviceVulkan12OutData) PopulateHeader(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o *PhysicalDeviceVulkan12Properties) PopulateHeader(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == nil {
 		preallocatedPointer = allocator.Malloc(C.sizeof_struct_VkPhysicalDeviceVulkan12Properties)
 	}
@@ -552,7 +552,7 @@ func (o *PhysicalDeviceVulkan12OutData) PopulateHeader(allocator *cgoparam.Alloc
 	return preallocatedPointer, nil
 }
 
-func (o *PhysicalDeviceVulkan12OutData) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
+func (o *PhysicalDeviceVulkan12Properties) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
 	outData := (*C.VkPhysicalDeviceVulkan12Properties)(cDataPointer)
 
 	o.DriverID = DriverID(outData.driverID)
@@ -619,7 +619,7 @@ func (o *PhysicalDeviceVulkan12OutData) PopulateOutData(cDataPointer unsafe.Poin
 	o.FilterMinmaxImageComponentMapping = outData.filterMinmaxImageComponentMapping != C.VkBool32(0)
 
 	o.MaxTimelineSemaphoreValueDifference = uint64(outData.maxTimelineSemaphoreValueDifference)
-	o.FramebufferIntegerColorSampleCounts = core1_0.SampleCounts(outData.framebufferIntegerColorSampleCounts)
+	o.FramebufferIntegerColorSampleCounts = core1_0.SampleCountFlags(outData.framebufferIntegerColorSampleCounts)
 
 	return outData.pNext, nil
 }

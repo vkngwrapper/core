@@ -7,9 +7,9 @@ package core1_0
 import "C"
 
 const (
-	PipelineCacheHeaderVersion1 PipelineCacheHeaderVersion = C.VK_PIPELINE_CACHE_HEADER_VERSION_ONE
+	PipelineCacheHeaderVersionOne PipelineCacheHeaderVersion = C.VK_PIPELINE_CACHE_HEADER_VERSION_ONE
 )
 
 func init() {
-	PipelineCacheHeaderVersion1.Register("APIVersion 1")
+	PipelineCacheHeaderVersionOne.Register("APIVersion 1")
 }

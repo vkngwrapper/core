@@ -17,7 +17,7 @@ import (
 const (
 	BufferCreateDeviceAddressCaptureReplay core1_0.BufferCreateFlags = C.VK_BUFFER_CREATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT
 
-	BufferUsageShaderDeviceAddress core1_0.BufferUsages = C.VK_BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT
+	BufferUsageShaderDeviceAddress core1_0.BufferUsageFlags = C.VK_BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT
 
 	MemoryAllocateDeviceAddress              core1_1.MemoryAllocateFlags = C.VK_MEMORY_ALLOCATE_DEVICE_ADDRESS_BIT
 	MemoryAllocateDeviceAddressCaptureReplay core1_1.MemoryAllocateFlags = C.VK_MEMORY_ALLOCATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT
@@ -38,13 +38,13 @@ func init() {
 
 ////
 
-type BufferDeviceAddressOptions struct {
+type BufferDeviceAddressInfo struct {
 	Buffer core1_0.Buffer
 
 	common.NextOptions
 }
 
-func (o BufferDeviceAddressOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o BufferDeviceAddressInfo) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == nil {
 		preallocatedPointer = allocator.Malloc(int(unsafe.Sizeof(C.VkBufferDeviceAddressInfo{})))
 	}
@@ -61,20 +61,20 @@ func (o BufferDeviceAddressOptions) PopulateCPointer(allocator *cgoparam.Allocat
 	return preallocatedPointer, nil
 }
 
-func (o BufferDeviceAddressOptions) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
+func (o BufferDeviceAddressInfo) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
 	info := (*C.VkBufferDeviceAddressInfo)(cDataPointer)
 	return info.pNext, nil
 }
 
 ////
 
-type DeviceMemoryOpaqueAddressOptions struct {
+type DeviceMemoryOpaqueCaptureAddressInfo struct {
 	Memory core1_0.DeviceMemory
 
 	common.NextOptions
 }
 
-func (o DeviceMemoryOpaqueAddressOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o DeviceMemoryOpaqueCaptureAddressInfo) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == nil {
 		preallocatedPointer = allocator.Malloc(int(unsafe.Sizeof(C.VkDeviceMemoryOpaqueCaptureAddressInfo{})))
 	}
@@ -89,13 +89,13 @@ func (o DeviceMemoryOpaqueAddressOptions) PopulateCPointer(allocator *cgoparam.A
 
 ////
 
-type BufferOpaqueCaptureAddressCreateOptions struct {
+type BufferOpaqueCaptureAddressCreateInfo struct {
 	OpaqueCaptureAddress uint64
 
 	common.NextOptions
 }
 
-func (o BufferOpaqueCaptureAddressCreateOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o BufferOpaqueCaptureAddressCreateInfo) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == nil {
 		preallocatedPointer = allocator.Malloc(int(unsafe.Sizeof(C.VkBufferOpaqueCaptureAddressCreateInfo{})))
 	}
@@ -110,13 +110,13 @@ func (o BufferOpaqueCaptureAddressCreateOptions) PopulateCPointer(allocator *cgo
 
 ////
 
-type MemoryOpaqueCaptureAddressAllocateOptions struct {
+type MemoryOpaqueCaptureAddressAllocateInfo struct {
 	OpaqueCaptureAddress uint64
 
 	common.NextOptions
 }
 
-func (o MemoryOpaqueCaptureAddressAllocateOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o MemoryOpaqueCaptureAddressAllocateInfo) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == nil {
 		preallocatedPointer = allocator.Malloc(int(unsafe.Sizeof(C.VkMemoryOpaqueCaptureAddressAllocateInfo{})))
 	}

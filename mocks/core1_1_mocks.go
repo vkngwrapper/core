@@ -56,7 +56,7 @@ func (mr *Buffer1_1MockRecorder) APIVersion() *gomock.Call {
 // BindBufferMemory mocks base method.
 func (m *Buffer1_1) BindBufferMemory(memory core1_0.DeviceMemory, offset int) (common.VkResult, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "BindBufferMemory", memory, offset)
+	ret := m.ctrl.Call(m, "BindBufferMemory2", memory, offset)
 	ret0, _ := ret[0].(common.VkResult)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
@@ -65,7 +65,7 @@ func (m *Buffer1_1) BindBufferMemory(memory core1_0.DeviceMemory, offset int) (c
 // BindBufferMemory indicates an expected call of BindBufferMemory.
 func (mr *Buffer1_1MockRecorder) BindBufferMemory(memory, offset interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "BindBufferMemory", reflect.TypeOf((*Buffer1_1)(nil).BindBufferMemory), memory, offset)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "BindBufferMemory2", reflect.TypeOf((*Buffer1_1)(nil).BindBufferMemory), memory, offset)
 }
 
 // Destroy mocks base method.
@@ -265,7 +265,7 @@ func (mr *CommandBuffer1_1MockRecorder) APIVersion() *gomock.Call {
 }
 
 // Begin mocks base method.
-func (m *CommandBuffer1_1) Begin(o core1_0.BeginOptions) (common.VkResult, error) {
+func (m *CommandBuffer1_1) Begin(o core1_0.CommandBufferBeginInfo) (common.VkResult, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Begin", o)
 	ret0, _ := ret[0].(common.VkResult)
@@ -292,7 +292,7 @@ func (mr *CommandBuffer1_1MockRecorder) CmdBeginQuery(queryPool, query, flags in
 }
 
 // CmdBeginRenderPass mocks base method.
-func (m *CommandBuffer1_1) CmdBeginRenderPass(contents core1_0.SubpassContents, o core1_0.RenderPassBeginOptions) error {
+func (m *CommandBuffer1_1) CmdBeginRenderPass(contents core1_0.SubpassContents, o core1_0.RenderPassBeginInfo) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CmdBeginRenderPass", contents, o)
 	ret0, _ := ret[0].(error)
@@ -618,7 +618,7 @@ func (mr *CommandBuffer1_1MockRecorder) CmdNextSubpass(contents interface{}) *go
 }
 
 // CmdPipelineBarrier mocks base method.
-func (m *CommandBuffer1_1) CmdPipelineBarrier(srcStageMask, dstStageMask core1_0.PipelineStages, dependencies core1_0.DependencyFlags, memoryBarriers []core1_0.MemoryBarrierOptions, bufferMemoryBarriers []core1_0.BufferMemoryBarrierOptions, imageMemoryBarriers []core1_0.ImageMemoryBarrierOptions) error {
+func (m *CommandBuffer1_1) CmdPipelineBarrier(srcStageMask, dstStageMask core1_0.PipelineStageFlags, dependencies core1_0.DependencyFlags, memoryBarriers []core1_0.MemoryBarrier, bufferMemoryBarriers []core1_0.BufferMemoryBarrier, imageMemoryBarriers []core1_0.ImageMemoryBarrier) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CmdPipelineBarrier", srcStageMask, dstStageMask, dependencies, memoryBarriers, bufferMemoryBarriers, imageMemoryBarriers)
 	ret0, _ := ret[0].(error)
@@ -632,7 +632,7 @@ func (mr *CommandBuffer1_1MockRecorder) CmdPipelineBarrier(srcStageMask, dstStag
 }
 
 // CmdPushConstants mocks base method.
-func (m *CommandBuffer1_1) CmdPushConstants(layout core1_0.PipelineLayout, stageFlags core1_0.ShaderStages, offset int, valueBytes []byte) {
+func (m *CommandBuffer1_1) CmdPushConstants(layout core1_0.PipelineLayout, stageFlags core1_0.ShaderStageFlags, offset int, valueBytes []byte) {
 	m.ctrl.T.Helper()
 	m.ctrl.Call(m, "CmdPushConstants", layout, stageFlags, offset, valueBytes)
 }
@@ -644,7 +644,7 @@ func (mr *CommandBuffer1_1MockRecorder) CmdPushConstants(layout, stageFlags, off
 }
 
 // CmdResetEvent mocks base method.
-func (m *CommandBuffer1_1) CmdResetEvent(event core1_0.Event, stageMask core1_0.PipelineStages) {
+func (m *CommandBuffer1_1) CmdResetEvent(event core1_0.Event, stageMask core1_0.PipelineStageFlags) {
 	m.ctrl.T.Helper()
 	m.ctrl.Call(m, "CmdResetEvent", event, stageMask)
 }
@@ -730,7 +730,7 @@ func (mr *CommandBuffer1_1MockRecorder) CmdSetDeviceMask(deviceMask interface{})
 }
 
 // CmdSetEvent mocks base method.
-func (m *CommandBuffer1_1) CmdSetEvent(event core1_0.Event, stageMask core1_0.PipelineStages) {
+func (m *CommandBuffer1_1) CmdSetEvent(event core1_0.Event, stageMask core1_0.PipelineStageFlags) {
 	m.ctrl.T.Helper()
 	m.ctrl.Call(m, "CmdSetEvent", event, stageMask)
 }
@@ -766,7 +766,7 @@ func (mr *CommandBuffer1_1MockRecorder) CmdSetScissor(scissors interface{}) *gom
 }
 
 // CmdSetStencilCompareMask mocks base method.
-func (m *CommandBuffer1_1) CmdSetStencilCompareMask(faceMask core1_0.StencilFaces, compareMask uint32) {
+func (m *CommandBuffer1_1) CmdSetStencilCompareMask(faceMask core1_0.StencilFaceFlags, compareMask uint32) {
 	m.ctrl.T.Helper()
 	m.ctrl.Call(m, "CmdSetStencilCompareMask", faceMask, compareMask)
 }
@@ -778,7 +778,7 @@ func (mr *CommandBuffer1_1MockRecorder) CmdSetStencilCompareMask(faceMask, compa
 }
 
 // CmdSetStencilReference mocks base method.
-func (m *CommandBuffer1_1) CmdSetStencilReference(faceMask core1_0.StencilFaces, reference uint32) {
+func (m *CommandBuffer1_1) CmdSetStencilReference(faceMask core1_0.StencilFaceFlags, reference uint32) {
 	m.ctrl.T.Helper()
 	m.ctrl.Call(m, "CmdSetStencilReference", faceMask, reference)
 }
@@ -790,7 +790,7 @@ func (mr *CommandBuffer1_1MockRecorder) CmdSetStencilReference(faceMask, referen
 }
 
 // CmdSetStencilWriteMask mocks base method.
-func (m *CommandBuffer1_1) CmdSetStencilWriteMask(faceMask core1_0.StencilFaces, writeMask uint32) {
+func (m *CommandBuffer1_1) CmdSetStencilWriteMask(faceMask core1_0.StencilFaceFlags, writeMask uint32) {
 	m.ctrl.T.Helper()
 	m.ctrl.Call(m, "CmdSetStencilWriteMask", faceMask, writeMask)
 }
@@ -826,7 +826,7 @@ func (mr *CommandBuffer1_1MockRecorder) CmdUpdateBuffer(dstBuffer, dstOffset, da
 }
 
 // CmdWaitEvents mocks base method.
-func (m *CommandBuffer1_1) CmdWaitEvents(events []core1_0.Event, srcStageMask, dstStageMask core1_0.PipelineStages, memoryBarriers []core1_0.MemoryBarrierOptions, bufferMemoryBarriers []core1_0.BufferMemoryBarrierOptions, imageMemoryBarriers []core1_0.ImageMemoryBarrierOptions) error {
+func (m *CommandBuffer1_1) CmdWaitEvents(events []core1_0.Event, srcStageMask, dstStageMask core1_0.PipelineStageFlags, memoryBarriers []core1_0.MemoryBarrier, bufferMemoryBarriers []core1_0.BufferMemoryBarrier, imageMemoryBarriers []core1_0.ImageMemoryBarrier) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CmdWaitEvents", events, srcStageMask, dstStageMask, memoryBarriers, bufferMemoryBarriers, imageMemoryBarriers)
 	ret0, _ := ret[0].(error)
@@ -840,7 +840,7 @@ func (mr *CommandBuffer1_1MockRecorder) CmdWaitEvents(events, srcStageMask, dstS
 }
 
 // CmdWriteTimestamp mocks base method.
-func (m *CommandBuffer1_1) CmdWriteTimestamp(pipelineStage core1_0.PipelineStages, queryPool core1_0.QueryPool, query int) {
+func (m *CommandBuffer1_1) CmdWriteTimestamp(pipelineStage core1_0.PipelineStageFlags, queryPool core1_0.QueryPool, query int) {
 	m.ctrl.T.Helper()
 	m.ctrl.Call(m, "CmdWriteTimestamp", pipelineStage, queryPool, query)
 }
@@ -1452,7 +1452,7 @@ func (mr *Device1_1MockRecorder) APIVersion() *gomock.Call {
 }
 
 // AllocateCommandBuffers mocks base method.
-func (m *Device1_1) AllocateCommandBuffers(o core1_0.CommandBufferAllocateOptions) ([]core1_0.CommandBuffer, common.VkResult, error) {
+func (m *Device1_1) AllocateCommandBuffers(o core1_0.CommandBufferAllocateInfo) ([]core1_0.CommandBuffer, common.VkResult, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "AllocateCommandBuffers", o)
 	ret0, _ := ret[0].([]core1_0.CommandBuffer)
@@ -1468,7 +1468,7 @@ func (mr *Device1_1MockRecorder) AllocateCommandBuffers(o interface{}) *gomock.C
 }
 
 // AllocateDescriptorSets mocks base method.
-func (m *Device1_1) AllocateDescriptorSets(o core1_0.DescriptorSetAllocateOptions) ([]core1_0.DescriptorSet, common.VkResult, error) {
+func (m *Device1_1) AllocateDescriptorSets(o core1_0.DescriptorSetAllocateInfo) ([]core1_0.DescriptorSet, common.VkResult, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "AllocateDescriptorSets", o)
 	ret0, _ := ret[0].([]core1_0.DescriptorSet)
@@ -1484,7 +1484,7 @@ func (mr *Device1_1MockRecorder) AllocateDescriptorSets(o interface{}) *gomock.C
 }
 
 // AllocateMemory mocks base method.
-func (m *Device1_1) AllocateMemory(allocationCallbacks *driver.AllocationCallbacks, o core1_0.MemoryAllocateOptions) (core1_0.DeviceMemory, common.VkResult, error) {
+func (m *Device1_1) AllocateMemory(allocationCallbacks *driver.AllocationCallbacks, o core1_0.MemoryAllocateInfo) (core1_0.DeviceMemory, common.VkResult, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "AllocateMemory", allocationCallbacks, o)
 	ret0, _ := ret[0].(core1_0.DeviceMemory)
@@ -1499,52 +1499,52 @@ func (mr *Device1_1MockRecorder) AllocateMemory(allocationCallbacks, o interface
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AllocateMemory", reflect.TypeOf((*Device1_1)(nil).AllocateMemory), allocationCallbacks, o)
 }
 
-// BindBufferMemory mocks base method.
-func (m *Device1_1) BindBufferMemory(o []core1_1.BindBufferMemoryOptions) (common.VkResult, error) {
+// BindBufferMemory2 mocks base method.
+func (m *Device1_1) BindBufferMemory2(o []core1_1.BindBufferMemoryInfo) (common.VkResult, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "BindBufferMemory", o)
+	ret := m.ctrl.Call(m, "BindBufferMemory2", o)
 	ret0, _ := ret[0].(common.VkResult)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// BindBufferMemory indicates an expected call of BindBufferMemory.
-func (mr *Device1_1MockRecorder) BindBufferMemory(o interface{}) *gomock.Call {
+// BindBufferMemory2 indicates an expected call of BindBufferMemory2.
+func (mr *Device1_1MockRecorder) BindBufferMemory2(o interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "BindBufferMemory", reflect.TypeOf((*Device1_1)(nil).BindBufferMemory), o)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "BindBufferMemory2", reflect.TypeOf((*Device1_1)(nil).BindBufferMemory2), o)
 }
 
-// BindImageMemory mocks base method.
-func (m *Device1_1) BindImageMemory(o []core1_1.BindImageMemoryOptions) (common.VkResult, error) {
+// BindImageMemory2 mocks base method.
+func (m *Device1_1) BindImageMemory2(o []core1_1.BindImageMemoryInfo) (common.VkResult, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "BindImageMemory", o)
+	ret := m.ctrl.Call(m, "BindImageMemory2", o)
 	ret0, _ := ret[0].(common.VkResult)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// BindImageMemory indicates an expected call of BindImageMemory.
-func (mr *Device1_1MockRecorder) BindImageMemory(o interface{}) *gomock.Call {
+// BindImageMemory2 indicates an expected call of BindImageMemory2.
+func (mr *Device1_1MockRecorder) BindImageMemory2(o interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "BindImageMemory", reflect.TypeOf((*Device1_1)(nil).BindImageMemory), o)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "BindImageMemory2", reflect.TypeOf((*Device1_1)(nil).BindImageMemory2), o)
 }
 
-// BufferMemoryRequirements mocks base method.
-func (m *Device1_1) BufferMemoryRequirements(o core1_1.BufferMemoryRequirementsOptions, out *core1_1.MemoryRequirementsOutData) error {
+// BufferMemoryRequirements2 mocks base method.
+func (m *Device1_1) BufferMemoryRequirements2(o core1_1.BufferMemoryRequirementsInfo2, out *core1_1.MemoryRequirements2) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "BufferMemoryRequirements", o, out)
+	ret := m.ctrl.Call(m, "BufferMemoryRequirements2", o, out)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
-// BufferMemoryRequirements indicates an expected call of BufferMemoryRequirements.
-func (mr *Device1_1MockRecorder) BufferMemoryRequirements(o, out interface{}) *gomock.Call {
+// BufferMemoryRequirements2 indicates an expected call of BufferMemoryRequirements2.
+func (mr *Device1_1MockRecorder) BufferMemoryRequirements2(o, out interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "BufferMemoryRequirements", reflect.TypeOf((*Device1_1)(nil).BufferMemoryRequirements), o, out)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "BufferMemoryRequirements2", reflect.TypeOf((*Device1_1)(nil).BufferMemoryRequirements2), o, out)
 }
 
 // CreateBuffer mocks base method.
-func (m *Device1_1) CreateBuffer(allocationCallbacks *driver.AllocationCallbacks, o core1_0.BufferCreateOptions) (core1_0.Buffer, common.VkResult, error) {
+func (m *Device1_1) CreateBuffer(allocationCallbacks *driver.AllocationCallbacks, o core1_0.BufferCreateInfo) (core1_0.Buffer, common.VkResult, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateBuffer", allocationCallbacks, o)
 	ret0, _ := ret[0].(core1_0.Buffer)
@@ -1560,7 +1560,7 @@ func (mr *Device1_1MockRecorder) CreateBuffer(allocationCallbacks, o interface{}
 }
 
 // CreateBufferView mocks base method.
-func (m *Device1_1) CreateBufferView(allocationCallbacks *driver.AllocationCallbacks, o core1_0.BufferViewCreateOptions) (core1_0.BufferView, common.VkResult, error) {
+func (m *Device1_1) CreateBufferView(allocationCallbacks *driver.AllocationCallbacks, o core1_0.BufferViewCreateInfo) (core1_0.BufferView, common.VkResult, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateBufferView", allocationCallbacks, o)
 	ret0, _ := ret[0].(core1_0.BufferView)
@@ -1576,7 +1576,7 @@ func (mr *Device1_1MockRecorder) CreateBufferView(allocationCallbacks, o interfa
 }
 
 // CreateCommandPool mocks base method.
-func (m *Device1_1) CreateCommandPool(allocationCallbacks *driver.AllocationCallbacks, o core1_0.CommandPoolCreateOptions) (core1_0.CommandPool, common.VkResult, error) {
+func (m *Device1_1) CreateCommandPool(allocationCallbacks *driver.AllocationCallbacks, o core1_0.CommandPoolCreateInfo) (core1_0.CommandPool, common.VkResult, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateCommandPool", allocationCallbacks, o)
 	ret0, _ := ret[0].(core1_0.CommandPool)
@@ -1592,7 +1592,7 @@ func (mr *Device1_1MockRecorder) CreateCommandPool(allocationCallbacks, o interf
 }
 
 // CreateComputePipelines mocks base method.
-func (m *Device1_1) CreateComputePipelines(pipelineCache core1_0.PipelineCache, allocationCallbacks *driver.AllocationCallbacks, o []core1_0.ComputePipelineCreateOptions) ([]core1_0.Pipeline, common.VkResult, error) {
+func (m *Device1_1) CreateComputePipelines(pipelineCache core1_0.PipelineCache, allocationCallbacks *driver.AllocationCallbacks, o []core1_0.ComputePipelineCreateInfo) ([]core1_0.Pipeline, common.VkResult, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateComputePipelines", pipelineCache, allocationCallbacks, o)
 	ret0, _ := ret[0].([]core1_0.Pipeline)
@@ -1608,7 +1608,7 @@ func (mr *Device1_1MockRecorder) CreateComputePipelines(pipelineCache, allocatio
 }
 
 // CreateDescriptorPool mocks base method.
-func (m *Device1_1) CreateDescriptorPool(allocationCallbacks *driver.AllocationCallbacks, o core1_0.DescriptorPoolCreateOptions) (core1_0.DescriptorPool, common.VkResult, error) {
+func (m *Device1_1) CreateDescriptorPool(allocationCallbacks *driver.AllocationCallbacks, o core1_0.DescriptorPoolCreateInfo) (core1_0.DescriptorPool, common.VkResult, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateDescriptorPool", allocationCallbacks, o)
 	ret0, _ := ret[0].(core1_0.DescriptorPool)
@@ -1624,7 +1624,7 @@ func (mr *Device1_1MockRecorder) CreateDescriptorPool(allocationCallbacks, o int
 }
 
 // CreateDescriptorSetLayout mocks base method.
-func (m *Device1_1) CreateDescriptorSetLayout(allocationCallbacks *driver.AllocationCallbacks, o core1_0.DescriptorSetLayoutCreateOptions) (core1_0.DescriptorSetLayout, common.VkResult, error) {
+func (m *Device1_1) CreateDescriptorSetLayout(allocationCallbacks *driver.AllocationCallbacks, o core1_0.DescriptorSetLayoutCreateInfo) (core1_0.DescriptorSetLayout, common.VkResult, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateDescriptorSetLayout", allocationCallbacks, o)
 	ret0, _ := ret[0].(core1_0.DescriptorSetLayout)
@@ -1640,7 +1640,7 @@ func (mr *Device1_1MockRecorder) CreateDescriptorSetLayout(allocationCallbacks, 
 }
 
 // CreateDescriptorUpdateTemplate mocks base method.
-func (m *Device1_1) CreateDescriptorUpdateTemplate(o core1_1.DescriptorUpdateTemplateCreateOptions, allocator *driver.AllocationCallbacks) (core1_1.DescriptorUpdateTemplate, common.VkResult, error) {
+func (m *Device1_1) CreateDescriptorUpdateTemplate(o core1_1.DescriptorUpdateTemplateCreateInfo, allocator *driver.AllocationCallbacks) (core1_1.DescriptorUpdateTemplate, common.VkResult, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateDescriptorUpdateTemplate", o, allocator)
 	ret0, _ := ret[0].(core1_1.DescriptorUpdateTemplate)
@@ -1656,7 +1656,7 @@ func (mr *Device1_1MockRecorder) CreateDescriptorUpdateTemplate(o, allocator int
 }
 
 // CreateEvent mocks base method.
-func (m *Device1_1) CreateEvent(allocationCallbacks *driver.AllocationCallbacks, options core1_0.EventCreateOptions) (core1_0.Event, common.VkResult, error) {
+func (m *Device1_1) CreateEvent(allocationCallbacks *driver.AllocationCallbacks, options core1_0.EventCreateInfo) (core1_0.Event, common.VkResult, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateEvent", allocationCallbacks, options)
 	ret0, _ := ret[0].(core1_0.Event)
@@ -1672,7 +1672,7 @@ func (mr *Device1_1MockRecorder) CreateEvent(allocationCallbacks, options interf
 }
 
 // CreateFence mocks base method.
-func (m *Device1_1) CreateFence(allocationCallbacks *driver.AllocationCallbacks, o core1_0.FenceCreateOptions) (core1_0.Fence, common.VkResult, error) {
+func (m *Device1_1) CreateFence(allocationCallbacks *driver.AllocationCallbacks, o core1_0.FenceCreateInfo) (core1_0.Fence, common.VkResult, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateFence", allocationCallbacks, o)
 	ret0, _ := ret[0].(core1_0.Fence)
@@ -1688,7 +1688,7 @@ func (mr *Device1_1MockRecorder) CreateFence(allocationCallbacks, o interface{})
 }
 
 // CreateFramebuffer mocks base method.
-func (m *Device1_1) CreateFramebuffer(allocationCallbacks *driver.AllocationCallbacks, o core1_0.FramebufferCreateOptions) (core1_0.Framebuffer, common.VkResult, error) {
+func (m *Device1_1) CreateFramebuffer(allocationCallbacks *driver.AllocationCallbacks, o core1_0.FramebufferCreateInfo) (core1_0.Framebuffer, common.VkResult, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateFramebuffer", allocationCallbacks, o)
 	ret0, _ := ret[0].(core1_0.Framebuffer)
@@ -1704,7 +1704,7 @@ func (mr *Device1_1MockRecorder) CreateFramebuffer(allocationCallbacks, o interf
 }
 
 // CreateGraphicsPipelines mocks base method.
-func (m *Device1_1) CreateGraphicsPipelines(pipelineCache core1_0.PipelineCache, allocationCallbacks *driver.AllocationCallbacks, o []core1_0.GraphicsPipelineCreateOptions) ([]core1_0.Pipeline, common.VkResult, error) {
+func (m *Device1_1) CreateGraphicsPipelines(pipelineCache core1_0.PipelineCache, allocationCallbacks *driver.AllocationCallbacks, o []core1_0.GraphicsPipelineCreateInfo) ([]core1_0.Pipeline, common.VkResult, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateGraphicsPipelines", pipelineCache, allocationCallbacks, o)
 	ret0, _ := ret[0].([]core1_0.Pipeline)
@@ -1736,7 +1736,7 @@ func (mr *Device1_1MockRecorder) CreateImage(allocationCallbacks, options interf
 }
 
 // CreateImageView mocks base method.
-func (m *Device1_1) CreateImageView(allocationCallbacks *driver.AllocationCallbacks, o core1_0.ImageViewCreateOptions) (core1_0.ImageView, common.VkResult, error) {
+func (m *Device1_1) CreateImageView(allocationCallbacks *driver.AllocationCallbacks, o core1_0.ImageViewCreateInfo) (core1_0.ImageView, common.VkResult, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateImageView", allocationCallbacks, o)
 	ret0, _ := ret[0].(core1_0.ImageView)
@@ -1752,7 +1752,7 @@ func (mr *Device1_1MockRecorder) CreateImageView(allocationCallbacks, o interfac
 }
 
 // CreatePipelineCache mocks base method.
-func (m *Device1_1) CreatePipelineCache(allocationCallbacks *driver.AllocationCallbacks, o core1_0.PipelineCacheCreateOptions) (core1_0.PipelineCache, common.VkResult, error) {
+func (m *Device1_1) CreatePipelineCache(allocationCallbacks *driver.AllocationCallbacks, o core1_0.PipelineCacheCreateInfo) (core1_0.PipelineCache, common.VkResult, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreatePipelineCache", allocationCallbacks, o)
 	ret0, _ := ret[0].(core1_0.PipelineCache)
@@ -1768,7 +1768,7 @@ func (mr *Device1_1MockRecorder) CreatePipelineCache(allocationCallbacks, o inte
 }
 
 // CreatePipelineLayout mocks base method.
-func (m *Device1_1) CreatePipelineLayout(allocationCallbacks *driver.AllocationCallbacks, o core1_0.PipelineLayoutCreateOptions) (core1_0.PipelineLayout, common.VkResult, error) {
+func (m *Device1_1) CreatePipelineLayout(allocationCallbacks *driver.AllocationCallbacks, o core1_0.PipelineLayoutCreateInfo) (core1_0.PipelineLayout, common.VkResult, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreatePipelineLayout", allocationCallbacks, o)
 	ret0, _ := ret[0].(core1_0.PipelineLayout)
@@ -1784,7 +1784,7 @@ func (mr *Device1_1MockRecorder) CreatePipelineLayout(allocationCallbacks, o int
 }
 
 // CreateQueryPool mocks base method.
-func (m *Device1_1) CreateQueryPool(allocationCallbacks *driver.AllocationCallbacks, o core1_0.QueryPoolCreateOptions) (core1_0.QueryPool, common.VkResult, error) {
+func (m *Device1_1) CreateQueryPool(allocationCallbacks *driver.AllocationCallbacks, o core1_0.QueryPoolCreateInfo) (core1_0.QueryPool, common.VkResult, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateQueryPool", allocationCallbacks, o)
 	ret0, _ := ret[0].(core1_0.QueryPool)
@@ -1800,7 +1800,7 @@ func (mr *Device1_1MockRecorder) CreateQueryPool(allocationCallbacks, o interfac
 }
 
 // CreateRenderPass mocks base method.
-func (m *Device1_1) CreateRenderPass(allocationCallbacks *driver.AllocationCallbacks, o core1_0.RenderPassCreateOptions) (core1_0.RenderPass, common.VkResult, error) {
+func (m *Device1_1) CreateRenderPass(allocationCallbacks *driver.AllocationCallbacks, o core1_0.RenderPassCreateInfo) (core1_0.RenderPass, common.VkResult, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateRenderPass", allocationCallbacks, o)
 	ret0, _ := ret[0].(core1_0.RenderPass)
@@ -1816,7 +1816,7 @@ func (mr *Device1_1MockRecorder) CreateRenderPass(allocationCallbacks, o interfa
 }
 
 // CreateSampler mocks base method.
-func (m *Device1_1) CreateSampler(allocationCallbacks *driver.AllocationCallbacks, o core1_0.SamplerCreateOptions) (core1_0.Sampler, common.VkResult, error) {
+func (m *Device1_1) CreateSampler(allocationCallbacks *driver.AllocationCallbacks, o core1_0.SamplerCreateInfo) (core1_0.Sampler, common.VkResult, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateSampler", allocationCallbacks, o)
 	ret0, _ := ret[0].(core1_0.Sampler)
@@ -1832,7 +1832,7 @@ func (mr *Device1_1MockRecorder) CreateSampler(allocationCallbacks, o interface{
 }
 
 // CreateSamplerYcbcrConversion mocks base method.
-func (m *Device1_1) CreateSamplerYcbcrConversion(o core1_1.SamplerYcbcrConversionCreateOptions, allocator *driver.AllocationCallbacks) (core1_1.SamplerYcbcrConversion, common.VkResult, error) {
+func (m *Device1_1) CreateSamplerYcbcrConversion(o core1_1.SamplerYcbcrConversionCreateInfo, allocator *driver.AllocationCallbacks) (core1_1.SamplerYcbcrConversion, common.VkResult, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateSamplerYcbcrConversion", o, allocator)
 	ret0, _ := ret[0].(core1_1.SamplerYcbcrConversion)
@@ -1848,7 +1848,7 @@ func (mr *Device1_1MockRecorder) CreateSamplerYcbcrConversion(o, allocator inter
 }
 
 // CreateSemaphore mocks base method.
-func (m *Device1_1) CreateSemaphore(allocationCallbacks *driver.AllocationCallbacks, o core1_0.SemaphoreCreateOptions) (core1_0.Semaphore, common.VkResult, error) {
+func (m *Device1_1) CreateSemaphore(allocationCallbacks *driver.AllocationCallbacks, o core1_0.SemaphoreCreateInfo) (core1_0.Semaphore, common.VkResult, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateSemaphore", allocationCallbacks, o)
 	ret0, _ := ret[0].(core1_0.Semaphore)
@@ -1864,7 +1864,7 @@ func (mr *Device1_1MockRecorder) CreateSemaphore(allocationCallbacks, o interfac
 }
 
 // CreateShaderModule mocks base method.
-func (m *Device1_1) CreateShaderModule(allocationCallbacks *driver.AllocationCallbacks, o core1_0.ShaderModuleCreateOptions) (core1_0.ShaderModule, common.VkResult, error) {
+func (m *Device1_1) CreateShaderModule(allocationCallbacks *driver.AllocationCallbacks, o core1_0.ShaderModuleCreateInfo) (core1_0.ShaderModule, common.VkResult, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateShaderModule", allocationCallbacks, o)
 	ret0, _ := ret[0].(core1_0.ShaderModule)
@@ -1880,7 +1880,7 @@ func (mr *Device1_1MockRecorder) CreateShaderModule(allocationCallbacks, o inter
 }
 
 // DescriptorSetLayoutSupport mocks base method.
-func (m *Device1_1) DescriptorSetLayoutSupport(o core1_0.DescriptorSetLayoutCreateOptions, outData *core1_1.DescriptorSetLayoutSupportOutData) error {
+func (m *Device1_1) DescriptorSetLayoutSupport(o core1_0.DescriptorSetLayoutCreateInfo, outData *core1_1.DescriptorSetLayoutSupport) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "DescriptorSetLayoutSupport", o, outData)
 	ret0, _ := ret[0].(error)
@@ -1906,10 +1906,10 @@ func (mr *Device1_1MockRecorder) Destroy(callbacks interface{}) *gomock.Call {
 }
 
 // DeviceGroupPeerMemoryFeatures mocks base method.
-func (m *Device1_1) DeviceGroupPeerMemoryFeatures(heapIndex, localDeviceIndex, remoteDeviceIndex int) core1_1.PeerMemoryFeatures {
+func (m *Device1_1) DeviceGroupPeerMemoryFeatures(heapIndex, localDeviceIndex, remoteDeviceIndex int) core1_1.PeerMemoryFeatureFlags {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "DeviceGroupPeerMemoryFeatures", heapIndex, localDeviceIndex, remoteDeviceIndex)
-	ret0, _ := ret[0].(core1_1.PeerMemoryFeatures)
+	ret0, _ := ret[0].(core1_1.PeerMemoryFeatureFlags)
 	return ret0
 }
 
@@ -1934,7 +1934,7 @@ func (mr *Device1_1MockRecorder) Driver() *gomock.Call {
 }
 
 // FlushMappedMemoryRanges mocks base method.
-func (m *Device1_1) FlushMappedMemoryRanges(ranges []core1_0.MappedMemoryRangeOptions) (common.VkResult, error) {
+func (m *Device1_1) FlushMappedMemoryRanges(ranges []core1_0.MappedMemoryRange) (common.VkResult, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "FlushMappedMemoryRanges", ranges)
 	ret0, _ := ret[0].(common.VkResult)
@@ -2002,7 +2002,7 @@ func (mr *Device1_1MockRecorder) GetQueue(queueFamilyIndex, queueIndex interface
 }
 
 // GetQueue2 mocks base method.
-func (m *Device1_1) GetQueue2(o core1_1.DeviceQueueOptions) (core1_0.Queue, error) {
+func (m *Device1_1) GetQueue2(o core1_1.DeviceQueueInfo2) (core1_0.Queue, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetQueue2", o)
 	ret0, _ := ret[0].(core1_0.Queue)
@@ -2030,22 +2030,37 @@ func (mr *Device1_1MockRecorder) Handle() *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Handle", reflect.TypeOf((*Device1_1)(nil).Handle))
 }
 
-// ImageMemoryRequirements mocks base method.
-func (m *Device1_1) ImageMemoryRequirements(o core1_1.ImageMemoryRequirementsOptions, out *core1_1.MemoryRequirementsOutData) error {
+// ImageMemoryRequirements2 mocks base method.
+func (m *Device1_1) ImageMemoryRequirements2(o core1_1.ImageMemoryRequirementsInfo2, out *core1_1.MemoryRequirements2) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "ImageMemoryRequirements", o, out)
+	ret := m.ctrl.Call(m, "ImageMemoryRequirements2", o, out)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
-// ImageMemoryRequirements indicates an expected call of ImageMemoryRequirements.
-func (mr *Device1_1MockRecorder) ImageMemoryRequirements(o, out interface{}) *gomock.Call {
+// ImageMemoryRequirements2 indicates an expected call of ImageMemoryRequirements2.
+func (mr *Device1_1MockRecorder) ImageMemoryRequirements2(o, out interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ImageMemoryRequirements", reflect.TypeOf((*Device1_1)(nil).ImageMemoryRequirements), o, out)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ImageMemoryRequirements2", reflect.TypeOf((*Device1_1)(nil).ImageMemoryRequirements2), o, out)
+}
+
+// ImageSparseMemoryRequirements2 mocks base method.
+func (m *Device1_1) ImageSparseMemoryRequirements2(o core1_1.ImageSparseMemoryRequirementsInfo2, outDataFactory func() *core1_1.SparseImageMemoryRequirements2) ([]*core1_1.SparseImageMemoryRequirements2, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ImageSparseMemoryRequirements2", o, outDataFactory)
+	ret0, _ := ret[0].([]*core1_1.SparseImageMemoryRequirements2)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ImageSparseMemoryRequirements2 indicates an expected call of ImageSparseMemoryRequirements2.
+func (mr *Device1_1MockRecorder) ImageSparseMemoryRequirements2(o, outDataFactory interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ImageSparseMemoryRequirements2", reflect.TypeOf((*Device1_1)(nil).ImageSparseMemoryRequirements2), o, outDataFactory)
 }
 
 // InvalidateMappedMemoryRanges mocks base method.
-func (m *Device1_1) InvalidateMappedMemoryRanges(ranges []core1_0.MappedMemoryRangeOptions) (common.VkResult, error) {
+func (m *Device1_1) InvalidateMappedMemoryRanges(ranges []core1_0.MappedMemoryRange) (common.VkResult, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "InvalidateMappedMemoryRanges", ranges)
 	ret0, _ := ret[0].(common.VkResult)
@@ -2088,23 +2103,8 @@ func (mr *Device1_1MockRecorder) ResetFences(fences interface{}) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ResetFences", reflect.TypeOf((*Device1_1)(nil).ResetFences), fences)
 }
 
-// SparseImageMemoryRequirements mocks base method.
-func (m *Device1_1) SparseImageMemoryRequirements(o core1_1.ImageSparseMemoryRequirementsOptions, outDataFactory func() *core1_1.SparseImageMemoryRequirementsOutData) ([]*core1_1.SparseImageMemoryRequirementsOutData, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SparseImageMemoryRequirements", o, outDataFactory)
-	ret0, _ := ret[0].([]*core1_1.SparseImageMemoryRequirementsOutData)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// SparseImageMemoryRequirements indicates an expected call of SparseImageMemoryRequirements.
-func (mr *Device1_1MockRecorder) SparseImageMemoryRequirements(o, outDataFactory interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SparseImageMemoryRequirements", reflect.TypeOf((*Device1_1)(nil).SparseImageMemoryRequirements), o, outDataFactory)
-}
-
 // UpdateDescriptorSets mocks base method.
-func (m *Device1_1) UpdateDescriptorSets(writes []core1_0.WriteDescriptorSetOptions, copies []core1_0.CopyDescriptorSetOptions) error {
+func (m *Device1_1) UpdateDescriptorSets(writes []core1_0.WriteDescriptorSet, copies []core1_0.CopyDescriptorSet) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "UpdateDescriptorSets", writes, copies)
 	ret0, _ := ret[0].(error)
@@ -2132,19 +2132,19 @@ func (mr *Device1_1MockRecorder) WaitForFences(waitForAll, timeout, fences inter
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "WaitForFences", reflect.TypeOf((*Device1_1)(nil).WaitForFences), waitForAll, timeout, fences)
 }
 
-// WaitForIdle mocks base method.
-func (m *Device1_1) WaitForIdle() (common.VkResult, error) {
+// WaitIdle mocks base method.
+func (m *Device1_1) WaitIdle() (common.VkResult, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "WaitForIdle")
+	ret := m.ctrl.Call(m, "WaitIdle")
 	ret0, _ := ret[0].(common.VkResult)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// WaitForIdle indicates an expected call of WaitForIdle.
-func (mr *Device1_1MockRecorder) WaitForIdle() *gomock.Call {
+// WaitIdle indicates an expected call of WaitIdle.
+func (mr *Device1_1MockRecorder) WaitIdle() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "WaitForIdle", reflect.TypeOf((*Device1_1)(nil).WaitForIdle))
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "WaitIdle", reflect.TypeOf((*Device1_1)(nil).WaitIdle))
 }
 
 // DeviceMemory1_1 is a mock of DeviceMemory interface.
@@ -2282,32 +2282,32 @@ func (mr *DeviceMemory1_1MockRecorder) InvalidateAll() *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "InvalidateAll", reflect.TypeOf((*DeviceMemory1_1)(nil).InvalidateAll))
 }
 
-// MapMemory mocks base method.
-func (m *DeviceMemory1_1) MapMemory(offset, size int, flags core1_0.MemoryMapFlags) (unsafe.Pointer, common.VkResult, error) {
+// Map mocks base method.
+func (m *DeviceMemory1_1) Map(offset, size int, flags core1_0.MemoryMapFlags) (unsafe.Pointer, common.VkResult, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "MapMemory", offset, size, flags)
+	ret := m.ctrl.Call(m, "Map", offset, size, flags)
 	ret0, _ := ret[0].(unsafe.Pointer)
 	ret1, _ := ret[1].(common.VkResult)
 	ret2, _ := ret[2].(error)
 	return ret0, ret1, ret2
 }
 
-// MapMemory indicates an expected call of MapMemory.
-func (mr *DeviceMemory1_1MockRecorder) MapMemory(offset, size, flags interface{}) *gomock.Call {
+// Map indicates an expected call of Map.
+func (mr *DeviceMemory1_1MockRecorder) Map(offset, size, flags interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "MapMemory", reflect.TypeOf((*DeviceMemory1_1)(nil).MapMemory), offset, size, flags)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Map", reflect.TypeOf((*DeviceMemory1_1)(nil).Map), offset, size, flags)
 }
 
-// UnmapMemory mocks base method.
-func (m *DeviceMemory1_1) UnmapMemory() {
+// Unmap mocks base method.
+func (m *DeviceMemory1_1) Unmap() {
 	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "UnmapMemory")
+	m.ctrl.Call(m, "Unmap")
 }
 
-// UnmapMemory indicates an expected call of UnmapMemory.
-func (mr *DeviceMemory1_1MockRecorder) UnmapMemory() *gomock.Call {
+// Unmap indicates an expected call of Unmap.
+func (mr *DeviceMemory1_1MockRecorder) Unmap() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UnmapMemory", reflect.TypeOf((*DeviceMemory1_1)(nil).UnmapMemory))
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Unmap", reflect.TypeOf((*DeviceMemory1_1)(nil).Unmap))
 }
 
 // DescriptorUpdateTemplate1_1 is a mock of DescriptorUpdateTemplate interface.
@@ -2840,7 +2840,7 @@ func (mr *Image1_1MockRecorder) APIVersion() *gomock.Call {
 // BindImageMemory mocks base method.
 func (m *Image1_1) BindImageMemory(memory core1_0.DeviceMemory, offset int) (common.VkResult, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "BindImageMemory", memory, offset)
+	ret := m.ctrl.Call(m, "BindImageMemory2", memory, offset)
 	ret0, _ := ret[0].(common.VkResult)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
@@ -2849,7 +2849,7 @@ func (m *Image1_1) BindImageMemory(memory core1_0.DeviceMemory, offset int) (com
 // BindImageMemory indicates an expected call of BindImageMemory.
 func (mr *Image1_1MockRecorder) BindImageMemory(memory, offset interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "BindImageMemory", reflect.TypeOf((*Image1_1)(nil).BindImageMemory), memory, offset)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "BindImageMemory2", reflect.TypeOf((*Image1_1)(nil).BindImageMemory), memory, offset)
 }
 
 // Destroy mocks base method.
@@ -3102,6 +3102,38 @@ func (mr *Instance1_1MockRecorder) Driver() *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Driver", reflect.TypeOf((*Instance1_1)(nil).Driver))
 }
 
+// EnumeratePhysicalDeviceGroups mocks base method.
+func (m *Instance1_1) EnumeratePhysicalDeviceGroups(outDataFactory func() *core1_1.PhysicalDeviceGroupProperties) ([]*core1_1.PhysicalDeviceGroupProperties, common.VkResult, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "EnumeratePhysicalDeviceGroups", outDataFactory)
+	ret0, _ := ret[0].([]*core1_1.PhysicalDeviceGroupProperties)
+	ret1, _ := ret[1].(common.VkResult)
+	ret2, _ := ret[2].(error)
+	return ret0, ret1, ret2
+}
+
+// EnumeratePhysicalDeviceGroups indicates an expected call of EnumeratePhysicalDeviceGroups.
+func (mr *Instance1_1MockRecorder) EnumeratePhysicalDeviceGroups(outDataFactory interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "EnumeratePhysicalDeviceGroups", reflect.TypeOf((*Instance1_1)(nil).EnumeratePhysicalDeviceGroups), outDataFactory)
+}
+
+// EnumeratePhysicalDevices mocks base method.
+func (m *Instance1_1) EnumeratePhysicalDevices() ([]core1_0.PhysicalDevice, common.VkResult, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "EnumeratePhysicalDevices")
+	ret0, _ := ret[0].([]core1_0.PhysicalDevice)
+	ret1, _ := ret[1].(common.VkResult)
+	ret2, _ := ret[2].(error)
+	return ret0, ret1, ret2
+}
+
+// EnumeratePhysicalDevices indicates an expected call of EnumeratePhysicalDevices.
+func (mr *Instance1_1MockRecorder) EnumeratePhysicalDevices() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "EnumeratePhysicalDevices", reflect.TypeOf((*Instance1_1)(nil).EnumeratePhysicalDevices))
+}
+
 // Handle mocks base method.
 func (m *Instance1_1) Handle() driver.VkInstance {
 	m.ctrl.T.Helper()
@@ -3130,38 +3162,6 @@ func (mr *Instance1_1MockRecorder) IsInstanceExtensionActive(extensionName inter
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "IsInstanceExtensionActive", reflect.TypeOf((*Instance1_1)(nil).IsInstanceExtensionActive), extensionName)
 }
 
-// PhysicalDeviceGroups mocks base method.
-func (m *Instance1_1) PhysicalDeviceGroups(outDataFactory func() *core1_1.DeviceGroupOutData) ([]*core1_1.DeviceGroupOutData, common.VkResult, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "PhysicalDeviceGroups", outDataFactory)
-	ret0, _ := ret[0].([]*core1_1.DeviceGroupOutData)
-	ret1, _ := ret[1].(common.VkResult)
-	ret2, _ := ret[2].(error)
-	return ret0, ret1, ret2
-}
-
-// PhysicalDeviceGroups indicates an expected call of PhysicalDeviceGroups.
-func (mr *Instance1_1MockRecorder) PhysicalDeviceGroups(outDataFactory interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "PhysicalDeviceGroups", reflect.TypeOf((*Instance1_1)(nil).PhysicalDeviceGroups), outDataFactory)
-}
-
-// PhysicalDevices mocks base method.
-func (m *Instance1_1) PhysicalDevices() ([]core1_0.PhysicalDevice, common.VkResult, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "PhysicalDevices")
-	ret0, _ := ret[0].([]core1_0.PhysicalDevice)
-	ret1, _ := ret[1].(common.VkResult)
-	ret2, _ := ret[2].(error)
-	return ret0, ret1, ret2
-}
-
-// PhysicalDevices indicates an expected call of PhysicalDevices.
-func (mr *Instance1_1MockRecorder) PhysicalDevices() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "PhysicalDevices", reflect.TypeOf((*Instance1_1)(nil).PhysicalDevices))
-}
-
 // MockInstanceScopedPhysicalDevice is a mock of InstanceScopedPhysicalDevice interface.
 type MockInstanceScopedPhysicalDevice struct {
 	ctrl     *gomock.Controller
@@ -3185,56 +3185,8 @@ func (m *MockInstanceScopedPhysicalDevice) EXPECT() *MockInstanceScopedPhysicalD
 	return m.recorder
 }
 
-// AvailableExtensions mocks base method.
-func (m *MockInstanceScopedPhysicalDevice) AvailableExtensions() (map[string]*core1_0.ExtensionProperties, common.VkResult, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "AvailableExtensions")
-	ret0, _ := ret[0].(map[string]*core1_0.ExtensionProperties)
-	ret1, _ := ret[1].(common.VkResult)
-	ret2, _ := ret[2].(error)
-	return ret0, ret1, ret2
-}
-
-// AvailableExtensions indicates an expected call of AvailableExtensions.
-func (mr *MockInstanceScopedPhysicalDeviceMockRecorder) AvailableExtensions() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AvailableExtensions", reflect.TypeOf((*MockInstanceScopedPhysicalDevice)(nil).AvailableExtensions))
-}
-
-// AvailableExtensionsForLayer mocks base method.
-func (m *MockInstanceScopedPhysicalDevice) AvailableExtensionsForLayer(layerName string) (map[string]*core1_0.ExtensionProperties, common.VkResult, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "AvailableExtensionsForLayer", layerName)
-	ret0, _ := ret[0].(map[string]*core1_0.ExtensionProperties)
-	ret1, _ := ret[1].(common.VkResult)
-	ret2, _ := ret[2].(error)
-	return ret0, ret1, ret2
-}
-
-// AvailableExtensionsForLayer indicates an expected call of AvailableExtensionsForLayer.
-func (mr *MockInstanceScopedPhysicalDeviceMockRecorder) AvailableExtensionsForLayer(layerName interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AvailableExtensionsForLayer", reflect.TypeOf((*MockInstanceScopedPhysicalDevice)(nil).AvailableExtensionsForLayer), layerName)
-}
-
-// AvailableLayers mocks base method.
-func (m *MockInstanceScopedPhysicalDevice) AvailableLayers() (map[string]*core1_0.LayerProperties, common.VkResult, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "AvailableLayers")
-	ret0, _ := ret[0].(map[string]*core1_0.LayerProperties)
-	ret1, _ := ret[1].(common.VkResult)
-	ret2, _ := ret[2].(error)
-	return ret0, ret1, ret2
-}
-
-// AvailableLayers indicates an expected call of AvailableLayers.
-func (mr *MockInstanceScopedPhysicalDeviceMockRecorder) AvailableLayers() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AvailableLayers", reflect.TypeOf((*MockInstanceScopedPhysicalDevice)(nil).AvailableLayers))
-}
-
 // CreateDevice mocks base method.
-func (m *MockInstanceScopedPhysicalDevice) CreateDevice(allocationCallbacks *driver.AllocationCallbacks, options core1_0.DeviceCreateOptions) (core1_0.Device, common.VkResult, error) {
+func (m *MockInstanceScopedPhysicalDevice) CreateDevice(allocationCallbacks *driver.AllocationCallbacks, options core1_0.DeviceCreateInfo) (core1_0.Device, common.VkResult, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateDevice", allocationCallbacks, options)
 	ret0, _ := ret[0].(core1_0.Device)
@@ -3277,10 +3229,58 @@ func (mr *MockInstanceScopedPhysicalDeviceMockRecorder) Driver() *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Driver", reflect.TypeOf((*MockInstanceScopedPhysicalDevice)(nil).Driver))
 }
 
-// ExternalBufferProperties mocks base method.
-func (m *MockInstanceScopedPhysicalDevice) ExternalBufferProperties(o core1_1.ExternalBufferOptions, outData *core1_1.ExternalBufferOutData) error {
+// EnumerateDeviceExtensionProperties mocks base method.
+func (m *MockInstanceScopedPhysicalDevice) EnumerateDeviceExtensionProperties() (map[string]*core1_0.ExtensionProperties, common.VkResult, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "ExternalBufferProperties", o, outData)
+	ret := m.ctrl.Call(m, "EnumerateDeviceExtensionProperties")
+	ret0, _ := ret[0].(map[string]*core1_0.ExtensionProperties)
+	ret1, _ := ret[1].(common.VkResult)
+	ret2, _ := ret[2].(error)
+	return ret0, ret1, ret2
+}
+
+// EnumerateDeviceExtensionProperties indicates an expected call of EnumerateDeviceExtensionProperties.
+func (mr *MockInstanceScopedPhysicalDeviceMockRecorder) EnumerateDeviceExtensionProperties() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "EnumerateDeviceExtensionProperties", reflect.TypeOf((*MockInstanceScopedPhysicalDevice)(nil).EnumerateDeviceExtensionProperties))
+}
+
+// EnumerateDeviceExtensionPropertiesForLayer mocks base method.
+func (m *MockInstanceScopedPhysicalDevice) EnumerateDeviceExtensionPropertiesForLayer(layerName string) (map[string]*core1_0.ExtensionProperties, common.VkResult, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "EnumerateDeviceExtensionPropertiesForLayer", layerName)
+	ret0, _ := ret[0].(map[string]*core1_0.ExtensionProperties)
+	ret1, _ := ret[1].(common.VkResult)
+	ret2, _ := ret[2].(error)
+	return ret0, ret1, ret2
+}
+
+// EnumerateDeviceExtensionPropertiesForLayer indicates an expected call of EnumerateDeviceExtensionPropertiesForLayer.
+func (mr *MockInstanceScopedPhysicalDeviceMockRecorder) EnumerateDeviceExtensionPropertiesForLayer(layerName interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "EnumerateDeviceExtensionPropertiesForLayer", reflect.TypeOf((*MockInstanceScopedPhysicalDevice)(nil).EnumerateDeviceExtensionPropertiesForLayer), layerName)
+}
+
+// EnumerateDeviceLayerProperties mocks base method.
+func (m *MockInstanceScopedPhysicalDevice) EnumerateDeviceLayerProperties() (map[string]*core1_0.LayerProperties, common.VkResult, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "EnumerateDeviceLayerProperties")
+	ret0, _ := ret[0].(map[string]*core1_0.LayerProperties)
+	ret1, _ := ret[1].(common.VkResult)
+	ret2, _ := ret[2].(error)
+	return ret0, ret1, ret2
+}
+
+// EnumerateDeviceLayerProperties indicates an expected call of EnumerateDeviceLayerProperties.
+func (mr *MockInstanceScopedPhysicalDeviceMockRecorder) EnumerateDeviceLayerProperties() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "EnumerateDeviceLayerProperties", reflect.TypeOf((*MockInstanceScopedPhysicalDevice)(nil).EnumerateDeviceLayerProperties))
+}
+
+// ExternalBufferProperties mocks base method.
+func (m *MockInstanceScopedPhysicalDevice) ExternalBufferProperties(o core1_1.PhysicalDeviceExternalBufferInfo, outData *core1_1.ExternalBufferProperties) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "PhysicalDeviceExternalBufferProperties", o, outData)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
@@ -3288,13 +3288,13 @@ func (m *MockInstanceScopedPhysicalDevice) ExternalBufferProperties(o core1_1.Ex
 // ExternalBufferProperties indicates an expected call of ExternalBufferProperties.
 func (mr *MockInstanceScopedPhysicalDeviceMockRecorder) ExternalBufferProperties(o, outData interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ExternalBufferProperties", reflect.TypeOf((*MockInstanceScopedPhysicalDevice)(nil).ExternalBufferProperties), o, outData)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "PhysicalDeviceExternalBufferProperties", reflect.TypeOf((*MockInstanceScopedPhysicalDevice)(nil).ExternalBufferProperties), o, outData)
 }
 
 // ExternalFenceProperties mocks base method.
-func (m *MockInstanceScopedPhysicalDevice) ExternalFenceProperties(o core1_1.ExternalFenceOptions, outData *core1_1.ExternalFenceOutData) error {
+func (m *MockInstanceScopedPhysicalDevice) ExternalFenceProperties(o core1_1.PhysicalDeviceExternalFenceInfo, outData *core1_1.ExternalFenceProperties) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "ExternalFenceProperties", o, outData)
+	ret := m.ctrl.Call(m, "PhysicalDeviceExternalFenceProperties", o, outData)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
@@ -3302,13 +3302,13 @@ func (m *MockInstanceScopedPhysicalDevice) ExternalFenceProperties(o core1_1.Ext
 // ExternalFenceProperties indicates an expected call of ExternalFenceProperties.
 func (mr *MockInstanceScopedPhysicalDeviceMockRecorder) ExternalFenceProperties(o, outData interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ExternalFenceProperties", reflect.TypeOf((*MockInstanceScopedPhysicalDevice)(nil).ExternalFenceProperties), o, outData)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "PhysicalDeviceExternalFenceProperties", reflect.TypeOf((*MockInstanceScopedPhysicalDevice)(nil).ExternalFenceProperties), o, outData)
 }
 
 // ExternalSemaphoreProperties mocks base method.
-func (m *MockInstanceScopedPhysicalDevice) ExternalSemaphoreProperties(o core1_1.ExternalSemaphoreOptions, outData *core1_1.ExternalSemaphoreOutData) error {
+func (m *MockInstanceScopedPhysicalDevice) ExternalSemaphoreProperties(o core1_1.PhysicalDeviceExternalSemaphoreInfo, outData *core1_1.ExternalSemaphoreProperties) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "ExternalSemaphoreProperties", o, outData)
+	ret := m.ctrl.Call(m, "PhysicalDeviceExternalSemaphoreProperties", o, outData)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
@@ -3316,7 +3316,7 @@ func (m *MockInstanceScopedPhysicalDevice) ExternalSemaphoreProperties(o core1_1
 // ExternalSemaphoreProperties indicates an expected call of ExternalSemaphoreProperties.
 func (mr *MockInstanceScopedPhysicalDeviceMockRecorder) ExternalSemaphoreProperties(o, outData interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ExternalSemaphoreProperties", reflect.TypeOf((*MockInstanceScopedPhysicalDevice)(nil).ExternalSemaphoreProperties), o, outData)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "PhysicalDeviceExternalSemaphoreProperties", reflect.TypeOf((*MockInstanceScopedPhysicalDevice)(nil).ExternalSemaphoreProperties), o, outData)
 }
 
 // Features mocks base method.
@@ -3334,7 +3334,7 @@ func (mr *MockInstanceScopedPhysicalDeviceMockRecorder) Features() *gomock.Call 
 }
 
 // Features2 mocks base method.
-func (m *MockInstanceScopedPhysicalDevice) Features2(out *core1_1.DeviceFeatures) error {
+func (m *MockInstanceScopedPhysicalDevice) Features2(out *core1_1.PhysicalDeviceFeatures2) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Features2", out)
 	ret0, _ := ret[0].(error)
@@ -3348,7 +3348,7 @@ func (mr *MockInstanceScopedPhysicalDeviceMockRecorder) Features2(out interface{
 }
 
 // FormatProperties mocks base method.
-func (m *MockInstanceScopedPhysicalDevice) FormatProperties(format core1_0.DataFormat) *core1_0.FormatProperties {
+func (m *MockInstanceScopedPhysicalDevice) FormatProperties(format core1_0.Format) *core1_0.FormatProperties {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "FormatProperties", format)
 	ret0, _ := ret[0].(*core1_0.FormatProperties)
@@ -3362,7 +3362,7 @@ func (mr *MockInstanceScopedPhysicalDeviceMockRecorder) FormatProperties(format 
 }
 
 // FormatProperties2 mocks base method.
-func (m *MockInstanceScopedPhysicalDevice) FormatProperties2(format core1_0.DataFormat, out *core1_1.FormatPropertiesOutData) error {
+func (m *MockInstanceScopedPhysicalDevice) FormatProperties2(format core1_0.Format, out *core1_1.FormatProperties2) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "FormatProperties2", format, out)
 	ret0, _ := ret[0].(error)
@@ -3390,7 +3390,7 @@ func (mr *MockInstanceScopedPhysicalDeviceMockRecorder) Handle() *gomock.Call {
 }
 
 // ImageFormatProperties mocks base method.
-func (m *MockInstanceScopedPhysicalDevice) ImageFormatProperties(format core1_0.DataFormat, imageType core1_0.ImageType, tiling core1_0.ImageTiling, usages core1_0.ImageUsages, flags core1_0.ImageCreateFlags) (*core1_0.ImageFormatProperties, common.VkResult, error) {
+func (m *MockInstanceScopedPhysicalDevice) ImageFormatProperties(format core1_0.Format, imageType core1_0.ImageType, tiling core1_0.ImageTiling, usages core1_0.ImageUsageFlags, flags core1_0.ImageCreateFlags) (*core1_0.ImageFormatProperties, common.VkResult, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ImageFormatProperties", format, imageType, tiling, usages, flags)
 	ret0, _ := ret[0].(*core1_0.ImageFormatProperties)
@@ -3406,7 +3406,7 @@ func (mr *MockInstanceScopedPhysicalDeviceMockRecorder) ImageFormatProperties(fo
 }
 
 // ImageFormatProperties2 mocks base method.
-func (m *MockInstanceScopedPhysicalDevice) ImageFormatProperties2(o core1_1.ImageFormatOptions, out *core1_1.ImageFormatPropertiesOutData) (common.VkResult, error) {
+func (m *MockInstanceScopedPhysicalDevice) ImageFormatProperties2(o core1_1.PhysicalDeviceImageFormatInfo2, out *core1_1.ImageFormatProperties2) (common.VkResult, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ImageFormatProperties2", o, out)
 	ret0, _ := ret[0].(common.VkResult)
@@ -3449,7 +3449,7 @@ func (mr *MockInstanceScopedPhysicalDeviceMockRecorder) MemoryProperties() *gomo
 }
 
 // MemoryProperties2 mocks base method.
-func (m *MockInstanceScopedPhysicalDevice) MemoryProperties2(out *core1_1.MemoryPropertiesOutData) error {
+func (m *MockInstanceScopedPhysicalDevice) MemoryProperties2(out *core1_1.PhysicalDeviceMemoryProperties2) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "MemoryProperties2", out)
 	ret0, _ := ret[0].(error)
@@ -3478,7 +3478,7 @@ func (mr *MockInstanceScopedPhysicalDeviceMockRecorder) Properties() *gomock.Cal
 }
 
 // Properties2 mocks base method.
-func (m *MockInstanceScopedPhysicalDevice) Properties2(out *core1_1.DevicePropertiesOutData) error {
+func (m *MockInstanceScopedPhysicalDevice) Properties2(out *core1_1.PhysicalDeviceProperties2) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Properties2", out)
 	ret0, _ := ret[0].(error)
@@ -3506,10 +3506,10 @@ func (mr *MockInstanceScopedPhysicalDeviceMockRecorder) QueueFamilyProperties() 
 }
 
 // QueueFamilyProperties2 mocks base method.
-func (m *MockInstanceScopedPhysicalDevice) QueueFamilyProperties2(outDataFactory func() *core1_1.QueueFamilyOutData) ([]*core1_1.QueueFamilyOutData, error) {
+func (m *MockInstanceScopedPhysicalDevice) QueueFamilyProperties2(outDataFactory func() *core1_1.QueueFamilyProperties2) ([]*core1_1.QueueFamilyProperties2, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "QueueFamilyProperties2", outDataFactory)
-	ret0, _ := ret[0].([]*core1_1.QueueFamilyOutData)
+	ret0, _ := ret[0].([]*core1_1.QueueFamilyProperties2)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -3521,9 +3521,9 @@ func (mr *MockInstanceScopedPhysicalDeviceMockRecorder) QueueFamilyProperties2(o
 }
 
 // SparseImageFormatProperties mocks base method.
-func (m *MockInstanceScopedPhysicalDevice) SparseImageFormatProperties(format core1_0.DataFormat, imageType core1_0.ImageType, samples core1_0.SampleCounts, usages core1_0.ImageUsages, tiling core1_0.ImageTiling) []core1_0.SparseImageFormatProperties {
+func (m *MockInstanceScopedPhysicalDevice) SparseImageFormatProperties(format core1_0.Format, imageType core1_0.ImageType, samples core1_0.SampleCountFlags, usages core1_0.ImageUsageFlags, tiling core1_0.ImageTiling) []core1_0.SparseImageFormatProperties {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SparseImageFormatProperties", format, imageType, samples, usages, tiling)
+	ret := m.ctrl.Call(m, "Properties", format, imageType, samples, usages, tiling)
 	ret0, _ := ret[0].([]core1_0.SparseImageFormatProperties)
 	return ret0
 }
@@ -3531,14 +3531,14 @@ func (m *MockInstanceScopedPhysicalDevice) SparseImageFormatProperties(format co
 // SparseImageFormatProperties indicates an expected call of SparseImageFormatProperties.
 func (mr *MockInstanceScopedPhysicalDeviceMockRecorder) SparseImageFormatProperties(format, imageType, samples, usages, tiling interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SparseImageFormatProperties", reflect.TypeOf((*MockInstanceScopedPhysicalDevice)(nil).SparseImageFormatProperties), format, imageType, samples, usages, tiling)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Properties", reflect.TypeOf((*MockInstanceScopedPhysicalDevice)(nil).SparseImageFormatProperties), format, imageType, samples, usages, tiling)
 }
 
 // SparseImageFormatProperties2 mocks base method.
-func (m *MockInstanceScopedPhysicalDevice) SparseImageFormatProperties2(o core1_1.SparseImageFormatOptions, outDataFactory func() *core1_1.SparseImageFormatPropertiesOutData) ([]*core1_1.SparseImageFormatPropertiesOutData, error) {
+func (m *MockInstanceScopedPhysicalDevice) SparseImageFormatProperties2(o core1_1.PhysicalDeviceSparseImageFormatInfo2, outDataFactory func() *core1_1.SparseImageFormatProperties2) ([]*core1_1.SparseImageFormatProperties2, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "SparseImageFormatProperties2", o, outDataFactory)
-	ret0, _ := ret[0].([]*core1_1.SparseImageFormatPropertiesOutData)
+	ret0, _ := ret[0].([]*core1_1.SparseImageFormatProperties2)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -3572,56 +3572,8 @@ func (m *PhysicalDevice1_1) EXPECT() *PhysicalDevice1_1MockRecorder {
 	return m.recorder
 }
 
-// AvailableExtensions mocks base method.
-func (m *PhysicalDevice1_1) AvailableExtensions() (map[string]*core1_0.ExtensionProperties, common.VkResult, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "AvailableExtensions")
-	ret0, _ := ret[0].(map[string]*core1_0.ExtensionProperties)
-	ret1, _ := ret[1].(common.VkResult)
-	ret2, _ := ret[2].(error)
-	return ret0, ret1, ret2
-}
-
-// AvailableExtensions indicates an expected call of AvailableExtensions.
-func (mr *PhysicalDevice1_1MockRecorder) AvailableExtensions() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AvailableExtensions", reflect.TypeOf((*PhysicalDevice1_1)(nil).AvailableExtensions))
-}
-
-// AvailableExtensionsForLayer mocks base method.
-func (m *PhysicalDevice1_1) AvailableExtensionsForLayer(layerName string) (map[string]*core1_0.ExtensionProperties, common.VkResult, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "AvailableExtensionsForLayer", layerName)
-	ret0, _ := ret[0].(map[string]*core1_0.ExtensionProperties)
-	ret1, _ := ret[1].(common.VkResult)
-	ret2, _ := ret[2].(error)
-	return ret0, ret1, ret2
-}
-
-// AvailableExtensionsForLayer indicates an expected call of AvailableExtensionsForLayer.
-func (mr *PhysicalDevice1_1MockRecorder) AvailableExtensionsForLayer(layerName interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AvailableExtensionsForLayer", reflect.TypeOf((*PhysicalDevice1_1)(nil).AvailableExtensionsForLayer), layerName)
-}
-
-// AvailableLayers mocks base method.
-func (m *PhysicalDevice1_1) AvailableLayers() (map[string]*core1_0.LayerProperties, common.VkResult, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "AvailableLayers")
-	ret0, _ := ret[0].(map[string]*core1_0.LayerProperties)
-	ret1, _ := ret[1].(common.VkResult)
-	ret2, _ := ret[2].(error)
-	return ret0, ret1, ret2
-}
-
-// AvailableLayers indicates an expected call of AvailableLayers.
-func (mr *PhysicalDevice1_1MockRecorder) AvailableLayers() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AvailableLayers", reflect.TypeOf((*PhysicalDevice1_1)(nil).AvailableLayers))
-}
-
 // CreateDevice mocks base method.
-func (m *PhysicalDevice1_1) CreateDevice(allocationCallbacks *driver.AllocationCallbacks, options core1_0.DeviceCreateOptions) (core1_0.Device, common.VkResult, error) {
+func (m *PhysicalDevice1_1) CreateDevice(allocationCallbacks *driver.AllocationCallbacks, options core1_0.DeviceCreateInfo) (core1_0.Device, common.VkResult, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateDevice", allocationCallbacks, options)
 	ret0, _ := ret[0].(core1_0.Device)
@@ -3664,6 +3616,54 @@ func (mr *PhysicalDevice1_1MockRecorder) Driver() *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Driver", reflect.TypeOf((*PhysicalDevice1_1)(nil).Driver))
 }
 
+// EnumerateDeviceExtensionProperties mocks base method.
+func (m *PhysicalDevice1_1) EnumerateDeviceExtensionProperties() (map[string]*core1_0.ExtensionProperties, common.VkResult, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "EnumerateDeviceExtensionProperties")
+	ret0, _ := ret[0].(map[string]*core1_0.ExtensionProperties)
+	ret1, _ := ret[1].(common.VkResult)
+	ret2, _ := ret[2].(error)
+	return ret0, ret1, ret2
+}
+
+// EnumerateDeviceExtensionProperties indicates an expected call of EnumerateDeviceExtensionProperties.
+func (mr *PhysicalDevice1_1MockRecorder) EnumerateDeviceExtensionProperties() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "EnumerateDeviceExtensionProperties", reflect.TypeOf((*PhysicalDevice1_1)(nil).EnumerateDeviceExtensionProperties))
+}
+
+// EnumerateDeviceExtensionPropertiesForLayer mocks base method.
+func (m *PhysicalDevice1_1) EnumerateDeviceExtensionPropertiesForLayer(layerName string) (map[string]*core1_0.ExtensionProperties, common.VkResult, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "EnumerateDeviceExtensionPropertiesForLayer", layerName)
+	ret0, _ := ret[0].(map[string]*core1_0.ExtensionProperties)
+	ret1, _ := ret[1].(common.VkResult)
+	ret2, _ := ret[2].(error)
+	return ret0, ret1, ret2
+}
+
+// EnumerateDeviceExtensionPropertiesForLayer indicates an expected call of EnumerateDeviceExtensionPropertiesForLayer.
+func (mr *PhysicalDevice1_1MockRecorder) EnumerateDeviceExtensionPropertiesForLayer(layerName interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "EnumerateDeviceExtensionPropertiesForLayer", reflect.TypeOf((*PhysicalDevice1_1)(nil).EnumerateDeviceExtensionPropertiesForLayer), layerName)
+}
+
+// EnumerateDeviceLayerProperties mocks base method.
+func (m *PhysicalDevice1_1) EnumerateDeviceLayerProperties() (map[string]*core1_0.LayerProperties, common.VkResult, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "EnumerateDeviceLayerProperties")
+	ret0, _ := ret[0].(map[string]*core1_0.LayerProperties)
+	ret1, _ := ret[1].(common.VkResult)
+	ret2, _ := ret[2].(error)
+	return ret0, ret1, ret2
+}
+
+// EnumerateDeviceLayerProperties indicates an expected call of EnumerateDeviceLayerProperties.
+func (mr *PhysicalDevice1_1MockRecorder) EnumerateDeviceLayerProperties() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "EnumerateDeviceLayerProperties", reflect.TypeOf((*PhysicalDevice1_1)(nil).EnumerateDeviceLayerProperties))
+}
+
 // Features mocks base method.
 func (m *PhysicalDevice1_1) Features() *core1_0.PhysicalDeviceFeatures {
 	m.ctrl.T.Helper()
@@ -3679,7 +3679,7 @@ func (mr *PhysicalDevice1_1MockRecorder) Features() *gomock.Call {
 }
 
 // FormatProperties mocks base method.
-func (m *PhysicalDevice1_1) FormatProperties(format core1_0.DataFormat) *core1_0.FormatProperties {
+func (m *PhysicalDevice1_1) FormatProperties(format core1_0.Format) *core1_0.FormatProperties {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "FormatProperties", format)
 	ret0, _ := ret[0].(*core1_0.FormatProperties)
@@ -3707,7 +3707,7 @@ func (mr *PhysicalDevice1_1MockRecorder) Handle() *gomock.Call {
 }
 
 // ImageFormatProperties mocks base method.
-func (m *PhysicalDevice1_1) ImageFormatProperties(format core1_0.DataFormat, imageType core1_0.ImageType, tiling core1_0.ImageTiling, usages core1_0.ImageUsages, flags core1_0.ImageCreateFlags) (*core1_0.ImageFormatProperties, common.VkResult, error) {
+func (m *PhysicalDevice1_1) ImageFormatProperties(format core1_0.Format, imageType core1_0.ImageType, tiling core1_0.ImageTiling, usages core1_0.ImageUsageFlags, flags core1_0.ImageCreateFlags) (*core1_0.ImageFormatProperties, common.VkResult, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ImageFormatProperties", format, imageType, tiling, usages, flags)
 	ret0, _ := ret[0].(*core1_0.ImageFormatProperties)
@@ -3794,9 +3794,9 @@ func (mr *PhysicalDevice1_1MockRecorder) QueueFamilyProperties() *gomock.Call {
 }
 
 // SparseImageFormatProperties mocks base method.
-func (m *PhysicalDevice1_1) SparseImageFormatProperties(format core1_0.DataFormat, imageType core1_0.ImageType, samples core1_0.SampleCounts, usages core1_0.ImageUsages, tiling core1_0.ImageTiling) []core1_0.SparseImageFormatProperties {
+func (m *PhysicalDevice1_1) SparseImageFormatProperties(format core1_0.Format, imageType core1_0.ImageType, samples core1_0.SampleCountFlags, usages core1_0.ImageUsageFlags, tiling core1_0.ImageTiling) []core1_0.SparseImageFormatProperties {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SparseImageFormatProperties", format, imageType, samples, usages, tiling)
+	ret := m.ctrl.Call(m, "Properties", format, imageType, samples, usages, tiling)
 	ret0, _ := ret[0].([]core1_0.SparseImageFormatProperties)
 	return ret0
 }
@@ -3804,7 +3804,7 @@ func (m *PhysicalDevice1_1) SparseImageFormatProperties(format core1_0.DataForma
 // SparseImageFormatProperties indicates an expected call of SparseImageFormatProperties.
 func (mr *PhysicalDevice1_1MockRecorder) SparseImageFormatProperties(format, imageType, samples, usages, tiling interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SparseImageFormatProperties", reflect.TypeOf((*PhysicalDevice1_1)(nil).SparseImageFormatProperties), format, imageType, samples, usages, tiling)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Properties", reflect.TypeOf((*PhysicalDevice1_1)(nil).SparseImageFormatProperties), format, imageType, samples, usages, tiling)
 }
 
 // Pipeline1_1 is a mock of Pipeline interface.
@@ -4311,34 +4311,34 @@ func (mr *Queue1_1MockRecorder) Handle() *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Handle", reflect.TypeOf((*Queue1_1)(nil).Handle))
 }
 
-// SubmitToQueue mocks base method.
-func (m *Queue1_1) SubmitToQueue(fence core1_0.Fence, o []core1_0.SubmitOptions) (common.VkResult, error) {
+// Submit mocks base method.
+func (m *Queue1_1) Submit(fence core1_0.Fence, o []core1_0.SubmitInfo) (common.VkResult, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SubmitToQueue", fence, o)
+	ret := m.ctrl.Call(m, "Submit", fence, o)
 	ret0, _ := ret[0].(common.VkResult)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// SubmitToQueue indicates an expected call of SubmitToQueue.
-func (mr *Queue1_1MockRecorder) SubmitToQueue(fence, o interface{}) *gomock.Call {
+// Submit indicates an expected call of Submit.
+func (mr *Queue1_1MockRecorder) Submit(fence, o interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SubmitToQueue", reflect.TypeOf((*Queue1_1)(nil).SubmitToQueue), fence, o)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Submit", reflect.TypeOf((*Queue1_1)(nil).Submit), fence, o)
 }
 
-// WaitForIdle mocks base method.
-func (m *Queue1_1) WaitForIdle() (common.VkResult, error) {
+// WaitIdle mocks base method.
+func (m *Queue1_1) WaitIdle() (common.VkResult, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "WaitForIdle")
+	ret := m.ctrl.Call(m, "WaitIdle")
 	ret0, _ := ret[0].(common.VkResult)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// WaitForIdle indicates an expected call of WaitForIdle.
-func (mr *Queue1_1MockRecorder) WaitForIdle() *gomock.Call {
+// WaitIdle indicates an expected call of WaitIdle.
+func (mr *Queue1_1MockRecorder) WaitIdle() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "WaitForIdle", reflect.TypeOf((*Queue1_1)(nil).WaitForIdle))
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "WaitIdle", reflect.TypeOf((*Queue1_1)(nil).WaitIdle))
 }
 
 // RenderPass1_1 is a mock of RenderPass interface.

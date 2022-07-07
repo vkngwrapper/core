@@ -51,16 +51,16 @@ func TestDescriptorPool_Create(t *testing.T) {
 			return core1_0.VKSuccess, nil
 		})
 
-	pool, _, err := device.CreateDescriptorPool(nil, core1_0.DescriptorPoolCreateOptions{
+	pool, _, err := device.CreateDescriptorPool(nil, core1_0.DescriptorPoolCreateInfo{
 		Flags:   core1_0.DescriptorPoolCreateFreeDescriptorSet,
 		MaxSets: 3,
-		PoolSizes: []core1_0.PoolSize{
+		PoolSizes: []core1_0.DescriptorPoolSize{
 			{
-				Type:            core1_0.DescriptorCombinedImageSampler,
+				Type:            core1_0.DescriptorTypeCombinedImageSampler,
 				DescriptorCount: 5,
 			},
 			{
-				Type:            core1_0.DescriptorUniformBuffer,
+				Type:            core1_0.DescriptorTypeUniformBuffer,
 				DescriptorCount: 4,
 			},
 		},
@@ -112,9 +112,9 @@ func TestDescriptorPool_AllocAndFree_Single(t *testing.T) {
 			return core1_0.VKSuccess, nil
 		})
 
-	sets, _, err := device.AllocateDescriptorSets(core1_0.DescriptorSetAllocateOptions{
-		DescriptorPool:    pool,
-		AllocationLayouts: []core1_0.DescriptorSetLayout{layout},
+	sets, _, err := device.AllocateDescriptorSets(core1_0.DescriptorSetAllocateInfo{
+		DescriptorPool: pool,
+		SetLayouts:     []core1_0.DescriptorSetLayout{layout},
 	})
 	require.NoError(t, err)
 
@@ -177,9 +177,9 @@ func TestDescriptorPool_AllocAndFree_Multi(t *testing.T) {
 			return core1_0.VKSuccess, nil
 		})
 
-	sets, _, err := device.AllocateDescriptorSets(core1_0.DescriptorSetAllocateOptions{
-		DescriptorPool:    pool,
-		AllocationLayouts: []core1_0.DescriptorSetLayout{layout1, layout2, layout3},
+	sets, _, err := device.AllocateDescriptorSets(core1_0.DescriptorSetAllocateInfo{
+		DescriptorPool: pool,
+		SetLayouts:     []core1_0.DescriptorSetLayout{layout1, layout2, layout3},
 	})
 	require.NoError(t, err)
 

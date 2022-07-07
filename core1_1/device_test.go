@@ -46,9 +46,9 @@ func TestVulkanDevice_DescriptorSetLayoutSupport(t *testing.T) {
 			*(*driver.VkBool32)(unsafe.Pointer(outDataVal.FieldByName("supported").UnsafeAddr())) = driver.VkBool32(1)
 		})
 
-	outData := &core1_1.DescriptorSetLayoutSupportOutData{}
-	err := device.DescriptorSetLayoutSupport(core1_0.DescriptorSetLayoutCreateOptions{
-		Bindings: []core1_0.DescriptorLayoutBinding{
+	outData := &core1_1.DescriptorSetLayoutSupport{}
+	err := device.DescriptorSetLayoutSupport(core1_0.DescriptorSetLayoutCreateInfo{
+		Bindings: []core1_0.DescriptorSetLayoutBinding{
 			{
 				Binding:         1,
 				DescriptorCount: 3,
@@ -94,7 +94,7 @@ func TestVulkanDevice_BindBufferMemory(t *testing.T) {
 			return core1_0.VKSuccess, nil
 		})
 
-	_, err := device.BindBufferMemory([]core1_1.BindBufferMemoryOptions{
+	_, err := device.BindBufferMemory2([]core1_1.BindBufferMemoryInfo{
 		{
 			Buffer:       buffer1,
 			Memory:       memory1,
@@ -144,7 +144,7 @@ func TestVulkanDevice_BindImageMemory(t *testing.T) {
 			return core1_0.VKSuccess, nil
 		})
 
-	_, err := device.BindImageMemory([]core1_1.BindImageMemoryOptions{
+	_, err := device.BindImageMemory2([]core1_1.BindImageMemoryInfo{
 		{
 			Image:        image1,
 			Memory:       memory1,
@@ -201,14 +201,14 @@ func TestBindBufferMemoryDeviceGroupOptions(t *testing.T) {
 		return core1_0.VKSuccess, nil
 	})
 
-	_, err := device.BindBufferMemory([]core1_1.BindBufferMemoryOptions{
+	_, err := device.BindBufferMemory2([]core1_1.BindBufferMemoryInfo{
 		{
 			Buffer:       buffer,
 			Memory:       memory,
 			MemoryOffset: 1,
 
 			NextOptions: common.NextOptions{
-				core1_1.BindBufferMemoryDeviceGroupOptions{
+				core1_1.BindBufferMemoryDeviceGroupInfo{
 					DeviceIndices: []int{1, 2, 7},
 				},
 			},
@@ -277,14 +277,14 @@ func TestBindImageMemoryDeviceGroupOptions(t *testing.T) {
 		return core1_0.VKSuccess, nil
 	})
 
-	_, err := device.BindImageMemory([]core1_1.BindImageMemoryOptions{
+	_, err := device.BindImageMemory2([]core1_1.BindImageMemoryInfo{
 		{
 			Image:        image,
 			Memory:       memory,
 			MemoryOffset: 1,
 
 			NextOptions: common.NextOptions{
-				core1_1.BindImageMemoryDeviceGroupOptions{
+				core1_1.BindImageMemoryDeviceGroupInfo{
 					DeviceIndices: []int{1, 2, 7},
 					SplitInstanceBindRegions: []core1_0.Rect2D{
 						{
@@ -337,13 +337,13 @@ func TestBindImagePlaneMemoryOptions(t *testing.T) {
 		return core1_0.VKSuccess, nil
 	})
 
-	_, err := device.BindImageMemory([]core1_1.BindImageMemoryOptions{
+	_, err := device.BindImageMemory2([]core1_1.BindImageMemoryInfo{
 		{
 			Image:  image,
 			Memory: memory,
 
 			NextOptions: common.NextOptions{
-				core1_1.BindImagePlaneMemoryOptions{
+				core1_1.BindImagePlaneMemoryInfo{
 					PlaneAspect: core1_1.ImageAspectPlane2,
 				},
 			},
@@ -405,7 +405,7 @@ func TestDeviceGroupBindSparseOptions(t *testing.T) {
 			WaitSemaphores:   []core1_0.Semaphore{semaphore1},
 			SignalSemaphores: []core1_0.Semaphore{semaphore2, semaphore3},
 			NextOptions: common.NextOptions{
-				core1_1.DeviceGroupBindSparseOptions{
+				core1_1.DeviceGroupBindSparseInfo{
 					ResourceDeviceIndex: 1,
 					MemoryDeviceIndex:   3,
 				},
@@ -447,15 +447,15 @@ func TestVulkanDevice_BufferMemoryRequirements(t *testing.T) {
 		*(*driver.Uint32)(unsafe.Pointer(val.FieldByName("memoryTypeBits").UnsafeAddr())) = driver.Uint32(5)
 	})
 
-	var outData core1_1.MemoryRequirementsOutData
-	err := device.BufferMemoryRequirements(core1_1.BufferMemoryRequirementsOptions{
+	var outData core1_1.MemoryRequirements2
+	err := device.BufferMemoryRequirements2(core1_1.BufferMemoryRequirementsInfo2{
 		Buffer: buffer,
 	}, &outData)
 	require.NoError(t, err)
 
 	require.Equal(t, 1, outData.MemoryRequirements.Size)
 	require.Equal(t, 3, outData.MemoryRequirements.Alignment)
-	require.Equal(t, uint32(5), outData.MemoryRequirements.MemoryType)
+	require.Equal(t, uint32(5), outData.MemoryRequirements.MemoryTypeBits)
 }
 
 func TestVulkanDevice_ImageMemoryRequirements(t *testing.T) {
@@ -490,15 +490,15 @@ func TestVulkanDevice_ImageMemoryRequirements(t *testing.T) {
 		*(*driver.Uint32)(unsafe.Pointer(val.FieldByName("memoryTypeBits").UnsafeAddr())) = driver.Uint32(5)
 	})
 
-	var outData core1_1.MemoryRequirementsOutData
-	err := device.ImageMemoryRequirements(core1_1.ImageMemoryRequirementsOptions{
+	var outData core1_1.MemoryRequirements2
+	err := device.ImageMemoryRequirements2(core1_1.ImageMemoryRequirementsInfo2{
 		Image: image,
 	}, &outData)
 	require.NoError(t, err)
 
 	require.Equal(t, 1, outData.MemoryRequirements.Size)
 	require.Equal(t, 3, outData.MemoryRequirements.Alignment)
-	require.Equal(t, uint32(5), outData.MemoryRequirements.MemoryType)
+	require.Equal(t, uint32(5), outData.MemoryRequirements.MemoryTypeBits)
 }
 
 func TestVulkanExtension_SparseImageMemoryRequirements(t *testing.T) {
@@ -589,15 +589,15 @@ func TestVulkanExtension_SparseImageMemoryRequirements(t *testing.T) {
 			*(*driver.VkDeviceSize)(unsafe.Pointer(memReqs.FieldByName("imageMipTailStride").UnsafeAddr())) = driver.VkDeviceSize(37)
 		})
 
-	outData, err := device.SparseImageMemoryRequirements(core1_1.ImageSparseMemoryRequirementsOptions{
+	outData, err := device.ImageSparseMemoryRequirements2(core1_1.ImageSparseMemoryRequirementsInfo2{
 		Image: image,
 	}, nil)
 	require.NoError(t, err)
-	require.Equal(t, []*core1_1.SparseImageMemoryRequirementsOutData{
+	require.Equal(t, []*core1_1.SparseImageMemoryRequirements2{
 		{
 			MemoryRequirements: core1_0.SparseImageMemoryRequirements{
 				FormatProperties: core1_0.SparseImageFormatProperties{
-					AspectMask: core1_0.AspectMetadata,
+					AspectMask: core1_0.ImageAspectMetadata,
 					ImageGranularity: core1_0.Extent3D{
 						Width:  1,
 						Height: 3,
@@ -614,7 +614,7 @@ func TestVulkanExtension_SparseImageMemoryRequirements(t *testing.T) {
 		{
 			MemoryRequirements: core1_0.SparseImageMemoryRequirements{
 				FormatProperties: core1_0.SparseImageFormatProperties{
-					AspectMask: core1_0.AspectStencil,
+					AspectMask: core1_0.ImageAspectStencil,
 					ImageGranularity: core1_0.Extent3D{
 						Width:  19,
 						Height: 23,
@@ -697,18 +697,18 @@ func TestVulkanLoader_CreateSamplerYcbcrConversion(t *testing.T) {
 		})
 
 	ycbcr, _, err := device.CreateSamplerYcbcrConversion(
-		core1_1.SamplerYcbcrConversionCreateOptions{
-			Format:     core1_1.DataFormatB12X4G12X4R12X4G12X4HorizontalChromaComponentPacked,
+		core1_1.SamplerYcbcrConversionCreateInfo{
+			Format:     core1_1.FormatB12X4G12X4R12X4G12X4HorizontalChromaComponentPacked,
 			YcbcrModel: core1_1.SamplerYcbcrModelConversionYcbcr709,
 			YcbcrRange: core1_1.SamplerYcbcrRangeITUNarrow,
 			Components: core1_0.ComponentMapping{
-				R: core1_0.SwizzleGreen,
-				G: core1_0.SwizzleAlpha,
-				B: core1_0.SwizzleIdentity,
-				A: core1_0.SwizzleOne,
+				R: core1_0.ComponentSwizzleGreen,
+				G: core1_0.ComponentSwizzleAlpha,
+				B: core1_0.ComponentSwizzleIdentity,
+				A: core1_0.ComponentSwizzleOne,
 			},
-			ChromaOffsetY:               core1_1.ChromaLocationCositedEven,
-			ChromaOffsetX:               core1_1.ChromaLocationMidpoint,
+			YChromaOffset:               core1_1.ChromaLocationCositedEven,
+			XChromaOffset:               core1_1.ChromaLocationMidpoint,
 			ChromaFilter:                core1_0.FilterLinear,
 			ForceExplicitReconstruction: true,
 		},
@@ -754,7 +754,7 @@ func TestVulkanLoader1_1_CreateDescriptorUpdateTemplate(t *testing.T) {
 	})
 
 	queue, err := device.GetQueue2(
-		core1_1.DeviceQueueOptions{
+		core1_1.DeviceQueueInfo2{
 			Flags:            core1_1.DeviceQueueCreateProtected,
 			QueueFamilyIndex: 3,
 			QueueIndex:       5,

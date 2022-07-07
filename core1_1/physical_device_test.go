@@ -44,15 +44,15 @@ func TestVulkanPhysicalDevice_PhysicalDeviceExternalFenceProperties(t *testing.T
 		*(*uint32)(unsafe.Pointer(val.FieldByName("externalFenceFeatures").UnsafeAddr())) = uint32(1)         // VK_EXTERNAL_FENCE_FEATURE_EXPORTABLE_BIT
 	})
 
-	var outData core1_1.ExternalFenceOutData
+	var outData core1_1.ExternalFenceProperties
 	err := physicalDevice.InstanceScopedPhysicalDevice1_1().ExternalFenceProperties(
-		core1_1.ExternalFenceOptions{
+		core1_1.PhysicalDeviceExternalFenceInfo{
 			HandleType: core1_1.ExternalFenceHandleTypeOpaqueWin32KMT,
 		},
 		&outData,
 	)
 	require.NoError(t, err)
-	require.Equal(t, core1_1.ExternalFenceOutData{
+	require.Equal(t, core1_1.ExternalFenceProperties{
 		ExportFromImportedHandleTypes: core1_1.ExternalFenceHandleTypeSyncFD,
 		CompatibleHandleTypes:         core1_1.ExternalFenceHandleTypeOpaqueWin32KMT,
 		ExternalFenceFeatures:         core1_1.ExternalFenceFeatureExportable,
@@ -88,9 +88,9 @@ func TestVulkanPhysicalDevice_ExternalBufferProperties(t *testing.T) {
 		*(*uint32)(unsafe.Pointer(val.FieldByName("externalMemoryProperties").FieldByName("compatibleHandleTypes").UnsafeAddr())) = uint32(2)
 	})
 
-	var outData core1_1.ExternalBufferOutData
+	var outData core1_1.ExternalBufferProperties
 	err := physicalDevice.InstanceScopedPhysicalDevice1_1().ExternalBufferProperties(
-		core1_1.ExternalBufferOptions{
+		core1_1.PhysicalDeviceExternalBufferInfo{
 			Flags:      core1_0.BufferCreateSparseResidency,
 			Usage:      core1_0.BufferUsageStorageTexelBuffer,
 			HandleType: core1_1.ExternalMemoryHandleTypeD3D11TextureKMT,
@@ -98,7 +98,7 @@ func TestVulkanPhysicalDevice_ExternalBufferProperties(t *testing.T) {
 		&outData,
 	)
 	require.NoError(t, err)
-	require.Equal(t, core1_1.ExternalBufferOutData{
+	require.Equal(t, core1_1.ExternalBufferProperties{
 		ExternalMemoryProperties: core1_1.ExternalMemoryProperties{
 			ExternalMemoryFeatures:        core1_1.ExternalMemoryFeatureExportable,
 			ExportFromImportedHandleTypes: core1_1.ExternalMemoryHandleTypeD3D12Resource,
@@ -139,14 +139,14 @@ func TestVulkanPhysicalDevice_ExternalSemaphoreProperties(t *testing.T) {
 			*(*uint32)(unsafe.Pointer(val.FieldByName("externalSemaphoreFeatures").UnsafeAddr())) = uint32(2)     // VK_EXTERNAL_SEMAPHORE_FEATURE_IMPORTABLE_BIT
 		})
 
-	var outData core1_1.ExternalSemaphoreOutData
+	var outData core1_1.ExternalSemaphoreProperties
 	err := physicalDevice.InstanceScopedPhysicalDevice1_1().ExternalSemaphoreProperties(
-		core1_1.ExternalSemaphoreOptions{
+		core1_1.PhysicalDeviceExternalSemaphoreInfo{
 			HandleType: core1_1.ExternalSemaphoreHandleTypeSyncFD,
 		},
 		&outData)
 	require.NoError(t, err)
-	require.Equal(t, core1_1.ExternalSemaphoreOutData{
+	require.Equal(t, core1_1.ExternalSemaphoreProperties{
 		ExportFromImportedHandleTypes: core1_1.ExternalSemaphoreHandleTypeOpaqueFD,
 		CompatibleHandleTypes:         core1_1.ExternalSemaphoreHandleTypeOpaqueWin32KMT,
 		ExternalSemaphoreFeatures:     core1_1.ExternalSemaphoreFeatureImportable,
@@ -228,7 +228,7 @@ func TestVulkanPhysicalDevice_Features(t *testing.T) {
 
 		})
 
-	outData := &core1_1.DeviceFeatures{}
+	outData := &core1_1.PhysicalDeviceFeatures2{}
 	err := physicalDevice.InstanceScopedPhysicalDevice1_1().Features2(outData)
 	require.NoError(t, err)
 
@@ -317,9 +317,9 @@ func TestVulkanPhysicalDevice_FormatProperties(t *testing.T) {
 		*(*uint32)(unsafe.Pointer(properties.FieldByName("bufferFeatures").UnsafeAddr())) = uint32(0x00000010)        // VK_FORMAT_FEATURE_STORAGE_TEXEL_BUFFER_BIT
 	})
 
-	outData := core1_1.FormatPropertiesOutData{}
+	outData := core1_1.FormatProperties2{}
 	err := physicalDevice.InstanceScopedPhysicalDevice1_1().FormatProperties2(
-		core1_0.DataFormatA2B10G10R10UnsignedNormalizedPacked,
+		core1_0.FormatA2B10G10R10UnsignedNormalizedPacked,
 		&outData)
 	require.NoError(t, err)
 
@@ -368,9 +368,9 @@ func TestVulkanPhysicalDevice_ImageFormatProperties(t *testing.T) {
 			return core1_0.VKSuccess, nil
 		})
 
-	outData := core1_1.ImageFormatPropertiesOutData{}
-	_, err := physicalDevice.InstanceScopedPhysicalDevice1_1().ImageFormatProperties2(core1_1.ImageFormatOptions{
-		Format: core1_0.DataFormatA2B10G10R10UnsignedIntPacked,
+	outData := core1_1.ImageFormatProperties2{}
+	_, err := physicalDevice.InstanceScopedPhysicalDevice1_1().ImageFormatProperties2(core1_1.PhysicalDeviceImageFormatInfo2{
+		Format: core1_0.FormatA2B10G10R10UnsignedIntPacked,
 		Type:   core1_0.ImageType2D,
 		Tiling: core1_0.ImageTilingOptimal,
 		Usage:  core1_0.ImageUsageStorage,
@@ -415,13 +415,13 @@ func TestVulkanPhysicalDevice_MemoryProperties(t *testing.T) {
 			*(*int32)(unsafe.Pointer(memoryHeap.FieldByName("flags").UnsafeAddr())) = int32(1) // VK_MEMORY_HEAP_DEVICE_LOCAL_BIT
 		})
 
-	outData := core1_1.MemoryPropertiesOutData{}
+	outData := core1_1.PhysicalDeviceMemoryProperties2{}
 	err := physicalDevice.InstanceScopedPhysicalDevice1_1().MemoryProperties2(&outData)
 	require.NoError(t, err)
 	require.Equal(t, []core1_0.MemoryType{
 		{
-			Properties: core1_0.MemoryPropertyLazilyAllocated,
-			HeapIndex:  3,
+			PropertyFlags: core1_0.MemoryPropertyLazilyAllocated,
+			HeapIndex:     3,
 		},
 	}, outData.MemoryProperties.MemoryTypes)
 	require.Equal(t, []core1_0.MemoryHeap{
@@ -493,7 +493,7 @@ func TestVulkanPhysicalDevice_Properties(t *testing.T) {
 			*(*driver.VkBool32)(unsafe.Pointer(sparseProperties.FieldByName("residencyNonResidentStrict").UnsafeAddr())) = driver.VkBool32(1)
 		})
 
-	outData := core1_1.DevicePropertiesOutData{}
+	outData := core1_1.PhysicalDeviceProperties2{}
 	err = physicalDevice.InstanceScopedPhysicalDevice1_1().Properties2(&outData)
 	require.NoError(t, err)
 
@@ -501,8 +501,8 @@ func TestVulkanPhysicalDevice_Properties(t *testing.T) {
 	require.Equal(t, common.CreateVersion(3, 2, 1), outData.Properties.DriverVersion)
 	require.Equal(t, uint32(3), outData.Properties.VendorID)
 	require.Equal(t, uint32(5), outData.Properties.DeviceID)
-	require.Equal(t, core1_0.DeviceDiscreteGPU, outData.Properties.Type)
-	require.Equal(t, "Some Device", outData.Properties.Name)
+	require.Equal(t, core1_0.PhysicalDeviceTypeDiscreteGPU, outData.Properties.DriverType)
+	require.Equal(t, "Some Device", outData.Properties.DriverName)
 	require.Equal(t, deviceUUID, outData.Properties.PipelineCacheUUID)
 
 	require.Equal(t, 7, outData.Properties.Limits.MaxUniformBufferRange)
@@ -571,10 +571,10 @@ func TestVulkanPhysicalDevice_QueueFamilyProperties(t *testing.T) {
 	outData, err := physicalDevice.InstanceScopedPhysicalDevice1_1().QueueFamilyProperties2(nil)
 	require.NoError(t, err)
 
-	require.Equal(t, []*core1_1.QueueFamilyOutData{
+	require.Equal(t, []*core1_1.QueueFamilyProperties2{
 		{
-			QueueFamily: core1_0.QueueFamily{
-				Flags:              core1_0.QueueSparseBinding,
+			QueueFamilyProperties: core1_0.QueueFamily{
+				QueueFlags:         core1_0.QueueSparseBinding,
 				QueueCount:         3,
 				TimestampValidBits: 5,
 				MinImageTransferGranularity: core1_0.Extent3D{
@@ -585,8 +585,8 @@ func TestVulkanPhysicalDevice_QueueFamilyProperties(t *testing.T) {
 			},
 		},
 		{
-			QueueFamily: core1_0.QueueFamily{
-				Flags:              core1_0.QueueCompute,
+			QueueFamilyProperties: core1_0.QueueFamily{
+				QueueFlags:         core1_0.QueueCompute,
 				QueueCount:         17,
 				TimestampValidBits: 19,
 				MinImageTransferGranularity: core1_0.Extent3D{
@@ -665,18 +665,18 @@ func TestVulkanPhysicalDevice_SparseImageFormatProperties(t *testing.T) {
 	})
 
 	outData, err := physicalDevice.InstanceScopedPhysicalDevice1_1().SparseImageFormatProperties2(
-		core1_1.SparseImageFormatOptions{
-			Format:  core1_0.DataFormatA2B10G10R10UnsignedScaledPacked,
+		core1_1.PhysicalDeviceSparseImageFormatInfo2{
+			Format:  core1_0.FormatA2B10G10R10UnsignedScaledPacked,
 			Type:    core1_0.ImageType3D,
 			Samples: core1_0.Samples32,
 			Usage:   core1_0.ImageUsageStorage,
 			Tiling:  core1_0.ImageTilingLinear,
 		}, nil)
 	require.NoError(t, err)
-	require.Equal(t, []*core1_1.SparseImageFormatPropertiesOutData{
+	require.Equal(t, []*core1_1.SparseImageFormatProperties2{
 		{
-			SparseImageFormatProperties: core1_0.SparseImageFormatProperties{
-				AspectMask: core1_0.AspectColor,
+			Properties: core1_0.SparseImageFormatProperties{
+				AspectMask: core1_0.ImageAspectColor,
 				ImageGranularity: core1_0.Extent3D{
 					Width:  1,
 					Height: 3,
@@ -736,15 +736,15 @@ func TestPhysicalDeviceIDOutData(t *testing.T) {
 			*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("deviceLUIDValid").UnsafeAddr())) = driver.VkBool32(1)
 		})
 
-	var properties core1_1.DevicePropertiesOutData
-	var outData core1_1.PhysicalDeviceIDOutData
+	var properties core1_1.PhysicalDeviceProperties2
+	var outData core1_1.PhysicalDeviceIDProperties
 	properties.NextOutData = common.NextOutData{&outData}
 
 	err = physicalDevice.InstanceScopedPhysicalDevice1_1().Properties2(
 		&properties,
 	)
 	require.NoError(t, err)
-	require.Equal(t, core1_1.PhysicalDeviceIDOutData{
+	require.Equal(t, core1_1.PhysicalDeviceIDProperties{
 		DeviceUUID:      deviceUUID,
 		DriverUUID:      driverUUID,
 		DeviceLUID:      0xdeadbeefdeadbeef,
@@ -780,8 +780,8 @@ func TestMaintenance3OutData(t *testing.T) {
 			*(*driver.Uint64)(unsafe.Pointer(maint.FieldByName("maxMemoryAllocationSize").UnsafeAddr())) = driver.Uint64(7)
 		})
 
-	maintOutData := &core1_1.PhysicalDeviceMaintenance3OutData{}
-	outData := &core1_1.DevicePropertiesOutData{
+	maintOutData := &core1_1.PhysicalDeviceMaintenance3Properties{}
+	outData := &core1_1.PhysicalDeviceProperties2{
 		NextOutData: common.NextOutData{Next: maintOutData},
 	}
 	err := physicalDevice.InstanceScopedPhysicalDevice1_1().Properties2(outData)
@@ -818,14 +818,14 @@ func TestMultiviewPropertiesOutData(t *testing.T) {
 		*(*uint32)(unsafe.Pointer(val.FieldByName("maxMultiviewInstanceIndex").UnsafeAddr())) = uint32(3)
 	})
 
-	var outData core1_1.PhysicalDeviceMultiviewOutData
-	properties := core1_1.DevicePropertiesOutData{
+	var outData core1_1.PhysicalDeviceMultiviewProperties
+	properties := core1_1.PhysicalDeviceProperties2{
 		NextOutData: common.NextOutData{&outData},
 	}
 
 	err := physicalDevice.InstanceScopedPhysicalDevice1_1().Properties2(&properties)
 	require.NoError(t, err)
-	require.Equal(t, core1_1.PhysicalDeviceMultiviewOutData{
+	require.Equal(t, core1_1.PhysicalDeviceMultiviewProperties{
 		MaxMultiviewInstanceIndex: 3,
 		MaxMultiviewViewCount:     5,
 	}, outData)
@@ -860,8 +860,8 @@ func TestPointClippingOutData(t *testing.T) {
 			*behavior = driver.VkPointClippingBehavior(1) // VK_POINT_CLIPPING_BEHAVIOR_USER_CLIP_PLANES_ONLY
 		})
 
-	pointClipping := &core1_1.PhysicalDevicePointClippingOutData{}
-	properties := &core1_1.DevicePropertiesOutData{
+	pointClipping := &core1_1.PhysicalDevicePointClippingProperties{}
+	properties := &core1_1.PhysicalDeviceProperties2{
 		NextOutData: common.NextOutData{Next: pointClipping},
 	}
 
@@ -903,8 +903,8 @@ func TestPhysicalDeviceProtectedMemoryOutData(t *testing.T) {
 			*noFault = driver.VkBool32(1)
 		})
 
-	protectedMemory := &core1_1.PhysicalDeviceProtectedMemoryOutData{}
-	properties := &core1_1.DevicePropertiesOutData{
+	protectedMemory := &core1_1.PhysicalDeviceProtectedMemoryProperties{}
+	properties := &core1_1.PhysicalDeviceProperties2{
 		NextOutData: common.NextOutData{Next: protectedMemory},
 	}
 
@@ -952,8 +952,8 @@ func TestPhysicalDeviceSubgroupOutData(t *testing.T) {
 			*(*driver.VkBool32)(unsafe.Pointer(subgroup.FieldByName("quadOperationsInAllStages").UnsafeAddr())) = driver.VkBool32(1)
 		})
 
-	subgroups := &core1_1.PhysicalDeviceSubgroupOutData{}
-	properties := &core1_1.DevicePropertiesOutData{
+	subgroups := &core1_1.PhysicalDeviceSubgroupProperties{}
+	properties := &core1_1.PhysicalDeviceProperties2{
 		NextOutData: common.NextOutData{Next: subgroups},
 	}
 
@@ -963,7 +963,7 @@ func TestPhysicalDeviceSubgroupOutData(t *testing.T) {
 	require.Equal(t, uint32(3), properties.Properties.VendorID)
 	require.InDelta(t, 5.0, properties.Properties.Limits.LineWidthGranularity, 0.001)
 
-	require.Equal(t, subgroups, &core1_1.PhysicalDeviceSubgroupOutData{
+	require.Equal(t, subgroups, &core1_1.PhysicalDeviceSubgroupProperties{
 		SubgroupSize:              1,
 		SupportedStages:           core1_0.StageFragment,
 		SupportedOperations:       core1_1.SubgroupFeatureBallot,
@@ -1045,7 +1045,7 @@ func TestVulkanExtension_PhysicalDeviceFeatures(t *testing.T) {
 
 		})
 
-	outData := &core1_1.DeviceFeatures{}
+	outData := &core1_1.PhysicalDeviceFeatures2{}
 	err := physicalDevice.InstanceScopedPhysicalDevice1_1().Features2(outData)
 	require.NoError(t, err)
 
@@ -1212,21 +1212,21 @@ func TestVulkanDevice_CreateDeviceWithFeatures(t *testing.T) {
 			return core1_0.VKSuccess, nil
 		})
 
-	options := core1_0.DeviceCreateOptions{
-		QueueFamilies: []core1_0.DeviceQueueCreateOptions{
+	options := core1_0.DeviceCreateInfo{
+		QueueCreateInfos: []core1_0.DeviceQueueCreateInfo{
 			{
-				QueueFamilyIndex:       1,
-				CreatedQueuePriorities: []float32{3, 5, 7},
+				QueueFamilyIndex: 1,
+				QueuePriorities:  []float32{3, 5, 7},
 			},
 			{
-				QueueFamilyIndex:       11,
-				CreatedQueuePriorities: []float32{13},
+				QueueFamilyIndex: 11,
+				QueuePriorities:  []float32{13},
 			},
 		},
-		ExtensionNames: []string{"a", "b"},
-		LayerNames:     []string{"c"},
+		EnabledExtensionNames: []string{"a", "b"},
+		EnabledLayerNames:     []string{"c"},
 	}
-	features := core1_1.DeviceFeatures{
+	features := core1_1.PhysicalDeviceFeatures2{
 		Features: core1_0.PhysicalDeviceFeatures{
 			TextureCompressionEtc2: true,
 			DepthBounds:            true,
@@ -1266,7 +1266,7 @@ func TestDevice16BitStorageOutData(t *testing.T) {
 		})
 
 	outData := &core1_1.PhysicalDevice16BitStorageFeatures{}
-	features := &core1_1.DeviceFeatures{
+	features := &core1_1.PhysicalDeviceFeatures2{
 		NextOutData: common.NextOutData{Next: outData},
 	}
 
@@ -1326,10 +1326,10 @@ func TestMultiviewFeaturesOptions(t *testing.T) {
 		return core1_0.VKSuccess, nil
 	})
 
-	device, _, err := physicalDevice.CreateDevice(nil, core1_0.DeviceCreateOptions{
-		QueueFamilies: []core1_0.DeviceQueueCreateOptions{
+	device, _, err := physicalDevice.CreateDevice(nil, core1_0.DeviceCreateInfo{
+		QueueCreateInfos: []core1_0.DeviceQueueCreateInfo{
 			{
-				CreatedQueuePriorities: []float32{3, 2, 1},
+				QueuePriorities: []float32{3, 2, 1},
 			},
 		},
 		NextOptions: common.NextOptions{
@@ -1372,7 +1372,7 @@ func TestMultiviewFeaturesOutData(t *testing.T) {
 	})
 
 	var outData core1_1.PhysicalDeviceMultiviewFeatures
-	features := core1_1.DeviceFeatures{
+	features := core1_1.PhysicalDeviceFeatures2{
 		NextOutData: common.NextOutData{&outData},
 	}
 
@@ -1428,10 +1428,10 @@ func TestPhysicalDeviceProtectedMemoryFeaturesOptions(t *testing.T) {
 		return core1_0.VKSuccess, nil
 	})
 
-	device, _, err := physicalDevice.CreateDevice(nil, core1_0.DeviceCreateOptions{
-		QueueFamilies: []core1_0.DeviceQueueCreateOptions{
+	device, _, err := physicalDevice.CreateDevice(nil, core1_0.DeviceCreateInfo{
+		QueueCreateInfos: []core1_0.DeviceQueueCreateInfo{
 			{
-				CreatedQueuePriorities: []float32{3, 2, 1},
+				QueuePriorities: []float32{3, 2, 1},
 			},
 		},
 		NextOptions: common.NextOptions{
@@ -1470,7 +1470,7 @@ func TestPhysicalDeviceProtectedMemoryFeaturesOutData(t *testing.T) {
 	})
 
 	var outData core1_1.PhysicalDeviceProtectedMemoryFeatures
-	features := core1_1.DeviceFeatures{
+	features := core1_1.PhysicalDeviceFeatures2{
 		NextOutData: common.NextOutData{&outData},
 	}
 
@@ -1518,15 +1518,15 @@ func TestSamplerYcbcrFeaturesOptions(t *testing.T) {
 
 	device, _, err := physicalDevice.CreateDevice(
 		nil,
-		core1_0.DeviceCreateOptions{
-			QueueFamilies: []core1_0.DeviceQueueCreateOptions{
+		core1_0.DeviceCreateInfo{
+			QueueCreateInfos: []core1_0.DeviceQueueCreateInfo{
 				{
-					CreatedQueuePriorities: []float32{0},
+					QueuePriorities: []float32{0},
 				},
 			},
 
 			NextOptions: common.NextOptions{
-				core1_1.PhysicalDeviceSamplerYcbcrFeatures{
+				core1_1.PhysicalDeviceSamplerYcbcrConversionFeatures{
 					SamplerYcbcrConversion: true,
 				},
 			},
@@ -1560,16 +1560,16 @@ func TestSamplerYcbcrFeaturesOutData(t *testing.T) {
 			*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("samplerYcbcrConversion").UnsafeAddr())) = driver.VkBool32(1)
 		})
 
-	var outData core1_1.PhysicalDeviceSamplerYcbcrFeatures
+	var outData core1_1.PhysicalDeviceSamplerYcbcrConversionFeatures
 
 	err := physicalDevice.InstanceScopedPhysicalDevice1_1().Features2(
-		&core1_1.DeviceFeatures{
+		&core1_1.PhysicalDeviceFeatures2{
 			NextOutData: common.NextOutData{
 				&outData,
 			},
 		})
 	require.NoError(t, err)
-	require.Equal(t, core1_1.PhysicalDeviceSamplerYcbcrFeatures{
+	require.Equal(t, core1_1.PhysicalDeviceSamplerYcbcrConversionFeatures{
 		SamplerYcbcrConversion: true,
 	}, outData)
 }
@@ -1617,10 +1617,10 @@ func TestPhysicalDeviceShaderDrawParametersFeaturesOptions(t *testing.T) {
 		return core1_0.VKSuccess, nil
 	})
 
-	device, _, err := physicalDevice.CreateDevice(nil, core1_0.DeviceCreateOptions{
-		QueueFamilies: []core1_0.DeviceQueueCreateOptions{
+	device, _, err := physicalDevice.CreateDevice(nil, core1_0.DeviceCreateInfo{
+		QueueCreateInfos: []core1_0.DeviceQueueCreateInfo{
 			{
-				CreatedQueuePriorities: []float32{3, 2, 1},
+				QueuePriorities: []float32{3, 2, 1},
 			},
 		},
 		NextOptions: common.NextOptions{
@@ -1659,7 +1659,7 @@ func TestPhysicalDeviceShaderDrawParametersFeaturesOutData(t *testing.T) {
 	})
 
 	var outData core1_1.PhysicalDeviceShaderDrawParametersFeatures
-	features := core1_1.DeviceFeatures{
+	features := core1_1.PhysicalDeviceFeatures2{
 		NextOutData: common.NextOutData{&outData},
 	}
 
@@ -1707,10 +1707,10 @@ func TestVariablePointersFeaturesOptions(t *testing.T) {
 			return core1_0.VKSuccess, nil
 		})
 
-	device, _, err := physicalDevice.CreateDevice(nil, core1_0.DeviceCreateOptions{
-		QueueFamilies: []core1_0.DeviceQueueCreateOptions{
+	device, _, err := physicalDevice.CreateDevice(nil, core1_0.DeviceCreateInfo{
+		QueueCreateInfos: []core1_0.DeviceQueueCreateInfo{
 			{
-				CreatedQueuePriorities: []float32{0},
+				QueuePriorities: []float32{0},
 			},
 		},
 
@@ -1756,7 +1756,7 @@ func TestVariablePointersFeaturesOutData(t *testing.T) {
 			*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("variablePointersStorageBuffer").UnsafeAddr())) = driver.VkBool32(1)
 		})
 
-	err := physicalDevice.InstanceScopedPhysicalDevice1_1().Features2(&core1_1.DeviceFeatures{
+	err := physicalDevice.InstanceScopedPhysicalDevice1_1().Features2(&core1_1.PhysicalDeviceFeatures2{
 		NextOutData: common.NextOutData{Next: &pointersOutData},
 	})
 	require.NoError(t, err)
@@ -1805,13 +1805,13 @@ func TestDeviceGroupOptions(t *testing.T) {
 		return core1_0.VKSuccess, nil
 	})
 
-	device, _, err := physicalDevice1.CreateDevice(nil, core1_0.DeviceCreateOptions{
-		QueueFamilies: []core1_0.DeviceQueueCreateOptions{
+	device, _, err := physicalDevice1.CreateDevice(nil, core1_0.DeviceCreateInfo{
+		QueueCreateInfos: []core1_0.DeviceQueueCreateInfo{
 			{
-				CreatedQueuePriorities: []float32{0},
+				QueuePriorities: []float32{0},
 			},
 		},
-		NextOptions: common.NextOptions{Next: core1_1.DeviceGroupDeviceOptions{
+		NextOptions: common.NextOptions{Next: core1_1.DeviceGroupDeviceCreateInfo{
 			PhysicalDevices: []core1_0.PhysicalDevice{physicalDevice1, physicalDevice2, physicalDevice3},
 		}},
 	})
@@ -1857,10 +1857,10 @@ func TestMemoryAllocateFlagsOptions(t *testing.T) {
 		})
 
 	memory, _, err := device.AllocateMemory(nil,
-		core1_0.MemoryAllocateOptions{
+		core1_0.MemoryAllocateInfo{
 			AllocationSize:  1,
 			MemoryTypeIndex: 3,
-			NextOptions: common.NextOptions{Next: core1_1.MemoryAllocateFlagsOptions{
+			NextOptions: common.NextOptions{Next: core1_1.MemoryAllocateFlagsInfo{
 				Flags:      core1_1.MemoryAllocateDeviceMask,
 				DeviceMask: 5,
 			}},
@@ -1907,10 +1907,10 @@ func TestDevice16BitStorageOptions(t *testing.T) {
 		StoragePushConstant16:              false,
 		StorageBuffer16BitAccess:           false,
 	}
-	device, _, err := physicalDevice.CreateDevice(nil, core1_0.DeviceCreateOptions{
-		QueueFamilies: []core1_0.DeviceQueueCreateOptions{
+	device, _, err := physicalDevice.CreateDevice(nil, core1_0.DeviceCreateInfo{
+		QueueCreateInfos: []core1_0.DeviceQueueCreateInfo{
 			{
-				CreatedQueuePriorities: []float32{0},
+				QueuePriorities: []float32{0},
 			},
 		},
 

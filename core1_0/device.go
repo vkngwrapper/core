@@ -44,7 +44,7 @@ func (d *VulkanDevice) Destroy(callbacks *driver.AllocationCallbacks) {
 	d.deviceDriver.ObjectStore().Delete(driver.VulkanHandle(d.deviceHandle))
 }
 
-func (d *VulkanDevice) WaitForIdle() (common.VkResult, error) {
+func (d *VulkanDevice) WaitIdle() (common.VkResult, error) {
 	return d.deviceDriver.VkDeviceWaitIdle(d.deviceHandle)
 }
 
@@ -86,7 +86,7 @@ func (d *VulkanDevice) ResetFences(fences []Fence) (common.VkResult, error) {
 	return d.deviceDriver.VkResetFences(d.deviceHandle, driver.Uint32(fenceCount), fencePtr)
 }
 
-func (d *VulkanDevice) UpdateDescriptorSets(writes []WriteDescriptorSetOptions, copies []CopyDescriptorSetOptions) error {
+func (d *VulkanDevice) UpdateDescriptorSets(writes []WriteDescriptorSet, copies []CopyDescriptorSet) error {
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
@@ -98,14 +98,14 @@ func (d *VulkanDevice) UpdateDescriptorSets(writes []WriteDescriptorSetOptions, 
 	var copyPtr *C.VkCopyDescriptorSet
 
 	if writeCount > 0 {
-		writePtr, err = common.AllocOptionSlice[C.VkWriteDescriptorSet, WriteDescriptorSetOptions](arena, writes)
+		writePtr, err = common.AllocOptionSlice[C.VkWriteDescriptorSet, WriteDescriptorSet](arena, writes)
 		if err != nil {
 			return err
 		}
 	}
 
 	if copyCount > 0 {
-		copyPtr, err = common.AllocOptionSlice[C.VkCopyDescriptorSet, CopyDescriptorSetOptions](arena, copies)
+		copyPtr, err = common.AllocOptionSlice[C.VkCopyDescriptorSet, CopyDescriptorSet](arena, copies)
 		if err != nil {
 			return err
 		}
@@ -115,12 +115,12 @@ func (d *VulkanDevice) UpdateDescriptorSets(writes []WriteDescriptorSetOptions, 
 	return nil
 }
 
-func (d *VulkanDevice) FlushMappedMemoryRanges(ranges []MappedMemoryRangeOptions) (common.VkResult, error) {
+func (d *VulkanDevice) FlushMappedMemoryRanges(ranges []MappedMemoryRange) (common.VkResult, error) {
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
 	rangeCount := len(ranges)
-	createInfos, err := common.AllocOptionSlice[C.VkMappedMemoryRange, MappedMemoryRangeOptions](arena, ranges)
+	createInfos, err := common.AllocOptionSlice[C.VkMappedMemoryRange, MappedMemoryRange](arena, ranges)
 	if err != nil {
 		return VKErrorUnknown, err
 	}
@@ -128,12 +128,12 @@ func (d *VulkanDevice) FlushMappedMemoryRanges(ranges []MappedMemoryRangeOptions
 	return d.deviceDriver.VkFlushMappedMemoryRanges(d.deviceHandle, driver.Uint32(rangeCount), (*driver.VkMappedMemoryRange)(unsafe.Pointer(createInfos)))
 }
 
-func (d *VulkanDevice) InvalidateMappedMemoryRanges(ranges []MappedMemoryRangeOptions) (common.VkResult, error) {
+func (d *VulkanDevice) InvalidateMappedMemoryRanges(ranges []MappedMemoryRange) (common.VkResult, error) {
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
 	rangeCount := len(ranges)
-	createInfos, err := common.AllocOptionSlice[C.VkMappedMemoryRange, MappedMemoryRangeOptions](arena, ranges)
+	createInfos, err := common.AllocOptionSlice[C.VkMappedMemoryRange, MappedMemoryRange](arena, ranges)
 	if err != nil {
 		return VKErrorUnknown, err
 	}
@@ -141,7 +141,7 @@ func (d *VulkanDevice) InvalidateMappedMemoryRanges(ranges []MappedMemoryRangeOp
 	return d.deviceDriver.VkInvalidateMappedMemoryRanges(d.deviceHandle, driver.Uint32(rangeCount), (*driver.VkMappedMemoryRange)(unsafe.Pointer(createInfos)))
 }
 
-func (d *VulkanDevice) CreateBufferView(allocationCallbacks *driver.AllocationCallbacks, options BufferViewCreateOptions) (BufferView, common.VkResult, error) {
+func (d *VulkanDevice) CreateBufferView(allocationCallbacks *driver.AllocationCallbacks, options BufferViewCreateInfo) (BufferView, common.VkResult, error) {
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
@@ -162,7 +162,7 @@ func (d *VulkanDevice) CreateBufferView(allocationCallbacks *driver.AllocationCa
 	return bufferView, res, nil
 }
 
-func (d *VulkanDevice) CreateShaderModule(allocationCallbacks *driver.AllocationCallbacks, o ShaderModuleCreateOptions) (ShaderModule, common.VkResult, error) {
+func (d *VulkanDevice) CreateShaderModule(allocationCallbacks *driver.AllocationCallbacks, o ShaderModuleCreateInfo) (ShaderModule, common.VkResult, error) {
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
@@ -182,7 +182,7 @@ func (d *VulkanDevice) CreateShaderModule(allocationCallbacks *driver.Allocation
 	return shaderModule, res, nil
 }
 
-func (d *VulkanDevice) CreateImageView(allocationCallbacks *driver.AllocationCallbacks, o ImageViewCreateOptions) (ImageView, common.VkResult, error) {
+func (d *VulkanDevice) CreateImageView(allocationCallbacks *driver.AllocationCallbacks, o ImageViewCreateInfo) (ImageView, common.VkResult, error) {
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
@@ -203,7 +203,7 @@ func (d *VulkanDevice) CreateImageView(allocationCallbacks *driver.AllocationCal
 	return imageView, res, nil
 }
 
-func (d *VulkanDevice) CreateSemaphore(allocationCallbacks *driver.AllocationCallbacks, o SemaphoreCreateOptions) (Semaphore, common.VkResult, error) {
+func (d *VulkanDevice) CreateSemaphore(allocationCallbacks *driver.AllocationCallbacks, o SemaphoreCreateInfo) (Semaphore, common.VkResult, error) {
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
@@ -224,7 +224,7 @@ func (d *VulkanDevice) CreateSemaphore(allocationCallbacks *driver.AllocationCal
 	return semaphore, res, nil
 }
 
-func (d *VulkanDevice) CreateFence(allocationCallbacks *driver.AllocationCallbacks, o FenceCreateOptions) (Fence, common.VkResult, error) {
+func (d *VulkanDevice) CreateFence(allocationCallbacks *driver.AllocationCallbacks, o FenceCreateInfo) (Fence, common.VkResult, error) {
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
@@ -245,7 +245,7 @@ func (d *VulkanDevice) CreateFence(allocationCallbacks *driver.AllocationCallbac
 	return fence, res, nil
 }
 
-func (d *VulkanDevice) CreateBuffer(allocationCallbacks *driver.AllocationCallbacks, o BufferCreateOptions) (Buffer, common.VkResult, error) {
+func (d *VulkanDevice) CreateBuffer(allocationCallbacks *driver.AllocationCallbacks, o BufferCreateInfo) (Buffer, common.VkResult, error) {
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
@@ -266,7 +266,7 @@ func (d *VulkanDevice) CreateBuffer(allocationCallbacks *driver.AllocationCallba
 	return buffer, res, nil
 }
 
-func (d *VulkanDevice) CreateDescriptorSetLayout(allocationCallbacks *driver.AllocationCallbacks, o DescriptorSetLayoutCreateOptions) (DescriptorSetLayout, common.VkResult, error) {
+func (d *VulkanDevice) CreateDescriptorSetLayout(allocationCallbacks *driver.AllocationCallbacks, o DescriptorSetLayoutCreateInfo) (DescriptorSetLayout, common.VkResult, error) {
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
@@ -287,7 +287,7 @@ func (d *VulkanDevice) CreateDescriptorSetLayout(allocationCallbacks *driver.All
 	return descriptorSetLayout, res, nil
 }
 
-func (d *VulkanDevice) CreateDescriptorPool(allocationCallbacks *driver.AllocationCallbacks, o DescriptorPoolCreateOptions) (DescriptorPool, common.VkResult, error) {
+func (d *VulkanDevice) CreateDescriptorPool(allocationCallbacks *driver.AllocationCallbacks, o DescriptorPoolCreateInfo) (DescriptorPool, common.VkResult, error) {
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
@@ -308,7 +308,7 @@ func (d *VulkanDevice) CreateDescriptorPool(allocationCallbacks *driver.Allocati
 	return descriptorPool, res, nil
 }
 
-func (d *VulkanDevice) CreateCommandPool(allocationCallbacks *driver.AllocationCallbacks, o CommandPoolCreateOptions) (CommandPool, common.VkResult, error) {
+func (d *VulkanDevice) CreateCommandPool(allocationCallbacks *driver.AllocationCallbacks, o CommandPoolCreateInfo) (CommandPool, common.VkResult, error) {
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
@@ -328,7 +328,7 @@ func (d *VulkanDevice) CreateCommandPool(allocationCallbacks *driver.AllocationC
 	return commandPool, res, nil
 }
 
-func (d *VulkanDevice) CreateEvent(allocationCallbacks *driver.AllocationCallbacks, o EventCreateOptions) (Event, common.VkResult, error) {
+func (d *VulkanDevice) CreateEvent(allocationCallbacks *driver.AllocationCallbacks, o EventCreateInfo) (Event, common.VkResult, error) {
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
@@ -348,7 +348,7 @@ func (d *VulkanDevice) CreateEvent(allocationCallbacks *driver.AllocationCallbac
 	return event, res, nil
 }
 
-func (d *VulkanDevice) CreateFramebuffer(allocationCallbacks *driver.AllocationCallbacks, o FramebufferCreateOptions) (Framebuffer, common.VkResult, error) {
+func (d *VulkanDevice) CreateFramebuffer(allocationCallbacks *driver.AllocationCallbacks, o FramebufferCreateInfo) (Framebuffer, common.VkResult, error) {
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
@@ -369,13 +369,13 @@ func (d *VulkanDevice) CreateFramebuffer(allocationCallbacks *driver.AllocationC
 	return framebuffer, res, nil
 }
 
-func (d *VulkanDevice) CreateGraphicsPipelines(pipelineCache PipelineCache, allocationCallbacks *driver.AllocationCallbacks, o []GraphicsPipelineCreateOptions) ([]Pipeline, common.VkResult, error) {
+func (d *VulkanDevice) CreateGraphicsPipelines(pipelineCache PipelineCache, allocationCallbacks *driver.AllocationCallbacks, o []GraphicsPipelineCreateInfo) ([]Pipeline, common.VkResult, error) {
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
 	pipelineCount := len(o)
 
-	pipelineCreateInfosPtr, err := common.AllocOptionSlice[C.VkGraphicsPipelineCreateInfo, GraphicsPipelineCreateOptions](arena, o)
+	pipelineCreateInfosPtr, err := common.AllocOptionSlice[C.VkGraphicsPipelineCreateInfo, GraphicsPipelineCreateInfo](arena, o)
 	if err != nil {
 		return nil, VKErrorUnknown, err
 	}
@@ -403,13 +403,13 @@ func (d *VulkanDevice) CreateGraphicsPipelines(pipelineCache PipelineCache, allo
 	return output, res, nil
 }
 
-func (d *VulkanDevice) CreateComputePipelines(pipelineCache PipelineCache, allocationCallbacks *driver.AllocationCallbacks, o []ComputePipelineCreateOptions) ([]Pipeline, common.VkResult, error) {
+func (d *VulkanDevice) CreateComputePipelines(pipelineCache PipelineCache, allocationCallbacks *driver.AllocationCallbacks, o []ComputePipelineCreateInfo) ([]Pipeline, common.VkResult, error) {
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
 	pipelineCount := len(o)
 
-	pipelineCreateInfosPtr, err := common.AllocOptionSlice[C.VkComputePipelineCreateInfo, ComputePipelineCreateOptions](arena, o)
+	pipelineCreateInfosPtr, err := common.AllocOptionSlice[C.VkComputePipelineCreateInfo, ComputePipelineCreateInfo](arena, o)
 	if err != nil {
 		return nil, VKErrorUnknown, err
 	}
@@ -458,7 +458,7 @@ func (d *VulkanDevice) CreateImage(allocationCallbacks *driver.AllocationCallbac
 	return image, res, nil
 }
 
-func (d *VulkanDevice) CreatePipelineCache(allocationCallbacks *driver.AllocationCallbacks, o PipelineCacheCreateOptions) (PipelineCache, common.VkResult, error) {
+func (d *VulkanDevice) CreatePipelineCache(allocationCallbacks *driver.AllocationCallbacks, o PipelineCacheCreateInfo) (PipelineCache, common.VkResult, error) {
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
@@ -478,7 +478,7 @@ func (d *VulkanDevice) CreatePipelineCache(allocationCallbacks *driver.Allocatio
 	return pipelineCache, res, nil
 }
 
-func (d *VulkanDevice) CreatePipelineLayout(allocationCallbacks *driver.AllocationCallbacks, o PipelineLayoutCreateOptions) (PipelineLayout, common.VkResult, error) {
+func (d *VulkanDevice) CreatePipelineLayout(allocationCallbacks *driver.AllocationCallbacks, o PipelineLayoutCreateInfo) (PipelineLayout, common.VkResult, error) {
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
@@ -498,7 +498,7 @@ func (d *VulkanDevice) CreatePipelineLayout(allocationCallbacks *driver.Allocati
 	return pipelineLayout, res, nil
 }
 
-func (d *VulkanDevice) CreateQueryPool(allocationCallbacks *driver.AllocationCallbacks, o QueryPoolCreateOptions) (QueryPool, common.VkResult, error) {
+func (d *VulkanDevice) CreateQueryPool(allocationCallbacks *driver.AllocationCallbacks, o QueryPoolCreateInfo) (QueryPool, common.VkResult, error) {
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
@@ -518,7 +518,7 @@ func (d *VulkanDevice) CreateQueryPool(allocationCallbacks *driver.AllocationCal
 	return queryPool, res, nil
 }
 
-func (d *VulkanDevice) CreateRenderPass(allocationCallbacks *driver.AllocationCallbacks, o RenderPassCreateOptions) (RenderPass, common.VkResult, error) {
+func (d *VulkanDevice) CreateRenderPass(allocationCallbacks *driver.AllocationCallbacks, o RenderPassCreateInfo) (RenderPass, common.VkResult, error) {
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
@@ -539,7 +539,7 @@ func (d *VulkanDevice) CreateRenderPass(allocationCallbacks *driver.AllocationCa
 	return renderPass, res, nil
 }
 
-func (d *VulkanDevice) CreateSampler(allocationCallbacks *driver.AllocationCallbacks, o SamplerCreateOptions) (Sampler, common.VkResult, error) {
+func (d *VulkanDevice) CreateSampler(allocationCallbacks *driver.AllocationCallbacks, o SamplerCreateInfo) (Sampler, common.VkResult, error) {
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
@@ -571,7 +571,7 @@ func (d *VulkanDevice) GetQueue(queueFamilyIndex int, queueIndex int) Queue {
 	return queue
 }
 
-func (d *VulkanDevice) AllocateMemory(allocationCallbacks *driver.AllocationCallbacks, o MemoryAllocateOptions) (DeviceMemory, common.VkResult, error) {
+func (d *VulkanDevice) AllocateMemory(allocationCallbacks *driver.AllocationCallbacks, o MemoryAllocateInfo) (DeviceMemory, common.VkResult, error) {
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
@@ -645,7 +645,7 @@ func (d *VulkanDevice) FreeCommandBuffers(buffers []CommandBuffer) {
 	}
 }
 
-func (d *VulkanDevice) AllocateCommandBuffers(o CommandBufferAllocateOptions) ([]CommandBuffer, common.VkResult, error) {
+func (d *VulkanDevice) AllocateCommandBuffers(o CommandBufferAllocateInfo) ([]CommandBuffer, common.VkResult, error) {
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
@@ -660,7 +660,7 @@ func (d *VulkanDevice) AllocateCommandBuffers(o CommandBufferAllocateOptions) ([
 
 	device := o.CommandPool.DeviceHandle()
 
-	commandBufferPtr := (*driver.VkCommandBuffer)(arena.Malloc(o.BufferCount * int(unsafe.Sizeof([1]driver.VkCommandBuffer{}))))
+	commandBufferPtr := (*driver.VkCommandBuffer)(arena.Malloc(o.CommandBufferCount * int(unsafe.Sizeof([1]driver.VkCommandBuffer{}))))
 
 	res, err := o.CommandPool.Driver().VkAllocateCommandBuffers(device, (*driver.VkCommandBufferAllocateInfo)(createInfo), commandBufferPtr)
 	err = res.ToError()
@@ -668,10 +668,10 @@ func (d *VulkanDevice) AllocateCommandBuffers(o CommandBufferAllocateOptions) ([
 		return nil, res, err
 	}
 
-	commandBufferArray := ([]driver.VkCommandBuffer)(unsafe.Slice(commandBufferPtr, o.BufferCount))
+	commandBufferArray := ([]driver.VkCommandBuffer)(unsafe.Slice(commandBufferPtr, o.CommandBufferCount))
 	var result []CommandBuffer
 
-	for i := 0; i < o.BufferCount; i++ {
+	for i := 0; i < o.CommandBufferCount; i++ {
 		commandBuffer := createCommandBufferObject(o.CommandPool.Driver(), o.CommandPool.Handle(), device, commandBufferArray[i], o.CommandPool.APIVersion())
 
 		result = append(result, commandBuffer)
@@ -680,7 +680,7 @@ func (d *VulkanDevice) AllocateCommandBuffers(o CommandBufferAllocateOptions) ([
 	return result, res, nil
 }
 
-func (d *VulkanDevice) AllocateDescriptorSets(o DescriptorSetAllocateOptions) ([]DescriptorSet, common.VkResult, error) {
+func (d *VulkanDevice) AllocateDescriptorSets(o DescriptorSetAllocateInfo) ([]DescriptorSet, common.VkResult, error) {
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
@@ -696,7 +696,7 @@ func (d *VulkanDevice) AllocateDescriptorSets(o DescriptorSetAllocateOptions) ([
 	device := o.DescriptorPool.DeviceHandle()
 	poolDriver := o.DescriptorPool.Driver()
 
-	setCount := len(o.AllocationLayouts)
+	setCount := len(o.SetLayouts)
 	descriptorSets := (*driver.VkDescriptorSet)(arena.Malloc(setCount * int(unsafe.Sizeof([1]C.VkDescriptorSet{}))))
 
 	res, err := poolDriver.VkAllocateDescriptorSets(device, (*driver.VkDescriptorSetAllocateInfo)(createInfo), descriptorSets)

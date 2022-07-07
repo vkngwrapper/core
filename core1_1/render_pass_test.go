@@ -52,21 +52,21 @@ func TestInputAttachmentAspectOptions(t *testing.T) {
 			return core1_0.VKSuccess, nil
 		})
 
-	aspectOptions := core1_1.RenderPassInputAttachmentAspectOptions{
+	aspectOptions := core1_1.RenderPassInputAttachmentAspectCreateInfo{
 		AspectReferences: []core1_1.InputAttachmentAspectReference{
 			{
 				Subpass:              1,
 				InputAttachmentIndex: 3,
-				AspectMask:           core1_0.AspectColor,
+				AspectMask:           core1_0.ImageAspectColor,
 			},
 			{
 				Subpass:              5,
 				InputAttachmentIndex: 7,
-				AspectMask:           core1_0.AspectMetadata,
+				AspectMask:           core1_0.ImageAspectMetadata,
 			},
 		},
 	}
-	renderPass, _, err := device.CreateRenderPass(nil, core1_0.RenderPassCreateOptions{
+	renderPass, _, err := device.CreateRenderPass(nil, core1_0.RenderPassCreateInfo{
 		NextOptions: common.NextOptions{Next: aspectOptions},
 	})
 	require.NoError(t, err)
@@ -126,11 +126,11 @@ func TestDeviceGroupRenderPassBeginOptions(t *testing.T) {
 
 	err := commandBuffer.CmdBeginRenderPass(
 		core1_0.SubpassContentsSecondaryCommandBuffers,
-		core1_0.RenderPassBeginOptions{
+		core1_0.RenderPassBeginInfo{
 			RenderPass:  renderPass,
 			Framebuffer: framebuffer,
 			NextOptions: common.NextOptions{
-				core1_1.DeviceGroupRenderPassBeginOptions{
+				core1_1.DeviceGroupRenderPassBeginInfo{
 					DeviceMask: 7,
 					DeviceRenderAreas: []core1_0.Rect2D{
 						{
@@ -196,12 +196,12 @@ func TestRenderPassMultiviewOptions(t *testing.T) {
 		return core1_0.VKSuccess, nil
 	})
 
-	renderPass, _, err := device.CreateRenderPass(nil, core1_0.RenderPassCreateOptions{
+	renderPass, _, err := device.CreateRenderPass(nil, core1_0.RenderPassCreateInfo{
 		NextOptions: common.NextOptions{
-			core1_1.RenderPassMultiviewOptions{
-				SubpassViewMasks:      []uint32{1, 2, 7},
-				DependencyViewOffsets: []int{11, 13},
-				CorrelationMasks:      []uint32{17},
+			core1_1.RenderPassMultiviewCreatInfo{
+				ViewMasks:        []uint32{1, 2, 7},
+				ViewOffsets:      []int{11, 13},
+				CorrelationMasks: []uint32{17},
 			},
 		},
 	})

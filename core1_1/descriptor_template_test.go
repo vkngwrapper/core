@@ -79,13 +79,13 @@ func TestVulkanExtension_CreateDescriptorUpdateTemplate(t *testing.T) {
 		gomock.Nil(),
 	)
 
-	template, _, err := device.CreateDescriptorUpdateTemplate(core1_1.DescriptorUpdateTemplateCreateOptions{
-		Entries: []core1_1.DescriptorUpdateTemplateEntry{
+	template, _, err := device.CreateDescriptorUpdateTemplate(core1_1.DescriptorUpdateTemplateCreateInfo{
+		DescriptorUpdateEntries: []core1_1.DescriptorUpdateTemplateEntry{
 			{
 				DstBinding:      1,
 				DstArrayElement: 3,
 				DescriptorCount: 5,
-				DescriptorType:  core1_0.DescriptorCombinedImageSampler,
+				DescriptorType:  core1_0.DescriptorTypeCombinedImageSampler,
 				Offset:          7,
 				Stride:          11,
 			},
@@ -93,14 +93,14 @@ func TestVulkanExtension_CreateDescriptorUpdateTemplate(t *testing.T) {
 				DstBinding:      13,
 				DstArrayElement: 17,
 				DescriptorCount: 19,
-				DescriptorType:  core1_0.DescriptorStorageBuffer,
+				DescriptorType:  core1_0.DescriptorTypeStorageBuffer,
 				Offset:          23,
 				Stride:          29,
 			},
 		},
-		TemplateType:        core1_1.DescriptorTemplateTypeDescriptorSet,
+		TemplateType:        core1_1.DescriptorUpdateTemplateTypeDescriptorSet,
 		DescriptorSetLayout: descriptorLayout,
-		PipelineBindPoint:   core1_0.BindGraphics,
+		PipelineBindPoint:   core1_0.PipelineBindPointGraphics,
 		PipelineLayout:      pipelineLayout,
 		Set:                 31,
 	}, nil)
@@ -157,7 +157,7 @@ func TestVulkanDescriptorTemplate_UpdateDescriptorSetFromBuffer(t *testing.T) {
 		require.Equal(t, uint64(3), info.FieldByName("_range").Uint())
 	})
 
-	template, _, err := device.CreateDescriptorUpdateTemplate(core1_1.DescriptorUpdateTemplateCreateOptions{}, nil)
+	template, _, err := device.CreateDescriptorUpdateTemplate(core1_1.DescriptorUpdateTemplateCreateInfo{}, nil)
 	require.NoError(t, err)
 	require.NotNil(t, template)
 
@@ -215,7 +215,7 @@ func TestVulkanDescriptorTemplate_UpdateDescriptorSetFromImage(t *testing.T) {
 		require.Equal(t, uint64(7), info.FieldByName("imageLayout").Uint()) // VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL
 	})
 
-	template, _, err := device.CreateDescriptorUpdateTemplate(core1_1.DescriptorUpdateTemplateCreateOptions{}, nil)
+	template, _, err := device.CreateDescriptorUpdateTemplate(core1_1.DescriptorUpdateTemplateCreateInfo{}, nil)
 	require.NoError(t, err)
 	require.NotNil(t, template)
 
@@ -269,7 +269,7 @@ func TestVulkanDescriptorTemplate_UpdateDescriptorSetFromObjectHandle(t *testing
 		require.Equal(t, bufferView.Handle(), info)
 	})
 
-	template, _, err := device.CreateDescriptorUpdateTemplate(core1_1.DescriptorUpdateTemplateCreateOptions{}, nil)
+	template, _, err := device.CreateDescriptorUpdateTemplate(core1_1.DescriptorUpdateTemplateCreateInfo{}, nil)
 	require.NoError(t, err)
 	require.NotNil(t, template)
 

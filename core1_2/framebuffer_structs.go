@@ -22,19 +22,19 @@ func init() {
 
 ////
 
-type FramebufferAttachmentImageOptions struct {
+type FramebufferAttachmentImageInfo struct {
 	Flags      core1_0.ImageCreateFlags
-	Usage      core1_0.ImageUsages
+	Usage      core1_0.ImageUsageFlags
 	Width      int
 	Height     int
 	LayerCount int
 
-	ViewFormats []core1_0.DataFormat
+	ViewFormats []core1_0.Format
 
 	common.NextOptions
 }
 
-func (o FramebufferAttachmentImageOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o FramebufferAttachmentImageInfo) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == nil {
 		preallocatedPointer = allocator.Malloc(int(unsafe.Sizeof(C.VkFramebufferAttachmentImageInfo{})))
 	}
@@ -65,13 +65,13 @@ func (o FramebufferAttachmentImageOptions) PopulateCPointer(allocator *cgoparam.
 
 ////
 
-type FramebufferAttachmentsCreateOptions struct {
-	AttachmentImageInfos []FramebufferAttachmentImageOptions
+type FramebufferAttachmentsCreateInfo struct {
+	AttachmentImageInfos []FramebufferAttachmentImageInfo
 
 	common.NextOptions
 }
 
-func (o FramebufferAttachmentsCreateOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o FramebufferAttachmentsCreateInfo) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == nil {
 		preallocatedPointer = allocator.Malloc(int(unsafe.Sizeof(C.VkFramebufferAttachmentsCreateInfo{})))
 	}
@@ -85,7 +85,7 @@ func (o FramebufferAttachmentsCreateOptions) PopulateCPointer(allocator *cgopara
 	info.pAttachmentImageInfos = nil
 
 	if count > 0 {
-		infosPtr, err := common.AllocOptionSlice[C.VkFramebufferAttachmentImageInfo, FramebufferAttachmentImageOptions](allocator, o.AttachmentImageInfos)
+		infosPtr, err := common.AllocOptionSlice[C.VkFramebufferAttachmentImageInfo, FramebufferAttachmentImageInfo](allocator, o.AttachmentImageInfos)
 		if err != nil {
 			return nil, err
 		}

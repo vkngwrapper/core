@@ -11,19 +11,34 @@ import (
 	"unsafe"
 )
 
-type TessellationStateOptions struct {
+type PipelineTessellationStateCreateFlags uint32
+
+var pipelineTessellationStateCreateFlagsMapping = common.NewFlagStringMapping[PipelineTessellationStateCreateFlags]()
+
+func (f PipelineTessellationStateCreateFlags) Register(str string) {
+	pipelineTessellationStateCreateFlagsMapping.Register(f, str)
+}
+
+func (f PipelineTessellationStateCreateFlags) String() string {
+	return pipelineTessellationStateCreateFlagsMapping.FlagsToString(f)
+}
+
+////
+
+type PipelineTessellationStateCreateInfo struct {
+	Flags              PipelineTessellationStateCreateFlags
 	PatchControlPoints uint32
 
 	common.NextOptions
 }
 
-func (o TessellationStateOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatePointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o PipelineTessellationStateCreateInfo) PopulateCPointer(allocator *cgoparam.Allocator, preallocatePointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatePointer == nil {
 		preallocatePointer = allocator.Malloc(C.sizeof_struct_VkPipelineTessellationStateCreateInfo)
 	}
 	createInfo := (*C.VkPipelineTessellationStateCreateInfo)(preallocatePointer)
 	createInfo.sType = C.VK_STRUCTURE_TYPE_PIPELINE_TESSELLATION_STATE_CREATE_INFO
-	createInfo.flags = 0
+	createInfo.flags = C.VkPipelineTessellationStateCreateFlags(o.Flags)
 	createInfo.pNext = next
 	createInfo.patchControlPoints = C.uint32_t(o.PatchControlPoints)
 

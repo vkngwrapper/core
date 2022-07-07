@@ -79,9 +79,9 @@ func TestDeviceGroupCommandBufferBeginOptions(t *testing.T) {
 		return core1_0.VKSuccess, nil
 	})
 
-	_, err := commandBuffer.Begin(core1_0.BeginOptions{
-		Flags: core1_0.BeginInfoOneTimeSubmit,
-		NextOptions: common.NextOptions{Next: core1_1.DeviceGroupCommandBufferBeginOptions{
+	_, err := commandBuffer.Begin(core1_0.CommandBufferBeginInfo{
+		Flags: core1_0.CommandBufferUsageOneTimeSubmit,
+		NextOptions: common.NextOptions{Next: core1_1.DeviceGroupCommandBufferBeginInfo{
 			DeviceMask: 3,
 		}},
 	})

@@ -19,20 +19,20 @@ const (
 	BorderColorFloatOpaqueWhite      BorderColor = C.VK_BORDER_COLOR_FLOAT_OPAQUE_WHITE
 	BorderColorIntOpaqueWhite        BorderColor = C.VK_BORDER_COLOR_INT_OPAQUE_WHITE
 
-	CompareNever          CompareOp = C.VK_COMPARE_OP_NEVER
-	CompareLess           CompareOp = C.VK_COMPARE_OP_LESS
-	CompareEqual          CompareOp = C.VK_COMPARE_OP_EQUAL
-	CompareLessOrEqual    CompareOp = C.VK_COMPARE_OP_LESS_OR_EQUAL
-	CompareGreater        CompareOp = C.VK_COMPARE_OP_GREATER
-	CompareNotEqual       CompareOp = C.VK_COMPARE_OP_NOT_EQUAL
-	CompareGreaterOrEqual CompareOp = C.VK_COMPARE_OP_GREATER_OR_EQUAL
-	CompareAlways         CompareOp = C.VK_COMPARE_OP_ALWAYS
+	CompareOpNever          CompareOp = C.VK_COMPARE_OP_NEVER
+	CompareOpLess           CompareOp = C.VK_COMPARE_OP_LESS
+	CompareOpEqual          CompareOp = C.VK_COMPARE_OP_EQUAL
+	CompareOpLessOrEqual    CompareOp = C.VK_COMPARE_OP_LESS_OR_EQUAL
+	CompareOpGreater        CompareOp = C.VK_COMPARE_OP_GREATER
+	CompareOpNotEqual       CompareOp = C.VK_COMPARE_OP_NOT_EQUAL
+	CompareOpGreaterOrEqual CompareOp = C.VK_COMPARE_OP_GREATER_OR_EQUAL
+	CompareOpAlways         CompareOp = C.VK_COMPARE_OP_ALWAYS
 
 	FilterNearest Filter = C.VK_FILTER_NEAREST
 	FilterLinear  Filter = C.VK_FILTER_LINEAR
 
-	MipmapNearest MipmapMode = C.VK_SAMPLER_MIPMAP_MODE_NEAREST
-	MipmapLinear  MipmapMode = C.VK_SAMPLER_MIPMAP_MODE_LINEAR
+	SamplerMipmapModeNearest SamplerMipmapMode = C.VK_SAMPLER_MIPMAP_MODE_NEAREST
+	SamplerMipmapModeLinear  SamplerMipmapMode = C.VK_SAMPLER_MIPMAP_MODE_LINEAR
 
 	SamplerAddressModeRepeat         SamplerAddressMode = C.VK_SAMPLER_ADDRESS_MODE_REPEAT
 	SamplerAddressModeMirroredRepeat SamplerAddressMode = C.VK_SAMPLER_ADDRESS_MODE_MIRRORED_REPEAT
@@ -48,20 +48,20 @@ func init() {
 	BorderColorFloatOpaqueWhite.Register("Opaque White - Float")
 	BorderColorIntOpaqueWhite.Register("Opaque White - Int")
 
-	CompareNever.Register("Never")
-	CompareLess.Register("Less Than")
-	CompareEqual.Register("Equal")
-	CompareLessOrEqual.Register("Less Than Or Equal")
-	CompareGreater.Register("Greater Than")
-	CompareNotEqual.Register("Not Equal")
-	CompareGreaterOrEqual.Register("Greater Than Or Equal")
-	CompareAlways.Register("Always")
+	CompareOpNever.Register("Never")
+	CompareOpLess.Register("Less Than")
+	CompareOpEqual.Register("Equal")
+	CompareOpLessOrEqual.Register("Less Than Or Equal")
+	CompareOpGreater.Register("Greater Than")
+	CompareOpNotEqual.Register("Not Equal")
+	CompareOpGreaterOrEqual.Register("Greater Than Or Equal")
+	CompareOpAlways.Register("Always")
 
 	FilterNearest.Register("Nearest")
 	FilterLinear.Register("Linear")
 
-	MipmapNearest.Register("Nearest")
-	MipmapLinear.Register("Linear")
+	SamplerMipmapModeNearest.Register("Nearest")
+	SamplerMipmapModeLinear.Register("Linear")
 
 	SamplerAddressModeRepeat.Register("Repeat")
 	SamplerAddressModeMirroredRepeat.Register("Mirrored Repeat")
@@ -69,11 +69,11 @@ func init() {
 	SamplerAddressModeClampToBorder.Register("Clamp to Border")
 }
 
-type SamplerCreateOptions struct {
+type SamplerCreateInfo struct {
 	Flags        SamplerCreateFlags
 	MagFilter    Filter
 	MinFilter    Filter
-	MipmapMode   MipmapMode
+	MipmapMode   SamplerMipmapMode
 	AddressModeU SamplerAddressMode
 	AddressModeV SamplerAddressMode
 	AddressModeW SamplerAddressMode
@@ -94,7 +94,7 @@ type SamplerCreateOptions struct {
 	common.NextOptions
 }
 
-func (o SamplerCreateOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o SamplerCreateInfo) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == unsafe.Pointer(nil) {
 		preallocatedPointer = allocator.Malloc(C.sizeof_struct_VkSamplerCreateInfo)
 	}

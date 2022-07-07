@@ -12,53 +12,68 @@ import (
 	"unsafe"
 )
 
+type PipelineInputAssemblyStateCreateFlags uint32
+
+var pipelineInputAssemblyStateCreateFlagsMapping = common.NewFlagStringMapping[PipelineInputAssemblyStateCreateFlags]()
+
+func (f PipelineInputAssemblyStateCreateFlags) Register(str string) {
+	pipelineInputAssemblyStateCreateFlagsMapping.Register(f, str)
+}
+
+func (f PipelineInputAssemblyStateCreateFlags) String() string {
+	return pipelineInputAssemblyStateCreateFlagsMapping.FlagsToString(f)
+}
+
+////
+
 const (
-	TopologyPointList                  PrimitiveTopology = C.VK_PRIMITIVE_TOPOLOGY_POINT_LIST
-	TopologyLineList                   PrimitiveTopology = C.VK_PRIMITIVE_TOPOLOGY_LINE_LIST
-	TopologyLineStrip                  PrimitiveTopology = C.VK_PRIMITIVE_TOPOLOGY_LINE_STRIP
-	TopologyTriangleList               PrimitiveTopology = C.VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST
-	TopologyTriangleStrip              PrimitiveTopology = C.VK_PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP
-	TopologyTriangleFan                PrimitiveTopology = C.VK_PRIMITIVE_TOPOLOGY_TRIANGLE_FAN
-	TopologyLineListWithAdjacency      PrimitiveTopology = C.VK_PRIMITIVE_TOPOLOGY_LINE_LIST_WITH_ADJACENCY
-	TopologyLineStripWithAdjacency     PrimitiveTopology = C.VK_PRIMITIVE_TOPOLOGY_LINE_STRIP_WITH_ADJACENCY
-	TopologyTriangleListWithAdjacency  PrimitiveTopology = C.VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST_WITH_ADJACENCY
-	TopologyTriangleStripWithAdjacency PrimitiveTopology = C.VK_PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP_WITH_ADJACENCY
-	TopologyPatchlist                  PrimitiveTopology = C.VK_PRIMITIVE_TOPOLOGY_PATCH_LIST
+	PrimitiveTopologyPointList                  PrimitiveTopology = C.VK_PRIMITIVE_TOPOLOGY_POINT_LIST
+	PrimitiveTopologyLineList                   PrimitiveTopology = C.VK_PRIMITIVE_TOPOLOGY_LINE_LIST
+	PrimitiveTopologyLineStrip                  PrimitiveTopology = C.VK_PRIMITIVE_TOPOLOGY_LINE_STRIP
+	PrimitiveTopologyTriangleList               PrimitiveTopology = C.VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST
+	PrimitiveTopologyTriangleStrip              PrimitiveTopology = C.VK_PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP
+	PrimitiveTopologyTriangleFan                PrimitiveTopology = C.VK_PRIMITIVE_TOPOLOGY_TRIANGLE_FAN
+	PrimitiveTopologyLineListWithAdjacency      PrimitiveTopology = C.VK_PRIMITIVE_TOPOLOGY_LINE_LIST_WITH_ADJACENCY
+	PrimitiveTopologyLineStripWithAdjacency     PrimitiveTopology = C.VK_PRIMITIVE_TOPOLOGY_LINE_STRIP_WITH_ADJACENCY
+	PrimitiveTopologyTriangleListWithAdjacency  PrimitiveTopology = C.VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST_WITH_ADJACENCY
+	PrimitiveTopologyTriangleStripWithAdjacency PrimitiveTopology = C.VK_PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP_WITH_ADJACENCY
+	PrimitiveTopologyPatchlist                  PrimitiveTopology = C.VK_PRIMITIVE_TOPOLOGY_PATCH_LIST
 )
 
 func init() {
-	TopologyPointList.Register("Point List")
-	TopologyLineList.Register("Line List")
-	TopologyLineStrip.Register("Line Strip")
-	TopologyTriangleList.Register("Triangle List")
-	TopologyTriangleStrip.Register("Triangle Strip")
-	TopologyTriangleFan.Register("Triangle Fan")
-	TopologyLineListWithAdjacency.Register("Line List w/ Adjacency")
-	TopologyLineStripWithAdjacency.Register("Line Strip w/ Adjacency")
-	TopologyTriangleListWithAdjacency.Register("Triangle List w/ Adjacency")
-	TopologyTriangleStripWithAdjacency.Register("Triangle Strip w/ Adjacency")
-	TopologyPatchlist.Register("Patch List")
+	PrimitiveTopologyPointList.Register("Point List")
+	PrimitiveTopologyLineList.Register("Line List")
+	PrimitiveTopologyLineStrip.Register("Line Strip")
+	PrimitiveTopologyTriangleList.Register("Triangle List")
+	PrimitiveTopologyTriangleStrip.Register("Triangle Strip")
+	PrimitiveTopologyTriangleFan.Register("Triangle Fan")
+	PrimitiveTopologyLineListWithAdjacency.Register("Line List w/ Adjacency")
+	PrimitiveTopologyLineStripWithAdjacency.Register("Line Strip w/ Adjacency")
+	PrimitiveTopologyTriangleListWithAdjacency.Register("Triangle List w/ Adjacency")
+	PrimitiveTopologyTriangleStripWithAdjacency.Register("Triangle Strip w/ Adjacency")
+	PrimitiveTopologyPatchlist.Register("Patch List")
 }
 
-type InputAssemblyStateOptions struct {
+type PipelineInputAssemblyStateCreateInfo struct {
+	Flags                  PipelineInputAssemblyStateCreateFlags
 	Topology               PrimitiveTopology
-	EnablePrimitiveRestart bool
+	PrimitiveRestartEnable bool
 
 	common.NextOptions
 }
 
-func (o InputAssemblyStateOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o PipelineInputAssemblyStateCreateInfo) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == unsafe.Pointer(nil) {
 		preallocatedPointer = allocator.Malloc(C.sizeof_struct_VkPipelineInputAssemblyStateCreateInfo)
 	}
 	createInfo := (*C.VkPipelineInputAssemblyStateCreateInfo)(preallocatedPointer)
 	createInfo.sType = C.VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO
-	createInfo.flags = 0
+	createInfo.flags = C.VkPipelineInputAssemblyStateCreateFlags(o.Flags)
 	createInfo.pNext = next
 	createInfo.topology = C.VkPrimitiveTopology(o.Topology)
 	createInfo.primitiveRestartEnable = C.VK_FALSE
 
-	if o.EnablePrimitiveRestart {
+	if o.PrimitiveRestartEnable {
 		createInfo.primitiveRestartEnable = C.VK_TRUE
 	}
 

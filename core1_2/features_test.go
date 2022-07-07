@@ -58,10 +58,10 @@ func TestPhysicalDevice8BitStorageFeaturesOptions(t *testing.T) {
 
 	device, _, err := physicalDevice.CreateDevice(
 		nil,
-		core1_0.DeviceCreateOptions{
-			QueueFamilies: []core1_0.DeviceQueueCreateOptions{
+		core1_0.DeviceCreateInfo{
+			QueueCreateInfos: []core1_0.DeviceQueueCreateInfo{
 				{
-					CreatedQueuePriorities: []float32{0},
+					QueuePriorities: []float32{0},
 				},
 			},
 			NextOptions: common.NextOptions{core1_2.PhysicalDevice8BitStorageFeatures{
@@ -102,7 +102,7 @@ func TestPhysicalDevice8BitStorageFeaturesOutData(t *testing.T) {
 
 	var outData core1_2.PhysicalDevice8BitStorageFeatures
 	err := physicalDevice.InstanceScopedPhysicalDevice1_2().Features2(
-		&core1_1.DeviceFeatures{
+		&core1_1.PhysicalDeviceFeatures2{
 			NextOutData: common.NextOutData{&outData},
 		})
 	require.NoError(t, err)
@@ -152,14 +152,14 @@ func TestPhysicalDeviceBufferAddressFeaturesOptions(t *testing.T) {
 
 	device, _, err := physicalDevice.CreateDevice(
 		nil,
-		core1_0.DeviceCreateOptions{
-			QueueFamilies: []core1_0.DeviceQueueCreateOptions{
+		core1_0.DeviceCreateInfo{
+			QueueCreateInfos: []core1_0.DeviceQueueCreateInfo{
 				{
-					CreatedQueuePriorities: []float32{0},
+					QueuePriorities: []float32{0},
 				},
 			},
 
-			NextOptions: common.NextOptions{core1_2.PhysicalDeviceBufferAddressFeatures{
+			NextOptions: common.NextOptions{core1_2.PhysicalDeviceBufferDeviceAddressFeatures{
 				BufferDeviceAddress:            true,
 				BufferDeviceAddressMultiDevice: true,
 			}},
@@ -195,13 +195,13 @@ func TestPhysicalDeviceBufferAddressFeaturesOutData(t *testing.T) {
 		*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("bufferDeviceAddressMultiDevice").UnsafeAddr())) = driver.VkBool32(0)
 	})
 
-	var outData core1_2.PhysicalDeviceBufferAddressFeatures
+	var outData core1_2.PhysicalDeviceBufferDeviceAddressFeatures
 	err := physicalDevice.Features2(
-		&core1_1.DeviceFeatures{
+		&core1_1.PhysicalDeviceFeatures2{
 			NextOutData: common.NextOutData{&outData},
 		})
 	require.NoError(t, err)
-	require.Equal(t, core1_2.PhysicalDeviceBufferAddressFeatures{
+	require.Equal(t, core1_2.PhysicalDeviceBufferDeviceAddressFeatures{
 		BufferDeviceAddressCaptureReplay: true,
 	}, outData)
 }
@@ -264,10 +264,10 @@ func TestPhysicalDeviceDescriptorIndexingFeaturesOptions(t *testing.T) {
 
 	device, _, err := physicalDevice.CreateDevice(
 		nil,
-		core1_0.DeviceCreateOptions{
-			QueueFamilies: []core1_0.DeviceQueueCreateOptions{
+		core1_0.DeviceCreateInfo{
+			QueueCreateInfos: []core1_0.DeviceQueueCreateInfo{
 				{
-					CreatedQueuePriorities: []float32{0},
+					QueuePriorities: []float32{0},
 				},
 			},
 			NextOptions: common.NextOptions{core1_2.PhysicalDeviceDescriptorIndexingFeatures{
@@ -342,7 +342,7 @@ func TestPhysicalDeviceDescriptorIndexingFeaturesOutData(t *testing.T) {
 
 	var outData core1_2.PhysicalDeviceDescriptorIndexingFeatures
 	err := physicalDevice.Features2(
-		&core1_1.DeviceFeatures{
+		&core1_1.PhysicalDeviceFeatures2{
 			NextOutData: common.NextOutData{&outData},
 		})
 	require.NoError(t, err)
@@ -406,10 +406,10 @@ func TestPhysicalDeviceHostQueryResetFeaturesOptions(t *testing.T) {
 
 	device, _, err := physicalDevice.CreateDevice(
 		nil,
-		core1_0.DeviceCreateOptions{
-			QueueFamilies: []core1_0.DeviceQueueCreateOptions{
+		core1_0.DeviceCreateInfo{
+			QueueCreateInfos: []core1_0.DeviceQueueCreateInfo{
 				{
-					CreatedQueuePriorities: []float32{0},
+					QueuePriorities: []float32{0},
 				},
 			},
 			NextOptions: common.NextOptions{
@@ -449,7 +449,7 @@ func TestPhysicalDeviceHostQueryResetFeaturesOutData(t *testing.T) {
 
 	var outData core1_2.PhysicalDeviceHostQueryResetFeatures
 	err := physicalDevice.Features2(
-		&core1_1.DeviceFeatures{
+		&core1_1.PhysicalDeviceFeatures2{
 			NextOutData: common.NextOutData{&outData},
 		},
 	)
@@ -495,10 +495,10 @@ func TestPhysicalDeviceImagelessFramebufferFeaturesOptions(t *testing.T) {
 
 	device, _, err := physicalDevice.CreateDevice(
 		nil,
-		core1_0.DeviceCreateOptions{
-			QueueFamilies: []core1_0.DeviceQueueCreateOptions{
+		core1_0.DeviceCreateInfo{
+			QueueCreateInfos: []core1_0.DeviceQueueCreateInfo{
 				{
-					CreatedQueuePriorities: []float32{0},
+					QueuePriorities: []float32{0},
 				},
 			},
 			NextOptions: common.NextOptions{
@@ -538,7 +538,7 @@ func TestPhysicalDeviceImagelessFramebufferFeaturesOutData(t *testing.T) {
 
 	var outData core1_2.PhysicalDeviceImagelessFramebufferFeatures
 	err := physicalDevice.Features2(
-		&core1_1.DeviceFeatures{
+		&core1_1.PhysicalDeviceFeatures2{
 			NextOutData: common.NextOutData{&outData},
 		},
 	)
@@ -584,10 +584,10 @@ func TestPhysicalDeviceScalarBlockLayoutFeaturesOptions(t *testing.T) {
 
 	device, _, err := physicalDevice.CreateDevice(
 		nil,
-		core1_0.DeviceCreateOptions{
-			QueueFamilies: []core1_0.DeviceQueueCreateOptions{
+		core1_0.DeviceCreateInfo{
+			QueueCreateInfos: []core1_0.DeviceQueueCreateInfo{
 				{
-					CreatedQueuePriorities: []float32{0},
+					QueuePriorities: []float32{0},
 				},
 			},
 			NextOptions: common.NextOptions{
@@ -627,7 +627,7 @@ func TestPhysicalDeviceScalarBlockLayoutFeaturesOutData(t *testing.T) {
 
 	var outData core1_2.PhysicalDeviceScalarBlockLayoutFeatures
 	err := physicalDevice.Features2(
-		&core1_1.DeviceFeatures{
+		&core1_1.PhysicalDeviceFeatures2{
 			NextOutData: common.NextOutData{&outData},
 		},
 	)
@@ -673,10 +673,10 @@ func TestPhysicalDeviceSeparateDepthStencilLayoutsFeaturesOptions(t *testing.T) 
 
 	device, _, err := physicalDevice.CreateDevice(
 		nil,
-		core1_0.DeviceCreateOptions{
-			QueueFamilies: []core1_0.DeviceQueueCreateOptions{
+		core1_0.DeviceCreateInfo{
+			QueueCreateInfos: []core1_0.DeviceQueueCreateInfo{
 				{
-					CreatedQueuePriorities: []float32{0},
+					QueuePriorities: []float32{0},
 				},
 			},
 			NextOptions: common.NextOptions{
@@ -716,7 +716,7 @@ func TestPhysicalDeviceSeparateDepthStencilLayoutsFeaturesOutData(t *testing.T) 
 
 	var outData core1_2.PhysicalDeviceSeparateDepthStencilLayoutsFeatures
 	err := physicalDevice.Features2(
-		&core1_1.DeviceFeatures{
+		&core1_1.PhysicalDeviceFeatures2{
 			NextOutData: common.NextOutData{&outData},
 		},
 	)
@@ -763,10 +763,10 @@ func TestPhysicalDeviceShaderAtomicInt64FeaturesOptions(t *testing.T) {
 
 	device, _, err := physicalDevice.CreateDevice(
 		nil,
-		core1_0.DeviceCreateOptions{
-			QueueFamilies: []core1_0.DeviceQueueCreateOptions{
+		core1_0.DeviceCreateInfo{
+			QueueCreateInfos: []core1_0.DeviceQueueCreateInfo{
 				{
-					CreatedQueuePriorities: []float32{0},
+					QueuePriorities: []float32{0},
 				},
 			},
 			NextOptions: common.NextOptions{
@@ -808,7 +808,7 @@ func TestPhysicalDeviceShaderAtomicInt64FeaturesOutData(t *testing.T) {
 
 	var outData core1_2.PhysicalDeviceShaderAtomicInt64Features
 	err := physicalDevice.Features2(
-		&core1_1.DeviceFeatures{
+		&core1_1.PhysicalDeviceFeatures2{
 			NextOutData: common.NextOutData{&outData},
 		},
 	)
@@ -856,10 +856,10 @@ func TestPhysicalDeviceShaderFloat16Int8FeaturesOptions(t *testing.T) {
 
 	device, _, err := physicalDevice.CreateDevice(
 		nil,
-		core1_0.DeviceCreateOptions{
-			QueueFamilies: []core1_0.DeviceQueueCreateOptions{
+		core1_0.DeviceCreateInfo{
+			QueueCreateInfos: []core1_0.DeviceQueueCreateInfo{
 				{
-					CreatedQueuePriorities: []float32{0},
+					QueuePriorities: []float32{0},
 				},
 			},
 			NextOptions: common.NextOptions{
@@ -901,7 +901,7 @@ func TestPhysicalDeviceShaderFloat16Int8FeaturesOutData(t *testing.T) {
 
 	var outData core1_2.PhysicalDeviceShaderFloat16Int8Features
 	err := physicalDevice.Features2(
-		&core1_1.DeviceFeatures{
+		&core1_1.PhysicalDeviceFeatures2{
 			NextOutData: common.NextOutData{&outData},
 		},
 	)
@@ -948,10 +948,10 @@ func TestPhysicalDeviceShaderSubgroupExtendedTypesFeaturesOptions(t *testing.T) 
 
 	device, _, err := physicalDevice.CreateDevice(
 		nil,
-		core1_0.DeviceCreateOptions{
-			QueueFamilies: []core1_0.DeviceQueueCreateOptions{
+		core1_0.DeviceCreateInfo{
+			QueueCreateInfos: []core1_0.DeviceQueueCreateInfo{
 				{
-					CreatedQueuePriorities: []float32{0},
+					QueuePriorities: []float32{0},
 				},
 			},
 			NextOptions: common.NextOptions{
@@ -991,7 +991,7 @@ func TestPhysicalDeviceShaderSubgroupExtendedTypesFeaturesOutData(t *testing.T) 
 
 	var outData core1_2.PhysicalDeviceShaderSubgroupExtendedTypesFeatures
 	err := physicalDevice.Features2(
-		&core1_1.DeviceFeatures{
+		&core1_1.PhysicalDeviceFeatures2{
 			NextOutData: common.NextOutData{&outData},
 		},
 	)
@@ -1037,10 +1037,10 @@ func TestPhysicalDeviceTimelineSemaphoreFeaturesOptions(t *testing.T) {
 
 	device, _, err := physicalDevice.CreateDevice(
 		nil,
-		core1_0.DeviceCreateOptions{
-			QueueFamilies: []core1_0.DeviceQueueCreateOptions{
+		core1_0.DeviceCreateInfo{
+			QueueCreateInfos: []core1_0.DeviceQueueCreateInfo{
 				{
-					CreatedQueuePriorities: []float32{0},
+					QueuePriorities: []float32{0},
 				},
 			},
 			NextOptions: common.NextOptions{
@@ -1080,7 +1080,7 @@ func TestPhysicalDeviceTimelineSemaphoreFeaturesOutData(t *testing.T) {
 
 	var outData core1_2.PhysicalDeviceTimelineSemaphoreFeatures
 	err := physicalDevice.Features2(
-		&core1_1.DeviceFeatures{
+		&core1_1.PhysicalDeviceFeatures2{
 			NextOutData: common.NextOutData{&outData},
 		},
 	)
@@ -1126,10 +1126,10 @@ func TestPhysicalDeviceUniformBufferStandardLayoutFeaturesOptions(t *testing.T) 
 
 	device, _, err := physicalDevice.CreateDevice(
 		nil,
-		core1_0.DeviceCreateOptions{
-			QueueFamilies: []core1_0.DeviceQueueCreateOptions{
+		core1_0.DeviceCreateInfo{
+			QueueCreateInfos: []core1_0.DeviceQueueCreateInfo{
 				{
-					CreatedQueuePriorities: []float32{0},
+					QueuePriorities: []float32{0},
 				},
 			},
 			NextOptions: common.NextOptions{
@@ -1169,7 +1169,7 @@ func TestPhysicalDeviceUniformBufferStandardLayoutFeaturesOutData(t *testing.T) 
 
 	var outData core1_2.PhysicalDeviceUniformBufferStandardLayoutFeatures
 	err := physicalDevice.Features2(
-		&core1_1.DeviceFeatures{
+		&core1_1.PhysicalDeviceFeatures2{
 			NextOutData: common.NextOutData{&outData},
 		},
 	)
@@ -1217,10 +1217,10 @@ func TestPhysicalDeviceVulkanMemoryModelFeaturesOptions(t *testing.T) {
 			return core1_0.VKSuccess, nil
 		})
 
-	device, _, err := physicalDevice.CreateDevice(nil, core1_0.DeviceCreateOptions{
-		QueueFamilies: []core1_0.DeviceQueueCreateOptions{
+	device, _, err := physicalDevice.CreateDevice(nil, core1_0.DeviceCreateInfo{
+		QueueCreateInfos: []core1_0.DeviceQueueCreateInfo{
 			{
-				CreatedQueuePriorities: []float32{0},
+				QueuePriorities: []float32{0},
 			},
 		},
 
@@ -1267,7 +1267,7 @@ func TestPhysicalDeviceVulkanMemoryModelFeaturesOutData(t *testing.T) {
 		})
 
 	var outData core1_2.PhysicalDeviceVulkanMemoryModelFeatures
-	err := physicalDevice.Features2(&core1_1.DeviceFeatures{
+	err := physicalDevice.Features2(&core1_1.PhysicalDeviceFeatures2{
 		NextOutData: common.NextOutData{Next: &outData},
 	})
 	require.NoError(t, err)
@@ -1325,10 +1325,10 @@ func TestPhysicalDeviceVulkan11FeaturesOptions(t *testing.T) {
 			return core1_0.VKSuccess, nil
 		})
 
-	device, _, err := physicalDevice.CreateDevice(nil, core1_0.DeviceCreateOptions{
-		QueueFamilies: []core1_0.DeviceQueueCreateOptions{
+	device, _, err := physicalDevice.CreateDevice(nil, core1_0.DeviceCreateInfo{
+		QueueCreateInfos: []core1_0.DeviceQueueCreateInfo{
 			{
-				CreatedQueuePriorities: []float32{0},
+				QueuePriorities: []float32{0},
 			},
 		},
 
@@ -1387,7 +1387,7 @@ func TestPhysicalDeviceVulkan11FeaturesOutData(t *testing.T) {
 		})
 
 	var outData core1_2.PhysicalDeviceVulkan11Features
-	err := physicalDevice.Features2(&core1_1.DeviceFeatures{
+	err := physicalDevice.Features2(&core1_1.PhysicalDeviceFeatures2{
 		NextOutData: common.NextOutData{Next: &outData},
 	})
 	require.NoError(t, err)
@@ -1489,10 +1489,10 @@ func TestPhysicalDeviceVulkan12FeaturesOptions(t *testing.T) {
 			return core1_0.VKSuccess, nil
 		})
 
-	device, _, err := physicalDevice.CreateDevice(nil, core1_0.DeviceCreateOptions{
-		QueueFamilies: []core1_0.DeviceQueueCreateOptions{
+	device, _, err := physicalDevice.CreateDevice(nil, core1_0.DeviceCreateInfo{
+		QueueCreateInfos: []core1_0.DeviceQueueCreateInfo{
 			{
-				CreatedQueuePriorities: []float32{0},
+				QueuePriorities: []float32{0},
 			},
 		},
 
@@ -1604,7 +1604,7 @@ func TestPhysicalDeviceVulkan12FeaturesOutData(t *testing.T) {
 		})
 
 	var outData core1_2.PhysicalDeviceVulkan12Features
-	err := physicalDevice.Features2(&core1_1.DeviceFeatures{
+	err := physicalDevice.Features2(&core1_1.PhysicalDeviceFeatures2{
 		NextOutData: common.NextOutData{Next: &outData},
 	})
 	require.NoError(t, err)

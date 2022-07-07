@@ -12,13 +12,13 @@ import (
 	"unsafe"
 )
 
-type ImageViewUsageOptions struct {
-	Usage core1_0.ImageUsages
+type ImageViewUsageCreateInfo struct {
+	Usage core1_0.ImageUsageFlags
 
 	common.NextOptions
 }
 
-func (o ImageViewUsageOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o ImageViewUsageCreateInfo) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == nil {
 		preallocatedPointer = allocator.Malloc(int(unsafe.Sizeof(C.VkImageViewUsageCreateInfo{})))
 	}

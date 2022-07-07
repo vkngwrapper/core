@@ -14,14 +14,14 @@ import (
 	"unsafe"
 )
 
-type DeviceGroupOutData struct {
+type PhysicalDeviceGroupProperties struct {
 	PhysicalDevices  []core1_0.PhysicalDevice
 	SubsetAllocation bool
 
 	common.NextOutData
 }
 
-func (o *DeviceGroupOutData) PopulateHeader(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o *PhysicalDeviceGroupProperties) PopulateHeader(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == nil {
 		preallocatedPointer = allocator.Malloc(int(unsafe.Sizeof(C.VkPhysicalDeviceGroupProperties{})))
 	}
@@ -46,7 +46,7 @@ func (o *DeviceGroupOutData) PopulateHeader(allocator *cgoparam.Allocator, preal
 //go:linkname createPhysicalDevice github.com/CannibalVox/VKng/core/core1_0.createPhysicalDeviceCore1_0
 func createPhysicalDevice(coreDriver driver.Driver, instance driver.VkInstance, handle driver.VkPhysicalDevice, instanceVersion, deviceVersion common.APIVersion) core1_0.PhysicalDevice
 
-func (o *DeviceGroupOutData) PopulateOutData(cPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
+func (o *PhysicalDeviceGroupProperties) PopulateOutData(cPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 

@@ -32,13 +32,13 @@ func (ref InputAttachmentAspectReference) PopulateCPointer(allocator *cgoparam.A
 	return preallocatedPointer, nil
 }
 
-type RenderPassInputAttachmentAspectOptions struct {
+type RenderPassInputAttachmentAspectCreateInfo struct {
 	AspectReferences []InputAttachmentAspectReference
 
 	common.NextOptions
 }
 
-func (o RenderPassInputAttachmentAspectOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o RenderPassInputAttachmentAspectCreateInfo) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == nil {
 		preallocatedPointer = allocator.Malloc(int(unsafe.Sizeof(C.VkRenderPassInputAttachmentAspectCreateInfo{})))
 	}
@@ -49,7 +49,7 @@ func (o RenderPassInputAttachmentAspectOptions) PopulateCPointer(allocator *cgop
 
 	count := len(o.AspectReferences)
 	if count < 1 {
-		return nil, errors.New("options RenderPassInputAttachmentAspectOptions must include at least 1 entry in AspectReferences")
+		return nil, errors.New("options RenderPassInputAttachmentAspectCreateInfo must include at least 1 entry in AspectReferences")
 	}
 
 	createInfo.aspectReferenceCount = C.uint32_t(count)
@@ -64,14 +64,14 @@ func (o RenderPassInputAttachmentAspectOptions) PopulateCPointer(allocator *cgop
 
 ////
 
-type DeviceGroupRenderPassBeginOptions struct {
+type DeviceGroupRenderPassBeginInfo struct {
 	DeviceMask        uint32
 	DeviceRenderAreas []core1_0.Rect2D
 
 	common.NextOptions
 }
 
-func (o DeviceGroupRenderPassBeginOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o DeviceGroupRenderPassBeginInfo) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == nil {
 		preallocatedPointer = allocator.Malloc(int(unsafe.Sizeof(C.VkDeviceGroupRenderPassBeginInfo{})))
 	}
@@ -104,15 +104,15 @@ func (o DeviceGroupRenderPassBeginOptions) PopulateCPointer(allocator *cgoparam.
 
 ////
 
-type RenderPassMultiviewOptions struct {
-	SubpassViewMasks      []uint32
-	DependencyViewOffsets []int
-	CorrelationMasks      []uint32
+type RenderPassMultiviewCreatInfo struct {
+	ViewMasks        []uint32
+	ViewOffsets      []int
+	CorrelationMasks []uint32
 
 	common.NextOptions
 }
 
-func (o RenderPassMultiviewOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o RenderPassMultiviewCreatInfo) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == nil {
 		preallocatedPointer = allocator.Malloc(int(unsafe.Sizeof(C.VkRenderPassMultiviewCreateInfo{})))
 	}
@@ -121,7 +121,7 @@ func (o RenderPassMultiviewOptions) PopulateCPointer(allocator *cgoparam.Allocat
 	info.sType = C.VK_STRUCTURE_TYPE_RENDER_PASS_MULTIVIEW_CREATE_INFO
 	info.pNext = next
 
-	count := len(o.SubpassViewMasks)
+	count := len(o.ViewMasks)
 	info.subpassCount = C.uint32_t(count)
 	info.pViewMasks = nil
 	if count > 0 {
@@ -129,12 +129,12 @@ func (o RenderPassMultiviewOptions) PopulateCPointer(allocator *cgoparam.Allocat
 		viewMaskSlice := ([]C.uint32_t)(unsafe.Slice(viewMasks, count))
 
 		for i := 0; i < count; i++ {
-			viewMaskSlice[i] = C.uint32_t(o.SubpassViewMasks[i])
+			viewMaskSlice[i] = C.uint32_t(o.ViewMasks[i])
 		}
 		info.pViewMasks = viewMasks
 	}
 
-	count = len(o.DependencyViewOffsets)
+	count = len(o.ViewOffsets)
 	info.dependencyCount = C.uint32_t(count)
 	info.pViewOffsets = nil
 	if count > 0 {
@@ -142,7 +142,7 @@ func (o RenderPassMultiviewOptions) PopulateCPointer(allocator *cgoparam.Allocat
 		viewOffsetSlice := ([]C.int32_t)(unsafe.Slice(viewOffsets, count))
 
 		for i := 0; i < count; i++ {
-			viewOffsetSlice[i] = C.int32_t(o.DependencyViewOffsets[i])
+			viewOffsetSlice[i] = C.int32_t(o.ViewOffsets[i])
 		}
 		info.pViewOffsets = viewOffsets
 	}

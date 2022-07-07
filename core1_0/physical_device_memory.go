@@ -27,8 +27,8 @@ func (d *VulkanPhysicalDevice) MemoryProperties() *PhysicalDeviceMemoryPropertie
 	for i := 0; i < typeCount; i++ {
 		t := props.memoryTypes[i]
 		outProps.MemoryTypes = append(outProps.MemoryTypes, MemoryType{
-			Properties: MemoryProperties(t.propertyFlags),
-			HeapIndex:  int(t.heapIndex),
+			PropertyFlags: MemoryPropertyFlags(t.propertyFlags),
+			HeapIndex:     int(t.heapIndex),
 		})
 	}
 

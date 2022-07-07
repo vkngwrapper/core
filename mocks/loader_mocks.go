@@ -99,7 +99,7 @@ func (mr *MockLoaderMockRecorder) AvailableLayers() *gomock.Call {
 }
 
 // CreateInstance mocks base method.
-func (m *MockLoader) CreateInstance(allocationCallbacks *driver.AllocationCallbacks, options core1_0.InstanceCreateOptions) (core1_0.Instance, common.VkResult, error) {
+func (m *MockLoader) CreateInstance(allocationCallbacks *driver.AllocationCallbacks, options core1_0.InstanceCreateInfo) (core1_0.Instance, common.VkResult, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateInstance", allocationCallbacks, options)
 	ret0, _ := ret[0].(core1_0.Instance)

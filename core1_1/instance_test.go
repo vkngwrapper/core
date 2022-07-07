@@ -117,7 +117,7 @@ func TestVulkanInstance_EnumeratePhysicalDeviceGroups(t *testing.T) {
 			*(*driver.Uint32)(unsafe.Pointer(value.FieldByName("apiVersion").UnsafeAddr())) = driver.Uint32(common.Vulkan1_0)
 		})
 
-	groups, _, err := instance.PhysicalDeviceGroups(nil)
+	groups, _, err := instance.EnumeratePhysicalDeviceGroups(nil)
 	require.NoError(t, err)
 	require.Len(t, groups, 3)
 	require.True(t, groups[0].SubsetAllocation)
@@ -279,7 +279,7 @@ func TestVulkanInstance_EnumeratePhysicalDeviceGroups_Incomplete(t *testing.T) {
 			*(*driver.Uint32)(unsafe.Pointer(value.FieldByName("apiVersion").UnsafeAddr())) = driver.Uint32(common.Vulkan1_0)
 		})
 
-	groups, _, err := instance.PhysicalDeviceGroups(nil)
+	groups, _, err := instance.EnumeratePhysicalDeviceGroups(nil)
 	require.NoError(t, err)
 	require.Len(t, groups, 3)
 	require.True(t, groups[0].SubsetAllocation)

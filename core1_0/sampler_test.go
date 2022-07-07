@@ -48,11 +48,11 @@ func TestVulkanLoader1_0_CreateSampler(t *testing.T) {
 			return core1_0.VKSuccess, nil
 		})
 
-	sampler, _, err := device.CreateSampler(nil, core1_0.SamplerCreateOptions{
+	sampler, _, err := device.CreateSampler(nil, core1_0.SamplerCreateInfo{
 		Flags:                   0,
 		MagFilter:               core1_0.FilterNearest,
 		MinFilter:               core1_0.FilterLinear,
-		MipmapMode:              core1_0.MipmapLinear,
+		MipmapMode:              core1_0.SamplerMipmapModeLinear,
 		AddressModeU:            core1_0.SamplerAddressModeRepeat,
 		AddressModeV:            core1_0.SamplerAddressModeClampToBorder,
 		AddressModeW:            core1_0.SamplerAddressModeMirroredRepeat,
@@ -62,7 +62,7 @@ func TestVulkanLoader1_0_CreateSampler(t *testing.T) {
 		AnisotropyEnable:        true,
 		MaxAnisotropy:           4.5,
 		CompareEnable:           true,
-		CompareOp:               core1_0.CompareGreater,
+		CompareOp:               core1_0.CompareOpGreater,
 		BorderColor:             core1_0.BorderColorFloatOpaqueBlack,
 		UnnormalizedCoordinates: true,
 	})

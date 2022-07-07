@@ -25,42 +25,42 @@ func (f FenceImportFlags) String() string {
 
 ////
 
-type ExternalFenceFeatures int32
+type ExternalFenceFeatureFlags int32
 
-var externalFenceFeaturesMapping = common.NewFlagStringMapping[ExternalFenceFeatures]()
+var externalFenceFeaturesMapping = common.NewFlagStringMapping[ExternalFenceFeatureFlags]()
 
-func (f ExternalFenceFeatures) Register(str string) {
+func (f ExternalFenceFeatureFlags) Register(str string) {
 	externalFenceFeaturesMapping.Register(f, str)
 }
 
-func (f ExternalFenceFeatures) String() string {
+func (f ExternalFenceFeatureFlags) String() string {
 	return externalFenceFeaturesMapping.FlagsToString(f)
 }
 
 ////
 
-type ExternalFenceHandleTypes int32
+type ExternalFenceHandleTypeFlags int32
 
-var externalFenceHandleTypesMapping = common.NewFlagStringMapping[ExternalFenceHandleTypes]()
+var externalFenceHandleTypesMapping = common.NewFlagStringMapping[ExternalFenceHandleTypeFlags]()
 
-func (f ExternalFenceHandleTypes) Register(str string) {
+func (f ExternalFenceHandleTypeFlags) Register(str string) {
 	externalFenceHandleTypesMapping.Register(f, str)
 }
 
-func (f ExternalFenceHandleTypes) String() string {
+func (f ExternalFenceHandleTypeFlags) String() string {
 	return externalFenceHandleTypesMapping.FlagsToString(f)
 }
 
 ////
 
 const (
-	ExternalFenceFeatureExportable ExternalFenceFeatures = C.VK_EXTERNAL_FENCE_FEATURE_EXPORTABLE_BIT
-	ExternalFenceFeatureImportable ExternalFenceFeatures = C.VK_EXTERNAL_FENCE_FEATURE_IMPORTABLE_BIT
+	ExternalFenceFeatureExportable ExternalFenceFeatureFlags = C.VK_EXTERNAL_FENCE_FEATURE_EXPORTABLE_BIT
+	ExternalFenceFeatureImportable ExternalFenceFeatureFlags = C.VK_EXTERNAL_FENCE_FEATURE_IMPORTABLE_BIT
 
-	ExternalFenceHandleTypeOpaqueFD       ExternalFenceHandleTypes = C.VK_EXTERNAL_FENCE_HANDLE_TYPE_OPAQUE_FD_BIT
-	ExternalFenceHandleTypeOpaqueWin32    ExternalFenceHandleTypes = C.VK_EXTERNAL_FENCE_HANDLE_TYPE_OPAQUE_WIN32_BIT
-	ExternalFenceHandleTypeOpaqueWin32KMT ExternalFenceHandleTypes = C.VK_EXTERNAL_FENCE_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT
-	ExternalFenceHandleTypeSyncFD         ExternalFenceHandleTypes = C.VK_EXTERNAL_FENCE_HANDLE_TYPE_SYNC_FD_BIT
+	ExternalFenceHandleTypeOpaqueFD       ExternalFenceHandleTypeFlags = C.VK_EXTERNAL_FENCE_HANDLE_TYPE_OPAQUE_FD_BIT
+	ExternalFenceHandleTypeOpaqueWin32    ExternalFenceHandleTypeFlags = C.VK_EXTERNAL_FENCE_HANDLE_TYPE_OPAQUE_WIN32_BIT
+	ExternalFenceHandleTypeOpaqueWin32KMT ExternalFenceHandleTypeFlags = C.VK_EXTERNAL_FENCE_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT
+	ExternalFenceHandleTypeSyncFD         ExternalFenceHandleTypeFlags = C.VK_EXTERNAL_FENCE_HANDLE_TYPE_SYNC_FD_BIT
 
 	FenceImportTemporary FenceImportFlags = C.VK_FENCE_IMPORT_TEMPORARY_BIT
 )
@@ -77,13 +77,13 @@ func init() {
 	FenceImportTemporary.Register("Temporary")
 }
 
-type ExternalFenceOptions struct {
-	HandleType ExternalFenceHandleTypes
+type PhysicalDeviceExternalFenceInfo struct {
+	HandleType ExternalFenceHandleTypeFlags
 
 	common.NextOptions
 }
 
-func (o ExternalFenceOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o PhysicalDeviceExternalFenceInfo) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == nil {
 		preallocatedPointer = allocator.Malloc(int(unsafe.Sizeof(C.VkPhysicalDeviceExternalFenceInfo{})))
 	}
@@ -97,15 +97,15 @@ func (o ExternalFenceOptions) PopulateCPointer(allocator *cgoparam.Allocator, pr
 
 ////
 
-type ExternalFenceOutData struct {
-	ExportFromImportedHandleTypes ExternalFenceHandleTypes
-	CompatibleHandleTypes         ExternalFenceHandleTypes
-	ExternalFenceFeatures         ExternalFenceFeatures
+type ExternalFenceProperties struct {
+	ExportFromImportedHandleTypes ExternalFenceHandleTypeFlags
+	CompatibleHandleTypes         ExternalFenceHandleTypeFlags
+	ExternalFenceFeatures         ExternalFenceFeatureFlags
 
 	common.NextOutData
 }
 
-func (o *ExternalFenceOutData) PopulateHeader(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o *ExternalFenceProperties) PopulateHeader(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == nil {
 		preallocatedPointer = allocator.Malloc(int(unsafe.Sizeof(C.VkExternalFenceProperties{})))
 	}
@@ -117,25 +117,25 @@ func (o *ExternalFenceOutData) PopulateHeader(allocator *cgoparam.Allocator, pre
 	return preallocatedPointer, nil
 }
 
-func (o *ExternalFenceOutData) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
+func (o *ExternalFenceProperties) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
 	info := (*C.VkExternalFenceProperties)(cDataPointer)
 
-	o.ExportFromImportedHandleTypes = ExternalFenceHandleTypes(info.exportFromImportedHandleTypes)
-	o.CompatibleHandleTypes = ExternalFenceHandleTypes(info.compatibleHandleTypes)
-	o.ExternalFenceFeatures = ExternalFenceFeatures(info.externalFenceFeatures)
+	o.ExportFromImportedHandleTypes = ExternalFenceHandleTypeFlags(info.exportFromImportedHandleTypes)
+	o.CompatibleHandleTypes = ExternalFenceHandleTypeFlags(info.compatibleHandleTypes)
+	o.ExternalFenceFeatures = ExternalFenceFeatureFlags(info.externalFenceFeatures)
 
 	return info.pNext, nil
 }
 
 ////
 
-type ExportFenceOptions struct {
-	HandleTypes ExternalFenceHandleTypes
+type ExportFenceCreateInfo struct {
+	HandleTypes ExternalFenceHandleTypeFlags
 
 	common.NextOptions
 }
 
-func (o ExportFenceOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o ExportFenceCreateInfo) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == nil {
 		preallocatedPointer = allocator.Malloc(int(unsafe.Sizeof(C.VkExportFenceCreateInfo{})))
 	}

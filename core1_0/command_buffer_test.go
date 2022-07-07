@@ -55,8 +55,8 @@ func TestCommandBuffer_Begin_NoInheritance(t *testing.T) {
 			return core1_0.VKSuccess, nil
 		})
 
-	_, err := buffer.Begin(core1_0.BeginOptions{
-		Flags: core1_0.BeginInfoSimultaneousUse,
+	_, err := buffer.Begin(core1_0.CommandBufferBeginInfo{
+		Flags: core1_0.CommandBufferUsageSimultaneousUse,
 	})
 	require.NoError(t, err)
 }
@@ -88,15 +88,15 @@ func TestCommandBuffer_Begin_WithInheritance(t *testing.T) {
 			return core1_0.VKSuccess, nil
 		})
 
-	_, err := buffer.Begin(core1_0.BeginOptions{
-		Flags: core1_0.BeginInfoSimultaneousUse,
-		InheritanceInfo: &core1_0.InheritanceOptions{
+	_, err := buffer.Begin(core1_0.CommandBufferBeginInfo{
+		Flags: core1_0.CommandBufferUsageSimultaneousUse,
+		InheritanceInfo: &core1_0.CommandBufferInheritanceInfo{
 			Framebuffer:          framebuffer,
 			RenderPass:           renderPass,
-			SubPass:              3,
+			Subpass:              3,
 			OcclusionQueryEnable: true,
 			QueryFlags:           core1_0.QueryPrecise,
-			PipelineStatistics:   core1_0.QueryStatisticClippingInvocations,
+			PipelineStatistics:   core1_0.QueryPipelineStatisticClippingInvocations,
 		},
 	})
 	require.NoError(t, err)
@@ -139,7 +139,7 @@ func TestCommandBuffer_BeginRenderPass(t *testing.T) {
 			require.ElementsMatch(t, []float32{5, 6, 7, 8}, clearValueSlice)
 		})
 
-	err := buffer.CmdBeginRenderPass(core1_0.SubpassContentsSecondaryCommandBuffers, core1_0.RenderPassBeginOptions{
+	err := buffer.CmdBeginRenderPass(core1_0.SubpassContentsSecondaryCommandBuffers, core1_0.RenderPassBeginInfo{
 		RenderPass:  renderPass,
 		Framebuffer: framebuffer,
 		RenderArea: core1_0.Rect2D{
@@ -175,7 +175,7 @@ func TestCommandBuffer_CmdBindGraphicsPipeline(t *testing.T) {
 
 	mockDriver.EXPECT().VkCmdBindPipeline(buffer.Handle(), driver.VkPipelineBindPoint(0), pipeline.Handle())
 
-	buffer.CmdBindPipeline(core1_0.BindGraphics, pipeline)
+	buffer.CmdBindPipeline(core1_0.PipelineBindPointGraphics, pipeline)
 }
 
 func TestCommandBuffer_CmdDraw(t *testing.T) {
@@ -234,7 +234,7 @@ func TestVulkanCommandBuffer_CmdBindIndexBuffer(t *testing.T) {
 
 	mockDriver.EXPECT().VkCmdBindIndexBuffer(buffer.Handle(), bufferHandle, driver.VkDeviceSize(2), driver.VkIndexType(1) /* VK_INDEX_TYPE_UINT32*/)
 
-	buffer.CmdBindIndexBuffer(indexBuffer, 2, core1_0.IndexUInt32)
+	buffer.CmdBindIndexBuffer(indexBuffer, 2, core1_0.IndexTypeUInt32)
 }
 
 func TestVulkanCommandBuffer_CmdBindDescriptorSets(t *testing.T) {
@@ -268,7 +268,7 @@ func TestVulkanCommandBuffer_CmdBindDescriptorSets(t *testing.T) {
 			require.ElementsMatch(t, []driver.Uint32{4, 5, 6}, dynamicOffsetSlice)
 		})
 
-	buffer.CmdBindDescriptorSets(core1_0.BindCompute, pipelineLayout, []core1_0.DescriptorSet{
+	buffer.CmdBindDescriptorSets(core1_0.PipelineBindPointCompute, pipelineLayout, []core1_0.DescriptorSet{
 		descriptorSet,
 	}, []int{4, 5, 6})
 }
@@ -386,7 +386,7 @@ func TestVulkanCommandBuffer_CmdPipelineBarrier(t *testing.T) {
 		core1_0.PipelineStageAllCommands,
 		core1_0.PipelineStageEarlyFragmentTests,
 		core1_0.DependencyByRegion,
-		[]core1_0.MemoryBarrierOptions{
+		[]core1_0.MemoryBarrier{
 			{
 				SrcAccessMask: core1_0.AccessColorAttachmentRead,
 				DstAccessMask: core1_0.AccessInputAttachmentRead,
@@ -396,7 +396,7 @@ func TestVulkanCommandBuffer_CmdPipelineBarrier(t *testing.T) {
 				DstAccessMask: core1_0.AccessHostWrite,
 			},
 		},
-		[]core1_0.BufferMemoryBarrierOptions{
+		[]core1_0.BufferMemoryBarrier{
 			{
 				SrcAccessMask:       core1_0.AccessHostWrite,
 				DstAccessMask:       core1_0.AccessShaderWrite,
@@ -407,7 +407,7 @@ func TestVulkanCommandBuffer_CmdPipelineBarrier(t *testing.T) {
 				Size:                7,
 			},
 		},
-		[]core1_0.ImageMemoryBarrierOptions{
+		[]core1_0.ImageMemoryBarrier{
 			{
 				SrcAccessMask:       core1_0.AccessIndexRead,
 				DstAccessMask:       core1_0.AccessDepthStencilAttachmentRead,
@@ -417,7 +417,7 @@ func TestVulkanCommandBuffer_CmdPipelineBarrier(t *testing.T) {
 				DstQueueFamilyIndex: 13,
 				Image:               mockImage,
 				SubresourceRange: core1_0.ImageSubresourceRange{
-					AspectMask:     core1_0.AspectMetadata,
+					AspectMask:     core1_0.ImageAspectMetadata,
 					BaseMipLevel:   17,
 					LevelCount:     19,
 					BaseArrayLayer: 23,
@@ -495,7 +495,7 @@ func TestVulkanCommandBuffer_CmdCopyBufferToImage(t *testing.T) {
 			BufferRowLength:   3,
 			BufferImageHeight: 5,
 			ImageSubresource: core1_0.ImageSubresourceLayers{
-				AspectMask:     core1_0.AspectDepth,
+				AspectMask:     core1_0.ImageAspectDepth,
 				MipLevel:       7,
 				BaseArrayLayer: 11,
 				LayerCount:     13,
@@ -516,7 +516,7 @@ func TestVulkanCommandBuffer_CmdCopyBufferToImage(t *testing.T) {
 			BufferRowLength:   43,
 			BufferImageHeight: 47,
 			ImageSubresource: core1_0.ImageSubresourceLayers{
-				AspectMask:     core1_0.AspectColor,
+				AspectMask:     core1_0.ImageAspectColor,
 				MipLevel:       53,
 				BaseArrayLayer: 59,
 				LayerCount:     61,
@@ -605,13 +605,13 @@ func TestVulkanCommandBuffer_CmdBlitImage(t *testing.T) {
 		core1_0.ImageLayoutColorAttachmentOptimal,
 		[]core1_0.ImageBlit{
 			{
-				SourceSubresource: core1_0.ImageSubresourceLayers{
-					AspectMask:     core1_0.AspectMetadata,
+				SrcSubresource: core1_0.ImageSubresourceLayers{
+					AspectMask:     core1_0.ImageAspectMetadata,
 					MipLevel:       1,
 					BaseArrayLayer: 3,
 					LayerCount:     5,
 				},
-				SourceOffsets: [2]core1_0.Offset3D{
+				SrcOffsets: [2]core1_0.Offset3D{
 					{
 						X: 7,
 						Y: 11,
@@ -623,13 +623,13 @@ func TestVulkanCommandBuffer_CmdBlitImage(t *testing.T) {
 						Z: 23,
 					},
 				},
-				DestinationSubresource: core1_0.ImageSubresourceLayers{
-					AspectMask:     core1_0.AspectStencil,
+				DstSubresource: core1_0.ImageSubresourceLayers{
+					AspectMask:     core1_0.ImageAspectStencil,
 					MipLevel:       29,
 					BaseArrayLayer: 31,
 					LayerCount:     37,
 				},
-				DestinationOffsets: [2]core1_0.Offset3D{
+				DstOffsets: [2]core1_0.Offset3D{
 					{
 						X: 41,
 						Y: 43,
@@ -867,13 +867,13 @@ func TestVulkanCommandBuffer_CmdCopyImage(t *testing.T) {
 	err := buffer.CmdCopyImage(srcImage, core1_0.ImageLayoutTransferDstOptimal, dstImage, core1_0.ImageLayoutShaderReadOnlyOptimal, []core1_0.ImageCopy{
 		{
 			SrcSubresource: core1_0.ImageSubresourceLayers{
-				AspectMask:     core1_0.AspectMetadata,
+				AspectMask:     core1_0.ImageAspectMetadata,
 				MipLevel:       1,
 				BaseArrayLayer: 3,
 				LayerCount:     5,
 			},
 			DstSubresource: core1_0.ImageSubresourceLayers{
-				AspectMask:     core1_0.AspectStencil,
+				AspectMask:     core1_0.ImageAspectStencil,
 				MipLevel:       7,
 				BaseArrayLayer: 11,
 				LayerCount:     13,
@@ -884,13 +884,13 @@ func TestVulkanCommandBuffer_CmdCopyImage(t *testing.T) {
 		},
 		{
 			SrcSubresource: core1_0.ImageSubresourceLayers{
-				AspectMask:     core1_0.AspectColor,
+				AspectMask:     core1_0.ImageAspectColor,
 				MipLevel:       53,
 				BaseArrayLayer: 59,
 				LayerCount:     61,
 			},
 			DstSubresource: core1_0.ImageSubresourceLayers{
-				AspectMask:     core1_0.AspectDepth,
+				AspectMask:     core1_0.ImageAspectDepth,
 				MipLevel:       67,
 				BaseArrayLayer: 71,
 				LayerCount:     73,
@@ -998,7 +998,7 @@ func TestVulkanCommandBuffer_CmdWaitEvents(t *testing.T) {
 		[]core1_0.Event{event1, event2},
 		core1_0.PipelineStageAllCommands,
 		core1_0.PipelineStageTessellationControlShader,
-		[]core1_0.MemoryBarrierOptions{
+		[]core1_0.MemoryBarrier{
 			{
 				SrcAccessMask: core1_0.AccessColorAttachmentRead,
 				DstAccessMask: core1_0.AccessUniformRead,
@@ -1008,7 +1008,7 @@ func TestVulkanCommandBuffer_CmdWaitEvents(t *testing.T) {
 				DstAccessMask: core1_0.AccessVertexAttributeRead,
 			},
 		},
-		[]core1_0.BufferMemoryBarrierOptions{
+		[]core1_0.BufferMemoryBarrier{
 			{
 				SrcAccessMask:       core1_0.AccessHostWrite,
 				DstAccessMask:       core1_0.AccessShaderWrite,
@@ -1019,7 +1019,7 @@ func TestVulkanCommandBuffer_CmdWaitEvents(t *testing.T) {
 				Size:                7,
 			},
 		},
-		[]core1_0.ImageMemoryBarrierOptions{
+		[]core1_0.ImageMemoryBarrier{
 			{
 				SrcAccessMask:       core1_0.AccessIndexRead,
 				DstAccessMask:       core1_0.AccessIndirectCommandRead,
@@ -1029,7 +1029,7 @@ func TestVulkanCommandBuffer_CmdWaitEvents(t *testing.T) {
 				DstQueueFamilyIndex: 13,
 				Image:               mockImage,
 				SubresourceRange: core1_0.ImageSubresourceRange{
-					AspectMask:     core1_0.AspectDepth,
+					AspectMask:     core1_0.ImageAspectDepth,
 					BaseMipLevel:   17,
 					LevelCount:     19,
 					BaseArrayLayer: 23,
@@ -1092,14 +1092,14 @@ func TestVulkanCommandBuffer_CmdClearColorImage(t *testing.T) {
 
 	buffer.CmdClearColorImage(image, core1_0.ImageLayoutDepthStencilAttachmentOptimal, &core1_0.ClearValueFloat{0.2, 0.3, 0.4, 0.5}, []core1_0.ImageSubresourceRange{
 		{
-			AspectMask:     core1_0.AspectMetadata,
+			AspectMask:     core1_0.ImageAspectMetadata,
 			BaseMipLevel:   1,
 			LevelCount:     3,
 			BaseArrayLayer: 5,
 			LayerCount:     7,
 		},
 		{
-			AspectMask:     core1_0.AspectDepth,
+			AspectMask:     core1_0.ImageAspectDepth,
 			BaseMipLevel:   11,
 			LevelCount:     13,
 			BaseArrayLayer: 17,
@@ -1273,7 +1273,7 @@ func TestVulkanCommandBuffer_CmdClearAttachments(t *testing.T) {
 
 	buffer.CmdClearAttachments([]core1_0.ClearAttachment{
 		{
-			AspectMask:      core1_0.AspectColor,
+			AspectMask:      core1_0.ImageAspectColor,
 			ColorAttachment: 3,
 			ClearValue:      core1_0.ClearValueFloat{5, 7, 11, 13},
 		},
@@ -1337,14 +1337,14 @@ func TestVulkanCommandBuffer_CmdClearDepthStencilImage(t *testing.T) {
 		Stencil: 3,
 	}, []core1_0.ImageSubresourceRange{
 		{
-			AspectMask:     core1_0.AspectColor,
+			AspectMask:     core1_0.ImageAspectColor,
 			BaseMipLevel:   5,
 			LevelCount:     7,
 			BaseArrayLayer: 11,
 			LayerCount:     13,
 		},
 		{
-			AspectMask:     core1_0.AspectDepth,
+			AspectMask:     core1_0.ImageAspectDepth,
 			BaseMipLevel:   17,
 			LevelCount:     19,
 			BaseArrayLayer: 23,
@@ -1393,7 +1393,7 @@ func TestVulkanCommandBuffer_CmdCopyImageToBuffer(t *testing.T) {
 			BufferRowLength:   3,
 			BufferImageHeight: 5,
 			ImageSubresource: core1_0.ImageSubresourceLayers{
-				AspectMask:     core1_0.AspectColor,
+				AspectMask:     core1_0.ImageAspectColor,
 				MipLevel:       7,
 				BaseArrayLayer: 11,
 				LayerCount:     13,
@@ -1554,14 +1554,14 @@ func TestVulkanCommandBuffer_CmdResolveImage(t *testing.T) {
 		[]core1_0.ImageResolve{
 			{
 				SrcSubresource: core1_0.ImageSubresourceLayers{
-					AspectMask:     core1_0.AspectColor,
+					AspectMask:     core1_0.ImageAspectColor,
 					MipLevel:       1,
 					BaseArrayLayer: 3,
 					LayerCount:     5,
 				},
 				SrcOffset: core1_0.Offset3D{7, 11, 13},
 				DstSubresource: core1_0.ImageSubresourceLayers{
-					AspectMask:     core1_0.AspectDepth,
+					AspectMask:     core1_0.ImageAspectDepth,
 					MipLevel:       17,
 					BaseArrayLayer: 19,
 					LayerCount:     23,
@@ -1571,14 +1571,14 @@ func TestVulkanCommandBuffer_CmdResolveImage(t *testing.T) {
 			},
 			{
 				SrcSubresource: core1_0.ImageSubresourceLayers{
-					AspectMask:     core1_0.AspectMetadata,
+					AspectMask:     core1_0.ImageAspectMetadata,
 					MipLevel:       53,
 					BaseArrayLayer: 59,
 					LayerCount:     61,
 				},
 				SrcOffset: core1_0.Offset3D{67, 71, 73},
 				DstSubresource: core1_0.ImageSubresourceLayers{
-					AspectMask:     core1_0.AspectStencil,
+					AspectMask:     core1_0.ImageAspectStencil,
 					MipLevel:       79,
 					BaseArrayLayer: 83,
 					LayerCount:     89,

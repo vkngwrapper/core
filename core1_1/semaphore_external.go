@@ -25,43 +25,43 @@ func (f SemaphoreImportFlags) String() string {
 
 ////
 
-type ExternalSemaphoreFeatures int32
+type ExternalSemaphoreFeatureFlags int32
 
-var externalSemaphoreFeaturesMapping = common.NewFlagStringMapping[ExternalSemaphoreFeatures]()
+var externalSemaphoreFeaturesMapping = common.NewFlagStringMapping[ExternalSemaphoreFeatureFlags]()
 
-func (f ExternalSemaphoreFeatures) Register(str string) {
+func (f ExternalSemaphoreFeatureFlags) Register(str string) {
 	externalSemaphoreFeaturesMapping.Register(f, str)
 }
 
-func (f ExternalSemaphoreFeatures) String() string {
+func (f ExternalSemaphoreFeatureFlags) String() string {
 	return externalSemaphoreFeaturesMapping.FlagsToString(f)
 }
 
 ////
 
-type ExternalSemaphoreHandleTypes int32
+type ExternalSemaphoreHandleTypeFlags int32
 
-var externalSemaphoreHandleTypesMapping = common.NewFlagStringMapping[ExternalSemaphoreHandleTypes]()
+var externalSemaphoreHandleTypesMapping = common.NewFlagStringMapping[ExternalSemaphoreHandleTypeFlags]()
 
-func (f ExternalSemaphoreHandleTypes) Register(str string) {
+func (f ExternalSemaphoreHandleTypeFlags) Register(str string) {
 	externalSemaphoreHandleTypesMapping.Register(f, str)
 }
 
-func (f ExternalSemaphoreHandleTypes) String() string {
+func (f ExternalSemaphoreHandleTypeFlags) String() string {
 	return externalSemaphoreHandleTypesMapping.FlagsToString(f)
 }
 
 ////
 
 const (
-	ExternalSemaphoreFeatureExportable ExternalSemaphoreFeatures = C.VK_EXTERNAL_SEMAPHORE_FEATURE_EXPORTABLE_BIT
-	ExternalSemaphoreFeatureImportable ExternalSemaphoreFeatures = C.VK_EXTERNAL_SEMAPHORE_FEATURE_IMPORTABLE_BIT
+	ExternalSemaphoreFeatureExportable ExternalSemaphoreFeatureFlags = C.VK_EXTERNAL_SEMAPHORE_FEATURE_EXPORTABLE_BIT
+	ExternalSemaphoreFeatureImportable ExternalSemaphoreFeatureFlags = C.VK_EXTERNAL_SEMAPHORE_FEATURE_IMPORTABLE_BIT
 
-	ExternalSemaphoreHandleTypeOpaqueFD       ExternalSemaphoreHandleTypes = C.VK_EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_FD_BIT
-	ExternalSemaphoreHandleTypeOpaqueWin32    ExternalSemaphoreHandleTypes = C.VK_EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_BIT
-	ExternalSemaphoreHandleTypeOpaqueWin32KMT ExternalSemaphoreHandleTypes = C.VK_EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT
-	ExternalSemaphoreHandleTypeD3D12Fence     ExternalSemaphoreHandleTypes = C.VK_EXTERNAL_SEMAPHORE_HANDLE_TYPE_D3D12_FENCE_BIT
-	ExternalSemaphoreHandleTypeSyncFD         ExternalSemaphoreHandleTypes = C.VK_EXTERNAL_SEMAPHORE_HANDLE_TYPE_SYNC_FD_BIT
+	ExternalSemaphoreHandleTypeOpaqueFD       ExternalSemaphoreHandleTypeFlags = C.VK_EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_FD_BIT
+	ExternalSemaphoreHandleTypeOpaqueWin32    ExternalSemaphoreHandleTypeFlags = C.VK_EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_BIT
+	ExternalSemaphoreHandleTypeOpaqueWin32KMT ExternalSemaphoreHandleTypeFlags = C.VK_EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT
+	ExternalSemaphoreHandleTypeD3D12Fence     ExternalSemaphoreHandleTypeFlags = C.VK_EXTERNAL_SEMAPHORE_HANDLE_TYPE_D3D12_FENCE_BIT
+	ExternalSemaphoreHandleTypeSyncFD         ExternalSemaphoreHandleTypeFlags = C.VK_EXTERNAL_SEMAPHORE_HANDLE_TYPE_SYNC_FD_BIT
 
 	SemaphoreImportTemporary SemaphoreImportFlags = C.VK_SEMAPHORE_IMPORT_TEMPORARY_BIT
 )
@@ -81,13 +81,13 @@ func init() {
 
 ////
 
-type ExternalSemaphoreOptions struct {
-	HandleType ExternalSemaphoreHandleTypes
+type PhysicalDeviceExternalSemaphoreInfo struct {
+	HandleType ExternalSemaphoreHandleTypeFlags
 
 	common.NextOptions
 }
 
-func (o ExternalSemaphoreOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o PhysicalDeviceExternalSemaphoreInfo) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == nil {
 		preallocatedPointer = allocator.Malloc(int(unsafe.Sizeof(C.VkPhysicalDeviceExternalSemaphoreInfo{})))
 	}
@@ -102,15 +102,15 @@ func (o ExternalSemaphoreOptions) PopulateCPointer(allocator *cgoparam.Allocator
 
 ////
 
-type ExternalSemaphoreOutData struct {
-	ExportFromImportedHandleTypes ExternalSemaphoreHandleTypes
-	CompatibleHandleTypes         ExternalSemaphoreHandleTypes
-	ExternalSemaphoreFeatures     ExternalSemaphoreFeatures
+type ExternalSemaphoreProperties struct {
+	ExportFromImportedHandleTypes ExternalSemaphoreHandleTypeFlags
+	CompatibleHandleTypes         ExternalSemaphoreHandleTypeFlags
+	ExternalSemaphoreFeatures     ExternalSemaphoreFeatureFlags
 
 	common.NextOutData
 }
 
-func (o *ExternalSemaphoreOutData) PopulateHeader(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o *ExternalSemaphoreProperties) PopulateHeader(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == nil {
 		preallocatedPointer = allocator.Malloc(int(unsafe.Sizeof(C.VkExternalSemaphoreProperties{})))
 	}
@@ -122,25 +122,25 @@ func (o *ExternalSemaphoreOutData) PopulateHeader(allocator *cgoparam.Allocator,
 	return preallocatedPointer, nil
 }
 
-func (o *ExternalSemaphoreOutData) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
+func (o *ExternalSemaphoreProperties) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
 	info := (*C.VkExternalSemaphoreProperties)(cDataPointer)
 
-	o.ExportFromImportedHandleTypes = ExternalSemaphoreHandleTypes(info.exportFromImportedHandleTypes)
-	o.CompatibleHandleTypes = ExternalSemaphoreHandleTypes(info.compatibleHandleTypes)
-	o.ExternalSemaphoreFeatures = ExternalSemaphoreFeatures(info.externalSemaphoreFeatures)
+	o.ExportFromImportedHandleTypes = ExternalSemaphoreHandleTypeFlags(info.exportFromImportedHandleTypes)
+	o.CompatibleHandleTypes = ExternalSemaphoreHandleTypeFlags(info.compatibleHandleTypes)
+	o.ExternalSemaphoreFeatures = ExternalSemaphoreFeatureFlags(info.externalSemaphoreFeatures)
 
 	return info.pNext, nil
 }
 
 ////
 
-type ExportSemaphoreOptions struct {
-	HandleTypes ExternalSemaphoreHandleTypes
+type ExportSemaphoreCreateInfo struct {
+	HandleTypes ExternalSemaphoreHandleTypeFlags
 
 	common.NextOptions
 }
 
-func (o ExportSemaphoreOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o ExportSemaphoreCreateInfo) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == nil {
 		preallocatedPointer = allocator.Malloc(int(unsafe.Sizeof(C.VkExportSemaphoreCreateInfo{})))
 	}

@@ -11,13 +11,13 @@ import (
 	"unsafe"
 )
 
-type EventCreateOptions struct {
+type EventCreateInfo struct {
 	Flags EventCreateFlags
 
 	common.NextOptions
 }
 
-func (o EventCreateOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o EventCreateInfo) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == unsafe.Pointer(nil) {
 		preallocatedPointer = allocator.Malloc(C.sizeof_struct_VkEventCreateInfo)
 	}

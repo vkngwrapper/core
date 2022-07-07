@@ -65,13 +65,13 @@ func TestPhysicalDeviceDriverOutData(t *testing.T) {
 			driverInfoSlice[len(driverInfo)] = 0
 		})
 
-	var driverOutData core1_2.PhysicalDeviceDriverOutData
+	var driverOutData core1_2.PhysicalDeviceDriverProperties
 	err := physicalDevice.Properties2(
-		&core1_1.DevicePropertiesOutData{
+		&core1_1.PhysicalDeviceProperties2{
 			NextOutData: common.NextOutData{&driverOutData},
 		})
 	require.NoError(t, err)
-	require.Equal(t, core1_2.PhysicalDeviceDriverOutData{
+	require.Equal(t, core1_2.PhysicalDeviceDriverProperties{
 		DriverID:           core1_2.DriverIDGoogleSwiftshader,
 		DriverName:         "Some Driver",
 		DriverInfo:         "Whooo Info",
@@ -109,13 +109,13 @@ func TestPhysicalDeviceDepthStencilResolveOutData(t *testing.T) {
 		*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("independentResolve").UnsafeAddr())) = driver.VkBool32(1)
 	})
 
-	var outData core1_2.PhysicalDeviceDepthStencilResolveOutData
+	var outData core1_2.PhysicalDeviceDepthStencilResolveProperties
 	err := physicalDevice.Properties2(
-		&core1_1.DevicePropertiesOutData{
+		&core1_1.PhysicalDeviceProperties2{
 			NextOutData: common.NextOutData{&outData},
 		})
 	require.NoError(t, err)
-	require.Equal(t, core1_2.PhysicalDeviceDepthStencilResolveOutData{
+	require.Equal(t, core1_2.PhysicalDeviceDepthStencilResolveProperties{
 		SupportedDepthResolveModes:   core1_2.ResolveModeAverage,
 		SupportedStencilResolveModes: core1_2.ResolveModeMax,
 		IndependentResolve:           true,
@@ -171,14 +171,14 @@ func TestPhysicalDeviceDescriptorIndexingOutData(t *testing.T) {
 		*(*driver.Uint32)(unsafe.Pointer(val.FieldByName("maxDescriptorSetUpdateAfterBindInputAttachments").UnsafeAddr())) = driver.Uint32(51)
 	})
 
-	var outData core1_2.PhysicalDeviceDescriptorIndexingOutData
+	var outData core1_2.PhysicalDeviceDescriptorIndexingProperties
 	err := physicalDevice.Properties2(
-		&core1_1.DevicePropertiesOutData{
+		&core1_1.PhysicalDeviceProperties2{
 			NextOutData: common.NextOutData{&outData},
 		})
 	require.NoError(t, err)
 	require.Equal(t,
-		core1_2.PhysicalDeviceDescriptorIndexingOutData{
+		core1_2.PhysicalDeviceDescriptorIndexingProperties{
 			MaxUpdateAfterBindDescriptorsInAllPools: 1,
 
 			ShaderUniformBufferArrayNonUniformIndexingNative:   true,
@@ -251,13 +251,13 @@ func TestPhysicalDeviceFloatControlsOutData(t *testing.T) {
 		*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("shaderRoundingModeRTZFloat64").UnsafeAddr())) = driver.VkBool32(1)
 	})
 
-	var outData core1_2.PhysicalDeviceFloatControlsOutData
+	var outData core1_2.PhysicalDeviceFloatControlsProperties
 	err := physicalDevice.Properties2(
-		&core1_1.DevicePropertiesOutData{
+		&core1_1.PhysicalDeviceProperties2{
 			NextOutData: common.NextOutData{&outData},
 		})
 	require.NoError(t, err)
-	require.Equal(t, core1_2.PhysicalDeviceFloatControlsOutData{
+	require.Equal(t, core1_2.PhysicalDeviceFloatControlsProperties{
 		DenormBehaviorIndependence: core1_2.ShaderFloatControlsIndependence32BitOnly,
 		RoundingMoundIndependence:  core1_2.ShaderFloatControlsIndependenceAll,
 
@@ -304,13 +304,13 @@ func TestPhysicalDeviceSamplerFilterMinmaxOutData(t *testing.T) {
 		*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("filterMinmaxImageComponentMapping").UnsafeAddr())) = driver.VkBool32(1)
 	})
 
-	var outData core1_2.PhysicalDeviceSamplerFilterMinmaxOutData
+	var outData core1_2.PhysicalDeviceSamplerFilterMinmaxProperties
 	err := physicalDevice.Properties2(
-		&core1_1.DevicePropertiesOutData{
+		&core1_1.PhysicalDeviceProperties2{
 			NextOutData: common.NextOutData{&outData},
 		})
 	require.NoError(t, err)
-	require.Equal(t, core1_2.PhysicalDeviceSamplerFilterMinmaxOutData{
+	require.Equal(t, core1_2.PhysicalDeviceSamplerFilterMinmaxProperties{
 		FilterMinmaxImageComponentMapping:  true,
 		FilterMinmaxSingleComponentFormats: true,
 	}, outData)
@@ -339,13 +339,13 @@ func TestPhysicalDeviceTimelineSemaphoreOutData(t *testing.T) {
 		*(*driver.Uint64)(unsafe.Pointer(val.FieldByName("maxTimelineSemaphoreValueDifference").UnsafeAddr())) = driver.Uint64(3)
 	})
 
-	var outData core1_2.PhysicalDeviceTimelineSemaphoreOutData
+	var outData core1_2.PhysicalDeviceTimelineSemaphoreProperties
 	err := physicalDevice.Properties2(
-		&core1_1.DevicePropertiesOutData{
+		&core1_1.PhysicalDeviceProperties2{
 			NextOutData: common.NextOutData{&outData},
 		})
 	require.NoError(t, err)
-	require.Equal(t, core1_2.PhysicalDeviceTimelineSemaphoreOutData{
+	require.Equal(t, core1_2.PhysicalDeviceTimelineSemaphoreProperties{
 		MaxTimelineSemaphoreValueDifference: 3,
 	}, outData)
 }
@@ -405,13 +405,13 @@ func TestPhysicalDeviceVulkan11OutData(t *testing.T) {
 		*(*driver.VkDeviceSize)(unsafe.Pointer(val.FieldByName("maxMemoryAllocationSize").UnsafeAddr())) = driver.VkDeviceSize(17)
 	})
 
-	var outData core1_2.PhysicalDeviceVulkan11OutData
+	var outData core1_2.PhysicalDeviceVulkan11Properties
 	err = physicalDevice.Properties2(
-		&core1_1.DevicePropertiesOutData{
+		&core1_1.PhysicalDeviceProperties2{
 			NextOutData: common.NextOutData{&outData},
 		})
 	require.NoError(t, err)
-	require.Equal(t, core1_2.PhysicalDeviceVulkan11OutData{
+	require.Equal(t, core1_2.PhysicalDeviceVulkan11Properties{
 		DeviceUUID:                        deviceUUID,
 		DriverUUID:                        driverUUID,
 		DeviceLUID:                        0xdeadbeefdeadbeef,
@@ -522,13 +522,13 @@ func TestPhysicalDeviceVulkan12OutData(t *testing.T) {
 		*(*driver.Uint32)(unsafe.Pointer(val.FieldByName("framebufferIntegerColorSampleCounts").UnsafeAddr())) = driver.Uint32(16)
 	})
 
-	var outData core1_2.PhysicalDeviceVulkan12OutData
+	var outData core1_2.PhysicalDeviceVulkan12Properties
 	err := physicalDevice.Properties2(
-		&core1_1.DevicePropertiesOutData{
+		&core1_1.PhysicalDeviceProperties2{
 			NextOutData: common.NextOutData{&outData},
 		})
 	require.NoError(t, err)
-	require.Equal(t, core1_2.PhysicalDeviceVulkan12OutData{
+	require.Equal(t, core1_2.PhysicalDeviceVulkan12Properties{
 		DriverID:   core1_2.DriverIDGoogleSwiftshader,
 		DriverName: "Some Driver",
 		DriverInfo: "Whooo Info",

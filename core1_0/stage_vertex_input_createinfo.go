@@ -21,27 +21,27 @@ func init() {
 	RateInstance.Register("Instance")
 }
 
-type VertexBindingDescription struct {
+type VertexInputBindingDescription struct {
 	InputRate InputRate
 	Binding   int
 	Stride    int
 }
 
-type VertexAttributeDescription struct {
+type VertexInputAttributeDescription struct {
 	Location uint32
 	Binding  int
-	Format   DataFormat
+	Format   Format
 	Offset   int
 }
 
-type VertexInputStateOptions struct {
-	VertexBindingDescriptions   []VertexBindingDescription
-	VertexAttributeDescriptions []VertexAttributeDescription
+type PipelineVertexInputStateCreateInfo struct {
+	VertexBindingDescriptions   []VertexInputBindingDescription
+	VertexAttributeDescriptions []VertexInputAttributeDescription
 
 	common.NextOptions
 }
 
-func (o VertexInputStateOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o PipelineVertexInputStateCreateInfo) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == unsafe.Pointer(nil) {
 		preallocatedPointer = allocator.Malloc(C.sizeof_struct_VkPipelineVertexInputStateCreateInfo)
 	}

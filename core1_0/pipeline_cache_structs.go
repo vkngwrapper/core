@@ -11,14 +11,14 @@ import (
 	"unsafe"
 )
 
-type PipelineCacheCreateOptions struct {
+type PipelineCacheCreateInfo struct {
 	Flags       PipelineCacheCreateFlags
 	InitialData []byte
 
 	common.NextOptions
 }
 
-func (o PipelineCacheCreateOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o PipelineCacheCreateInfo) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == unsafe.Pointer(nil) {
 		preallocatedPointer = allocator.Malloc(C.sizeof_struct_VkPipelineCacheCreateInfo)
 	}

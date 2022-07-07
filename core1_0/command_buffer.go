@@ -59,7 +59,7 @@ func (c *VulkanCommandBuffer) DispatchesRecorded() int {
 	return c.commandCounter.DispatchCount
 }
 
-func (c *VulkanCommandBuffer) Begin(o BeginOptions) (common.VkResult, error) {
+func (c *VulkanCommandBuffer) Begin(o CommandBufferBeginInfo) (common.VkResult, error) {
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
@@ -82,7 +82,7 @@ func (c *VulkanCommandBuffer) End() (common.VkResult, error) {
 	return c.deviceDriver.VkEndCommandBuffer(c.commandBufferHandle)
 }
 
-func (c *VulkanCommandBuffer) CmdBeginRenderPass(contents SubpassContents, o RenderPassBeginOptions) error {
+func (c *VulkanCommandBuffer) CmdBeginRenderPass(contents SubpassContents, o RenderPassBeginInfo) error {
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
@@ -185,7 +185,7 @@ func (c *VulkanCommandBuffer) CmdBindDescriptorSets(bindPoint PipelineBindPoint,
 	c.commandCounter.CommandCount++
 }
 
-func (c *VulkanCommandBuffer) CmdPipelineBarrier(srcStageMask, dstStageMask PipelineStages, dependencies DependencyFlags, memoryBarriers []MemoryBarrierOptions, bufferMemoryBarriers []BufferMemoryBarrierOptions, imageMemoryBarriers []ImageMemoryBarrierOptions) error {
+func (c *VulkanCommandBuffer) CmdPipelineBarrier(srcStageMask, dstStageMask PipelineStageFlags, dependencies DependencyFlags, memoryBarriers []MemoryBarrier, bufferMemoryBarriers []BufferMemoryBarrier, imageMemoryBarriers []ImageMemoryBarrier) error {
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
@@ -199,21 +199,21 @@ func (c *VulkanCommandBuffer) CmdPipelineBarrier(srcStageMask, dstStageMask Pipe
 	var imageBarrierPtr *C.VkImageMemoryBarrier
 
 	if barrierCount > 0 {
-		barrierPtr, err = common.AllocOptionSlice[C.VkMemoryBarrier, MemoryBarrierOptions](arena, memoryBarriers)
+		barrierPtr, err = common.AllocOptionSlice[C.VkMemoryBarrier, MemoryBarrier](arena, memoryBarriers)
 		if err != nil {
 			return err
 		}
 	}
 
 	if bufferBarrierCount > 0 {
-		bufferBarrierPtr, err = common.AllocOptionSlice[C.VkBufferMemoryBarrier, BufferMemoryBarrierOptions](arena, bufferMemoryBarriers)
+		bufferBarrierPtr, err = common.AllocOptionSlice[C.VkBufferMemoryBarrier, BufferMemoryBarrier](arena, bufferMemoryBarriers)
 		if err != nil {
 			return err
 		}
 	}
 
 	if imageBarrierCount > 0 {
-		imageBarrierPtr, err = common.AllocOptionSlice[C.VkImageMemoryBarrier, ImageMemoryBarrierOptions](arena, imageMemoryBarriers)
+		imageBarrierPtr, err = common.AllocOptionSlice[C.VkImageMemoryBarrier, ImageMemoryBarrier](arena, imageMemoryBarriers)
 		if err != nil {
 			return err
 		}
@@ -268,7 +268,7 @@ func (c *VulkanCommandBuffer) CmdBlitImage(sourceImage Image, sourceImageLayout 
 	return nil
 }
 
-func (c *VulkanCommandBuffer) CmdPushConstants(layout PipelineLayout, stageFlags ShaderStages, offset int, valueBytes []byte) {
+func (c *VulkanCommandBuffer) CmdPushConstants(layout PipelineLayout, stageFlags ShaderStageFlags, offset int, valueBytes []byte) {
 	alloc := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(alloc)
 
@@ -333,7 +333,7 @@ func (c *VulkanCommandBuffer) CmdNextSubpass(contents SubpassContents) {
 	c.commandCounter.CommandCount++
 }
 
-func (c *VulkanCommandBuffer) CmdWaitEvents(events []Event, srcStageMask PipelineStages, dstStageMask PipelineStages, memoryBarriers []MemoryBarrierOptions, bufferMemoryBarriers []BufferMemoryBarrierOptions, imageMemoryBarriers []ImageMemoryBarrierOptions) error {
+func (c *VulkanCommandBuffer) CmdWaitEvents(events []Event, srcStageMask PipelineStageFlags, dstStageMask PipelineStageFlags, memoryBarriers []MemoryBarrier, bufferMemoryBarriers []BufferMemoryBarrier, imageMemoryBarriers []ImageMemoryBarrier) error {
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
@@ -358,21 +358,21 @@ func (c *VulkanCommandBuffer) CmdWaitEvents(events []Event, srcStageMask Pipelin
 	}
 
 	if barrierCount > 0 {
-		barrierPtr, err = common.AllocOptionSlice[C.VkMemoryBarrier, MemoryBarrierOptions](arena, memoryBarriers)
+		barrierPtr, err = common.AllocOptionSlice[C.VkMemoryBarrier, MemoryBarrier](arena, memoryBarriers)
 		if err != nil {
 			return err
 		}
 	}
 
 	if bufferBarrierCount > 0 {
-		bufferBarrierPtr, err = common.AllocOptionSlice[C.VkBufferMemoryBarrier, BufferMemoryBarrierOptions](arena, bufferMemoryBarriers)
+		bufferBarrierPtr, err = common.AllocOptionSlice[C.VkBufferMemoryBarrier, BufferMemoryBarrier](arena, bufferMemoryBarriers)
 		if err != nil {
 			return err
 		}
 	}
 
 	if imageBarrierCount > 0 {
-		imageBarrierPtr, err = common.AllocOptionSlice[C.VkImageMemoryBarrier, ImageMemoryBarrierOptions](arena, imageMemoryBarriers)
+		imageBarrierPtr, err = common.AllocOptionSlice[C.VkImageMemoryBarrier, ImageMemoryBarrier](arena, imageMemoryBarriers)
 		if err != nil {
 			return err
 		}
@@ -383,7 +383,7 @@ func (c *VulkanCommandBuffer) CmdWaitEvents(events []Event, srcStageMask Pipelin
 	return nil
 }
 
-func (c *VulkanCommandBuffer) CmdSetEvent(event Event, stageMask PipelineStages) {
+func (c *VulkanCommandBuffer) CmdSetEvent(event Event, stageMask PipelineStageFlags) {
 	c.deviceDriver.VkCmdSetEvent(c.commandBufferHandle, event.Handle(), driver.VkPipelineStageFlags(stageMask))
 	c.commandCounter.CommandCount++
 }
@@ -549,7 +549,7 @@ func (c *VulkanCommandBuffer) CmdFillBuffer(dstBuffer Buffer, dstOffset int, siz
 	c.commandCounter.CommandCount++
 }
 
-func (c *VulkanCommandBuffer) CmdResetEvent(event Event, stageMask PipelineStages) {
+func (c *VulkanCommandBuffer) CmdResetEvent(event Event, stageMask PipelineStageFlags) {
 	c.deviceDriver.VkCmdResetEvent(c.commandBufferHandle, event.Handle(), driver.VkPipelineStageFlags(stageMask))
 	c.commandCounter.CommandCount++
 }
@@ -599,17 +599,17 @@ func (c *VulkanCommandBuffer) CmdSetLineWidth(lineWidth float32) {
 	c.commandCounter.CommandCount++
 }
 
-func (c *VulkanCommandBuffer) CmdSetStencilCompareMask(faceMask StencilFaces, compareMask uint32) {
+func (c *VulkanCommandBuffer) CmdSetStencilCompareMask(faceMask StencilFaceFlags, compareMask uint32) {
 	c.deviceDriver.VkCmdSetStencilCompareMask(c.commandBufferHandle, driver.VkStencilFaceFlags(faceMask), driver.Uint32(compareMask))
 	c.commandCounter.CommandCount++
 }
 
-func (c *VulkanCommandBuffer) CmdSetStencilReference(faceMask StencilFaces, reference uint32) {
+func (c *VulkanCommandBuffer) CmdSetStencilReference(faceMask StencilFaceFlags, reference uint32) {
 	c.deviceDriver.VkCmdSetStencilReference(c.commandBufferHandle, driver.VkStencilFaceFlags(faceMask), driver.Uint32(reference))
 	c.commandCounter.CommandCount++
 }
 
-func (c *VulkanCommandBuffer) CmdSetStencilWriteMask(faceMask StencilFaces, writeMask uint32) {
+func (c *VulkanCommandBuffer) CmdSetStencilWriteMask(faceMask StencilFaceFlags, writeMask uint32) {
 	c.deviceDriver.VkCmdSetStencilWriteMask(c.commandBufferHandle, driver.VkStencilFaceFlags(faceMask), driver.Uint32(writeMask))
 	c.commandCounter.CommandCount++
 }
@@ -627,7 +627,7 @@ func (c *VulkanCommandBuffer) CmdUpdateBuffer(dstBuffer Buffer, dstOffset int, d
 	c.commandCounter.CommandCount++
 }
 
-func (c *VulkanCommandBuffer) CmdWriteTimestamp(pipelineStage PipelineStages, queryPool QueryPool, query int) {
+func (c *VulkanCommandBuffer) CmdWriteTimestamp(pipelineStage PipelineStageFlags, queryPool QueryPool, query int) {
 	c.deviceDriver.VkCmdWriteTimestamp(c.commandBufferHandle, driver.VkPipelineStageFlags(pipelineStage), queryPool.Handle(), driver.Uint32(query))
 	c.commandCounter.CommandCount++
 }

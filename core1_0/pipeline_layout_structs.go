@@ -11,20 +11,36 @@ import (
 	"unsafe"
 )
 
-type PushConstantRange struct {
-	Stages ShaderStages
-	Offset int
-	Size   int
+type PipelineLayoutCreateFlags uint32
+
+var pipelineLayoutCreateFlagsMapping = common.NewFlagStringMapping[PipelineLayoutCreateFlags]()
+
+func (f PipelineLayoutCreateFlags) Register(str string) {
+	pipelineLayoutCreateFlagsMapping.Register(f, str)
 }
 
-type PipelineLayoutCreateOptions struct {
+func (f PipelineLayoutCreateFlags) String() string {
+	return pipelineLayoutCreateFlagsMapping.FlagsToString(f)
+}
+
+////
+
+type PushConstantRange struct {
+	StageFlags ShaderStageFlags
+	Offset     int
+	Size       int
+}
+
+type PipelineLayoutCreateInfo struct {
+	Flags PipelineLayoutCreateFlags
+
 	SetLayouts         []DescriptorSetLayout
 	PushConstantRanges []PushConstantRange
 
 	common.NextOptions
 }
 
-func (o PipelineLayoutCreateOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o PipelineLayoutCreateInfo) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == unsafe.Pointer(nil) {
 		preallocatedPointer = allocator.Malloc(C.sizeof_struct_VkPipelineLayoutCreateInfo)
 	}
@@ -34,8 +50,8 @@ func (o PipelineLayoutCreateOptions) PopulateCPointer(allocator *cgoparam.Alloca
 	constantRangesCount := len(o.PushConstantRanges)
 
 	createInfo.sType = C.VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO
-	createInfo.flags = 0
 	createInfo.pNext = next
+	createInfo.flags = C.VkPipelineLayoutCreateFlags(o.Flags)
 	createInfo.setLayoutCount = C.uint32_t(setLayoutCount)
 	createInfo.pushConstantRangeCount = C.uint32_t(constantRangesCount)
 
@@ -56,7 +72,7 @@ func (o PipelineLayoutCreateOptions) PopulateCPointer(allocator *cgoparam.Alloca
 		constantRangesSlice := ([]C.VkPushConstantRange)(unsafe.Slice(constantRangesPtr, constantRangesCount))
 
 		for i := 0; i < constantRangesCount; i++ {
-			constantRangesSlice[i].stageFlags = C.VkShaderStageFlags(o.PushConstantRanges[i].Stages)
+			constantRangesSlice[i].stageFlags = C.VkShaderStageFlags(o.PushConstantRanges[i].StageFlags)
 			constantRangesSlice[i].offset = C.uint32_t(o.PushConstantRanges[i].Offset)
 			constantRangesSlice[i].size = C.uint32_t(o.PushConstantRanges[i].Size)
 		}

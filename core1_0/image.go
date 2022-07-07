@@ -53,9 +53,9 @@ func (i *VulkanImage) MemoryRequirements() *MemoryRequirements {
 	memRequirements := (*C.VkMemoryRequirements)(memRequirementsUnsafe)
 
 	return &MemoryRequirements{
-		Size:       int(memRequirements.size),
-		Alignment:  int(memRequirements.alignment),
-		MemoryType: uint32(memRequirements.memoryTypeBits),
+		Size:           int(memRequirements.size),
+		Alignment:      int(memRequirements.alignment),
+		MemoryTypeBits: uint32(memRequirements.memoryTypeBits),
 	}
 }
 

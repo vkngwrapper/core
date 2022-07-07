@@ -12,12 +12,12 @@ import (
 	"unsafe"
 )
 
-func (q *VulkanQueue) SubmitToQueue(fence Fence, o []SubmitOptions) (common.VkResult, error) {
+func (q *VulkanQueue) Submit(fence Fence, o []SubmitInfo) (common.VkResult, error) {
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
 	submitCount := len(o)
-	createInfoPtrUnsafe, err := common.AllocOptionSlice[C.VkSubmitInfo, SubmitOptions](arena, o)
+	createInfoPtrUnsafe, err := common.AllocOptionSlice[C.VkSubmitInfo, SubmitInfo](arena, o)
 	if err != nil {
 		return VKErrorUnknown, err
 	}

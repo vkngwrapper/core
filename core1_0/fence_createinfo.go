@@ -19,13 +19,13 @@ func init() {
 	FenceCreateSignaled.Register("Signaled")
 }
 
-type FenceCreateOptions struct {
+type FenceCreateInfo struct {
 	Flags FenceCreateFlags
 
 	common.NextOptions
 }
 
-func (o FenceCreateOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o FenceCreateInfo) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == unsafe.Pointer(nil) {
 		preallocatedPointer = allocator.Malloc(C.sizeof_struct_VkFenceCreateInfo)
 	}

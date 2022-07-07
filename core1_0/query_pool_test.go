@@ -38,10 +38,10 @@ func TestVulkanLoader1_0_CreateQueryPool(t *testing.T) {
 			return core1_0.VKSuccess, nil
 		})
 
-	queryPool, _, err := device.CreateQueryPool(nil, core1_0.QueryPoolCreateOptions{
+	queryPool, _, err := device.CreateQueryPool(nil, core1_0.QueryPoolCreateInfo{
 		QueryType:          core1_0.QueryTypeOcclusion,
 		QueryCount:         5,
-		PipelineStatistics: core1_0.PipelineStatisticGeometryShaderPrimitives,
+		PipelineStatistics: core1_0.QueryPipelineStatisticGeometryShaderPrimitives,
 	})
 	require.NoError(t, err)
 	require.NotNil(t, queryPool)

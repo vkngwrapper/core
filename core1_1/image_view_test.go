@@ -41,9 +41,9 @@ func TestImageViewUsageOptions(t *testing.T) {
 			return core1_0.VKSuccess, nil
 		})
 
-	imageView, _, err := device.CreateImageView(nil, core1_0.ImageViewCreateOptions{
+	imageView, _, err := device.CreateImageView(nil, core1_0.ImageViewCreateInfo{
 		Image: image,
-		NextOptions: common.NextOptions{Next: core1_1.ImageViewUsageOptions{
+		NextOptions: common.NextOptions{Next: core1_1.ImageViewUsageCreateInfo{
 			Usage: core1_0.ImageUsageInputAttachment,
 		}},
 	})

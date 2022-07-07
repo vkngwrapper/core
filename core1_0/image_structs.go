@@ -35,22 +35,22 @@ const (
 	ImageType2D ImageType = C.VK_IMAGE_TYPE_2D
 	ImageType3D ImageType = C.VK_IMAGE_TYPE_3D
 
-	ImageUsageTransferSrc            ImageUsages = C.VK_IMAGE_USAGE_TRANSFER_SRC_BIT
-	ImageUsageTransferDst            ImageUsages = C.VK_IMAGE_USAGE_TRANSFER_DST_BIT
-	ImageUsageSampled                ImageUsages = C.VK_IMAGE_USAGE_SAMPLED_BIT
-	ImageUsageStorage                ImageUsages = C.VK_IMAGE_USAGE_STORAGE_BIT
-	ImageUsageColorAttachment        ImageUsages = C.VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT
-	ImageUsageDepthStencilAttachment ImageUsages = C.VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT
-	ImageUsageTransientAttachment    ImageUsages = C.VK_IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT
-	ImageUsageInputAttachment        ImageUsages = C.VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT
+	ImageUsageTransferSrc            ImageUsageFlags = C.VK_IMAGE_USAGE_TRANSFER_SRC_BIT
+	ImageUsageTransferDst            ImageUsageFlags = C.VK_IMAGE_USAGE_TRANSFER_DST_BIT
+	ImageUsageSampled                ImageUsageFlags = C.VK_IMAGE_USAGE_SAMPLED_BIT
+	ImageUsageStorage                ImageUsageFlags = C.VK_IMAGE_USAGE_STORAGE_BIT
+	ImageUsageColorAttachment        ImageUsageFlags = C.VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT
+	ImageUsageDepthStencilAttachment ImageUsageFlags = C.VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT
+	ImageUsageTransientAttachment    ImageUsageFlags = C.VK_IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT
+	ImageUsageInputAttachment        ImageUsageFlags = C.VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT
 
-	Samples1  SampleCounts = C.VK_SAMPLE_COUNT_1_BIT
-	Samples2  SampleCounts = C.VK_SAMPLE_COUNT_2_BIT
-	Samples4  SampleCounts = C.VK_SAMPLE_COUNT_4_BIT
-	Samples8  SampleCounts = C.VK_SAMPLE_COUNT_8_BIT
-	Samples16 SampleCounts = C.VK_SAMPLE_COUNT_16_BIT
-	Samples32 SampleCounts = C.VK_SAMPLE_COUNT_32_BIT
-	Samples64 SampleCounts = C.VK_SAMPLE_COUNT_64_BIT
+	Samples1  SampleCountFlags = C.VK_SAMPLE_COUNT_1_BIT
+	Samples2  SampleCountFlags = C.VK_SAMPLE_COUNT_2_BIT
+	Samples4  SampleCountFlags = C.VK_SAMPLE_COUNT_4_BIT
+	Samples8  SampleCountFlags = C.VK_SAMPLE_COUNT_8_BIT
+	Samples16 SampleCountFlags = C.VK_SAMPLE_COUNT_16_BIT
+	Samples32 SampleCountFlags = C.VK_SAMPLE_COUNT_32_BIT
+	Samples64 SampleCountFlags = C.VK_SAMPLE_COUNT_64_BIT
 )
 
 func init() {
@@ -98,15 +98,15 @@ func init() {
 type ImageCreateOptions struct {
 	Flags     ImageCreateFlags
 	ImageType ImageType
-	Format    DataFormat
+	Format    Format
 	Extent    Extent3D
 
 	MipLevels   int
 	ArrayLayers int
 
-	Samples     SampleCounts
+	Samples     SampleCountFlags
 	Tiling      ImageTiling
-	Usage       ImageUsages
+	Usage       ImageUsageFlags
 	SharingMode SharingMode
 
 	QueueFamilies []uint32

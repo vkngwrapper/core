@@ -21,7 +21,7 @@ func init() {
 	SubpassContentsSecondaryCommandBuffers.Register("Secondary Command Buffers")
 }
 
-type RenderPassBeginOptions struct {
+type RenderPassBeginInfo struct {
 	RenderPass  RenderPass
 	Framebuffer Framebuffer
 
@@ -31,7 +31,7 @@ type RenderPassBeginOptions struct {
 	common.NextOptions
 }
 
-func (o RenderPassBeginOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o RenderPassBeginInfo) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == unsafe.Pointer(nil) {
 		preallocatedPointer = allocator.Malloc(C.sizeof_struct_VkRenderPassBeginInfo)
 	}

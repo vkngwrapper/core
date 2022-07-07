@@ -15,17 +15,17 @@ import (
 const (
 	AttachmentDescriptionMayAlias AttachmentDescriptionFlags = C.VK_ATTACHMENT_DESCRIPTION_MAY_ALIAS_BIT
 
-	LoadOpLoad     AttachmentLoadOp = C.VK_ATTACHMENT_LOAD_OP_LOAD
-	LoadOpClear    AttachmentLoadOp = C.VK_ATTACHMENT_LOAD_OP_CLEAR
-	LoadOpDontCare AttachmentLoadOp = C.VK_ATTACHMENT_LOAD_OP_DONT_CARE
+	AttachmentLoadOpLoad     AttachmentLoadOp = C.VK_ATTACHMENT_LOAD_OP_LOAD
+	AttachmentLoadOpClear    AttachmentLoadOp = C.VK_ATTACHMENT_LOAD_OP_CLEAR
+	AttachmentLoadOpDontCare AttachmentLoadOp = C.VK_ATTACHMENT_LOAD_OP_DONT_CARE
 
-	StoreOpStore    AttachmentStoreOp = C.VK_ATTACHMENT_STORE_OP_STORE
-	StoreOpDontCare AttachmentStoreOp = C.VK_ATTACHMENT_STORE_OP_DONT_CARE
+	AttachmentStoreOpStore    AttachmentStoreOp = C.VK_ATTACHMENT_STORE_OP_STORE
+	AttachmentStoreOpDontCare AttachmentStoreOp = C.VK_ATTACHMENT_STORE_OP_DONT_CARE
 
 	DependencyByRegion DependencyFlags = C.VK_DEPENDENCY_BY_REGION_BIT
 
-	BindGraphics PipelineBindPoint = C.VK_PIPELINE_BIND_POINT_GRAPHICS
-	BindCompute  PipelineBindPoint = C.VK_PIPELINE_BIND_POINT_COMPUTE
+	PipelineBindPointGraphics PipelineBindPoint = C.VK_PIPELINE_BIND_POINT_GRAPHICS
+	PipelineBindPointCompute  PipelineBindPoint = C.VK_PIPELINE_BIND_POINT_COMPUTE
 
 	SubpassExternal = int(C.VK_SUBPASS_EXTERNAL)
 )
@@ -33,23 +33,23 @@ const (
 func init() {
 	AttachmentDescriptionMayAlias.Register("May Alias")
 
-	LoadOpLoad.Register("Load")
-	LoadOpClear.Register("Clear")
-	LoadOpDontCare.Register("Don't Care")
+	AttachmentLoadOpLoad.Register("Load")
+	AttachmentLoadOpClear.Register("Clear")
+	AttachmentLoadOpDontCare.Register("Don't Care")
 
-	StoreOpStore.Register("Store")
-	StoreOpDontCare.Register("Don't Care")
+	AttachmentStoreOpStore.Register("Store")
+	AttachmentStoreOpDontCare.Register("Don't Care")
 
 	DependencyByRegion.Register("By Region")
 
-	BindGraphics.Register("Graphics")
-	BindCompute.Register("Compute")
+	PipelineBindPointGraphics.Register("Graphics")
+	PipelineBindPointCompute.Register("Compute")
 }
 
 type AttachmentDescription struct {
 	Flags   AttachmentDescriptionFlags
-	Format  DataFormat
-	Samples SampleCounts
+	Format  Format
+	Samples SampleCountFlags
 
 	LoadOp         AttachmentLoadOp
 	StoreOp        AttachmentStoreOp
@@ -60,40 +60,40 @@ type AttachmentDescription struct {
 	FinalLayout   ImageLayout
 }
 
-type SubPassDependency struct {
-	Flags DependencyFlags
+type SubpassDependency struct {
+	DependencyFlags DependencyFlags
 
-	SrcSubPassIndex int
-	DstSubPassIndex int
+	SrcSubpass int
+	DstSubpass int
 
-	SrcStageMask PipelineStages
-	DstStageMask PipelineStages
+	SrcStageMask PipelineStageFlags
+	DstStageMask PipelineStageFlags
 
 	SrcAccessMask AccessFlags
 	DstAccessMask AccessFlags
 }
 
-type SubPassDescription struct {
-	Flags     SubPassDescriptionFlags
-	BindPoint PipelineBindPoint
+type SubpassDescription struct {
+	Flags             SubpassDescriptionFlags
+	PipelineBindPoint PipelineBindPoint
 
-	InputAttachments           []AttachmentReference
-	ColorAttachments           []AttachmentReference
-	ResolveAttachments         []AttachmentReference
-	DepthStencilAttachment     *AttachmentReference
-	PreservedAttachmentIndices []int
+	InputAttachments       []AttachmentReference
+	ColorAttachments       []AttachmentReference
+	ResolveAttachments     []AttachmentReference
+	DepthStencilAttachment *AttachmentReference
+	PreserveAttachments    []int
 }
 
-type RenderPassCreateOptions struct {
+type RenderPassCreateInfo struct {
 	Flags               RenderPassCreateFlags
 	Attachments         []AttachmentDescription
-	SubPassDescriptions []SubPassDescription
-	SubPassDependencies []SubPassDependency
+	Subpasses           []SubpassDescription
+	SubpassDependencies []SubpassDependency
 
 	common.NextOptions
 }
 
-func (o RenderPassCreateOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o RenderPassCreateInfo) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == unsafe.Pointer(nil) {
 		preallocatedPointer = allocator.Malloc(int(unsafe.Sizeof(C.VkRenderPassCreateInfo{})))
 	}
@@ -125,7 +125,7 @@ func (o RenderPassCreateOptions) PopulateCPointer(allocator *cgoparam.Allocator,
 		}
 	}
 
-	subPassCount := len(o.SubPassDescriptions)
+	subPassCount := len(o.Subpasses)
 	createInfo.subpassCount = C.uint32_t(subPassCount)
 
 	if subPassCount == 0 {
@@ -136,29 +136,29 @@ func (o RenderPassCreateOptions) PopulateCPointer(allocator *cgoparam.Allocator,
 		subPassSlice := ([]C.VkSubpassDescription)(unsafe.Slice(subPassPtr, subPassCount))
 
 		for i := 0; i < subPassCount; i++ {
-			resolveAttachmentCount := len(o.SubPassDescriptions[i].ResolveAttachments)
-			colorAttachmentCount := len(o.SubPassDescriptions[i].ColorAttachments)
+			resolveAttachmentCount := len(o.Subpasses[i].ResolveAttachments)
+			colorAttachmentCount := len(o.Subpasses[i].ColorAttachments)
 
 			if resolveAttachmentCount > 0 && resolveAttachmentCount != colorAttachmentCount {
 				return nil, errors.Newf("in subpass %d, %d color attachments are defined, but %d resolve attachments are defined", i, colorAttachmentCount, resolveAttachmentCount)
 			}
 
-			subPassSlice[i].flags = C.VkSubpassDescriptionFlags(o.SubPassDescriptions[i].Flags)
-			subPassSlice[i].pipelineBindPoint = C.VkPipelineBindPoint(o.SubPassDescriptions[i].BindPoint)
-			subPassSlice[i].inputAttachmentCount = C.uint32_t(len(o.SubPassDescriptions[i].InputAttachments))
-			subPassSlice[i].pInputAttachments = createAttachmentReferences(allocator, o.SubPassDescriptions[i].InputAttachments)
+			subPassSlice[i].flags = C.VkSubpassDescriptionFlags(o.Subpasses[i].Flags)
+			subPassSlice[i].pipelineBindPoint = C.VkPipelineBindPoint(o.Subpasses[i].PipelineBindPoint)
+			subPassSlice[i].inputAttachmentCount = C.uint32_t(len(o.Subpasses[i].InputAttachments))
+			subPassSlice[i].pInputAttachments = createAttachmentReferences(allocator, o.Subpasses[i].InputAttachments)
 			subPassSlice[i].colorAttachmentCount = C.uint32_t(colorAttachmentCount)
-			subPassSlice[i].pColorAttachments = createAttachmentReferences(allocator, o.SubPassDescriptions[i].ColorAttachments)
-			subPassSlice[i].pResolveAttachments = createAttachmentReferences(allocator, o.SubPassDescriptions[i].ResolveAttachments)
+			subPassSlice[i].pColorAttachments = createAttachmentReferences(allocator, o.Subpasses[i].ColorAttachments)
+			subPassSlice[i].pResolveAttachments = createAttachmentReferences(allocator, o.Subpasses[i].ResolveAttachments)
 			subPassSlice[i].pDepthStencilAttachment = nil
 
-			if o.SubPassDescriptions[i].DepthStencilAttachment != nil {
+			if o.Subpasses[i].DepthStencilAttachment != nil {
 				subPassSlice[i].pDepthStencilAttachment = createAttachmentReferences(allocator, []AttachmentReference{
-					*o.SubPassDescriptions[i].DepthStencilAttachment,
+					*o.Subpasses[i].DepthStencilAttachment,
 				})
 			}
 
-			preserveAttachmentCount := len(o.SubPassDescriptions[i].PreservedAttachmentIndices)
+			preserveAttachmentCount := len(o.Subpasses[i].PreserveAttachments)
 			subPassSlice[i].preserveAttachmentCount = C.uint32_t(preserveAttachmentCount)
 			if preserveAttachmentCount == 0 {
 				subPassSlice[i].pPreserveAttachments = nil
@@ -168,13 +168,13 @@ func (o RenderPassCreateOptions) PopulateCPointer(allocator *cgoparam.Allocator,
 				preserveAttachmentSlice := ([]C.uint32_t)(unsafe.Slice(preserveAttachmentPtr, preserveAttachmentCount))
 
 				for attInd := 0; attInd < preserveAttachmentCount; attInd++ {
-					preserveAttachmentSlice[attInd] = C.uint32_t(o.SubPassDescriptions[i].PreservedAttachmentIndices[attInd])
+					preserveAttachmentSlice[attInd] = C.uint32_t(o.Subpasses[i].PreserveAttachments[attInd])
 				}
 			}
 		}
 	}
 
-	dependencyCount := len(o.SubPassDependencies)
+	dependencyCount := len(o.SubpassDependencies)
 	createInfo.dependencyCount = C.uint32_t(dependencyCount)
 
 	if dependencyCount == 0 {
@@ -185,13 +185,13 @@ func (o RenderPassCreateOptions) PopulateCPointer(allocator *cgoparam.Allocator,
 		dependencySlice := ([]C.VkSubpassDependency)(unsafe.Slice(dependencyPtr, dependencyCount))
 
 		for i := 0; i < dependencyCount; i++ {
-			dependencySlice[i].srcSubpass = C.uint32_t(o.SubPassDependencies[i].SrcSubPassIndex)
-			dependencySlice[i].dstSubpass = C.uint32_t(o.SubPassDependencies[i].DstSubPassIndex)
-			dependencySlice[i].srcStageMask = C.VkPipelineStageFlags(o.SubPassDependencies[i].SrcStageMask)
-			dependencySlice[i].dstStageMask = C.VkPipelineStageFlags(o.SubPassDependencies[i].DstStageMask)
-			dependencySlice[i].srcAccessMask = C.VkAccessFlags(o.SubPassDependencies[i].SrcAccessMask)
-			dependencySlice[i].dstAccessMask = C.VkAccessFlags(o.SubPassDependencies[i].DstAccessMask)
-			dependencySlice[i].dependencyFlags = C.VkDependencyFlags(o.SubPassDependencies[i].Flags)
+			dependencySlice[i].srcSubpass = C.uint32_t(o.SubpassDependencies[i].SrcSubpass)
+			dependencySlice[i].dstSubpass = C.uint32_t(o.SubpassDependencies[i].DstSubpass)
+			dependencySlice[i].srcStageMask = C.VkPipelineStageFlags(o.SubpassDependencies[i].SrcStageMask)
+			dependencySlice[i].dstStageMask = C.VkPipelineStageFlags(o.SubpassDependencies[i].DstStageMask)
+			dependencySlice[i].srcAccessMask = C.VkAccessFlags(o.SubpassDependencies[i].SrcAccessMask)
+			dependencySlice[i].dstAccessMask = C.VkAccessFlags(o.SubpassDependencies[i].DstAccessMask)
+			dependencySlice[i].dependencyFlags = C.VkDependencyFlags(o.SubpassDependencies[i].DependencyFlags)
 		}
 	}
 
@@ -208,10 +208,10 @@ func createAttachmentReferences(allocator *cgoparam.Allocator, references []Atta
 	inputAttachmentsSlice := ([]C.VkAttachmentReference)(unsafe.Slice(inputAttachmentsPtr, count))
 
 	for i := 0; i < count; i++ {
-		if references[i].AttachmentIndex < 0 {
+		if references[i].Attachment < 0 {
 			inputAttachmentsSlice[i].attachment = C.VK_ATTACHMENT_UNUSED
 		} else {
-			inputAttachmentsSlice[i].attachment = C.uint32_t(references[i].AttachmentIndex)
+			inputAttachmentsSlice[i].attachment = C.uint32_t(references[i].Attachment)
 		}
 
 		inputAttachmentsSlice[i].layout = C.VkImageLayout(references[i].Layout)

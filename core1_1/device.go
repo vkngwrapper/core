@@ -39,11 +39,11 @@ func PromoteDevice(device core1_0.Device) Device {
 		}).(Device)
 }
 
-func (d *VulkanDevice) BindBufferMemory(o []BindBufferMemoryOptions) (common.VkResult, error) {
+func (d *VulkanDevice) BindBufferMemory2(o []BindBufferMemoryInfo) (common.VkResult, error) {
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
-	optionPtr, err := common.AllocOptionSlice[C.VkBindBufferMemoryInfo, BindBufferMemoryOptions](arena, o)
+	optionPtr, err := common.AllocOptionSlice[C.VkBindBufferMemoryInfo, BindBufferMemoryInfo](arena, o)
 	if err != nil {
 		return core1_0.VKErrorUnknown, err
 	}
@@ -54,11 +54,11 @@ func (d *VulkanDevice) BindBufferMemory(o []BindBufferMemoryOptions) (common.VkR
 	)
 }
 
-func (d *VulkanDevice) BindImageMemory(o []BindImageMemoryOptions) (common.VkResult, error) {
+func (d *VulkanDevice) BindImageMemory2(o []BindImageMemoryInfo) (common.VkResult, error) {
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
-	optionPtr, err := common.AllocOptionSlice[C.VkBindImageMemoryInfo, BindImageMemoryOptions](arena, o)
+	optionPtr, err := common.AllocOptionSlice[C.VkBindImageMemoryInfo, BindImageMemoryInfo](arena, o)
 	if err != nil {
 		return core1_0.VKErrorUnknown, err
 	}
@@ -70,7 +70,7 @@ func (d *VulkanDevice) BindImageMemory(o []BindImageMemoryOptions) (common.VkRes
 	)
 }
 
-func (d *VulkanDevice) BufferMemoryRequirements(o BufferMemoryRequirementsOptions, out *MemoryRequirementsOutData) error {
+func (d *VulkanDevice) BufferMemoryRequirements2(o BufferMemoryRequirementsInfo2, out *MemoryRequirements2) error {
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
@@ -92,7 +92,7 @@ func (d *VulkanDevice) BufferMemoryRequirements(o BufferMemoryRequirementsOption
 	return common.PopulateOutData(out, outDataPtr)
 }
 
-func (d *VulkanDevice) ImageMemoryRequirements(o ImageMemoryRequirementsOptions, out *MemoryRequirementsOutData) error {
+func (d *VulkanDevice) ImageMemoryRequirements2(o ImageMemoryRequirementsInfo2, out *MemoryRequirements2) error {
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
@@ -114,7 +114,7 @@ func (d *VulkanDevice) ImageMemoryRequirements(o ImageMemoryRequirementsOptions,
 	return common.PopulateOutData(out, outDataPtr)
 }
 
-func (d *VulkanDevice) SparseImageMemoryRequirements(o ImageSparseMemoryRequirementsOptions, outDataFactory func() *SparseImageMemoryRequirementsOutData) ([]*SparseImageMemoryRequirementsOutData, error) {
+func (d *VulkanDevice) ImageSparseMemoryRequirements2(o ImageSparseMemoryRequirementsInfo2, outDataFactory func() *SparseImageMemoryRequirements2) ([]*SparseImageMemoryRequirements2, error) {
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
@@ -136,16 +136,16 @@ func (d *VulkanDevice) SparseImageMemoryRequirements(o ImageSparseMemoryRequirem
 		return nil, nil
 	}
 
-	outDataSlice := make([]*SparseImageMemoryRequirementsOutData, count)
+	outDataSlice := make([]*SparseImageMemoryRequirements2, count)
 	for i := 0; i < count; i++ {
 		if outDataFactory != nil {
 			outDataSlice[i] = outDataFactory()
 		} else {
-			outDataSlice[i] = &SparseImageMemoryRequirementsOutData{}
+			outDataSlice[i] = &SparseImageMemoryRequirements2{}
 		}
 	}
 
-	outDataPtr, err := common.AllocOutDataHeaderSlice[C.VkSparseImageMemoryRequirements2, *SparseImageMemoryRequirementsOutData](arena, outDataSlice)
+	outDataPtr, err := common.AllocOutDataHeaderSlice[C.VkSparseImageMemoryRequirements2, *SparseImageMemoryRequirements2](arena, outDataSlice)
 	if err != nil {
 		return nil, err
 	}
@@ -158,7 +158,7 @@ func (d *VulkanDevice) SparseImageMemoryRequirements(o ImageSparseMemoryRequirem
 		(*driver.VkSparseImageMemoryRequirements2)(unsafe.Pointer(castOutDataPtr)),
 	)
 
-	err = common.PopulateOutDataSlice[C.VkSparseImageMemoryRequirements2, *SparseImageMemoryRequirementsOutData](outDataSlice, unsafe.Pointer(outDataPtr))
+	err = common.PopulateOutDataSlice[C.VkSparseImageMemoryRequirements2, *SparseImageMemoryRequirements2](outDataSlice, unsafe.Pointer(outDataPtr))
 	if err != nil {
 		return nil, err
 	}
@@ -166,7 +166,7 @@ func (d *VulkanDevice) SparseImageMemoryRequirements(o ImageSparseMemoryRequirem
 	return outDataSlice, nil
 }
 
-func (d *VulkanDevice) DescriptorSetLayoutSupport(o core1_0.DescriptorSetLayoutCreateOptions, outData *DescriptorSetLayoutSupportOutData) error {
+func (d *VulkanDevice) DescriptorSetLayoutSupport(o core1_0.DescriptorSetLayoutCreateInfo, outData *DescriptorSetLayoutSupport) error {
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
@@ -187,7 +187,7 @@ func (d *VulkanDevice) DescriptorSetLayoutSupport(o core1_0.DescriptorSetLayoutC
 	return common.PopulateOutData(outData, outDataPtr)
 }
 
-func (d *VulkanDevice) DeviceGroupPeerMemoryFeatures(heapIndex, localDeviceIndex, remoteDeviceIndex int) PeerMemoryFeatures {
+func (d *VulkanDevice) DeviceGroupPeerMemoryFeatures(heapIndex, localDeviceIndex, remoteDeviceIndex int) PeerMemoryFeatureFlags {
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
@@ -201,10 +201,10 @@ func (d *VulkanDevice) DeviceGroupPeerMemoryFeatures(heapIndex, localDeviceIndex
 		featuresPtr,
 	)
 
-	return PeerMemoryFeatures(*featuresPtr)
+	return PeerMemoryFeatureFlags(*featuresPtr)
 }
 
-func (d *VulkanDevice) CreateDescriptorUpdateTemplate(o DescriptorUpdateTemplateCreateOptions, allocator *driver.AllocationCallbacks) (DescriptorUpdateTemplate, common.VkResult, error) {
+func (d *VulkanDevice) CreateDescriptorUpdateTemplate(o DescriptorUpdateTemplateCreateInfo, allocator *driver.AllocationCallbacks) (DescriptorUpdateTemplate, common.VkResult, error) {
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
@@ -226,7 +226,7 @@ func (d *VulkanDevice) CreateDescriptorUpdateTemplate(o DescriptorUpdateTemplate
 	return CreateDescriptorUpdateTemplate(d.DeviceDriver, d.DeviceHandle, templateHandle, d.MaximumAPIVersion), res, nil
 }
 
-func (d *VulkanDevice) CreateSamplerYcbcrConversion(o SamplerYcbcrConversionCreateOptions, allocator *driver.AllocationCallbacks) (SamplerYcbcrConversion, common.VkResult, error) {
+func (d *VulkanDevice) CreateSamplerYcbcrConversion(o SamplerYcbcrConversionCreateInfo, allocator *driver.AllocationCallbacks) (SamplerYcbcrConversion, common.VkResult, error) {
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
@@ -252,7 +252,7 @@ func (d *VulkanDevice) CreateSamplerYcbcrConversion(o SamplerYcbcrConversionCrea
 //go:linkname createQueueObject github.com/CannibalVox/VKng/core/core1_0.createQueueObject
 func createQueueObject(coreDriver driver.Driver, device driver.VkDevice, handle driver.VkQueue, version common.APIVersion) *core1_0.VulkanQueue
 
-func (d *VulkanDevice) GetQueue2(o DeviceQueueOptions) (core1_0.Queue, error) {
+func (d *VulkanDevice) GetQueue2(o DeviceQueueInfo2) (core1_0.Queue, error) {
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 

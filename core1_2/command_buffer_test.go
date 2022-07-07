@@ -60,13 +60,13 @@ func TestCommandBuffer_CmdBeginRenderPass2(t *testing.T) {
 	})
 
 	err := commandBuffer.CmdBeginRenderPass2(
-		core1_0.RenderPassBeginOptions{
+		core1_0.RenderPassBeginInfo{
 			RenderPass:  renderPass,
 			Framebuffer: framebuffer,
 			RenderArea:  core1_0.Rect2D{Offset: core1_0.Offset2D{1, 3}, Extent: core1_0.Extent2D{5, 7}},
 			ClearValues: []core1_0.ClearValue{core1_0.ClearValueFloat{1, 3, 5, 7}},
 		},
-		core1_2.SubpassBeginOptions{
+		core1_2.SubpassBeginInfo{
 			Contents: core1_0.SubpassContentsSecondaryCommandBuffers,
 		})
 	require.NoError(t, err)
@@ -93,7 +93,7 @@ func TestCommandBuffer_CmdEndRenderPass2(t *testing.T) {
 		require.True(t, val.FieldByName("pNext").IsNil())
 	})
 
-	err := commandBuffer.CmdEndRenderPass2(core1_2.SubpassEndOptions{})
+	err := commandBuffer.CmdEndRenderPass2(core1_2.SubpassEndInfo{})
 	require.NoError(t, err)
 }
 
@@ -125,10 +125,10 @@ func TestVulkanExtension_CmdNextSubpass2(t *testing.T) {
 	})
 
 	err := commandBuffer.CmdNextSubpass2(
-		core1_2.SubpassBeginOptions{
+		core1_2.SubpassBeginInfo{
 			Contents: core1_0.SubpassContentsSecondaryCommandBuffers,
 		},
-		core1_2.SubpassEndOptions{})
+		core1_2.SubpassEndInfo{})
 	require.NoError(t, err)
 }
 

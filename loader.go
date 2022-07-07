@@ -161,7 +161,7 @@ func (l *VulkanLoader) AvailableLayers() (map[string]*core1_0.LayerProperties, c
 //go:linkname createInstanceObject github.com/CannibalVox/VKng/core/core1_0.createInstanceObject
 func createInstanceObject(instanceDriver driver.Driver, handle driver.VkInstance, version common.APIVersion) *core1_0.VulkanInstance
 
-func (l *VulkanLoader) CreateInstance(allocationCallbacks *driver.AllocationCallbacks, options core1_0.InstanceCreateOptions) (core1_0.Instance, common.VkResult, error) {
+func (l *VulkanLoader) CreateInstance(allocationCallbacks *driver.AllocationCallbacks, options core1_0.InstanceCreateInfo) (core1_0.Instance, common.VkResult, error) {
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
@@ -182,10 +182,10 @@ func (l *VulkanLoader) CreateInstance(allocationCallbacks *driver.AllocationCall
 		return nil, core1_0.VKErrorUnknown, err
 	}
 
-	version := l.APIVersion().Min(options.VulkanVersion)
+	version := l.APIVersion().Min(options.APIVersion)
 	instance := createInstanceObject(instanceDriver, instanceHandle, version)
 
-	for _, extension := range options.ExtensionNames {
+	for _, extension := range options.EnabledExtensionNames {
 		instance.ActiveInstanceExtensions[extension] = struct{}{}
 	}
 

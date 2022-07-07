@@ -46,11 +46,11 @@ func TestExportFenceOptions(t *testing.T) {
 
 	fence, _, err := device.CreateFence(
 		nil,
-		core1_0.FenceCreateOptions{
+		core1_0.FenceCreateInfo{
 			Flags: core1_0.FenceCreateSignaled,
 
 			NextOptions: common.NextOptions{
-				core1_1.ExportFenceOptions{
+				core1_1.ExportFenceCreateInfo{
 					HandleTypes: core1_1.ExternalFenceHandleTypeOpaqueWin32,
 				},
 			},

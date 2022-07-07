@@ -70,7 +70,7 @@ func PromoteCommandBufferSlice(commandBuffers []core1_0.CommandBuffer) []Command
 	return outBuffers
 }
 
-func (c *VulkanCommandBuffer) CmdBeginRenderPass2(renderPassBegin core1_0.RenderPassBeginOptions, subpassBegin SubpassBeginOptions) error {
+func (c *VulkanCommandBuffer) CmdBeginRenderPass2(renderPassBegin core1_0.RenderPassBeginInfo, subpassBegin SubpassBeginInfo) error {
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
@@ -94,7 +94,7 @@ func (c *VulkanCommandBuffer) CmdBeginRenderPass2(renderPassBegin core1_0.Render
 	return nil
 }
 
-func (c *VulkanCommandBuffer) CmdEndRenderPass2(subpassEnd SubpassEndOptions) error {
+func (c *VulkanCommandBuffer) CmdEndRenderPass2(subpassEnd SubpassEndInfo) error {
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
@@ -112,7 +112,7 @@ func (c *VulkanCommandBuffer) CmdEndRenderPass2(subpassEnd SubpassEndOptions) er
 	return nil
 }
 
-func (c *VulkanCommandBuffer) CmdNextSubpass2(subpassBegin SubpassBeginOptions, subpassEnd SubpassEndOptions) error {
+func (c *VulkanCommandBuffer) CmdNextSubpass2(subpassBegin SubpassBeginInfo, subpassEnd SubpassEndInfo) error {
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 

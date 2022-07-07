@@ -43,7 +43,7 @@ func TestVulkanLoader1_0_CreatePipelineCache(t *testing.T) {
 			return core1_0.VKSuccess, nil
 		})
 
-	pipelineCache, _, err := device.CreatePipelineCache(nil, core1_0.PipelineCacheCreateOptions{
+	pipelineCache, _, err := device.CreatePipelineCache(nil, core1_0.PipelineCacheCreateInfo{
 		Flags:       0,
 		InitialData: []byte{1, 3, 5, 7},
 	})

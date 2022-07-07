@@ -15,7 +15,7 @@ import (
 const (
 	MemoryHeapMultiInstance core1_0.MemoryHeapFlags = C.VK_MEMORY_HEAP_MULTI_INSTANCE_BIT
 
-	MemoryPropertyProtected core1_0.MemoryProperties = C.VK_MEMORY_PROPERTY_PROTECTED_BIT
+	MemoryPropertyProtected core1_0.MemoryPropertyFlags = C.VK_MEMORY_PROPERTY_PROTECTED_BIT
 )
 
 func init() {
@@ -26,13 +26,13 @@ func init() {
 
 ////
 
-type BufferMemoryRequirementsOptions struct {
+type BufferMemoryRequirementsInfo2 struct {
 	Buffer core1_0.Buffer
 
 	common.NextOptions
 }
 
-func (o BufferMemoryRequirementsOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o BufferMemoryRequirementsInfo2) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == nil {
 		preallocatedPointer = allocator.Malloc(int(unsafe.Sizeof(C.VkBufferMemoryRequirementsInfo2{})))
 	}
@@ -47,13 +47,13 @@ func (o BufferMemoryRequirementsOptions) PopulateCPointer(allocator *cgoparam.Al
 
 ////
 
-type ImageMemoryRequirementsOptions struct {
+type ImageMemoryRequirementsInfo2 struct {
 	Image core1_0.Image
 
 	common.NextOptions
 }
 
-func (o ImageMemoryRequirementsOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o ImageMemoryRequirementsInfo2) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == nil {
 		preallocatedPointer = allocator.Malloc(int(unsafe.Sizeof(C.VkImageMemoryRequirementsInfo2{})))
 	}
@@ -68,12 +68,12 @@ func (o ImageMemoryRequirementsOptions) PopulateCPointer(allocator *cgoparam.All
 
 ////
 
-type MemoryRequirementsOutData struct {
+type MemoryRequirements2 struct {
 	MemoryRequirements core1_0.MemoryRequirements
 	common.NextOutData
 }
 
-func (o *MemoryRequirementsOutData) PopulateHeader(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o *MemoryRequirements2) PopulateHeader(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == nil {
 		preallocatedPointer = allocator.Malloc(int(unsafe.Sizeof(C.VkMemoryRequirements2{})))
 	}
@@ -85,24 +85,24 @@ func (o *MemoryRequirementsOutData) PopulateHeader(allocator *cgoparam.Allocator
 	return preallocatedPointer, nil
 }
 
-func (o *MemoryRequirementsOutData) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
+func (o *MemoryRequirements2) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
 	outData := (*C.VkMemoryRequirements2)(cDataPointer)
 	o.MemoryRequirements.Size = int(outData.memoryRequirements.size)
 	o.MemoryRequirements.Alignment = int(outData.memoryRequirements.alignment)
-	o.MemoryRequirements.MemoryType = uint32(outData.memoryRequirements.memoryTypeBits)
+	o.MemoryRequirements.MemoryTypeBits = uint32(outData.memoryRequirements.memoryTypeBits)
 
 	return outData.pNext, nil
 }
 
 ////
 
-type ImageSparseMemoryRequirementsOptions struct {
+type ImageSparseMemoryRequirementsInfo2 struct {
 	Image core1_0.Image
 
 	common.NextOptions
 }
 
-func (o ImageSparseMemoryRequirementsOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o ImageSparseMemoryRequirementsInfo2) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == nil {
 		preallocatedPointer = allocator.Malloc(int(unsafe.Sizeof(C.VkImageSparseMemoryRequirementsInfo2{})))
 	}
@@ -117,13 +117,13 @@ func (o ImageSparseMemoryRequirementsOptions) PopulateCPointer(allocator *cgopar
 
 ////
 
-type SparseImageMemoryRequirementsOutData struct {
+type SparseImageMemoryRequirements2 struct {
 	MemoryRequirements core1_0.SparseImageMemoryRequirements
 
 	common.NextOutData
 }
 
-func (o *SparseImageMemoryRequirementsOutData) PopulateHeader(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o *SparseImageMemoryRequirements2) PopulateHeader(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == nil {
 		preallocatedPointer = allocator.Malloc(int(unsafe.Sizeof(C.VkSparseImageMemoryRequirements2{})))
 	}
@@ -135,7 +135,7 @@ func (o *SparseImageMemoryRequirementsOutData) PopulateHeader(allocator *cgopara
 	return preallocatedPointer, nil
 }
 
-func (o *SparseImageMemoryRequirementsOutData) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
+func (o *SparseImageMemoryRequirements2) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
 	outData := (*C.VkSparseImageMemoryRequirements2)(cDataPointer)
 	o.MemoryRequirements.FormatProperties.Flags = core1_0.SparseImageFormatFlags(outData.memoryRequirements.formatProperties.flags)
 	o.MemoryRequirements.FormatProperties.ImageGranularity = core1_0.Extent3D{

@@ -55,9 +55,9 @@ func (b *VulkanBuffer) MemoryRequirements() *MemoryRequirements {
 	requirements := (*C.VkMemoryRequirements)(requirementsUnsafe)
 
 	return &MemoryRequirements{
-		Size:       int(requirements.size),
-		Alignment:  int(requirements.alignment),
-		MemoryType: uint32(requirements.memoryTypeBits),
+		Size:           int(requirements.size),
+		Alignment:      int(requirements.alignment),
+		MemoryTypeBits: uint32(requirements.memoryTypeBits),
 	}
 }
 

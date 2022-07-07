@@ -12,7 +12,7 @@ import (
 	"unsafe"
 )
 
-type BindBufferMemoryOptions struct {
+type BindBufferMemoryInfo struct {
 	Buffer       core1_0.Buffer
 	Memory       core1_0.DeviceMemory
 	MemoryOffset int
@@ -20,7 +20,7 @@ type BindBufferMemoryOptions struct {
 	common.NextOptions
 }
 
-func (o BindBufferMemoryOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o BindBufferMemoryInfo) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == nil {
 		preallocatedPointer = allocator.Malloc(int(unsafe.Sizeof(C.VkBindBufferMemoryInfo{})))
 	}
@@ -37,7 +37,7 @@ func (o BindBufferMemoryOptions) PopulateCPointer(allocator *cgoparam.Allocator,
 
 ////
 
-type BindImageMemoryOptions struct {
+type BindImageMemoryInfo struct {
 	Image        core1_0.Image
 	Memory       core1_0.DeviceMemory
 	MemoryOffset uint64
@@ -45,7 +45,7 @@ type BindImageMemoryOptions struct {
 	common.NextOptions
 }
 
-func (o BindImageMemoryOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o BindImageMemoryInfo) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == nil {
 		preallocatedPointer = allocator.Malloc(int(unsafe.Sizeof(C.VkBindImageMemoryInfo{})))
 	}
@@ -62,13 +62,13 @@ func (o BindImageMemoryOptions) PopulateCPointer(allocator *cgoparam.Allocator, 
 
 ////
 
-type BindBufferMemoryDeviceGroupOptions struct {
+type BindBufferMemoryDeviceGroupInfo struct {
 	DeviceIndices []int
 
 	common.NextOptions
 }
 
-func (o BindBufferMemoryDeviceGroupOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o BindBufferMemoryDeviceGroupInfo) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == nil {
 		preallocatedPointer = allocator.Malloc(int(unsafe.Sizeof(C.VkBindBufferMemoryDeviceGroupInfo{})))
 	}
@@ -97,14 +97,14 @@ func (o BindBufferMemoryDeviceGroupOptions) PopulateCPointer(allocator *cgoparam
 
 ////
 
-type BindImageMemoryDeviceGroupOptions struct {
+type BindImageMemoryDeviceGroupInfo struct {
 	DeviceIndices            []int
 	SplitInstanceBindRegions []core1_0.Rect2D
 
 	common.NextOptions
 }
 
-func (o BindImageMemoryDeviceGroupOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o BindImageMemoryDeviceGroupInfo) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == nil {
 		preallocatedPointer = allocator.Malloc(int(unsafe.Sizeof(C.VkBindImageMemoryDeviceGroupInfo{})))
 	}
@@ -149,13 +149,13 @@ func (o BindImageMemoryDeviceGroupOptions) PopulateCPointer(allocator *cgoparam.
 
 ////
 
-type BindImagePlaneMemoryOptions struct {
+type BindImagePlaneMemoryInfo struct {
 	PlaneAspect core1_0.ImageAspectFlags
 
 	common.NextOptions
 }
 
-func (o BindImagePlaneMemoryOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o BindImagePlaneMemoryInfo) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == nil {
 		preallocatedPointer = allocator.Malloc(int(unsafe.Sizeof(C.VkBindImagePlaneMemoryInfo{})))
 	}
@@ -170,14 +170,14 @@ func (o BindImagePlaneMemoryOptions) PopulateCPointer(allocator *cgoparam.Alloca
 
 ////
 
-type DeviceGroupBindSparseOptions struct {
+type DeviceGroupBindSparseInfo struct {
 	ResourceDeviceIndex int
 	MemoryDeviceIndex   int
 
 	common.NextOptions
 }
 
-func (o DeviceGroupBindSparseOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o DeviceGroupBindSparseInfo) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == nil {
 		preallocatedPointer = allocator.Malloc(int(unsafe.Sizeof(C.VkDeviceGroupBindSparseInfo{})))
 	}

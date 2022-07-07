@@ -42,7 +42,7 @@ func PromoteInstance(instance core1_0.Instance) Instance {
 		}).(Instance)
 }
 
-func (i *VulkanInstance) attemptEnumeratePhysicalDeviceGroups(outDataFactory func() *DeviceGroupOutData) ([]*DeviceGroupOutData, common.VkResult, error) {
+func (i *VulkanInstance) attemptEnumeratePhysicalDeviceGroups(outDataFactory func() *PhysicalDeviceGroupProperties) ([]*PhysicalDeviceGroupProperties, common.VkResult, error) {
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
@@ -62,16 +62,16 @@ func (i *VulkanInstance) attemptEnumeratePhysicalDeviceGroups(outDataFactory fun
 		return nil, core1_0.VKSuccess, nil
 	}
 
-	outDataSlice := make([]*DeviceGroupOutData, count)
+	outDataSlice := make([]*PhysicalDeviceGroupProperties, count)
 	for i := 0; i < count; i++ {
 		if outDataFactory != nil {
 			outDataSlice[i] = outDataFactory()
 		} else {
-			outDataSlice[i] = &DeviceGroupOutData{}
+			outDataSlice[i] = &PhysicalDeviceGroupProperties{}
 		}
 	}
 
-	outData, err := common.AllocOutDataHeaderSlice[C.VkPhysicalDeviceGroupProperties, *DeviceGroupOutData](arena, outDataSlice)
+	outData, err := common.AllocOutDataHeaderSlice[C.VkPhysicalDeviceGroupProperties, *PhysicalDeviceGroupProperties](arena, outDataSlice)
 	if err != nil {
 		return nil, core1_0.VKErrorUnknown, err
 	}
@@ -85,7 +85,7 @@ func (i *VulkanInstance) attemptEnumeratePhysicalDeviceGroups(outDataFactory fun
 		return nil, res, err
 	}
 
-	err = common.PopulateOutDataSlice[C.VkPhysicalDeviceGroupProperties, *DeviceGroupOutData](outDataSlice, unsafe.Pointer(outData),
+	err = common.PopulateOutDataSlice[C.VkPhysicalDeviceGroupProperties, *PhysicalDeviceGroupProperties](outDataSlice, unsafe.Pointer(outData),
 		i.InstanceDriver, i.InstanceHandle, i.MaximumVersion)
 	if err != nil {
 		return nil, core1_0.VKErrorUnknown, err
@@ -94,8 +94,8 @@ func (i *VulkanInstance) attemptEnumeratePhysicalDeviceGroups(outDataFactory fun
 	return outDataSlice, res, nil
 }
 
-func (i *VulkanInstance) PhysicalDeviceGroups(outDataFactory func() *DeviceGroupOutData) ([]*DeviceGroupOutData, common.VkResult, error) {
-	var outData []*DeviceGroupOutData
+func (i *VulkanInstance) EnumeratePhysicalDeviceGroups(outDataFactory func() *PhysicalDeviceGroupProperties) ([]*PhysicalDeviceGroupProperties, common.VkResult, error) {
+	var outData []*PhysicalDeviceGroupProperties
 	var result common.VkResult
 	var err error
 

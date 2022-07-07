@@ -13,8 +13,8 @@ import (
 )
 
 type MemoryType struct {
-	Properties MemoryProperties
-	HeapIndex  int
+	PropertyFlags MemoryPropertyFlags
+	HeapIndex     int
 }
 
 type MemoryHeap struct {
@@ -50,7 +50,7 @@ func (m *VulkanDeviceMemory) APIVersion() common.APIVersion {
 	return m.maximumAPIVersion
 }
 
-func (m *VulkanDeviceMemory) MapMemory(offset int, size int, flags MemoryMapFlags) (unsafe.Pointer, common.VkResult, error) {
+func (m *VulkanDeviceMemory) Map(offset int, size int, flags MemoryMapFlags) (unsafe.Pointer, common.VkResult, error) {
 	var data unsafe.Pointer
 	res, err := m.deviceDriver.VkMapMemory(m.device, m.deviceMemoryHandle, driver.VkDeviceSize(offset), driver.VkDeviceSize(size), driver.VkMemoryMapFlags(flags), &data)
 	if err != nil {
@@ -60,7 +60,7 @@ func (m *VulkanDeviceMemory) MapMemory(offset int, size int, flags MemoryMapFlag
 	return data, res, nil
 }
 
-func (m *VulkanDeviceMemory) UnmapMemory() {
+func (m *VulkanDeviceMemory) Unmap() {
 	m.deviceDriver.VkUnmapMemory(m.device, m.deviceMemoryHandle)
 }
 

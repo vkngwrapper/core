@@ -28,14 +28,14 @@ func (e PointClippingBehavior) String() string {
 
 ////
 
-type SubgroupFeatures int32
+type SubgroupFeatureFlags int32
 
-var subgroupFeaturesMapping = common.NewFlagStringMapping[SubgroupFeatures]()
+var subgroupFeaturesMapping = common.NewFlagStringMapping[SubgroupFeatureFlags]()
 
-func (f SubgroupFeatures) Register(str string) {
+func (f SubgroupFeatureFlags) Register(str string) {
 	subgroupFeaturesMapping.Register(f, str)
 }
-func (f SubgroupFeatures) String() string {
+func (f SubgroupFeatureFlags) String() string {
 	return subgroupFeaturesMapping.FlagsToString(f)
 }
 
@@ -48,14 +48,14 @@ const (
 	PointClippingAllClipPlanes      PointClippingBehavior = C.VK_POINT_CLIPPING_BEHAVIOR_ALL_CLIP_PLANES
 	PointClippingUserClipPlanesOnly PointClippingBehavior = C.VK_POINT_CLIPPING_BEHAVIOR_USER_CLIP_PLANES_ONLY
 
-	SubgroupFeatureBasic           SubgroupFeatures = C.VK_SUBGROUP_FEATURE_BASIC_BIT
-	SubgroupFeatureVote            SubgroupFeatures = C.VK_SUBGROUP_FEATURE_VOTE_BIT
-	SubgroupFeatureArithmetic      SubgroupFeatures = C.VK_SUBGROUP_FEATURE_ARITHMETIC_BIT
-	SubgroupFeatureBallot          SubgroupFeatures = C.VK_SUBGROUP_FEATURE_BALLOT_BIT
-	SubgroupFeatureShuffle         SubgroupFeatures = C.VK_SUBGROUP_FEATURE_SHUFFLE_BIT
-	SubgroupFeatureShuffleRelative SubgroupFeatures = C.VK_SUBGROUP_FEATURE_SHUFFLE_RELATIVE_BIT
-	SubgroupFeatureClustered       SubgroupFeatures = C.VK_SUBGROUP_FEATURE_CLUSTERED_BIT
-	SubgroupFeatureQuad            SubgroupFeatures = C.VK_SUBGROUP_FEATURE_QUAD_BIT
+	SubgroupFeatureBasic           SubgroupFeatureFlags = C.VK_SUBGROUP_FEATURE_BASIC_BIT
+	SubgroupFeatureVote            SubgroupFeatureFlags = C.VK_SUBGROUP_FEATURE_VOTE_BIT
+	SubgroupFeatureArithmetic      SubgroupFeatureFlags = C.VK_SUBGROUP_FEATURE_ARITHMETIC_BIT
+	SubgroupFeatureBallot          SubgroupFeatureFlags = C.VK_SUBGROUP_FEATURE_BALLOT_BIT
+	SubgroupFeatureShuffle         SubgroupFeatureFlags = C.VK_SUBGROUP_FEATURE_SHUFFLE_BIT
+	SubgroupFeatureShuffleRelative SubgroupFeatureFlags = C.VK_SUBGROUP_FEATURE_SHUFFLE_RELATIVE_BIT
+	SubgroupFeatureClustered       SubgroupFeatureFlags = C.VK_SUBGROUP_FEATURE_CLUSTERED_BIT
+	SubgroupFeatureQuad            SubgroupFeatureFlags = C.VK_SUBGROUP_FEATURE_QUAD_BIT
 )
 
 func init() {
@@ -74,12 +74,12 @@ func init() {
 
 ////
 
-type FormatPropertiesOutData struct {
+type FormatProperties2 struct {
 	FormatProperties core1_0.FormatProperties
 	common.NextOutData
 }
 
-func (o *FormatPropertiesOutData) PopulateHeader(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o *FormatProperties2) PopulateHeader(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == nil {
 		preallocatedPointer = allocator.Malloc(int(unsafe.Sizeof(C.VkFormatProperties2{})))
 	}
@@ -91,28 +91,28 @@ func (o *FormatPropertiesOutData) PopulateHeader(allocator *cgoparam.Allocator, 
 	return preallocatedPointer, nil
 }
 
-func (o *FormatPropertiesOutData) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
+func (o *FormatProperties2) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
 	data := (*C.VkFormatProperties2)(cDataPointer)
-	o.FormatProperties.LinearTilingFeatures = core1_0.FormatFeatures(data.formatProperties.linearTilingFeatures)
-	o.FormatProperties.OptimalTilingFeatures = core1_0.FormatFeatures(data.formatProperties.optimalTilingFeatures)
-	o.FormatProperties.BufferFeatures = core1_0.FormatFeatures(data.formatProperties.bufferFeatures)
+	o.FormatProperties.LinearTilingFeatures = core1_0.FormatFeatureFlags(data.formatProperties.linearTilingFeatures)
+	o.FormatProperties.OptimalTilingFeatures = core1_0.FormatFeatureFlags(data.formatProperties.optimalTilingFeatures)
+	o.FormatProperties.BufferFeatures = core1_0.FormatFeatureFlags(data.formatProperties.bufferFeatures)
 
 	return data.pNext, nil
 }
 
 ////
 
-type ImageFormatOptions struct {
-	Format core1_0.DataFormat
+type PhysicalDeviceImageFormatInfo2 struct {
+	Format core1_0.Format
 	Type   core1_0.ImageType
 	Tiling core1_0.ImageTiling
-	Usage  core1_0.ImageUsages
+	Usage  core1_0.ImageUsageFlags
 	Flags  core1_0.ImageCreateFlags
 
 	common.NextOptions
 }
 
-func (o ImageFormatOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o PhysicalDeviceImageFormatInfo2) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == nil {
 		preallocatedPointer = allocator.Malloc(int(unsafe.Sizeof(C.VkPhysicalDeviceImageFormatInfo2{})))
 	}
@@ -130,13 +130,13 @@ func (o ImageFormatOptions) PopulateCPointer(allocator *cgoparam.Allocator, prea
 
 ////
 
-type ImageFormatPropertiesOutData struct {
+type ImageFormatProperties2 struct {
 	ImageFormatProperties core1_0.ImageFormatProperties
 
 	common.NextOutData
 }
 
-func (o *ImageFormatPropertiesOutData) PopulateHeader(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o *ImageFormatProperties2) PopulateHeader(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == nil {
 		preallocatedPointer = allocator.Malloc(int(unsafe.Sizeof(C.VkImageFormatProperties2{})))
 	}
@@ -148,7 +148,7 @@ func (o *ImageFormatPropertiesOutData) PopulateHeader(allocator *cgoparam.Alloca
 	return preallocatedPointer, nil
 }
 
-func (o *ImageFormatPropertiesOutData) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
+func (o *ImageFormatProperties2) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
 	data := (*C.VkImageFormatProperties2)(cDataPointer)
 	o.ImageFormatProperties.MaxExtent = core1_0.Extent3D{
 		Width:  int(data.imageFormatProperties.maxExtent.width),
@@ -157,7 +157,7 @@ func (o *ImageFormatPropertiesOutData) PopulateOutData(cDataPointer unsafe.Point
 	}
 	o.ImageFormatProperties.MaxMipLevels = int(data.imageFormatProperties.maxMipLevels)
 	o.ImageFormatProperties.MaxArrayLayers = int(data.imageFormatProperties.maxArrayLayers)
-	o.ImageFormatProperties.SampleCounts = core1_0.SampleCounts(data.imageFormatProperties.sampleCounts)
+	o.ImageFormatProperties.SampleCounts = core1_0.SampleCountFlags(data.imageFormatProperties.sampleCounts)
 	o.ImageFormatProperties.MaxResourceSize = int(data.imageFormatProperties.maxResourceSize)
 
 	return data.pNext, nil
@@ -165,13 +165,13 @@ func (o *ImageFormatPropertiesOutData) PopulateOutData(cDataPointer unsafe.Point
 
 ////
 
-type MemoryPropertiesOutData struct {
+type PhysicalDeviceMemoryProperties2 struct {
 	MemoryProperties core1_0.PhysicalDeviceMemoryProperties
 
 	common.NextOutData
 }
 
-func (o *MemoryPropertiesOutData) PopulateHeader(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o *PhysicalDeviceMemoryProperties2) PopulateHeader(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == nil {
 		preallocatedPointer = allocator.Malloc(int(unsafe.Sizeof(C.VkPhysicalDeviceMemoryProperties2{})))
 	}
@@ -182,14 +182,14 @@ func (o *MemoryPropertiesOutData) PopulateHeader(allocator *cgoparam.Allocator, 
 	return preallocatedPointer, nil
 }
 
-func (o *MemoryPropertiesOutData) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
+func (o *PhysicalDeviceMemoryProperties2) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
 	data := (*C.VkPhysicalDeviceMemoryProperties2)(cDataPointer)
 
 	memoryTypeCount := int(data.memoryProperties.memoryTypeCount)
 	o.MemoryProperties.MemoryTypes = make([]core1_0.MemoryType, memoryTypeCount)
 
 	for i := 0; i < memoryTypeCount; i++ {
-		o.MemoryProperties.MemoryTypes[i].Properties = core1_0.MemoryProperties(data.memoryProperties.memoryTypes[i].propertyFlags)
+		o.MemoryProperties.MemoryTypes[i].PropertyFlags = core1_0.MemoryPropertyFlags(data.memoryProperties.memoryTypes[i].propertyFlags)
 		o.MemoryProperties.MemoryTypes[i].HeapIndex = int(data.memoryProperties.memoryTypes[i].heapIndex)
 	}
 
@@ -206,13 +206,13 @@ func (o *MemoryPropertiesOutData) PopulateOutData(cDataPointer unsafe.Pointer, h
 
 ////
 
-type DevicePropertiesOutData struct {
+type PhysicalDeviceProperties2 struct {
 	Properties core1_0.PhysicalDeviceProperties
 
 	common.NextOutData
 }
 
-func (o *DevicePropertiesOutData) PopulateHeader(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o *PhysicalDeviceProperties2) PopulateHeader(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == nil {
 		preallocatedPointer = allocator.Malloc(int(unsafe.Sizeof(C.VkPhysicalDeviceProperties2{})))
 	}
@@ -224,7 +224,7 @@ func (o *DevicePropertiesOutData) PopulateHeader(allocator *cgoparam.Allocator, 
 	return preallocatedPointer, nil
 }
 
-func (o *DevicePropertiesOutData) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
+func (o *PhysicalDeviceProperties2) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
 	data := (*C.VkPhysicalDeviceProperties2)(cDataPointer)
 
 	err = (&o.Properties).PopulateFromCPointer(unsafe.Pointer(&data.properties))
@@ -233,13 +233,13 @@ func (o *DevicePropertiesOutData) PopulateOutData(cDataPointer unsafe.Pointer, h
 
 ////
 
-type QueueFamilyOutData struct {
-	QueueFamily core1_0.QueueFamily
+type QueueFamilyProperties2 struct {
+	QueueFamilyProperties core1_0.QueueFamily
 
 	common.NextOutData
 }
 
-func (o *QueueFamilyOutData) PopulateHeader(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o *QueueFamilyProperties2) PopulateHeader(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == nil {
 		preallocatedPointer = allocator.Malloc(int(unsafe.Sizeof(C.VkQueueFamilyProperties2{})))
 	}
@@ -251,13 +251,13 @@ func (o *QueueFamilyOutData) PopulateHeader(allocator *cgoparam.Allocator, preal
 	return preallocatedPointer, nil
 }
 
-func (o *QueueFamilyOutData) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
+func (o *QueueFamilyProperties2) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
 	data := (*C.VkQueueFamilyProperties2)(cDataPointer)
 
-	o.QueueFamily.Flags = core1_0.QueueFlags(data.queueFamilyProperties.queueFlags)
-	o.QueueFamily.QueueCount = int(data.queueFamilyProperties.queueCount)
-	o.QueueFamily.TimestampValidBits = uint32(data.queueFamilyProperties.timestampValidBits)
-	o.QueueFamily.MinImageTransferGranularity = core1_0.Extent3D{
+	o.QueueFamilyProperties.QueueFlags = core1_0.QueueFlags(data.queueFamilyProperties.queueFlags)
+	o.QueueFamilyProperties.QueueCount = int(data.queueFamilyProperties.queueCount)
+	o.QueueFamilyProperties.TimestampValidBits = uint32(data.queueFamilyProperties.timestampValidBits)
+	o.QueueFamilyProperties.MinImageTransferGranularity = core1_0.Extent3D{
 		Width:  int(data.queueFamilyProperties.minImageTransferGranularity.width),
 		Height: int(data.queueFamilyProperties.minImageTransferGranularity.height),
 		Depth:  int(data.queueFamilyProperties.minImageTransferGranularity.depth),
@@ -268,17 +268,17 @@ func (o *QueueFamilyOutData) PopulateOutData(cDataPointer unsafe.Pointer, helper
 
 ////
 
-type SparseImageFormatOptions struct {
-	Format  core1_0.DataFormat
+type PhysicalDeviceSparseImageFormatInfo2 struct {
+	Format  core1_0.Format
 	Type    core1_0.ImageType
-	Samples core1_0.SampleCounts
-	Usage   core1_0.ImageUsages
+	Samples core1_0.SampleCountFlags
+	Usage   core1_0.ImageUsageFlags
 	Tiling  core1_0.ImageTiling
 
 	common.NextOptions
 }
 
-func (o SparseImageFormatOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o PhysicalDeviceSparseImageFormatInfo2) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == nil {
 		preallocatedPointer = allocator.Malloc(int(unsafe.Sizeof(C.VkPhysicalDeviceSparseImageFormatInfo2{})))
 	}
@@ -297,12 +297,12 @@ func (o SparseImageFormatOptions) PopulateCPointer(allocator *cgoparam.Allocator
 
 ////
 
-type SparseImageFormatPropertiesOutData struct {
-	SparseImageFormatProperties core1_0.SparseImageFormatProperties
+type SparseImageFormatProperties2 struct {
+	Properties core1_0.SparseImageFormatProperties
 	common.NextOutData
 }
 
-func (o *SparseImageFormatPropertiesOutData) PopulateHeader(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o *SparseImageFormatProperties2) PopulateHeader(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == nil {
 		preallocatedPointer = allocator.Malloc(int(unsafe.Sizeof(C.VkSparseImageFormatProperties2{})))
 	}
@@ -314,12 +314,12 @@ func (o *SparseImageFormatPropertiesOutData) PopulateHeader(allocator *cgoparam.
 	return preallocatedPointer, nil
 }
 
-func (o *SparseImageFormatPropertiesOutData) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
+func (o *SparseImageFormatProperties2) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
 	data := (*C.VkSparseImageFormatProperties2)(cDataPointer)
 
-	o.SparseImageFormatProperties.AspectMask = core1_0.ImageAspectFlags(data.properties.aspectMask)
-	o.SparseImageFormatProperties.Flags = core1_0.SparseImageFormatFlags(data.properties.flags)
-	o.SparseImageFormatProperties.ImageGranularity = core1_0.Extent3D{
+	o.Properties.AspectMask = core1_0.ImageAspectFlags(data.properties.aspectMask)
+	o.Properties.Flags = core1_0.SparseImageFormatFlags(data.properties.flags)
+	o.Properties.ImageGranularity = core1_0.Extent3D{
 		Width:  int(data.properties.imageGranularity.width),
 		Height: int(data.properties.imageGranularity.height),
 		Depth:  int(data.properties.imageGranularity.depth),
@@ -330,7 +330,7 @@ func (o *SparseImageFormatPropertiesOutData) PopulateOutData(cDataPointer unsafe
 
 ////
 
-type PhysicalDeviceIDOutData struct {
+type PhysicalDeviceIDProperties struct {
 	DeviceUUID      uuid.UUID
 	DriverUUID      uuid.UUID
 	DeviceLUID      uint64
@@ -340,7 +340,7 @@ type PhysicalDeviceIDOutData struct {
 	common.NextOutData
 }
 
-func (o *PhysicalDeviceIDOutData) PopulateHeader(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o *PhysicalDeviceIDProperties) PopulateHeader(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == nil {
 		preallocatedPointer = allocator.Malloc(int(unsafe.Sizeof(C.VkPhysicalDeviceIDProperties{})))
 	}
@@ -351,7 +351,7 @@ func (o *PhysicalDeviceIDOutData) PopulateHeader(allocator *cgoparam.Allocator, 
 	return preallocatedPointer, nil
 }
 
-func (o *PhysicalDeviceIDOutData) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
+func (o *PhysicalDeviceIDProperties) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
 	info := (*C.VkPhysicalDeviceIDProperties)(cDataPointer)
 
 	deviceUUIDBytes := C.GoBytes(unsafe.Pointer(&info.deviceUUID[0]), C.VK_UUID_SIZE)
@@ -375,14 +375,14 @@ func (o *PhysicalDeviceIDOutData) PopulateOutData(cDataPointer unsafe.Pointer, h
 
 ////
 
-type PhysicalDeviceMaintenance3OutData struct {
+type PhysicalDeviceMaintenance3Properties struct {
 	MaxPerSetDescriptors    int
 	MaxMemoryAllocationSize int
 
 	common.NextOutData
 }
 
-func (o *PhysicalDeviceMaintenance3OutData) PopulateHeader(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o *PhysicalDeviceMaintenance3Properties) PopulateHeader(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == nil {
 		preallocatedPointer = allocator.Malloc(int(unsafe.Sizeof(C.VkPhysicalDeviceMaintenance3Properties{})))
 	}
@@ -394,7 +394,7 @@ func (o *PhysicalDeviceMaintenance3OutData) PopulateHeader(allocator *cgoparam.A
 	return preallocatedPointer, nil
 }
 
-func (o *PhysicalDeviceMaintenance3OutData) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
+func (o *PhysicalDeviceMaintenance3Properties) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
 	outData := (*C.VkPhysicalDeviceMaintenance3Properties)(cDataPointer)
 
 	o.MaxMemoryAllocationSize = int(outData.maxMemoryAllocationSize)
@@ -405,14 +405,14 @@ func (o *PhysicalDeviceMaintenance3OutData) PopulateOutData(cDataPointer unsafe.
 
 ////
 
-type PhysicalDeviceMultiviewOutData struct {
+type PhysicalDeviceMultiviewProperties struct {
 	MaxMultiviewViewCount     int
 	MaxMultiviewInstanceIndex int
 
 	common.NextOutData
 }
 
-func (o *PhysicalDeviceMultiviewOutData) PopulateHeader(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o *PhysicalDeviceMultiviewProperties) PopulateHeader(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == nil {
 		preallocatedPointer = allocator.Malloc(int(unsafe.Sizeof(C.VkPhysicalDeviceMultiviewProperties{})))
 	}
@@ -424,7 +424,7 @@ func (o *PhysicalDeviceMultiviewOutData) PopulateHeader(allocator *cgoparam.Allo
 	return preallocatedPointer, nil
 }
 
-func (o *PhysicalDeviceMultiviewOutData) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
+func (o *PhysicalDeviceMultiviewProperties) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
 	info := (*C.VkPhysicalDeviceMultiviewProperties)(cDataPointer)
 	o.MaxMultiviewViewCount = int(info.maxMultiviewViewCount)
 	o.MaxMultiviewInstanceIndex = int(info.maxMultiviewInstanceIndex)
@@ -434,13 +434,13 @@ func (o *PhysicalDeviceMultiviewOutData) PopulateOutData(cDataPointer unsafe.Poi
 
 ////
 
-type PhysicalDevicePointClippingOutData struct {
+type PhysicalDevicePointClippingProperties struct {
 	PointClippingBehavior PointClippingBehavior
 
 	common.NextOutData
 }
 
-func (o *PhysicalDevicePointClippingOutData) PopulateHeader(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o *PhysicalDevicePointClippingProperties) PopulateHeader(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == nil {
 		preallocatedPointer = allocator.Malloc(int(unsafe.Sizeof(C.VkPhysicalDevicePointClippingProperties{})))
 	}
@@ -452,7 +452,7 @@ func (o *PhysicalDevicePointClippingOutData) PopulateHeader(allocator *cgoparam.
 	return preallocatedPointer, nil
 }
 
-func (o *PhysicalDevicePointClippingOutData) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
+func (o *PhysicalDevicePointClippingProperties) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
 	properties := (*C.VkPhysicalDevicePointClippingProperties)(cDataPointer)
 	o.PointClippingBehavior = PointClippingBehavior(properties.pointClippingBehavior)
 
@@ -461,13 +461,13 @@ func (o *PhysicalDevicePointClippingOutData) PopulateOutData(cDataPointer unsafe
 
 ////
 
-type PhysicalDeviceProtectedMemoryOutData struct {
+type PhysicalDeviceProtectedMemoryProperties struct {
 	ProtectedNoFault bool
 
 	common.NextOutData
 }
 
-func (o *PhysicalDeviceProtectedMemoryOutData) PopulateHeader(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o *PhysicalDeviceProtectedMemoryProperties) PopulateHeader(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == nil {
 		preallocatedPointer = allocator.Malloc(C.sizeof_struct_VkPhysicalDeviceProtectedMemoryProperties)
 	}
@@ -479,7 +479,7 @@ func (o *PhysicalDeviceProtectedMemoryOutData) PopulateHeader(allocator *cgopara
 	return preallocatedPointer, nil
 }
 
-func (o *PhysicalDeviceProtectedMemoryOutData) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
+func (o *PhysicalDeviceProtectedMemoryProperties) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
 	properties := (*C.VkPhysicalDeviceProtectedMemoryProperties)(cDataPointer)
 
 	o.ProtectedNoFault = properties.protectedNoFault != C.VkBool32(0)
@@ -489,16 +489,16 @@ func (o *PhysicalDeviceProtectedMemoryOutData) PopulateOutData(cDataPointer unsa
 
 ////
 
-type PhysicalDeviceSubgroupOutData struct {
+type PhysicalDeviceSubgroupProperties struct {
 	SubgroupSize              int
-	SupportedStages           core1_0.ShaderStages
-	SupportedOperations       SubgroupFeatures
+	SupportedStages           core1_0.ShaderStageFlags
+	SupportedOperations       SubgroupFeatureFlags
 	QuadOperationsInAllStages bool
 
 	common.NextOutData
 }
 
-func (o *PhysicalDeviceSubgroupOutData) PopulateHeader(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o *PhysicalDeviceSubgroupProperties) PopulateHeader(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == nil {
 		preallocatedPointer = allocator.Malloc(C.sizeof_struct_VkPhysicalDeviceSubgroupProperties)
 	}
@@ -510,12 +510,12 @@ func (o *PhysicalDeviceSubgroupOutData) PopulateHeader(allocator *cgoparam.Alloc
 	return preallocatedPointer, nil
 }
 
-func (o *PhysicalDeviceSubgroupOutData) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
+func (o *PhysicalDeviceSubgroupProperties) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
 	properties := (*C.VkPhysicalDeviceSubgroupProperties)(cDataPointer)
 
 	o.SubgroupSize = int(properties.subgroupSize)
-	o.SupportedStages = core1_0.ShaderStages(properties.supportedStages)
-	o.SupportedOperations = SubgroupFeatures(properties.supportedOperations)
+	o.SupportedStages = core1_0.ShaderStageFlags(properties.supportedStages)
+	o.SupportedOperations = SubgroupFeatureFlags(properties.supportedOperations)
 	o.QuadOperationsInAllStages = properties.quadOperationsInAllStages != C.VkBool32(0)
 
 	return properties.pNext, nil

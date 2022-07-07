@@ -57,7 +57,7 @@ func TestVulkanLoader1_0_CreateImage(t *testing.T) {
 	image, _, err := device.CreateImage(nil, core1_0.ImageCreateOptions{
 		Flags:     core1_0.ImageCreateCubeCompatible,
 		ImageType: core1_0.ImageType2D,
-		Format:    core1_0.DataFormatA2R10G10B10SignedNormalizedPacked,
+		Format:    core1_0.FormatA2R10G10B10SignedNormalizedPacked,
 		Extent: core1_0.Extent3D{
 			Width:  1,
 			Height: 3,
@@ -68,7 +68,7 @@ func TestVulkanLoader1_0_CreateImage(t *testing.T) {
 		Samples:       core1_0.Samples16,
 		Tiling:        core1_0.ImageTilingLinear,
 		Usage:         core1_0.ImageUsageTransferSrc,
-		SharingMode:   core1_0.SharingConcurrent,
+		SharingMode:   core1_0.SharingModeConcurrent,
 		QueueFamilies: []uint32{13, 17, 19},
 		InitialLayout: core1_0.ImageLayoutTransferSrcOptimal,
 	})
@@ -98,7 +98,7 @@ func TestVulkanImage_MemoryRequirements(t *testing.T) {
 	require.NotNil(t, reqs)
 	require.Equal(t, 1, reqs.Size)
 	require.Equal(t, 3, reqs.Alignment)
-	require.Equal(t, uint32(5), reqs.MemoryType)
+	require.Equal(t, uint32(5), reqs.MemoryTypeBits)
 }
 
 func TestVulkanImage_BindImageMemory(t *testing.T) {
@@ -141,7 +141,7 @@ func TestVulkanImage_SubresourceLayout(t *testing.T) {
 		})
 
 	layout := image.SubresourceLayout(&core1_0.ImageSubresource{
-		AspectMask: core1_0.AspectDepth,
+		AspectMask: core1_0.ImageAspectDepth,
 		MipLevel:   1,
 		ArrayLayer: 3,
 	})
@@ -202,7 +202,7 @@ func TestVulkanImage_SparseMemoryRequirements(t *testing.T) {
 	require.Equal(t, []core1_0.SparseImageMemoryRequirements{
 		{
 			FormatProperties: core1_0.SparseImageFormatProperties{
-				AspectMask:       core1_0.AspectColor,
+				AspectMask:       core1_0.ImageAspectColor,
 				ImageGranularity: core1_0.Extent3D{1, 3, 5},
 				Flags:            core1_0.SparseImageFormatNonstandardBlockSize,
 			},
@@ -213,7 +213,7 @@ func TestVulkanImage_SparseMemoryRequirements(t *testing.T) {
 		},
 		{
 			FormatProperties: core1_0.SparseImageFormatProperties{
-				AspectMask:       core1_0.AspectDepth,
+				AspectMask:       core1_0.ImageAspectDepth,
 				ImageGranularity: core1_0.Extent3D{19, 23, 29},
 				Flags:            core1_0.SparseImageFormatAlignedMipSize,
 			},

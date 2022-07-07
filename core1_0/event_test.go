@@ -33,7 +33,7 @@ func TestVulkanLoader1_0_CreateEvent(t *testing.T) {
 			return core1_0.VKSuccess, nil
 		})
 
-	event, _, err := device.CreateEvent(nil, core1_0.EventCreateOptions{
+	event, _, err := device.CreateEvent(nil, core1_0.EventCreateInfo{
 		Flags: 0,
 	})
 	require.NoError(t, err)

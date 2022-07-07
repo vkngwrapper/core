@@ -8,11 +8,11 @@ import "C"
 import "github.com/CannibalVox/VKng/core/core1_0"
 
 const (
-	ObjectTypeDescriptorTemplate     core1_0.ObjectType = C.VK_OBJECT_TYPE_DESCRIPTOR_UPDATE_TEMPLATE
-	ObjectTypeSamplerYcbcrConversion core1_0.ObjectType = C.VK_OBJECT_TYPE_SAMPLER_YCBCR_CONVERSION
+	ObjectTypeDescriptorUpdateTemplate core1_0.ObjectType = C.VK_OBJECT_TYPE_DESCRIPTOR_UPDATE_TEMPLATE
+	ObjectTypeSamplerYcbcrConversion   core1_0.ObjectType = C.VK_OBJECT_TYPE_SAMPLER_YCBCR_CONVERSION
 )
 
 func init() {
-	ObjectTypeDescriptorTemplate.Register("Descriptor Template")
+	ObjectTypeDescriptorUpdateTemplate.Register("Descriptor Template")
 	ObjectTypeSamplerYcbcrConversion.Register("Sampler Ycbcr Conversion")
 }

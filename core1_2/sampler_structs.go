@@ -37,7 +37,7 @@ func init() {
 ////
 
 const (
-	FormatFeatureSampledImageFilterMinmax core1_0.FormatFeatures = C.VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_MINMAX_BIT
+	FormatFeatureSampledImageFilterMinmax core1_0.FormatFeatureFlags = C.VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_MINMAX_BIT
 
 	SamplerReductionModeMax             SamplerReductionMode = C.VK_SAMPLER_REDUCTION_MODE_MAX
 	SamplerReductionModeMin             SamplerReductionMode = C.VK_SAMPLER_REDUCTION_MODE_MIN
@@ -54,13 +54,13 @@ func init() {
 
 ////
 
-type SamplerReductionModeCreateOptions struct {
+type SamplerReductionModeCreateInfo struct {
 	ReductionMode SamplerReductionMode
 
 	common.NextOptions
 }
 
-func (o SamplerReductionModeCreateOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o SamplerReductionModeCreateInfo) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == nil {
 		preallocatedPointer = allocator.Malloc(int(unsafe.Sizeof(C.VkSamplerReductionModeCreateInfo{})))
 	}

@@ -21,9 +21,9 @@ type BufferView interface {
 type CommandBuffer interface {
 	core1_1.CommandBuffer
 
-	CmdBeginRenderPass2(renderPassBegin core1_0.RenderPassBeginOptions, subpassBegin SubpassBeginOptions) error
-	CmdEndRenderPass2(subpassEnd SubpassEndOptions) error
-	CmdNextSubpass2(subpassBegin SubpassBeginOptions, subpassEnd SubpassEndOptions) error
+	CmdBeginRenderPass2(renderPassBegin core1_0.RenderPassBeginInfo, subpassBegin SubpassBeginInfo) error
+	CmdEndRenderPass2(subpassEnd SubpassEndInfo) error
+	CmdNextSubpass2(subpassBegin SubpassBeginInfo, subpassEnd SubpassEndInfo) error
 	CmdDrawIndexedIndirectCount(buffer core1_0.Buffer, offset uint64, countBuffer core1_0.Buffer, countBufferOffset uint64, maxDrawCount, stride int)
 	CmdDrawIndirectCount(buffer core1_0.Buffer, offset uint64, countBuffer core1_0.Buffer, countBufferOffset uint64, maxDrawCount, stride int)
 }
@@ -48,12 +48,12 @@ type Device interface {
 	core1_1.Device
 
 	CreateRenderPass2(allocator *driver.AllocationCallbacks, options RenderPassCreateOptions) (core1_0.RenderPass, common.VkResult, error)
-	GetBufferDeviceAddress(o BufferDeviceAddressOptions) (uint64, error)
-	GetBufferOpaqueCaptureAddress(o BufferDeviceAddressOptions) (uint64, error)
-	GetDeviceMemoryOpaqueCaptureAddress(o DeviceMemoryOpaqueAddressOptions) (uint64, error)
+	GetBufferDeviceAddress(o BufferDeviceAddressInfo) (uint64, error)
+	GetBufferOpaqueCaptureAddress(o BufferDeviceAddressInfo) (uint64, error)
+	GetDeviceMemoryOpaqueCaptureAddress(o DeviceMemoryOpaqueCaptureAddressInfo) (uint64, error)
 
-	SignalSemaphore(o SemaphoreSignalOptions) (common.VkResult, error)
-	WaitSemaphores(timeout time.Duration, o SemaphoreWaitOptions) (common.VkResult, error)
+	SignalSemaphore(o SemaphoreSignalInfo) (common.VkResult, error)
+	WaitSemaphores(timeout time.Duration, o SemaphoreWaitInfo) (common.VkResult, error)
 }
 
 type DeviceMemory interface {

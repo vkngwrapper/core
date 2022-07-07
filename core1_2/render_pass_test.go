@@ -73,20 +73,20 @@ func TestAttachmentDescriptionStencilLayoutOptions(t *testing.T) {
 	renderPass, _, err := device.CreateRenderPass2(
 		nil,
 		core1_2.RenderPassCreateOptions{
-			Attachments: []core1_2.AttachmentDescriptionOptions{
+			Attachments: []core1_2.AttachmentDescription2{
 				{
-					NextOptions: common.NextOptions{core1_2.AttachmentDescriptionStencilLayoutOptions{
+					NextOptions: common.NextOptions{core1_2.AttachmentDescriptionStencilLayout{
 						StencilInitialLayout: core1_2.ImageLayoutDepthAttachmentOptimal,
 						StencilFinalLayout:   core1_2.ImageLayoutStencilReadOnlyOptimal,
 					}},
 				},
 			},
-			Subpasses: []core1_2.SubpassDescriptionOptions{
+			Subpasses: []core1_2.SubpassDescription2{
 				{
-					InputAttachments: []core1_2.AttachmentReferenceOptions{
+					InputAttachments: []core1_2.AttachmentReference2{
 						{
 							NextOptions: common.NextOptions{
-								core1_2.AttachmentReferenceStencilLayoutOptions{
+								core1_2.AttachmentReferenceStencilLayout{
 									StencilLayout: core1_2.ImageLayoutDepthAttachmentOptimal,
 								},
 							},
@@ -136,8 +136,8 @@ func TestRenderPassAttachmentBeginInfo(t *testing.T) {
 		require.Equal(t, imageView2.Handle(), *(*driver.VkImageView)(secondImageView))
 	})
 
-	err := commandBuffer.CmdBeginRenderPass(core1_0.SubpassContentsInline, core1_0.RenderPassBeginOptions{
-		NextOptions: common.NextOptions{core1_2.RenderPassAttachmentBeginOptions{
+	err := commandBuffer.CmdBeginRenderPass(core1_0.SubpassContentsInline, core1_0.RenderPassBeginInfo{
+		NextOptions: common.NextOptions{core1_2.RenderPassAttachmentBeginInfo{
 			Attachments: []core1_0.ImageView{imageView1, imageView2},
 		}},
 	})
@@ -193,16 +193,16 @@ func TestSubpassDescriptionDepthStencilResolveOptions(t *testing.T) {
 
 	renderPass, _, err := device.CreateRenderPass2(nil,
 		core1_2.RenderPassCreateOptions{
-			Subpasses: []core1_2.SubpassDescriptionOptions{
+			Subpasses: []core1_2.SubpassDescription2{
 				{
 					NextOptions: common.NextOptions{
-						core1_2.SubpassDescriptionDepthStencilResolveOptions{
+						core1_2.SubpassDescriptionDepthStencilResolve{
 							DepthResolveMode:   core1_2.ResolveModeMin,
 							StencilResolveMode: core1_2.ResolveModeSampleZero,
-							DepthStencilResolveAttachment: &core1_2.AttachmentReferenceOptions{
+							DepthStencilResolveAttachment: &core1_2.AttachmentReference2{
 								Attachment: 3,
 								Layout:     core1_0.ImageLayoutTransferDstOptimal,
-								AspectMask: core1_0.AspectStencil,
+								AspectMask: core1_0.ImageAspectStencil,
 							},
 						},
 					},

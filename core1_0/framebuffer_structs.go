@@ -11,7 +11,7 @@ import (
 	"unsafe"
 )
 
-type FramebufferCreateOptions struct {
+type FramebufferCreateInfo struct {
 	Attachments []ImageView
 	Flags       FramebufferCreateFlags
 
@@ -24,13 +24,13 @@ type FramebufferCreateOptions struct {
 	common.NextOptions
 }
 
-func (o FramebufferCreateOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o FramebufferCreateInfo) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == unsafe.Pointer(nil) {
 		preallocatedPointer = allocator.Malloc(C.sizeof_struct_VkFramebufferCreateInfo)
 	}
 	createInfo := (*C.VkFramebufferCreateInfo)(preallocatedPointer)
 	createInfo.sType = C.VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO
-	createInfo.flags = 0
+	createInfo.flags = C.VkFramebufferCreateFlags(o.Flags)
 	createInfo.pNext = next
 
 	if o.RenderPass != nil {
@@ -53,7 +53,6 @@ func (o FramebufferCreateOptions) PopulateCPointer(allocator *cgoparam.Allocator
 	createInfo.width = C.uint32_t(o.Width)
 	createInfo.height = C.uint32_t(o.Height)
 	createInfo.layers = C.uint32_t(o.Layers)
-	createInfo.flags = C.VkFramebufferCreateFlags(o.Flags)
 
 	return unsafe.Pointer(createInfo), nil
 }

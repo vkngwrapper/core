@@ -66,16 +66,16 @@ func TestDescriptorSetVariableDescriptorCountAllocateOptions(t *testing.T) {
 		return core1_0.VKSuccess, nil
 	})
 
-	sets, _, err := device.AllocateDescriptorSets(core1_0.DescriptorSetAllocateOptions{
+	sets, _, err := device.AllocateDescriptorSets(core1_0.DescriptorSetAllocateInfo{
 		DescriptorPool: descriptorPool,
-		AllocationLayouts: []core1_0.DescriptorSetLayout{
+		SetLayouts: []core1_0.DescriptorSetLayout{
 			descriptorLayout1,
 			descriptorLayout2,
 			descriptorLayout3,
 			descriptorLayout4,
 		},
 		NextOptions: common.NextOptions{
-			core1_2.DescriptorSetVariableDescriptorCountAllocateOptions{
+			core1_2.DescriptorSetVariableDescriptorCountAllocateInfo{
 				DescriptorCounts: []int{1, 3, 5, 7},
 			},
 		},
@@ -130,9 +130,9 @@ func TestDescriptorSetLayoutBindingFlagsCreateOptions(t *testing.T) {
 
 	descriptorSetLayout, _, err := device.CreateDescriptorSetLayout(
 		nil,
-		core1_0.DescriptorSetLayoutCreateOptions{
+		core1_0.DescriptorSetLayoutCreateInfo{
 			NextOptions: common.NextOptions{
-				core1_2.DescriptorSetLayoutBindingFlagsCreateOptions{
+				core1_2.DescriptorSetLayoutBindingFlagsCreateInfo{
 					BindingFlags: []core1_2.DescriptorBindingFlags{
 						core1_2.DescriptorBindingVariableDescriptorCount,
 						core1_2.DescriptorBindingUpdateAfterBind,
@@ -169,14 +169,14 @@ func TestDescriptorSetVariableDescriptorCountLayoutSupportOutData(t *testing.T) 
 		*(*driver.Uint32)(unsafe.Pointer(val.FieldByName("maxVariableDescriptorCount").UnsafeAddr())) = driver.Uint32(7)
 	})
 
-	var outData core1_2.DescriptorSetVariableDescriptorCountLayoutSupportOutData
+	var outData core1_2.DescriptorSetVariableDescriptorCountLayoutSupport
 	err := device.DescriptorSetLayoutSupport(
-		core1_0.DescriptorSetLayoutCreateOptions{},
-		&core1_1.DescriptorSetLayoutSupportOutData{
+		core1_0.DescriptorSetLayoutCreateInfo{},
+		&core1_1.DescriptorSetLayoutSupport{
 			NextOutData: common.NextOutData{&outData},
 		})
 	require.NoError(t, err)
-	require.Equal(t, core1_2.DescriptorSetVariableDescriptorCountLayoutSupportOutData{
+	require.Equal(t, core1_2.DescriptorSetVariableDescriptorCountLayoutSupport{
 		MaxVariableDescriptorCount: 7,
 	}, outData)
 }

@@ -11,14 +11,14 @@ import (
 	"unsafe"
 )
 
-type MemoryBarrierOptions struct {
+type MemoryBarrier struct {
 	SrcAccessMask AccessFlags
 	DstAccessMask AccessFlags
 
 	common.NextOptions
 }
 
-func (o MemoryBarrierOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o MemoryBarrier) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == unsafe.Pointer(nil) {
 		preallocatedPointer = allocator.Malloc(C.sizeof_struct_VkMemoryBarrier)
 	}
@@ -31,7 +31,7 @@ func (o MemoryBarrierOptions) PopulateCPointer(allocator *cgoparam.Allocator, pr
 	return preallocatedPointer, nil
 }
 
-type BufferMemoryBarrierOptions struct {
+type BufferMemoryBarrier struct {
 	SrcAccessMask AccessFlags
 	DstAccessMask AccessFlags
 
@@ -46,7 +46,7 @@ type BufferMemoryBarrierOptions struct {
 	common.NextOptions
 }
 
-func (o BufferMemoryBarrierOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o BufferMemoryBarrier) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == unsafe.Pointer(nil) {
 		preallocatedPointer = allocator.Malloc(C.sizeof_struct_VkBufferMemoryBarrier)
 	}
@@ -64,7 +64,7 @@ func (o BufferMemoryBarrierOptions) PopulateCPointer(allocator *cgoparam.Allocat
 	return preallocatedPointer, nil
 }
 
-type ImageMemoryBarrierOptions struct {
+type ImageMemoryBarrier struct {
 	SrcAccessMask AccessFlags
 	DstAccessMask AccessFlags
 
@@ -80,7 +80,7 @@ type ImageMemoryBarrierOptions struct {
 	common.NextOptions
 }
 
-func (o ImageMemoryBarrierOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o ImageMemoryBarrier) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == unsafe.Pointer(nil) {
 		preallocatedPointer = allocator.Malloc(C.sizeof_struct_VkImageMemoryBarrier)
 	}

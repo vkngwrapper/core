@@ -36,7 +36,7 @@ func TestVulkanLoader1_0_CreateFence(t *testing.T) {
 			return core1_0.VKSuccess, nil
 		})
 
-	fence, _, err := device.CreateFence(nil, core1_0.FenceCreateOptions{
+	fence, _, err := device.CreateFence(nil, core1_0.FenceCreateInfo{
 		Flags: core1_0.FenceCreateSignaled,
 	})
 	require.NoError(t, err)

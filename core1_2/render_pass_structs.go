@@ -13,13 +13,13 @@ import (
 	"unsafe"
 )
 
-type SubpassBeginOptions struct {
+type SubpassBeginInfo struct {
 	Contents core1_0.SubpassContents
 
 	common.NextOptions
 }
 
-func (o SubpassBeginOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o SubpassBeginInfo) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == nil {
 		preallocatedPointer = allocator.Malloc(int(unsafe.Sizeof(C.VkSubpassBeginInfo{})))
 	}
@@ -34,11 +34,11 @@ func (o SubpassBeginOptions) PopulateCPointer(allocator *cgoparam.Allocator, pre
 
 ////
 
-type SubpassEndOptions struct {
+type SubpassEndInfo struct {
 	common.NextOptions
 }
 
-func (o SubpassEndOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o SubpassEndInfo) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == nil {
 		preallocatedPointer = allocator.Malloc(int(unsafe.Sizeof(C.VkSubpassEndInfo{})))
 	}
@@ -52,10 +52,10 @@ func (o SubpassEndOptions) PopulateCPointer(allocator *cgoparam.Allocator, preal
 
 ////
 
-type AttachmentDescriptionOptions struct {
+type AttachmentDescription2 struct {
 	Flags          core1_0.AttachmentDescriptionFlags
-	Format         core1_0.DataFormat
-	Samples        core1_0.SampleCounts
+	Format         core1_0.Format
+	Samples        core1_0.SampleCountFlags
 	LoadOp         core1_0.AttachmentLoadOp
 	StoreOp        core1_0.AttachmentStoreOp
 	StencilLoadOp  core1_0.AttachmentLoadOp
@@ -66,7 +66,7 @@ type AttachmentDescriptionOptions struct {
 	common.NextOptions
 }
 
-func (o AttachmentDescriptionOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o AttachmentDescription2) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == nil {
 		preallocatedPointer = allocator.Malloc(int(unsafe.Sizeof(C.VkAttachmentDescription2{})))
 	}
@@ -89,7 +89,7 @@ func (o AttachmentDescriptionOptions) PopulateCPointer(allocator *cgoparam.Alloc
 
 ////
 
-type AttachmentReferenceOptions struct {
+type AttachmentReference2 struct {
 	Attachment int
 	Layout     core1_0.ImageLayout
 	AspectMask core1_0.ImageAspectFlags
@@ -97,7 +97,7 @@ type AttachmentReferenceOptions struct {
 	common.NextOptions
 }
 
-func (o AttachmentReferenceOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o AttachmentReference2) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == nil {
 		preallocatedPointer = allocator.Malloc(int(unsafe.Sizeof(C.VkAttachmentReference2{})))
 	}
@@ -114,20 +114,20 @@ func (o AttachmentReferenceOptions) PopulateCPointer(allocator *cgoparam.Allocat
 
 ////
 
-type SubpassDescriptionOptions struct {
-	Flags                  core1_0.SubPassDescriptionFlags
+type SubpassDescription2 struct {
+	Flags                  core1_0.SubpassDescriptionFlags
 	PipelineBindPoint      core1_0.PipelineBindPoint
 	ViewMask               uint32
-	InputAttachments       []AttachmentReferenceOptions
-	ColorAttachments       []AttachmentReferenceOptions
-	ResolveAttachments     []AttachmentReferenceOptions
-	DepthStencilAttachment *AttachmentReferenceOptions
+	InputAttachments       []AttachmentReference2
+	ColorAttachments       []AttachmentReference2
+	ResolveAttachments     []AttachmentReference2
+	DepthStencilAttachment *AttachmentReference2
 	PreserveAttachments    []int
 
 	common.NextOptions
 }
 
-func (o SubpassDescriptionOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o SubpassDescription2) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == nil {
 		preallocatedPointer = allocator.Malloc(int(unsafe.Sizeof(C.VkSubpassDescription2{})))
 	}
@@ -159,19 +159,19 @@ func (o SubpassDescriptionOptions) PopulateCPointer(allocator *cgoparam.Allocato
 
 	var err error
 	if inputAttachmentCount > 0 {
-		info.pInputAttachments, err = common.AllocOptionSlice[C.VkAttachmentReference2, AttachmentReferenceOptions](allocator, o.InputAttachments)
+		info.pInputAttachments, err = common.AllocOptionSlice[C.VkAttachmentReference2, AttachmentReference2](allocator, o.InputAttachments)
 		if err != nil {
 			return nil, err
 		}
 	}
 
 	if colorAttachmentCount > 0 {
-		info.pColorAttachments, err = common.AllocOptionSlice[C.VkAttachmentReference2, AttachmentReferenceOptions](allocator, o.ColorAttachments)
+		info.pColorAttachments, err = common.AllocOptionSlice[C.VkAttachmentReference2, AttachmentReference2](allocator, o.ColorAttachments)
 		if err != nil {
 			return nil, err
 		}
 
-		info.pResolveAttachments, err = common.AllocOptionSlice[C.VkAttachmentReference2, AttachmentReferenceOptions](allocator, o.ResolveAttachments)
+		info.pResolveAttachments, err = common.AllocOptionSlice[C.VkAttachmentReference2, AttachmentReference2](allocator, o.ResolveAttachments)
 		if err != nil {
 			return nil, err
 		}
@@ -200,11 +200,11 @@ func (o SubpassDescriptionOptions) PopulateCPointer(allocator *cgoparam.Allocato
 
 ////
 
-type SubpassDependencyOptions struct {
-	SrcSubpassIndex int
-	DstSubpassIndex int
-	SrcStageMask    core1_0.PipelineStages
-	DstStageMask    core1_0.PipelineStages
+type SubpassDependency2 struct {
+	SrcSubpass      int
+	DstSubpass      int
+	SrcStageMask    core1_0.PipelineStageFlags
+	DstStageMask    core1_0.PipelineStageFlags
 	SrcAccessMask   core1_0.AccessFlags
 	DstAccessMask   core1_0.AccessFlags
 	DependencyFlags core1_0.DependencyFlags
@@ -213,7 +213,7 @@ type SubpassDependencyOptions struct {
 	common.NextOptions
 }
 
-func (o SubpassDependencyOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o SubpassDependency2) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == nil {
 		preallocatedPointer = allocator.Malloc(int(unsafe.Sizeof(C.VkSubpassDependency2{})))
 	}
@@ -221,8 +221,8 @@ func (o SubpassDependencyOptions) PopulateCPointer(allocator *cgoparam.Allocator
 	info := (*C.VkSubpassDependency2)(preallocatedPointer)
 	info.sType = C.VK_STRUCTURE_TYPE_SUBPASS_DEPENDENCY_2
 	info.pNext = next
-	info.srcSubpass = C.uint32_t(o.SrcSubpassIndex)
-	info.dstSubpass = C.uint32_t(o.DstSubpassIndex)
+	info.srcSubpass = C.uint32_t(o.SrcSubpass)
+	info.dstSubpass = C.uint32_t(o.DstSubpass)
 	info.srcStageMask = C.VkPipelineStageFlags(o.SrcStageMask)
 	info.dstStageMask = C.VkPipelineStageFlags(o.DstStageMask)
 	info.srcAccessMask = C.VkAccessFlags(o.SrcAccessMask)
@@ -238,9 +238,9 @@ func (o SubpassDependencyOptions) PopulateCPointer(allocator *cgoparam.Allocator
 type RenderPassCreateOptions struct {
 	Flags core1_0.RenderPassCreateFlags
 
-	Attachments  []AttachmentDescriptionOptions
-	Subpasses    []SubpassDescriptionOptions
-	Dependencies []SubpassDependencyOptions
+	Attachments  []AttachmentDescription2
+	Subpasses    []SubpassDescription2
+	Dependencies []SubpassDependency2
 
 	CorrelatedViewMasks []uint32
 
@@ -273,21 +273,21 @@ func (o RenderPassCreateOptions) PopulateCPointer(allocator *cgoparam.Allocator,
 
 	var err error
 	if attachmentCount > 0 {
-		info.pAttachments, err = common.AllocOptionSlice[C.VkAttachmentDescription2, AttachmentDescriptionOptions](allocator, o.Attachments)
+		info.pAttachments, err = common.AllocOptionSlice[C.VkAttachmentDescription2, AttachmentDescription2](allocator, o.Attachments)
 		if err != nil {
 			return nil, err
 		}
 	}
 
 	if subpassCount > 0 {
-		info.pSubpasses, err = common.AllocOptionSlice[C.VkSubpassDescription2, SubpassDescriptionOptions](allocator, o.Subpasses)
+		info.pSubpasses, err = common.AllocOptionSlice[C.VkSubpassDescription2, SubpassDescription2](allocator, o.Subpasses)
 		if err != nil {
 			return nil, err
 		}
 	}
 
 	if dependencyCount > 0 {
-		info.pDependencies, err = common.AllocOptionSlice[C.VkSubpassDependency2, SubpassDependencyOptions](allocator, o.Dependencies)
+		info.pDependencies, err = common.AllocOptionSlice[C.VkSubpassDependency2, SubpassDependency2](allocator, o.Dependencies)
 		if err != nil {
 			return nil, err
 		}
@@ -307,14 +307,14 @@ func (o RenderPassCreateOptions) PopulateCPointer(allocator *cgoparam.Allocator,
 
 ////
 
-type AttachmentDescriptionStencilLayoutOptions struct {
+type AttachmentDescriptionStencilLayout struct {
 	StencilInitialLayout core1_0.ImageLayout
 	StencilFinalLayout   core1_0.ImageLayout
 
 	common.NextOptions
 }
 
-func (o AttachmentDescriptionStencilLayoutOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o AttachmentDescriptionStencilLayout) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == nil {
 		preallocatedPointer = allocator.Malloc(int(unsafe.Sizeof(C.VkAttachmentDescriptionStencilLayout{})))
 	}
@@ -330,13 +330,13 @@ func (o AttachmentDescriptionStencilLayoutOptions) PopulateCPointer(allocator *c
 
 ////
 
-type AttachmentReferenceStencilLayoutOptions struct {
+type AttachmentReferenceStencilLayout struct {
 	StencilLayout core1_0.ImageLayout
 
 	common.NextOptions
 }
 
-func (o AttachmentReferenceStencilLayoutOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o AttachmentReferenceStencilLayout) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == nil {
 		preallocatedPointer = allocator.Malloc(int(unsafe.Sizeof(C.VkAttachmentReferenceStencilLayout{})))
 	}
@@ -351,13 +351,13 @@ func (o AttachmentReferenceStencilLayoutOptions) PopulateCPointer(allocator *cgo
 
 ////
 
-type RenderPassAttachmentBeginOptions struct {
+type RenderPassAttachmentBeginInfo struct {
 	Attachments []core1_0.ImageView
 
 	common.NextOptions
 }
 
-func (o RenderPassAttachmentBeginOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o RenderPassAttachmentBeginInfo) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == nil {
 		preallocatedPointer = allocator.Malloc(int(unsafe.Sizeof(C.VkRenderPassAttachmentBeginInfo{})))
 	}
@@ -383,15 +383,15 @@ func (o RenderPassAttachmentBeginOptions) PopulateCPointer(allocator *cgoparam.A
 
 ////
 
-type SubpassDescriptionDepthStencilResolveOptions struct {
+type SubpassDescriptionDepthStencilResolve struct {
 	DepthResolveMode              ResolveModeFlags
 	StencilResolveMode            ResolveModeFlags
-	DepthStencilResolveAttachment *AttachmentReferenceOptions
+	DepthStencilResolveAttachment *AttachmentReference2
 
 	common.NextOptions
 }
 
-func (o SubpassDescriptionDepthStencilResolveOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o SubpassDescriptionDepthStencilResolve) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == nil {
 		preallocatedPointer = allocator.Malloc(int(unsafe.Sizeof(C.VkSubpassDescriptionDepthStencilResolve{})))
 	}

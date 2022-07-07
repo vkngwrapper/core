@@ -71,7 +71,7 @@ func TestVulkanPhysicalDevice_AvailableExtensionsForLayer(t *testing.T) {
 			return core1_0.VKSuccess, nil
 		})
 
-	extensions, _, err := physicalDevice.AvailableExtensionsForLayer("someLayer")
+	extensions, _, err := physicalDevice.EnumerateDeviceExtensionPropertiesForLayer("someLayer")
 	require.NoError(t, err)
 	require.Len(t, extensions, 2)
 
@@ -118,7 +118,7 @@ func TestVulkanPhysicalDevice_AvailableExtensions(t *testing.T) {
 
 			return core1_0.VKSuccess, nil
 		})
-	extensions, _, err := physicalDevice.AvailableExtensions()
+	extensions, _, err := physicalDevice.EnumerateDeviceExtensionProperties()
 	require.NoError(t, err)
 	require.Len(t, extensions, 2)
 
@@ -175,7 +175,7 @@ func TestVulkanPhysicalDevice_AvailableExtensions_Incomplete(t *testing.T) {
 
 			return core1_0.VKSuccess, nil
 		})
-	extensions, _, err := physicalDevice.AvailableExtensions()
+	extensions, _, err := physicalDevice.EnumerateDeviceExtensionProperties()
 	require.NoError(t, err)
 	require.Len(t, extensions, 2)
 
@@ -230,7 +230,7 @@ func TestVulkanPhysicalDevice_AvailableLayers(t *testing.T) {
 			return core1_0.VKSuccess, nil
 		})
 
-	layers, _, err := physicalDevice.AvailableLayers()
+	layers, _, err := physicalDevice.EnumerateDeviceLayerProperties()
 	require.NoError(t, err)
 	require.Len(t, layers, 2)
 
@@ -299,7 +299,7 @@ func TestVulkanPhysicalDevice_AvailableLayers_Incomplete(t *testing.T) {
 			return core1_0.VKSuccess, nil
 		})
 
-	layers, _, err := physicalDevice.AvailableLayers()
+	layers, _, err := physicalDevice.EnumerateDeviceLayerProperties()
 	require.NoError(t, err)
 	require.Len(t, layers, 2)
 
@@ -352,7 +352,7 @@ func TestVulkanPhysicalDevice_QueueFamilyProperties(t *testing.T) {
 	require.Equal(t, 7, queueProperties[0].MinImageTransferGranularity.Width)
 	require.Equal(t, 11, queueProperties[0].MinImageTransferGranularity.Height)
 	require.Equal(t, 13, queueProperties[0].MinImageTransferGranularity.Depth)
-	require.Equal(t, core1_0.QueueSparseBinding, queueProperties[0].Flags)
+	require.Equal(t, core1_0.QueueSparseBinding, queueProperties[0].QueueFlags)
 }
 
 func TestVulkanPhysicalDevice_Properties(t *testing.T) {
@@ -418,8 +418,8 @@ func TestVulkanPhysicalDevice_Properties(t *testing.T) {
 	require.Equal(t, common.CreateVersion(3, 2, 1), properties.DriverVersion)
 	require.Equal(t, uint32(3), properties.VendorID)
 	require.Equal(t, uint32(5), properties.DeviceID)
-	require.Equal(t, core1_0.DeviceDiscreteGPU, properties.Type)
-	require.Equal(t, "Some Device", properties.Name)
+	require.Equal(t, core1_0.PhysicalDeviceTypeDiscreteGPU, properties.DriverType)
+	require.Equal(t, "Some Device", properties.DriverName)
 	require.Equal(t, deviceUUID, properties.PipelineCacheUUID)
 
 	require.Equal(t, 7, properties.Limits.MaxUniformBufferRange)
@@ -584,7 +584,7 @@ func TestVulkanPhysicalDevice_FormatProperties(t *testing.T) {
 			*(*uint32)(unsafe.Pointer(val.FieldByName("bufferFeatures").UnsafeAddr())) = uint32(0x00000010)        // VK_FORMAT_FEATURE_STORAGE_TEXEL_BUFFER_BIT
 		})
 
-	props := physicalDevice.FormatProperties(core1_0.DataFormatA8B8G8R8SRGBPacked)
+	props := physicalDevice.FormatProperties(core1_0.FormatA8B8G8R8SRGBPacked)
 	require.NotNil(t, props)
 	require.Equal(t, core1_0.FormatFeatureColorAttachmentBlend, props.OptimalTilingFeatures)
 	require.Equal(t, core1_0.FormatFeatureBlitSource, props.LinearTilingFeatures)
@@ -628,7 +628,7 @@ func TestVulkanPhysicalDevice_ImageFormatProperties(t *testing.T) {
 			return core1_0.VKSuccess, nil
 		})
 
-	props, _, err := physicalDevice.ImageFormatProperties(core1_0.DataFormatA8B8G8R8SRGBPacked, core1_0.ImageType2D, core1_0.ImageTilingLinear, core1_0.ImageUsageStorage, core1_0.ImageCreateSparseAliased)
+	props, _, err := physicalDevice.ImageFormatProperties(core1_0.FormatA8B8G8R8SRGBPacked, core1_0.ImageType2D, core1_0.ImageTilingLinear, core1_0.ImageUsageStorage, core1_0.ImageCreateSparseAliased)
 	require.NoError(t, err)
 	require.NotNil(t, props)
 	require.Equal(t, 1, props.MaxMipLevels)
@@ -693,15 +693,15 @@ func TestVulkanPhysicalDevice_SparseImageFormatProperties(t *testing.T) {
 			*(*uint32)(unsafe.Pointer(granularity.FieldByName("depth").UnsafeAddr())) = uint32(13)
 		})
 
-	props := physicalDevice.SparseImageFormatProperties(core1_0.DataFormatA2B10G10R10UnsignedIntPacked, core1_0.ImageType3D, core1_0.Samples8, core1_0.ImageUsageInputAttachment, core1_0.ImageTilingLinear)
+	props := physicalDevice.SparseImageFormatProperties(core1_0.FormatA2B10G10R10UnsignedIntPacked, core1_0.ImageType3D, core1_0.Samples8, core1_0.ImageUsageInputAttachment, core1_0.ImageTilingLinear)
 	require.Len(t, props, 2)
-	require.Equal(t, core1_0.AspectStencil, props[0].AspectMask)
+	require.Equal(t, core1_0.ImageAspectStencil, props[0].AspectMask)
 	require.Equal(t, core1_0.SparseImageFormatNonstandardBlockSize|core1_0.SparseImageFormatSingleMipTail, props[0].Flags)
 	require.Equal(t, 1, props[0].ImageGranularity.Width)
 	require.Equal(t, 3, props[0].ImageGranularity.Height)
 	require.Equal(t, 5, props[0].ImageGranularity.Depth)
 
-	require.Equal(t, core1_0.AspectColor, props[1].AspectMask)
+	require.Equal(t, core1_0.ImageAspectColor, props[1].AspectMask)
 	require.Equal(t, core1_0.SparseImageFormatFlags(0), props[1].Flags)
 	require.Equal(t, 7, props[1].ImageGranularity.Width)
 	require.Equal(t, 11, props[1].ImageGranularity.Height)
@@ -738,7 +738,7 @@ func TestVulkanPhysicalDevice_MemoryProperties(t *testing.T) {
 	require.Len(t, memoryProps.MemoryHeaps, 1)
 
 	require.Equal(t, 3, memoryProps.MemoryTypes[0].HeapIndex)
-	require.Equal(t, core1_0.MemoryPropertyLazilyAllocated, memoryProps.MemoryTypes[0].Properties)
+	require.Equal(t, core1_0.MemoryPropertyLazilyAllocated, memoryProps.MemoryTypes[0].PropertyFlags)
 
 	require.Equal(t, 99, memoryProps.MemoryHeaps[0].Size)
 	require.Equal(t, core1_0.MemoryHeapDeviceLocal, memoryProps.MemoryHeaps[0].Flags)

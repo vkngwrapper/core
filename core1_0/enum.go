@@ -126,16 +126,16 @@ func (e ComponentSwizzle) String() string {
 
 ////
 
-type DataFormat int32
+type Format int32
 
-var dataFormatMapping = make(map[DataFormat]string)
+var FormatMapping = make(map[Format]string)
 
-func (e DataFormat) Register(str string) {
-	dataFormatMapping[e] = str
+func (e Format) Register(str string) {
+	FormatMapping[e] = str
 }
 
-func (e DataFormat) String() string {
-	return dataFormatMapping[e]
+func (e Format) String() string {
+	return FormatMapping[e]
 }
 
 ////
@@ -294,15 +294,15 @@ func (e LogicOp) String() string {
 
 ////
 
-type MipmapMode int32
+type SamplerMipmapMode int32
 
-var mipmapModeMapping = make(map[MipmapMode]string)
+var mipmapModeMapping = make(map[SamplerMipmapMode]string)
 
-func (e MipmapMode) Register(str string) {
+func (e SamplerMipmapMode) Register(str string) {
 	mipmapModeMapping[e] = str
 }
 
-func (e MipmapMode) String() string {
+func (e SamplerMipmapMode) String() string {
 	return mipmapModeMapping[e]
 }
 

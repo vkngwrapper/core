@@ -88,14 +88,14 @@ func TestVulkanLoader1_0_CreateInstance(t *testing.T) {
 			return core1_0.VKSuccess, nil
 		})
 
-	instance, _, err := loader.CreateInstance(nil, core1_0.InstanceCreateOptions{
-		ApplicationName:    "test app",
-		ApplicationVersion: common.CreateVersion(2, 3, 4),
-		EngineName:         "test engine",
-		EngineVersion:      common.CreateVersion(3, 4, 5),
-		VulkanVersion:      common.Vulkan1_0,
-		ExtensionNames:     []string{"extension"},
-		LayerNames:         []string{"layer a", "layer 2"},
+	instance, _, err := loader.CreateInstance(nil, core1_0.InstanceCreateInfo{
+		ApplicationName:       "test app",
+		ApplicationVersion:    common.CreateVersion(2, 3, 4),
+		EngineName:            "test engine",
+		EngineVersion:         common.CreateVersion(3, 4, 5),
+		APIVersion:            common.Vulkan1_0,
+		EnabledExtensionNames: []string{"extension"},
+		EnabledLayerNames:     []string{"layer a", "layer 2"},
 	})
 	require.NoError(t, err)
 	require.NotNil(t, instance)
@@ -142,7 +142,7 @@ func TestVulkanInstance_PhysicalDevices(t *testing.T) {
 			*(*uint32)(unsafe.Pointer(val.FieldByName("apiVersion").UnsafeAddr())) = uint32(1<<22 | 2<<12)
 		})
 
-	devices, _, err := instance.PhysicalDevices()
+	devices, _, err := instance.EnumeratePhysicalDevices()
 	require.NoError(t, err)
 	require.Len(t, devices, 2)
 	require.Equal(t, device1, devices[0].Handle())

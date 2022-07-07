@@ -29,15 +29,15 @@ func (f AttachmentDescriptionFlags) String() string {
 
 ////
 
-type BeginInfoFlags int32
+type CommandBufferUsageFlags int32
 
-var beginInfoFlagsMapping = common.NewFlagStringMapping[BeginInfoFlags]()
+var beginInfoFlagsMapping = common.NewFlagStringMapping[CommandBufferUsageFlags]()
 
-func (f BeginInfoFlags) Register(str string) {
+func (f CommandBufferUsageFlags) Register(str string) {
 	beginInfoFlagsMapping.Register(f, str)
 }
 
-func (f BeginInfoFlags) String() string {
+func (f CommandBufferUsageFlags) String() string {
 	return beginInfoFlagsMapping.FlagsToString(f)
 }
 
@@ -57,15 +57,15 @@ func (f BufferCreateFlags) String() string {
 
 ////
 
-type BufferUsages int32
+type BufferUsageFlags int32
 
-var bufferUsagesMapping = common.NewFlagStringMapping[BufferUsages]()
+var bufferUsagesMapping = common.NewFlagStringMapping[BufferUsageFlags]()
 
-func (f BufferUsages) Register(str string) {
+func (f BufferUsageFlags) Register(str string) {
 	bufferUsagesMapping.Register(f, str)
 }
 
-func (f BufferUsages) String() string {
+func (f BufferUsageFlags) String() string {
 	return bufferUsagesMapping.FlagsToString(f)
 }
 
@@ -113,29 +113,29 @@ func (f CommandPoolResetFlags) String() string {
 
 ////
 
-type CompositeAlphaModes int32
+type CompositeAlphaFlags int32
 
-var compositeAlphaModesMapping = common.NewFlagStringMapping[CompositeAlphaModes]()
+var compositeAlphaModesMapping = common.NewFlagStringMapping[CompositeAlphaFlags]()
 
-func (f CompositeAlphaModes) Register(str string) {
+func (f CompositeAlphaFlags) Register(str string) {
 	compositeAlphaModesMapping.Register(f, str)
 }
 
-func (f CompositeAlphaModes) String() string {
+func (f CompositeAlphaFlags) String() string {
 	return compositeAlphaModesMapping.FlagsToString(f)
 }
 
 ////
 
-type CullModes int32
+type CullModeFlags int32
 
-var cullModesMapping = common.NewFlagStringMapping[CullModes]()
+var cullModesMapping = common.NewFlagStringMapping[CullModeFlags]()
 
-func (f CullModes) Register(str string) {
+func (f CullModeFlags) Register(str string) {
 	cullModesMapping.Register(f, str)
 }
 
-func (f CullModes) String() string {
+func (f CullModeFlags) String() string {
 	return cullModesMapping.FlagsToString(f)
 }
 
@@ -239,15 +239,15 @@ func (f FenceCreateFlags) String() string {
 
 ////
 
-type FormatFeatures int32
+type FormatFeatureFlags int32
 
-var formatFeaturesMapping = common.NewFlagStringMapping[FormatFeatures]()
+var formatFeaturesMapping = common.NewFlagStringMapping[FormatFeatureFlags]()
 
-func (f FormatFeatures) Register(str string) {
+func (f FormatFeatureFlags) Register(str string) {
 	formatFeaturesMapping.Register(f, str)
 }
 
-func (f FormatFeatures) String() string {
+func (f FormatFeatureFlags) String() string {
 	return formatFeaturesMapping.FlagsToString(f)
 }
 
@@ -309,15 +309,15 @@ func (f ImageViewCreateFlags) String() string {
 
 ////
 
-type ImageUsages int32
+type ImageUsageFlags int32
 
-var imageUsagesMapping = common.NewFlagStringMapping[ImageUsages]()
+var imageUsagesMapping = common.NewFlagStringMapping[ImageUsageFlags]()
 
-func (f ImageUsages) Register(str string) {
+func (f ImageUsageFlags) Register(str string) {
 	imageUsagesMapping.Register(f, str)
 }
 
-func (f ImageUsages) String() string {
+func (f ImageUsageFlags) String() string {
 	return imageUsagesMapping.FlagsToString(f)
 }
 
@@ -337,15 +337,15 @@ func (f MemoryHeapFlags) String() string {
 
 ////
 
-type MemoryProperties int32
+type MemoryPropertyFlags int32
 
-var memoryPropertiesMapping = common.NewFlagStringMapping[MemoryProperties]()
+var memoryPropertiesMapping = common.NewFlagStringMapping[MemoryPropertyFlags]()
 
-func (f MemoryProperties) Register(str string) {
+func (f MemoryPropertyFlags) Register(str string) {
 	memoryPropertiesMapping.Register(f, str)
 }
 
-func (f MemoryProperties) String() string {
+func (f MemoryPropertyFlags) String() string {
 	return memoryPropertiesMapping.FlagsToString(f)
 }
 
@@ -379,30 +379,16 @@ func (f PipelineCreateFlags) String() string {
 
 ////
 
-type PipelineStages int32
+type PipelineStageFlags int32
 
-var pipelineStagesMapping = common.NewFlagStringMapping[PipelineStages]()
+var pipelineStagesMapping = common.NewFlagStringMapping[PipelineStageFlags]()
 
-func (f PipelineStages) Register(str string) {
+func (f PipelineStageFlags) Register(str string) {
 	pipelineStagesMapping.Register(f, str)
 }
 
-func (f PipelineStages) String() string {
+func (f PipelineStageFlags) String() string {
 	return pipelineStagesMapping.FlagsToString(f)
-}
-
-////
-
-type PipelineStatistics int32
-
-var pipelineStatisticsMapping = common.NewFlagStringMapping[PipelineStatistics]()
-
-func (f PipelineStatistics) Register(str string) {
-	pipelineStatisticsMapping.Register(f, str)
-}
-
-func (f PipelineStatistics) String() string {
-	return pipelineStatisticsMapping.FlagsToString(f)
 }
 
 ////
@@ -477,24 +463,24 @@ func (f RenderPassCreateFlags) String() string {
 
 ////
 
-type SampleCounts int32
+type SampleCountFlags int32
 
-var sampleCountsMapping = common.NewFlagStringMapping[SampleCounts]()
-var sampleCountsToCount = make(map[SampleCounts]int)
+var sampleCountsMapping = common.NewFlagStringMapping[SampleCountFlags]()
+var sampleCountsToCount = make(map[SampleCountFlags]int)
 
-func (f SampleCounts) RegisterSamples(str string, sampleCount int) {
+func (f SampleCountFlags) RegisterSamples(str string, sampleCount int) {
 	sampleCountsMapping.Register(f, str)
 	sampleCountsToCount[f] = sampleCount
 }
 
-func (f SampleCounts) String() string {
+func (f SampleCountFlags) String() string {
 	return sampleCountsMapping.FlagsToString(f)
 }
 
-func (f SampleCounts) Count() int {
+func (f SampleCountFlags) Count() int {
 	var outCount int
 	for i := 0; i < 32; i++ {
-		checkBit := SampleCounts(1 << i)
+		checkBit := SampleCountFlags(1 << i)
 		if (f & checkBit) != 0 {
 			count, hasCount := sampleCountsToCount[checkBit]
 			if hasCount && count > outCount {
@@ -536,15 +522,15 @@ func (f ShaderStageCreateFlags) String() string {
 
 ////
 
-type ShaderStages int32
+type ShaderStageFlags int32
 
-var shaderStagesMapping = common.NewFlagStringMapping[ShaderStages]()
+var shaderStagesMapping = common.NewFlagStringMapping[ShaderStageFlags]()
 
-func (f ShaderStages) Register(str string) {
+func (f ShaderStageFlags) Register(str string) {
 	shaderStagesMapping.Register(f, str)
 }
 
-func (f ShaderStages) String() string {
+func (f ShaderStageFlags) String() string {
 	return shaderStagesMapping.FlagsToString(f)
 }
 
@@ -578,28 +564,28 @@ func (f SparseMemoryBindFlags) String() string {
 
 ////
 
-type StencilFaces int32
+type StencilFaceFlags int32
 
-var stencilFacesMapping = common.NewFlagStringMapping[StencilFaces]()
+var stencilFacesMapping = common.NewFlagStringMapping[StencilFaceFlags]()
 
-func (f StencilFaces) Register(str string) {
+func (f StencilFaceFlags) Register(str string) {
 	stencilFacesMapping.Register(f, str)
 }
 
-func (f StencilFaces) String() string {
+func (f StencilFaceFlags) String() string {
 	return stencilFacesMapping.FlagsToString(f)
 }
 
 ////
 
-type SubPassDescriptionFlags int32
+type SubpassDescriptionFlags int32
 
-var subPassFlagsMapping = common.NewFlagStringMapping[SubPassDescriptionFlags]()
+var subPassFlagsMapping = common.NewFlagStringMapping[SubpassDescriptionFlags]()
 
-func (f SubPassDescriptionFlags) Register(str string) {
+func (f SubpassDescriptionFlags) Register(str string) {
 	subPassFlagsMapping.Register(f, str)
 }
 
-func (f SubPassDescriptionFlags) String() string {
+func (f SubpassDescriptionFlags) String() string {
 	return subPassFlagsMapping.FlagsToString(f)
 }

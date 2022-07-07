@@ -40,8 +40,8 @@ func TestVulkanLoader1_0_CreateShaderModule(t *testing.T) {
 			return core1_0.VKSuccess, nil
 		})
 
-	shaderModule, _, err := device.CreateShaderModule(nil, core1_0.ShaderModuleCreateOptions{
-		SpirVByteCode: []uint32{1, 1, 2, 3, 5, 8, 13, 21},
+	shaderModule, _, err := device.CreateShaderModule(nil, core1_0.ShaderModuleCreateInfo{
+		Code: []uint32{1, 1, 2, 3, 5, 8, 13, 21},
 	})
 	require.NoError(t, err)
 	require.NotNil(t, shaderModule)

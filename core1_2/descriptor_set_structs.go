@@ -45,13 +45,13 @@ func init() {
 
 ////
 
-type DescriptorSetVariableDescriptorCountAllocateOptions struct {
+type DescriptorSetVariableDescriptorCountAllocateInfo struct {
 	DescriptorCounts []int
 
 	common.NextOptions
 }
 
-func (o DescriptorSetVariableDescriptorCountAllocateOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o DescriptorSetVariableDescriptorCountAllocateInfo) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == nil {
 		preallocatedPointer = allocator.Malloc(int(unsafe.Sizeof(C.VkDescriptorSetVariableDescriptorCountAllocateInfo{})))
 	}
@@ -77,13 +77,13 @@ func (o DescriptorSetVariableDescriptorCountAllocateOptions) PopulateCPointer(al
 
 ////
 
-type DescriptorSetLayoutBindingFlagsCreateOptions struct {
+type DescriptorSetLayoutBindingFlagsCreateInfo struct {
 	BindingFlags []DescriptorBindingFlags
 
 	common.NextOptions
 }
 
-func (o DescriptorSetLayoutBindingFlagsCreateOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o DescriptorSetLayoutBindingFlagsCreateInfo) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == nil {
 		preallocatedPointer = allocator.Malloc(int(unsafe.Sizeof(C.VkDescriptorSetLayoutBindingFlagsCreateInfo{})))
 	}
@@ -110,13 +110,13 @@ func (o DescriptorSetLayoutBindingFlagsCreateOptions) PopulateCPointer(allocator
 
 ////
 
-type DescriptorSetVariableDescriptorCountLayoutSupportOutData struct {
+type DescriptorSetVariableDescriptorCountLayoutSupport struct {
 	MaxVariableDescriptorCount int
 
 	common.NextOutData
 }
 
-func (o *DescriptorSetVariableDescriptorCountLayoutSupportOutData) PopulateHeader(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o *DescriptorSetVariableDescriptorCountLayoutSupport) PopulateHeader(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == nil {
 		preallocatedPointer = allocator.Malloc(int(unsafe.Sizeof(C.VkDescriptorSetVariableDescriptorCountLayoutSupport{})))
 	}
@@ -128,7 +128,7 @@ func (o *DescriptorSetVariableDescriptorCountLayoutSupportOutData) PopulateHeade
 	return preallocatedPointer, nil
 }
 
-func (o *DescriptorSetVariableDescriptorCountLayoutSupportOutData) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
+func (o *DescriptorSetVariableDescriptorCountLayoutSupport) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
 	info := (*C.VkDescriptorSetVariableDescriptorCountLayoutSupport)(cDataPointer)
 
 	o.MaxVariableDescriptorCount = int(info.maxVariableDescriptorCount)

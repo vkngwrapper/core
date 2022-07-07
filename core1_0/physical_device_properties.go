@@ -18,18 +18,18 @@ const (
 	QueueTransfer      QueueFlags = C.VK_QUEUE_TRANSFER_BIT
 	QueueSparseBinding QueueFlags = C.VK_QUEUE_SPARSE_BINDING_BIT
 
-	MemoryPropertyDeviceLocal     MemoryProperties = C.VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT
-	MemoryPropertyHostVisible     MemoryProperties = C.VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT
-	MemoryPropertyHostCoherent    MemoryProperties = C.VK_MEMORY_PROPERTY_HOST_COHERENT_BIT
-	MemoryPropertyLazilyAllocated MemoryProperties = C.VK_MEMORY_PROPERTY_LAZILY_ALLOCATED_BIT
+	MemoryPropertyDeviceLocal     MemoryPropertyFlags = C.VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT
+	MemoryPropertyHostVisible     MemoryPropertyFlags = C.VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT
+	MemoryPropertyHostCoherent    MemoryPropertyFlags = C.VK_MEMORY_PROPERTY_HOST_COHERENT_BIT
+	MemoryPropertyLazilyAllocated MemoryPropertyFlags = C.VK_MEMORY_PROPERTY_LAZILY_ALLOCATED_BIT
 
 	MemoryHeapDeviceLocal MemoryHeapFlags = C.VK_MEMORY_HEAP_DEVICE_LOCAL_BIT
 
-	DeviceOther         PhysicalDeviceType = C.VK_PHYSICAL_DEVICE_TYPE_OTHER
-	DeviceIntegratedGPU PhysicalDeviceType = C.VK_PHYSICAL_DEVICE_TYPE_INTEGRATED_GPU
-	DeviceDiscreteGPU   PhysicalDeviceType = C.VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU
-	DeviceVirtualGPU    PhysicalDeviceType = C.VK_PHYSICAL_DEVICE_TYPE_VIRTUAL_GPU
-	DeviceCPU           PhysicalDeviceType = C.VK_PHYSICAL_DEVICE_TYPE_CPU
+	PhysicalDeviceTypeOther         PhysicalDeviceType = C.VK_PHYSICAL_DEVICE_TYPE_OTHER
+	PhysicalDeviceTypeIntegratedGPU PhysicalDeviceType = C.VK_PHYSICAL_DEVICE_TYPE_INTEGRATED_GPU
+	PhysicalDeviceTypeDiscreteGPU   PhysicalDeviceType = C.VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU
+	PhysicalDeviceTypeVirtualGPU    PhysicalDeviceType = C.VK_PHYSICAL_DEVICE_TYPE_VIRTUAL_GPU
+	PhysicalDeviceTypeCPU           PhysicalDeviceType = C.VK_PHYSICAL_DEVICE_TYPE_CPU
 )
 
 func init() {
@@ -45,11 +45,11 @@ func init() {
 
 	MemoryHeapDeviceLocal.Register("Device Local")
 
-	DeviceOther.Register("Other")
-	DeviceIntegratedGPU.Register("Integrated GPU")
-	DeviceDiscreteGPU.Register("Discrete GPU")
-	DeviceVirtualGPU.Register("Virtual GPU")
-	DeviceCPU.Register("CPU")
+	PhysicalDeviceTypeOther.Register("Other")
+	PhysicalDeviceTypeIntegratedGPU.Register("Integrated GPU")
+	PhysicalDeviceTypeDiscreteGPU.Register("Discrete GPU")
+	PhysicalDeviceTypeVirtualGPU.Register("Virtual GPU")
+	PhysicalDeviceTypeCPU.Register("CPU")
 }
 
 type PhysicalDeviceSparseProperties struct {
@@ -61,8 +61,8 @@ type PhysicalDeviceSparseProperties struct {
 }
 
 type PhysicalDeviceProperties struct {
-	Type PhysicalDeviceType
-	Name string
+	DriverType PhysicalDeviceType
+	DriverName string
 
 	APIVersion    common.APIVersion
 	DriverVersion common.Version
@@ -83,8 +83,8 @@ func (p *PhysicalDeviceProperties) PopulateFromCPointer(cPointer unsafe.Pointer)
 		return errors.Wrap(err, "vulkan provided invalid pipeline cache uuid")
 	}
 
-	p.Type = PhysicalDeviceType(pData.deviceType)
-	p.Name = C.GoString((*C.char)(&pData.deviceName[0]))
+	p.DriverType = PhysicalDeviceType(pData.deviceType)
+	p.DriverName = C.GoString((*C.char)(&pData.deviceName[0]))
 	p.APIVersion = common.APIVersion(pData.apiVersion)
 	p.DriverVersion = common.Version(pData.driverVersion)
 	p.VendorID = uint32(pData.vendorID)
@@ -97,7 +97,7 @@ func (p *PhysicalDeviceProperties) PopulateFromCPointer(cPointer unsafe.Pointer)
 }
 
 type QueueFamily struct {
-	Flags                       QueueFlags
+	QueueFlags                  QueueFlags
 	QueueCount                  int
 	TimestampValidBits          uint32
 	MinImageTransferGranularity Extent3D
@@ -186,16 +186,16 @@ func createPhysicalDeviceLimits(l *C.VkPhysicalDeviceLimits) *PhysicalDeviceLimi
 		MaxFramebufferWidth:                             int(l.maxFramebufferWidth),
 		MaxFramebufferHeight:                            int(l.maxFramebufferHeight),
 		MaxFramebufferLayers:                            int(l.maxFramebufferLayers),
-		FramebufferColorSampleCounts:                    SampleCounts(l.framebufferColorSampleCounts),
-		FramebufferDepthSampleCounts:                    SampleCounts(l.framebufferDepthSampleCounts),
-		FramebufferStencilSampleCounts:                  SampleCounts(l.framebufferStencilSampleCounts),
-		FramebufferNoAttachmentsSampleCounts:            SampleCounts(l.framebufferNoAttachmentsSampleCounts),
+		FramebufferColorSampleCounts:                    SampleCountFlags(l.framebufferColorSampleCounts),
+		FramebufferDepthSampleCounts:                    SampleCountFlags(l.framebufferDepthSampleCounts),
+		FramebufferStencilSampleCounts:                  SampleCountFlags(l.framebufferStencilSampleCounts),
+		FramebufferNoAttachmentsSampleCounts:            SampleCountFlags(l.framebufferNoAttachmentsSampleCounts),
 		MaxColorAttachments:                             int(l.maxColorAttachments),
-		SampledImageColorSampleCounts:                   SampleCounts(l.sampledImageColorSampleCounts),
-		SampledImageIntegerSampleCounts:                 SampleCounts(l.sampledImageIntegerSampleCounts),
-		SampledImageDepthSampleCounts:                   SampleCounts(l.sampledImageDepthSampleCounts),
-		SampledImageStencilSampleCounts:                 SampleCounts(l.sampledImageStencilSampleCounts),
-		StorageImageSampleCounts:                        SampleCounts(l.storageImageSampleCounts),
+		SampledImageColorSampleCounts:                   SampleCountFlags(l.sampledImageColorSampleCounts),
+		SampledImageIntegerSampleCounts:                 SampleCountFlags(l.sampledImageIntegerSampleCounts),
+		SampledImageDepthSampleCounts:                   SampleCountFlags(l.sampledImageDepthSampleCounts),
+		SampledImageStencilSampleCounts:                 SampleCountFlags(l.sampledImageStencilSampleCounts),
+		StorageImageSampleCounts:                        SampleCountFlags(l.storageImageSampleCounts),
 		MaxSampleMaskWords:                              int(l.maxSampleMaskWords),
 		TimestampComputeAndGraphics:                     l.timestampComputeAndGraphics != C.VK_FALSE,
 		TimestampPeriod:                                 float32(l.timestampPeriod),

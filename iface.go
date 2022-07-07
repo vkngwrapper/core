@@ -22,7 +22,7 @@ type Loader interface {
 	AvailableExtensionsForLayer(layerName string) (map[string]*core1_0.ExtensionProperties, common.VkResult, error)
 	AvailableLayers() (map[string]*core1_0.LayerProperties, common.VkResult, error)
 
-	CreateInstance(allocationCallbacks *driver.AllocationCallbacks, options core1_0.InstanceCreateOptions) (core1_0.Instance, common.VkResult, error)
+	CreateInstance(allocationCallbacks *driver.AllocationCallbacks, options core1_0.InstanceCreateInfo) (core1_0.Instance, common.VkResult, error)
 }
 
 func CreateStaticLinkedLoader() (*VulkanLoader, error) {

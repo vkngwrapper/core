@@ -24,7 +24,7 @@ func TestVulkanQueue_WaitForIdle(t *testing.T) {
 
 	driver.EXPECT().VkQueueWaitIdle(queue.Handle()).Return(core1_0.VKSuccess, nil)
 
-	_, err := queue.WaitForIdle()
+	_, err := queue.WaitIdle()
 	require.NoError(t, err)
 }
 
@@ -190,7 +190,7 @@ func TestVulkanQueue_BindSparse(t *testing.T) {
 					Binds: []core1_0.SparseImageMemoryBind{
 						{
 							Subresource: core1_0.ImageSubresource{
-								AspectMask: core1_0.AspectColor,
+								AspectMask: core1_0.ImageAspectColor,
 								MipLevel:   29,
 								ArrayLayer: 31,
 							},

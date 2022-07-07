@@ -11,20 +11,36 @@ import (
 	"unsafe"
 )
 
-type InstanceCreateOptions struct {
+type InstanceCreateFlags int32
+
+var instanceCreateFlagsMapping = common.NewFlagStringMapping[InstanceCreateFlags]()
+
+func (f InstanceCreateFlags) Register(str string) {
+	instanceCreateFlagsMapping.Register(f, str)
+}
+
+func (f InstanceCreateFlags) String() string {
+	return instanceCreateFlagsMapping.FlagsToString(f)
+}
+
+////
+
+type InstanceCreateInfo struct {
 	ApplicationName    string
 	ApplicationVersion common.Version
 	EngineName         string
 	EngineVersion      common.Version
-	VulkanVersion      common.APIVersion
+	APIVersion         common.APIVersion
 
-	ExtensionNames []string
-	LayerNames     []string
+	Flags InstanceCreateFlags
+
+	EnabledExtensionNames []string
+	EnabledLayerNames     []string
 
 	common.NextOptions
 }
 
-func (o InstanceCreateOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o InstanceCreateInfo) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == unsafe.Pointer(nil) {
 		preallocatedPointer = allocator.Malloc(int(unsafe.Sizeof(C.VkInstanceCreateInfo{})))
 	}
@@ -39,28 +55,28 @@ func (o InstanceCreateOptions) PopulateCPointer(allocator *cgoparam.Allocator, p
 	appInfo.pEngineName = (*C.char)(cEngine)
 	appInfo.applicationVersion = C.uint32_t(o.ApplicationVersion)
 	appInfo.engineVersion = C.uint32_t(o.EngineVersion)
-	appInfo.apiVersion = C.uint32_t(o.VulkanVersion)
+	appInfo.apiVersion = C.uint32_t(o.APIVersion)
 
 	createInfo := (*C.VkInstanceCreateInfo)(preallocatedPointer)
 
 	// Alloc array of extension names
-	numExtensions := len(o.ExtensionNames)
+	numExtensions := len(o.EnabledExtensionNames)
 	extNamePtr := allocator.Malloc(numExtensions * int(unsafe.Sizeof(uintptr(0))))
 	extNames := ([]*C.char)(unsafe.Slice((**C.char)(extNamePtr), numExtensions))
 	for i := 0; i < numExtensions; i++ {
-		extNames[i] = (*C.char)(allocator.CString(o.ExtensionNames[i]))
+		extNames[i] = (*C.char)(allocator.CString(o.EnabledExtensionNames[i]))
 	}
 
 	// Alloc array of layer names
-	numLayers := len(o.LayerNames)
+	numLayers := len(o.EnabledLayerNames)
 	layerNamePtr := allocator.Malloc(numLayers * int(unsafe.Sizeof(uintptr(0))))
 	layerNames := ([]*C.char)(unsafe.Slice((**C.char)(layerNamePtr), numLayers))
 	for i := 0; i < numLayers; i++ {
-		layerNames[i] = (*C.char)(allocator.CString(o.LayerNames[i]))
+		layerNames[i] = (*C.char)(allocator.CString(o.EnabledLayerNames[i]))
 	}
 
 	createInfo.sType = C.VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO
-	createInfo.flags = 0
+	createInfo.flags = C.VkInstanceCreateFlags(o.Flags)
 	createInfo.pNext = next
 	createInfo.pApplicationInfo = appInfo
 	createInfo.enabledExtensionCount = C.uint32_t(numExtensions)

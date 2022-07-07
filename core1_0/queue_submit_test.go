@@ -72,11 +72,11 @@ func TestSubmitToQueue_SignalSuccess(t *testing.T) {
 			return core1_0.VKSuccess, nil
 		})
 
-	_, err := queue.SubmitToQueue(fence, []core1_0.SubmitOptions{
+	_, err := queue.Submit(fence, []core1_0.SubmitInfo{
 		{
 			CommandBuffers:   []core1_0.CommandBuffer{buffer},
 			WaitSemaphores:   []core1_0.Semaphore{waitSemaphore1, waitSemaphore2},
-			WaitDstStages:    []core1_0.PipelineStages{core1_0.PipelineStageVertexShader, core1_0.PipelineStageFragmentShader},
+			WaitDstStageMask: []core1_0.PipelineStageFlags{core1_0.PipelineStageVertexShader, core1_0.PipelineStageFragmentShader},
 			SignalSemaphores: []core1_0.Semaphore{signalSemaphore1, signalSemaphore2, signalSemaphore3},
 		},
 	})
@@ -119,11 +119,11 @@ func TestSubmitToQueue_NoSignalSuccess(t *testing.T) {
 			return core1_0.VKSuccess, nil
 		})
 
-	_, err := queue.SubmitToQueue(nil, []core1_0.SubmitOptions{
+	_, err := queue.Submit(nil, []core1_0.SubmitInfo{
 		{
 			CommandBuffers:   []core1_0.CommandBuffer{buffer},
 			WaitSemaphores:   []core1_0.Semaphore{},
-			WaitDstStages:    []core1_0.PipelineStages{},
+			WaitDstStageMask: []core1_0.PipelineStageFlags{},
 			SignalSemaphores: []core1_0.Semaphore{},
 		},
 	})
@@ -144,11 +144,11 @@ func TestSubmitToQueue_MismatchWaitSemaphores(t *testing.T) {
 	waitSemaphore1 := mocks.EasyMockSemaphore(ctrl)
 	waitSemaphore2 := mocks.EasyMockSemaphore(ctrl)
 
-	_, err := queue.SubmitToQueue(nil, []core1_0.SubmitOptions{
+	_, err := queue.Submit(nil, []core1_0.SubmitInfo{
 		{
 			CommandBuffers:   []core1_0.CommandBuffer{buffer},
 			WaitSemaphores:   []core1_0.Semaphore{waitSemaphore1, waitSemaphore2},
-			WaitDstStages:    []core1_0.PipelineStages{core1_0.PipelineStageFragmentShader},
+			WaitDstStageMask: []core1_0.PipelineStageFlags{core1_0.PipelineStageFragmentShader},
 			SignalSemaphores: []core1_0.Semaphore{},
 		},
 	})

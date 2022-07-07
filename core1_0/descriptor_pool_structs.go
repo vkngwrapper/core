@@ -19,21 +19,21 @@ func init() {
 	DescriptorPoolCreateFreeDescriptorSet.Register("Free Descriptor Set")
 }
 
-type PoolSize struct {
+type DescriptorPoolSize struct {
 	Type            DescriptorType
 	DescriptorCount int
 }
 
-type DescriptorPoolCreateOptions struct {
+type DescriptorPoolCreateInfo struct {
 	Flags DescriptorPoolCreateFlags
 
 	MaxSets   int
-	PoolSizes []PoolSize
+	PoolSizes []DescriptorPoolSize
 
 	common.NextOptions
 }
 
-func (o DescriptorPoolCreateOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o DescriptorPoolCreateInfo) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == unsafe.Pointer(nil) {
 		preallocatedPointer = allocator.Malloc(C.sizeof_struct_VkDescriptorPoolCreateInfo)
 	}

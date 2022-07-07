@@ -38,9 +38,9 @@ func TestCommandPoolCreateBasic(t *testing.T) {
 		})
 
 	graphicsFamily := 1
-	pool, res, err := device.CreateCommandPool(nil, core1_0.CommandPoolCreateOptions{
-		Flags:               core1_0.CommandPoolCreateResetBuffer,
-		GraphicsQueueFamily: &graphicsFamily,
+	pool, res, err := device.CreateCommandPool(nil, core1_0.CommandPoolCreateInfo{
+		Flags:            core1_0.CommandPoolCreateResetBuffer,
+		QueueFamilyIndex: &graphicsFamily,
 	})
 	require.NoError(t, err)
 	require.Equal(t, core1_0.VKSuccess, res)
@@ -56,7 +56,7 @@ func TestCommandPoolNullQueue(t *testing.T) {
 
 	device := internal_mocks.EasyDummyDevice(mockDriver)
 
-	pool, res, err := device.CreateCommandPool(nil, core1_0.CommandPoolCreateOptions{
+	pool, res, err := device.CreateCommandPool(nil, core1_0.CommandPoolCreateInfo{
 		Flags: core1_0.CommandPoolCreateResetBuffer,
 	})
 	require.Error(t, err)
@@ -91,10 +91,10 @@ func TestCommandBufferSingleAllocateFree(t *testing.T) {
 			return core1_0.VKSuccess, nil
 		})
 
-	buffers, res, err := device.AllocateCommandBuffers(core1_0.CommandBufferAllocateOptions{
-		CommandPool: commandPool,
-		Level:       core1_0.LevelPrimary,
-		BufferCount: 1,
+	buffers, res, err := device.AllocateCommandBuffers(core1_0.CommandBufferAllocateInfo{
+		CommandPool:        commandPool,
+		Level:              core1_0.CommandBufferLevelPrimary,
+		CommandBufferCount: 1,
 	})
 
 	require.NoError(t, err)
@@ -146,10 +146,10 @@ func TestCommandBufferMultiAllocateFree(t *testing.T) {
 			return core1_0.VKSuccess, nil
 		})
 
-	buffers, res, err := device.AllocateCommandBuffers(core1_0.CommandBufferAllocateOptions{
-		CommandPool: commandPool,
-		Level:       core1_0.LevelSecondary,
-		BufferCount: 3,
+	buffers, res, err := device.AllocateCommandBuffers(core1_0.CommandBufferAllocateInfo{
+		CommandPool:        commandPool,
+		Level:              core1_0.CommandBufferLevelSecondary,
+		CommandBufferCount: 3,
 	})
 
 	require.NoError(t, err)

@@ -61,12 +61,12 @@ func TestVulkanLoader1_0_CreateGraphicsPipelines_EmptySuccess(t *testing.T) {
 			return core1_0.VKSuccess, nil
 		})
 
-	pipelines, _, err := device.CreateGraphicsPipelines(nil, nil, []core1_0.GraphicsPipelineCreateOptions{
+	pipelines, _, err := device.CreateGraphicsPipelines(nil, nil, []core1_0.GraphicsPipelineCreateInfo{
 		{
 			Flags:             core1_0.PipelineCreateAllowDerivatives,
 			Layout:            layout,
 			RenderPass:        renderPass,
-			SubPass:           1,
+			Subpass:           1,
 			BasePipeline:      basePipeline,
 			BasePipelineIndex: 3,
 		},
@@ -183,21 +183,21 @@ func TestVulkanLoader1_0_CreateGraphicsPipelines_ShaderStagesSuccess(t *testing.
 			return core1_0.VKSuccess, nil
 		})
 
-	pipelines, _, err := device.CreateGraphicsPipelines(nil, nil, []core1_0.GraphicsPipelineCreateOptions{
+	pipelines, _, err := device.CreateGraphicsPipelines(nil, nil, []core1_0.GraphicsPipelineCreateInfo{
 		{
 			Layout:     layout,
 			RenderPass: renderPass,
-			ShaderStages: []core1_0.ShaderStageOptions{
+			Stages: []core1_0.PipelineShaderStageCreateInfo{
 				{
 					Flags:  0,
 					Name:   "some shader 1",
 					Stage:  core1_0.StageGeometry,
-					Shader: shaderModule1,
+					Module: shaderModule1,
 				},
 				{
 					Name:   "another shader 2",
 					Stage:  core1_0.StageFragment,
-					Shader: shaderModule2,
+					Module: shaderModule2,
 					SpecializationInfo: map[uint32]any{
 						1: true,
 						2: float64(7.6),
@@ -223,20 +223,20 @@ func TestVulkanLoader1_0_CreateGraphicsPipelines_ShaderStagesFailure_InvalidSpec
 	shaderModule1 := mocks.EasyMockShaderModule(ctrl)
 	shaderModule2 := mocks.EasyMockShaderModule(ctrl)
 
-	_, _, err := device.CreateGraphicsPipelines(nil, nil, []core1_0.GraphicsPipelineCreateOptions{
+	_, _, err := device.CreateGraphicsPipelines(nil, nil, []core1_0.GraphicsPipelineCreateInfo{
 		{
 			Layout:     layout,
 			RenderPass: renderPass,
-			ShaderStages: []core1_0.ShaderStageOptions{
+			Stages: []core1_0.PipelineShaderStageCreateInfo{
 				{
 					Name:   "some shader 1",
 					Stage:  core1_0.StageGeometry,
-					Shader: shaderModule1,
+					Module: shaderModule1,
 				},
 				{
 					Name:   "another shader 2",
 					Stage:  core1_0.StageFragment,
-					Shader: shaderModule2,
+					Module: shaderModule2,
 					SpecializationInfo: map[uint32]any{
 						1: "wow, this is invalid",
 						2: float64(7.6),
@@ -300,26 +300,26 @@ func TestVulkanLoader1_0_CreateGraphicsPipelines_VertexInputSuccess(t *testing.T
 			return core1_0.VKSuccess, nil
 		})
 
-	pipelines, _, err := device.CreateGraphicsPipelines(nil, nil, []core1_0.GraphicsPipelineCreateOptions{
+	pipelines, _, err := device.CreateGraphicsPipelines(nil, nil, []core1_0.GraphicsPipelineCreateInfo{
 		{
 			Layout:     layout,
 			RenderPass: renderPass,
-			VertexInput: &core1_0.VertexInputStateOptions{
-				VertexAttributeDescriptions: []core1_0.VertexAttributeDescription{
+			VertexInputState: &core1_0.PipelineVertexInputStateCreateInfo{
+				VertexAttributeDescriptions: []core1_0.VertexInputAttributeDescription{
 					{
 						Location: 1,
 						Binding:  3,
-						Format:   core1_0.DataFormatA1R5G5B5UnsignedNormalizedPacked,
+						Format:   core1_0.FormatA1R5G5B5UnsignedNormalizedPacked,
 						Offset:   5,
 					},
 					{
 						Location: 7,
 						Binding:  11,
-						Format:   core1_0.DataFormatA2B10G10R10UnsignedNormalizedPacked,
+						Format:   core1_0.FormatA2B10G10R10UnsignedNormalizedPacked,
 						Offset:   13,
 					},
 				},
-				VertexBindingDescriptions: []core1_0.VertexBindingDescription{
+				VertexBindingDescriptions: []core1_0.VertexInputBindingDescription{
 					{
 						InputRate: core1_0.RateInstance,
 						Binding:   17,
@@ -361,13 +361,13 @@ func TestVulkanLoader1_0_CreateGraphicsPipelines_InputAssemblySuccess(t *testing
 			return core1_0.VKSuccess, nil
 		})
 
-	pipelines, _, err := device.CreateGraphicsPipelines(nil, nil, []core1_0.GraphicsPipelineCreateOptions{
+	pipelines, _, err := device.CreateGraphicsPipelines(nil, nil, []core1_0.GraphicsPipelineCreateInfo{
 		{
 			Layout:     layout,
 			RenderPass: renderPass,
-			InputAssembly: &core1_0.InputAssemblyStateOptions{
-				Topology:               core1_0.TopologyLineList,
-				EnablePrimitiveRestart: true,
+			InputAssemblyState: &core1_0.PipelineInputAssemblyStateCreateInfo{
+				Topology:               core1_0.PrimitiveTopologyLineList,
+				PrimitiveRestartEnable: true,
 			},
 		}})
 	require.NoError(t, err)
@@ -403,11 +403,11 @@ func TestVulkanLoader1_0_CreateGraphicsPipelines_TessellationSuccess(t *testing.
 			return core1_0.VKSuccess, nil
 		})
 
-	pipelines, _, err := device.CreateGraphicsPipelines(nil, nil, []core1_0.GraphicsPipelineCreateOptions{
+	pipelines, _, err := device.CreateGraphicsPipelines(nil, nil, []core1_0.GraphicsPipelineCreateInfo{
 		{
 			Layout:     layout,
 			RenderPass: renderPass,
-			Tessellation: &core1_0.TessellationStateOptions{
+			TessellationState: &core1_0.PipelineTessellationStateCreateInfo{
 				PatchControlPoints: 3,
 			},
 		}})
@@ -474,11 +474,11 @@ func TestVulkanLoader1_0_CreateGraphicsPipelines_ViewportSuccess(t *testing.T) {
 			return core1_0.VKSuccess, nil
 		})
 
-	pipelines, _, err := device.CreateGraphicsPipelines(nil, nil, []core1_0.GraphicsPipelineCreateOptions{
+	pipelines, _, err := device.CreateGraphicsPipelines(nil, nil, []core1_0.GraphicsPipelineCreateInfo{
 		{
 			Layout:     layout,
 			RenderPass: renderPass,
-			Viewport: &core1_0.ViewportStateOptions{
+			ViewportState: &core1_0.PipelineViewportStateCreateInfo{
 				Viewports: []core1_0.Viewport{
 					{
 						X:        1,
@@ -542,19 +542,19 @@ func TestVulkanLoader1_0_CreateGraphicsPipelines_RasterizationSuccess(t *testing
 			return core1_0.VKSuccess, nil
 		})
 
-	pipelines, _, err := device.CreateGraphicsPipelines(nil, nil, []core1_0.GraphicsPipelineCreateOptions{
+	pipelines, _, err := device.CreateGraphicsPipelines(nil, nil, []core1_0.GraphicsPipelineCreateInfo{
 		{
 			Layout:     layout,
 			RenderPass: renderPass,
-			Rasterization: &core1_0.RasterizationStateOptions{
-				DepthClamp:        true,
-				RasterizerDiscard: true,
+			RasterizationState: &core1_0.PipelineRasterizationStateCreateInfo{
+				DepthClampEnable:        true,
+				RasterizerDiscardEnable: true,
 
 				PolygonMode: core1_0.PolygonModeLine,
-				CullMode:    core1_0.CullFront | core1_0.CullBack,
+				CullMode:    core1_0.CullModeFront | core1_0.CullModeBack,
 				FrontFace:   core1_0.FrontFaceClockwise,
 
-				DepthBias:               true,
+				DepthBiasEnable:         true,
 				DepthBiasClamp:          2.3,
 				DepthBiasConstantFactor: 3.4,
 				DepthBiasSlopeFactor:    4.5,
@@ -603,17 +603,17 @@ func TestVulkanLoader1_0_CreateGraphicsPipelines_MultisampleSuccess(t *testing.T
 			return core1_0.VKSuccess, nil
 		})
 
-	pipelines, _, err := device.CreateGraphicsPipelines(nil, nil, []core1_0.GraphicsPipelineCreateOptions{
+	pipelines, _, err := device.CreateGraphicsPipelines(nil, nil, []core1_0.GraphicsPipelineCreateInfo{
 		{
 			Layout:     layout,
 			RenderPass: renderPass,
-			Multisample: &core1_0.MultisampleStateOptions{
-				RasterizationSamples: core1_0.Samples64,
-				SampleShading:        true,
-				MinSampleShading:     2.3,
-				SampleMask:           []uint32{1, 3},
-				AlphaToCoverage:      true,
-				AlphaToOne:           true,
+			MultisampleState: &core1_0.PipelineMultisampleStateCreateInfo{
+				RasterizationSamples:  core1_0.Samples64,
+				SampleShadingEnable:   true,
+				MinSampleShading:      2.3,
+				SampleMask:            []uint32{1, 3},
+				AlphaToCoverageEnable: true,
+				AlphaToOneEnable:      true,
 			},
 		}})
 	require.NoError(t, err)
@@ -653,16 +653,16 @@ func TestVulkanLoader1_0_CreateGraphicsPipelines_MultisampleSuccess_NoSampleMask
 			return core1_0.VKSuccess, nil
 		})
 
-	pipelines, _, err := device.CreateGraphicsPipelines(nil, nil, []core1_0.GraphicsPipelineCreateOptions{
+	pipelines, _, err := device.CreateGraphicsPipelines(nil, nil, []core1_0.GraphicsPipelineCreateInfo{
 		{
 			Layout:     layout,
 			RenderPass: renderPass,
-			Multisample: &core1_0.MultisampleStateOptions{
-				RasterizationSamples: core1_0.Samples64,
-				SampleShading:        true,
-				MinSampleShading:     2.3,
-				AlphaToCoverage:      true,
-				AlphaToOne:           true,
+			MultisampleState: &core1_0.PipelineMultisampleStateCreateInfo{
+				RasterizationSamples:  core1_0.Samples64,
+				SampleShadingEnable:   true,
+				MinSampleShading:      2.3,
+				AlphaToCoverageEnable: true,
+				AlphaToOneEnable:      true,
 			},
 		}})
 	require.NoError(t, err)
@@ -680,17 +680,17 @@ func TestVulkanLoader1_0_CreateGraphicsPipelines_MultisampleFail_MismatchSampleM
 	layout := mocks.EasyMockPipelineLayout(ctrl)
 	renderPass := mocks.EasyMockRenderPass(ctrl)
 
-	_, _, err := device.CreateGraphicsPipelines(nil, nil, []core1_0.GraphicsPipelineCreateOptions{
+	_, _, err := device.CreateGraphicsPipelines(nil, nil, []core1_0.GraphicsPipelineCreateInfo{
 		{
 			Layout:     layout,
 			RenderPass: renderPass,
-			Multisample: &core1_0.MultisampleStateOptions{
-				RasterizationSamples: core1_0.Samples4,
-				SampleShading:        true,
-				MinSampleShading:     2.3,
-				SampleMask:           []uint32{1, 3},
-				AlphaToCoverage:      true,
-				AlphaToOne:           true,
+			MultisampleState: &core1_0.PipelineMultisampleStateCreateInfo{
+				RasterizationSamples:  core1_0.Samples4,
+				SampleShadingEnable:   true,
+				MinSampleShading:      2.3,
+				SampleMask:            []uint32{1, 3},
+				AlphaToCoverageEnable: true,
+				AlphaToOneEnable:      true,
 			},
 		}})
 	require.EqualError(t, err, "expected a sample mask size of 1, because 4 rasterization samples were specified- however, received a sample mask size of 2")
@@ -746,30 +746,30 @@ func TestVulkanLoader1_0_CreateGraphicsPipelines_DepthStencilSuccess(t *testing.
 			return core1_0.VKSuccess, nil
 		})
 
-	pipelines, _, err := device.CreateGraphicsPipelines(nil, nil, []core1_0.GraphicsPipelineCreateOptions{
+	pipelines, _, err := device.CreateGraphicsPipelines(nil, nil, []core1_0.GraphicsPipelineCreateInfo{
 		{
 			Layout:     layout,
 			RenderPass: renderPass,
-			DepthStencil: &core1_0.DepthStencilStateOptions{
+			DepthStencilState: &core1_0.PipelineDepthStencilStateCreateInfo{
 				DepthTestEnable:       true,
 				DepthWriteEnable:      true,
-				DepthCompareOp:        core1_0.CompareEqual,
+				DepthCompareOp:        core1_0.CompareOpEqual,
 				DepthBoundsTestEnable: true,
 				StencilTestEnable:     true,
-				FrontStencilState: core1_0.StencilOpState{
+				Front: core1_0.StencilOpState{
 					FailOp:      core1_0.StencilInvert,
 					PassOp:      core1_0.StencilDecrementAndWrap,
 					DepthFailOp: core1_0.StencilReplace,
-					CompareOp:   core1_0.CompareGreaterOrEqual,
+					CompareOp:   core1_0.CompareOpGreaterOrEqual,
 					CompareMask: 3,
 					WriteMask:   5,
 					Reference:   7,
 				},
-				BackStencilState: core1_0.StencilOpState{
+				Back: core1_0.StencilOpState{
 					FailOp:      core1_0.StencilIncrementAndClamp,
 					PassOp:      core1_0.StencilZero,
 					DepthFailOp: core1_0.StencilKeep,
-					CompareOp:   core1_0.CompareLess,
+					CompareOp:   core1_0.CompareOpLess,
 					CompareMask: 11,
 					WriteMask:   13,
 					Reference:   17,
@@ -841,34 +841,34 @@ func TestVulkanLoader1_0_CreateGraphicsPipelines_ColorBlendSuccess(t *testing.T)
 			return core1_0.VKSuccess, nil
 		})
 
-	pipelines, _, err := device.CreateGraphicsPipelines(nil, nil, []core1_0.GraphicsPipelineCreateOptions{
+	pipelines, _, err := device.CreateGraphicsPipelines(nil, nil, []core1_0.GraphicsPipelineCreateInfo{
 		{
 			Layout:     layout,
 			RenderPass: renderPass,
-			ColorBlend: &core1_0.ColorBlendStateOptions{
+			ColorBlendState: &core1_0.PipelineColorBlendStateCreateInfo{
 				LogicOpEnabled: true,
 				LogicOp:        core1_0.LogicOpCopyInverted,
 				BlendConstants: [4]float32{1.2, 2.3, 3.4, 4.5},
-				Attachments: []core1_0.ColorBlendAttachment{
+				Attachments: []core1_0.PipelineColorBlendAttachmentState{
 					{
-						BlendEnabled: true,
-						SrcColor:     core1_0.BlendDstColor,
-						DstColor:     core1_0.BlendOneMinusSrc1Alpha,
-						ColorBlendOp: core1_0.BlendOpSubtract,
-						SrcAlpha:     core1_0.BlendSrc1Alpha,
-						DstAlpha:     core1_0.BlendSrcAlpha,
-						AlphaBlendOp: core1_0.BlendOpMin,
-						WriteMask:    core1_0.ComponentAlpha,
+						BlendEnabled:        true,
+						SrcColorBlendFactor: core1_0.BlendFactorDstColor,
+						DstColorBlendFactor: core1_0.BlendFactorOneMinusSrc1Alpha,
+						ColorBlendOp:        core1_0.BlendOpSubtract,
+						SrcAlphaBlendFactor: core1_0.BlendFactorSrc1Alpha,
+						DstAlphaBlendFactor: core1_0.BlendFactorSrcAlpha,
+						AlphaBlendOp:        core1_0.BlendOpMin,
+						ColorWriteMask:      core1_0.ColorComponentAlpha,
 					},
 					{
-						BlendEnabled: false,
-						SrcColor:     core1_0.BlendOneMinusSrcAlpha,
-						DstColor:     core1_0.BlendOneMinusConstantColor,
-						ColorBlendOp: core1_0.BlendOpAdd,
-						SrcAlpha:     core1_0.BlendConstantAlpha,
-						DstAlpha:     core1_0.BlendOne,
-						AlphaBlendOp: core1_0.BlendOpMax,
-						WriteMask:    core1_0.ComponentRed,
+						BlendEnabled:        false,
+						SrcColorBlendFactor: core1_0.BlendFactorOneMinusSrcAlpha,
+						DstColorBlendFactor: core1_0.BlendFactorOneMinusConstantColor,
+						ColorBlendOp:        core1_0.BlendOpAdd,
+						SrcAlphaBlendFactor: core1_0.BlendFactorConstantAlpha,
+						DstAlphaBlendFactor: core1_0.BlendFactorOne,
+						AlphaBlendOp:        core1_0.BlendOpMax,
+						ColorWriteMask:      core1_0.ColorComponentRed,
 					},
 				},
 			},
@@ -911,11 +911,11 @@ func TestVulkanLoader1_0_CreateGraphicsPipelines_DynamicStateSuccess(t *testing.
 			return core1_0.VKSuccess, nil
 		})
 
-	pipelines, _, err := device.CreateGraphicsPipelines(nil, nil, []core1_0.GraphicsPipelineCreateOptions{
+	pipelines, _, err := device.CreateGraphicsPipelines(nil, nil, []core1_0.GraphicsPipelineCreateInfo{
 		{
 			Layout:     layout,
 			RenderPass: renderPass,
-			DynamicState: &core1_0.DynamicStateOptions{
+			DynamicState: &core1_0.PipelineDynamicStateCreateInfo{
 				DynamicStates: []core1_0.DynamicState{
 					core1_0.DynamicStateDepthBounds, core1_0.DynamicStateStencilWriteMask,
 				},
@@ -1017,14 +1017,14 @@ func TestVulkanLoader1_0_CreateComputePipelines_EmptySuccess(t *testing.T) {
 			return core1_0.VKSuccess, nil
 		})
 
-	pipelines, _, err := device.CreateComputePipelines(nil, nil, []core1_0.ComputePipelineCreateOptions{
+	pipelines, _, err := device.CreateComputePipelines(nil, nil, []core1_0.ComputePipelineCreateInfo{
 		{
 			Flags: core1_0.PipelineCreateDerivative,
-			Shader: core1_0.ShaderStageOptions{
+			Stage: core1_0.PipelineShaderStageCreateInfo{
 				Flags:  0,
 				Name:   "some compute shader",
 				Stage:  core1_0.StageCompute,
-				Shader: shaderModule,
+				Module: shaderModule,
 				SpecializationInfo: map[uint32]any{
 					1: true,
 					2: float64(7.6),

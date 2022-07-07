@@ -12,15 +12,15 @@ import (
 	"unsafe"
 )
 
-type DescriptorSetAllocateOptions struct {
+type DescriptorSetAllocateInfo struct {
 	DescriptorPool DescriptorPool
 
-	AllocationLayouts []DescriptorSetLayout
+	SetLayouts []DescriptorSetLayout
 
 	common.NextOptions
 }
 
-func (o DescriptorSetAllocateOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o DescriptorSetAllocateInfo) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == unsafe.Pointer(nil) {
 		preallocatedPointer = allocator.Malloc(C.sizeof_struct_VkDescriptorSetAllocateInfo)
 	}
@@ -30,7 +30,7 @@ func (o DescriptorSetAllocateOptions) PopulateCPointer(allocator *cgoparam.Alloc
 	createInfo.pNext = next
 	createInfo.descriptorPool = C.VkDescriptorPool(unsafe.Pointer(o.DescriptorPool.Handle()))
 
-	setCount := len(o.AllocationLayouts)
+	setCount := len(o.SetLayouts)
 	createInfo.descriptorSetCount = C.uint32_t(setCount)
 	createInfo.pSetLayouts = nil
 
@@ -39,7 +39,7 @@ func (o DescriptorSetAllocateOptions) PopulateCPointer(allocator *cgoparam.Alloc
 		layoutsSlice := ([]C.VkDescriptorSetLayout)(unsafe.Slice(layoutsPtr, setCount))
 
 		for i := 0; i < setCount; i++ {
-			layoutsSlice[i] = C.VkDescriptorSetLayout(unsafe.Pointer(o.AllocationLayouts[i].Handle()))
+			layoutsSlice[i] = C.VkDescriptorSetLayout(unsafe.Pointer(o.SetLayouts[i].Handle()))
 		}
 
 		createInfo.pSetLayouts = layoutsPtr
@@ -60,7 +60,7 @@ type DescriptorBufferInfo struct {
 	Range  int
 }
 
-type WriteDescriptorSetOptions struct {
+type WriteDescriptorSet struct {
 	DstSet          DescriptorSet
 	DstBinding      int
 	DstArrayElement int
@@ -78,7 +78,7 @@ type WriteDescriptorSetExtensionSource interface {
 	WriteDescriptorSetCount() int
 }
 
-func (o WriteDescriptorSetOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o WriteDescriptorSet) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == unsafe.Pointer(nil) {
 		preallocatedPointer = allocator.Malloc(C.sizeof_struct_VkWriteDescriptorSet)
 	}
@@ -101,23 +101,23 @@ func (o WriteDescriptorSetOptions) PopulateCPointer(allocator *cgoparam.Allocato
 	}
 
 	if imageInfoCount > 0 && texelBufferCount > 0 {
-		return nil, errors.New("a WriteDescriptorSetOptions may have one or more ImageInfo sources OR one or more TexelBufferView sources, but not both")
+		return nil, errors.New("a WriteDescriptorSet may have one or more ImageInfo sources OR one or more TexelBufferView sources, but not both")
 	}
 
 	if imageInfoCount > 0 && bufferInfoCount > 0 {
-		return nil, errors.New("a WriteDescriptorSetOptions may have one or more ImageInfo sources OR one or more BufferInfo sources, but not both")
+		return nil, errors.New("a WriteDescriptorSet may have one or more ImageInfo sources OR one or more BufferInfo sources, but not both")
 	}
 
 	if bufferInfoCount > 0 && texelBufferCount > 0 {
-		return nil, errors.New("a WriteDescriptorSetOptions may have one or more BufferInfo sources OR one or more TexelBufferView sources, but not both")
+		return nil, errors.New("a WriteDescriptorSet may have one or more BufferInfo sources OR one or more TexelBufferView sources, but not both")
 	}
 
 	if imageInfoCount == 0 && bufferInfoCount == 0 && texelBufferCount == 0 && extSource == nil {
-		return nil, errors.New("a WriteDescriptorSetOptions must have a source to write the descriptor from: ImageInfo, BufferInfo, TexelBufferView, or an extension source")
+		return nil, errors.New("a WriteDescriptorSet must have a source to write the descriptor from: ImageInfo, BufferInfo, TexelBufferView, or an extension source")
 	}
 
 	if extSource != nil && (bufferInfoCount > 0 || texelBufferCount > 0 || imageInfoCount > 0) {
-		return nil, errors.New("an extension descriptor source for a WriteDescriptorSetOptions has been included, but so has a traditional descriptor source: ImageInfo, BufferInfo, or TexelBufferView")
+		return nil, errors.New("an extension descriptor source for a WriteDescriptorSet has been included, but so has a traditional descriptor source: ImageInfo, BufferInfo, or TexelBufferView")
 	}
 
 	createInfo.sType = C.VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET
@@ -181,21 +181,21 @@ func (o WriteDescriptorSetOptions) PopulateCPointer(allocator *cgoparam.Allocato
 	return preallocatedPointer, nil
 }
 
-type CopyDescriptorSetOptions struct {
-	Source             DescriptorSet
-	SourceBinding      int
-	SourceArrayElement int
+type CopyDescriptorSet struct {
+	SrcSet          DescriptorSet
+	SrcBinding      int
+	SrcArrayElement int
 
-	Destination             DescriptorSet
-	DestinationBinding      int
-	DestinationArrayElement int
+	DstSet          DescriptorSet
+	DstBinding      int
+	DstArrayElement int
 
-	Count int
+	DescriptorCount int
 
 	common.NextOptions
 }
 
-func (o CopyDescriptorSetOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o CopyDescriptorSet) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == unsafe.Pointer(nil) {
 		preallocatedPointer = allocator.Malloc(C.sizeof_struct_VkCopyDescriptorSet)
 	}
@@ -204,15 +204,15 @@ func (o CopyDescriptorSetOptions) PopulateCPointer(allocator *cgoparam.Allocator
 	createInfo.sType = C.VK_STRUCTURE_TYPE_COPY_DESCRIPTOR_SET
 	createInfo.pNext = next
 
-	createInfo.srcSet = (C.VkDescriptorSet)(unsafe.Pointer(o.Source.Handle()))
-	createInfo.srcBinding = C.uint32_t(o.SourceBinding)
-	createInfo.srcArrayElement = C.uint32_t(o.SourceArrayElement)
+	createInfo.srcSet = (C.VkDescriptorSet)(unsafe.Pointer(o.SrcSet.Handle()))
+	createInfo.srcBinding = C.uint32_t(o.SrcBinding)
+	createInfo.srcArrayElement = C.uint32_t(o.SrcArrayElement)
 
-	createInfo.dstSet = (C.VkDescriptorSet)(unsafe.Pointer(o.Destination.Handle()))
-	createInfo.dstBinding = C.uint32_t(o.DestinationBinding)
-	createInfo.dstArrayElement = C.uint32_t(o.DestinationArrayElement)
+	createInfo.dstSet = (C.VkDescriptorSet)(unsafe.Pointer(o.DstSet.Handle()))
+	createInfo.dstBinding = C.uint32_t(o.DstBinding)
+	createInfo.dstArrayElement = C.uint32_t(o.DstArrayElement)
 
-	createInfo.descriptorCount = C.uint32_t(o.Count)
+	createInfo.descriptorCount = C.uint32_t(o.DescriptorCount)
 
 	return preallocatedPointer, nil
 }

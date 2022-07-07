@@ -12,24 +12,24 @@ import (
 	"unsafe"
 )
 
-type PeerMemoryFeatures int32
+type PeerMemoryFeatureFlags int32
 
-var peerMemoryFeaturesMapping = common.NewFlagStringMapping[PeerMemoryFeatures]()
+var peerMemoryFeaturesMapping = common.NewFlagStringMapping[PeerMemoryFeatureFlags]()
 
-func (f PeerMemoryFeatures) Register(str string) {
+func (f PeerMemoryFeatureFlags) Register(str string) {
 	peerMemoryFeaturesMapping.Register(f, str)
 }
-func (f PeerMemoryFeatures) String() string {
+func (f PeerMemoryFeatureFlags) String() string {
 	return peerMemoryFeaturesMapping.FlagsToString(f)
 }
 
 ////
 
 const (
-	PeerMemoryFeatureCopyDst    PeerMemoryFeatures = C.VK_PEER_MEMORY_FEATURE_COPY_DST_BIT
-	PeerMemoryFeatureCopySrc    PeerMemoryFeatures = C.VK_PEER_MEMORY_FEATURE_COPY_SRC_BIT
-	PeerMemoryFeatureGenericDst PeerMemoryFeatures = C.VK_PEER_MEMORY_FEATURE_GENERIC_DST_BIT
-	PeerMemoryFeatureGenericSrc PeerMemoryFeatures = C.VK_PEER_MEMORY_FEATURE_GENERIC_SRC_BIT
+	PeerMemoryFeatureCopyDst    PeerMemoryFeatureFlags = C.VK_PEER_MEMORY_FEATURE_COPY_DST_BIT
+	PeerMemoryFeatureCopySrc    PeerMemoryFeatureFlags = C.VK_PEER_MEMORY_FEATURE_COPY_SRC_BIT
+	PeerMemoryFeatureGenericDst PeerMemoryFeatureFlags = C.VK_PEER_MEMORY_FEATURE_GENERIC_DST_BIT
+	PeerMemoryFeatureGenericSrc PeerMemoryFeatureFlags = C.VK_PEER_MEMORY_FEATURE_GENERIC_SRC_BIT
 
 	QueueFamilyExternal int = C.VK_QUEUE_FAMILY_EXTERNAL
 
@@ -49,13 +49,13 @@ func init() {
 
 ////
 
-type DescriptorSetLayoutSupportOutData struct {
+type DescriptorSetLayoutSupport struct {
 	Supported bool
 
 	common.NextOutData
 }
 
-func (o *DescriptorSetLayoutSupportOutData) PopulateHeader(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o *DescriptorSetLayoutSupport) PopulateHeader(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == nil {
 		preallocatedPointer = allocator.Malloc(int(unsafe.Sizeof(C.VkDescriptorSetLayoutSupport{})))
 	}
@@ -67,7 +67,7 @@ func (o *DescriptorSetLayoutSupportOutData) PopulateHeader(allocator *cgoparam.A
 	return preallocatedPointer, nil
 }
 
-func (o *DescriptorSetLayoutSupportOutData) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
+func (o *DescriptorSetLayoutSupport) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
 	outData := (*C.VkDescriptorSetLayoutSupport)(cDataPointer)
 	o.Supported = outData.supported != C.VkBool32(0)
 

@@ -56,20 +56,20 @@ func init() {
 
 ////
 
-type SemaphoreSignalOptions struct {
+type SemaphoreSignalInfo struct {
 	Semaphore core1_0.Semaphore
 	Value     uint64
 
 	common.NextOptions
 }
 
-func (o SemaphoreSignalOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o SemaphoreSignalInfo) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == nil {
 		preallocatedPointer = allocator.Malloc(int(unsafe.Sizeof(C.VkSemaphoreSignalInfo{})))
 	}
 
 	if o.Semaphore == nil {
-		return nil, errors.New("the 'Semaphore' field of SemaphoreSignalOptions must be non-nil")
+		return nil, errors.New("the 'Semaphore' field of SemaphoreSignalInfo must be non-nil")
 	}
 
 	info := (*C.VkSemaphoreSignalInfo)(preallocatedPointer)
@@ -83,7 +83,7 @@ func (o SemaphoreSignalOptions) PopulateCPointer(allocator *cgoparam.Allocator, 
 
 ////
 
-type SemaphoreWaitOptions struct {
+type SemaphoreWaitInfo struct {
 	Flags      SemaphoreWaitFlags
 	Semaphores []core1_0.Semaphore
 	Values     []uint64
@@ -91,13 +91,13 @@ type SemaphoreWaitOptions struct {
 	common.NextOptions
 }
 
-func (o SemaphoreWaitOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o SemaphoreWaitInfo) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == nil {
 		preallocatedPointer = allocator.Malloc(int(unsafe.Sizeof(C.VkSemaphoreWaitInfo{})))
 	}
 
 	if len(o.Semaphores) != len(o.Values) {
-		return nil, errors.Newf("the SemaphoreWaitOptions 'Semaphores' list has %d elements, but the 'Values' list has %d elements- these lists must be the same size", len(o.Semaphores), len(o.Values))
+		return nil, errors.Newf("the SemaphoreWaitInfo 'Semaphores' list has %d elements, but the 'Values' list has %d elements- these lists must be the same size", len(o.Semaphores), len(o.Values))
 	}
 
 	info := (*C.VkSemaphoreWaitInfo)(preallocatedPointer)
@@ -119,7 +119,7 @@ func (o SemaphoreWaitOptions) PopulateCPointer(allocator *cgoparam.Allocator, pr
 
 		for i := 0; i < count; i++ {
 			if o.Semaphores[i] == nil {
-				return nil, errors.Newf("the SemaphoreWaitOptions 'Semaphores' list has a nil semaphore at element %d- all elements must be non-nil", i)
+				return nil, errors.Newf("the SemaphoreWaitInfo 'Semaphores' list has a nil semaphore at element %d- all elements must be non-nil", i)
 			}
 
 			semaphoreSlice[i] = C.VkSemaphore(unsafe.Pointer(o.Semaphores[i].Handle()))
@@ -132,14 +132,14 @@ func (o SemaphoreWaitOptions) PopulateCPointer(allocator *cgoparam.Allocator, pr
 
 ////
 
-type SemaphoreTypeCreateOptions struct {
+type SemaphoreTypeCreateInfo struct {
 	SemaphoreType SemaphoreType
 	InitialValue  uint64
 
 	common.NextOptions
 }
 
-func (o SemaphoreTypeCreateOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o SemaphoreTypeCreateInfo) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == nil {
 		preallocatedPointer = allocator.Malloc(int(unsafe.Sizeof(C.VkSemaphoreTypeCreateInfo{})))
 	}
@@ -155,14 +155,14 @@ func (o SemaphoreTypeCreateOptions) PopulateCPointer(allocator *cgoparam.Allocat
 
 ////
 
-type TimelineSemaphoreSubmitOptions struct {
+type TimelineSemaphoreSubmitInfo struct {
 	WaitSemaphoreValues   []uint64
 	SignalSemaphoreValues []uint64
 
 	common.NextOptions
 }
 
-func (o TimelineSemaphoreSubmitOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o TimelineSemaphoreSubmitInfo) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == nil {
 		preallocatedPointer = allocator.Malloc(int(unsafe.Sizeof(C.VkTimelineSemaphoreSubmitInfo{})))
 	}

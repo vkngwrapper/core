@@ -57,7 +57,7 @@ func (d *VulkanPhysicalDevice) QueueFamilyProperties() []*QueueFamily {
 	var queueFamilies []*QueueFamily
 	for i := 0; i < goCount; i++ {
 		queueFamilies = append(queueFamilies, &QueueFamily{
-			Flags:              QueueFlags(familyProperties[i].queueFlags),
+			QueueFlags:         QueueFlags(familyProperties[i].queueFlags),
 			QueueCount:         int(familyProperties[i].queueCount),
 			TimestampValidBits: uint32(familyProperties[i].timestampValidBits),
 			MinImageTransferGranularity: Extent3D{
@@ -139,7 +139,7 @@ func (d *VulkanPhysicalDevice) attemptAvailableExtensions(layerNamePtr *driver.C
 	return retVal, res, nil
 }
 
-func (d *VulkanPhysicalDevice) AvailableExtensions() (map[string]*ExtensionProperties, common.VkResult, error) {
+func (d *VulkanPhysicalDevice) EnumerateDeviceExtensionProperties() (map[string]*ExtensionProperties, common.VkResult, error) {
 	// There may be a race condition that adds new available extensions between getting the
 	// extension count & pulling the extensions, in which case, attemptAvailableExtensions will return
 	// VK_INCOMPLETE.  In this case, we should try again.
@@ -152,7 +152,7 @@ func (d *VulkanPhysicalDevice) AvailableExtensions() (map[string]*ExtensionPrope
 	return layers, result, err
 }
 
-func (d *VulkanPhysicalDevice) AvailableExtensionsForLayer(layerName string) (map[string]*ExtensionProperties, common.VkResult, error) {
+func (d *VulkanPhysicalDevice) EnumerateDeviceExtensionPropertiesForLayer(layerName string) (map[string]*ExtensionProperties, common.VkResult, error) {
 	// There may be a race condition that adds new available extensions between getting the
 	// extension count & pulling the extensions, in which case, attemptAvailableExtensions will return
 	// VK_INCOMPLETE.  In this case, we should try again.
@@ -215,7 +215,7 @@ func (d *VulkanPhysicalDevice) attemptAvailableLayers() (map[string]*LayerProper
 	return retVal, res, nil
 }
 
-func (d *VulkanPhysicalDevice) AvailableLayers() (map[string]*LayerProperties, common.VkResult, error) {
+func (d *VulkanPhysicalDevice) EnumerateDeviceLayerProperties() (map[string]*LayerProperties, common.VkResult, error) {
 	// There may be a race condition that adds new available extensions between getting the
 	// extension count & pulling the extensions, in which case, attemptAvailableExtensions will return
 	// VK_INCOMPLETE.  In this case, we should try again.
@@ -228,7 +228,7 @@ func (d *VulkanPhysicalDevice) AvailableLayers() (map[string]*LayerProperties, c
 	return layers, result, err
 }
 
-func (d *VulkanPhysicalDevice) FormatProperties(format DataFormat) *FormatProperties {
+func (d *VulkanPhysicalDevice) FormatProperties(format Format) *FormatProperties {
 	allocator := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(allocator)
 
@@ -237,13 +237,13 @@ func (d *VulkanPhysicalDevice) FormatProperties(format DataFormat) *FormatProper
 	d.instanceDriver.VkGetPhysicalDeviceFormatProperties(d.physicalDeviceHandle, driver.VkFormat(format), (*driver.VkFormatProperties)(unsafe.Pointer(properties)))
 
 	return &FormatProperties{
-		LinearTilingFeatures:  FormatFeatures(properties.linearTilingFeatures),
-		OptimalTilingFeatures: FormatFeatures(properties.optimalTilingFeatures),
-		BufferFeatures:        FormatFeatures(properties.bufferFeatures),
+		LinearTilingFeatures:  FormatFeatureFlags(properties.linearTilingFeatures),
+		OptimalTilingFeatures: FormatFeatureFlags(properties.optimalTilingFeatures),
+		BufferFeatures:        FormatFeatureFlags(properties.bufferFeatures),
 	}
 }
 
-func (d *VulkanPhysicalDevice) ImageFormatProperties(format DataFormat, imageType ImageType, tiling ImageTiling, usages ImageUsages, flags ImageCreateFlags) (*ImageFormatProperties, common.VkResult, error) {
+func (d *VulkanPhysicalDevice) ImageFormatProperties(format Format, imageType ImageType, tiling ImageTiling, usages ImageUsageFlags, flags ImageCreateFlags) (*ImageFormatProperties, common.VkResult, error) {
 	allocator := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(allocator)
 
@@ -262,12 +262,12 @@ func (d *VulkanPhysicalDevice) ImageFormatProperties(format DataFormat, imageTyp
 		},
 		MaxMipLevels:    int(properties.maxMipLevels),
 		MaxArrayLayers:  int(properties.maxArrayLayers),
-		SampleCounts:    SampleCounts(properties.sampleCounts),
+		SampleCounts:    SampleCountFlags(properties.sampleCounts),
 		MaxResourceSize: int(properties.maxResourceSize),
 	}, res, nil
 }
 
-func (d *VulkanPhysicalDevice) SparseImageFormatProperties(format DataFormat, imageType ImageType, samples SampleCounts, usages ImageUsages, tiling ImageTiling) []SparseImageFormatProperties {
+func (d *VulkanPhysicalDevice) SparseImageFormatProperties(format Format, imageType ImageType, samples SampleCountFlags, usages ImageUsageFlags, tiling ImageTiling) []SparseImageFormatProperties {
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
@@ -300,7 +300,7 @@ func (d *VulkanPhysicalDevice) SparseImageFormatProperties(format DataFormat, im
 	return outReqs
 }
 
-func (d *VulkanPhysicalDevice) CreateDevice(allocationCallbacks *driver.AllocationCallbacks, options DeviceCreateOptions) (Device, common.VkResult, error) {
+func (d *VulkanPhysicalDevice) CreateDevice(allocationCallbacks *driver.AllocationCallbacks, options DeviceCreateInfo) (Device, common.VkResult, error) {
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
@@ -322,7 +322,7 @@ func (d *VulkanPhysicalDevice) CreateDevice(allocationCallbacks *driver.Allocati
 
 	device := createDeviceObject(deviceDriver, deviceHandle, d.maximumDeviceVersion)
 
-	for _, extension := range options.ExtensionNames {
+	for _, extension := range options.EnabledExtensionNames {
 		device.activeDeviceExtensions[extension] = struct{}{}
 	}
 

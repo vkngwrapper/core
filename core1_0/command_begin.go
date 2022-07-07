@@ -12,49 +12,49 @@ import (
 )
 
 const (
-	BeginInfoOneTimeSubmit      BeginInfoFlags = C.VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT
-	BeginInfoRenderPassContinue BeginInfoFlags = C.VK_COMMAND_BUFFER_USAGE_RENDER_PASS_CONTINUE_BIT
-	BeginInfoSimultaneousUse    BeginInfoFlags = C.VK_COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT
+	CommandBufferUsageOneTimeSubmit      CommandBufferUsageFlags = C.VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT
+	CommandBufferUsageRenderPassContinue CommandBufferUsageFlags = C.VK_COMMAND_BUFFER_USAGE_RENDER_PASS_CONTINUE_BIT
+	CommandBufferUsageSimultaneousUse    CommandBufferUsageFlags = C.VK_COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT
 
 	QueryPrecise QueryControlFlags = C.VK_QUERY_CONTROL_PRECISE_BIT
 
-	QueryStatisticInputAssemblyVertices                   QueryPipelineStatisticFlags = C.VK_QUERY_PIPELINE_STATISTIC_INPUT_ASSEMBLY_VERTICES_BIT
-	QueryStatisticInputAssemblyPrimitives                 QueryPipelineStatisticFlags = C.VK_QUERY_PIPELINE_STATISTIC_INPUT_ASSEMBLY_PRIMITIVES_BIT
-	QueryStatisticVertexShaderInvocations                 QueryPipelineStatisticFlags = C.VK_QUERY_PIPELINE_STATISTIC_VERTEX_SHADER_INVOCATIONS_BIT
-	QueryStatisticGeometryShaderInvocations               QueryPipelineStatisticFlags = C.VK_QUERY_PIPELINE_STATISTIC_GEOMETRY_SHADER_INVOCATIONS_BIT
-	QueryStatisticGeometryShaderPrimitives                QueryPipelineStatisticFlags = C.VK_QUERY_PIPELINE_STATISTIC_GEOMETRY_SHADER_PRIMITIVES_BIT
-	QueryStatisticClippingInvocations                     QueryPipelineStatisticFlags = C.VK_QUERY_PIPELINE_STATISTIC_CLIPPING_INVOCATIONS_BIT
-	QueryStatisticClippingPrimitives                      QueryPipelineStatisticFlags = C.VK_QUERY_PIPELINE_STATISTIC_CLIPPING_PRIMITIVES_BIT
-	QueryStatisticFragmentShaderInvocations               QueryPipelineStatisticFlags = C.VK_QUERY_PIPELINE_STATISTIC_FRAGMENT_SHADER_INVOCATIONS_BIT
-	QueryStatisticTessellationControlShaderPatches        QueryPipelineStatisticFlags = C.VK_QUERY_PIPELINE_STATISTIC_TESSELLATION_CONTROL_SHADER_PATCHES_BIT
-	QueryStatisticTessellationEvaluationShaderInvocations QueryPipelineStatisticFlags = C.VK_QUERY_PIPELINE_STATISTIC_TESSELLATION_EVALUATION_SHADER_INVOCATIONS_BIT
-	QueryStatisticComputeShaderInvocations                QueryPipelineStatisticFlags = C.VK_QUERY_PIPELINE_STATISTIC_COMPUTE_SHADER_INVOCATIONS_BIT
+	QueryPipelineStatisticInputAssemblyVertices                   QueryPipelineStatisticFlags = C.VK_QUERY_PIPELINE_STATISTIC_INPUT_ASSEMBLY_VERTICES_BIT
+	QueryPipelineStatisticInputAssemblyPrimitives                 QueryPipelineStatisticFlags = C.VK_QUERY_PIPELINE_STATISTIC_INPUT_ASSEMBLY_PRIMITIVES_BIT
+	QueryPipelineStatisticVertexShaderInvocations                 QueryPipelineStatisticFlags = C.VK_QUERY_PIPELINE_STATISTIC_VERTEX_SHADER_INVOCATIONS_BIT
+	QueryPipelineStatisticGeometryShaderInvocations               QueryPipelineStatisticFlags = C.VK_QUERY_PIPELINE_STATISTIC_GEOMETRY_SHADER_INVOCATIONS_BIT
+	QueryPipelineStatisticGeometryShaderPrimitives                QueryPipelineStatisticFlags = C.VK_QUERY_PIPELINE_STATISTIC_GEOMETRY_SHADER_PRIMITIVES_BIT
+	QueryPipelineStatisticClippingInvocations                     QueryPipelineStatisticFlags = C.VK_QUERY_PIPELINE_STATISTIC_CLIPPING_INVOCATIONS_BIT
+	QueryPipelineStatisticClippingPrimitives                      QueryPipelineStatisticFlags = C.VK_QUERY_PIPELINE_STATISTIC_CLIPPING_PRIMITIVES_BIT
+	QueryPipelineStatisticFragmentShaderInvocations               QueryPipelineStatisticFlags = C.VK_QUERY_PIPELINE_STATISTIC_FRAGMENT_SHADER_INVOCATIONS_BIT
+	QueryPipelineStatisticTessellationControlShaderPatches        QueryPipelineStatisticFlags = C.VK_QUERY_PIPELINE_STATISTIC_TESSELLATION_CONTROL_SHADER_PATCHES_BIT
+	QueryPipelineStatisticTessellationEvaluationShaderInvocations QueryPipelineStatisticFlags = C.VK_QUERY_PIPELINE_STATISTIC_TESSELLATION_EVALUATION_SHADER_INVOCATIONS_BIT
+	QueryPipelineStatisticComputeShaderInvocations                QueryPipelineStatisticFlags = C.VK_QUERY_PIPELINE_STATISTIC_COMPUTE_SHADER_INVOCATIONS_BIT
 )
 
 func init() {
-	BeginInfoOneTimeSubmit.Register("One Time Submit")
-	BeginInfoRenderPassContinue.Register("Render Pass Continue")
-	BeginInfoSimultaneousUse.Register("Simultaneous Use")
+	CommandBufferUsageOneTimeSubmit.Register("One Time Submit")
+	CommandBufferUsageRenderPassContinue.Register("Render Pass Continue")
+	CommandBufferUsageSimultaneousUse.Register("Simultaneous Use")
 
 	QueryPrecise.Register("Precise")
 
-	QueryStatisticInputAssemblyVertices.Register("Input Assembly Vertices")
-	QueryStatisticInputAssemblyPrimitives.Register("Input Assembly Primitives")
-	QueryStatisticVertexShaderInvocations.Register("Vertex Shader Invocations")
-	QueryStatisticGeometryShaderInvocations.Register("Geometry Shader Invocations")
-	QueryStatisticGeometryShaderPrimitives.Register("Geometry Shader Primitives")
-	QueryStatisticClippingInvocations.Register("Clipping Invocations")
-	QueryStatisticClippingPrimitives.Register("Clipping Primitives")
-	QueryStatisticFragmentShaderInvocations.Register("Fragment Shader Invocations")
-	QueryStatisticTessellationControlShaderPatches.Register("Tessellation Control Shader Patches")
-	QueryStatisticTessellationEvaluationShaderInvocations.Register("Tessellation Evaluation Shader Invocations")
-	QueryStatisticComputeShaderInvocations.Register("Compute Shader Invocations")
+	QueryPipelineStatisticInputAssemblyVertices.Register("Input Assembly Vertices")
+	QueryPipelineStatisticInputAssemblyPrimitives.Register("Input Assembly Primitives")
+	QueryPipelineStatisticVertexShaderInvocations.Register("Vertex Shader Invocations")
+	QueryPipelineStatisticGeometryShaderInvocations.Register("Geometry Shader Invocations")
+	QueryPipelineStatisticGeometryShaderPrimitives.Register("Geometry Shader Primitives")
+	QueryPipelineStatisticClippingInvocations.Register("Clipping Invocations")
+	QueryPipelineStatisticClippingPrimitives.Register("Clipping Primitives")
+	QueryPipelineStatisticFragmentShaderInvocations.Register("Fragment Shader Invocations")
+	QueryPipelineStatisticTessellationControlShaderPatches.Register("Tessellation Control Shader Patches")
+	QueryPipelineStatisticTessellationEvaluationShaderInvocations.Register("Tessellation Evaluation Shader Invocations")
+	QueryPipelineStatisticComputeShaderInvocations.Register("Compute Shader Invocations")
 }
 
-type InheritanceOptions struct {
+type CommandBufferInheritanceInfo struct {
 	Framebuffer Framebuffer
 	RenderPass  RenderPass
-	SubPass     int
+	Subpass     int
 
 	OcclusionQueryEnable bool
 	QueryFlags           QueryControlFlags
@@ -63,7 +63,7 @@ type InheritanceOptions struct {
 	common.NextOptions
 }
 
-func (o InheritanceOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o CommandBufferInheritanceInfo) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == unsafe.Pointer(nil) {
 		preallocatedPointer = allocator.Malloc(C.sizeof_struct_VkCommandBufferInheritanceInfo)
 	}
@@ -83,7 +83,7 @@ func (o InheritanceOptions) PopulateCPointer(allocator *cgoparam.Allocator, prea
 		createInfo.renderPass = (C.VkRenderPass)(unsafe.Pointer(o.RenderPass.Handle()))
 	}
 
-	createInfo.subpass = C.uint32_t(o.SubPass)
+	createInfo.subpass = C.uint32_t(o.Subpass)
 	createInfo.occlusionQueryEnable = C.VK_FALSE
 
 	if o.OcclusionQueryEnable {
@@ -96,14 +96,14 @@ func (o InheritanceOptions) PopulateCPointer(allocator *cgoparam.Allocator, prea
 	return unsafe.Pointer(createInfo), nil
 }
 
-type BeginOptions struct {
-	Flags           BeginInfoFlags
-	InheritanceInfo *InheritanceOptions
+type CommandBufferBeginInfo struct {
+	Flags           CommandBufferUsageFlags
+	InheritanceInfo *CommandBufferInheritanceInfo
 
 	common.NextOptions
 }
 
-func (o BeginOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o CommandBufferBeginInfo) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == unsafe.Pointer(nil) {
 		preallocatedPointer = allocator.Malloc(C.sizeof_struct_VkCommandBufferBeginInfo)
 	}

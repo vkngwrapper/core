@@ -12,14 +12,29 @@ import (
 	"unsafe"
 )
 
-type ShaderModuleCreateOptions struct {
-	SpirVByteCode []uint32
+type ShaderModuleCreateFlags int32
+
+var shaderModuleCreateFlagsMapping = common.NewFlagStringMapping[ShaderModuleCreateFlags]()
+
+func (f ShaderModuleCreateFlags) Register(str string) {
+	shaderModuleCreateFlagsMapping.Register(f, str)
+}
+
+func (f ShaderModuleCreateFlags) String() string {
+	return shaderModuleCreateFlagsMapping.FlagsToString(f)
+}
+
+////
+
+type ShaderModuleCreateInfo struct {
+	Code  []uint32
+	Flags ShaderModuleCreateFlags
 
 	common.NextOptions
 }
 
-func (o ShaderModuleCreateOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
-	byteCodeLen := len(o.SpirVByteCode)
+func (o ShaderModuleCreateInfo) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+	byteCodeLen := len(o.Code)
 	if byteCodeLen == 0 {
 		return nil, errors.New("attempted to create a shader module with no shader bytecode")
 	}
@@ -34,13 +49,13 @@ func (o ShaderModuleCreateOptions) PopulateCPointer(allocator *cgoparam.Allocato
 	byteCodeArray := ([]C.uint32_t)(unsafe.Slice(bytecodePtr, byteCodeLen))
 
 	createInfo.sType = C.VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO
-	createInfo.flags = 0
+	createInfo.flags = C.VkShaderModuleCreateFlags(o.Flags)
 	createInfo.pNext = next
 	createInfo.codeSize = C.size_t(byteCodeLen * 4)
 	createInfo.pCode = bytecodePtr
 
 	for i := 0; i < byteCodeLen; i++ {
-		byteCodeArray[i] = C.uint32_t(o.SpirVByteCode[i])
+		byteCodeArray[i] = C.uint32_t(o.Code[i])
 	}
 
 	return preallocatedPointer, nil

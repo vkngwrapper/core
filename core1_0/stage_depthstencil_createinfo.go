@@ -12,6 +12,20 @@ import (
 	"unsafe"
 )
 
+type PipelineDepthStencilStateCreateFlags uint32
+
+var pipelineDepthStencilStateCreateFlagsMapping = common.NewFlagStringMapping[PipelineDepthStencilStateCreateFlags]()
+
+func (f PipelineDepthStencilStateCreateFlags) Register(str string) {
+	pipelineDepthStencilStateCreateFlagsMapping.Register(f, str)
+}
+
+func (f PipelineDepthStencilStateCreateFlags) String() string {
+	return pipelineDepthStencilStateCreateFlagsMapping.FlagsToString(f)
+}
+
+////
+
 const (
 	StencilKeep              StencilOp = C.VK_STENCIL_OP_KEEP
 	StencilZero              StencilOp = C.VK_STENCIL_OP_ZERO
@@ -46,7 +60,9 @@ type StencilOpState struct {
 	Reference uint32
 }
 
-type DepthStencilStateOptions struct {
+type PipelineDepthStencilStateCreateInfo struct {
+	Flags PipelineDepthStencilStateCreateFlags
+
 	DepthTestEnable  bool
 	DepthWriteEnable bool
 	DepthCompareOp   CompareOp
@@ -54,8 +70,8 @@ type DepthStencilStateOptions struct {
 	DepthBoundsTestEnable bool
 	StencilTestEnable     bool
 
-	FrontStencilState StencilOpState
-	BackStencilState  StencilOpState
+	Front StencilOpState
+	Back  StencilOpState
 
 	MinDepthBounds float32
 	MaxDepthBounds float32
@@ -63,13 +79,13 @@ type DepthStencilStateOptions struct {
 	common.NextOptions
 }
 
-func (o DepthStencilStateOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o PipelineDepthStencilStateCreateInfo) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == unsafe.Pointer(nil) {
 		preallocatedPointer = allocator.Malloc(C.sizeof_struct_VkPipelineDepthStencilStateCreateInfo)
 	}
 	createInfo := (*C.VkPipelineDepthStencilStateCreateInfo)(preallocatedPointer)
 	createInfo.sType = C.VK_STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO
-	createInfo.flags = 0
+	createInfo.flags = C.VkPipelineDepthStencilStateCreateFlags(o.Flags)
 	createInfo.pNext = next
 	createInfo.depthTestEnable = C.VK_FALSE
 	createInfo.depthWriteEnable = C.VK_FALSE
@@ -93,21 +109,21 @@ func (o DepthStencilStateOptions) PopulateCPointer(allocator *cgoparam.Allocator
 	createInfo.minDepthBounds = C.float(o.MinDepthBounds)
 	createInfo.maxDepthBounds = C.float(o.MaxDepthBounds)
 
-	createInfo.front.failOp = C.VkStencilOp(o.FrontStencilState.FailOp)
-	createInfo.front.passOp = C.VkStencilOp(o.FrontStencilState.PassOp)
-	createInfo.front.depthFailOp = C.VkStencilOp(o.FrontStencilState.DepthFailOp)
-	createInfo.front.compareOp = C.VkCompareOp(o.FrontStencilState.CompareOp)
-	createInfo.front.compareMask = C.uint32_t(o.FrontStencilState.CompareMask)
-	createInfo.front.writeMask = C.uint32_t(o.FrontStencilState.WriteMask)
-	createInfo.front.reference = C.uint32_t(o.FrontStencilState.Reference)
+	createInfo.front.failOp = C.VkStencilOp(o.Front.FailOp)
+	createInfo.front.passOp = C.VkStencilOp(o.Front.PassOp)
+	createInfo.front.depthFailOp = C.VkStencilOp(o.Front.DepthFailOp)
+	createInfo.front.compareOp = C.VkCompareOp(o.Front.CompareOp)
+	createInfo.front.compareMask = C.uint32_t(o.Front.CompareMask)
+	createInfo.front.writeMask = C.uint32_t(o.Front.WriteMask)
+	createInfo.front.reference = C.uint32_t(o.Front.Reference)
 
-	createInfo.back.failOp = C.VkStencilOp(o.BackStencilState.FailOp)
-	createInfo.back.passOp = C.VkStencilOp(o.BackStencilState.PassOp)
-	createInfo.back.depthFailOp = C.VkStencilOp(o.BackStencilState.DepthFailOp)
-	createInfo.back.compareOp = C.VkCompareOp(o.BackStencilState.CompareOp)
-	createInfo.back.compareMask = C.uint32_t(o.BackStencilState.CompareMask)
-	createInfo.back.writeMask = C.uint32_t(o.BackStencilState.WriteMask)
-	createInfo.back.reference = C.uint32_t(o.BackStencilState.Reference)
+	createInfo.back.failOp = C.VkStencilOp(o.Back.FailOp)
+	createInfo.back.passOp = C.VkStencilOp(o.Back.PassOp)
+	createInfo.back.depthFailOp = C.VkStencilOp(o.Back.DepthFailOp)
+	createInfo.back.compareOp = C.VkCompareOp(o.Back.CompareOp)
+	createInfo.back.compareMask = C.uint32_t(o.Back.CompareMask)
+	createInfo.back.writeMask = C.uint32_t(o.Back.WriteMask)
+	createInfo.back.reference = C.uint32_t(o.Back.Reference)
 
 	return preallocatedPointer, nil
 }

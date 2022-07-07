@@ -14,23 +14,23 @@ import (
 )
 
 const (
-	PipelineStageTopOfPipe                    PipelineStages = C.VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT
-	PipelineStageDrawIndirect                 PipelineStages = C.VK_PIPELINE_STAGE_DRAW_INDIRECT_BIT
-	PipelineStageVertexInput                  PipelineStages = C.VK_PIPELINE_STAGE_VERTEX_INPUT_BIT
-	PipelineStageVertexShader                 PipelineStages = C.VK_PIPELINE_STAGE_VERTEX_SHADER_BIT
-	PipelineStageTessellationControlShader    PipelineStages = C.VK_PIPELINE_STAGE_TESSELLATION_CONTROL_SHADER_BIT
-	PipelineStageTessellationEvaluationShader PipelineStages = C.VK_PIPELINE_STAGE_TESSELLATION_EVALUATION_SHADER_BIT
-	PipelineStageGeometryShader               PipelineStages = C.VK_PIPELINE_STAGE_GEOMETRY_SHADER_BIT
-	PipelineStageFragmentShader               PipelineStages = C.VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT
-	PipelineStageEarlyFragmentTests           PipelineStages = C.VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT
-	PipelineStageLateFragmentTests            PipelineStages = C.VK_PIPELINE_STAGE_LATE_FRAGMENT_TESTS_BIT
-	PipelineStageColorAttachmentOutput        PipelineStages = C.VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT
-	PipelineStageComputeShader                PipelineStages = C.VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT
-	PipelineStageTransfer                     PipelineStages = C.VK_PIPELINE_STAGE_TRANSFER_BIT
-	PipelineStageBottomOfPipe                 PipelineStages = C.VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT
-	PipelineStageHost                         PipelineStages = C.VK_PIPELINE_STAGE_HOST_BIT
-	PipelineStageAllGraphics                  PipelineStages = C.VK_PIPELINE_STAGE_ALL_GRAPHICS_BIT
-	PipelineStageAllCommands                  PipelineStages = C.VK_PIPELINE_STAGE_ALL_COMMANDS_BIT
+	PipelineStageTopOfPipe                    PipelineStageFlags = C.VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT
+	PipelineStageDrawIndirect                 PipelineStageFlags = C.VK_PIPELINE_STAGE_DRAW_INDIRECT_BIT
+	PipelineStageVertexInput                  PipelineStageFlags = C.VK_PIPELINE_STAGE_VERTEX_INPUT_BIT
+	PipelineStageVertexShader                 PipelineStageFlags = C.VK_PIPELINE_STAGE_VERTEX_SHADER_BIT
+	PipelineStageTessellationControlShader    PipelineStageFlags = C.VK_PIPELINE_STAGE_TESSELLATION_CONTROL_SHADER_BIT
+	PipelineStageTessellationEvaluationShader PipelineStageFlags = C.VK_PIPELINE_STAGE_TESSELLATION_EVALUATION_SHADER_BIT
+	PipelineStageGeometryShader               PipelineStageFlags = C.VK_PIPELINE_STAGE_GEOMETRY_SHADER_BIT
+	PipelineStageFragmentShader               PipelineStageFlags = C.VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT
+	PipelineStageEarlyFragmentTests           PipelineStageFlags = C.VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT
+	PipelineStageLateFragmentTests            PipelineStageFlags = C.VK_PIPELINE_STAGE_LATE_FRAGMENT_TESTS_BIT
+	PipelineStageColorAttachmentOutput        PipelineStageFlags = C.VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT
+	PipelineStageComputeShader                PipelineStageFlags = C.VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT
+	PipelineStageTransfer                     PipelineStageFlags = C.VK_PIPELINE_STAGE_TRANSFER_BIT
+	PipelineStageBottomOfPipe                 PipelineStageFlags = C.VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT
+	PipelineStageHost                         PipelineStageFlags = C.VK_PIPELINE_STAGE_HOST_BIT
+	PipelineStageAllGraphics                  PipelineStageFlags = C.VK_PIPELINE_STAGE_ALL_GRAPHICS_BIT
+	PipelineStageAllCommands                  PipelineStageFlags = C.VK_PIPELINE_STAGE_ALL_COMMANDS_BIT
 )
 
 func init() {
@@ -53,18 +53,18 @@ func init() {
 	PipelineStageAllCommands.Register("All Commands")
 }
 
-type SubmitOptions struct {
+type SubmitInfo struct {
 	CommandBuffers   []CommandBuffer
 	WaitSemaphores   []Semaphore
-	WaitDstStages    []PipelineStages
+	WaitDstStageMask []PipelineStageFlags
 	SignalSemaphores []Semaphore
 
 	common.NextOptions
 }
 
-func (o SubmitOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
-	if len(o.WaitSemaphores) != len(o.WaitDstStages) {
-		return nil, errors.Newf("attempted to submit with %d wait semaphores but %d dst stages- these should match", len(o.WaitSemaphores), len(o.WaitDstStages))
+func (o SubmitInfo) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+	if len(o.WaitSemaphores) != len(o.WaitDstStageMask) {
+		return nil, errors.Newf("attempted to submit with %d wait semaphores but %d dst stages- these should match", len(o.WaitSemaphores), len(o.WaitDstStageMask))
 	}
 	if preallocatedPointer == unsafe.Pointer(nil) {
 		preallocatedPointer = allocator.Malloc(C.sizeof_struct_VkSubmitInfo)
@@ -87,7 +87,7 @@ func (o SubmitOptions) PopulateCPointer(allocator *cgoparam.Allocator, prealloca
 
 		for i := 0; i < waitSemaphoreCount; i++ {
 			semaphoreSlice[i] = (C.VkSemaphore)(unsafe.Pointer(o.WaitSemaphores[i].Handle()))
-			stageSlice[i] = (C.VkPipelineStageFlags)(o.WaitDstStages[i])
+			stageSlice[i] = (C.VkPipelineStageFlags)(o.WaitDstStageMask[i])
 		}
 
 		createInfo.pWaitSemaphores = semaphorePtr

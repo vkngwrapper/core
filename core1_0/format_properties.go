@@ -7,19 +7,19 @@ package core1_0
 import "C"
 
 const (
-	FormatFeatureSampledImage             FormatFeatures = C.VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT
-	FormatFeatureStorageImage             FormatFeatures = C.VK_FORMAT_FEATURE_STORAGE_IMAGE_BIT
-	FormatFeatureStorageImageAtomic       FormatFeatures = C.VK_FORMAT_FEATURE_STORAGE_IMAGE_ATOMIC_BIT
-	FormatFeatureUniformTexelBuffer       FormatFeatures = C.VK_FORMAT_FEATURE_UNIFORM_TEXEL_BUFFER_BIT
-	FormatFeatureStorageTexelBuffer       FormatFeatures = C.VK_FORMAT_FEATURE_STORAGE_TEXEL_BUFFER_BIT
-	FormatFeatureStorageTexelBufferAtomic FormatFeatures = C.VK_FORMAT_FEATURE_STORAGE_TEXEL_BUFFER_ATOMIC_BIT
-	FormatFeatureVertexBuffer             FormatFeatures = C.VK_FORMAT_FEATURE_VERTEX_BUFFER_BIT
-	FormatFeatureColorAttachment          FormatFeatures = C.VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BIT
-	FormatFeatureColorAttachmentBlend     FormatFeatures = C.VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BLEND_BIT
-	FormatFeatureDepthStencilAttachment   FormatFeatures = C.VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT
-	FormatFeatureBlitSource               FormatFeatures = C.VK_FORMAT_FEATURE_BLIT_SRC_BIT
-	FormatFeatureBlitDestination          FormatFeatures = C.VK_FORMAT_FEATURE_BLIT_DST_BIT
-	FormatFeatureSampledImageFilterLinear FormatFeatures = C.VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT
+	FormatFeatureSampledImage             FormatFeatureFlags = C.VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT
+	FormatFeatureStorageImage             FormatFeatureFlags = C.VK_FORMAT_FEATURE_STORAGE_IMAGE_BIT
+	FormatFeatureStorageImageAtomic       FormatFeatureFlags = C.VK_FORMAT_FEATURE_STORAGE_IMAGE_ATOMIC_BIT
+	FormatFeatureUniformTexelBuffer       FormatFeatureFlags = C.VK_FORMAT_FEATURE_UNIFORM_TEXEL_BUFFER_BIT
+	FormatFeatureStorageTexelBuffer       FormatFeatureFlags = C.VK_FORMAT_FEATURE_STORAGE_TEXEL_BUFFER_BIT
+	FormatFeatureStorageTexelBufferAtomic FormatFeatureFlags = C.VK_FORMAT_FEATURE_STORAGE_TEXEL_BUFFER_ATOMIC_BIT
+	FormatFeatureVertexBuffer             FormatFeatureFlags = C.VK_FORMAT_FEATURE_VERTEX_BUFFER_BIT
+	FormatFeatureColorAttachment          FormatFeatureFlags = C.VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BIT
+	FormatFeatureColorAttachmentBlend     FormatFeatureFlags = C.VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BLEND_BIT
+	FormatFeatureDepthStencilAttachment   FormatFeatureFlags = C.VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT
+	FormatFeatureBlitSource               FormatFeatureFlags = C.VK_FORMAT_FEATURE_BLIT_SRC_BIT
+	FormatFeatureBlitDestination          FormatFeatureFlags = C.VK_FORMAT_FEATURE_BLIT_DST_BIT
+	FormatFeatureSampledImageFilterLinear FormatFeatureFlags = C.VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT
 )
 
 func init() {
@@ -39,7 +39,7 @@ func init() {
 }
 
 type FormatProperties struct {
-	LinearTilingFeatures  FormatFeatures
-	OptimalTilingFeatures FormatFeatures
-	BufferFeatures        FormatFeatures
+	LinearTilingFeatures  FormatFeatureFlags
+	OptimalTilingFeatures FormatFeatureFlags
+	BufferFeatures        FormatFeatureFlags
 }

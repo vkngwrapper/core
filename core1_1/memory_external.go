@@ -12,46 +12,46 @@ import (
 	"unsafe"
 )
 
-type ExternalMemoryFeatures int32
+type ExternalMemoryFeatureFlags int32
 
-var externalMemoryFeaturesMapping = common.NewFlagStringMapping[ExternalMemoryFeatures]()
+var externalMemoryFeaturesMapping = common.NewFlagStringMapping[ExternalMemoryFeatureFlags]()
 
-func (f ExternalMemoryFeatures) Register(str string) {
+func (f ExternalMemoryFeatureFlags) Register(str string) {
 	externalMemoryFeaturesMapping.Register(f, str)
 }
 
-func (f ExternalMemoryFeatures) String() string {
+func (f ExternalMemoryFeatureFlags) String() string {
 	return externalMemoryFeaturesMapping.FlagsToString(f)
 }
 
 ////
 
-type ExternalMemoryHandleTypes int32
+type ExternalMemoryHandleTypeFlags int32
 
-var externalMemoryHandleTypesMapping = common.NewFlagStringMapping[ExternalMemoryHandleTypes]()
+var externalMemoryHandleTypesMapping = common.NewFlagStringMapping[ExternalMemoryHandleTypeFlags]()
 
-func (f ExternalMemoryHandleTypes) Register(str string) {
+func (f ExternalMemoryHandleTypeFlags) Register(str string) {
 	externalMemoryHandleTypesMapping.Register(f, str)
 }
 
-func (f ExternalMemoryHandleTypes) String() string {
+func (f ExternalMemoryHandleTypeFlags) String() string {
 	return externalMemoryHandleTypesMapping.FlagsToString(f)
 }
 
 ////
 
 const (
-	ExternalMemoryFeatureDedicatedOnly ExternalMemoryFeatures = C.VK_EXTERNAL_MEMORY_FEATURE_DEDICATED_ONLY_BIT
-	ExternalMemoryFeatureExportable    ExternalMemoryFeatures = C.VK_EXTERNAL_MEMORY_FEATURE_EXPORTABLE_BIT
-	ExternalMemoryFeatureImportable    ExternalMemoryFeatures = C.VK_EXTERNAL_MEMORY_FEATURE_IMPORTABLE_BIT
+	ExternalMemoryFeatureDedicatedOnly ExternalMemoryFeatureFlags = C.VK_EXTERNAL_MEMORY_FEATURE_DEDICATED_ONLY_BIT
+	ExternalMemoryFeatureExportable    ExternalMemoryFeatureFlags = C.VK_EXTERNAL_MEMORY_FEATURE_EXPORTABLE_BIT
+	ExternalMemoryFeatureImportable    ExternalMemoryFeatureFlags = C.VK_EXTERNAL_MEMORY_FEATURE_IMPORTABLE_BIT
 
-	ExternalMemoryHandleTypeD3D11Texture    ExternalMemoryHandleTypes = C.VK_EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_TEXTURE_BIT
-	ExternalMemoryHandleTypeD3D11TextureKMT ExternalMemoryHandleTypes = C.VK_EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_TEXTURE_KMT_BIT
-	ExternalMemoryHandleTypeD3D12Heap       ExternalMemoryHandleTypes = C.VK_EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_HEAP_BIT
-	ExternalMemoryHandleTypeD3D12Resource   ExternalMemoryHandleTypes = C.VK_EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_RESOURCE_BIT
-	ExternalMemoryHandleTypeOpaqueFD        ExternalMemoryHandleTypes = C.VK_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_FD_BIT
-	ExternalMemoryHandleTypeOpaqueWin32     ExternalMemoryHandleTypes = C.VK_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_BIT
-	ExternalMemoryHandleTypeOpaqueWin32KMT  ExternalMemoryHandleTypes = C.VK_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT
+	ExternalMemoryHandleTypeD3D11Texture    ExternalMemoryHandleTypeFlags = C.VK_EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_TEXTURE_BIT
+	ExternalMemoryHandleTypeD3D11TextureKMT ExternalMemoryHandleTypeFlags = C.VK_EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_TEXTURE_KMT_BIT
+	ExternalMemoryHandleTypeD3D12Heap       ExternalMemoryHandleTypeFlags = C.VK_EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_HEAP_BIT
+	ExternalMemoryHandleTypeD3D12Resource   ExternalMemoryHandleTypeFlags = C.VK_EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_RESOURCE_BIT
+	ExternalMemoryHandleTypeOpaqueFD        ExternalMemoryHandleTypeFlags = C.VK_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_FD_BIT
+	ExternalMemoryHandleTypeOpaqueWin32     ExternalMemoryHandleTypeFlags = C.VK_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_BIT
+	ExternalMemoryHandleTypeOpaqueWin32KMT  ExternalMemoryHandleTypeFlags = C.VK_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT
 )
 
 func init() {
@@ -71,9 +71,9 @@ func init() {
 ////
 
 type ExternalMemoryProperties struct {
-	ExternalMemoryFeatures        ExternalMemoryFeatures
-	ExportFromImportedHandleTypes ExternalMemoryHandleTypes
-	CompatibleHandleTypes         ExternalMemoryHandleTypes
+	ExternalMemoryFeatures        ExternalMemoryFeatureFlags
+	ExportFromImportedHandleTypes ExternalMemoryHandleTypeFlags
+	CompatibleHandleTypes         ExternalMemoryHandleTypeFlags
 }
 
 func (o ExternalMemoryProperties) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer) (unsafe.Pointer, error) {
@@ -91,24 +91,24 @@ func (o ExternalMemoryProperties) PopulateCPointer(allocator *cgoparam.Allocator
 
 func (o *ExternalMemoryProperties) PopulateOutData(cDataPointer unsafe.Pointer) error {
 	info := (*C.VkExternalMemoryProperties)(cDataPointer)
-	o.ExternalMemoryFeatures = ExternalMemoryFeatures(info.externalMemoryFeatures)
-	o.ExportFromImportedHandleTypes = ExternalMemoryHandleTypes(info.exportFromImportedHandleTypes)
-	o.CompatibleHandleTypes = ExternalMemoryHandleTypes(info.compatibleHandleTypes)
+	o.ExternalMemoryFeatures = ExternalMemoryFeatureFlags(info.externalMemoryFeatures)
+	o.ExportFromImportedHandleTypes = ExternalMemoryHandleTypeFlags(info.exportFromImportedHandleTypes)
+	o.CompatibleHandleTypes = ExternalMemoryHandleTypeFlags(info.compatibleHandleTypes)
 
 	return nil
 }
 
 ////
 
-type ExternalBufferOptions struct {
+type PhysicalDeviceExternalBufferInfo struct {
 	Flags      core1_0.BufferCreateFlags
-	Usage      core1_0.BufferUsages
-	HandleType ExternalMemoryHandleTypes
+	Usage      core1_0.BufferUsageFlags
+	HandleType ExternalMemoryHandleTypeFlags
 
 	common.NextOptions
 }
 
-func (o ExternalBufferOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o PhysicalDeviceExternalBufferInfo) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == nil {
 		preallocatedPointer = allocator.Malloc(int(unsafe.Sizeof(C.VkPhysicalDeviceExternalBufferInfo{})))
 	}
@@ -125,13 +125,13 @@ func (o ExternalBufferOptions) PopulateCPointer(allocator *cgoparam.Allocator, p
 
 ////
 
-type ExternalBufferOutData struct {
+type ExternalBufferProperties struct {
 	ExternalMemoryProperties ExternalMemoryProperties
 
 	common.NextOutData
 }
 
-func (o *ExternalBufferOutData) PopulateHeader(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o *ExternalBufferProperties) PopulateHeader(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == nil {
 		preallocatedPointer = allocator.Malloc(int(unsafe.Sizeof(C.VkExternalBufferProperties{})))
 	}
@@ -142,7 +142,7 @@ func (o *ExternalBufferOutData) PopulateHeader(allocator *cgoparam.Allocator, pr
 	return preallocatedPointer, nil
 }
 
-func (o *ExternalBufferOutData) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
+func (o *ExternalBufferProperties) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
 	info := (*C.VkExternalBufferProperties)(cDataPointer)
 
 	err = (&o.ExternalMemoryProperties).PopulateOutData(unsafe.Pointer(&info.externalMemoryProperties))
@@ -151,13 +151,13 @@ func (o *ExternalBufferOutData) PopulateOutData(cDataPointer unsafe.Pointer, hel
 
 ////
 
-type ExternalMemoryBufferOptions struct {
-	HandleTypes ExternalMemoryHandleTypes
+type ExternalMemoryBufferCreateInfo struct {
+	HandleTypes ExternalMemoryHandleTypeFlags
 
 	common.NextOptions
 }
 
-func (o ExternalMemoryBufferOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o ExternalMemoryBufferCreateInfo) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == nil {
 		preallocatedPointer = allocator.Malloc(int(unsafe.Sizeof(C.VkExternalMemoryBufferCreateInfo{})))
 	}
@@ -172,13 +172,13 @@ func (o ExternalMemoryBufferOptions) PopulateCPointer(allocator *cgoparam.Alloca
 
 ////
 
-type ExternalMemoryImageOptions struct {
-	HandleTypes ExternalMemoryHandleTypes
+type ExternalMemoryImageCreateInfo struct {
+	HandleTypes ExternalMemoryHandleTypeFlags
 
 	common.NextOptions
 }
 
-func (o ExternalMemoryImageOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o ExternalMemoryImageCreateInfo) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == nil {
 		preallocatedPointer = allocator.Malloc(int(unsafe.Sizeof(C.VkExternalMemoryImageCreateInfo{})))
 	}
@@ -193,13 +193,13 @@ func (o ExternalMemoryImageOptions) PopulateCPointer(allocator *cgoparam.Allocat
 
 ////
 
-type PhysicalDeviceExternalImageFormatOptions struct {
-	HandleType ExternalMemoryHandleTypes
+type PhysicalDeviceExternalImageFormatInfo struct {
+	HandleType ExternalMemoryHandleTypeFlags
 
 	common.NextOptions
 }
 
-func (o PhysicalDeviceExternalImageFormatOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o PhysicalDeviceExternalImageFormatInfo) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == nil {
 		preallocatedPointer = allocator.Malloc(int(unsafe.Sizeof(C.VkPhysicalDeviceExternalImageFormatInfo{})))
 	}
@@ -215,13 +215,13 @@ func (o PhysicalDeviceExternalImageFormatOptions) PopulateCPointer(allocator *cg
 
 ////
 
-type ExportMemoryAllocateOptions struct {
-	HandleTypes ExternalMemoryHandleTypes
+type ExportMemoryAllocateInfo struct {
+	HandleTypes ExternalMemoryHandleTypeFlags
 
 	common.NextOptions
 }
 
-func (o ExportMemoryAllocateOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o ExportMemoryAllocateInfo) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == nil {
 		preallocatedPointer = allocator.Malloc(int(unsafe.Sizeof(C.VkExportMemoryAllocateInfo{})))
 	}
@@ -236,13 +236,13 @@ func (o ExportMemoryAllocateOptions) PopulateCPointer(allocator *cgoparam.Alloca
 
 ////
 
-type ExternalImageFormatOutData struct {
+type ExternalImageFormatProperties struct {
 	ExternalMemoryProperties ExternalMemoryProperties
 
 	common.NextOutData
 }
 
-func (o *ExternalImageFormatOutData) PopulateHeader(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o *ExternalImageFormatProperties) PopulateHeader(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == nil {
 		preallocatedPointer = allocator.Malloc(int(unsafe.Sizeof(C.VkExternalImageFormatProperties{})))
 	}
@@ -254,7 +254,7 @@ func (o *ExternalImageFormatOutData) PopulateHeader(allocator *cgoparam.Allocato
 	return preallocatedPointer, nil
 }
 
-func (o *ExternalImageFormatOutData) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
+func (o *ExternalImageFormatProperties) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
 	info := (*C.VkExternalImageFormatProperties)(cDataPointer)
 
 	err = (&o.ExternalMemoryProperties).PopulateOutData(unsafe.Pointer(&info.externalMemoryProperties))

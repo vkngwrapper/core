@@ -46,10 +46,10 @@ func TestMemoryDedicatedAllocateOptions(t *testing.T) {
 			return core1_0.VKSuccess, nil
 		})
 
-	memory, _, err := device.AllocateMemory(nil, core1_0.MemoryAllocateOptions{
+	memory, _, err := device.AllocateMemory(nil, core1_0.MemoryAllocateInfo{
 		AllocationSize:  1,
 		MemoryTypeIndex: 3,
-		NextOptions: common.NextOptions{Next: core1_1.MemoryDedicatedAllocationOptions{
+		NextOptions: common.NextOptions{Next: core1_1.MemoryDedicatedAllocationInfo{
 			Buffer: buffer,
 		}},
 	})
@@ -95,21 +95,21 @@ func TestDedicatedMemoryRequirementsOutData_Buffer(t *testing.T) {
 			*(*driver.VkBool32)(unsafe.Pointer(dedicated.FieldByName("requiresDedicatedAllocation").UnsafeAddr())) = driver.VkBool32(0)
 		})
 
-	var memReqs core1_1.MemoryDedicatedAllocationOutData
-	var outData = core1_1.MemoryRequirementsOutData{
+	var memReqs core1_1.MemoryDedicatedRequirements
+	var outData = core1_1.MemoryRequirements2{
 		NextOutData: common.NextOutData{Next: &memReqs},
 	}
-	err := device.BufferMemoryRequirements(
-		core1_1.BufferMemoryRequirementsOptions{
+	err := device.BufferMemoryRequirements2(
+		core1_1.BufferMemoryRequirementsInfo2{
 			Buffer: buffer,
 		}, &outData)
 	require.NoError(t, err)
-	require.False(t, memReqs.DedicatedRequired)
-	require.True(t, memReqs.DedicatedPreferred)
+	require.False(t, memReqs.RequiresDedicatedAllocation)
+	require.True(t, memReqs.PrefersDedicatedAllocation)
 
 	require.Equal(t, 1, outData.MemoryRequirements.Size)
 	require.Equal(t, 3, outData.MemoryRequirements.Alignment)
-	require.Equal(t, uint32(5), outData.MemoryRequirements.MemoryType)
+	require.Equal(t, uint32(5), outData.MemoryRequirements.MemoryTypeBits)
 }
 
 func TestDedicatedMemoryRequirementsOutData_Image(t *testing.T) {
@@ -149,21 +149,21 @@ func TestDedicatedMemoryRequirementsOutData_Image(t *testing.T) {
 			*(*driver.VkBool32)(unsafe.Pointer(dedicated.FieldByName("requiresDedicatedAllocation").UnsafeAddr())) = driver.VkBool32(0)
 		})
 
-	var memReqs core1_1.MemoryDedicatedAllocationOutData
-	var outData = core1_1.MemoryRequirementsOutData{
+	var memReqs core1_1.MemoryDedicatedRequirements
+	var outData = core1_1.MemoryRequirements2{
 		NextOutData: common.NextOutData{Next: &memReqs},
 	}
-	err := device.ImageMemoryRequirements(
-		core1_1.ImageMemoryRequirementsOptions{
+	err := device.ImageMemoryRequirements2(
+		core1_1.ImageMemoryRequirementsInfo2{
 			Image: image,
 		}, &outData)
 	require.NoError(t, err)
-	require.False(t, memReqs.DedicatedRequired)
-	require.True(t, memReqs.DedicatedPreferred)
+	require.False(t, memReqs.RequiresDedicatedAllocation)
+	require.True(t, memReqs.PrefersDedicatedAllocation)
 
 	require.Equal(t, 1, outData.MemoryRequirements.Size)
 	require.Equal(t, 3, outData.MemoryRequirements.Alignment)
-	require.Equal(t, uint32(5), outData.MemoryRequirements.MemoryType)
+	require.Equal(t, uint32(5), outData.MemoryRequirements.MemoryTypeBits)
 }
 
 func TestExternalMemoryBufferOptions(t *testing.T) {
@@ -204,12 +204,12 @@ func TestExternalMemoryBufferOptions(t *testing.T) {
 
 	buffer, _, err := device.CreateBuffer(
 		nil,
-		core1_0.BufferCreateOptions{
-			BufferSize: 1,
-			Usage:      core1_0.BufferUsageStorageTexelBuffer,
+		core1_0.BufferCreateInfo{
+			Size:  1,
+			Usage: core1_0.BufferUsageStorageTexelBuffer,
 
 			NextOptions: common.NextOptions{
-				core1_1.ExternalMemoryBufferOptions{
+				core1_1.ExternalMemoryBufferCreateInfo{
 					HandleTypes: core1_1.ExternalMemoryHandleTypeD3D11Texture,
 				},
 			},
@@ -261,7 +261,7 @@ func TestExternalMemoryImageOptions(t *testing.T) {
 			ArrayLayers: 3,
 
 			NextOptions: common.NextOptions{
-				core1_1.ExternalMemoryImageOptions{
+				core1_1.ExternalMemoryImageCreateInfo{
 					HandleTypes: core1_1.ExternalMemoryHandleTypeD3D12Heap,
 				},
 			},
@@ -315,15 +315,15 @@ func TestExternalImageFormatOptions(t *testing.T) {
 		return core1_0.VKSuccess, nil
 	})
 
-	var outData core1_1.ExternalImageFormatOutData
-	format := core1_1.ImageFormatPropertiesOutData{
+	var outData core1_1.ExternalImageFormatProperties
+	format := core1_1.ImageFormatProperties2{
 		NextOutData: common.NextOutData{&outData},
 	}
 	_, err := physicalDevice.InstanceScopedPhysicalDevice1_1().ImageFormatProperties2(
-		core1_1.ImageFormatOptions{
-			Format: core1_0.DataFormatA2B10G10R10UnsignedIntPacked,
+		core1_1.PhysicalDeviceImageFormatInfo2{
+			Format: core1_0.FormatA2B10G10R10UnsignedIntPacked,
 			NextOptions: common.NextOptions{
-				core1_1.PhysicalDeviceExternalImageFormatOptions{
+				core1_1.PhysicalDeviceExternalImageFormatInfo{
 					HandleType: core1_1.ExternalMemoryHandleTypeOpaqueFD,
 				},
 			},
@@ -331,7 +331,7 @@ func TestExternalImageFormatOptions(t *testing.T) {
 		&format,
 	)
 	require.NoError(t, err)
-	require.Equal(t, core1_1.ExternalImageFormatOutData{
+	require.Equal(t, core1_1.ExternalImageFormatProperties{
 		ExternalMemoryProperties: core1_1.ExternalMemoryProperties{
 			ExternalMemoryFeatures:        core1_1.ExternalMemoryFeatureImportable,
 			ExportFromImportedHandleTypes: core1_1.ExternalMemoryHandleTypeD3D11Texture,
@@ -376,11 +376,11 @@ func TestExternalMemoryAllocateOptions(t *testing.T) {
 			return core1_0.VKSuccess, nil
 		})
 
-	memory, _, err := device.AllocateMemory(nil, core1_0.MemoryAllocateOptions{
+	memory, _, err := device.AllocateMemory(nil, core1_0.MemoryAllocateInfo{
 		AllocationSize:  1,
 		MemoryTypeIndex: 3,
 		NextOptions: common.NextOptions{
-			core1_1.ExportMemoryAllocateOptions{
+			core1_1.ExportMemoryAllocateInfo{
 				HandleTypes: core1_1.ExternalMemoryHandleTypeD3D11TextureKMT,
 			},
 		},

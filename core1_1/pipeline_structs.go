@@ -44,12 +44,12 @@ func init() {
 
 ////
 
-type PipelineTessellationDomainOriginStateOptions struct {
+type PipelineTessellationDomainOriginStateCreateInfo struct {
 	DomainOrigin TessellationDomainOrigin
 	common.NextOptions
 }
 
-func (o PipelineTessellationDomainOriginStateOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o PipelineTessellationDomainOriginStateCreateInfo) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == nil {
 		preallocatedPointer = allocator.Malloc(int(unsafe.Sizeof(C.VkPipelineTessellationDomainOriginStateCreateInfo{})))
 	}

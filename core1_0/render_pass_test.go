@@ -140,92 +140,92 @@ func TestVulkanLoader1_0_CreateRenderPass_Success(t *testing.T) {
 			return core1_0.VKSuccess, nil
 		})
 
-	renderPass, _, err := device.CreateRenderPass(nil, core1_0.RenderPassCreateOptions{
+	renderPass, _, err := device.CreateRenderPass(nil, core1_0.RenderPassCreateInfo{
 		Flags: 0,
 		Attachments: []core1_0.AttachmentDescription{
 			{
 				Flags:          core1_0.AttachmentDescriptionMayAlias,
-				Format:         core1_0.DataFormatA2B10G10R10SignedIntPacked,
+				Format:         core1_0.FormatA2B10G10R10SignedIntPacked,
 				Samples:        core1_0.Samples4,
-				LoadOp:         core1_0.LoadOpClear,
-				StoreOp:        core1_0.StoreOpStore,
-				StencilLoadOp:  core1_0.LoadOpDontCare,
-				StencilStoreOp: core1_0.StoreOpDontCare,
+				LoadOp:         core1_0.AttachmentLoadOpClear,
+				StoreOp:        core1_0.AttachmentStoreOpStore,
+				StencilLoadOp:  core1_0.AttachmentLoadOpDontCare,
+				StencilStoreOp: core1_0.AttachmentStoreOpDontCare,
 				InitialLayout:  core1_0.ImageLayoutColorAttachmentOptimal,
 				FinalLayout:    core1_0.ImageLayoutDepthStencilReadOnlyOptimal,
 			},
 			{
 				Flags:          0,
-				Format:         core1_0.DataFormatA2R10G10B10SignedIntPacked,
+				Format:         core1_0.FormatA2R10G10B10SignedIntPacked,
 				Samples:        core1_0.Samples64,
-				LoadOp:         core1_0.LoadOpLoad,
-				StoreOp:        core1_0.StoreOpDontCare,
-				StencilLoadOp:  core1_0.LoadOpClear,
-				StencilStoreOp: core1_0.StoreOpStore,
+				LoadOp:         core1_0.AttachmentLoadOpLoad,
+				StoreOp:        core1_0.AttachmentStoreOpDontCare,
+				StencilLoadOp:  core1_0.AttachmentLoadOpClear,
+				StencilStoreOp: core1_0.AttachmentStoreOpStore,
 				InitialLayout:  core1_0.ImageLayoutGeneral,
 				FinalLayout:    core1_0.ImageLayoutColorAttachmentOptimal,
 			},
 		},
-		SubPassDescriptions: []core1_0.SubPassDescription{
+		Subpasses: []core1_0.SubpassDescription{
 			{
-				Flags:     0,
-				BindPoint: core1_0.BindCompute,
+				Flags:             0,
+				PipelineBindPoint: core1_0.PipelineBindPointCompute,
 				InputAttachments: []core1_0.AttachmentReference{
 					{
-						AttachmentIndex: 0,
-						Layout:          core1_0.ImageLayoutGeneral,
+						Attachment: 0,
+						Layout:     core1_0.ImageLayoutGeneral,
 					},
 				},
 				ColorAttachments: []core1_0.AttachmentReference{
 					{
-						AttachmentIndex: 1,
-						Layout:          core1_0.ImageLayoutPreInitialized,
+						Attachment: 1,
+						Layout:     core1_0.ImageLayoutPreInitialized,
 					},
 					{
-						AttachmentIndex: 2,
-						Layout:          core1_0.ImageLayoutDepthStencilAttachmentOptimal,
+						Attachment: 2,
+						Layout:     core1_0.ImageLayoutDepthStencilAttachmentOptimal,
 					},
 				},
 				ResolveAttachments: []core1_0.AttachmentReference{
 					{
-						AttachmentIndex: 3,
-						Layout:          core1_0.ImageLayoutDepthStencilReadOnlyOptimal,
+						Attachment: 3,
+						Layout:     core1_0.ImageLayoutDepthStencilReadOnlyOptimal,
 					},
 					{
-						AttachmentIndex: 5,
-						Layout:          core1_0.ImageLayoutShaderReadOnlyOptimal,
+						Attachment: 5,
+						Layout:     core1_0.ImageLayoutShaderReadOnlyOptimal,
 					},
 				},
 				DepthStencilAttachment: &core1_0.AttachmentReference{
-					AttachmentIndex: 11,
-					Layout:          core1_0.ImageLayoutTransferSrcOptimal,
+					Attachment: 11,
+					Layout:     core1_0.ImageLayoutTransferSrcOptimal,
 				},
-				PreservedAttachmentIndices: []int{17},
+				PreserveAttachments: []int{17},
 			},
 		},
-		SubPassDependencies: []core1_0.SubPassDependency{
+		SubpassDependencies: []core1_0.SubpassDependency{
 			{
-				Flags:           core1_0.DependencyByRegion,
-				SrcSubPassIndex: 17,
-				DstSubPassIndex: 19,
+				DependencyFlags: core1_0.DependencyByRegion,
+				SrcSubpass:      17,
+				DstSubpass:      19,
 				SrcStageMask:    core1_0.PipelineStageVertexShader,
 				DstStageMask:    core1_0.PipelineStageBottomOfPipe,
 				SrcAccessMask:   core1_0.AccessIndirectCommandRead,
 				DstAccessMask:   core1_0.AccessShaderWrite,
 			},
 			{
-				Flags:           0,
-				SrcSubPassIndex: 23,
-				DstSubPassIndex: 29,
+				DependencyFlags: 0,
+				SrcSubpass:      23,
+				DstSubpass:      29,
 				SrcStageMask:    core1_0.PipelineStageEarlyFragmentTests,
 				DstStageMask:    core1_0.PipelineStageBottomOfPipe,
 				SrcAccessMask:   core1_0.AccessColorAttachmentRead,
 				DstAccessMask:   core1_0.AccessUniformRead,
 			},
 			{
-				Flags:           0,
-				SrcSubPassIndex: 31,
-				DstSubPassIndex: 37,
+				DependencyFlags: 0,
+				SrcSubpass:      31,
+				DstSubpass:      37,
 				SrcStageMask:    core1_0.PipelineStageBottomOfPipe,
 				DstStageMask:    core1_0.PipelineStageAllGraphics,
 				SrcAccessMask:   core1_0.AccessDepthStencilAttachmentWrite,
@@ -352,79 +352,79 @@ func TestVulkanLoader1_0_CreateRenderPass_SuccessNoNonColorAttachments(t *testin
 			return core1_0.VKSuccess, nil
 		})
 
-	renderPass, _, err := device.CreateRenderPass(nil, core1_0.RenderPassCreateOptions{
+	renderPass, _, err := device.CreateRenderPass(nil, core1_0.RenderPassCreateInfo{
 		Flags: 0,
 		Attachments: []core1_0.AttachmentDescription{
 			{
 				Flags:          core1_0.AttachmentDescriptionMayAlias,
-				Format:         core1_0.DataFormatA2B10G10R10SignedIntPacked,
+				Format:         core1_0.FormatA2B10G10R10SignedIntPacked,
 				Samples:        core1_0.Samples4,
-				LoadOp:         core1_0.LoadOpClear,
-				StoreOp:        core1_0.StoreOpStore,
-				StencilLoadOp:  core1_0.LoadOpDontCare,
-				StencilStoreOp: core1_0.StoreOpDontCare,
+				LoadOp:         core1_0.AttachmentLoadOpClear,
+				StoreOp:        core1_0.AttachmentStoreOpStore,
+				StencilLoadOp:  core1_0.AttachmentLoadOpDontCare,
+				StencilStoreOp: core1_0.AttachmentStoreOpDontCare,
 				InitialLayout:  core1_0.ImageLayoutColorAttachmentOptimal,
 				FinalLayout:    core1_0.ImageLayoutPreInitialized,
 			},
 			{
 				Flags:          0,
-				Format:         core1_0.DataFormatA2R10G10B10SignedIntPacked,
+				Format:         core1_0.FormatA2R10G10B10SignedIntPacked,
 				Samples:        core1_0.Samples64,
-				LoadOp:         core1_0.LoadOpLoad,
-				StoreOp:        core1_0.StoreOpDontCare,
-				StencilLoadOp:  core1_0.LoadOpClear,
-				StencilStoreOp: core1_0.StoreOpStore,
+				LoadOp:         core1_0.AttachmentLoadOpLoad,
+				StoreOp:        core1_0.AttachmentStoreOpDontCare,
+				StencilLoadOp:  core1_0.AttachmentLoadOpClear,
+				StencilStoreOp: core1_0.AttachmentStoreOpStore,
 				InitialLayout:  core1_0.ImageLayoutGeneral,
 				FinalLayout:    core1_0.ImageLayoutColorAttachmentOptimal,
 			},
 		},
-		SubPassDescriptions: []core1_0.SubPassDescription{
+		Subpasses: []core1_0.SubpassDescription{
 			{
-				Flags:     0,
-				BindPoint: core1_0.BindCompute,
+				Flags:             0,
+				PipelineBindPoint: core1_0.PipelineBindPointCompute,
 				InputAttachments: []core1_0.AttachmentReference{
 					{
-						AttachmentIndex: 0,
-						Layout:          core1_0.ImageLayoutGeneral,
+						Attachment: 0,
+						Layout:     core1_0.ImageLayoutGeneral,
 					},
 				},
 				ColorAttachments: []core1_0.AttachmentReference{
 					{
-						AttachmentIndex: 1,
-						Layout:          core1_0.ImageLayoutTransferDstOptimal,
+						Attachment: 1,
+						Layout:     core1_0.ImageLayoutTransferDstOptimal,
 					},
 					{
-						AttachmentIndex: 2,
-						Layout:          core1_0.ImageLayoutDepthStencilAttachmentOptimal,
+						Attachment: 2,
+						Layout:     core1_0.ImageLayoutDepthStencilAttachmentOptimal,
 					},
 				},
-				ResolveAttachments:         []core1_0.AttachmentReference{},
-				PreservedAttachmentIndices: []int{17},
+				ResolveAttachments:  []core1_0.AttachmentReference{},
+				PreserveAttachments: []int{17},
 			},
 		},
-		SubPassDependencies: []core1_0.SubPassDependency{
+		SubpassDependencies: []core1_0.SubpassDependency{
 			{
-				Flags:           core1_0.DependencyByRegion,
-				SrcSubPassIndex: 17,
-				DstSubPassIndex: 19,
+				DependencyFlags: core1_0.DependencyByRegion,
+				SrcSubpass:      17,
+				DstSubpass:      19,
 				SrcStageMask:    core1_0.PipelineStageVertexShader,
 				DstStageMask:    core1_0.PipelineStageComputeShader,
 				SrcAccessMask:   core1_0.AccessVertexAttributeRead,
 				DstAccessMask:   core1_0.AccessColorAttachmentWrite,
 			},
 			{
-				Flags:           0,
-				SrcSubPassIndex: 23,
-				DstSubPassIndex: 29,
+				DependencyFlags: 0,
+				SrcSubpass:      23,
+				DstSubpass:      29,
 				SrcStageMask:    core1_0.PipelineStageDrawIndirect,
 				DstStageMask:    core1_0.PipelineStageBottomOfPipe,
 				SrcAccessMask:   core1_0.AccessColorAttachmentRead,
 				DstAccessMask:   core1_0.AccessHostRead,
 			},
 			{
-				Flags:           0,
-				SrcSubPassIndex: 31,
-				DstSubPassIndex: 37,
+				DependencyFlags: 0,
+				SrcSubpass:      31,
+				DstSubpass:      37,
 				SrcStageMask:    core1_0.PipelineStageBottomOfPipe,
 				DstStageMask:    core1_0.PipelineStageAllGraphics,
 				SrcAccessMask:   core1_0.AccessDepthStencilAttachmentWrite,
@@ -444,96 +444,96 @@ func TestVulkanLoader1_0_CreateRenderPass_MismatchResolve(t *testing.T) {
 	driver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_0)
 	device := internal_mocks.EasyDummyDevice(driver)
 
-	_, _, err := device.CreateRenderPass(nil, core1_0.RenderPassCreateOptions{
+	_, _, err := device.CreateRenderPass(nil, core1_0.RenderPassCreateInfo{
 		Flags: 0,
 		Attachments: []core1_0.AttachmentDescription{
 			{
 				Flags:          core1_0.AttachmentDescriptionMayAlias,
-				Format:         core1_0.DataFormatA2B10G10R10SignedIntPacked,
+				Format:         core1_0.FormatA2B10G10R10SignedIntPacked,
 				Samples:        core1_0.Samples4,
-				LoadOp:         core1_0.LoadOpClear,
-				StoreOp:        core1_0.StoreOpStore,
-				StencilLoadOp:  core1_0.LoadOpDontCare,
-				StencilStoreOp: core1_0.StoreOpDontCare,
+				LoadOp:         core1_0.AttachmentLoadOpClear,
+				StoreOp:        core1_0.AttachmentStoreOpStore,
+				StencilLoadOp:  core1_0.AttachmentLoadOpDontCare,
+				StencilStoreOp: core1_0.AttachmentStoreOpDontCare,
 				InitialLayout:  core1_0.ImageLayoutColorAttachmentOptimal,
 				FinalLayout:    core1_0.ImageLayoutPreInitialized,
 			},
 			{
 				Flags:          0,
-				Format:         core1_0.DataFormatA2R10G10B10SignedIntPacked,
+				Format:         core1_0.FormatA2R10G10B10SignedIntPacked,
 				Samples:        core1_0.Samples64,
-				LoadOp:         core1_0.LoadOpLoad,
-				StoreOp:        core1_0.StoreOpDontCare,
-				StencilLoadOp:  core1_0.LoadOpClear,
-				StencilStoreOp: core1_0.StoreOpStore,
+				LoadOp:         core1_0.AttachmentLoadOpLoad,
+				StoreOp:        core1_0.AttachmentStoreOpDontCare,
+				StencilLoadOp:  core1_0.AttachmentLoadOpClear,
+				StencilStoreOp: core1_0.AttachmentStoreOpStore,
 				InitialLayout:  core1_0.ImageLayoutGeneral,
 				FinalLayout:    core1_0.ImageLayoutColorAttachmentOptimal,
 			},
 		},
-		SubPassDescriptions: []core1_0.SubPassDescription{
+		Subpasses: []core1_0.SubpassDescription{
 			{
-				Flags:     0,
-				BindPoint: core1_0.BindCompute,
+				Flags:             0,
+				PipelineBindPoint: core1_0.PipelineBindPointCompute,
 				InputAttachments: []core1_0.AttachmentReference{
 					{
-						AttachmentIndex: 0,
-						Layout:          core1_0.ImageLayoutGeneral,
+						Attachment: 0,
+						Layout:     core1_0.ImageLayoutGeneral,
 					},
 				},
 				ColorAttachments: []core1_0.AttachmentReference{
 					{
-						AttachmentIndex: 1,
-						Layout:          core1_0.ImageLayoutDepthStencilReadOnlyOptimal,
+						Attachment: 1,
+						Layout:     core1_0.ImageLayoutDepthStencilReadOnlyOptimal,
 					},
 					{
-						AttachmentIndex: 2,
-						Layout:          core1_0.ImageLayoutDepthStencilAttachmentOptimal,
+						Attachment: 2,
+						Layout:     core1_0.ImageLayoutDepthStencilAttachmentOptimal,
 					},
 				},
 				ResolveAttachments: []core1_0.AttachmentReference{
 					{
-						AttachmentIndex: 3,
-						Layout:          core1_0.ImageLayoutDepthStencilReadOnlyOptimal,
+						Attachment: 3,
+						Layout:     core1_0.ImageLayoutDepthStencilReadOnlyOptimal,
 					},
 					{
-						AttachmentIndex: 5,
-						Layout:          core1_0.ImageLayoutColorAttachmentOptimal,
+						Attachment: 5,
+						Layout:     core1_0.ImageLayoutColorAttachmentOptimal,
 					},
 					{
-						AttachmentIndex: 0,
-						Layout:          core1_0.ImageLayoutUndefined,
+						Attachment: 0,
+						Layout:     core1_0.ImageLayoutUndefined,
 					},
 				},
 				DepthStencilAttachment: &core1_0.AttachmentReference{
-					AttachmentIndex: 11,
-					Layout:          core1_0.ImageLayoutTransferSrcOptimal,
+					Attachment: 11,
+					Layout:     core1_0.ImageLayoutTransferSrcOptimal,
 				},
-				PreservedAttachmentIndices: []int{17},
+				PreserveAttachments: []int{17},
 			},
 		},
-		SubPassDependencies: []core1_0.SubPassDependency{
+		SubpassDependencies: []core1_0.SubpassDependency{
 			{
-				Flags:           0,
-				SrcSubPassIndex: 17,
-				DstSubPassIndex: 19,
+				DependencyFlags: 0,
+				SrcSubpass:      17,
+				DstSubpass:      19,
 				SrcStageMask:    core1_0.PipelineStageVertexShader,
 				DstStageMask:    core1_0.PipelineStageTessellationEvaluationShader,
 				SrcAccessMask:   core1_0.AccessDepthStencilAttachmentRead,
 				DstAccessMask:   core1_0.AccessHostWrite,
 			},
 			{
-				Flags:           core1_0.DependencyByRegion,
-				SrcSubPassIndex: 23,
-				DstSubPassIndex: 29,
+				DependencyFlags: core1_0.DependencyByRegion,
+				SrcSubpass:      23,
+				DstSubpass:      29,
 				SrcStageMask:    core1_0.PipelineStageLateFragmentTests,
 				DstStageMask:    core1_0.PipelineStageBottomOfPipe,
 				SrcAccessMask:   core1_0.AccessColorAttachmentRead,
 				DstAccessMask:   core1_0.AccessInputAttachmentRead,
 			},
 			{
-				Flags:           0,
-				SrcSubPassIndex: 31,
-				DstSubPassIndex: 37,
+				DependencyFlags: 0,
+				SrcSubpass:      31,
+				DstSubpass:      37,
 				SrcStageMask:    core1_0.PipelineStageBottomOfPipe,
 				DstStageMask:    core1_0.PipelineStageAllGraphics,
 				SrcAccessMask:   core1_0.AccessDepthStencilAttachmentWrite,

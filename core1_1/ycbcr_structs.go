@@ -58,13 +58,13 @@ const (
 	ChromaLocationCositedEven ChromaLocation = C.VK_CHROMA_LOCATION_COSITED_EVEN
 	ChromaLocationMidpoint    ChromaLocation = C.VK_CHROMA_LOCATION_MIDPOINT
 
-	FormatFeatureCositedChromaSamples                                             core1_0.FormatFeatures = C.VK_FORMAT_FEATURE_COSITED_CHROMA_SAMPLES_BIT
-	FormatFeatureDisjoint                                                         core1_0.FormatFeatures = C.VK_FORMAT_FEATURE_DISJOINT_BIT
-	FormatFeatureMidpointChromaSamples                                            core1_0.FormatFeatures = C.VK_FORMAT_FEATURE_MIDPOINT_CHROMA_SAMPLES_BIT
-	FormatFeatureSampledImageYcbcrConversionChromaReconstructionExplicit          core1_0.FormatFeatures = C.VK_FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_BIT
-	FormatFeatureSampledImageYcbcrConversionChromaReconstructionExplicitForceable core1_0.FormatFeatures = C.VK_FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_FORCEABLE_BIT
-	FormatFeatureSampledImageYcbcrConversionLinearFilter                          core1_0.FormatFeatures = C.VK_FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_LINEAR_FILTER_BIT
-	FormatFeatureSampledImageYcbcrConversionSeparateReconstructionFilter          core1_0.FormatFeatures = C.VK_FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_SEPARATE_RECONSTRUCTION_FILTER_BIT
+	FormatFeatureCositedChromaSamples                                             core1_0.FormatFeatureFlags = C.VK_FORMAT_FEATURE_COSITED_CHROMA_SAMPLES_BIT
+	FormatFeatureDisjoint                                                         core1_0.FormatFeatureFlags = C.VK_FORMAT_FEATURE_DISJOINT_BIT
+	FormatFeatureMidpointChromaSamples                                            core1_0.FormatFeatureFlags = C.VK_FORMAT_FEATURE_MIDPOINT_CHROMA_SAMPLES_BIT
+	FormatFeatureSampledImageYcbcrConversionChromaReconstructionExplicit          core1_0.FormatFeatureFlags = C.VK_FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_BIT
+	FormatFeatureSampledImageYcbcrConversionChromaReconstructionExplicitForceable core1_0.FormatFeatureFlags = C.VK_FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_FORCEABLE_BIT
+	FormatFeatureSampledImageYcbcrConversionLinearFilter                          core1_0.FormatFeatureFlags = C.VK_FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_LINEAR_FILTER_BIT
+	FormatFeatureSampledImageYcbcrConversionSeparateReconstructionFilter          core1_0.FormatFeatureFlags = C.VK_FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_SEPARATE_RECONSTRUCTION_FILTER_BIT
 
 	SamplerYcbcrModelConversionRGBIdentity   SamplerYcbcrModelConversion = C.VK_SAMPLER_YCBCR_MODEL_CONVERSION_RGB_IDENTITY
 	SamplerYcbcrModelConversionYcbcr2020     SamplerYcbcrModelConversion = C.VK_SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_2020
@@ -98,20 +98,20 @@ func init() {
 	SamplerYcbcrRangeITUNarrow.Register("ITU Narrow")
 }
 
-type SamplerYcbcrConversionCreateOptions struct {
-	Format                      core1_0.DataFormat
+type SamplerYcbcrConversionCreateInfo struct {
+	Format                      core1_0.Format
 	YcbcrModel                  SamplerYcbcrModelConversion
 	YcbcrRange                  SamplerYcbcrRange
 	Components                  core1_0.ComponentMapping
-	ChromaOffsetX               ChromaLocation
-	ChromaOffsetY               ChromaLocation
+	XChromaOffset               ChromaLocation
+	YChromaOffset               ChromaLocation
 	ChromaFilter                core1_0.Filter
 	ForceExplicitReconstruction bool
 
 	common.NextOptions
 }
 
-func (o SamplerYcbcrConversionCreateOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o SamplerYcbcrConversionCreateInfo) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == nil {
 		preallocatedPointer = allocator.Malloc(int(unsafe.Sizeof(C.VkSamplerYcbcrConversionCreateInfo{})))
 	}
@@ -126,8 +126,8 @@ func (o SamplerYcbcrConversionCreateOptions) PopulateCPointer(allocator *cgopara
 	info.components.g = C.VkComponentSwizzle(o.Components.G)
 	info.components.b = C.VkComponentSwizzle(o.Components.B)
 	info.components.a = C.VkComponentSwizzle(o.Components.A)
-	info.xChromaOffset = C.VkChromaLocation(o.ChromaOffsetX)
-	info.yChromaOffset = C.VkChromaLocation(o.ChromaOffsetY)
+	info.xChromaOffset = C.VkChromaLocation(o.XChromaOffset)
+	info.yChromaOffset = C.VkChromaLocation(o.YChromaOffset)
 	info.chromaFilter = C.VkFilter(o.ChromaFilter)
 	info.forceExplicitReconstruction = C.VkBool32(0)
 
@@ -140,13 +140,13 @@ func (o SamplerYcbcrConversionCreateOptions) PopulateCPointer(allocator *cgopara
 
 ////
 
-type SamplerYcbcrImageFormatOutData struct {
+type SamplerYcbcrConversionImageFormatProperties struct {
 	CombinedImageSamplerDescriptorCount int
 
 	common.NextOutData
 }
 
-func (o *SamplerYcbcrImageFormatOutData) PopulateHeader(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o *SamplerYcbcrConversionImageFormatProperties) PopulateHeader(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == nil {
 		preallocatedPointer = allocator.Malloc(int(unsafe.Sizeof(C.VkSamplerYcbcrConversionImageFormatProperties{})))
 	}
@@ -158,7 +158,7 @@ func (o *SamplerYcbcrImageFormatOutData) PopulateHeader(allocator *cgoparam.Allo
 	return preallocatedPointer, nil
 }
 
-func (o *SamplerYcbcrImageFormatOutData) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
+func (o *SamplerYcbcrConversionImageFormatProperties) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
 	info := (*C.VkSamplerYcbcrConversionImageFormatProperties)(cDataPointer)
 
 	o.CombinedImageSamplerDescriptorCount = int(info.combinedImageSamplerDescriptorCount)
@@ -168,13 +168,13 @@ func (o *SamplerYcbcrImageFormatOutData) PopulateOutData(cDataPointer unsafe.Poi
 
 ////
 
-type ImagePlaneMemoryRequirementsOptions struct {
+type ImagePlaneMemoryRequirementsInfo struct {
 	PlaneAspect core1_0.ImageAspectFlags
 
 	common.NextOptions
 }
 
-func (o ImagePlaneMemoryRequirementsOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o ImagePlaneMemoryRequirementsInfo) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == nil {
 		preallocatedPointer = allocator.Malloc(int(unsafe.Sizeof(C.VkImagePlaneMemoryRequirementsInfo{})))
 	}
@@ -189,13 +189,13 @@ func (o ImagePlaneMemoryRequirementsOptions) PopulateCPointer(allocator *cgopara
 
 ////
 
-type SamplerYcbcrConversionOptions struct {
+type SamplerYcbcrConversionInfo struct {
 	Conversion SamplerYcbcrConversion
 
 	common.NextOptions
 }
 
-func (o SamplerYcbcrConversionOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o SamplerYcbcrConversionInfo) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == nil {
 		preallocatedPointer = allocator.Malloc(int(unsafe.Sizeof(C.VkSamplerYcbcrConversionInfo{})))
 	}

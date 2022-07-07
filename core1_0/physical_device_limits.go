@@ -105,17 +105,17 @@ type PhysicalDeviceLimits struct {
 	MaxFramebufferHeight int
 	MaxFramebufferLayers int
 
-	FramebufferColorSampleCounts         SampleCounts
-	FramebufferDepthSampleCounts         SampleCounts
-	FramebufferStencilSampleCounts       SampleCounts
-	FramebufferNoAttachmentsSampleCounts SampleCounts
+	FramebufferColorSampleCounts         SampleCountFlags
+	FramebufferDepthSampleCounts         SampleCountFlags
+	FramebufferStencilSampleCounts       SampleCountFlags
+	FramebufferNoAttachmentsSampleCounts SampleCountFlags
 
 	MaxColorAttachments             int
-	SampledImageColorSampleCounts   SampleCounts
-	SampledImageIntegerSampleCounts SampleCounts
-	SampledImageDepthSampleCounts   SampleCounts
-	SampledImageStencilSampleCounts SampleCounts
-	StorageImageSampleCounts        SampleCounts
+	SampledImageColorSampleCounts   SampleCountFlags
+	SampledImageIntegerSampleCounts SampleCountFlags
+	SampledImageDepthSampleCounts   SampleCountFlags
+	SampledImageStencilSampleCounts SampleCountFlags
+	StorageImageSampleCounts        SampleCountFlags
 	MaxSampleMaskWords              int
 
 	TimestampComputeAndGraphics bool

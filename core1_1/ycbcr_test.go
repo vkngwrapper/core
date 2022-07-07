@@ -51,23 +51,23 @@ func TestImagePlaneMemoryRequirementsOptions(t *testing.T) {
 		*(*uint32)(unsafe.Pointer(val.FieldByName("memoryRequirements").FieldByName("memoryTypeBits").UnsafeAddr())) = uint32(7)
 	})
 
-	var outData core1_1.MemoryRequirementsOutData
-	err := device.ImageMemoryRequirements(
-		core1_1.ImageMemoryRequirementsOptions{
+	var outData core1_1.MemoryRequirements2
+	err := device.ImageMemoryRequirements2(
+		core1_1.ImageMemoryRequirementsInfo2{
 			Image: image,
 			NextOptions: common.NextOptions{
-				core1_1.ImagePlaneMemoryRequirementsOptions{
+				core1_1.ImagePlaneMemoryRequirementsInfo{
 					PlaneAspect: core1_1.ImageAspectPlane1,
 				},
 			},
 		},
 		&outData)
 	require.NoError(t, err)
-	require.Equal(t, core1_1.MemoryRequirementsOutData{
+	require.Equal(t, core1_1.MemoryRequirements2{
 		MemoryRequirements: core1_0.MemoryRequirements{
-			Size:       17,
-			Alignment:  19,
-			MemoryType: 7,
+			Size:           17,
+			Alignment:      19,
+			MemoryTypeBits: 7,
 		},
 	}, outData)
 }
@@ -110,12 +110,12 @@ func TestSamplerYcbcrConversionOptions(t *testing.T) {
 
 	imageView, _, err := device.CreateImageView(
 		nil,
-		core1_0.ImageViewCreateOptions{
+		core1_0.ImageViewCreateInfo{
 			Image:  image,
-			Format: core1_1.DataFormatB16G16R16G16HorizontalChroma,
+			Format: core1_1.FormatB16G16R16G16HorizontalChroma,
 
 			NextOptions: common.NextOptions{
-				core1_1.SamplerYcbcrConversionOptions{
+				core1_1.SamplerYcbcrConversionInfo{
 					Conversion: ycbcr,
 				},
 			},
@@ -157,14 +157,14 @@ func TestSamplerYcbcrImageFormatOutData(t *testing.T) {
 			return core1_0.VKSuccess, nil
 		})
 
-	var outData core1_1.SamplerYcbcrImageFormatOutData
+	var outData core1_1.SamplerYcbcrConversionImageFormatProperties
 	_, err := physicalDevice.InstanceScopedPhysicalDevice1_1().ImageFormatProperties2(
-		core1_1.ImageFormatOptions{},
-		&core1_1.ImageFormatPropertiesOutData{
+		core1_1.PhysicalDeviceImageFormatInfo2{},
+		&core1_1.ImageFormatProperties2{
 			NextOutData: common.NextOutData{&outData},
 		})
 	require.NoError(t, err)
-	require.Equal(t, core1_1.SamplerYcbcrImageFormatOutData{
+	require.Equal(t, core1_1.SamplerYcbcrConversionImageFormatProperties{
 		CombinedImageSamplerDescriptorCount: 7,
 	}, outData)
 }

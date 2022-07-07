@@ -84,19 +84,19 @@ func TestFramebufferAttachmentsCreateOptions(t *testing.T) {
 
 	framebuffer, _, err := device.CreateFramebuffer(
 		nil,
-		core1_0.FramebufferCreateOptions{
+		core1_0.FramebufferCreateInfo{
 			NextOptions: common.NextOptions{
-				core1_2.FramebufferAttachmentsCreateOptions{
-					AttachmentImageInfos: []core1_2.FramebufferAttachmentImageOptions{
+				core1_2.FramebufferAttachmentsCreateInfo{
+					AttachmentImageInfos: []core1_2.FramebufferAttachmentImageInfo{
 						{
 							Flags:      core1_0.ImageCreateCubeCompatible,
 							Usage:      core1_0.ImageUsageSampled,
 							Width:      1,
 							Height:     3,
 							LayerCount: 5,
-							ViewFormats: []core1_0.DataFormat{
-								core1_0.DataFormatA2B10G10R10UnsignedIntPacked,
-								core1_0.DataFormatA8B8G8R8UnsignedScaledPacked,
+							ViewFormats: []core1_0.Format{
+								core1_0.FormatA2B10G10R10UnsignedIntPacked,
+								core1_0.FormatA8B8G8R8UnsignedScaledPacked,
 							},
 						},
 						{
@@ -105,10 +105,10 @@ func TestFramebufferAttachmentsCreateOptions(t *testing.T) {
 							Width:      7,
 							Height:     11,
 							LayerCount: 13,
-							ViewFormats: []core1_0.DataFormat{
-								core1_0.DataFormatASTC5x5_UnsignedNormalized,
-								core1_0.DataFormatASTC6x5_sRGB,
-								core1_0.DataFormatASTC6x5_UnsignedNormalized,
+							ViewFormats: []core1_0.Format{
+								core1_0.FormatASTC5x5_UnsignedNormalized,
+								core1_0.FormatASTC6x5_sRGB,
+								core1_0.FormatASTC6x5_UnsignedNormalized,
 							},
 						},
 					},

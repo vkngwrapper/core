@@ -113,19 +113,19 @@ func TestVulkanLoader1_0_CreateDevice_Success(t *testing.T) {
 			return core1_0.VKSuccess, nil
 		})
 
-	device, _, err := physicalDevice.CreateDevice(nil, core1_0.DeviceCreateOptions{
-		QueueFamilies: []core1_0.DeviceQueueCreateOptions{
+	device, _, err := physicalDevice.CreateDevice(nil, core1_0.DeviceCreateInfo{
+		QueueCreateInfos: []core1_0.DeviceQueueCreateInfo{
 			{
-				QueueFamilyIndex:       1,
-				CreatedQueuePriorities: []float32{1, 0, 0.5},
+				QueueFamilyIndex: 1,
+				QueuePriorities:  []float32{1, 0, 0.5},
 			},
 			{
-				QueueFamilyIndex:       3,
-				CreatedQueuePriorities: []float32{0.5},
+				QueueFamilyIndex: 3,
+				QueuePriorities:  []float32{0.5},
 			},
 		},
-		ExtensionNames: []string{"A", "B", "C"},
-		LayerNames:     []string{"D", "E"},
+		EnabledExtensionNames: []string{"A", "B", "C"},
+		EnabledLayerNames:     []string{"D", "E"},
 		EnabledFeatures: &core1_0.PhysicalDeviceFeatures{
 			OcclusionQueryPrecise: true,
 			TessellationShader:    true,
@@ -144,16 +144,16 @@ func TestVulkanLoader1_0_CreateDevice_FailNoQueueFamilies(t *testing.T) {
 	instance := mocks.EasyMockInstance(ctrl, mockDriver)
 	physicalDevice := internal_mocks.EasyDummyPhysicalDevice(mockDriver, instance)
 
-	_, _, err := physicalDevice.CreateDevice(nil, core1_0.DeviceCreateOptions{
-		QueueFamilies:  []core1_0.DeviceQueueCreateOptions{},
-		ExtensionNames: []string{"A", "B", "C"},
-		LayerNames:     []string{"D", "E"},
+	_, _, err := physicalDevice.CreateDevice(nil, core1_0.DeviceCreateInfo{
+		QueueCreateInfos:      []core1_0.DeviceQueueCreateInfo{},
+		EnabledExtensionNames: []string{"A", "B", "C"},
+		EnabledLayerNames:     []string{"D", "E"},
 		EnabledFeatures: &core1_0.PhysicalDeviceFeatures{
 			OcclusionQueryPrecise: true,
 			TessellationShader:    true,
 		},
 	})
-	require.EqualError(t, err, "alloc DeviceCreateOptions: no queue families added")
+	require.EqualError(t, err, "alloc DeviceCreateInfo: no queue families added")
 }
 
 func TestVulkanLoader1_0_CreateDevice_FailFamilyWithoutPriorities(t *testing.T) {
@@ -164,25 +164,25 @@ func TestVulkanLoader1_0_CreateDevice_FailFamilyWithoutPriorities(t *testing.T) 
 	instance := mocks.EasyMockInstance(ctrl, mockDriver)
 	physicalDevice := internal_mocks.EasyDummyPhysicalDevice(mockDriver, instance)
 
-	_, _, err := physicalDevice.CreateDevice(nil, core1_0.DeviceCreateOptions{
-		QueueFamilies: []core1_0.DeviceQueueCreateOptions{
+	_, _, err := physicalDevice.CreateDevice(nil, core1_0.DeviceCreateInfo{
+		QueueCreateInfos: []core1_0.DeviceQueueCreateInfo{
 			{
-				QueueFamilyIndex:       1,
-				CreatedQueuePriorities: []float32{1, 0, 0.5},
+				QueueFamilyIndex: 1,
+				QueuePriorities:  []float32{1, 0, 0.5},
 			},
 			{
-				QueueFamilyIndex:       3,
-				CreatedQueuePriorities: []float32{},
+				QueueFamilyIndex: 3,
+				QueuePriorities:  []float32{},
 			},
 		},
-		ExtensionNames: []string{"A", "B", "C"},
-		LayerNames:     []string{"D", "E"},
+		EnabledExtensionNames: []string{"A", "B", "C"},
+		EnabledLayerNames:     []string{"D", "E"},
 		EnabledFeatures: &core1_0.PhysicalDeviceFeatures{
 			OcclusionQueryPrecise: true,
 			TessellationShader:    true,
 		},
 	})
-	require.EqualError(t, err, "alloc DeviceCreateOptions: queue family 3 had no queue priorities")
+	require.EqualError(t, err, "alloc DeviceCreateInfo: queue family 3 had no queue priorities")
 }
 
 func TestDevice_GetQueue(t *testing.T) {
@@ -257,7 +257,7 @@ func TestDevice_WaitForIdle(t *testing.T) {
 	device := internal_mocks.EasyDummyDevice(mockDriver)
 
 	mockDriver.EXPECT().VkDeviceWaitIdle(device.Handle()).Return(core1_0.VKSuccess, nil)
-	_, err := device.WaitForIdle()
+	_, err := device.WaitIdle()
 	require.NoError(t, err)
 }
 
@@ -329,12 +329,12 @@ func TestVulkanDevice_UpdateDescriptorSets_WriteImageInfo(t *testing.T) {
 			return nil
 		})
 
-	err := device.UpdateDescriptorSets([]core1_0.WriteDescriptorSetOptions{
+	err := device.UpdateDescriptorSets([]core1_0.WriteDescriptorSet{
 		{
 			DstSet:          destDescriptor,
 			DstBinding:      1,
 			DstArrayElement: 2,
-			DescriptorType:  core1_0.DescriptorUniformBuffer,
+			DescriptorType:  core1_0.DescriptorTypeUniformBuffer,
 			ImageInfo: []core1_0.DescriptorImageInfo{
 				{
 					Sampler:     sampler1,
@@ -395,12 +395,12 @@ func TestVulkanDevice_UpdateDescriptorSets_WriteBufferInfo(t *testing.T) {
 			return nil
 		})
 
-	err := device.UpdateDescriptorSets([]core1_0.WriteDescriptorSetOptions{
+	err := device.UpdateDescriptorSets([]core1_0.WriteDescriptorSet{
 		{
 			DstSet:          destDescriptor,
 			DstBinding:      1,
 			DstArrayElement: 3,
-			DescriptorType:  core1_0.DescriptorUniformBuffer,
+			DescriptorType:  core1_0.DescriptorTypeUniformBuffer,
 			BufferInfo: []core1_0.DescriptorBufferInfo{
 				{
 					Buffer: buffer1,
@@ -455,12 +455,12 @@ func TestVulkanDevice_UpdateDescriptorSets_TexelBufferView(t *testing.T) {
 			return nil
 		})
 
-	err := device.UpdateDescriptorSets([]core1_0.WriteDescriptorSetOptions{
+	err := device.UpdateDescriptorSets([]core1_0.WriteDescriptorSet{
 		{
 			DstSet:          destDescriptor,
 			DstBinding:      1,
 			DstArrayElement: 3,
-			DescriptorType:  core1_0.DescriptorUniformBuffer,
+			DescriptorType:  core1_0.DescriptorTypeUniformBuffer,
 			TexelBufferView: []core1_0.BufferView{
 				bufferView1, bufferView2,
 			},
@@ -496,17 +496,17 @@ func TestVulkanDevice_UpdateDescriptorSets_Copy(t *testing.T) {
 			return nil
 		})
 
-	err := device.UpdateDescriptorSets(nil, []core1_0.CopyDescriptorSetOptions{
+	err := device.UpdateDescriptorSets(nil, []core1_0.CopyDescriptorSet{
 		{
-			Source:             srcDescriptor,
-			SourceBinding:      3,
-			SourceArrayElement: 5,
+			SrcSet:          srcDescriptor,
+			SrcBinding:      3,
+			SrcArrayElement: 5,
 
-			Destination:             destDescriptor,
-			DestinationBinding:      7,
-			DestinationArrayElement: 11,
+			DstSet:          destDescriptor,
+			DstBinding:      7,
+			DstArrayElement: 11,
 
-			Count: 13,
+			DescriptorCount: 13,
 		},
 	})
 
@@ -527,12 +527,12 @@ func TestVulkanDevice_UpdateDescriptorSets_FailureImageInfoAndBufferInfo(t *test
 	imageView1 := mocks.EasyMockImageView(ctrl)
 	imageView2 := mocks.EasyMockImageView(ctrl)
 
-	err := device.UpdateDescriptorSets([]core1_0.WriteDescriptorSetOptions{
+	err := device.UpdateDescriptorSets([]core1_0.WriteDescriptorSet{
 		{
 			DstSet:          destDescriptor,
 			DstBinding:      1,
 			DstArrayElement: 3,
-			DescriptorType:  core1_0.DescriptorUniformBuffer,
+			DescriptorType:  core1_0.DescriptorTypeUniformBuffer,
 			BufferInfo: []core1_0.DescriptorBufferInfo{
 				{
 					Buffer: buffer1,
@@ -560,7 +560,7 @@ func TestVulkanDevice_UpdateDescriptorSets_FailureImageInfoAndBufferInfo(t *test
 		},
 	}, nil)
 
-	require.EqualError(t, err, "a WriteDescriptorSetOptions may have one or more ImageInfo sources OR one or more BufferInfo sources, but not both")
+	require.EqualError(t, err, "a WriteDescriptorSet may have one or more ImageInfo sources OR one or more BufferInfo sources, but not both")
 }
 
 func TestVulkanDevice_UpdateDescriptorSets_FailureImageInfoAndBufferView(t *testing.T) {
@@ -577,12 +577,12 @@ func TestVulkanDevice_UpdateDescriptorSets_FailureImageInfoAndBufferView(t *test
 	imageView1 := mocks.EasyMockImageView(ctrl)
 	imageView2 := mocks.EasyMockImageView(ctrl)
 
-	err := device.UpdateDescriptorSets([]core1_0.WriteDescriptorSetOptions{
+	err := device.UpdateDescriptorSets([]core1_0.WriteDescriptorSet{
 		{
 			DstSet:          destDescriptor,
 			DstBinding:      1,
 			DstArrayElement: 3,
-			DescriptorType:  core1_0.DescriptorUniformBuffer,
+			DescriptorType:  core1_0.DescriptorTypeUniformBuffer,
 			ImageInfo: []core1_0.DescriptorImageInfo{
 				{
 					Sampler:     sampler1,
@@ -601,7 +601,7 @@ func TestVulkanDevice_UpdateDescriptorSets_FailureImageInfoAndBufferView(t *test
 		},
 	}, nil)
 
-	require.EqualError(t, err, "a WriteDescriptorSetOptions may have one or more ImageInfo sources OR one or more TexelBufferView sources, but not both")
+	require.EqualError(t, err, "a WriteDescriptorSet may have one or more ImageInfo sources OR one or more TexelBufferView sources, but not both")
 }
 
 func TestVulkanDevice_UpdateDescriptorSets_FailureBufferInfoAndBufferView(t *testing.T) {
@@ -616,12 +616,12 @@ func TestVulkanDevice_UpdateDescriptorSets_FailureBufferInfoAndBufferView(t *tes
 	bufferView1 := mocks.EasyMockBufferView(ctrl)
 	bufferView2 := mocks.EasyMockBufferView(ctrl)
 
-	err := device.UpdateDescriptorSets([]core1_0.WriteDescriptorSetOptions{
+	err := device.UpdateDescriptorSets([]core1_0.WriteDescriptorSet{
 		{
 			DstSet:          destDescriptor,
 			DstBinding:      1,
 			DstArrayElement: 3,
-			DescriptorType:  core1_0.DescriptorUniformBuffer,
+			DescriptorType:  core1_0.DescriptorTypeUniformBuffer,
 			BufferInfo: []core1_0.DescriptorBufferInfo{
 				{
 					Buffer: buffer1,
@@ -640,7 +640,7 @@ func TestVulkanDevice_UpdateDescriptorSets_FailureBufferInfoAndBufferView(t *tes
 		},
 	}, nil)
 
-	require.EqualError(t, err, "a WriteDescriptorSetOptions may have one or more BufferInfo sources OR one or more TexelBufferView sources, but not both")
+	require.EqualError(t, err, "a WriteDescriptorSet may have one or more BufferInfo sources OR one or more TexelBufferView sources, but not both")
 }
 
 func TestVulkanDevice_UpdateDescriptorSets_FailureNoSource(t *testing.T) {
@@ -651,16 +651,16 @@ func TestVulkanDevice_UpdateDescriptorSets_FailureNoSource(t *testing.T) {
 	device := internal_mocks.EasyDummyDevice(mockDriver)
 	destDescriptor := mocks.EasyMockDescriptorSet(ctrl)
 
-	err := device.UpdateDescriptorSets([]core1_0.WriteDescriptorSetOptions{
+	err := device.UpdateDescriptorSets([]core1_0.WriteDescriptorSet{
 		{
 			DstSet:          destDescriptor,
 			DstBinding:      1,
 			DstArrayElement: 3,
-			DescriptorType:  core1_0.DescriptorUniformBuffer,
+			DescriptorType:  core1_0.DescriptorTypeUniformBuffer,
 		},
 	}, nil)
 
-	require.EqualError(t, err, "a WriteDescriptorSetOptions must have a source to write the descriptor from: ImageInfo, BufferInfo, TexelBufferView, or an extension source")
+	require.EqualError(t, err, "a WriteDescriptorSet must have a source to write the descriptor from: ImageInfo, BufferInfo, TexelBufferView, or an extension source")
 }
 
 func TestVulkanDevice_FlushMappedMemoryRanges(t *testing.T) {
@@ -694,7 +694,7 @@ func TestVulkanDevice_FlushMappedMemoryRanges(t *testing.T) {
 			return core1_0.VKSuccess, nil
 		})
 
-	_, err := device.FlushMappedMemoryRanges([]core1_0.MappedMemoryRangeOptions{
+	_, err := device.FlushMappedMemoryRanges([]core1_0.MappedMemoryRange{
 		{
 			Memory: mem1,
 			Offset: 1,
@@ -739,7 +739,7 @@ func TestVulkanDevice_InvalidateMappedMemoryRanges(t *testing.T) {
 			return core1_0.VKSuccess, nil
 		})
 
-	_, err := device.InvalidateMappedMemoryRanges([]core1_0.MappedMemoryRangeOptions{
+	_, err := device.InvalidateMappedMemoryRanges([]core1_0.MappedMemoryRange{
 		{
 			Memory: mem1,
 			Offset: 1,

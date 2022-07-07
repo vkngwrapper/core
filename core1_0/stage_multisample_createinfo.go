@@ -12,41 +12,56 @@ import (
 	"unsafe"
 )
 
-type MultisampleStateOptions struct {
-	RasterizationSamples SampleCounts
+type PipelineMultisampleStateCreateFlags uint32
 
-	SampleShading    bool
-	MinSampleShading float32
-	SampleMask       []uint32
+var pipelineMultisampleStateCreateFlagsMapping = common.NewFlagStringMapping[PipelineMultisampleStateCreateFlags]()
 
-	AlphaToCoverage bool
-	AlphaToOne      bool
+func (f PipelineMultisampleStateCreateFlags) Register(str string) {
+	pipelineMultisampleStateCreateFlagsMapping.Register(f, str)
+}
+
+func (f PipelineMultisampleStateCreateFlags) String() string {
+	return pipelineMultisampleStateCreateFlagsMapping.FlagsToString(f)
+}
+
+////
+
+type PipelineMultisampleStateCreateInfo struct {
+	Flags                PipelineMultisampleStateCreateFlags
+	RasterizationSamples SampleCountFlags
+
+	SampleShadingEnable bool
+	MinSampleShading    float32
+	SampleMask          []uint32
+
+	AlphaToCoverageEnable bool
+	AlphaToOneEnable      bool
 
 	common.NextOptions
 }
 
-func (o MultisampleStateOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o PipelineMultisampleStateCreateInfo) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == unsafe.Pointer(nil) {
 		preallocatedPointer = allocator.Malloc(C.sizeof_struct_VkPipelineMultisampleStateCreateInfo)
 	}
 	createInfo := (*C.VkPipelineMultisampleStateCreateInfo)(preallocatedPointer)
 	createInfo.sType = C.VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO
-	createInfo.flags = 0
+	createInfo.flags = C.VkPipelineMultisampleStateCreateFlags(o.Flags)
 	createInfo.pNext = next
 	createInfo.rasterizationSamples = C.VkSampleCountFlagBits(o.RasterizationSamples)
 	createInfo.sampleShadingEnable = C.VK_FALSE
 	createInfo.alphaToCoverageEnable = C.VK_FALSE
 	createInfo.alphaToOneEnable = C.VK_FALSE
 
-	if o.SampleShading {
+	if o.SampleShadingEnable {
 		createInfo.sampleShadingEnable = C.VK_TRUE
 	}
 
-	if o.AlphaToCoverage {
+	if o.AlphaToCoverageEnable {
 		createInfo.alphaToCoverageEnable = C.VK_TRUE
 	}
 
-	if o.AlphaToOne {
+	if o.AlphaToOneEnable {
 		createInfo.alphaToOneEnable = C.VK_TRUE
 	}
 

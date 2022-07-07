@@ -44,12 +44,12 @@ func TestDescriptorSetLayout_Create_SingleBinding(t *testing.T) {
 			return core1_0.VKSuccess, nil
 		})
 
-	layout, _, err := device.CreateDescriptorSetLayout(nil, core1_0.DescriptorSetLayoutCreateOptions{
+	layout, _, err := device.CreateDescriptorSetLayout(nil, core1_0.DescriptorSetLayoutCreateInfo{
 		Flags: 0,
-		Bindings: []core1_0.DescriptorLayoutBinding{
+		Bindings: []core1_0.DescriptorSetLayoutBinding{
 			{
 				Binding:         3,
-				DescriptorType:  core1_0.DescriptorStorageBuffer,
+				DescriptorType:  core1_0.DescriptorTypeStorageBuffer,
 				DescriptorCount: 1,
 				StageFlags:      core1_0.StageGeometry,
 			},
@@ -103,12 +103,12 @@ func TestDescriptorSetLayout_Create_SingleBindingImmutableSamplers(t *testing.T)
 			return core1_0.VKSuccess, nil
 		})
 
-	layout, _, err := device.CreateDescriptorSetLayout(nil, core1_0.DescriptorSetLayoutCreateOptions{
+	layout, _, err := device.CreateDescriptorSetLayout(nil, core1_0.DescriptorSetLayoutCreateInfo{
 		Flags: 0,
-		Bindings: []core1_0.DescriptorLayoutBinding{
+		Bindings: []core1_0.DescriptorSetLayoutBinding{
 			{
 				Binding:         3,
-				DescriptorType:  core1_0.DescriptorCombinedImageSampler,
+				DescriptorType:  core1_0.DescriptorTypeCombinedImageSampler,
 				DescriptorCount: 4,
 				StageFlags:      core1_0.StageGeometry,
 				ImmutableSamplers: []core1_0.Sampler{
@@ -135,12 +135,12 @@ func TestDescriptorSetLayout_Create_FailBindingSamplerMismatch(t *testing.T) {
 	sampler3 := mocks.EasyMockSampler(ctrl)
 	sampler4 := mocks.EasyMockSampler(ctrl)
 
-	_, _, err := device.CreateDescriptorSetLayout(nil, core1_0.DescriptorSetLayoutCreateOptions{
+	_, _, err := device.CreateDescriptorSetLayout(nil, core1_0.DescriptorSetLayoutCreateInfo{
 		Flags: 0,
-		Bindings: []core1_0.DescriptorLayoutBinding{
+		Bindings: []core1_0.DescriptorSetLayoutBinding{
 			{
 				Binding:         3,
-				DescriptorType:  core1_0.DescriptorCombinedImageSampler,
+				DescriptorType:  core1_0.DescriptorTypeCombinedImageSampler,
 				DescriptorCount: 3,
 				StageFlags:      core1_0.StageGeometry,
 				ImmutableSamplers: []core1_0.Sampler{
@@ -197,24 +197,24 @@ func TestDescriptorSetLayout_Create_MultiBinding(t *testing.T) {
 			return core1_0.VKSuccess, nil
 		})
 
-	layout, _, err := device.CreateDescriptorSetLayout(nil, core1_0.DescriptorSetLayoutCreateOptions{
+	layout, _, err := device.CreateDescriptorSetLayout(nil, core1_0.DescriptorSetLayoutCreateInfo{
 		Flags: 0,
-		Bindings: []core1_0.DescriptorLayoutBinding{
+		Bindings: []core1_0.DescriptorSetLayoutBinding{
 			{
 				Binding:         3,
-				DescriptorType:  core1_0.DescriptorStorageBuffer,
+				DescriptorType:  core1_0.DescriptorTypeStorageBuffer,
 				DescriptorCount: 1,
 				StageFlags:      core1_0.StageGeometry,
 			},
 			{
 				Binding:         11,
-				DescriptorType:  core1_0.DescriptorInputAttachment,
+				DescriptorType:  core1_0.DescriptorTypeInputAttachment,
 				DescriptorCount: 9,
 				StageFlags:      core1_0.StageGeometry,
 			},
 			{
 				Binding:         12,
-				DescriptorType:  core1_0.DescriptorInputAttachment,
+				DescriptorType:  core1_0.DescriptorTypeInputAttachment,
 				DescriptorCount: 18,
 				StageFlags:      core1_0.StageGeometry,
 			},
