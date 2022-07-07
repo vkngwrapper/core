@@ -1,5 +1,5 @@
 #include <stdlib.h>
-#include "vulkan/vulkan.h"
+#include "../common/vulkan.h"
 
 typedef struct DriverFuncPtrs {
     //VK 1.0
