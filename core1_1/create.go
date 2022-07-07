@@ -1,8 +1,8 @@
 package core1_1
 
 import (
-	"github.com/CannibalVox/VKng/core/common"
-	"github.com/CannibalVox/VKng/core/driver"
+	"github.com/vkngwrapper/core/common"
+	"github.com/vkngwrapper/core/driver"
 )
 
 func CreateDescriptorUpdateTemplate(coreDriver driver.Driver, device driver.VkDevice, handle driver.VkDescriptorUpdateTemplate, version common.APIVersion) *VulkanDescriptorUpdateTemplate {

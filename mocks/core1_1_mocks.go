@@ -9,11 +9,11 @@ import (
 	time "time"
 	unsafe "unsafe"
 
-	common "github.com/CannibalVox/VKng/core/common"
-	core1_0 "github.com/CannibalVox/VKng/core/core1_0"
-	core1_1 "github.com/CannibalVox/VKng/core/core1_1"
-	driver "github.com/CannibalVox/VKng/core/driver"
 	gomock "github.com/golang/mock/gomock"
+	common "github.com/vkngwrapper/core/common"
+	core1_0 "github.com/vkngwrapper/core/core1_0"
+	core1_1 "github.com/vkngwrapper/core/core1_1"
+	driver "github.com/vkngwrapper/core/driver"
 )
 
 // Buffer1_1 is a mock of Buffer interface.
@@ -56,7 +56,7 @@ func (mr *Buffer1_1MockRecorder) APIVersion() *gomock.Call {
 // BindBufferMemory mocks base method.
 func (m *Buffer1_1) BindBufferMemory(memory core1_0.DeviceMemory, offset int) (common.VkResult, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "BindBufferMemory2", memory, offset)
+	ret := m.ctrl.Call(m, "BindBufferMemory", memory, offset)
 	ret0, _ := ret[0].(common.VkResult)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
@@ -65,7 +65,7 @@ func (m *Buffer1_1) BindBufferMemory(memory core1_0.DeviceMemory, offset int) (c
 // BindBufferMemory indicates an expected call of BindBufferMemory.
 func (mr *Buffer1_1MockRecorder) BindBufferMemory(memory, offset interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "BindBufferMemory2", reflect.TypeOf((*Buffer1_1)(nil).BindBufferMemory), memory, offset)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "BindBufferMemory", reflect.TypeOf((*Buffer1_1)(nil).BindBufferMemory), memory, offset)
 }
 
 // Destroy mocks base method.
@@ -2840,7 +2840,7 @@ func (mr *Image1_1MockRecorder) APIVersion() *gomock.Call {
 // BindImageMemory mocks base method.
 func (m *Image1_1) BindImageMemory(memory core1_0.DeviceMemory, offset int) (common.VkResult, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "BindImageMemory2", memory, offset)
+	ret := m.ctrl.Call(m, "BindImageMemory", memory, offset)
 	ret0, _ := ret[0].(common.VkResult)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
@@ -2849,7 +2849,7 @@ func (m *Image1_1) BindImageMemory(memory core1_0.DeviceMemory, offset int) (com
 // BindImageMemory indicates an expected call of BindImageMemory.
 func (mr *Image1_1MockRecorder) BindImageMemory(memory, offset interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "BindImageMemory2", reflect.TypeOf((*Image1_1)(nil).BindImageMemory), memory, offset)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "BindImageMemory", reflect.TypeOf((*Image1_1)(nil).BindImageMemory), memory, offset)
 }
 
 // Destroy mocks base method.
@@ -3280,7 +3280,7 @@ func (mr *MockInstanceScopedPhysicalDeviceMockRecorder) EnumerateDeviceLayerProp
 // ExternalBufferProperties mocks base method.
 func (m *MockInstanceScopedPhysicalDevice) ExternalBufferProperties(o core1_1.PhysicalDeviceExternalBufferInfo, outData *core1_1.ExternalBufferProperties) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "PhysicalDeviceExternalBufferProperties", o, outData)
+	ret := m.ctrl.Call(m, "ExternalBufferProperties", o, outData)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
@@ -3288,13 +3288,13 @@ func (m *MockInstanceScopedPhysicalDevice) ExternalBufferProperties(o core1_1.Ph
 // ExternalBufferProperties indicates an expected call of ExternalBufferProperties.
 func (mr *MockInstanceScopedPhysicalDeviceMockRecorder) ExternalBufferProperties(o, outData interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "PhysicalDeviceExternalBufferProperties", reflect.TypeOf((*MockInstanceScopedPhysicalDevice)(nil).ExternalBufferProperties), o, outData)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ExternalBufferProperties", reflect.TypeOf((*MockInstanceScopedPhysicalDevice)(nil).ExternalBufferProperties), o, outData)
 }
 
 // ExternalFenceProperties mocks base method.
 func (m *MockInstanceScopedPhysicalDevice) ExternalFenceProperties(o core1_1.PhysicalDeviceExternalFenceInfo, outData *core1_1.ExternalFenceProperties) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "PhysicalDeviceExternalFenceProperties", o, outData)
+	ret := m.ctrl.Call(m, "ExternalFenceProperties", o, outData)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
@@ -3302,13 +3302,13 @@ func (m *MockInstanceScopedPhysicalDevice) ExternalFenceProperties(o core1_1.Phy
 // ExternalFenceProperties indicates an expected call of ExternalFenceProperties.
 func (mr *MockInstanceScopedPhysicalDeviceMockRecorder) ExternalFenceProperties(o, outData interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "PhysicalDeviceExternalFenceProperties", reflect.TypeOf((*MockInstanceScopedPhysicalDevice)(nil).ExternalFenceProperties), o, outData)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ExternalFenceProperties", reflect.TypeOf((*MockInstanceScopedPhysicalDevice)(nil).ExternalFenceProperties), o, outData)
 }
 
 // ExternalSemaphoreProperties mocks base method.
 func (m *MockInstanceScopedPhysicalDevice) ExternalSemaphoreProperties(o core1_1.PhysicalDeviceExternalSemaphoreInfo, outData *core1_1.ExternalSemaphoreProperties) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "PhysicalDeviceExternalSemaphoreProperties", o, outData)
+	ret := m.ctrl.Call(m, "ExternalSemaphoreProperties", o, outData)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
@@ -3316,7 +3316,7 @@ func (m *MockInstanceScopedPhysicalDevice) ExternalSemaphoreProperties(o core1_1
 // ExternalSemaphoreProperties indicates an expected call of ExternalSemaphoreProperties.
 func (mr *MockInstanceScopedPhysicalDeviceMockRecorder) ExternalSemaphoreProperties(o, outData interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "PhysicalDeviceExternalSemaphoreProperties", reflect.TypeOf((*MockInstanceScopedPhysicalDevice)(nil).ExternalSemaphoreProperties), o, outData)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ExternalSemaphoreProperties", reflect.TypeOf((*MockInstanceScopedPhysicalDevice)(nil).ExternalSemaphoreProperties), o, outData)
 }
 
 // Features mocks base method.
@@ -3523,7 +3523,7 @@ func (mr *MockInstanceScopedPhysicalDeviceMockRecorder) QueueFamilyProperties2(o
 // SparseImageFormatProperties mocks base method.
 func (m *MockInstanceScopedPhysicalDevice) SparseImageFormatProperties(format core1_0.Format, imageType core1_0.ImageType, samples core1_0.SampleCountFlags, usages core1_0.ImageUsageFlags, tiling core1_0.ImageTiling) []core1_0.SparseImageFormatProperties {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Properties", format, imageType, samples, usages, tiling)
+	ret := m.ctrl.Call(m, "SparseImageFormatProperties", format, imageType, samples, usages, tiling)
 	ret0, _ := ret[0].([]core1_0.SparseImageFormatProperties)
 	return ret0
 }
@@ -3531,7 +3531,7 @@ func (m *MockInstanceScopedPhysicalDevice) SparseImageFormatProperties(format co
 // SparseImageFormatProperties indicates an expected call of SparseImageFormatProperties.
 func (mr *MockInstanceScopedPhysicalDeviceMockRecorder) SparseImageFormatProperties(format, imageType, samples, usages, tiling interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Properties", reflect.TypeOf((*MockInstanceScopedPhysicalDevice)(nil).SparseImageFormatProperties), format, imageType, samples, usages, tiling)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SparseImageFormatProperties", reflect.TypeOf((*MockInstanceScopedPhysicalDevice)(nil).SparseImageFormatProperties), format, imageType, samples, usages, tiling)
 }
 
 // SparseImageFormatProperties2 mocks base method.
@@ -3796,7 +3796,7 @@ func (mr *PhysicalDevice1_1MockRecorder) QueueFamilyProperties() *gomock.Call {
 // SparseImageFormatProperties mocks base method.
 func (m *PhysicalDevice1_1) SparseImageFormatProperties(format core1_0.Format, imageType core1_0.ImageType, samples core1_0.SampleCountFlags, usages core1_0.ImageUsageFlags, tiling core1_0.ImageTiling) []core1_0.SparseImageFormatProperties {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Properties", format, imageType, samples, usages, tiling)
+	ret := m.ctrl.Call(m, "SparseImageFormatProperties", format, imageType, samples, usages, tiling)
 	ret0, _ := ret[0].([]core1_0.SparseImageFormatProperties)
 	return ret0
 }
@@ -3804,7 +3804,7 @@ func (m *PhysicalDevice1_1) SparseImageFormatProperties(format core1_0.Format, i
 // SparseImageFormatProperties indicates an expected call of SparseImageFormatProperties.
 func (mr *PhysicalDevice1_1MockRecorder) SparseImageFormatProperties(format, imageType, samples, usages, tiling interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Properties", reflect.TypeOf((*PhysicalDevice1_1)(nil).SparseImageFormatProperties), format, imageType, samples, usages, tiling)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SparseImageFormatProperties", reflect.TypeOf((*PhysicalDevice1_1)(nil).SparseImageFormatProperties), format, imageType, samples, usages, tiling)
 }
 
 // Pipeline1_1 is a mock of Pipeline interface.

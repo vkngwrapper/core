@@ -18,8 +18,8 @@ PFN_vkVoidFunction device_proc_addr(DriverFuncPtrs *funcPtrs, VkDevice device, c
 */
 import "C"
 import (
-	"github.com/CannibalVox/VKng/core/common"
 	"github.com/cockroachdb/errors"
+	"github.com/vkngwrapper/core/common"
 	"unsafe"
 )
 

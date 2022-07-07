@@ -1,7 +1,7 @@
 package mocks
 
 import (
-	"github.com/CannibalVox/VKng/core/driver"
+	"github.com/vkngwrapper/core/driver"
 	"math/rand"
 	"unsafe"
 )

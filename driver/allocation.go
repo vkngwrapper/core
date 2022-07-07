@@ -51,7 +51,7 @@ VKAPI_ATTR void VKAPI_CALL internalFreeCallback(
 */
 import "C"
 import (
-	"github.com/CannibalVox/VKng/core/common"
+	"github.com/vkngwrapper/core/common"
 	"runtime/cgo"
 	"unsafe"
 )

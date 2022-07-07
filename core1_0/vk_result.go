@@ -5,7 +5,7 @@ package core1_0
 #include "vulkan/vulkan.h"
 */
 import "C"
-import "github.com/CannibalVox/VKng/core/common"
+import "github.com/vkngwrapper/core/common"
 
 const (
 	VKSuccess                   common.VkResult = C.VK_SUCCESS

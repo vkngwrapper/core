@@ -1,14 +1,14 @@
 package core1_0_test
 
 import (
-	"github.com/CannibalVox/VKng/core/common"
-	"github.com/CannibalVox/VKng/core/core1_0"
-	"github.com/CannibalVox/VKng/core/driver"
-	mock_driver "github.com/CannibalVox/VKng/core/driver/mocks"
-	internal_mocks "github.com/CannibalVox/VKng/core/internal/dummies"
-	"github.com/CannibalVox/VKng/core/mocks"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/require"
+	"github.com/vkngwrapper/core/common"
+	"github.com/vkngwrapper/core/core1_0"
+	"github.com/vkngwrapper/core/driver"
+	mock_driver "github.com/vkngwrapper/core/driver/mocks"
+	internal_mocks "github.com/vkngwrapper/core/internal/dummies"
+	"github.com/vkngwrapper/core/mocks"
 	"testing"
 	"unsafe"
 )

@@ -6,8 +6,8 @@ package core1_0
 */
 import "C"
 import (
-	"github.com/CannibalVox/VKng/core/driver"
 	"github.com/CannibalVox/cgoparam"
+	"github.com/vkngwrapper/core/driver"
 )
 
 func (d *VulkanPhysicalDevice) MemoryProperties() *PhysicalDeviceMemoryProperties {

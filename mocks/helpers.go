@@ -1,9 +1,9 @@
 package mocks
 
 import (
-	"github.com/CannibalVox/VKng/core/core1_0"
-	"github.com/CannibalVox/VKng/core/driver"
 	"github.com/golang/mock/gomock"
+	"github.com/vkngwrapper/core/core1_0"
+	"github.com/vkngwrapper/core/driver"
 )
 
 func EasyMockBuffer(ctrl *gomock.Controller) *MockBuffer {

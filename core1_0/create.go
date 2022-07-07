@@ -1,8 +1,8 @@
 package core1_0
 
 import (
-	"github.com/CannibalVox/VKng/core/common"
-	"github.com/CannibalVox/VKng/core/driver"
+	"github.com/vkngwrapper/core/common"
+	"github.com/vkngwrapper/core/driver"
 )
 
 func createInstanceObject(instanceDriver driver.Driver, handle driver.VkInstance, version common.APIVersion) *VulkanInstance {

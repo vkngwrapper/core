@@ -1,6 +1,6 @@
 package core1_0
 
-import "github.com/CannibalVox/VKng/core/common"
+import "github.com/vkngwrapper/core/common"
 
 type AccessFlags int32
 

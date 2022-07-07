@@ -8,9 +8,9 @@ import (
 	reflect "reflect"
 	unsafe "unsafe"
 
-	common "github.com/CannibalVox/VKng/core/common"
-	driver "github.com/CannibalVox/VKng/core/driver"
 	gomock "github.com/golang/mock/gomock"
+	common "github.com/vkngwrapper/core/common"
+	driver "github.com/vkngwrapper/core/driver"
 )
 
 // MockDriver is a mock of Driver interface.

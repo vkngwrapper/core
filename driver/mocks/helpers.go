@@ -1,9 +1,9 @@
 package mock_driver
 
 import (
-	"github.com/CannibalVox/VKng/core/common"
-	"github.com/CannibalVox/VKng/core/driver"
 	"github.com/golang/mock/gomock"
+	"github.com/vkngwrapper/core/common"
+	"github.com/vkngwrapper/core/driver"
 )
 
 func DriverForVersion(ctrl *gomock.Controller, version common.APIVersion) *MockDriver {

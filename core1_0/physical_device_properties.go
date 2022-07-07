@@ -6,9 +6,9 @@ package core1_0
 */
 import "C"
 import (
-	"github.com/CannibalVox/VKng/core/common"
 	"github.com/cockroachdb/errors"
 	"github.com/google/uuid"
+	"github.com/vkngwrapper/core/common"
 	"unsafe"
 )
 

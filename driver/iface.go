@@ -1,7 +1,7 @@
 package driver
 
 import (
-	"github.com/CannibalVox/VKng/core/common"
+	"github.com/vkngwrapper/core/common"
 	"unsafe"
 )
 

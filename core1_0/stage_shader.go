@@ -8,9 +8,9 @@ import "C"
 import (
 	"bytes"
 	"encoding/binary"
-	"github.com/CannibalVox/VKng/core/common"
 	"github.com/CannibalVox/cgoparam"
 	"github.com/cockroachdb/errors"
+	"github.com/vkngwrapper/core/common"
 	"unsafe"
 )
 

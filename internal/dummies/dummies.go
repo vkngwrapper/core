@@ -1,10 +1,10 @@
 package dummies
 
 import (
-	"github.com/CannibalVox/VKng/core/common/extensions"
-	"github.com/CannibalVox/VKng/core/core1_0"
-	"github.com/CannibalVox/VKng/core/driver"
-	"github.com/CannibalVox/VKng/core/mocks"
+	"github.com/vkngwrapper/core/common/extensions"
+	"github.com/vkngwrapper/core/core1_0"
+	"github.com/vkngwrapper/core/driver"
+	"github.com/vkngwrapper/core/mocks"
 )
 
 func EasyDummyBuffer(driver driver.Driver, device core1_0.Device) core1_0.Buffer {

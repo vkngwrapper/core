@@ -6,11 +6,11 @@ package core1_1
 */
 import "C"
 import (
-	"github.com/CannibalVox/VKng/core/common"
-	"github.com/CannibalVox/VKng/core/core1_0"
-	"github.com/CannibalVox/VKng/core/driver"
 	"github.com/CannibalVox/cgoparam"
 	"github.com/cockroachdb/errors"
+	"github.com/vkngwrapper/core/common"
+	"github.com/vkngwrapper/core/core1_0"
+	"github.com/vkngwrapper/core/driver"
 	"unsafe"
 )
 
@@ -43,7 +43,7 @@ func (o *PhysicalDeviceGroupProperties) PopulateHeader(allocator *cgoparam.Alloc
 // but it poses a serious problem right here, in core/core*. I'm breaking the circular dependency
 // by using a go:linkname and may god have mercy on my soul.
 
-//go:linkname createPhysicalDevice github.com/CannibalVox/VKng/core/core1_0.createPhysicalDeviceCore1_0
+//go:linkname createPhysicalDevice github.com/vkngwrapper/core/core1_0.createPhysicalDeviceCore1_0
 func createPhysicalDevice(coreDriver driver.Driver, instance driver.VkInstance, handle driver.VkPhysicalDevice, instanceVersion, deviceVersion common.APIVersion) core1_0.PhysicalDevice
 
 func (o *PhysicalDeviceGroupProperties) PopulateOutData(cPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {

@@ -6,12 +6,12 @@ package core1_2
 */
 import "C"
 import (
-	"github.com/CannibalVox/VKng/core/common"
-	"github.com/CannibalVox/VKng/core/core1_0"
-	"github.com/CannibalVox/VKng/core/core1_1"
 	"github.com/CannibalVox/cgoparam"
 	"github.com/cockroachdb/errors"
 	"github.com/google/uuid"
+	"github.com/vkngwrapper/core/common"
+	"github.com/vkngwrapper/core/core1_0"
+	"github.com/vkngwrapper/core/core1_1"
 	"unsafe"
 )
 

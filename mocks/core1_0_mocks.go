@@ -9,10 +9,10 @@ import (
 	time "time"
 	unsafe "unsafe"
 
-	common "github.com/CannibalVox/VKng/core/common"
-	core1_0 "github.com/CannibalVox/VKng/core/core1_0"
-	driver "github.com/CannibalVox/VKng/core/driver"
 	gomock "github.com/golang/mock/gomock"
+	common "github.com/vkngwrapper/core/common"
+	core1_0 "github.com/vkngwrapper/core/core1_0"
+	driver "github.com/vkngwrapper/core/driver"
 )
 
 // MockBuffer is a mock of Buffer interface.
@@ -55,7 +55,7 @@ func (mr *MockBufferMockRecorder) APIVersion() *gomock.Call {
 // BindBufferMemory mocks base method.
 func (m *MockBuffer) BindBufferMemory(memory core1_0.DeviceMemory, offset int) (common.VkResult, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "BindBufferMemory2", memory, offset)
+	ret := m.ctrl.Call(m, "BindBufferMemory", memory, offset)
 	ret0, _ := ret[0].(common.VkResult)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
@@ -64,7 +64,7 @@ func (m *MockBuffer) BindBufferMemory(memory core1_0.DeviceMemory, offset int) (
 // BindBufferMemory indicates an expected call of BindBufferMemory.
 func (mr *MockBufferMockRecorder) BindBufferMemory(memory, offset interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "BindBufferMemory2", reflect.TypeOf((*MockBuffer)(nil).BindBufferMemory), memory, offset)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "BindBufferMemory", reflect.TypeOf((*MockBuffer)(nil).BindBufferMemory), memory, offset)
 }
 
 // Destroy mocks base method.
@@ -2528,7 +2528,7 @@ func (mr *MockImageMockRecorder) APIVersion() *gomock.Call {
 // BindImageMemory mocks base method.
 func (m *MockImage) BindImageMemory(memory core1_0.DeviceMemory, offset int) (common.VkResult, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "BindImageMemory2", memory, offset)
+	ret := m.ctrl.Call(m, "BindImageMemory", memory, offset)
 	ret0, _ := ret[0].(common.VkResult)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
@@ -2537,7 +2537,7 @@ func (m *MockImage) BindImageMemory(memory core1_0.DeviceMemory, offset int) (co
 // BindImageMemory indicates an expected call of BindImageMemory.
 func (mr *MockImageMockRecorder) BindImageMemory(memory, offset interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "BindImageMemory2", reflect.TypeOf((*MockImage)(nil).BindImageMemory), memory, offset)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "BindImageMemory", reflect.TypeOf((*MockImage)(nil).BindImageMemory), memory, offset)
 }
 
 // Destroy mocks base method.
@@ -3067,7 +3067,7 @@ func (mr *MockPhysicalDeviceMockRecorder) QueueFamilyProperties() *gomock.Call {
 // SparseImageFormatProperties mocks base method.
 func (m *MockPhysicalDevice) SparseImageFormatProperties(format core1_0.Format, imageType core1_0.ImageType, samples core1_0.SampleCountFlags, usages core1_0.ImageUsageFlags, tiling core1_0.ImageTiling) []core1_0.SparseImageFormatProperties {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Properties", format, imageType, samples, usages, tiling)
+	ret := m.ctrl.Call(m, "SparseImageFormatProperties", format, imageType, samples, usages, tiling)
 	ret0, _ := ret[0].([]core1_0.SparseImageFormatProperties)
 	return ret0
 }
@@ -3075,7 +3075,7 @@ func (m *MockPhysicalDevice) SparseImageFormatProperties(format core1_0.Format, 
 // SparseImageFormatProperties indicates an expected call of SparseImageFormatProperties.
 func (mr *MockPhysicalDeviceMockRecorder) SparseImageFormatProperties(format, imageType, samples, usages, tiling interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Properties", reflect.TypeOf((*MockPhysicalDevice)(nil).SparseImageFormatProperties), format, imageType, samples, usages, tiling)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SparseImageFormatProperties", reflect.TypeOf((*MockPhysicalDevice)(nil).SparseImageFormatProperties), format, imageType, samples, usages, tiling)
 }
 
 // MockPipeline is a mock of Pipeline interface.

@@ -7,10 +7,10 @@ package mocks
 import (
 	reflect "reflect"
 
-	common "github.com/CannibalVox/VKng/core/common"
-	core1_0 "github.com/CannibalVox/VKng/core/core1_0"
-	driver "github.com/CannibalVox/VKng/core/driver"
 	gomock "github.com/golang/mock/gomock"
+	common "github.com/vkngwrapper/core/common"
+	core1_0 "github.com/vkngwrapper/core/core1_0"
+	driver "github.com/vkngwrapper/core/driver"
 )
 
 // MockLoader is a mock of Loader interface.

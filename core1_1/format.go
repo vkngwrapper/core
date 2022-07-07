@@ -5,7 +5,7 @@ package core1_1
 #include "vulkan/vulkan.h"
 */
 import "C"
-import "github.com/CannibalVox/VKng/core/core1_0"
+import "github.com/vkngwrapper/core/core1_0"
 
 const (
 	FormatB10X6G10X6R10X6G10X6HorizontalChromaComponentPacked     core1_0.Format = C.VK_FORMAT_B10X6G10X6R10X6G10X6_422_UNORM_4PACK16

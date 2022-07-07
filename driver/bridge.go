@@ -7,7 +7,7 @@ package driver
 */
 import "C"
 import (
-	"github.com/CannibalVox/VKng/core/common"
+	"github.com/vkngwrapper/core/common"
 	"unsafe"
 )
 
