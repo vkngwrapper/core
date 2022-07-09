@@ -59,12 +59,12 @@ func TestVulkanPhysicalDevice_AvailableExtensionsForLayer(t *testing.T) {
 
 			extension := propertySlice.Index(0)
 
-			*(*uint32)(unsafe.Pointer(extension.FieldByName("specVersion").UnsafeAddr())) = uint32(common.CreateVersion(1, 2, 3))
+			*(*uint32)(unsafe.Pointer(extension.FieldByName("specVersion").UnsafeAddr())) = uint32(123)
 			extensionName := ([]driver.Char)(unsafe.Slice((*driver.Char)(unsafe.Pointer(extension.FieldByName("extensionName").UnsafeAddr())), 256))
 			strToCharSlice("extension 1", extensionName)
 
 			extension = propertySlice.Index(1)
-			*(*uint32)(unsafe.Pointer(extension.FieldByName("specVersion").UnsafeAddr())) = uint32(common.CreateVersion(3, 2, 1))
+			*(*uint32)(unsafe.Pointer(extension.FieldByName("specVersion").UnsafeAddr())) = uint32(321)
 			extensionName = ([]driver.Char)(unsafe.Slice((*driver.Char)(unsafe.Pointer(extension.FieldByName("extensionName").UnsafeAddr())), 256))
 			strToCharSlice("extension A", extensionName)
 
@@ -78,12 +78,12 @@ func TestVulkanPhysicalDevice_AvailableExtensionsForLayer(t *testing.T) {
 	extension := extensions["extension 1"]
 	require.NotNil(t, extension)
 	require.Equal(t, "extension 1", extension.ExtensionName)
-	require.Equal(t, common.CreateVersion(1, 2, 3), extension.SpecVersion)
+	require.Equal(t, uint(123), extension.SpecVersion)
 
 	extension = extensions["extension A"]
 	require.NotNil(t, extension)
 	require.Equal(t, "extension A", extension.ExtensionName)
-	require.Equal(t, common.CreateVersion(3, 2, 1), extension.SpecVersion)
+	require.Equal(t, uint(321), extension.SpecVersion)
 }
 
 func TestVulkanPhysicalDevice_AvailableExtensions(t *testing.T) {
@@ -107,12 +107,12 @@ func TestVulkanPhysicalDevice_AvailableExtensions(t *testing.T) {
 
 			extension := propertySlice.Index(0)
 
-			*(*uint32)(unsafe.Pointer(extension.FieldByName("specVersion").UnsafeAddr())) = uint32(common.CreateVersion(1, 2, 3))
+			*(*uint32)(unsafe.Pointer(extension.FieldByName("specVersion").UnsafeAddr())) = uint32(123)
 			extensionName := ([]driver.Char)(unsafe.Slice((*driver.Char)(unsafe.Pointer(extension.FieldByName("extensionName").UnsafeAddr())), 256))
 			strToCharSlice("extension 1", extensionName)
 
 			extension = propertySlice.Index(1)
-			*(*uint32)(unsafe.Pointer(extension.FieldByName("specVersion").UnsafeAddr())) = uint32(common.CreateVersion(3, 2, 1))
+			*(*uint32)(unsafe.Pointer(extension.FieldByName("specVersion").UnsafeAddr())) = uint32(321)
 			extensionName = ([]driver.Char)(unsafe.Slice((*driver.Char)(unsafe.Pointer(extension.FieldByName("extensionName").UnsafeAddr())), 256))
 			strToCharSlice("extension A", extensionName)
 
@@ -125,12 +125,12 @@ func TestVulkanPhysicalDevice_AvailableExtensions(t *testing.T) {
 	extension := extensions["extension 1"]
 	require.NotNil(t, extension)
 	require.Equal(t, "extension 1", extension.ExtensionName)
-	require.Equal(t, common.CreateVersion(1, 2, 3), extension.SpecVersion)
+	require.Equal(t, uint(123), extension.SpecVersion)
 
 	extension = extensions["extension A"]
 	require.NotNil(t, extension)
 	require.Equal(t, "extension A", extension.ExtensionName)
-	require.Equal(t, common.CreateVersion(3, 2, 1), extension.SpecVersion)
+	require.Equal(t, uint(321), extension.SpecVersion)
 }
 
 func TestVulkanPhysicalDevice_AvailableExtensions_Incomplete(t *testing.T) {
@@ -164,12 +164,12 @@ func TestVulkanPhysicalDevice_AvailableExtensions_Incomplete(t *testing.T) {
 
 			extension := propertySlice.Index(0)
 
-			*(*uint32)(unsafe.Pointer(extension.FieldByName("specVersion").UnsafeAddr())) = uint32(common.CreateVersion(1, 2, 3))
+			*(*uint32)(unsafe.Pointer(extension.FieldByName("specVersion").UnsafeAddr())) = uint32(123)
 			extensionName := ([]driver.Char)(unsafe.Slice((*driver.Char)(unsafe.Pointer(extension.FieldByName("extensionName").UnsafeAddr())), 256))
 			strToCharSlice("extension 1", extensionName)
 
 			extension = propertySlice.Index(1)
-			*(*uint32)(unsafe.Pointer(extension.FieldByName("specVersion").UnsafeAddr())) = uint32(common.CreateVersion(3, 2, 1))
+			*(*uint32)(unsafe.Pointer(extension.FieldByName("specVersion").UnsafeAddr())) = uint32(321)
 			extensionName = ([]driver.Char)(unsafe.Slice((*driver.Char)(unsafe.Pointer(extension.FieldByName("extensionName").UnsafeAddr())), 256))
 			strToCharSlice("extension A", extensionName)
 
@@ -182,12 +182,12 @@ func TestVulkanPhysicalDevice_AvailableExtensions_Incomplete(t *testing.T) {
 	extension := extensions["extension 1"]
 	require.NotNil(t, extension)
 	require.Equal(t, "extension 1", extension.ExtensionName)
-	require.Equal(t, common.CreateVersion(1, 2, 3), extension.SpecVersion)
+	require.Equal(t, uint(123), extension.SpecVersion)
 
 	extension = extensions["extension A"]
 	require.NotNil(t, extension)
 	require.Equal(t, "extension A", extension.ExtensionName)
-	require.Equal(t, common.CreateVersion(3, 2, 1), extension.SpecVersion)
+	require.Equal(t, uint(321), extension.SpecVersion)
 }
 
 func TestVulkanPhysicalDevice_AvailableLayers(t *testing.T) {

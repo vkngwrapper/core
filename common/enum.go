@@ -4,6 +4,10 @@ import "github.com/cockroachdb/errors"
 
 ////
 
+// InternalAllocationType classifies in an internal allocation in an AllocationCallbackOptions
+// notification callback.
+//
+// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/VkInternalAllocationType.html
 type InternalAllocationType int32
 
 var internalAllocationTypeMapping = make(map[InternalAllocationType]string)
@@ -18,6 +22,10 @@ func (e InternalAllocationType) String() string {
 
 ////
 
+// SystemAllocationScope indicates how long an allocation is intended to last in an
+// AllocationCallbacksOptions allocation callback
+//
+// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/VkSystemAllocationScope.html
 type SystemAllocationScope int32
 
 var systemAllocationScopeMapping = make(map[SystemAllocationScope]string)
@@ -32,6 +40,10 @@ func (e SystemAllocationScope) String() string {
 
 ////
 
+// VkResult is a return code used by many Vulkan commands to indicate failure cases or other
+// status information.
+//
+// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/VkResult.html
 type VkResult int
 
 var vkResultMapping = make(map[VkResult]string)

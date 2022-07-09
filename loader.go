@@ -61,7 +61,7 @@ func (l *VulkanLoader) attemptAvailableExtensions(layerName *driver.Char) (map[s
 
 		outExtension := &core1_0.ExtensionProperties{
 			ExtensionName: C.GoString((*C.char)(&extension.extensionName[0])),
-			SpecVersion:   common.Version(extension.specVersion),
+			SpecVersion:   uint(extension.specVersion),
 		}
 
 		existingExtension, ok := outExtensions[outExtension.ExtensionName]

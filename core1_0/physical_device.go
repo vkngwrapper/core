@@ -126,7 +126,7 @@ func (d *VulkanPhysicalDevice) attemptAvailableExtensions(layerNamePtr *driver.C
 
 		outExtension := &ExtensionProperties{
 			ExtensionName: C.GoString((*C.char)(&extension.extensionName[0])),
-			SpecVersion:   common.Version(extension.specVersion),
+			SpecVersion:   uint(extension.specVersion),
 		}
 
 		existingExtension, ok := retVal[outExtension.ExtensionName]

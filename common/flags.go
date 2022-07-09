@@ -6,6 +6,10 @@ type flags interface {
 	~int32 | ~uint32
 }
 
+// FlagStringMapping is used as a base type for many bitflag enums in vkngwrapper.
+// It has the capability to Register flags with a descriptive string in an init() method.
+// Once that has done, the flag type can be stringified into a pipe-separated list of
+// flags.
 type FlagStringMapping[T flags] struct {
 	stringValues map[T]string
 }
