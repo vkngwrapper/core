@@ -12,6 +12,8 @@ import (
 	"unsafe"
 )
 
+// VulkanCommandBuffer is an implementation of the CommandBuffer interface that actually communicates with Vulkan. This
+// is the default implementation. See the interface for more documentation.
 type VulkanCommandBuffer struct {
 	deviceDriver        driver.Driver
 	device              driver.VkDevice

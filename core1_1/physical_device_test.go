@@ -573,7 +573,7 @@ func TestVulkanPhysicalDevice_QueueFamilyProperties(t *testing.T) {
 
 	require.Equal(t, []*core1_1.QueueFamilyProperties2{
 		{
-			QueueFamilyProperties: core1_0.QueueFamily{
+			QueueFamilyProperties: core1_0.QueueFamilyProperties{
 				QueueFlags:         core1_0.QueueSparseBinding,
 				QueueCount:         3,
 				TimestampValidBits: 5,
@@ -585,7 +585,7 @@ func TestVulkanPhysicalDevice_QueueFamilyProperties(t *testing.T) {
 			},
 		},
 		{
-			QueueFamilyProperties: core1_0.QueueFamily{
+			QueueFamilyProperties: core1_0.QueueFamilyProperties{
 				QueueFlags:         core1_0.QueueCompute,
 				QueueCount:         17,
 				TimestampValidBits: 19,

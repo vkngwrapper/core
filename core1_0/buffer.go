@@ -12,6 +12,8 @@ import (
 	"github.com/vkngwrapper/core/driver"
 )
 
+// VulkanBuffer is an implementation of the Buffer interface that actually communicates with Vulkan. This
+// is the default implementation. See the interface for more documentation.
 type VulkanBuffer struct {
 	deviceDriver driver.Driver
 	device       driver.VkDevice

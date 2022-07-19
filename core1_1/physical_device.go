@@ -13,6 +13,8 @@ import (
 	"unsafe"
 )
 
+// VulkanPhysicalDevice is an implementation of the PhysicalDevice interface that actually communicates with Vulkan. This
+// is the default implementation. See the interface for more documentation.
 type VulkanPhysicalDevice struct {
 	core1_0.PhysicalDevice
 
@@ -23,6 +25,11 @@ func (p *VulkanPhysicalDevice) InstanceScopedPhysicalDevice1_1() InstanceScopedP
 	return p.InstanceScoped1_1
 }
 
+// PromotePhysicalDevice accepts a PhysicalDevice object from any core version. If provided a physical device that supports
+// at least core 1.1 for its device-scoped functionality, it will return a core1_1.PhysicalDevice. Otherwise, it will return nil. This method
+// will always return a core1_1.VulkanPhysicalDevice, even if it is provided a VulkanPhysicalDevice from a higher
+// core version. Two Vulkan 1.1 compatible PhysicalDevice objects with the same PhysicalDevice.Handle will
+// return the same interface value when passed to this method.
 func PromotePhysicalDevice(physicalDevice core1_0.PhysicalDevice) PhysicalDevice {
 	if !physicalDevice.DeviceAPIVersion().IsAtLeast(common.Vulkan1_1) {
 		return nil
@@ -42,6 +49,8 @@ func PromotePhysicalDevice(physicalDevice core1_0.PhysicalDevice) PhysicalDevice
 		}).(PhysicalDevice)
 }
 
+// VulkanInstanceScopedPhysicalDevice is an implementation of the InstanceScopedPhysicalDevice interface that actually communicates with Vulkan. This
+// is the default implementation. See the interface for more documentation.
 type VulkanInstanceScopedPhysicalDevice struct {
 	core1_0.PhysicalDevice
 
@@ -49,6 +58,11 @@ type VulkanInstanceScopedPhysicalDevice struct {
 	PhysicalDeviceHandle driver.VkPhysicalDevice
 }
 
+// PromoteInstanceScopedPhysicalDevice accepts a PhysicalDevice object from any core version. If provided a physical device that supports
+// at least core 1.1 for its instance-scoped functionality, it will return a core1_1.InstanceScopedPhysicalDevice. Otherwise, it will return nil. This method
+// will always return a core1_1.VulkanInstanceScopedPhysicalDevice, even if it is provided a VulkanInstanceScopedPhysicalDevice from a higher
+// core version. Two Vulkan 1.1 compatible InstanceScopedPhysicalDevice objects with the same InstanceScopedPhysicalDevice.Handle will
+// return the same interface value when passed to this method.
 func PromoteInstanceScopedPhysicalDevice(physicalDevice core1_0.PhysicalDevice) InstanceScopedPhysicalDevice {
 	if !physicalDevice.InstanceAPIVersion().IsAtLeast(common.Vulkan1_1) {
 		return nil

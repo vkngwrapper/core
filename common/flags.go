@@ -14,14 +14,20 @@ type FlagStringMapping[T flags] struct {
 	stringValues map[T]string
 }
 
+// NewFlagStringMapping creates a FlagStringMapping for use in flag types
 func NewFlagStringMapping[T flags]() FlagStringMapping[T] {
 	return FlagStringMapping[T]{make(map[T]string)}
 }
 
+// Register maps a flag value to a string that will represent that flag
+// when using String(). It is best to call this from init()
 func (m FlagStringMapping[T]) Register(value T, str string) {
 	m.stringValues[value] = str
 }
 
+// FlagsToString returns a formatted string representing the flag value
+// passed in. It is a pipe-separated list of descriptive strings for each
+// flag active in the value.
 func (m FlagStringMapping[T]) FlagsToString(value T) string {
 	if value == 0 {
 		return "None"

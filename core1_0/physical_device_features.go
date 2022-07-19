@@ -10,62 +10,168 @@ import (
 	"unsafe"
 )
 
+// PhysicalDeviceFeatures describes the fine-grained features that can be supported by an
+// implementation
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkPhysicalDeviceFeatures.html
 type PhysicalDeviceFeatures struct {
-	RobustBufferAccess                      bool
-	FullDrawIndexUint32                     bool
-	ImageCubeArray                          bool
-	IndependentBlend                        bool
-	GeometryShader                          bool
-	TessellationShader                      bool
-	SampleRateShading                       bool
-	DualSrcBlend                            bool
-	LogicOp                                 bool
-	MultiDrawIndirect                       bool
-	DrawIndirectFirstInstance               bool
-	DepthClamp                              bool
-	DepthBiasClamp                          bool
-	FillModeNonSolid                        bool
-	DepthBounds                             bool
-	WideLines                               bool
-	LargePoints                             bool
-	AlphaToOne                              bool
-	MultiViewport                           bool
-	SamplerAnisotropy                       bool
-	TextureCompressionEtc2                  bool
-	TextureCompressionAstcLdc               bool
-	TextureCompressionBc                    bool
-	OcclusionQueryPrecise                   bool
-	PipelineStatisticsQuery                 bool
-	VertexPipelineStoresAndAtomics          bool
-	FragmentStoresAndAtomics                bool
-	ShaderTessellationAndGeometryPointSize  bool
-	ShaderImageGatherExtended               bool
-	ShaderStorageImageExtendedFormats       bool
-	ShaderStorageImageMultisample           bool
-	ShaderStorageImageReadWithoutFormat     bool
-	ShaderStorageImageWriteWithoutFormat    bool
+	// RobustBufferAccess specifies that access to Buffer objects are bounds-checked against the
+	// range of the Buffer descriptor
+	RobustBufferAccess bool
+	// FullDrawIndexUint32 specifies the full 32-bit range of indices is supported for indexed
+	// draw calls when using an IndexType of IndexTypeUInt32
+	FullDrawIndexUint32 bool
+	// ImageCubeArray specifies whether ImageView objects with an ImageViewType of ImageViewTypeCubeArray
+	// can be created
+	ImageCubeArray bool
+	// IndependentBlend specifies whether the PipelineColorBlendAttachmentState settings are controlled
+	// independently per-attachment. If this feature is not enabled, the PipelineColorBlendAttachmentState
+	// settings for all color attachments must be identical
+	IndependentBlend bool
+	// GeometryShader specifies whether geometry shaders are supported
+	GeometryShader bool
+	// TessellationShader specifies whether tessellation control and evaluation shaders are supported
+	TessellationShader bool
+	// SampleRateShading specifies whether sample shading and multisample interpolation are supported
+	SampleRateShading bool
+	// DualSrcBlend specifies whether blend operations which take two sources are supported
+	DualSrcBlend bool
+	// LogicOp specifies whether logic operations are supported
+	LogicOp bool
+	// MultiDrawIndirect specifies whether multiple draw indirect is supported. If this feature is not
+	// enabled, the drawCount parameter to CommandBuffer.CmdDrawIndirect and CommandBuffer.CmdDrawIndexedIndirect
+	// must be 0 or 1
+	MultiDrawIndirect bool
+	// DrawIndirectFirstInstance specifies whether indirect drawing calls support the firstInstance
+	// parameter
+	DrawIndirectFirstInstance bool
+	// DepthClamp specifies whether depth clamping is supported
+	DepthClamp bool
+	// DepthBiasClamp specifies whether depth bias clamping is supported
+	DepthBiasClamp bool
+	// FillModeNonSolid specifies whether point and wireframe fill modes are supported
+	FillModeNonSolid bool
+	// DepthBounds specifies whether depth bounds tests are supported
+	DepthBounds bool
+	// WideLines specifies whether lines with width other than 1.0 are supported
+	WideLines bool
+	// LargePoints specifies whether points with size greater than 1.0 are supported
+	LargePoints bool
+	// AlphaToOne specifies whether the implementation is able to replace the alpha
+	// value of the fragment shader color output in the multisample coverage fragment
+	// operation. If this feature is not enabled, then the alphaToOneEnable member
+	// of PipelineMultisampleStateCreateInfo must be set to false
+	AlphaToOne bool
+	// MultiViewport specifies whether more than one viewport is supported
+	MultiViewport bool
+	// SamplerAnisotropy specifies whether anisotropic filtering is supported
+	SamplerAnisotropy bool
+	// TextureCompressionEtc2 specifies whether all of the ETC2 and EAC compressed texture
+	// formats are supported. If the feature is not enabled, PhysicalDevice.FormatProperties
+	// and PhysicalDevice.ImageFormatProperties can be used to check for supported properties
+	// of individual formats as normal
+	TextureCompressionEtc2 bool
+	// TextureCompressionAstcLdc specifies whether all of the ASTC LDR compressed texture
+	// formats are supported. If the feature is not enabled, PhysicalDevice.FormatProperties
+	// and PhysicalDevice.ImageFormatProperties can be used to check for supported properties
+	// of individual formats as normal
+	TextureCompressionAstcLdc bool
+	// TextureCompressionBc specifies whether all of the BC compressed texture formats are supported
+	// If the feature is not enabled, PhysicalDevice.FormatProperties and
+	// PhysicalDevice.ImageFormatProperties can be used to check for supported properties of
+	//individual formats as normal
+	TextureCompressionBc bool
+	// OcclusionQueryPrecise specifies whether occlusion queries returning actual sample counts
+	// are supported
+	OcclusionQueryPrecise bool
+	// PipelineStatisticsQuery specifies whether the Pipeline statistics queries are supported
+	PipelineStatisticsQuery bool
+	// VertexPipelineStoresAndAtomics specifies whether storage Buffer objects and Image objects
+	// support stores and atomic operations in the vertex, tessellation, and geometry shader stages
+	VertexPipelineStoresAndAtomics bool
+	// FragmentStoresAndAtomics specifies whether storage Buffer objects and Image objects support
+	// stores and atomic operations in the fragment shader stages
+	FragmentStoresAndAtomics bool
+	// ShaderTessellationAndGeometryPointSize specifies whether the PointSize built-in decoration
+	// is available in the tessellation control, tessellation evaluation, and geometry shader stages
+	ShaderTessellationAndGeometryPointSize bool
+	// ShaderImageGatherExtended specifies whether the extended set of Image gather instructions
+	// are available in shader code
+	ShaderImageGatherExtended bool
+	// ShaderStorageImageExtendedFormats specifies whether all the "storage Image extended formats"
+	// are supported
+	ShaderStorageImageExtendedFormats bool
+	// ShaderStorageImageMultisample specifies whether multisampled storage Image objects are supported
+	ShaderStorageImageMultisample bool
+	// ShaderStorageImageReadWithoutFormat specifies whether storage Image objects require a format
+	// qualifier to be specified when reading
+	ShaderStorageImageReadWithoutFormat bool
+	// ShaderStorageImageWriteWithoutFormat specifies whether storage Image objects require a format
+	// qualifier to be specified when writing
+	ShaderStorageImageWriteWithoutFormat bool
+	// ShaderUniformBufferArrayDynamicIndexing specifies whether arrays of uniform Buffrer objects can
+	// be indexed by dynamically uniform integer expressions in shader code
 	ShaderUniformBufferArrayDynamicIndexing bool
-	ShaderSampledImageArrayDynamicIndexing  bool
+	// ShaderSampledImageArrayDynamicIndexing specifies whether arrays of Sampler objects or sampled Image
+	// objects can be indexed by dynamically uniform expressions in shader code
+	ShaderSampledImageArrayDynamicIndexing bool
+	// ShaderStorageBufferArrayDynamicIndexing specifies whether arrays of storage Buffer objects
+	// can be indexed by dynamically uniform integer expressions in shader code
 	ShaderStorageBufferArrayDynamicIndexing bool
-	ShaderStorageImageArrayDynamicIndexing  bool
-	ShaderClipDistance                      bool
-	ShaderCullDistance                      bool
-	ShaderFloat64                           bool
-	ShaderInt64                             bool
-	ShaderInt16                             bool
-	ShaderResourceResidency                 bool
-	ShaderResourceMinLod                    bool
-	SparseBinding                           bool
-	SparseResidencyBuffer                   bool
-	SparseResidencyImage2D                  bool
-	SparseResidencyImage3D                  bool
-	SparseResidency2Samples                 bool
-	SparseResidency4Samples                 bool
-	SparseResidency8Samples                 bool
-	SparseResidency16Samples                bool
-	SparseResidencyAliased                  bool
-	VariableMultisampleRate                 bool
-	InheritedQueries                        bool
+	// ShaderStorageImageArrayDynamicIndexing specifies arrays of storage Image objects can be
+	// indexed by dynamically uniform integer expressions in shader code
+	ShaderStorageImageArrayDynamicIndexing bool
+	// ShaderClipDistance specifies whether clip distances are supported in shader code
+	ShaderClipDistance bool
+	// ShaderCullDistance specifies whether cull distances are supported in shader code
+	ShaderCullDistance bool
+	// ShaderFloat64 specifies whether 64-bit floats (doubles) are supported in shader code
+	ShaderFloat64 bool
+	// ShaderInt64 specifies whether 64-bit integer (signed and unsigned) are supported in shader
+	// code
+	ShaderInt64 bool
+	// ShaderInt16 specifies whether 16-bit integers (signed and unsigned) are supported in shader
+	// code
+	ShaderInt16 bool
+	// ShaderResourceResidency specifies whether Image operations that return resource residency
+	// information are supported in shader code
+	ShaderResourceResidency bool
+	// ShaderResourceMinLod specifies whether Image operations specifying the minimum resource LOD
+	// are supported in shader code
+	ShaderResourceMinLod bool
+	// SparseBinding specifies whether resource memory can be managed at opaque sparse block level
+	// instead of at object level
+	SparseBinding bool
+	// SparseResidencyBuffer specifies whether the Device can access partially resident Buffer objects
+	SparseResidencyBuffer bool
+	// SparseResidencyImage2D specifies whether the Device can access partially resident 2D Image
+	// objects with 1 sample per pixel
+	SparseResidencyImage2D bool
+	// SparseResidencyImage3D specifies whether the Device can access partially resident 3D Image
+	// objects
+	SparseResidencyImage3D bool
+	// SparseResidency2Samples specifies whether the PhysicalDevice can access partially resident
+	// 2D Image objects with 2 samples per pixel
+	SparseResidency2Samples bool
+	// SparseResidency4Samples specifies whether the PhysicalDevice can access partially resident
+	// 2D Image objects with 4 samples per pixel
+	SparseResidency4Samples bool
+	// SparseResidency8Samples specifies whether the PhysicalDevice can access partially resident
+	// 2D Image objects with 8 samples per pixel
+	SparseResidency8Samples bool
+	// SparseResidency16Samples specifies whether the PhysicalDevice can access partially resident
+	// 2D Image objects with 16 samples per pixel
+	SparseResidency16Samples bool
+	// SparseResidencyAliased specifies whether the PhysicalDevice can correctly access data aliased
+	// into multiple locations
+	SparseResidencyAliased bool
+	// VariableMultisampleRate specifies whether all Pipeline objects that will be bound to a
+	// CommandBuffer during a subpass which uses no attachments must have the same value for
+	// PipelineMultisampleStateCreateInfo.rasterizationSamples
+	VariableMultisampleRate bool
+	// InheritedQueries specifies whether a secondary CommandBuffer may be executed while a
+	// query is active
+	InheritedQueries bool
 }
 
 func (p *PhysicalDeviceFeatures) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer) (unsafe.Pointer, error) {

@@ -13,6 +13,8 @@ import (
 	"unsafe"
 )
 
+// VulkanFence is an implementation of the Fence interface that actually communicates with Vulkan. This
+// is the default implementation. See the interface for more documentation.
 type VulkanFence struct {
 	deviceDriver driver.Driver
 	device       driver.VkDevice

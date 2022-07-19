@@ -235,7 +235,7 @@ func (o SubpassDependency2) PopulateCPointer(allocator *cgoparam.Allocator, prea
 
 ////
 
-type RenderPassCreateOptions struct {
+type RenderPassCreateInfo2 struct {
 	Flags core1_0.RenderPassCreateFlags
 
 	Attachments  []AttachmentDescription2
@@ -247,7 +247,7 @@ type RenderPassCreateOptions struct {
 	common.NextOptions
 }
 
-func (o RenderPassCreateOptions) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o RenderPassCreateInfo2) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == nil {
 		preallocatedPointer = allocator.Malloc(int(unsafe.Sizeof(C.VkRenderPassCreateInfo2{})))
 	}

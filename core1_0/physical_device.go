@@ -12,6 +12,8 @@ import (
 	"unsafe"
 )
 
+// VulkanPhysicalDevice is an implementation of the PhysicalDevice interface that actually communicates with Vulkan. This
+// is the default implementation. See the interface for more documentation.
 type VulkanPhysicalDevice struct {
 	instanceDriver       driver.Driver
 	physicalDeviceHandle driver.VkPhysicalDevice
@@ -36,7 +38,7 @@ func (d *VulkanPhysicalDevice) InstanceAPIVersion() common.APIVersion {
 	return d.instanceVersion
 }
 
-func (d *VulkanPhysicalDevice) QueueFamilyProperties() []*QueueFamily {
+func (d *VulkanPhysicalDevice) QueueFamilyProperties() []*QueueFamilyProperties {
 	allocator := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(allocator)
 
@@ -54,9 +56,9 @@ func (d *VulkanPhysicalDevice) QueueFamilyProperties() []*QueueFamily {
 
 	d.instanceDriver.VkGetPhysicalDeviceQueueFamilyProperties(d.physicalDeviceHandle, count, (*driver.VkQueueFamilyProperties)(allocatedHandles))
 
-	var queueFamilies []*QueueFamily
+	var queueFamilies []*QueueFamilyProperties
 	for i := 0; i < goCount; i++ {
-		queueFamilies = append(queueFamilies, &QueueFamily{
+		queueFamilies = append(queueFamilies, &QueueFamilyProperties{
 			QueueFlags:         QueueFlags(familyProperties[i].queueFlags),
 			QueueCount:         int(familyProperties[i].queueCount),
 			TimestampValidBits: uint32(familyProperties[i].timestampValidBits),

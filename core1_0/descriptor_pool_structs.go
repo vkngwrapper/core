@@ -12,6 +12,10 @@ import (
 )
 
 const (
+	// DescriptorPoolCreateFreeDescriptorSet specifies that DescriptorSet objects can return their
+	// individual allocations to the pool
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkDescriptorPoolCreateFlagBits.html
 	DescriptorPoolCreateFreeDescriptorSet DescriptorPoolCreateFlags = C.VK_DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT
 )
 
@@ -19,15 +23,25 @@ func init() {
 	DescriptorPoolCreateFreeDescriptorSet.Register("Free Descriptor Set")
 }
 
+// DescriptorPoolSize specifies DescriptorPool size
 type DescriptorPoolSize struct {
-	Type            DescriptorType
+	// Type is the type of descriptor
+	Type DescriptorType
+	// DescriptorCount is the number of descriptors of that type ot allocate
 	DescriptorCount int
 }
 
+// DescriptorPoolCreateInfo specifies parameters of a newly-created DescriptorPool
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkDescriptorPoolCreateInfo.html
 type DescriptorPoolCreateInfo struct {
+	// Flags specifies certain supported operations on the pool
 	Flags DescriptorPoolCreateFlags
 
-	MaxSets   int
+	// MaxSets is the maximum number of DescriptorSet objects that can be allocated from the pool
+	MaxSets int
+	// PoolSizes is a slice of DescriptorPoolSize structures, each containing a descriptor type
+	// and number of descriptors of that type to be allocated in the pool
 	PoolSizes []DescriptorPoolSize
 
 	common.NextOptions

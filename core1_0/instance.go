@@ -12,6 +12,8 @@ import (
 	"unsafe"
 )
 
+// VulkanInstance is an implementation of the Instance interface that actually communicates with Vulkan. This
+// is the default implementation. See the interface for more documentation.
 type VulkanInstance struct {
 	instanceDriver driver.Driver
 	instanceHandle driver.VkInstance

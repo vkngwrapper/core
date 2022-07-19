@@ -13,6 +13,8 @@ import (
 	"unsafe"
 )
 
+// VulkanImage is an implementation of the Image interface that actually communicates with Vulkan. This
+// is the default implementation. See the interface for more documentation.
 type VulkanImage struct {
 	deviceDriver driver.Driver
 	imageHandle  driver.VkImage

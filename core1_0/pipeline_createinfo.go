@@ -12,9 +12,16 @@ import (
 )
 
 const (
+	// PipelineCreateDisableOptimization specifies that the created Pipeline will not be optimized
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkPipelineCreateFlagBits.html
 	PipelineCreateDisableOptimization PipelineCreateFlags = C.VK_PIPELINE_CREATE_DISABLE_OPTIMIZATION_BIT
-	PipelineCreateAllowDerivatives    PipelineCreateFlags = C.VK_PIPELINE_CREATE_ALLOW_DERIVATIVES_BIT
-	PipelineCreateDerivative          PipelineCreateFlags = C.VK_PIPELINE_CREATE_DERIVATIVE_BIT
+	// PipelineCreateAllowDerivatives specifies that the Pipeline to be created is allowed to
+	// be the parent of a Pipeline that will be created in a subsequent Pipeline creation call
+	PipelineCreateAllowDerivatives PipelineCreateFlags = C.VK_PIPELINE_CREATE_ALLOW_DERIVATIVES_BIT
+	// PipelineCreateDerivative specifies that the Pipeline to be created will be a child of a
+	// previously-created parent Pipeline
+	PipelineCreateDerivative PipelineCreateFlags = C.VK_PIPELINE_CREATE_DERIVATIVE_BIT
 )
 
 func init() {
@@ -23,25 +30,49 @@ func init() {
 	PipelineCreateDerivative.Register("Derivative")
 }
 
+// GraphicsPipelineCreateInfo specifies parameters of a newly-created graphics Pipeline
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkGraphicsPipelineCreateInfo.html
 type GraphicsPipelineCreateInfo struct {
+	// Flags specifies how the Pipeline will be generated
 	Flags PipelineCreateFlags
 
-	Stages             []PipelineShaderStageCreateInfo
-	VertexInputState   *PipelineVertexInputStateCreateInfo
+	// Stages is a slice of PipelineShaderStageCreateInfo structures describing the set of shader
+	// stages to be included in the graphics Pipeline
+	Stages []PipelineShaderStageCreateInfo
+	// VertexInputState defines vertex input state for use with vertex shading
+	VertexInputState *PipelineVertexInputStateCreateInfo
+	// InputAssemblyState determines input assembly behavior for vertex shading
 	InputAssemblyState *PipelineInputAssemblyStateCreateInfo
-	TessellationState  *PipelineTessellationStateCreateInfo
-	ViewportState      *PipelineViewportStateCreateInfo
+	// TessellationState defines tessellation state used by tessellation shaders
+	TessellationState *PipelineTessellationStateCreateInfo
+	// ViewportState defines viewport state used when rasterization is enabled
+	ViewportState *PipelineViewportStateCreateInfo
+	// RasterizationState defines rasterization state
 	RasterizationState *PipelineRasterizationStateCreateInfo
-	MultisampleState   *PipelineMultisampleStateCreateInfo
-	DepthStencilState  *PipelineDepthStencilStateCreateInfo
-	ColorBlendState    *PipelineColorBlendStateCreateInfo
-	DynamicState       *PipelineDynamicStateCreateInfo
+	// MultisampleState defines multisample state used when rasterization is enabled
+	MultisampleState *PipelineMultisampleStateCreateInfo
+	// DepthStencilState defines depth/stencil state used when rasterization is enabled for depth
+	// or stencil attachments accessed during rendering
+	DepthStencilState *PipelineDepthStencilStateCreateInfo
+	// ColorBlendState defines color blend state used when rasterization is enabled for any
+	// color attachments accessed during rendering
+	ColorBlendState *PipelineColorBlendStateCreateInfo
+	// DynamicState defines which properties of the Pipeline state object are dynamic and can
+	// be changed independently of the Pipeline state
+	DynamicState *PipelineDynamicStateCreateInfo
 
-	Layout     PipelineLayout
+	// Layout is the description of binding locations used by both the Pipeline and DescriptorSet
+	// objects used with the Pipeline
+	Layout PipelineLayout
+	// RenderPass is a RenderPass object describing the environment in which the Pipeline will be used
 	RenderPass RenderPass
 
-	Subpass           int
-	BasePipeline      Pipeline
+	// Subpass is the index of the subpass in the RenderPass where this Pipeline will be used
+	Subpass int
+	// BasePipeline is a Pipeline object to derive from
+	BasePipeline Pipeline
+	// BasePipelineIndex is an index into the createInfos parameter to use as a Pipeline to derive from
 	BasePipelineIndex int
 
 	common.NextOptions
@@ -178,12 +209,21 @@ func (o GraphicsPipelineCreateInfo) PopulateCPointer(allocator *cgoparam.Allocat
 	return preallocatedPointer, nil
 }
 
+// ComputePipelineCreateInfo specifies parameters of a newly-created compute Pipeline
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkComputePipelineCreateInfo.html
 type ComputePipelineCreateInfo struct {
-	Flags  PipelineCreateFlags
-	Stage  PipelineShaderStageCreateInfo
+	// Flags specifies how the Pipeline will be generated
+	Flags PipelineCreateFlags
+	// Stage describes the compute shader
+	Stage PipelineShaderStageCreateInfo
+	// Layout is the description of binding locations used by both the Pipeline and DescriptorSet
+	// objects used with the Pipeline
 	Layout PipelineLayout
 
-	BasePipeline      Pipeline
+	// BasePipeline is a Pipeline to derive from
+	BasePipeline Pipeline
+	// BasePipelineIndex is an index into the createInfos parameters to use as a Pipeline to derive from
 	BasePipelineIndex int
 
 	common.NextOptions

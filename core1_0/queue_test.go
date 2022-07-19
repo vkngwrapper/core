@@ -147,7 +147,7 @@ func TestVulkanQueue_BindSparse(t *testing.T) {
 			return core1_0.VKSuccess, nil
 		})
 
-	_, err := queue.BindSparse(nil, []core1_0.BindSparseOptions{
+	_, err := queue.BindSparse(nil, []core1_0.BindSparseInfo{
 		{
 			WaitSemaphores:   []core1_0.Semaphore{semaphore1},
 			SignalSemaphores: []core1_0.Semaphore{semaphore2, semaphore3},

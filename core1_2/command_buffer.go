@@ -8,6 +8,8 @@ import (
 	"github.com/vkngwrapper/core/driver"
 )
 
+// VulkanCommandBuffer is an implementation of the CommandBuffer interface that actually communicates with Vulkan. This
+// is the default implementation. See the interface for more documentation.
 type VulkanCommandBuffer struct {
 	core1_1.CommandBuffer
 
@@ -17,6 +19,11 @@ type VulkanCommandBuffer struct {
 	CommandCounter *core1_0.CommandCounter
 }
 
+// PromoteCommandBuffer accepts a CommandBuffer object from any core version. If provided a command buffer that supports
+// at least core 1.2, it will return a core1_2.CommandBuffer. Otherwise, it will return nil. This method
+// will always return a core1_2.VulkanCommandBuffer, even if it is provided a VulkanCommandBuffer from a higher
+// core version. Two Vulkan 1.2 compatible CommandBuffer objects with the same CommandBuffer.Handle will
+// return the same interface value when passed to this method.
 func PromoteCommandBuffer(commandBuffer core1_0.CommandBuffer) CommandBuffer {
 	if !commandBuffer.APIVersion().IsAtLeast(common.Vulkan1_2) {
 		return nil

@@ -11,6 +11,9 @@ import (
 	"unsafe"
 )
 
+// BufferViewCreateFlags is a set of flags reserved for future use
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkBufferViewCreateFlags.html
 type BufferViewCreateFlags int32
 
 var bufferViewCreateFlagsMapping = common.NewFlagStringMapping[BufferViewCreateFlags]()
@@ -25,12 +28,20 @@ func (f BufferViewCreateFlags) String() string {
 
 ////
 
+// BufferViewCreateInfo specifies the parameters of a newly-created BufferView object
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkBufferViewCreateInfo.html
 type BufferViewCreateInfo struct {
+	// Buffer is the Buffer on which the view will be created
 	Buffer Buffer
-	Flags  BufferViewCreateFlags
+	// Flags is reserved for future use
+	Flags BufferViewCreateFlags
+	// Format describes the format of the data element in the Buffer
 	Format Format
+	// Offset is the offset in bytes from the base address of the Buffer
 	Offset int
-	Range  int
+	// Range is the size in bytes of the BufferView
+	Range int
 
 	common.NextOptions
 }

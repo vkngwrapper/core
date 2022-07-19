@@ -72,7 +72,7 @@ func TestAttachmentDescriptionStencilLayoutOptions(t *testing.T) {
 
 	renderPass, _, err := device.CreateRenderPass2(
 		nil,
-		core1_2.RenderPassCreateOptions{
+		core1_2.RenderPassCreateInfo2{
 			Attachments: []core1_2.AttachmentDescription2{
 				{
 					NextOptions: common.NextOptions{core1_2.AttachmentDescriptionStencilLayout{
@@ -192,7 +192,7 @@ func TestSubpassDescriptionDepthStencilResolveOptions(t *testing.T) {
 	})
 
 	renderPass, _, err := device.CreateRenderPass2(nil,
-		core1_2.RenderPassCreateOptions{
+		core1_2.RenderPassCreateInfo2{
 			Subpasses: []core1_2.SubpassDescription2{
 				{
 					NextOptions: common.NextOptions{

@@ -12,6 +12,9 @@ import (
 	"unsafe"
 )
 
+// PipelineDepthStencilStateCreateFlags are reserved for future use
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkPipelineDepthStencilStateCreateFlags.html
 type PipelineDepthStencilStateCreateFlags uint32
 
 var pipelineDepthStencilStateCreateFlagsMapping = common.NewFlagStringMapping[PipelineDepthStencilStateCreateFlags]()
@@ -27,14 +30,41 @@ func (f PipelineDepthStencilStateCreateFlags) String() string {
 ////
 
 const (
-	StencilKeep              StencilOp = C.VK_STENCIL_OP_KEEP
-	StencilZero              StencilOp = C.VK_STENCIL_OP_ZERO
-	StencilReplace           StencilOp = C.VK_STENCIL_OP_REPLACE
+	// StencilKeep keeps the current value
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkStencilOp.html
+	StencilKeep StencilOp = C.VK_STENCIL_OP_KEEP
+	// StencilZero sets the value to 0
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkStencilOp.html
+	StencilZero StencilOp = C.VK_STENCIL_OP_ZERO
+	// StencilReplace sets the value to Reference
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkStencilOp.html
+	StencilReplace StencilOp = C.VK_STENCIL_OP_REPLACE
+	// StencilIncrementAndClamp increments the current value and clamps to the maximum
+	// representable unsigned value
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkStencilOp.html
 	StencilIncrementAndClamp StencilOp = C.VK_STENCIL_OP_INCREMENT_AND_CLAMP
+	// StencilDecrementAndClamp decrements the current value and clamps to 0
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkStencilOp.html
 	StencilDecrementAndClamp StencilOp = C.VK_STENCIL_OP_DECREMENT_AND_CLAMP
-	StencilInvert            StencilOp = C.VK_STENCIL_OP_INVERT
-	StencilIncrementAndWrap  StencilOp = C.VK_STENCIL_OP_INCREMENT_AND_WRAP
-	StencilDecrementAndWrap  StencilOp = C.VK_STENCIL_OP_DECREMENT_AND_WRAP
+	// StencilInvert bitwise-inverts the current value
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkStencilOp.html
+	StencilInvert StencilOp = C.VK_STENCIL_OP_INVERT
+	// StencilIncrementAndWrap increments the current value and wraps to 0 when the
+	// maximum would have been exceeded
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkStencilOp.html
+	StencilIncrementAndWrap StencilOp = C.VK_STENCIL_OP_INCREMENT_AND_WRAP
+	// StencilDecrementAndWrap decrements the current value and wraps to the maximum possible
+	// value when the value would go below 0
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkStencilOp.html
+	StencilDecrementAndWrap StencilOp = C.VK_STENCIL_OP_DECREMENT_AND_WRAP
 )
 
 func init() {
@@ -48,32 +78,67 @@ func init() {
 	StencilDecrementAndWrap.Register("Decrement and Wrap")
 }
 
+// StencilOpState specifies stencil operation state
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkStencilOpState.html
 type StencilOpState struct {
-	FailOp      StencilOp
-	PassOp      StencilOp
+	// FailOp specifies the action performed on samples that fail the stencil test
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkStencilOpState.html
+	FailOp StencilOp
+	// PassOp specifies the action performed on samples that pass both the depth and stencil tests
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkStencilOpState.html
+	PassOp StencilOp
+	// DepthFailOp specifies the action performed on samples that pass the stencil test and fail
+	// the depth test
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkStencilOpState.html
 	DepthFailOp StencilOp
 
-	CompareOp   CompareOp
+	// CompareOp specifies the comparison operator used in the stencil test
+	CompareOp CompareOp
+	// CompareMask selects the bits of the unsigned integer stencil values participating in the
+	// stencil test
 	CompareMask uint32
-	WriteMask   uint32
+	// WriteMask selects the bits of the unsigned integer stencil values updated by the stencil
+	// test in the stencil Framebuffer attachment
+	WriteMask uint32
 
+	// Reference is an integer stencil reference value that is used in the unsigned stencil
+	// comparison
 	Reference uint32
 }
 
+// PipelineDepthStencilStateCreateInfo specifies parameters of a newly-created Pipeline depth stencil
+// state
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkPipelineDepthStencilStateCreateInfo.html
 type PipelineDepthStencilStateCreateInfo struct {
+	// Flags specifies additional depth/stencil state information
 	Flags PipelineDepthStencilStateCreateFlags
 
-	DepthTestEnable  bool
+	// DepthTestEnable controls whether depth testing is enabled
+	DepthTestEnable bool
+	// DepthWriteEnable controls whether depth writes are enabled when DepthTestEnable is true
 	DepthWriteEnable bool
-	DepthCompareOp   CompareOp
+	// DepthCompareOp specifies the comparison operator to use in the depth comparison step
+	// of the depth test
+	DepthCompareOp CompareOp
 
+	// DepthBoundsTestEnable controls whether depth bounds testing is enabled
 	DepthBoundsTestEnable bool
-	StencilTestEnable     bool
+	// StencilTestEnable controls whether stencil testing is enabled
+	StencilTestEnable bool
 
+	// Front controls the parameters of the stencil test for front-facing triangles
 	Front StencilOpState
-	Back  StencilOpState
+	// Back controls the parameters of the stencil test for back-facing triangles
+	Back StencilOpState
 
+	// MinDepthBounds is the minimum depth bound used in the depth bounds test
 	MinDepthBounds float32
+	// MaxDepthBounds is the maximum depth bound used in the depth bounds test
 	MaxDepthBounds float32
 
 	common.NextOptions

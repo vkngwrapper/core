@@ -10,6 +10,8 @@ import (
 	"github.com/vkngwrapper/core/driver"
 )
 
+// VulkanImageView is an implementation of the ImageView interface that actually communicates with Vulkan. This
+// is the default implementation. See the interface for more documentation.
 type VulkanImageView struct {
 	deviceDriver    driver.Driver
 	imageViewHandle driver.VkImageView

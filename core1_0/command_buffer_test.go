@@ -95,7 +95,7 @@ func TestCommandBuffer_Begin_WithInheritance(t *testing.T) {
 			RenderPass:           renderPass,
 			Subpass:              3,
 			OcclusionQueryEnable: true,
-			QueryFlags:           core1_0.QueryPrecise,
+			QueryFlags:           core1_0.QueryControlPrecise,
 			PipelineStatistics:   core1_0.QueryPipelineStatisticClippingInvocations,
 		},
 	})
@@ -1146,7 +1146,7 @@ func TestVulkanCommandBuffer_CmdBeginQuery(t *testing.T) {
 		driver.VkQueryControlFlags(1), // VK_QUERY_CONTROL_PRECISE_BIT
 	)
 
-	buffer.CmdBeginQuery(queryPool, 5, core1_0.QueryPrecise)
+	buffer.CmdBeginQuery(queryPool, 5, core1_0.QueryControlPrecise)
 }
 
 func TestVulkanCommandBuffer_CmdEndQuery(t *testing.T) {

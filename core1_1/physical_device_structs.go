@@ -234,7 +234,7 @@ func (o *PhysicalDeviceProperties2) PopulateOutData(cDataPointer unsafe.Pointer,
 ////
 
 type QueueFamilyProperties2 struct {
-	QueueFamilyProperties core1_0.QueueFamily
+	QueueFamilyProperties core1_0.QueueFamilyProperties
 
 	common.NextOutData
 }

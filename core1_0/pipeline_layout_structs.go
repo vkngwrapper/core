@@ -11,6 +11,9 @@ import (
 	"unsafe"
 )
 
+// PipelineLayoutCreateFlags represents PipelineLayout creation flag bits
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkPipelineLayoutCreateFlagBits.html
 type PipelineLayoutCreateFlags uint32
 
 var pipelineLayoutCreateFlagsMapping = common.NewFlagStringMapping[PipelineLayoutCreateFlags]()
@@ -25,16 +28,29 @@ func (f PipelineLayoutCreateFlags) String() string {
 
 ////
 
+// PushConstantRange specifies a push constant range
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkPushConstantRange.html
 type PushConstantRange struct {
+	// StageFlags describes the shader stages that will access a range of push constants
 	StageFlags ShaderStageFlags
-	Offset     int
-	Size       int
+	// Offset is the start offset consumed by the range, in bytes. Must be a multiple of 4
+	Offset int
+	// Size is the size consumed by the range, in bytes. Must be a multiple of 4
+	Size int
 }
 
+// PipelineLayoutCreateInfo creates a new PipelineLayout object
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkPipelineLayoutCreateInfo.html
 type PipelineLayoutCreateInfo struct {
+	// Flags specifies options for PipelineLayout creation
 	Flags PipelineLayoutCreateFlags
 
-	SetLayouts         []DescriptorSetLayout
+	// SetLayouts is a slice of DescriptorSetLayout objects
+	SetLayouts []DescriptorSetLayout
+	// PushConstantRanges is a slice of PushConstantRange structures defining a set of push constant
+	// ranges for use in a single PipelineLayout
 	PushConstantRanges []PushConstantRange
 
 	common.NextOptions

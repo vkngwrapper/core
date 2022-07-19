@@ -13,6 +13,8 @@ import (
 	"unsafe"
 )
 
+// VulkanDescriptorUpdateTemplate is an implementation of the DescriptorUpdateTemplate interface that actually communicates with Vulkan. This
+// is the default implementation. See the interface for more documentation.
 type VulkanDescriptorUpdateTemplate struct {
 	DeviceDriver             driver.Driver
 	Device                   driver.VkDevice

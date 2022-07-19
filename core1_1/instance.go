@@ -13,6 +13,8 @@ import (
 	"unsafe"
 )
 
+// VulkanInstance is an implementation of the Instance interface that actually communicates with Vulkan. This
+// is the default implementation. See the interface for more documentation.
 type VulkanInstance struct {
 	core1_0.Instance
 
@@ -22,6 +24,11 @@ type VulkanInstance struct {
 	MaximumVersion common.APIVersion
 }
 
+// PromoteInstance accepts a Instance object from any core version. If provided a instance that supports
+// at least core 1.1, it will return a core1_1.Instance. Otherwise, it will return nil. This method
+// will always return a core1_1.VulkanInstance, even if it is provided a VulkanInstance from a higher
+// core version. Two Vulkan 1.1 compatible Instance objects with the same Instance.Handle will
+// return the same interface value when passed to this method.
 func PromoteInstance(instance core1_0.Instance) Instance {
 	if !instance.APIVersion().IsAtLeast(common.Vulkan1_1) {
 		return nil

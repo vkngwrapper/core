@@ -7,12 +7,27 @@ package core1_0
 import "C"
 import "strings"
 
+// ColorComponentFlags controls which components are written to the framebuffer
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkColorComponentFlagBits.html
 type ColorComponentFlags int32
 
 const (
-	ColorComponentRed   ColorComponentFlags = C.VK_COLOR_COMPONENT_R_BIT
+	// ColorComponentRed specifies that the R value is written to the color attachment
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkColorComponentFlagBits.html
+	ColorComponentRed ColorComponentFlags = C.VK_COLOR_COMPONENT_R_BIT
+	// ColorComponentGreen specifies that the G value is written to the color attachment
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkColorComponentFlagBits.html
 	ColorComponentGreen ColorComponentFlags = C.VK_COLOR_COMPONENT_G_BIT
-	ColorComponentBlue  ColorComponentFlags = C.VK_COLOR_COMPONENT_B_BIT
+	// ColorComponentBlue specifies that the B value is written to the color attachment
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkColorComponentFlagBits.html
+	ColorComponentBlue ColorComponentFlags = C.VK_COLOR_COMPONENT_B_BIT
+	// ColorComponentAlpha specifies that the A value is written to the color attachment
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkColorComponentFlagBits.html
 	ColorComponentAlpha ColorComponentFlags = C.VK_COLOR_COMPONENT_A_BIT
 )
 

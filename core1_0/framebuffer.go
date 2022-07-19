@@ -10,6 +10,8 @@ import (
 	"github.com/vkngwrapper/core/driver"
 )
 
+// VulkanFramebuffer is an implementation of the Framebuffer interface that actually communicates with Vulkan. This
+// is the default implementation. See the interface for more documentation.
 type VulkanFramebuffer struct {
 	deviceDriver      driver.Driver
 	device            driver.VkDevice

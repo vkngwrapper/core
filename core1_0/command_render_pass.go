@@ -12,7 +12,16 @@ import (
 )
 
 const (
-	SubpassContentsInline                  SubpassContents = C.VK_SUBPASS_CONTENTS_INLINE
+	// SubpassContentsInline specifies that the contents of the subpass will be recorded inline in
+	// the primary CommandBuffer and secondary CommandBuffer objects must not be executed within
+	// the subpass.
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkSubpassContents.html
+	SubpassContentsInline SubpassContents = C.VK_SUBPASS_CONTENTS_INLINE
+	// SubpassContentsSecondaryCommandBuffers specifies that the contents are recorded in
+	// secondary CommandBuffer objects that will be called from the primary CommandBuffer
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkSubpassContents.html
 	SubpassContentsSecondaryCommandBuffers SubpassContents = C.VK_SUBPASS_CONTENTS_SECONDARY_COMMAND_BUFFERS
 )
 
@@ -21,11 +30,21 @@ func init() {
 	SubpassContentsSecondaryCommandBuffers.Register("Secondary Command Buffers")
 }
 
+// RenderPassBeginInfo specifies RenderPass begin information
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkRenderPassBeginInfo.html
 type RenderPassBeginInfo struct {
-	RenderPass  RenderPass
+	// RenderPass is the RenderPass to begin an instance of
+	RenderPass RenderPass
+	// Framebuffer is the Framebuffer containing the attachments that are used with the
+	// RenderPass
 	Framebuffer Framebuffer
 
-	RenderArea  Rect2D
+	// RenderArea is the render area that is affected by this RenderPass instance
+	RenderArea Rect2D
+	// ClearValues is a slice of ClearValue structures containing clear values for each attachment
+	// if the attachment uses an AttachmentLoadOp value of AttachmentLoadOpClear. Elements of the slice
+	// corresponding to attachments that do not use AttachmentLoadOpClear are ignored
 	ClearValues []ClearValue
 
 	common.NextOptions

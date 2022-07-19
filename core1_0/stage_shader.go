@@ -15,14 +15,37 @@ import (
 )
 
 const (
-	StageVertex                 ShaderStageFlags = C.VK_SHADER_STAGE_VERTEX_BIT
-	StageTessellationControl    ShaderStageFlags = C.VK_SHADER_STAGE_TESSELLATION_CONTROL_BIT
+	// StageVertex specifies the vertex stage
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkShaderStageFlagBits.html
+	StageVertex ShaderStageFlags = C.VK_SHADER_STAGE_VERTEX_BIT
+	// StageTessellationControl specifies the tessellation control stage
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkShaderStageFlagBits.html
+	StageTessellationControl ShaderStageFlags = C.VK_SHADER_STAGE_TESSELLATION_CONTROL_BIT
+	// StageTessellationEvaluation specifies the tessellation evaluation stage
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkShaderStageFlagBits.html
 	StageTessellationEvaluation ShaderStageFlags = C.VK_SHADER_STAGE_TESSELLATION_EVALUATION_BIT
-	StageGeometry               ShaderStageFlags = C.VK_SHADER_STAGE_GEOMETRY_BIT
-	StageFragment               ShaderStageFlags = C.VK_SHADER_STAGE_FRAGMENT_BIT
-	StageCompute                ShaderStageFlags = C.VK_SHADER_STAGE_COMPUTE_BIT
-	StageAllGraphics            ShaderStageFlags = C.VK_SHADER_STAGE_ALL_GRAPHICS
-	StageAll                    ShaderStageFlags = C.VK_SHADER_STAGE_ALL
+	// StageGeometry specifies the geometry stage
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkShaderStageFlagBits.html
+	StageGeometry ShaderStageFlags = C.VK_SHADER_STAGE_GEOMETRY_BIT
+	// StageFragment specifies the fragment stage
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkShaderStageFlagBits.html
+	StageFragment ShaderStageFlags = C.VK_SHADER_STAGE_FRAGMENT_BIT
+	// StageCompute specifies the compute stage
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkShaderStageFlagBits.html
+	StageCompute ShaderStageFlags = C.VK_SHADER_STAGE_COMPUTE_BIT
+	// StageAllGraphics is a combination of bits used as shorthand to specify all graphics
+	// stages (excluding the compute stage)
+	StageAllGraphics ShaderStageFlags = C.VK_SHADER_STAGE_ALL_GRAPHICS
+	// StageAll is a combination of bits used as a shorthand to specify all shader stages
+	// supported by the Device, including all additional stages which are introduced by
+	// extensions
+	StageAll ShaderStageFlags = C.VK_SHADER_STAGE_ALL
 )
 
 func init() {
@@ -34,11 +57,19 @@ func init() {
 	StageCompute.Register("Compute")
 }
 
+// PipelineShaderStageCreateInfo specifies parameters of a newly-created Pipeline shader stage
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkPipelineShaderStageCreateInfo.html
 type PipelineShaderStageCreateInfo struct {
-	Flags              ShaderStageCreateFlags
-	Name               string
-	Stage              ShaderStageFlags
-	Module             ShaderModule
+	// Flags specifies how the Pipeline shader stage will be generated
+	Flags PipelineShaderStageCreateFlags
+	// Name is a string specifying the entry point name of the shader for this stage
+	Name string
+	// Stage specifies a single Pipeline stage
+	Stage ShaderStageFlags
+	// Module contains the shader code for this stage
+	Module ShaderModule
+	// SpecializationInfo is a map specifying specialization contents
 	SpecializationInfo map[uint32]any
 
 	common.NextOptions

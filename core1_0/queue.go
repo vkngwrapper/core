@@ -12,6 +12,8 @@ import (
 	"unsafe"
 )
 
+// VulkanQueue is an implementation of the Queue interface that actually communicates with Vulkan. This
+// is the default implementation. See the interface for more documentation.
 type VulkanQueue struct {
 	deviceDriver driver.Driver
 	device       driver.VkDevice
@@ -40,7 +42,7 @@ func (q *VulkanQueue) WaitIdle() (common.VkResult, error) {
 	return q.deviceDriver.VkQueueWaitIdle(q.queueHandle)
 }
 
-func (q *VulkanQueue) BindSparse(fence Fence, bindInfos []BindSparseOptions) (common.VkResult, error) {
+func (q *VulkanQueue) BindSparse(fence Fence, bindInfos []BindSparseInfo) (common.VkResult, error) {
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
@@ -50,7 +52,7 @@ func (q *VulkanQueue) BindSparse(fence Fence, bindInfos []BindSparseOptions) (co
 	}
 
 	bindInfoCount := len(bindInfos)
-	bindInfoPtr, err := common.AllocOptionSlice[C.VkBindSparseInfo, BindSparseOptions](arena, bindInfos)
+	bindInfoPtr, err := common.AllocOptionSlice[C.VkBindSparseInfo, BindSparseInfo](arena, bindInfos)
 	if err != nil {
 		return VKErrorUnknown, err
 	}

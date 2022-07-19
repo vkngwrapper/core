@@ -11,6 +11,9 @@ import (
 	"unsafe"
 )
 
+// SemaphoreCreateFlags is reserved for future use
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkSemaphoreCreateFlags.html
 type SemaphoreCreateFlags int32
 
 var semaphoreCreateFlagsMapping = common.NewFlagStringMapping[SemaphoreCreateFlags]()
@@ -25,7 +28,11 @@ func (f SemaphoreCreateFlags) String() string {
 
 ////
 
+// SemaphoreCreateInfo specifies parameters of a newly-created Semaphore
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkSemaphoreCreateInfo.html
 type SemaphoreCreateInfo struct {
+	// Flags is reserved future use
 	Flags SemaphoreCreateFlags
 
 	common.NextOptions

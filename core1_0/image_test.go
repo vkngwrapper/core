@@ -54,7 +54,7 @@ func TestVulkanLoader1_0_CreateImage(t *testing.T) {
 			return core1_0.VKSuccess, nil
 		})
 
-	image, _, err := device.CreateImage(nil, core1_0.ImageCreateOptions{
+	image, _, err := device.CreateImage(nil, core1_0.ImageCreateInfo{
 		Flags:     core1_0.ImageCreateCubeCompatible,
 		ImageType: core1_0.ImageType2D,
 		Format:    core1_0.FormatA2R10G10B10SignedNormalizedPacked,
@@ -63,14 +63,14 @@ func TestVulkanLoader1_0_CreateImage(t *testing.T) {
 			Height: 3,
 			Depth:  5,
 		},
-		MipLevels:     7,
-		ArrayLayers:   11,
-		Samples:       core1_0.Samples16,
-		Tiling:        core1_0.ImageTilingLinear,
-		Usage:         core1_0.ImageUsageTransferSrc,
-		SharingMode:   core1_0.SharingModeConcurrent,
-		QueueFamilies: []uint32{13, 17, 19},
-		InitialLayout: core1_0.ImageLayoutTransferSrcOptimal,
+		MipLevels:          7,
+		ArrayLayers:        11,
+		Samples:            core1_0.Samples16,
+		Tiling:             core1_0.ImageTilingLinear,
+		Usage:              core1_0.ImageUsageTransferSrc,
+		SharingMode:        core1_0.SharingModeConcurrent,
+		QueueFamilyIndices: []uint32{13, 17, 19},
+		InitialLayout:      core1_0.ImageLayoutTransferSrcOptimal,
 	})
 	require.NoError(t, err)
 	require.NotNil(t, image)

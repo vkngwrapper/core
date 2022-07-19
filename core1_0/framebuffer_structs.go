@@ -11,14 +11,24 @@ import (
 	"unsafe"
 )
 
+// FramebufferCreateInfo specifies parameters of a newly-created Framebuffer
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkFramebufferCreateInfo.html
 type FramebufferCreateInfo struct {
+	// Attachments is a slice ImageView objects, each of which will be used as the corresponding
+	// attachment in a RenderPass instance
 	Attachments []ImageView
-	Flags       FramebufferCreateFlags
+	// Flags is a bitmask of FramebufferCreateFlags
+	Flags FramebufferCreateFlags
 
-	Width  int
+	// Width is the width of the Framebuffer
+	Width int
+	// Height is the height of the Framebuffer
 	Height int
+	// Layers is the depth of the Framebuffer
 	Layers uint32
 
+	// RenderPass is a RenderPass defining what render passes the Framebuffer will be compatible with
 	RenderPass RenderPass
 
 	common.NextOptions

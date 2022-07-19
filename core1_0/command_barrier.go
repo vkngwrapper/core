@@ -11,8 +11,13 @@ import (
 	"unsafe"
 )
 
+// MemoryBarrier specifies a global memory barrier
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkMemoryBarrier.html
 type MemoryBarrier struct {
+	// SrcAccessMask specifies a source access mask
 	SrcAccessMask AccessFlags
+	// DstAccessMask specifies a destination access mask
 	DstAccessMask AccessFlags
 
 	common.NextOptions
@@ -31,17 +36,27 @@ func (o MemoryBarrier) PopulateCPointer(allocator *cgoparam.Allocator, prealloca
 	return preallocatedPointer, nil
 }
 
+// BufferMemoryBarrier specifies a buffer memory barrier
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkBufferMemoryBarrier.html
 type BufferMemoryBarrier struct {
+	// SrcAccessMask specifies a source access mask
 	SrcAccessMask AccessFlags
+	// DstAccessMask specifies a destination access mask
 	DstAccessMask AccessFlags
 
+	// SrcQueueFamilyIndex is the source queue family for a queue family ownership transfer
 	SrcQueueFamilyIndex int
+	// DstQueueFamilyIndex is the source queue family for a queue family ownership transfer
 	DstQueueFamilyIndex int
 
+	// Buffer is the buffer whose backing memory is affected by the barrier
 	Buffer Buffer
 
+	// Offset is an offset in bytes into the backing memory for Buffer
 	Offset int
-	Size   int
+	// Size is a size in bytes of the affected area of backing memory for Buffer
+	Size int
 
 	common.NextOptions
 }
@@ -64,17 +79,28 @@ func (o BufferMemoryBarrier) PopulateCPointer(allocator *cgoparam.Allocator, pre
 	return preallocatedPointer, nil
 }
 
+// ImageMemoryBarrier specifies the parameters of an image memory barrier
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkImageMemoryBarrier.html
 type ImageMemoryBarrier struct {
+	// SrcAccessMask specifies a source access mask
 	SrcAccessMask AccessFlags
+	// DstAccessMask specifies a destination access mask
 	DstAccessMask AccessFlags
 
+	// OldLayout is the old layout in an image layout transition
 	OldLayout ImageLayout
+	// NewLayout is the new layout in an image layout transition
 	NewLayout ImageLayout
 
+	// SrcQueueFamilyIndex is the source queue family for a queue family ownership transfer
 	SrcQueueFamilyIndex int
+	// DstQueueFamilyIndex is the destination queue family for a queue family ownership transfer
 	DstQueueFamilyIndex int
 
-	Image            Image
+	// Image is the Image object affected by this barrier
+	Image Image
+	// SubresourceRange describes the image subresource range within Image that is affected by this barrier
 	SubresourceRange ImageSubresourceRange
 
 	common.NextOptions

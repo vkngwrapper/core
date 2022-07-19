@@ -10,12 +10,24 @@ import (
 	"unsafe"
 )
 
+// ImageCopy specifies an Image copy operation
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkImageCopy.html
 type ImageCopy struct {
+	// SrcSubresource specifies the Image subresources of the Image objects used for the
+	// source Image data
 	SrcSubresource ImageSubresourceLayers
-	SrcOffset      Offset3D
+	// SrcOffset selects the initial x, y, and z offsets in texels of the sub-regions of the
+	// source Image data
+	SrcOffset Offset3D
+	// DstSubresource specifies the Image subresource of the Image objects used for the
+	// destination Image data
 	DstSubresource ImageSubresourceLayers
-	DstOffset      Offset3D
-	Extent         Extent3D
+	// DstOffset selects the initial x, y, and z offsets in texels of the sub-regions of the
+	// destination Image data
+	DstOffset Offset3D
+	// Extent is the size in texels of the Image to copy in width, height, and depth
+	Extent Extent3D
 }
 
 func (c ImageCopy) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer) (unsafe.Pointer, error) {

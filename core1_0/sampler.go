@@ -5,6 +5,8 @@ import (
 	"github.com/vkngwrapper/core/driver"
 )
 
+// VulkanSampler is an implementation of the Sampler interface that actually communicates with Vulkan. This
+// is the default implementation. See the interface for more documentation.
 type VulkanSampler struct {
 	device        driver.VkDevice
 	deviceDriver  driver.Driver

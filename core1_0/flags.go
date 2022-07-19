@@ -2,6 +2,9 @@ package core1_0
 
 import "github.com/vkngwrapper/core/common"
 
+// AccessFlags specifies memory access types that will participate in a memory dependency
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkAccessFlags.html
 type AccessFlags int32
 
 var accessFlagsMapping = common.NewFlagStringMapping[AccessFlags]()
@@ -15,6 +18,9 @@ func (f AccessFlags) String() string {
 
 ////
 
+// AttachmentDescriptionFlags specifies additional properties of an attachment
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkAttachmentDescriptionFlagBits.html
 type AttachmentDescriptionFlags int32
 
 var attachmentDescriptionFlagsMapping = common.NewFlagStringMapping[AttachmentDescriptionFlags]()
@@ -29,6 +35,9 @@ func (f AttachmentDescriptionFlags) String() string {
 
 ////
 
+// CommandBufferUsageFlags specifies usage behavior for a CommandBuffer
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkCommandBufferUsageFlagBits.html
 type CommandBufferUsageFlags int32
 
 var beginInfoFlagsMapping = common.NewFlagStringMapping[CommandBufferUsageFlags]()
@@ -43,6 +52,9 @@ func (f CommandBufferUsageFlags) String() string {
 
 ////
 
+// BufferCreateFlags specifies additional parameters of a Buffer
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkBufferCreateFlagBits.html
 type BufferCreateFlags int32
 
 var bufferCreateFlagsMapping = common.NewFlagStringMapping[BufferCreateFlags]()
@@ -57,6 +69,9 @@ func (f BufferCreateFlags) String() string {
 
 ////
 
+// BufferUsageFlags specifies allowed usage of a Buffer
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkBufferUsageFlagBits.html
 type BufferUsageFlags int32
 
 var bufferUsagesMapping = common.NewFlagStringMapping[BufferUsageFlags]()
@@ -71,6 +86,9 @@ func (f BufferUsageFlags) String() string {
 
 ////
 
+// CommandBufferResetFlags controls behavior of a CommandBuffer reset
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkCommandBufferResetFlagBits.html
 type CommandBufferResetFlags int32
 
 var commandBufferResetFlagsMapping = common.NewFlagStringMapping[CommandBufferResetFlags]()
@@ -85,6 +103,9 @@ func (f CommandBufferResetFlags) String() string {
 
 ////
 
+// CommandPoolCreateFlags specifies usage behavior for a CommandPool
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkCommandPoolCreateFlagBits.html
 type CommandPoolCreateFlags int32
 
 var commandPoolCreateFlagsMapping = common.NewFlagStringMapping[CommandPoolCreateFlags]()
@@ -99,6 +120,9 @@ func (f CommandPoolCreateFlags) String() string {
 
 ////
 
+// CommandPoolResetFlags controls behavior of a CommandPool reset
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkCommandPoolResetFlagBits.html
 type CommandPoolResetFlags int32
 
 var commandPoolResetFlagsMapping = common.NewFlagStringMapping[CommandPoolResetFlags]()
@@ -113,20 +137,9 @@ func (f CommandPoolResetFlags) String() string {
 
 ////
 
-type CompositeAlphaFlags int32
-
-var compositeAlphaModesMapping = common.NewFlagStringMapping[CompositeAlphaFlags]()
-
-func (f CompositeAlphaFlags) Register(str string) {
-	compositeAlphaModesMapping.Register(f, str)
-}
-
-func (f CompositeAlphaFlags) String() string {
-	return compositeAlphaModesMapping.FlagsToString(f)
-}
-
-////
-
+// CullModeFlags controls triangle culling
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkCullModeFlagBits.html
 type CullModeFlags int32
 
 var cullModesMapping = common.NewFlagStringMapping[CullModeFlags]()
@@ -141,6 +154,9 @@ func (f CullModeFlags) String() string {
 
 ////
 
+// DependencyFlags specifies how execution and memory dependencies are formed
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkDependencyFlagBits.html
 type DependencyFlags int32
 
 var dependencyFlagsMapping = common.NewFlagStringMapping[DependencyFlags]()
@@ -155,6 +171,9 @@ func (f DependencyFlags) String() string {
 
 ////
 
+// DescriptorPoolCreateFlags specifies parameters of a newly-created DescriptorPool
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkDescriptorPoolCreateInfo.html
 type DescriptorPoolCreateFlags int32
 
 var descriptorPoolCreateFlagsMapping = common.NewFlagStringMapping[DescriptorPoolCreateFlags]()
@@ -169,6 +188,9 @@ func (f DescriptorPoolCreateFlags) String() string {
 
 ////
 
+// DescriptorPoolResetFlags is reserved for future use
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkDescriptorPoolResetFlags.html
 type DescriptorPoolResetFlags int32
 
 var descriptorPoolResetFlagsMapping = common.NewFlagStringMapping[DescriptorPoolResetFlags]()
@@ -183,6 +205,9 @@ func (f DescriptorPoolResetFlags) String() string {
 
 ////
 
+// DescriptorSetLayoutCreateFlags specifies DescriptorSetLayout properties
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkDescriptorSetLayoutCreateFlagBits.html
 type DescriptorSetLayoutCreateFlags int32
 
 var descriptorSetLayoutCreateFlagsMapping = common.NewFlagStringMapping[DescriptorSetLayoutCreateFlags]()
@@ -197,6 +222,9 @@ func (f DescriptorSetLayoutCreateFlags) String() string {
 
 ////
 
+// DeviceQueueCreateFlags specifies behavior of a Queue
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkDeviceQueueCreateFlagBits.html
 type DeviceQueueCreateFlags int32
 
 var deviceQueueCreateFlagsMapping = common.NewFlagStringMapping[DeviceQueueCreateFlags]()
@@ -211,6 +239,9 @@ func (f DeviceQueueCreateFlags) String() string {
 
 ////
 
+// EventCreateFlags represents event creation flag bits
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkEventCreateFlagBits.html
 type EventCreateFlags int32
 
 var eventCreateFlagsMapping = common.NewFlagStringMapping[EventCreateFlags]()
@@ -225,6 +256,9 @@ func (f EventCreateFlags) String() string {
 
 ////
 
+// FenceCreateFlags specifies initial state and behavior of a Fence
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkFenceCreateFlagBits.html
 type FenceCreateFlags int32
 
 var fenceCreateFlagsMapping = common.NewFlagStringMapping[FenceCreateFlags]()
@@ -239,6 +273,9 @@ func (f FenceCreateFlags) String() string {
 
 ////
 
+// FormatFeatureFlags specifies features supported by a Buffer
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkFormatFeatureFlagBits.html
 type FormatFeatureFlags int32
 
 var formatFeaturesMapping = common.NewFlagStringMapping[FormatFeatureFlags]()
@@ -253,6 +290,9 @@ func (f FormatFeatureFlags) String() string {
 
 ////
 
+// FramebufferCreateFlags specifies Framebuffer properties
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkFramebufferCreateFlagBits.html
 type FramebufferCreateFlags int32
 
 var framebufferCreateFlagsMapping = common.NewFlagStringMapping[FramebufferCreateFlags]()
@@ -267,6 +307,9 @@ func (f FramebufferCreateFlags) String() string {
 
 ////
 
+// ImageAspectFlags specifies which aspects of an Image are included in a view
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkImageAspectFlagBits.html
 type ImageAspectFlags int32
 
 var imageAspectFlagsMapping = common.NewFlagStringMapping[ImageAspectFlags]()
@@ -281,6 +324,9 @@ func (f ImageAspectFlags) String() string {
 
 ////
 
+// ImageCreateFlags specifies additional parameters of an Image
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkImageCreateFlagBits.html
 type ImageCreateFlags int32
 
 var imageCreateFlagsMapping = common.NewFlagStringMapping[ImageCreateFlags]()
@@ -295,6 +341,9 @@ func (f ImageCreateFlags) String() string {
 
 ////
 
+// ImageViewCreateFlags specifies additional parameters of an ImageView
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkImageViewCreateFlagBits.html
 type ImageViewCreateFlags int32
 
 var imageViewCreateFlagsMapping = common.NewFlagStringMapping[ImageViewCreateFlags]()
@@ -309,6 +358,9 @@ func (f ImageViewCreateFlags) String() string {
 
 ////
 
+// ImageUsageFlags specifies intended usage of an Image
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkImageUsageFlagBits.html
 type ImageUsageFlags int32
 
 var imageUsagesMapping = common.NewFlagStringMapping[ImageUsageFlags]()
@@ -323,6 +375,9 @@ func (f ImageUsageFlags) String() string {
 
 ////
 
+// MemoryHeapFlags specifies attribute flags for a heap
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkMemoryHeapFlagBits.html
 type MemoryHeapFlags int32
 
 var memoryHeapFlagsMapping = common.NewFlagStringMapping[MemoryHeapFlags]()
@@ -337,6 +392,9 @@ func (f MemoryHeapFlags) String() string {
 
 ////
 
+// MemoryPropertyFlags specifies properties for a memory type
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkMemoryPropertyFlagBits.html
 type MemoryPropertyFlags int32
 
 var memoryPropertiesMapping = common.NewFlagStringMapping[MemoryPropertyFlags]()
@@ -351,6 +409,9 @@ func (f MemoryPropertyFlags) String() string {
 
 ////
 
+// PipelineCacheCreateFlags specifies the behavior of the PipelineCache
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkPipelineCacheCreateFlagBits.html
 type PipelineCacheCreateFlags int32
 
 var pipelineCacheCreateFlagsMapping = common.NewFlagStringMapping[PipelineCacheCreateFlags]()
@@ -365,6 +426,9 @@ func (f PipelineCacheCreateFlags) String() string {
 
 ////
 
+// PipelineCreateFlags controls how a Pipeline is created
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkPipelineCreateFlagBits.html
 type PipelineCreateFlags int32
 
 var pipelineCreateFlagsMapping = common.NewFlagStringMapping[PipelineCreateFlags]()
@@ -379,6 +443,9 @@ func (f PipelineCreateFlags) String() string {
 
 ////
 
+// PipelineStageFlags specifies Pipeline stages
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkPipelineStageFlagBits.html
 type PipelineStageFlags int32
 
 var pipelineStagesMapping = common.NewFlagStringMapping[PipelineStageFlags]()
@@ -393,6 +460,9 @@ func (f PipelineStageFlags) String() string {
 
 ////
 
+// QueryControlFlags specifies constraints on a query
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkQueryControlFlagBits.html
 type QueryControlFlags int32
 
 var queryControlFlagsMapping = common.NewFlagStringMapping[QueryControlFlags]()
@@ -407,6 +477,9 @@ func (f QueryControlFlags) String() string {
 
 ////
 
+// QueryPipelineStatisticFlags specifies queried Pipeline statistics
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkQueryPipelineStatisticFlagBits.html
 type QueryPipelineStatisticFlags int32
 
 var queryPipelineStatisticFlagsMapping = common.NewFlagStringMapping[QueryPipelineStatisticFlags]()
@@ -421,6 +494,9 @@ func (f QueryPipelineStatisticFlags) String() string {
 
 ////
 
+// QueryResultFlags specifies how and when query results are returned
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkQueryResultFlagBits.html
 type QueryResultFlags int32
 
 var queryResultFlagsMapping = common.NewFlagStringMapping[QueryResultFlags]()
@@ -435,6 +511,9 @@ func (f QueryResultFlags) String() string {
 
 ////
 
+// QueueFlags specifies capabilities of Queue objects in a Queue family
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkQueueFlagBits.html
 type QueueFlags int32
 
 var queueFlagsMapping = common.NewFlagStringMapping[QueueFlags]()
@@ -449,6 +528,9 @@ func (f QueueFlags) String() string {
 
 ////
 
+// RenderPassCreateFlags specifies additional properties of a RenderPass
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkRenderPassCreateFlagBits.html
 type RenderPassCreateFlags int32
 
 var renderPassCreateFlagsMapping = common.NewFlagStringMapping[RenderPassCreateFlags]()
@@ -463,6 +545,9 @@ func (f RenderPassCreateFlags) String() string {
 
 ////
 
+// SampleCountFlags specifies sample counts supported for an Image used for storage operations
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkSampleCountFlagBits.html
 type SampleCountFlags int32
 
 var sampleCountsMapping = common.NewFlagStringMapping[SampleCountFlags]()
@@ -494,6 +579,9 @@ func (f SampleCountFlags) Count() int {
 
 ////
 
+// SamplerCreateFlags specifies additional parameters of a Sampler
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkSamplerCreateFlagBits.html
 type SamplerCreateFlags int32
 
 var samplerCreateFlagsMapping = common.NewFlagStringMapping[SamplerCreateFlags]()
@@ -508,20 +596,26 @@ func (f SamplerCreateFlags) String() string {
 
 ////
 
-type ShaderStageCreateFlags int32
+// PipelineShaderStageCreateFlags controls how a Pipeline shader stage is created
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkPipelineShaderStageCreateFlagBits.html
+type PipelineShaderStageCreateFlags int32
 
-var shaderStageCreateMapping = common.NewFlagStringMapping[ShaderStageCreateFlags]()
+var shaderStageCreateMapping = common.NewFlagStringMapping[PipelineShaderStageCreateFlags]()
 
-func (f ShaderStageCreateFlags) Register(str string) {
+func (f PipelineShaderStageCreateFlags) Register(str string) {
 	shaderStageCreateMapping.Register(f, str)
 }
 
-func (f ShaderStageCreateFlags) String() string {
+func (f PipelineShaderStageCreateFlags) String() string {
 	return shaderStageCreateMapping.FlagsToString(f)
 }
 
 ////
 
+// ShaderStageFlags specifies a Pipeline stage
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkShaderStageFlagBits.html
 type ShaderStageFlags int32
 
 var shaderStagesMapping = common.NewFlagStringMapping[ShaderStageFlags]()
@@ -536,6 +630,9 @@ func (f ShaderStageFlags) String() string {
 
 ////
 
+// SparseImageFormatFlags specifies additional information about a sparse Image resource
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkSparseImageFormatFlagBits.html
 type SparseImageFormatFlags int32
 
 var sparseImageFormatFlagsMapping = common.NewFlagStringMapping[SparseImageFormatFlags]()
@@ -550,6 +647,9 @@ func (f SparseImageFormatFlags) String() string {
 
 ////
 
+// SparseMemoryBindFlags specifies usage of a sparse memory binding operation
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkSparseMemoryBindFlagBits.html
 type SparseMemoryBindFlags int32
 
 var sparseMemoryBindFlagsMapping = common.NewFlagStringMapping[SparseMemoryBindFlags]()
@@ -564,6 +664,9 @@ func (f SparseMemoryBindFlags) String() string {
 
 ////
 
+// StencilFaceFlags specifies sets of stencil state for which to update the compare mask
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkStencilFaceFlagBits.html
 type StencilFaceFlags int32
 
 var stencilFacesMapping = common.NewFlagStringMapping[StencilFaceFlags]()
@@ -578,6 +681,9 @@ func (f StencilFaceFlags) String() string {
 
 ////
 
+// SubpassDescriptionFlags specifies usage of a subpass
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkSubpassDescriptionFlagBits.html
 type SubpassDescriptionFlags int32
 
 var subPassFlagsMapping = common.NewFlagStringMapping[SubpassDescriptionFlags]()

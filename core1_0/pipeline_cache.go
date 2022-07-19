@@ -12,6 +12,8 @@ import (
 	"unsafe"
 )
 
+// VulkanPipelineCache is an implementation of the PipelineCache interface that actually communicates with Vulkan. This
+// is the default implementation. See the interface for more documentation.
 type VulkanPipelineCache struct {
 	deviceDriver        driver.Driver
 	device              driver.VkDevice

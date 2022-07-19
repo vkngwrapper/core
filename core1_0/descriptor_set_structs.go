@@ -12,9 +12,13 @@ import (
 	"unsafe"
 )
 
+// DescriptorSetAllocateInfo specifies the allocation parameters for DescritporSet objects
 type DescriptorSetAllocateInfo struct {
+	// DescriptorPool is the pool which the sets will be allocated from
 	DescriptorPool DescriptorPool
 
+	// SetLayouts is a slice of DescriptorSetLayout objects, which each member specifying how the
+	// corresponding DescriptorSet is allocated
 	SetLayouts []DescriptorSetLayout
 
 	common.NextOptions
@@ -48,27 +52,54 @@ func (o DescriptorSetAllocateInfo) PopulateCPointer(allocator *cgoparam.Allocato
 	return preallocatedPointer, nil
 }
 
+// DescriptorImageInfo specifies descriptor Image information
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkDescriptorImageInfo.html
 type DescriptorImageInfo struct {
-	Sampler     Sampler
-	ImageView   ImageView
+	// Sampler is a Sampler object, and is used in descriptor updates for DescriptorTypeSampler and
+	// DescriptorTypeCombinedImageSampler descriptors if the binding being update does not use
+	// immutable sampler
+	Sampler Sampler
+	// ImageView is an ImageView object, and is used in descriptor updates for DescriptorTypeSampledImage,
+	// DescriptorTypeStorageImage, DescriptorTypeCombinedImageSampler, and DescriptorTypeInputAttachment
+	ImageView ImageView
+	// ImageLayout is the layout that the Image subresources accessible form ImageView will be in
+	// at the time this descriptor is accessed
 	ImageLayout ImageLayout
 }
 
+// DescriptorBufferInfo specifies descriptor Buffer information
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkDescriptorBufferInfo.html
 type DescriptorBufferInfo struct {
+	// Buffer is the Buffer resource
 	Buffer Buffer
+	// Offset is the offset in bytes from the start of Buffer
 	Offset int
-	Range  int
+	// Range is the size in bytes that is used for this descriptor update
+	Range int
 }
 
+// WriteDescriptorSet specifies the parameters of a DescriptorSet write operation
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkWriteDescriptorSet.html
 type WriteDescriptorSet struct {
-	DstSet          DescriptorSet
-	DstBinding      int
+	// DstSet is the destination DescriptorSet to update
+	DstSet DescriptorSet
+	// DstBinding is the descriptor binding within that set
+	DstBinding int
+	// DstArrayElement is the starting element in that array
 	DstArrayElement int
 
+	// DescriptorType specifies the type of each descriptor in ImageInfo, BufferInfo, or
+	// TexelBufferView
 	DescriptorType DescriptorType
 
-	ImageInfo       []DescriptorImageInfo
-	BufferInfo      []DescriptorBufferInfo
+	// ImageInfo is a slice of DescriptorImageInfo structures or is ignored
+	ImageInfo []DescriptorImageInfo
+	// BufferInfo is a slice of DescriptorBufferInfo structures or is ignored
+	BufferInfo []DescriptorBufferInfo
+	// TexelBufferView is a slice of BufferView objects or is ignored
 	TexelBufferView []BufferView
 
 	common.NextOptions
@@ -181,15 +212,25 @@ func (o WriteDescriptorSet) PopulateCPointer(allocator *cgoparam.Allocator, prea
 	return preallocatedPointer, nil
 }
 
+// CopyDescriptorSet specifies a copy descriptor set operation
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkCopyDescriptorSet.html
 type CopyDescriptorSet struct {
-	SrcSet          DescriptorSet
-	SrcBinding      int
+	// SrcSet is the source descriptor set
+	SrcSet DescriptorSet
+	// SrcBinding is the source descriptor binding
+	SrcBinding int
+	// SrcArrayElement is the source descriptor array element
 	SrcArrayElement int
 
-	DstSet          DescriptorSet
-	DstBinding      int
+	// DstSet is the destination descriptor set
+	DstSet DescriptorSet
+	// DstBinding is the destination descriptor binding
+	DstBinding int
+	// DstArrayElement is the destination descriptor array element
 	DstArrayElement int
 
+	// DescriptorCount is number of descriptors to copy from source to destination
 	DescriptorCount int
 
 	common.NextOptions

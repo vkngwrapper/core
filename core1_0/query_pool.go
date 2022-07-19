@@ -12,6 +12,8 @@ import (
 	"unsafe"
 )
 
+// VulkanQueryPool is an implementation of the QueryPool interface that actually communicates with Vulkan. This
+// is the default implementation. See the interface for more documentation.
 type VulkanQueryPool struct {
 	deviceDriver    driver.Driver
 	queryPoolHandle driver.VkQueryPool

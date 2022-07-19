@@ -12,6 +12,7 @@ import (
 	"unsafe"
 )
 
+// DeviceCreateFlags is reserved for future use
 type DeviceCreateFlags int32
 
 var deviceCreateFlags = common.NewFlagStringMapping[DeviceCreateFlags]()
@@ -26,12 +27,18 @@ func (f DeviceCreateFlags) String() string {
 
 ////
 
+// DeviceCreateInfo specifies parameters of a newly-created Device
 type DeviceCreateInfo struct {
-	Flags                 DeviceCreateFlags
-	QueueCreateInfos      []DeviceQueueCreateInfo
-	EnabledFeatures       *PhysicalDeviceFeatures
+	// Flags is reserved for future use
+	Flags DeviceCreateFlags
+	// QueueCreateInfos is a slice of DeviceQueueCreateInfo structures describing the Queue objects
+	// that are requested to be created along with the logical Device
+	QueueCreateInfos []DeviceQueueCreateInfo
+	// EnabledFeatures contains boolean indicators of all the features to be enabled
+	EnabledFeatures *PhysicalDeviceFeatures
+	// EnabledExtensionNames is a slice of strings containing the names of extensions to enable
+	// for the created Device
 	EnabledExtensionNames []string
-	EnabledLayerNames     []string
 
 	common.NextOptions
 }
@@ -58,22 +65,14 @@ func (o DeviceCreateInfo) PopulateCPointer(allocator *cgoparam.Allocator, preall
 		extNames[i] = (*C.char)(allocator.CString(o.EnabledExtensionNames[i]))
 	}
 
-	// Alloc array of layer names
-	numLayers := len(o.EnabledLayerNames)
-	layerNamePtr := allocator.Malloc(numLayers * int(unsafe.Sizeof(uintptr(0))))
-	layerNames := ([]*C.char)(unsafe.Slice((**C.char)(layerNamePtr), numLayers))
-	for i := 0; i < numLayers; i++ {
-		layerNames[i] = (*C.char)(allocator.CString(o.EnabledLayerNames[i]))
-	}
-
 	createInfo := (*C.VkDeviceCreateInfo)(preallocatedPointer)
 	createInfo.sType = C.VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO
 	createInfo.flags = C.VkDeviceCreateFlags(o.Flags)
 	createInfo.pNext = next
 	createInfo.queueCreateInfoCount = C.uint32_t(len(o.QueueCreateInfos))
 	createInfo.pQueueCreateInfos = (*C.VkDeviceQueueCreateInfo)(queueFamilyPtr)
-	createInfo.enabledLayerCount = C.uint(numLayers)
-	createInfo.ppEnabledLayerNames = (**C.char)(layerNamePtr)
+	createInfo.enabledLayerCount = C.uint(0)
+	createInfo.ppEnabledLayerNames = nil
 	createInfo.enabledExtensionCount = C.uint(numExtensions)
 	createInfo.ppEnabledExtensionNames = (**C.char)(extNamePtr)
 

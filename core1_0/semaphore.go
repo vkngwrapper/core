@@ -10,6 +10,8 @@ import (
 	"github.com/vkngwrapper/core/driver"
 )
 
+// VulkanSemaphore is an implementation of the Semaphore interface that actually communicates with Vulkan. This
+// is the default implementation. See the interface for more documentation.
 type VulkanSemaphore struct {
 	deviceDriver    driver.Driver
 	device          driver.VkDevice

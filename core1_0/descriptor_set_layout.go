@@ -5,6 +5,8 @@ import (
 	"github.com/vkngwrapper/core/driver"
 )
 
+// VulkanDescriptorSetLayout is an implementation of the DescriptorSetLayout interface that actually communicates with Vulkan. This
+// is the default implementation. See the interface for more documentation.
 type VulkanDescriptorSetLayout struct {
 	deviceDriver              driver.Driver
 	device                    driver.VkDevice

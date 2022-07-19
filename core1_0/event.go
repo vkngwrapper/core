@@ -10,6 +10,8 @@ import (
 	"github.com/vkngwrapper/core/driver"
 )
 
+// VulkanEvent is an implementation of the Event interface that actually communicates with Vulkan. This
+// is the default implementation. See the interface for more documentation.
 type VulkanEvent struct {
 	eventHandle  driver.VkEvent
 	device       driver.VkDevice

@@ -37,10 +37,9 @@ func TestCommandPoolCreateBasic(t *testing.T) {
 			return core1_0.VKSuccess, nil
 		})
 
-	graphicsFamily := 1
 	pool, res, err := device.CreateCommandPool(nil, core1_0.CommandPoolCreateInfo{
 		Flags:            core1_0.CommandPoolCreateResetBuffer,
-		QueueFamilyIndex: &graphicsFamily,
+		QueueFamilyIndex: 1,
 	})
 	require.NoError(t, err)
 	require.Equal(t, core1_0.VKSuccess, res)

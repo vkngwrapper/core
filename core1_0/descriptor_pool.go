@@ -10,6 +10,8 @@ import (
 	"github.com/vkngwrapper/core/driver"
 )
 
+// VulkanDescriptorPool is an implementation of the DescriptorPool interface that actually communicates with Vulkan. This
+// is the default implementation. See the interface for more documentation.
 type VulkanDescriptorPool struct {
 	deviceDriver         driver.Driver
 	descriptorPoolHandle driver.VkDescriptorPool

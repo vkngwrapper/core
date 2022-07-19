@@ -13,23 +13,71 @@ import (
 )
 
 const (
-	QueueGraphics      QueueFlags = C.VK_QUEUE_GRAPHICS_BIT
-	QueueCompute       QueueFlags = C.VK_QUEUE_COMPUTE_BIT
-	QueueTransfer      QueueFlags = C.VK_QUEUE_TRANSFER_BIT
+	// QueueGraphics specifies that Queue objects in this Queue family support graphics operations
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkQueueFlagBits.html
+	QueueGraphics QueueFlags = C.VK_QUEUE_GRAPHICS_BIT
+	// QueueCompute specifies that Queue objects in this Queue family support compute operations
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkQueueFlagBits.html
+	QueueCompute QueueFlags = C.VK_QUEUE_COMPUTE_BIT
+	// QueueTransfer specifies that Queue objects in this Queue family support transfer operations
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkQueueFlagBits.html
+	QueueTransfer QueueFlags = C.VK_QUEUE_TRANSFER_BIT
+	// QueueSparseBinding specifies that Queue objects in this Queue family support sparse
+	// memory management operations
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkQueueFlagBits.html
 	QueueSparseBinding QueueFlags = C.VK_QUEUE_SPARSE_BINDING_BIT
 
-	MemoryPropertyDeviceLocal     MemoryPropertyFlags = C.VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT
-	MemoryPropertyHostVisible     MemoryPropertyFlags = C.VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT
-	MemoryPropertyHostCoherent    MemoryPropertyFlags = C.VK_MEMORY_PROPERTY_HOST_COHERENT_BIT
+	// MemoryPropertyDeviceLocal specifies that memory allocated with this type is the most efficient
+	// for Device access
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkMemoryPropertyFlagBits.html
+	MemoryPropertyDeviceLocal MemoryPropertyFlags = C.VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT
+	// MemoryPropertyHostVisible specifies that memory allocated with this type can be mapped
+	// for host access using DeviceMemory.Map
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkMemoryPropertyFlagBits.html
+	MemoryPropertyHostVisible MemoryPropertyFlags = C.VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT
+	// MemoryPropertyHostCoherent specifies that the host cache management commands
+	// Device.FlushMappedMemoryRanges and Device.InvalidateMappedMemoryRanges are not needed
+	// to flush host writes to the Device or make Device writes visible to the host, respectively
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkMemoryPropertyFlagBits.html
+	MemoryPropertyHostCoherent MemoryPropertyFlags = C.VK_MEMORY_PROPERTY_HOST_COHERENT_BIT
+	// MemoryPropertyLazilyAllocated specifies that the memory type only allows Device access to
+	// the memory
 	MemoryPropertyLazilyAllocated MemoryPropertyFlags = C.VK_MEMORY_PROPERTY_LAZILY_ALLOCATED_BIT
 
+	// MemoryHeapDeviceLocal specifies that the heap corresponds to device-local memory
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkMemoryHeapFlagBits.html
 	MemoryHeapDeviceLocal MemoryHeapFlags = C.VK_MEMORY_HEAP_DEVICE_LOCAL_BIT
 
-	PhysicalDeviceTypeOther         PhysicalDeviceType = C.VK_PHYSICAL_DEVICE_TYPE_OTHER
+	// PhysicalDeviceTypeOther specifies that the Device does not match any other available types
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkPhysicalDeviceType.html
+	PhysicalDeviceTypeOther PhysicalDeviceType = C.VK_PHYSICAL_DEVICE_TYPE_OTHER
+	// PhysicalDeviceTypeIntegratedGPU specifies that the Device is typically one embedded in or
+	// tightly coupled with the host
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkPhysicalDeviceType.html
 	PhysicalDeviceTypeIntegratedGPU PhysicalDeviceType = C.VK_PHYSICAL_DEVICE_TYPE_INTEGRATED_GPU
-	PhysicalDeviceTypeDiscreteGPU   PhysicalDeviceType = C.VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU
-	PhysicalDeviceTypeVirtualGPU    PhysicalDeviceType = C.VK_PHYSICAL_DEVICE_TYPE_VIRTUAL_GPU
-	PhysicalDeviceTypeCPU           PhysicalDeviceType = C.VK_PHYSICAL_DEVICE_TYPE_CPU
+	// PhysicalDeviceTypeDiscreteGPU specifies that the Device is typically a separate processor
+	// connected to the host via an interlink
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkPhysicalDeviceType.html
+	PhysicalDeviceTypeDiscreteGPU PhysicalDeviceType = C.VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU
+	// PhysicalDeviceTypeVirtualGPU specifies that the Device is typically a virtual node in
+	// a virtualization environment
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkPhysicalDeviceType.html
+	PhysicalDeviceTypeVirtualGPU PhysicalDeviceType = C.VK_PHYSICAL_DEVICE_TYPE_VIRTUAL_GPU
+	// PhysicalDeviceTypeCPU specifies that the Device is typically running on the same processors
+	// as the host
+	PhysicalDeviceTypeCPU PhysicalDeviceType = C.VK_PHYSICAL_DEVICE_TYPE_CPU
 )
 
 func init() {
@@ -52,26 +100,53 @@ func init() {
 	PhysicalDeviceTypeCPU.Register("CPU")
 }
 
+// PhysicalDeviceSparseProperties specifies PhysicalDevice sparse memory properties
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkPhysicalDeviceSparseProperties.html
 type PhysicalDeviceSparseProperties struct {
-	ResidencyStandard2DBlockShape            bool
+	// ResidencyStandard2DBlockShape is true if the PhysicalDevice will access all single-sample
+	// 2D sparse resources using th standard sparse Image block shapes
+	ResidencyStandard2DBlockShape bool
+	// ResidencyStandard2DMultisampleBlockShape is true if the PhysicalDevice will access all
+	// multisample 2D sparse resources using the standard sparse Image block shapes
 	ResidencyStandard2DMultisampleBlockShape bool
-	ResidencyStandard3DBlockShape            bool
-	ResidencyAlignedMipSize                  bool
-	ResidencyNonResidentStrict               bool
+	// ResidencyStandard3DBlockShape is true if the PhysicalDevice will access all 3D sparse
+	// resources using the standard sparse Image block shapes
+	ResidencyStandard3DBlockShape bool
+	// ResidencyAlignedMipSize is true if Image objects with mip level dimensions that are not integer
+	// multiples of the corresponding dimensions of the sparse Image block may be placed in the
+	// mip tail
+	ResidencyAlignedMipSize bool
+	// ResidencyNonResidentStrict specifies whether the PhysicalDevice can consistently access non-
+	// resident regions of a resource
+	ResidencyNonResidentStrict bool
 }
 
+// PhysicalDeviceProperties specifies PhysicalDevice properties
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkPhysicalDeviceProperties.html
 type PhysicalDeviceProperties struct {
+	// DeviceType specifies the type of this device
 	DriverType PhysicalDeviceType
+	// DriverName is the name of the PhysicalDevice
 	DriverName string
 
-	APIVersion    common.APIVersion
+	// APIVersion is the version of Vulkan supported by this PhysicalDevice
+	APIVersion common.APIVersion
+	// DriverVersion is the vendor-specified version of the driver
 	DriverVersion common.Version
-	VendorID      uint32
-	DeviceID      uint32
+	// VendorID is a unique identifier for the vendor of the PhysicalDevice
+	VendorID uint32
+	// DeviceID is a unique identifier for the PhysicalDevice among all devices available from
+	// the vendor
+	DeviceID uint32
 
+	// PipelineCacheUUID represents a UUID for the Device
 	PipelineCacheUUID uuid.UUID
-	Limits            *PhysicalDeviceLimits
-	SparseProperties  *PhysicalDeviceSparseProperties
+	// Limits specifies device-specific limits of the PhysicalDevice
+	Limits *PhysicalDeviceLimits
+	// SparseProperties specifies various sparse related properties of the PhysicalDevice
+	SparseProperties *PhysicalDeviceSparseProperties
 }
 
 func (p *PhysicalDeviceProperties) PopulateFromCPointer(cPointer unsafe.Pointer) error {
@@ -96,15 +171,31 @@ func (p *PhysicalDeviceProperties) PopulateFromCPointer(cPointer unsafe.Pointer)
 	return nil
 }
 
-type QueueFamily struct {
-	QueueFlags                  QueueFlags
-	QueueCount                  int
-	TimestampValidBits          uint32
+// QueueFamilyProperties provides information about a Queue family
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkQueueFamilyProperties.html
+type QueueFamilyProperties struct {
+	// QueueFlags indicates capabilities of the Queue objects in this Queue family
+	QueueFlags QueueFlags
+	// QueueCount is the number of Queue objects in this Queue family
+	QueueCount int
+	// TimestampValidBits is the number of meaningful bits in the timestamps written via
+	// CommandBuffer.CmdWriteTimestamp
+	TimestampValidBits uint32
+	// MinImageTransferGranularity is the minimum granularity supported for Image transfer
+	// operations on the Queue objects in this Queue family
 	MinImageTransferGranularity Extent3D
 }
 
+// PhysicalDeviceMemoryProperties specifies PhysicalDevice memory properties
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkPhysicalDeviceMemoryProperties.html
 type PhysicalDeviceMemoryProperties struct {
+	// MemoryTypes is a slice of MemoryType structures describing the memory types that can be
+	// used to access memory allocated from the heaps specified by MemoryHeaps
 	MemoryTypes []MemoryType
+	// MemoryHeaps is a slice of MemoryHeap structures describing the memory heaps from which
+	// memory can be allocated
 	MemoryHeaps []MemoryHeap
 }
 

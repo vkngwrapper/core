@@ -50,7 +50,7 @@ func TestImageStencilUsageCreateOptions(t *testing.T) {
 
 	image, _, err := device.CreateImage(
 		nil,
-		core1_0.ImageCreateOptions{
+		core1_0.ImageCreateInfo{
 			NextOptions: common.NextOptions{core1_2.ImageStencilUsageCreateInfo{
 				StencilUsage: core1_0.ImageUsageColorAttachment,
 			}},
@@ -98,7 +98,7 @@ func TestImageFormatListCreateOptions(t *testing.T) {
 
 	image, _, err := device.CreateImage(
 		nil,
-		core1_0.ImageCreateOptions{
+		core1_0.ImageCreateInfo{
 			NextOptions: common.NextOptions{
 				core1_2.ImageFormatListCreateInfo{
 					ViewFormats: []core1_0.Format{

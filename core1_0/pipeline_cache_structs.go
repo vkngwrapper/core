@@ -11,8 +11,13 @@ import (
 	"unsafe"
 )
 
+// PipelineCacheCreateInfo specifies parameters of a newly-created PipelineCache
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkPipelineCacheCreateInfo.html
 type PipelineCacheCreateInfo struct {
-	Flags       PipelineCacheCreateFlags
+	// Flags specifies the behavior of the PipelineCache
+	Flags PipelineCacheCreateFlags
+	// InitialData contains previously-retrieved PipelineCache data
 	InitialData []byte
 
 	common.NextOptions

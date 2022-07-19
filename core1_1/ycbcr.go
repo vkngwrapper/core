@@ -5,6 +5,8 @@ import (
 	"github.com/vkngwrapper/core/driver"
 )
 
+// VulkanSamplerYcbcrConversion is an implementation of the SamplerYcbcrConversion interface that actually communicates with Vulkan. This
+// is the default implementation. See the interface for more documentation.
 type VulkanSamplerYcbcrConversion struct {
 	DeviceDriver driver.Driver
 	Device       driver.VkDevice

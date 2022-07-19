@@ -10,6 +10,8 @@ import (
 	"github.com/vkngwrapper/core/driver"
 )
 
+// VulkanPipelineLayout is an implementation of the PipelineLayout interface that actually communicates with Vulkan. This
+// is the default implementation. See the interface for more documentation.
 type VulkanPipelineLayout struct {
 	deviceDriver         driver.Driver
 	device               driver.VkDevice

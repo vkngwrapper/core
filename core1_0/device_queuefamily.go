@@ -12,10 +12,18 @@ import (
 	"unsafe"
 )
 
+// DeviceQueueCreateInfo specifies parameters of a newly-created Device Queue
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkDeviceQueueCreateInfo.html
 type DeviceQueueCreateInfo struct {
-	Flags            DeviceQueueCreateFlags
+	// Flags indicates behavior of the Queue objects
+	Flags DeviceQueueCreateFlags
+	// QueueFamilyIndex indicates the index of the Queue family in which to create the Queue objects
+	// on this Device
 	QueueFamilyIndex int
-	QueuePriorities  []float32
+	// QueuePriorities is a slice of normalized floating point values, specifying priorities of work
+	// that will be submitted to each created queue
+	QueuePriorities []float32
 
 	common.NextOptions
 }

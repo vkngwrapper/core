@@ -12,6 +12,9 @@ import (
 	"unsafe"
 )
 
+// ShaderModuleCreateFlags is reserved for future use
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkShaderModuleCreateFlags.html
 type ShaderModuleCreateFlags int32
 
 var shaderModuleCreateFlagsMapping = common.NewFlagStringMapping[ShaderModuleCreateFlags]()
@@ -26,8 +29,12 @@ func (f ShaderModuleCreateFlags) String() string {
 
 ////
 
+// ShaderModuleCreateInfo specifies parameters of a newly-created ShaderModule
 type ShaderModuleCreateInfo struct {
-	Code  []uint32
+	// Code is the code that is used to create the ShaderModule. The type and format of the code
+	// is determined from the content of the data
+	Code []uint32
+	// Flags is reserved for future use
 	Flags ShaderModuleCreateFlags
 
 	common.NextOptions

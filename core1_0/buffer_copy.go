@@ -11,10 +11,16 @@ import (
 	"unsafe"
 )
 
+// BufferCopy specifies a buffer copy operation via CommandBuffer.CmdCopyBuffer
+//
+// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/VkBufferCopy.html
 type BufferCopy struct {
+	// SrcOffset is the starting offset in bytes from the start of the source Buffer
 	SrcOffset int
+	// DstOffset is the starting offset in bytes from the start of the dest Buffer
 	DstOffset int
-	Size      int
+	// Size is the number of bytes to copy
+	Size int
 }
 
 func (c BufferCopy) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer) (unsafe.Pointer, error) {
@@ -30,14 +36,26 @@ func (c BufferCopy) PopulateCPointer(allocator *cgoparam.Allocator, preallocated
 	return preallocatedPointer, nil
 }
 
+// BufferImageCopy specifies a buffer image copy operation via CommandBuffer.CmdCopyBufferToImage
+// or CommandBuffer.CmdCopyImageToBuffer
+//
+// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/VkBufferImageCopy.html
 type BufferImageCopy struct {
-	BufferOffset      int
-	BufferRowLength   int
+	// BufferOffset is the offset in bytes from the start of the Buffer
+	BufferOffset int
+	// BufferRowLength is the size in texels of the rows of the image stored in the Buffer.
+	// 0 indicates that the ImageExtent controls this value
+	BufferRowLength int
+	// BufferImageHeight is the height in texels of the image stored in the Buffer
+	// 0 indicates that the ImageExtent controls this value
 	BufferImageHeight int
 
+	// ImageSubresource is used to specify the specific image subresources of the Image
 	ImageSubresource ImageSubresourceLayers
-	ImageOffset      Offset3D
-	ImageExtent      Extent3D
+	// ImageOffset selects the initial x, y, and z offset in texels of the Image subregion
+	ImageOffset Offset3D
+	// ImageExtent is the size in texels of the Image subregion
+	ImageExtent Extent3D
 }
 
 func (c BufferImageCopy) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer) (unsafe.Pointer, error) {

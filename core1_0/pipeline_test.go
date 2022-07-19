@@ -321,7 +321,7 @@ func TestVulkanLoader1_0_CreateGraphicsPipelines_VertexInputSuccess(t *testing.T
 				},
 				VertexBindingDescriptions: []core1_0.VertexInputBindingDescription{
 					{
-						InputRate: core1_0.RateInstance,
+						InputRate: core1_0.VertexInputRateInstance,
 						Binding:   17,
 						Stride:    19,
 					},

@@ -11,6 +11,9 @@ import (
 	"unsafe"
 )
 
+// PipelineViewportStateCreateFlags is reserved for future use
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkPipelineViewportStateCreateFlags.html
 type PipelineViewportStateCreateFlags uint32
 
 var pipelineViewportStateCreateFlagsMapping = common.NewFlagStringMapping[PipelineViewportStateCreateFlags]()
@@ -25,10 +28,15 @@ func (f PipelineViewportStateCreateFlags) String() string {
 
 ////
 
+// PipelineViewportStateCreateInfo specifies parameters of a newly-created Pipeline viewport state
 type PipelineViewportStateCreateInfo struct {
+	// Viewports is a slice of Viewport structures, defining viewport transforms
 	Viewports []Viewport
-	Scissors  []Rect2D
-	Flags     PipelineViewportStateCreateFlags
+	// Scissors is a slice of Rect2D structures defining the rectangular bounds of the scissor for
+	// the corresponding viewport
+	Scissors []Rect2D
+	// Flags is reserved for future use
+	Flags PipelineViewportStateCreateFlags
 
 	common.NextOptions
 }

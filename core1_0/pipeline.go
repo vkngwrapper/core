@@ -10,6 +10,8 @@ import (
 	"github.com/vkngwrapper/core/driver"
 )
 
+// VulkanPipeline is an implementation of the Pipeline interface that actually communicates with Vulkan. This
+// is the default implementation. See the interface for more documentation.
 type VulkanPipeline struct {
 	deviceDriver   driver.Driver
 	device         driver.VkDevice

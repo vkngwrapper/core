@@ -12,6 +12,9 @@ import (
 	"unsafe"
 )
 
+// PipelineMultisampleStateCreateFlags is reserved for future use
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkPipelineMultisampleStateCreateFlags.html
 type PipelineMultisampleStateCreateFlags uint32
 
 var pipelineMultisampleStateCreateFlagsMapping = common.NewFlagStringMapping[PipelineMultisampleStateCreateFlags]()
@@ -26,16 +29,30 @@ func (f PipelineMultisampleStateCreateFlags) String() string {
 
 ////
 
+// PipelineMultisampleStateCreateInfo specifies parameters of a newly-created Pipeline multisample
+// state
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkPipelineMultisampleStateCreateInfo.html
 type PipelineMultisampleStateCreateInfo struct {
-	Flags                PipelineMultisampleStateCreateFlags
+	// Flags is reserved for future use
+	Flags PipelineMultisampleStateCreateFlags
+	// RasterizationSamples specifies the number of samples used in rasterization
 	RasterizationSamples SampleCountFlags
 
+	// SampleShadingEnable can be used to enable sample shading
 	SampleShadingEnable bool
-	MinSampleShading    float32
-	SampleMask          []uint32
+	// MinSampleShading specifies a minimum fraction of sample shading if SampleShadingEnable
+	// is set to true
+	MinSampleShading float32
+	// SampleMask is a slice of unsigned 32-bit integers used in the sample mask test
+	SampleMask []uint32
 
+	// AlphaToCoverageEnable controls whether a temporary coverage value is generated based on
+	// the alpha component of the fragment's first color output
 	AlphaToCoverageEnable bool
-	AlphaToOneEnable      bool
+	// AlphaToOneEnable controls whether the alpha component of the fragment's first color output
+	// is replaced with 1
+	AlphaToOneEnable bool
 
 	common.NextOptions
 }

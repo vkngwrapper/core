@@ -12,32 +12,105 @@ import (
 )
 
 const (
+	// LodClampNone is a special constant value used for SamplerCreateInfo.MaxLod to indicate
+	// that maximum LOD clamping should not be performed
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VK_LOD_CLAMP_NONE.html
+	LodClampNone float32 = C.VK_LOD_CLAMP_NONE
+
+	// BorderColorFloatTransparentBlack specifies a transparent, floating-point format,
+	// black color
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkBorderColor.html
 	BorderColorFloatTransparentBlack BorderColor = C.VK_BORDER_COLOR_FLOAT_TRANSPARENT_BLACK
-	BorderColorIntTransparentBlack   BorderColor = C.VK_BORDER_COLOR_INT_TRANSPARENT_BLACK
-	BorderColorFloatOpaqueBlack      BorderColor = C.VK_BORDER_COLOR_FLOAT_OPAQUE_BLACK
-	BorderColorIntOpaqueBlack        BorderColor = C.VK_BORDER_COLOR_INT_OPAQUE_BLACK
-	BorderColorFloatOpaqueWhite      BorderColor = C.VK_BORDER_COLOR_FLOAT_OPAQUE_WHITE
-	BorderColorIntOpaqueWhite        BorderColor = C.VK_BORDER_COLOR_INT_OPAQUE_WHITE
+	// BorderColorIntTransparentBlack specifies a transparent, integer format, black color
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkBorderColor.html
+	BorderColorIntTransparentBlack BorderColor = C.VK_BORDER_COLOR_INT_TRANSPARENT_BLACK
+	// BorderColorFloatOpaqueBlack specifies an opaque, floating-point format, black color
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkBorderColor.html
+	BorderColorFloatOpaqueBlack BorderColor = C.VK_BORDER_COLOR_FLOAT_OPAQUE_BLACK
+	// BorderColorIntOpaqueBlack specifies an opaque, integer format, black color
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkBorderColor.html
+	BorderColorIntOpaqueBlack BorderColor = C.VK_BORDER_COLOR_INT_OPAQUE_BLACK
+	// BorderColorFloatOpaqueWhite specifies an opaque, floating-point format, white color
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkBorderColor.html
+	BorderColorFloatOpaqueWhite BorderColor = C.VK_BORDER_COLOR_FLOAT_OPAQUE_WHITE
+	// BorderColorIntOpaqueWhite specifies an opaque, integer format, white color
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkBorderColor.html
+	BorderColorIntOpaqueWhite BorderColor = C.VK_BORDER_COLOR_INT_OPAQUE_WHITE
 
-	CompareOpNever          CompareOp = C.VK_COMPARE_OP_NEVER
-	CompareOpLess           CompareOp = C.VK_COMPARE_OP_LESS
-	CompareOpEqual          CompareOp = C.VK_COMPARE_OP_EQUAL
-	CompareOpLessOrEqual    CompareOp = C.VK_COMPARE_OP_LESS_OR_EQUAL
-	CompareOpGreater        CompareOp = C.VK_COMPARE_OP_GREATER
-	CompareOpNotEqual       CompareOp = C.VK_COMPARE_OP_NOT_EQUAL
+	// CompareOpNever specifies that the comparison always evaluates false
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkCompareOp.html
+	CompareOpNever CompareOp = C.VK_COMPARE_OP_NEVER
+	// CompareOpLess specifies that the comparison evaluates reference < test
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkCompareOp.html
+	CompareOpLess CompareOp = C.VK_COMPARE_OP_LESS
+	// CompareOpEqual specifies that the comparison evaluates reference == test
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkCompareOp.html
+	CompareOpEqual CompareOp = C.VK_COMPARE_OP_EQUAL
+	// CompareOpLessOrEqual specifies that the comparison evaluates reference <= test
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkCompareOp.html
+	CompareOpLessOrEqual CompareOp = C.VK_COMPARE_OP_LESS_OR_EQUAL
+	// CompareOpGreater specifies that the comparison evaluates reference > test
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkCompareOp.html
+	CompareOpGreater CompareOp = C.VK_COMPARE_OP_GREATER
+	// CompareOpNotEqual specifies that the comparison evaluates reference != test
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkCompareOp.html
+	CompareOpNotEqual CompareOp = C.VK_COMPARE_OP_NOT_EQUAL
+	// CompareOpGreaterOrEqual specifies that the comparison evaluates reference >= test
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkCompareOp.html
 	CompareOpGreaterOrEqual CompareOp = C.VK_COMPARE_OP_GREATER_OR_EQUAL
-	CompareOpAlways         CompareOp = C.VK_COMPARE_OP_ALWAYS
+	// CompareOpAlways specifies that the comparison always evaluates true
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkCompareOp.html
+	CompareOpAlways CompareOp = C.VK_COMPARE_OP_ALWAYS
 
+	// FilterNearest specifies nearest filtering
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkFilter.html
 	FilterNearest Filter = C.VK_FILTER_NEAREST
-	FilterLinear  Filter = C.VK_FILTER_LINEAR
+	// FilterLinear specifies linear filtering
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkFilter.html
+	FilterLinear Filter = C.VK_FILTER_LINEAR
 
+	// SamplerMipmapModeNearest specifies nearest filtering
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkSamplerMipmapMode.html
 	SamplerMipmapModeNearest SamplerMipmapMode = C.VK_SAMPLER_MIPMAP_MODE_NEAREST
-	SamplerMipmapModeLinear  SamplerMipmapMode = C.VK_SAMPLER_MIPMAP_MODE_LINEAR
+	// SamplerMipmapModeLinear specifiest linear filtering
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkSamplerMipmapMode.html
+	SamplerMipmapModeLinear SamplerMipmapMode = C.VK_SAMPLER_MIPMAP_MODE_LINEAR
 
-	SamplerAddressModeRepeat         SamplerAddressMode = C.VK_SAMPLER_ADDRESS_MODE_REPEAT
+	// SamplerAddressModeRepeat specifies that the repeat wrap mode will be used
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkSamplerAddressMode.html
+	SamplerAddressModeRepeat SamplerAddressMode = C.VK_SAMPLER_ADDRESS_MODE_REPEAT
+	// SamplerAddressModeMirroredRepeat specifies that the mirrored repeat wrap mode will be used
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkSamplerAddressMode.html
 	SamplerAddressModeMirroredRepeat SamplerAddressMode = C.VK_SAMPLER_ADDRESS_MODE_MIRRORED_REPEAT
-	SamplerAddressModeClampToEdge    SamplerAddressMode = C.VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE
-	SamplerAddressModeClampToBorder  SamplerAddressMode = C.VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER
+	// SamplerAddressModeClampToEdge specifies that the clamp-to-edge wrap mode will be used
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkSamplerAddressMode.html
+	SamplerAddressModeClampToEdge SamplerAddressMode = C.VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE
+	// SamplerAddressModeClampToBorder specifies that the clamp-to-border wrap mode will be used
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkSamplerAddressMode.html
+	SamplerAddressModeClampToBorder SamplerAddressMode = C.VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER
 )
 
 func init() {
@@ -69,26 +142,51 @@ func init() {
 	SamplerAddressModeClampToBorder.Register("Clamp to Border")
 }
 
+// SamplerCreateInfo specifies parameters of a newly-created Sampler
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkSamplerCreateInfo.html
 type SamplerCreateInfo struct {
-	Flags        SamplerCreateFlags
-	MagFilter    Filter
-	MinFilter    Filter
-	MipmapMode   SamplerMipmapMode
+	// Flags describes additional parameters of the Sampler
+	Flags SamplerCreateFlags
+	// MagFilter specifies the magnification filter to apply to lookups
+	MagFilter Filter
+	// MinFilter specifies the minification filter to apply to lookups
+	MinFilter Filter
+	// MipmapMode specifies the mipmap filter to apply to lookups
+	MipmapMode SamplerMipmapMode
+	// AddressModeU specifies the addressing mode for U coordinates outside [0,1)
 	AddressModeU SamplerAddressMode
+	// AddressModeV specifies the addressing mode for V coordinates outside [0,1)
 	AddressModeV SamplerAddressMode
+	// AddressModeW specifies the addressing mode for W coordinates outside [0,1)
 	AddressModeW SamplerAddressMode
 
+	// MipLodBias is the bias to be added to mipmap level-of-detail calculations and bias provided
+	// by Image sampling functions
 	MipLodBias float32
-	MinLod     float32
-	MaxLod     float32
+	// MinLod is used to clamp the minimum of the computed level-of-detail value
+	MinLod float32
+	// MaxLod is used to clamp the maximum of the computed level-of-detail value- to avoid
+	// clamping the maximum value, set MaxLod to the constant LodClampNone
+	MaxLod float32
 
+	// AnisotropyEnable is true to enable anisotropic filtering
 	AnisotropyEnable bool
-	MaxAnisotropy    float32
+	// MaxAnisotropy is the anisotropy value clamp used by the Sampler when AnisotropyEnable is true
+	MaxAnisotropy float32
 
+	// CompareEnable is true to enable comparison against a reference value during lookups, or
+	// false otherwise
 	CompareEnable bool
-	CompareOp     CompareOp
+	// CompareOp specifies the comparison operator to apply to fetched data before filtering
+	CompareOp CompareOp
 
-	BorderColor             BorderColor
+	// BorderColor specifies the predefined border color to use
+	BorderColor BorderColor
+	// UnnormalizedCoordinates controls whether to use unnormalized or normalized texel coordinates
+	// to address texels of the image. When set to true, the range of the Image coordinates used
+	// to lookup the texel is in the range of 0 to the Image size in each dimension. When set to
+	// false, the range of Image coordinates is 0..1
 	UnnormalizedCoordinates bool
 
 	common.NextOptions

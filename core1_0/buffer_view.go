@@ -10,6 +10,8 @@ import (
 	"github.com/vkngwrapper/core/driver"
 )
 
+// VulkanBufferView is an implementation of the BufferView interface that actually communicates with Vulkan. This
+// is the default implementation. See the interface for more documentation.
 type VulkanBufferView struct {
 	deviceDriver     driver.Driver
 	device           driver.VkDevice

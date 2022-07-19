@@ -14,6 +14,8 @@ import (
 	"unsafe"
 )
 
+// VulkanDevice is an implementation of the Device interface that actually communicates with Vulkan. This
+// is the default implementation. See the interface for more documentation.
 type VulkanDevice struct {
 	deviceDriver driver.Driver
 	deviceHandle driver.VkDevice
@@ -438,7 +440,7 @@ func (d *VulkanDevice) CreateComputePipelines(pipelineCache PipelineCache, alloc
 	return output, res, nil
 }
 
-func (d *VulkanDevice) CreateImage(allocationCallbacks *driver.AllocationCallbacks, o ImageCreateOptions) (Image, common.VkResult, error) {
+func (d *VulkanDevice) CreateImage(allocationCallbacks *driver.AllocationCallbacks, o ImageCreateInfo) (Image, common.VkResult, error) {
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 

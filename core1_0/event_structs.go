@@ -11,7 +11,11 @@ import (
 	"unsafe"
 )
 
+// EventCreateInfo specifies parameters of a newly-created Event
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkEventCreateInfo.html
 type EventCreateInfo struct {
+	// Flags defines additional creation parameters
 	Flags EventCreateFlags
 
 	common.NextOptions

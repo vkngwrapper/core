@@ -7,10 +7,17 @@ import (
 	"github.com/vkngwrapper/core/driver"
 )
 
+// VulkanBuffer is an implementation of the Buffer interface that actually communicates with Vulkan. This
+// is the default implementation. See the interface for more documentation.
 type VulkanBuffer struct {
 	core1_1.Buffer
 }
 
+// PromoteBuffer accepts a Buffer object from any core version. If provided a buffer that supports
+// at least core 1.2, it will return a core1_2.Buffer. Otherwise, it will return nil. This method
+// will always return a core1_2.VulkanBuffer, even if it is provided a VulkanBuffer from a higher
+// core version. Two Vulkan 1.2 compatible Buffer objects with the same Buffer.Handle will
+// return the same interface value when passed to this method.
 func PromoteBuffer(buffer core1_0.Buffer) Buffer {
 	if !buffer.APIVersion().IsAtLeast(common.Vulkan1_2) {
 		return nil

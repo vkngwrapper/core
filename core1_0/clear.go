@@ -10,10 +10,17 @@ import (
 	"unsafe"
 )
 
+// ClearAttachment specifies a clear attachment
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkClearAttachment.html
 type ClearAttachment struct {
-	AspectMask      ImageAspectFlags
+	// AspectMask is a mask selecting the color, depth, and/or stencil aspects of the attachment
+	// to be cleared
+	AspectMask ImageAspectFlags
+	// ColorAttachment is an index into the currently-bound color attachments
 	ColorAttachment int
-	ClearValue      ClearValue
+	// ClearValue is the color or depth/stencil value to clear the attachment to
+	ClearValue ClearValue
 }
 
 func (c ClearAttachment) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer) (unsafe.Pointer, error) {
@@ -29,10 +36,16 @@ func (c ClearAttachment) PopulateCPointer(allocator *cgoparam.Allocator, preallo
 	return preallocatedPointer, nil
 }
 
+// ClearRect specifies a clear rectangle
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkClearRect.html
 type ClearRect struct {
-	Rect           Rect2D
+	// Rect is the two-dimensional region to be cleared
+	Rect Rect2D
+	// BaseArrayLayer is the first layer to be cleared
 	BaseArrayLayer int
-	LayerCount     int
+	// LayerCount is the number of layers to clear
+	LayerCount int
 }
 
 func (r ClearRect) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer) (unsafe.Pointer, error) {

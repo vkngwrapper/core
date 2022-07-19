@@ -150,7 +150,7 @@ func TestDevice_CreateRenderPass(t *testing.T) {
 
 	renderPass, _, err := device.CreateRenderPass2(
 		nil,
-		core1_2.RenderPassCreateOptions{
+		core1_2.RenderPassCreateInfo2{
 			Flags: 0,
 			Attachments: []core1_2.AttachmentDescription2{
 				{

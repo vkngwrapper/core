@@ -11,6 +11,9 @@ import (
 	"unsafe"
 )
 
+// PipelineTessellationStateCreateFlags is reserved for future use
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkPipelineTessellationStateCreateFlags.html
 type PipelineTessellationStateCreateFlags uint32
 
 var pipelineTessellationStateCreateFlagsMapping = common.NewFlagStringMapping[PipelineTessellationStateCreateFlags]()
@@ -25,8 +28,14 @@ func (f PipelineTessellationStateCreateFlags) String() string {
 
 ////
 
+// PipelineTessellationStateCreateInfo specifies parameters of a newly-created Pipeline tessellation
+// state
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkPipelineTessellationStateCreateInfo.html
 type PipelineTessellationStateCreateInfo struct {
-	Flags              PipelineTessellationStateCreateFlags
+	// Flags is reserved for future use
+	Flags PipelineTessellationStateCreateFlags
+	// PatchControlPoints is the number of control points per patch
 	PatchControlPoints uint32
 
 	common.NextOptions

@@ -10,6 +10,8 @@ import (
 	"github.com/vkngwrapper/core/driver"
 )
 
+// VulkanCommandPool is an implementation of the CommandPool interface that actually communicates with Vulkan. This
+// is the default implementation. See the interface for more documentation.
 type VulkanCommandPool struct {
 	deviceDriver      driver.Driver
 	commandPoolHandle driver.VkCommandPool

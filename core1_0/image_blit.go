@@ -10,12 +10,21 @@ import (
 	"unsafe"
 )
 
+// ImageBlit specifies an Image blit operation
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkImageBlit.html
 type ImageBlit struct {
+	// SrcSubresource is the subresource to blit from
 	SrcSubresource ImageSubresourceLayers
-	SrcOffsets     [2]Offset3D
+	// SrcOffsets is a slice of Offset3D structures specifying the bounds of the source region
+	// within the source subresource
+	SrcOffsets [2]Offset3D
 
+	// DstSubresource is the subresource to blit to
 	DstSubresource ImageSubresourceLayers
-	DstOffsets     [2]Offset3D
+	// DstOffsets is a slice of Offset3D structures specifying the bounds of the destination region
+	// within the destination subresource
+	DstOffsets [2]Offset3D
 }
 
 func (b ImageBlit) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer) (unsafe.Pointer, error) {

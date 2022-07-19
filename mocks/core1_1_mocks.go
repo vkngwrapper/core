@@ -1720,7 +1720,7 @@ func (mr *Device1_1MockRecorder) CreateGraphicsPipelines(pipelineCache, allocati
 }
 
 // CreateImage mocks base method.
-func (m *Device1_1) CreateImage(allocationCallbacks *driver.AllocationCallbacks, options core1_0.ImageCreateOptions) (core1_0.Image, common.VkResult, error) {
+func (m *Device1_1) CreateImage(allocationCallbacks *driver.AllocationCallbacks, options core1_0.ImageCreateInfo) (core1_0.Image, common.VkResult, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateImage", allocationCallbacks, options)
 	ret0, _ := ret[0].(core1_0.Image)
@@ -3492,10 +3492,10 @@ func (mr *MockInstanceScopedPhysicalDeviceMockRecorder) Properties2(out interfac
 }
 
 // QueueFamilyProperties mocks base method.
-func (m *MockInstanceScopedPhysicalDevice) QueueFamilyProperties() []*core1_0.QueueFamily {
+func (m *MockInstanceScopedPhysicalDevice) QueueFamilyProperties() []*core1_0.QueueFamilyProperties {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "QueueFamilyProperties")
-	ret0, _ := ret[0].([]*core1_0.QueueFamily)
+	ret0, _ := ret[0].([]*core1_0.QueueFamilyProperties)
 	return ret0
 }
 
@@ -3780,10 +3780,10 @@ func (mr *PhysicalDevice1_1MockRecorder) Properties() *gomock.Call {
 }
 
 // QueueFamilyProperties mocks base method.
-func (m *PhysicalDevice1_1) QueueFamilyProperties() []*core1_0.QueueFamily {
+func (m *PhysicalDevice1_1) QueueFamilyProperties() []*core1_0.QueueFamilyProperties {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "QueueFamilyProperties")
-	ret0, _ := ret[0].([]*core1_0.QueueFamily)
+	ret0, _ := ret[0].([]*core1_0.QueueFamilyProperties)
 	return ret0
 }
 
@@ -4255,7 +4255,7 @@ func (mr *Queue1_1MockRecorder) APIVersion() *gomock.Call {
 }
 
 // BindSparse mocks base method.
-func (m *Queue1_1) BindSparse(fence core1_0.Fence, bindInfos []core1_0.BindSparseOptions) (common.VkResult, error) {
+func (m *Queue1_1) BindSparse(fence core1_0.Fence, bindInfos []core1_0.BindSparseInfo) (common.VkResult, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "BindSparse", fence, bindInfos)
 	ret0, _ := ret[0].(common.VkResult)

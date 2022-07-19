@@ -12,6 +12,8 @@ import (
 	"unsafe"
 )
 
+// VulkanRenderPass is an implementation of the RenderPass interface that actually communicates with Vulkan. This
+// is the default implementation. See the interface for more documentation.
 type VulkanRenderPass struct {
 	deviceDriver     driver.Driver
 	device           driver.VkDevice

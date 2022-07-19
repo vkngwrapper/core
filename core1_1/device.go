@@ -13,6 +13,8 @@ import (
 	"unsafe"
 )
 
+// VulkanDevice is an implementation of the Device interface that actually communicates with Vulkan. This
+// is the default implementation. See the interface for more documentation.
 type VulkanDevice struct {
 	core1_0.Device
 
@@ -21,6 +23,11 @@ type VulkanDevice struct {
 	MaximumAPIVersion common.APIVersion
 }
 
+// PromoteDevice accepts a Device object from any core version. If provided a device that supports
+// at least core 1.1, it will return a core1_1.Device. Otherwise, it will return nil. This method
+// will always return a core1_1.VulkanDevice, even if it is provided a VulkanDevice from a higher
+// core version. Two Vulkan 1.1 compatible Device objects with the same Device.Handle will
+// return the same interface value when passed to this method.
 func PromoteDevice(device core1_0.Device) Device {
 	if !device.APIVersion().IsAtLeast(common.Vulkan1_1) {
 		return nil

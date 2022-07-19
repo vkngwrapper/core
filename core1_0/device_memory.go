@@ -12,18 +12,30 @@ import (
 	"unsafe"
 )
 
+// MemoryType specifies memory type
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkMemoryType.html
 type MemoryType struct {
+	// PropertyFlags specifies properties for this memory type
 	PropertyFlags MemoryPropertyFlags
-	HeapIndex     int
+	// HeapIndex describes which memory heap this memory type corresponds to
+	HeapIndex int
 }
 
+// MemoryHeap specifies a memory heap
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkMemoryHeap.html
 type MemoryHeap struct {
-	Size  int
+	// Size is the total memory size in bytes in the heap
+	Size int
+	// Flags specifies attribute flags for the heap
 	Flags MemoryHeapFlags
 }
 
 ////
 
+// VulkanDeviceMemory is an implementation of the DeviceMemory interface that actually communicates with Vulkan. This
+// is the default implementation. See the interface for more documentation.
 type VulkanDeviceMemory struct {
 	deviceDriver       driver.Driver
 	device             driver.VkDevice

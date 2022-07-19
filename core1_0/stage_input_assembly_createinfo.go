@@ -12,6 +12,9 @@ import (
 	"unsafe"
 )
 
+// PipelineInputAssemblyStateCreateFlags reserved for future use
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkPipelineInputAssemblyStateCreateFlags.html
 type PipelineInputAssemblyStateCreateFlags uint32
 
 var pipelineInputAssemblyStateCreateFlagsMapping = common.NewFlagStringMapping[PipelineInputAssemblyStateCreateFlags]()
@@ -27,17 +30,56 @@ func (f PipelineInputAssemblyStateCreateFlags) String() string {
 ////
 
 const (
-	PrimitiveTopologyPointList                  PrimitiveTopology = C.VK_PRIMITIVE_TOPOLOGY_POINT_LIST
-	PrimitiveTopologyLineList                   PrimitiveTopology = C.VK_PRIMITIVE_TOPOLOGY_LINE_LIST
-	PrimitiveTopologyLineStrip                  PrimitiveTopology = C.VK_PRIMITIVE_TOPOLOGY_LINE_STRIP
-	PrimitiveTopologyTriangleList               PrimitiveTopology = C.VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST
-	PrimitiveTopologyTriangleStrip              PrimitiveTopology = C.VK_PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP
-	PrimitiveTopologyTriangleFan                PrimitiveTopology = C.VK_PRIMITIVE_TOPOLOGY_TRIANGLE_FAN
-	PrimitiveTopologyLineListWithAdjacency      PrimitiveTopology = C.VK_PRIMITIVE_TOPOLOGY_LINE_LIST_WITH_ADJACENCY
-	PrimitiveTopologyLineStripWithAdjacency     PrimitiveTopology = C.VK_PRIMITIVE_TOPOLOGY_LINE_STRIP_WITH_ADJACENCY
-	PrimitiveTopologyTriangleListWithAdjacency  PrimitiveTopology = C.VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST_WITH_ADJACENCY
+	// PrimitiveTopologyPointList specifies a series of separate point primitives
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkPrimitiveTopology.html
+	PrimitiveTopologyPointList PrimitiveTopology = C.VK_PRIMITIVE_TOPOLOGY_POINT_LIST
+	// PrimitiveTopologyLineList specifies a series of separate line primitives
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkPrimitiveTopology.html
+	PrimitiveTopologyLineList PrimitiveTopology = C.VK_PRIMITIVE_TOPOLOGY_LINE_LIST
+	// PrimitiveTopologyLineStrip specifies a series of connected line primitives with consecutive
+	// lines sharing a vertex
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkPrimitiveTopology.html
+	PrimitiveTopologyLineStrip PrimitiveTopology = C.VK_PRIMITIVE_TOPOLOGY_LINE_STRIP
+	// PrimitiveTopologyTriangleList specifies a series of separate triangle primitives
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkPrimitiveTopology.html
+	PrimitiveTopologyTriangleList PrimitiveTopology = C.VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST
+	// PrimitiveTopologyTriangleStrip specifies a series of connected triangle primitives with
+	// consecutive triangles sharing an edge
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkPrimitiveTopology.html
+	PrimitiveTopologyTriangleStrip PrimitiveTopology = C.VK_PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP
+	// PrimitiveTopologyTriangleFan specifies a series of connected triangle primitives with all triangles
+	// sharing a common vertex
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkPrimitiveTopology.html
+	PrimitiveTopologyTriangleFan PrimitiveTopology = C.VK_PRIMITIVE_TOPOLOGY_TRIANGLE_FAN
+	// PrimitiveTopologyLineListWithAdjacency specifies a series of separate line primitives with adjacency
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkPrimitiveTopology.html
+	PrimitiveTopologyLineListWithAdjacency PrimitiveTopology = C.VK_PRIMITIVE_TOPOLOGY_LINE_LIST_WITH_ADJACENCY
+	// PrimitiveTopologyLineStripWithAdjacency specifies a series of connected line primitives
+	// with adjacency, with consecutive primitives sharing three vertices
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkPrimitiveTopology.html
+	PrimitiveTopologyLineStripWithAdjacency PrimitiveTopology = C.VK_PRIMITIVE_TOPOLOGY_LINE_STRIP_WITH_ADJACENCY
+	// PrimitiveTopologyTriangleListWithAdjacency specifies a series of separate triangle primitives
+	// with adjacency
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkPrimitiveTopology.html
+	PrimitiveTopologyTriangleListWithAdjacency PrimitiveTopology = C.VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST_WITH_ADJACENCY
+	// PrimitiveTopologyTriangleStripWithAdjacency specifies connected triangle primitives with
+	// adjacency, with consecutive triangles sharing an edge
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkPrimitiveTopology.html
 	PrimitiveTopologyTriangleStripWithAdjacency PrimitiveTopology = C.VK_PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP_WITH_ADJACENCY
-	PrimitiveTopologyPatchlist                  PrimitiveTopology = C.VK_PRIMITIVE_TOPOLOGY_PATCH_LIST
+	// PrimitiveTopologyPatchList specifies separate patch primitives
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkPrimitiveTopology.html
+	PrimitiveTopologyPatchList PrimitiveTopology = C.VK_PRIMITIVE_TOPOLOGY_PATCH_LIST
 )
 
 func init() {
@@ -51,12 +93,20 @@ func init() {
 	PrimitiveTopologyLineStripWithAdjacency.Register("Line Strip w/ Adjacency")
 	PrimitiveTopologyTriangleListWithAdjacency.Register("Triangle List w/ Adjacency")
 	PrimitiveTopologyTriangleStripWithAdjacency.Register("Triangle Strip w/ Adjacency")
-	PrimitiveTopologyPatchlist.Register("Patch List")
+	PrimitiveTopologyPatchList.Register("Patch List")
 }
 
+// PipelineInputAssemblyStateCreateInfo specifies parameters of a newly-created Pipeline input
+// assembly state
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkPipelineInputAssemblyStateCreateInfo.html
 type PipelineInputAssemblyStateCreateInfo struct {
-	Flags                  PipelineInputAssemblyStateCreateFlags
-	Topology               PrimitiveTopology
+	// Flags is reserved for future use
+	Flags PipelineInputAssemblyStateCreateFlags
+	// Topology defines the primitive topology
+	Topology PrimitiveTopology
+	// PrimitiveRestartEnable controls whether a special vertex index value is treated as
+	// restarting the assembly of primitives
 	PrimitiveRestartEnable bool
 
 	common.NextOptions

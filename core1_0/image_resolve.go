@@ -10,12 +10,24 @@ import (
 	"unsafe"
 )
 
+// ImageResolve specifies an Image resolve operation
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkImageResolve.html
 type ImageResolve struct {
+	// SrcSubresource specifies the Image subresources of the Image objects used for the source
+	// destination Image data
 	SrcSubresource ImageSubresourceLayers
-	SrcOffset      Offset3D
+	// SrcOffset selects the initial x, y, and z offsets in texels of the sub-regions of the
+	// source Image data
+	SrcOffset Offset3D
+	// DstSubresource specifies the Image subresources of the Image objects used for the
+	// destination Image data, respectively
 	DstSubresource ImageSubresourceLayers
-	DstOffset      Offset3D
-	Extent         Extent3D
+	// DstOffset selects the initial x, y, and z offsets in texels of the sub-regions of the
+	// destination Image data
+	DstOffset Offset3D
+	// Extent is the size in texels of the source Image to resolve in width, height, and depth
+	Extent Extent3D
 }
 
 func (r ImageResolve) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer) (unsafe.Pointer, error) {

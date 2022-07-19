@@ -11,6 +11,7 @@ import (
 	"unsafe"
 )
 
+// QueryPoolCreateFlags is reserved for future use
 type QueryPoolCreateFlags uint32
 
 var queryPoolCreateFlags = common.NewFlagStringMapping[QueryPoolCreateFlags]()
@@ -26,14 +27,37 @@ func (f QueryPoolCreateFlags) String() string {
 ////
 
 const (
-	QueryTypeOcclusion          QueryType = C.VK_QUERY_TYPE_OCCLUSION
+	// QueryTypeOcclusion specifies an occlusion query
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkQueryType.html
+	QueryTypeOcclusion QueryType = C.VK_QUERY_TYPE_OCCLUSION
+	// QueryTypePipelineStatistics specifies a pipeline statistics query
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkQueryType.html
 	QueryTypePipelineStatistics QueryType = C.VK_QUERY_TYPE_PIPELINE_STATISTICS
-	QueryTypeTimestamp          QueryType = C.VK_QUERY_TYPE_TIMESTAMP
+	// QueryTypeTimestamp specifies a timestamp query
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkQueryType.html
+	QueryTypeTimestamp QueryType = C.VK_QUERY_TYPE_TIMESTAMP
 
-	QueryResult64Bit            QueryResultFlags = C.VK_QUERY_RESULT_64_BIT
-	QueryResultWait             QueryResultFlags = C.VK_QUERY_RESULT_WAIT_BIT
+	// QueryResult64Bit specifies the results will be written as an array of 64-bit unsigned
+	// integer values (instead of 32-bit unsigned integer values)
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkQueryResultFlagBits.html
+	QueryResult64Bit QueryResultFlags = C.VK_QUERY_RESULT_64_BIT
+	// QueryResultWait specifies that Vulkan will wait for each query's status to become available
+	// before retrieving its results
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkQueryResultFlagBits.html
+	QueryResultWait QueryResultFlags = C.VK_QUERY_RESULT_WAIT_BIT
+	// QueryResultWithAvailability specifies that the availability status accompanies the results
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkQueryResultFlagBits.html
 	QueryResultWithAvailability QueryResultFlags = C.VK_QUERY_RESULT_WITH_AVAILABILITY_BIT
-	QueryResultPartial          QueryResultFlags = C.VK_QUERY_RESULT_PARTIAL_BIT
+	// QueryResultPartial specifies that returning partial results is acceptable
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkQueryResultFlagBits.html
+	QueryResultPartial QueryResultFlags = C.VK_QUERY_RESULT_PARTIAL_BIT
 )
 
 func init() {
@@ -47,11 +71,19 @@ func init() {
 	QueryResultPartial.Register("Partial")
 }
 
+// QueryPoolCreateInfo specifies parameters of a newly-created QueryPool
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkQueryPoolCreateInfo.html
 type QueryPoolCreateInfo struct {
+	// Flags is reserved for future use
 	Flags QueryPoolCreateFlags
 
-	QueryType          QueryType
-	QueryCount         int
+	// QueryType specifies the type of queries managed by the QueryPool
+	QueryType QueryType
+	// QueryCount is the number of queries managed by the QueryPool
+	QueryCount int
+	// PipelineStatistics specifies which counters will be returned in queries on the
+	// new QueryPool
 	PipelineStatistics QueryPipelineStatisticFlags
 
 	common.NextOptions

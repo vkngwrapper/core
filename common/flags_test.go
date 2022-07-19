@@ -12,6 +12,7 @@ var coolFlagsMapping = common.NewFlagStringMapping[CoolFlags]()
 func (f CoolFlags) Register(str string) {
 	coolFlagsMapping.Register(f, str)
 }
+
 func (f CoolFlags) String() string {
 	return coolFlagsMapping.FlagsToString(f)
 }
@@ -25,8 +26,8 @@ func init() {
 	CoolFlagsRed.Register("Red")
 	CoolFlagsBlue.Register("Blue")
 }
+
 func ExampleFlagStringMapping() {
 	fmt.Println(CoolFlagsBlue | CoolFlagsRed)
-
 	// Output: Red|Blue
 }

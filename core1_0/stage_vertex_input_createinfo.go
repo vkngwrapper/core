@@ -12,30 +12,57 @@ import (
 )
 
 const (
-	RateVertex   InputRate = C.VK_VERTEX_INPUT_RATE_VERTEX
-	RateInstance InputRate = C.VK_VERTEX_INPUT_RATE_INSTANCE
+	// VertexInputRateVertex specifies that vertex attribute addressing is a function of the vertex index
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkVertexInputRate.html
+	VertexInputRateVertex VertexInputRate = C.VK_VERTEX_INPUT_RATE_VERTEX
+	// VertexInputRateInstance specifies that vertex attribute addressing is a function of the
+	// instance index
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkVertexInputRate.html
+	VertexInputRateInstance VertexInputRate = C.VK_VERTEX_INPUT_RATE_INSTANCE
 )
 
 func init() {
-	RateVertex.Register("Vertex")
-	RateInstance.Register("Instance")
+	VertexInputRateVertex.Register("Vertex")
+	VertexInputRateInstance.Register("Instance")
 }
 
+// VertexInputBindingDescription specifies a vertex input binding description
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkVertexInputBindingDescription.html
 type VertexInputBindingDescription struct {
-	InputRate InputRate
-	Binding   int
-	Stride    int
+	// InputRate specifies whether vertex attribute addressing is a function of the vertex index
+	// or the instance index
+	InputRate VertexInputRate
+	// Binding isthe bidning number that this structure describes
+	Binding int
+	// Stride is the byte stride between consecutive elements within the buffer
+	Stride int
 }
 
+// VertexInputAttributeDescription specifies a vertex input attribute description
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkVertexInputAttributeDescription.html
 type VertexInputAttributeDescription struct {
+	// Location is the shader input location number for this attribute
 	Location uint32
-	Binding  int
-	Format   Format
-	Offset   int
+	// Binding is the binding number which this attribute takes its data from
+	Binding int
+	// Format is the size and type of the vertex attribute data
+	Format Format
+	// Offset is a byte offset of this attribute relative to the start of an element in the vertex
+	// input binding
+	Offset int
 }
 
+// PipelineVertexInputStateCreateInfo specifies parameters of a newly-created Pipeline vertex input state
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkPipelineVertexInputStateCreateInfo.html
 type PipelineVertexInputStateCreateInfo struct {
-	VertexBindingDescriptions   []VertexInputBindingDescription
+	// VertexBindingDescriptions is a slice of VertexInputBindingDescription structures
+	VertexBindingDescriptions []VertexInputBindingDescription
+	// VertexAttributeDescriptions is a slice of VertexInputAttributeDescription structures
 	VertexAttributeDescriptions []VertexInputAttributeDescription
 
 	common.NextOptions
