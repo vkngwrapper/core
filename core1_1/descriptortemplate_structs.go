@@ -12,6 +12,9 @@ import (
 	"unsafe"
 )
 
+// DescriptorUpdateTemplateType indicates the valid usage of the DescriptorUpdateTemplate
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkDescriptorUpdateTemplateType.html
 type DescriptorUpdateTemplateType int32
 
 var descriptorTemplateTypeMapping = make(map[DescriptorUpdateTemplateType]string)
@@ -26,6 +29,9 @@ func (e DescriptorUpdateTemplateType) String() string {
 
 ////
 
+// DescriptorUpdateTemplateCreateFlags is reserved for future use
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkDescriptorUpdateTemplateCreateFlags.html
 type DescriptorUpdateTemplateCreateFlags int32
 
 var descriptorTemplateFlagsMapping = common.NewFlagStringMapping[DescriptorUpdateTemplateCreateFlags]()
@@ -40,6 +46,9 @@ func (f DescriptorUpdateTemplateCreateFlags) String() string {
 ////
 
 const (
+	// DescriptorUpdateTemplateTypeDescriptorSet indicates the valid usage of the DescriptorUpdateTemplate
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkDescriptorUpdateTemplateType.html
 	DescriptorUpdateTemplateTypeDescriptorSet DescriptorUpdateTemplateType = C.VK_DESCRIPTOR_UPDATE_TEMPLATE_TYPE_DESCRIPTOR_SET
 )
 
@@ -49,14 +58,24 @@ func init() {
 
 ////
 
+// DescriptorUpdateTemplateEntry describes a single descriptor update of the DescriptorUpdateTemplate
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkDescriptorUpdateTemplateEntry.html
 type DescriptorUpdateTemplateEntry struct {
-	DstBinding      int
+	// DstBinding is the descriptor binding to update when using this DescriptorUpdateTemplate
+	DstBinding int
+	// DstArrayElement is the starting element in the array belonging to DstBinding
 	DstArrayElement int
+	// DescriptorCount is the number of descriptors to update
 	DescriptorCount int
 
+	// DescriptorType specifies the type of the descriptor
 	DescriptorType core1_0.DescriptorType
 
+	// Offset is the offset in bytes of the first binding in the raw data structure
 	Offset int
+	// Stride is the stride in bytes between two consecutive array elements of the
+	// descriptor update informations in the raw data structure
 	Stride int
 }
 
@@ -76,16 +95,26 @@ func (e DescriptorUpdateTemplateEntry) PopulateCPointer(allocator *cgoparam.Allo
 	return preallocatedPointer, nil
 }
 
+// DescriptorUpdateTemplateCreateInfo specifies parameters of a newly-created Descriptor Update
+// Template
 type DescriptorUpdateTemplateCreateInfo struct {
-	Flags                   DescriptorUpdateTemplateCreateFlags
+	// Flags is reserved for future use
+	Flags DescriptorUpdateTemplateCreateFlags
+	// DescriptorUpdateEntries is a slice of DescriptorUpdateTemplateEntry structures describing
+	// the descriptors to be updated by the DescriptorUpdateTEmplate
 	DescriptorUpdateEntries []DescriptorUpdateTemplateEntry
-	TemplateType            DescriptorUpdateTemplateType
+	// TemplateType specifies the type of the DescriptorUpdateTemplate
+	TemplateType DescriptorUpdateTemplateType
 
+	// DescriptorSetLayout is the DescriptorSetLayout used to build the DescriptorUpdateTemplate
 	DescriptorSetLayout core1_0.DescriptorSetLayout
 
+	// PipelineBindPoint indicates the type of the Pipeline that will use the descriptors
 	PipelineBindPoint core1_0.PipelineBindPoint
-	PipelineLayout    core1_0.PipelineLayout
-	Set               int
+	// PipelineLayout is a PipelineLayout object used to program the bindings
+	PipelineLayout core1_0.PipelineLayout
+	// Set is the set number of the DescriptorSet in the PipelineLayout that will be updated
+	Set int
 
 	common.NextOptions
 }

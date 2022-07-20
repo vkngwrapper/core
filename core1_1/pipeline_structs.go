@@ -12,6 +12,9 @@ import (
 	"unsafe"
 )
 
+// TessellationDomainOrigin describes tessellation domain origin
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkTessellationDomainOrigin.html
 type TessellationDomainOrigin int32
 
 var tessellationDomainOriginMapping = make(map[TessellationDomainOrigin]string)
@@ -27,10 +30,26 @@ func (e TessellationDomainOrigin) String() string {
 ////
 
 const (
+	// TessellationDomainOriginUpperLeft specifies that the origin of the domain space
+	// is in the upper left corner, as shown in figure
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkTessellationDomainOrigin.html
 	TessellationDomainOriginUpperLeft TessellationDomainOrigin = C.VK_TESSELLATION_DOMAIN_ORIGIN_UPPER_LEFT
+	// TessellationDomainOriginLowerLeft specifies that the origin of the domain space
+	// is in the lower left corner, as shown in figure
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkTessellationDomainOrigin.html
 	TessellationDomainOriginLowerLeft TessellationDomainOrigin = C.VK_TESSELLATION_DOMAIN_ORIGIN_LOWER_LEFT
 
-	PipelineCreateDispatchBase             core1_0.PipelineCreateFlags = C.VK_PIPELINE_CREATE_DISPATCH_BASE
+	// PipelineCreateDispatchBase specifies that a compute pipeline can be used with
+	// CommandBuffer.CmdDispatchBase with a non-zero base workgroup
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkPipelineCreateFlagBits.html
+	PipelineCreateDispatchBase core1_0.PipelineCreateFlags = C.VK_PIPELINE_CREATE_DISPATCH_BASE
+	// PipelineCreateViewIndexFromDeviceIndex specifies that any shader input variables
+	// decorated as ViewIndex will be assigned values as if they were decorated as DeviceIndex
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkPipelineCreateFlagBits.html
 	PipelineCreateViewIndexFromDeviceIndex core1_0.PipelineCreateFlags = C.VK_PIPELINE_CREATE_VIEW_INDEX_FROM_DEVICE_INDEX_BIT
 )
 
@@ -44,8 +63,13 @@ func init() {
 
 ////
 
+// PipelineTessellationDomainOriginStateCreateInfo
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkPipelineTessellationDomainOriginStateCreateInfo.html
 type PipelineTessellationDomainOriginStateCreateInfo struct {
+	// DomainOrigin controls the origin of the tessellation domain space
 	DomainOrigin TessellationDomainOrigin
+
 	common.NextOptions
 }
 

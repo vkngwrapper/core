@@ -12,9 +12,15 @@ import (
 	"unsafe"
 )
 
+// BindBufferMemoryInfo specifies how to bind a Buffer to DeviceMemory
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkBindBufferMemoryInfo.html
 type BindBufferMemoryInfo struct {
-	Buffer       core1_0.Buffer
-	Memory       core1_0.DeviceMemory
+	// Buffer is the Buffer to be attached to memory
+	Buffer core1_0.Buffer
+	// Memory describes the DeviceMemory object to attach
+	Memory core1_0.DeviceMemory
+	// MemoryOffset is the start offset of the region of memory which is to be bound to the Buffer
 	MemoryOffset int
 
 	common.NextOptions
@@ -37,9 +43,13 @@ func (o BindBufferMemoryInfo) PopulateCPointer(allocator *cgoparam.Allocator, pr
 
 ////
 
+// BindImageMemoryInfo specifies how to bind an Image to DeviceMemory
 type BindImageMemoryInfo struct {
-	Image        core1_0.Image
-	Memory       core1_0.DeviceMemory
+	// Image is the image to be attached to DeviceMemory
+	Image core1_0.Image
+	// Memory describes the DeviceMemory to attach
+	Memory core1_0.DeviceMemory
+	// MemoryOffset is the start offset of the region of DeviceMemory to be bound to the Image
 	MemoryOffset uint64
 
 	common.NextOptions
@@ -62,7 +72,11 @@ func (o BindImageMemoryInfo) PopulateCPointer(allocator *cgoparam.Allocator, pre
 
 ////
 
+// BindBufferMemoryDeviceGroupInfo specifies Device within a group to bind to
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkBindBufferMemoryDeviceGroupInfo.html
 type BindBufferMemoryDeviceGroupInfo struct {
+	// DeviceIndices is a slice of Device indices
 	DeviceIndices []int
 
 	common.NextOptions
@@ -97,8 +111,14 @@ func (o BindBufferMemoryDeviceGroupInfo) PopulateCPointer(allocator *cgoparam.Al
 
 ////
 
+// BindImageMemoryDeviceGroupInfo specifies Device within a group to bind to
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkBindImageMemoryDeviceGroupInfo.html
 type BindImageMemoryDeviceGroupInfo struct {
-	DeviceIndices            []int
+	// DeviceIndices is a slice of Device indices
+	DeviceIndices []int
+	// SplitInstanceBindRegions is a slice of Rect2D structures describing which regions of
+	// the Image are attached to each instance of DeviceMemory
 	SplitInstanceBindRegions []core1_0.Rect2D
 
 	common.NextOptions
@@ -149,7 +169,11 @@ func (o BindImageMemoryDeviceGroupInfo) PopulateCPointer(allocator *cgoparam.All
 
 ////
 
+// BindImagePlaneMemoryInfo specifies how to bind an Image plane to DeviceMemory
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkBindImagePlaneMemoryInfo.html
 type BindImagePlaneMemoryInfo struct {
+	// PlaneAspect specifies the aspect of the disjoint Image plane to bind
 	PlaneAspect core1_0.ImageAspectFlags
 
 	common.NextOptions
@@ -170,9 +194,14 @@ func (o BindImagePlaneMemoryInfo) PopulateCPointer(allocator *cgoparam.Allocator
 
 ////
 
+// DeviceGroupBindSparseInfo indicates which instances are bound
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkDeviceGroupBindSparseInfo.html
 type DeviceGroupBindSparseInfo struct {
+	// ResourceDeviceIndex is a Device index indicating which instance of the resource is bound
 	ResourceDeviceIndex int
-	MemoryDeviceIndex   int
+	// MemoryDeviceIndex is a Device index indicating which instance of the memory the resource instance is bound to
+	MemoryDeviceIndex int
 
 	common.NextOptions
 }

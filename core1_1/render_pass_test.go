@@ -198,7 +198,7 @@ func TestRenderPassMultiviewOptions(t *testing.T) {
 
 	renderPass, _, err := device.CreateRenderPass(nil, core1_0.RenderPassCreateInfo{
 		NextOptions: common.NextOptions{
-			core1_1.RenderPassMultiviewCreatInfo{
+			core1_1.RenderPassMultiviewCreateInfo{
 				ViewMasks:        []uint32{1, 2, 7},
 				ViewOffsets:      []int{11, 13},
 				CorrelationMasks: []uint32{17},

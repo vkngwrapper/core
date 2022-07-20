@@ -58,6 +58,12 @@ func PromoteCommandBuffer(commandBuffer core1_0.CommandBuffer) CommandBuffer {
 		}).(CommandBuffer)
 }
 
+// PromoteCommandBufferSlice accepts a slice of CommandBuffer objects from any core version.
+// If provided a descriptor set that supports at least core 1.1, it will return a core1_1.CommandBuffer.
+// Otherwise, it will left out of the returned slice. This method will always return a
+// core1_1.VulkanCommandBuffer, even if it is provided a VulkanCommandBuffer from a higher core version. Two
+// Vulkan 1.1 compatible CommandBuffer objects with the same CommandBuffer.Handle will return the same interface
+// value when passed to this method.
 func PromoteCommandBufferSlice(commandBuffers []core1_0.CommandBuffer) []CommandBuffer {
 	outBuffers := make([]CommandBuffer, len(commandBuffers))
 

@@ -11,6 +11,9 @@ import (
 	"unsafe"
 )
 
+// FenceImportFlags specifies additional parameters of a Fence payload import
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkFenceImportFlagBits.html
 type FenceImportFlags int32
 
 var fenceImportFlagsMapping = common.NewFlagStringMapping[FenceImportFlags]()
@@ -25,6 +28,9 @@ func (f FenceImportFlags) String() string {
 
 ////
 
+// ExternalFenceFeatureFlags describes features of an external Fence handle type
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkExternalFenceFeatureFlagBits.html
 type ExternalFenceFeatureFlags int32
 
 var externalFenceFeaturesMapping = common.NewFlagStringMapping[ExternalFenceFeatureFlags]()
@@ -39,6 +45,9 @@ func (f ExternalFenceFeatureFlags) String() string {
 
 ////
 
+// ExternalFenceHandleTypeFlags is a bitmask of valid external Fence handle types
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkExternalFenceHandleTypeFlagBits.html
 type ExternalFenceHandleTypeFlags int32
 
 var externalFenceHandleTypesMapping = common.NewFlagStringMapping[ExternalFenceHandleTypeFlags]()
@@ -54,14 +63,42 @@ func (f ExternalFenceHandleTypeFlags) String() string {
 ////
 
 const (
+	// ExternalFenceFeatureExportable specifies handles of this type can be exported from Vulkan
+	// Fence objects
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkExternalFenceFeatureFlagBits.html
 	ExternalFenceFeatureExportable ExternalFenceFeatureFlags = C.VK_EXTERNAL_FENCE_FEATURE_EXPORTABLE_BIT
+	// ExternalFenceFeatureImportable specifies handles of this type can be imported to Vulkan Fence
+	// objects
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkExternalFenceFeatureFlagBits.html
 	ExternalFenceFeatureImportable ExternalFenceFeatureFlags = C.VK_EXTERNAL_FENCE_FEATURE_IMPORTABLE_BIT
 
-	ExternalFenceHandleTypeOpaqueFD       ExternalFenceHandleTypeFlags = C.VK_EXTERNAL_FENCE_HANDLE_TYPE_OPAQUE_FD_BIT
-	ExternalFenceHandleTypeOpaqueWin32    ExternalFenceHandleTypeFlags = C.VK_EXTERNAL_FENCE_HANDLE_TYPE_OPAQUE_WIN32_BIT
+	// ExternalFenceHandleTypeOpaqueFD specifies a POSIX file descriptor handle that has only limited
+	// valid usage outside of Vulkan and other compatible APIs
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkExternalFenceHandleTypeFlagBits.html
+	ExternalFenceHandleTypeOpaqueFD ExternalFenceHandleTypeFlags = C.VK_EXTERNAL_FENCE_HANDLE_TYPE_OPAQUE_FD_BIT
+	// ExternalFenceHandleTypeOpaqueWin32 specifies an NT handle that has only limited valid usage
+	// outside of Vulkan and other compatible APIs
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkExternalFenceHandleTypeFlagBits.html
+	ExternalFenceHandleTypeOpaqueWin32 ExternalFenceHandleTypeFlags = C.VK_EXTERNAL_FENCE_HANDLE_TYPE_OPAQUE_WIN32_BIT
+	// ExternalFenceHandleTypeOpaqueWin32KMT specifies a global share handle that has only limited
+	// usage outside of Vulkan and other compatible APIs
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkExternalFenceHandleTypeFlagBits.html
 	ExternalFenceHandleTypeOpaqueWin32KMT ExternalFenceHandleTypeFlags = C.VK_EXTERNAL_FENCE_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT
-	ExternalFenceHandleTypeSyncFD         ExternalFenceHandleTypeFlags = C.VK_EXTERNAL_FENCE_HANDLE_TYPE_SYNC_FD_BIT
+	// ExternalFenceHandleTypeSyncFD specifies a POSIX file descriptor handle to a Linux Sync File
+	// or Android Fence
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkExternalFenceHandleTypeFlagBits.html
+	ExternalFenceHandleTypeSyncFD ExternalFenceHandleTypeFlags = C.VK_EXTERNAL_FENCE_HANDLE_TYPE_SYNC_FD_BIT
 
+	// FenceImportTemporary specifies that the Fence payload will be imported only temporarily,
+	// regardless of the permanence of HandleType
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkFenceImportFlagBits.html
 	FenceImportTemporary FenceImportFlags = C.VK_FENCE_IMPORT_TEMPORARY_BIT
 )
 
@@ -77,7 +114,12 @@ func init() {
 	FenceImportTemporary.Register("Temporary")
 }
 
+// PhysicalDeviceExternalFenceInfo specifies Fence creation parameters
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkPhysicalDeviceExternalFenceInfo.html
 type PhysicalDeviceExternalFenceInfo struct {
+	// HandleType specifies an external Fence handle type for which capabilities will be
+	// returned
 	HandleType ExternalFenceHandleTypeFlags
 
 	common.NextOptions
@@ -97,6 +139,9 @@ func (o PhysicalDeviceExternalFenceInfo) PopulateCPointer(allocator *cgoparam.Al
 
 ////
 
+// ExternalFenceProperties describes supported external Fence handle features
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkExternalFenceProperties.html
 type ExternalFenceProperties struct {
 	ExportFromImportedHandleTypes ExternalFenceHandleTypeFlags
 	CompatibleHandleTypes         ExternalFenceHandleTypeFlags
@@ -129,7 +174,12 @@ func (o *ExternalFenceProperties) PopulateOutData(cDataPointer unsafe.Pointer, h
 
 ////
 
+// ExportFenceCreateInfo specifies handle types that can be exported from a Fence
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkExportFenceCreateInfo.html
 type ExportFenceCreateInfo struct {
+	// HandleTypes specifies one or more Fence handle types the application can export from
+	// the resulting Fence
 	HandleTypes ExternalFenceHandleTypeFlags
 
 	common.NextOptions

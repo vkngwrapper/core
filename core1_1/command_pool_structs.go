@@ -10,6 +10,7 @@ import (
 	"github.com/vkngwrapper/core/core1_0"
 )
 
+// CommandPoolTrimFlags is reserved for future use
 type CommandPoolTrimFlags int32
 
 var commandPoolTrimFlagsMapping = common.NewFlagStringMapping[CommandPoolTrimFlags]()
@@ -24,6 +25,10 @@ func (f CommandPoolTrimFlags) String() string {
 ////
 
 const (
+	// CommandPoolCreateProtected specifies that CommandBuffer objects allocated from the pool
+	// are protected CommandBuffer objects
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkCommandPoolCreateFlagBits.html
 	CommandPoolCreateProtected core1_0.CommandPoolCreateFlags = C.VK_COMMAND_POOL_CREATE_PROTECTED_BIT
 )
 

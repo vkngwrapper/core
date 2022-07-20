@@ -14,6 +14,9 @@ import (
 	"unsafe"
 )
 
+// PointClippingBehavior specifies the point clipping behavior
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkPointClippingBehavior.html
 type PointClippingBehavior int32
 
 var pointClippingBehaviorMapping = make(map[PointClippingBehavior]string)
@@ -28,6 +31,9 @@ func (e PointClippingBehavior) String() string {
 
 ////
 
+// SubgroupFeatureFlags describes what group operations are supported with subgroup scope
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkSubgroupFeatureFlagBits.html
 type SubgroupFeatureFlags int32
 
 var subgroupFeaturesMapping = common.NewFlagStringMapping[SubgroupFeatureFlags]()
@@ -42,20 +48,66 @@ func (f SubgroupFeatureFlags) String() string {
 ////
 
 const (
-	LUIDSize     int = C.VK_LUID_SIZE
+	// LUIDSize is the length of a locally unique Device identifier
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VK_LUID_SIZE.html
+	LUIDSize int = C.VK_LUID_SIZE
+	// MaxGroupSize is the length of a PhysicalDevice handle array
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VK_MAX_DEVICE_GROUP_SIZE_KHR.html
 	MaxGroupSize int = C.VK_MAX_DEVICE_GROUP_SIZE
 
-	PointClippingAllClipPlanes      PointClippingBehavior = C.VK_POINT_CLIPPING_BEHAVIOR_ALL_CLIP_PLANES
+	// PointClippingAllClipPlanes specifies that the primitive is discarded if the vertex lies
+	// outside any clip plane, including the planes bounding the view volume
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkPointClippingBehavior.html
+	PointClippingAllClipPlanes PointClippingBehavior = C.VK_POINT_CLIPPING_BEHAVIOR_ALL_CLIP_PLANES
+	// PointClippingUserClipPlanesOnly specifies that the primitive is discarded only if the vertex
+	// lies outside any user clip plane
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkPointClippingBehavior.html
 	PointClippingUserClipPlanesOnly PointClippingBehavior = C.VK_POINT_CLIPPING_BEHAVIOR_USER_CLIP_PLANES_ONLY
 
-	SubgroupFeatureBasic           SubgroupFeatureFlags = C.VK_SUBGROUP_FEATURE_BASIC_BIT
-	SubgroupFeatureVote            SubgroupFeatureFlags = C.VK_SUBGROUP_FEATURE_VOTE_BIT
-	SubgroupFeatureArithmetic      SubgroupFeatureFlags = C.VK_SUBGROUP_FEATURE_ARITHMETIC_BIT
-	SubgroupFeatureBallot          SubgroupFeatureFlags = C.VK_SUBGROUP_FEATURE_BALLOT_BIT
-	SubgroupFeatureShuffle         SubgroupFeatureFlags = C.VK_SUBGROUP_FEATURE_SHUFFLE_BIT
+	// SubgroupFeatureBasic specifies the Device will accept SPIR-V shader modules containing
+	// the GroupNonUniform capability
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkSubgroupFeatureFlagBits.html
+	SubgroupFeatureBasic SubgroupFeatureFlags = C.VK_SUBGROUP_FEATURE_BASIC_BIT
+	// SubgroupFeatureVote specifies the Device will accept SPIR-V shader modules containing
+	// the GroupNonUniformVote capability
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkSubgroupFeatureFlagBits.html
+	SubgroupFeatureVote SubgroupFeatureFlags = C.VK_SUBGROUP_FEATURE_VOTE_BIT
+	// SubgroupFeatureArithmetic specifies the Device will accept SPIR-V shader modules containing
+	// the GroupNonUniformArithmetic capability
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkSubgroupFeatureFlagBits.html
+	SubgroupFeatureArithmetic SubgroupFeatureFlags = C.VK_SUBGROUP_FEATURE_ARITHMETIC_BIT
+	// SubgroupFeatureBallot specifies the Device will accept SPIR-V shader modules containing
+	// the GroupNonUniformBallot capability
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkSubgroupFeatureFlagBits.html
+	SubgroupFeatureBallot SubgroupFeatureFlags = C.VK_SUBGROUP_FEATURE_BALLOT_BIT
+	// SubgroupFeatureShuffle specifies the Device will accept SPIR-V shader modules containing
+	// the GroupNonUniformShuffle capability
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkSubgroupFeatureFlagBits.html
+	SubgroupFeatureShuffle SubgroupFeatureFlags = C.VK_SUBGROUP_FEATURE_SHUFFLE_BIT
+	// SubgroupFeatureShuffleRelative specifies the Device will accept SPIR-V shader modules
+	// containing the GroupNonUniformShuffleRelative capability
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkSubgroupFeatureFlagBits.html
 	SubgroupFeatureShuffleRelative SubgroupFeatureFlags = C.VK_SUBGROUP_FEATURE_SHUFFLE_RELATIVE_BIT
-	SubgroupFeatureClustered       SubgroupFeatureFlags = C.VK_SUBGROUP_FEATURE_CLUSTERED_BIT
-	SubgroupFeatureQuad            SubgroupFeatureFlags = C.VK_SUBGROUP_FEATURE_QUAD_BIT
+	// SubgroupFeatureClustered specifies the Device will accept SPIR-V shader modules containing
+	// the GroupNonUniformClustered capability
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkSubgroupFeatureFlagBits.html
+	SubgroupFeatureClustered SubgroupFeatureFlags = C.VK_SUBGROUP_FEATURE_CLUSTERED_BIT
+	// SubgroupFeatureQuad specifies the Device will accept SPIR-V shader modules containing
+	// the GroupNonUniformQuad capability
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkSubgroupFeatureFlagBits.html
+	SubgroupFeatureQuad SubgroupFeatureFlags = C.VK_SUBGROUP_FEATURE_QUAD_BIT
 )
 
 func init() {
@@ -74,7 +126,11 @@ func init() {
 
 ////
 
+// FormatProperties2 specifies the Image format properties
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkFormatProperties2KHR.html
 type FormatProperties2 struct {
+	// FormatProperties describes features supported by the requested format
 	FormatProperties core1_0.FormatProperties
 	common.NextOutData
 }
@@ -102,12 +158,20 @@ func (o *FormatProperties2) PopulateOutData(cDataPointer unsafe.Pointer, helpers
 
 ////
 
+// PhysicalDeviceImageFormatInfo2 specifies Image creation parameters
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkPhysicalDeviceImageFormatInfo2KHR.html
 type PhysicalDeviceImageFormatInfo2 struct {
+	// Format indicates the Image format, corresponding to ImageCreateInfo.Format
 	Format core1_0.Format
-	Type   core1_0.ImageType
+	// Type indicates the ImageType, corresponding to ImageCreateInfo.ImageType
+	Type core1_0.ImageType
+	// Tiling indicates the Image tiling, corresponding to ImageCreateInfo.Tiling
 	Tiling core1_0.ImageTiling
-	Usage  core1_0.ImageUsageFlags
-	Flags  core1_0.ImageCreateFlags
+	// Usage indicates the intended usage of the Image, corresponding to ImageCreateInfo.Usage
+	Usage core1_0.ImageUsageFlags
+	// Flags indicates additional parameters of the Image, corresponding to ImageCreateInfo.Flags
+	Flags core1_0.ImageCreateFlags
 
 	common.NextOptions
 }
@@ -130,7 +194,11 @@ func (o PhysicalDeviceImageFormatInfo2) PopulateCPointer(allocator *cgoparam.All
 
 ////
 
+// ImageFormatProperties2 specifies image format properties
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkImageFormatProperties2KHR.html
 type ImageFormatProperties2 struct {
+	// ImageFormatProperties is a structure in which capabilities are returned
 	ImageFormatProperties core1_0.ImageFormatProperties
 
 	common.NextOutData
@@ -165,7 +233,12 @@ func (o *ImageFormatProperties2) PopulateOutData(cDataPointer unsafe.Pointer, he
 
 ////
 
+// PhysicalDeviceMemoryProperties2 specifies PhysicalDevice memory properties
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkPhysicalDeviceMemoryProperties2.html
 type PhysicalDeviceMemoryProperties2 struct {
+	// MemoryProperties is a structure which is populated with the same values as in
+	// PhysicalDevice.MemoryProperties
 	MemoryProperties core1_0.PhysicalDeviceMemoryProperties
 
 	common.NextOutData
@@ -206,7 +279,11 @@ func (o *PhysicalDeviceMemoryProperties2) PopulateOutData(cDataPointer unsafe.Po
 
 ////
 
+// PhysicalDeviceProperties2 specifies PhysicalDevice properties
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkPhysicalDeviceProperties2.html
 type PhysicalDeviceProperties2 struct {
+	// Properties describes properties of the PhysicalDevice
 	Properties core1_0.PhysicalDeviceProperties
 
 	common.NextOutData
@@ -233,7 +310,12 @@ func (o *PhysicalDeviceProperties2) PopulateOutData(cDataPointer unsafe.Pointer,
 
 ////
 
+// QueueFamilyProperties2 provides information about a Queue family
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkQueueFamilyProperties2KHR.html
 type QueueFamilyProperties2 struct {
+	// QueueFamilyProperties is populated with the same values as in
+	// PhysicalDevice.QueueFamilyProperties
 	QueueFamilyProperties core1_0.QueueFamilyProperties
 
 	common.NextOutData
@@ -268,12 +350,20 @@ func (o *QueueFamilyProperties2) PopulateOutData(cDataPointer unsafe.Pointer, he
 
 ////
 
+// PhysicalDeviceSparseImageFormatInfo2 specifies sparse Image format inputs
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkPhysicalDeviceSparseImageFormatInfo2KHR.html
 type PhysicalDeviceSparseImageFormatInfo2 struct {
-	Format  core1_0.Format
-	Type    core1_0.ImageType
+	// Format is the Image format
+	Format core1_0.Format
+	// Type is the dimensionality of the Image
+	Type core1_0.ImageType
+	// Samples specifies the number of samples per texel
 	Samples core1_0.SampleCountFlags
-	Usage   core1_0.ImageUsageFlags
-	Tiling  core1_0.ImageTiling
+	// Usage describes the intended usage of the Image
+	Usage core1_0.ImageUsageFlags
+	// Tiling is the tiling arrangement of the texel blocks in memory
+	Tiling core1_0.ImageTiling
 
 	common.NextOptions
 }
@@ -297,7 +387,9 @@ func (o PhysicalDeviceSparseImageFormatInfo2) PopulateCPointer(allocator *cgopar
 
 ////
 
+// SparseImageFormatProperties2 specifies sparse Image format properties
 type SparseImageFormatProperties2 struct {
+	// Properties is populated with the same values as in PhysicalDevice.SparseImageFormatProperties
 	Properties core1_0.SparseImageFormatProperties
 	common.NextOutData
 }
@@ -330,11 +422,20 @@ func (o *SparseImageFormatProperties2) PopulateOutData(cDataPointer unsafe.Point
 
 ////
 
+// PhysicalDeviceIDProperties speicifes IDs related to the PhysicalDevice
 type PhysicalDeviceIDProperties struct {
-	DeviceUUID      uuid.UUID
-	DriverUUID      uuid.UUID
-	DeviceLUID      uint64
-	DeviceNodeMask  uint32
+	// DeviceUUID represents a universally-unique identifier for the device
+	DeviceUUID uuid.UUID
+	// DriverUUID represents a universally-unique identifier for the driver build
+	// in use by the device
+	DriverUUID uuid.UUID
+	// DeviceLUID represents a locally-unique identifier for the device
+	DeviceLUID uint64
+	// DeviceNodeMask identifies the node within a linked device adapter corresponding to the
+	// Device
+	DeviceNodeMask uint32
+	// DeviceLUIDValid is true if DeviceLUID contains a valid LUID and DeviceNodeMask contains
+	// a valid node mask
 	DeviceLUIDValid bool
 
 	common.NextOutData
@@ -375,8 +476,16 @@ func (o *PhysicalDeviceIDProperties) PopulateOutData(cDataPointer unsafe.Pointer
 
 ////
 
+// PhysicalDeviceMaintenance3Properties describes DescriptorSet properties
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkPhysicalDeviceMaintenance3Properties.html
 type PhysicalDeviceMaintenance3Properties struct {
-	MaxPerSetDescriptors    int
+	// MaxPerSetDescriptors is a maximum number of descriptors in a single DescriptorSet that is
+	// guaranteed to satisfy any implementation-dependent constraints on the size of a
+	// DescriptorSet itself
+	MaxPerSetDescriptors int
+	// MaxMemoryAllocationSize is the maximum size of a memory allocation that can be created,
+	// even if the is more space available in the heap
 	MaxMemoryAllocationSize int
 
 	common.NextOutData
@@ -405,8 +514,15 @@ func (o *PhysicalDeviceMaintenance3Properties) PopulateOutData(cDataPointer unsa
 
 ////
 
+// PhysicalDeviceMultiviewProperties describes multiview limits that can be supported by an
+// implementation
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkPhysicalDeviceMultiviewProperties.html
 type PhysicalDeviceMultiviewProperties struct {
-	MaxMultiviewViewCount     int
+	// MaxMultiviewViewCount is one greater than the maximum view index that can be used in
+	// a subpass
+	MaxMultiviewViewCount int
+	// MaxMultiviewInstanceIndex is the maximum
 	MaxMultiviewInstanceIndex int
 
 	common.NextOutData
@@ -434,7 +550,12 @@ func (o *PhysicalDeviceMultiviewProperties) PopulateOutData(cDataPointer unsafe.
 
 ////
 
+// PhysicalDevicePointClippingProperties describes the point clipping behavior supported
+// by an implementation
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkPhysicalDevicePointClippingProperties.html
 type PhysicalDevicePointClippingProperties struct {
+	// PointClippingBehavior specifies the point clipping behavior supported by the implementation
 	PointClippingBehavior PointClippingBehavior
 
 	common.NextOutData
@@ -461,7 +582,14 @@ func (o *PhysicalDevicePointClippingProperties) PopulateOutData(cDataPointer uns
 
 ////
 
+// PhysicalDeviceProtectedMemoryProperties describes protected memory properties that can
+// be supported by an implementation
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkPhysicalDeviceProtectedMemoryProperties.html
 type PhysicalDeviceProtectedMemoryProperties struct {
+	// ProtectedNoFault specifies how an implementation behaves when an application attempts
+	// to write to unprotected memory in a protected Queue operation, or perform a query in a
+	// protected Queue operation
 	ProtectedNoFault bool
 
 	common.NextOutData
@@ -489,10 +617,20 @@ func (o *PhysicalDeviceProtectedMemoryProperties) PopulateOutData(cDataPointer u
 
 ////
 
+// PhysicalDeviceSubgroupProperties describes subgroup support for an implementation
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkPhysicalDeviceSubgroupProperties.html
 type PhysicalDeviceSubgroupProperties struct {
-	SubgroupSize              int
-	SupportedStages           core1_0.ShaderStageFlags
-	SupportedOperations       SubgroupFeatureFlags
+	// SubgroupSize is the default number of invocations in each subgroup
+	SubgroupSize int
+	// SupportedStages describes the shader stages that group operations with subgroup scope
+	// are supported in
+	SupportedStages core1_0.ShaderStageFlags
+	// SupportedOperations specifies the sets of group operations with subgroup scope supported
+	// on this Device
+	SupportedOperations SubgroupFeatureFlags
+	// QuadOperationsInAllStages specifies whether quad group operations are available in all
+	// stages, or are restricted to fragment and compute stages
 	QuadOperationsInAllStages bool
 
 	common.NextOutData

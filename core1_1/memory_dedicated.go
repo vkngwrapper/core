@@ -14,18 +14,23 @@ import (
 	"unsafe"
 )
 
-type MemoryDedicatedAllocationInfo struct {
-	Image  core1_0.Image
+// MemoryDedicatedAllocateInfo specifies a dedicated memory allocation resource
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkMemoryDedicatedAllocateInfo.html
+type MemoryDedicatedAllocateInfo struct {
+	// Image is nil or the Image object which this memory will be bound to
+	Image core1_0.Image
+	// Buffer is nil or the Buffer object this memory will be bound to
 	Buffer core1_0.Buffer
 
 	common.NextOptions
 }
 
-func (o MemoryDedicatedAllocationInfo) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o MemoryDedicatedAllocateInfo) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if o.Image != nil && o.Buffer != nil {
-		return nil, errors.New("both Image and Buffer fields are set in MemoryDedicatedAllocationInfo- only one must be set")
+		return nil, errors.New("both Image and Buffer fields are set in MemoryDedicatedAllocateInfo- only one must be set")
 	} else if o.Image == nil && o.Buffer == nil {
-		return nil, errors.New("neither Image nor Buffer fields are set in MemoryDedicatedAllocationInfo- one must be set")
+		return nil, errors.New("neither Image nor Buffer fields are set in MemoryDedicatedAllocateInfo- one must be set")
 	}
 
 	if preallocatedPointer == nil {
@@ -49,8 +54,16 @@ func (o MemoryDedicatedAllocationInfo) PopulateCPointer(allocator *cgoparam.Allo
 
 ////
 
+// MemoryDedicatedRequirements describes dedicated allocation requirements of Buffer and Image
+// resources
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkMemoryDedicatedRequirements.html
 type MemoryDedicatedRequirements struct {
-	PrefersDedicatedAllocation  bool
+	// PrefersDedicatedAllocation specifies that the implementation would prefer a dedicated
+	// allocation for this resource. The application is still free to suballocate the resource
+	// but it may get better performance if a dedicated allocation is used
+	PrefersDedicatedAllocation bool
+	// RequiresDedicatedAllocation specifies that a dedicated allocation is required for this resource
 	RequiresDedicatedAllocation bool
 
 	common.NextOutData

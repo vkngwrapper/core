@@ -13,8 +13,14 @@ import (
 )
 
 const (
+	// DeviceQueueCreateProtected specifies that the Device Queue is a protected-capable Queue
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkDeviceQueueCreateFlagBits.html
 	DeviceQueueCreateProtected core1_0.DeviceQueueCreateFlags = C.VK_DEVICE_QUEUE_CREATE_PROTECTED_BIT
 
+	// QueueProtected specifies capagbilities of Queue objects in a Queue family
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkQueueFlagBits.html
 	QueueProtected core1_0.QueueFlags = C.VK_QUEUE_PROTECTED_BIT
 )
 
@@ -26,10 +32,17 @@ func init() {
 
 ////
 
+// DeviceQueueInfo2 specifies the parameters used for Device Queue creation
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkDeviceQueueInfo2.html
 type DeviceQueueInfo2 struct {
-	Flags            core1_0.DeviceQueueCreateFlags
+	// Flags indicates the flags used to create the Device Queue
+	Flags core1_0.DeviceQueueCreateFlags
+	// QueueFamilyIndex is the index of the queue family to which the Queue belongs
 	QueueFamilyIndex int
-	QueueIndex       int
+	// QueueIndex is the index of the Queue to retrieve from within the set of Queue objects
+	// that share both the Queue family and flags specified
+	QueueIndex int
 
 	common.NextOptions
 }
@@ -51,9 +64,19 @@ func (o DeviceQueueInfo2) PopulateCPointer(allocator *cgoparam.Allocator, preall
 
 ////
 
+// DeviceGroupSubmitInfo indicates which PhysicalDevice objects execute Semaphore operations
+// and CommandBuffer objects
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkDeviceGroupSubmitInfo.html
 type DeviceGroupSubmitInfo struct {
-	WaitSemaphoreDeviceIndices   []int
-	CommandBufferDeviceMasks     []uint32
+	// WaitSemaphoreDeviceIndices is a slice of Device indices indicating which PhysicalDevice
+	// executes the Semaphore wait operation in the corresponding element of SubmitInfo.WaitSemaphores
+	WaitSemaphoreDeviceIndices []int
+	// CommandBufferDeviceMasks is a slice of Device masks indicating which PhysicalDevice objects
+	// execute the CommandBuffer in teh corresponding element of SubmitInfo.CommandBuffers
+	CommandBufferDeviceMasks []uint32
+	// SignalSemaphoreDeviceIndices is a slice of Device indices indicating which PhysicalDevice
+	// executes the Semaphore signal operation in the SubmitInfo.SignalSemaphores
 	SignalSemaphoreDeviceIndices []int
 
 	common.NextOptions
@@ -115,7 +138,11 @@ func (o DeviceGroupSubmitInfo) PopulateCPointer(allocator *cgoparam.Allocator, p
 
 ////
 
+// ProtectedSubmitInfo indicates whether the submission is protected
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkProtectedSubmitInfo.html
 type ProtectedSubmitInfo struct {
+	// ProtectedSubmit specifies whether the batch is protected
 	ProtectedSubmit bool
 
 	common.NextOptions

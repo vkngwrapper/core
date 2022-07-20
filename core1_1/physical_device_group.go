@@ -13,6 +13,9 @@ import (
 	"unsafe"
 )
 
+// MemoryAllocateFlags specifies flags for a DeviceMemory allocation
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkMemoryAllocateFlagBits.html
 type MemoryAllocateFlags int32
 
 var memoryAllocateFlagsMapping = common.NewFlagStringMapping[MemoryAllocateFlags]()
@@ -28,6 +31,10 @@ func (f MemoryAllocateFlags) String() string {
 ////
 
 const (
+	// MemoryAllocateDeviceMask specifies that memory will be allocated for the devices
+	// in MemoryAllocateFlagsInfo.DeviceMask
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkMemoryAllocateFlagBitsKHR.html
 	MemoryAllocateDeviceMask MemoryAllocateFlags = C.VK_MEMORY_ALLOCATE_DEVICE_MASK_BIT
 )
 
@@ -37,7 +44,11 @@ func init() {
 
 ////
 
+// DeviceGroupDeviceCreateInfo creates a logical Device from multiple PhysicalDevice objects
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkDeviceGroupDeviceCreateInfo.html
 type DeviceGroupDeviceCreateInfo struct {
+	// PhysicalDevices is a slice of PhysicalDevice objects belonging to the same Device group
 	PhysicalDevices []core1_0.PhysicalDevice
 
 	common.NextOptions
@@ -70,8 +81,15 @@ func (o DeviceGroupDeviceCreateInfo) PopulateCPointer(allocator *cgoparam.Alloca
 
 ////
 
+// MemoryAllocateFlagsInfo controls how many instances of memory will be allocated
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkMemoryAllocateFlagsInfoKHR.html
 type MemoryAllocateFlagsInfo struct {
-	Flags      MemoryAllocateFlags
+	// Flags controls the allocation
+	Flags MemoryAllocateFlags
+	// DeviceMask is a mask of PhysicalDevice objects in the logical Device, indicating that
+	// memory must be allocated on each Device in the mask, if MemoryAllocateDeviceMask is set
+	// in flags
 	DeviceMask uint32
 
 	common.NextOptions

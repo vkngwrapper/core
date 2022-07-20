@@ -11,7 +11,11 @@ import (
 	"unsafe"
 )
 
+// DeviceGroupCommandBufferBeginInfo sets the initial device mask for a CommandBuffer
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkDeviceGroupCommandBufferBeginInfo.html
 type DeviceGroupCommandBufferBeginInfo struct {
+	// DeviceMask is the initial value of the CommandBuffer object's device mask
 	DeviceMask uint32
 
 	common.NextOptions

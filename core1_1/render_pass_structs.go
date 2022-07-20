@@ -13,10 +13,15 @@ import (
 	"unsafe"
 )
 
+// InputAttachmentAspectReference specifies a subpass/input attachment pair and an aspect mask that
+// can be read
 type InputAttachmentAspectReference struct {
-	Subpass              int
+	// Subpass is an index into RenderPassCreateInfo.Subpasses
+	Subpass int
+	// InputAttachmentIndex is an index into the InputAttachments of the specified subpass
 	InputAttachmentIndex int
-	AspectMask           core1_0.ImageAspectFlags
+	// AspectMask is a mask of which aspect(s) can be accessed within the specified subpass
+	AspectMask core1_0.ImageAspectFlags
 }
 
 func (ref InputAttachmentAspectReference) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer) (unsafe.Pointer, error) {
@@ -32,7 +37,12 @@ func (ref InputAttachmentAspectReference) PopulateCPointer(allocator *cgoparam.A
 	return preallocatedPointer, nil
 }
 
+// RenderPassInputAttachmentAspectCreateInfo specifies, for a given subpass/input attachment
+// pair, which aspect can be read
 type RenderPassInputAttachmentAspectCreateInfo struct {
+	// AspectReferences is a slice of InputAttachmentAspectReference structures containing
+	// a mask describing which aspect(s) can be accessed for a given input attachment within a
+	// given subpass
 	AspectReferences []InputAttachmentAspectReference
 
 	common.NextOptions
@@ -64,8 +74,15 @@ func (o RenderPassInputAttachmentAspectCreateInfo) PopulateCPointer(allocator *c
 
 ////
 
+// DeviceGroupRenderPassBeginInfo sets the initial Device mask and render areas for a RenderPass
+// instance
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkDeviceGroupRenderPassBeginInfo.html
 type DeviceGroupRenderPassBeginInfo struct {
-	DeviceMask        uint32
+	// DeviceMask is the deivce mask for the RenderPass instance
+	DeviceMask uint32
+	// DeviceRenderAreas is a slice of Rect2D structures defining the render area for each
+	// PhysicalDevice
 	DeviceRenderAreas []core1_0.Rect2D
 
 	common.NextOptions
@@ -104,15 +121,24 @@ func (o DeviceGroupRenderPassBeginInfo) PopulateCPointer(allocator *cgoparam.All
 
 ////
 
-type RenderPassMultiviewCreatInfo struct {
-	ViewMasks        []uint32
-	ViewOffsets      []int
+// RenderPassMultiviewCreateInfo contains multiview information for all subpasses
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkRenderPassMultiviewCreateInfo.html
+type RenderPassMultiviewCreateInfo struct {
+	// ViewMasks is a slice of view masks, where each mask is a bitfield of view indices describing
+	// which views rendering is broadcast to in each subpass, when multiview is enabled
+	ViewMasks []uint32
+	// ViewOffsets is a slice of view offsets, one for each subpass dependency. Each view offset
+	// controls which view in the source subpass the views in the destination subpass depends on.
+	ViewOffsets []int
+	// CorrelationMasks is a slice of view masks indicating stes of views that may be
+	// more efficient to render concurrently
 	CorrelationMasks []uint32
 
 	common.NextOptions
 }
 
-func (o RenderPassMultiviewCreatInfo) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+func (o RenderPassMultiviewCreateInfo) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == nil {
 		preallocatedPointer = allocator.Malloc(int(unsafe.Sizeof(C.VkRenderPassMultiviewCreateInfo{})))
 	}

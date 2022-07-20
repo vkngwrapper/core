@@ -49,7 +49,7 @@ func TestMemoryDedicatedAllocateOptions(t *testing.T) {
 	memory, _, err := device.AllocateMemory(nil, core1_0.MemoryAllocateInfo{
 		AllocationSize:  1,
 		MemoryTypeIndex: 3,
-		NextOptions: common.NextOptions{Next: core1_1.MemoryDedicatedAllocationInfo{
+		NextOptions: common.NextOptions{Next: core1_1.MemoryDedicatedAllocateInfo{
 			Buffer: buffer,
 		}},
 	})

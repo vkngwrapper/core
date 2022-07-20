@@ -14,8 +14,15 @@ import (
 	"unsafe"
 )
 
+// PhysicalDeviceGroupProperties specifies PhysicalDevice group properties
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkPhysicalDeviceGroupProperties.html
 type PhysicalDeviceGroupProperties struct {
-	PhysicalDevices  []core1_0.PhysicalDevice
+	// PhysicalDevices is a slice of PhysicalDevice objects that represent all PhysicalDevice
+	// objects in the group
+	PhysicalDevices []core1_0.PhysicalDevice
+	// SubsetAllocation specifies whether logical Device objects created from the group support
+	// allocating DeviceMemory on a subset of Device objects, via MemoryAllocateFlagsInfo
 	SubsetAllocation bool
 
 	common.NextOutData

@@ -13,8 +13,16 @@ import (
 )
 
 const (
+	// MemoryHeapMultiInstance specifies that ina  logical Device representing more than one
+	// PhysicalDevice, there is a per-PhysicalDevice instance of the heap memory
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkMemoryHeapFlagBits.html
 	MemoryHeapMultiInstance core1_0.MemoryHeapFlags = C.VK_MEMORY_HEAP_MULTI_INSTANCE_BIT
 
+	// MemoryPropertyProtected specifies that the memory type only allows Device access to the
+	// memory, and allows protected Queue operations to access the DeviceMemory
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkMemoryPropertyFlagBits.html
 	MemoryPropertyProtected core1_0.MemoryPropertyFlags = C.VK_MEMORY_PROPERTY_PROTECTED_BIT
 )
 
@@ -26,7 +34,11 @@ func init() {
 
 ////
 
+// BufferMemoryRequirementsInfo2 has no documentation
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkBufferMemoryRequirementsInfo2.html
 type BufferMemoryRequirementsInfo2 struct {
+	// Buffer is the Buffer to query
 	Buffer core1_0.Buffer
 
 	common.NextOptions
@@ -47,7 +59,11 @@ func (o BufferMemoryRequirementsInfo2) PopulateCPointer(allocator *cgoparam.Allo
 
 ////
 
+// ImageMemoryRequirementsInfo2 has no documentation
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkImageMemoryRequirementsInfo2.html
 type ImageMemoryRequirementsInfo2 struct {
+	// Image is the Image to query
 	Image core1_0.Image
 
 	common.NextOptions
@@ -68,8 +84,13 @@ func (o ImageMemoryRequirementsInfo2) PopulateCPointer(allocator *cgoparam.Alloc
 
 ////
 
+// MemoryRequirements2 specifies memory requirements
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkMemoryRequirements2.html
 type MemoryRequirements2 struct {
+	// MemoryRequirements describes the memory requirements of the resource
 	MemoryRequirements core1_0.MemoryRequirements
+
 	common.NextOutData
 }
 
@@ -96,7 +117,11 @@ func (o *MemoryRequirements2) PopulateOutData(cDataPointer unsafe.Pointer, helpe
 
 ////
 
+// ImageSparseMemoryRequirementsInfo2 has no documentation
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkImageSparseMemoryRequirementsInfo2.html
 type ImageSparseMemoryRequirementsInfo2 struct {
+	// Image is the Image to query
 	Image core1_0.Image
 
 	common.NextOptions
@@ -117,7 +142,11 @@ func (o ImageSparseMemoryRequirementsInfo2) PopulateCPointer(allocator *cgoparam
 
 ////
 
+// SparseImageMemoryRequirements2 has no documentation
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkSparseImageMemoryRequirements2.html
 type SparseImageMemoryRequirements2 struct {
+	// MemoryRequirements describes the memory requirements of the sparse image
 	MemoryRequirements core1_0.SparseImageMemoryRequirements
 
 	common.NextOutData

@@ -12,6 +12,9 @@ import (
 	"unsafe"
 )
 
+// ExternalMemoryFeatureFlags specifies features of an external memory handle type
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkExternalMemoryFeatureFlagBits.html
 type ExternalMemoryFeatureFlags int32
 
 var externalMemoryFeaturesMapping = common.NewFlagStringMapping[ExternalMemoryFeatureFlags]()
@@ -26,6 +29,9 @@ func (f ExternalMemoryFeatureFlags) String() string {
 
 ////
 
+// ExternalMemoryHandleTypeFlags specifies external memory handle types
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkExternalMemoryHandleTypeFlagBits.html
 type ExternalMemoryHandleTypeFlags int32
 
 var externalMemoryHandleTypesMapping = common.NewFlagStringMapping[ExternalMemoryHandleTypeFlags]()
@@ -41,17 +47,58 @@ func (f ExternalMemoryHandleTypeFlags) String() string {
 ////
 
 const (
+	// ExternalMemoryFeatureDedicatedOnly specifies that Image or Buffer objects created with the
+	// specified parameters and handle type must create or import a dedicated allocation for
+	// the Image or Buffer object
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkExternalMemoryFeatureFlagBits.html
 	ExternalMemoryFeatureDedicatedOnly ExternalMemoryFeatureFlags = C.VK_EXTERNAL_MEMORY_FEATURE_DEDICATED_ONLY_BIT
-	ExternalMemoryFeatureExportable    ExternalMemoryFeatureFlags = C.VK_EXTERNAL_MEMORY_FEATURE_EXPORTABLE_BIT
-	ExternalMemoryFeatureImportable    ExternalMemoryFeatureFlags = C.VK_EXTERNAL_MEMORY_FEATURE_IMPORTABLE_BIT
+	// ExternalMemoryFeatureExportable specifies that handles of this type can be exported from
+	// Vulkan memory objects
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkExternalMemoryFeatureFlagBits.html
+	ExternalMemoryFeatureExportable ExternalMemoryFeatureFlags = C.VK_EXTERNAL_MEMORY_FEATURE_EXPORTABLE_BIT
+	// ExternalMemoryFeatureImportable specifies that handles of this type can be imported as Vulkan
+	// memory objects
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkExternalMemoryFeatureFlagBits.html
+	ExternalMemoryFeatureImportable ExternalMemoryFeatureFlags = C.VK_EXTERNAL_MEMORY_FEATURE_IMPORTABLE_BIT
 
-	ExternalMemoryHandleTypeD3D11Texture    ExternalMemoryHandleTypeFlags = C.VK_EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_TEXTURE_BIT
+	// ExternalMemoryHandleTypeD3D11Texture specifies an NT handle returned by
+	// IDXGIResource1::CreateSharedHandle referring to a Direct3D 10 or 11 texture resource
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkExternalMemoryHandleTypeFlagBits.html
+	ExternalMemoryHandleTypeD3D11Texture ExternalMemoryHandleTypeFlags = C.VK_EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_TEXTURE_BIT
+	// ExternalMemoryHandleTypeD3D11TextureKMT specifies a global share handle returned by
+	// IDXGIResource::GetSharedHandle referring to a Direct3D 10 or 11 texture resource
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkExternalMemoryHandleTypeFlagBits.html
 	ExternalMemoryHandleTypeD3D11TextureKMT ExternalMemoryHandleTypeFlags = C.VK_EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_TEXTURE_KMT_BIT
-	ExternalMemoryHandleTypeD3D12Heap       ExternalMemoryHandleTypeFlags = C.VK_EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_HEAP_BIT
-	ExternalMemoryHandleTypeD3D12Resource   ExternalMemoryHandleTypeFlags = C.VK_EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_RESOURCE_BIT
-	ExternalMemoryHandleTypeOpaqueFD        ExternalMemoryHandleTypeFlags = C.VK_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_FD_BIT
-	ExternalMemoryHandleTypeOpaqueWin32     ExternalMemoryHandleTypeFlags = C.VK_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_BIT
-	ExternalMemoryHandleTypeOpaqueWin32KMT  ExternalMemoryHandleTypeFlags = C.VK_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT
+	// ExternalMemoryHandleTypeD3D12Heap specifies an NT handle returned by
+	// ID3D12Device::CreateSharedHandle referring to a Direct3D 12 heap resource
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkExternalMemoryHandleTypeFlagBits.html
+	ExternalMemoryHandleTypeD3D12Heap ExternalMemoryHandleTypeFlags = C.VK_EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_HEAP_BIT
+	// ExternalMemoryHandleTypeD3D12Resource specifies an NT handle returned by
+	// ID3D12Device::CreateSharedHandle referring to a Direct3D 12 committed resource
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkExternalMemoryHandleTypeFlagBits.html
+	ExternalMemoryHandleTypeD3D12Resource ExternalMemoryHandleTypeFlags = C.VK_EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_RESOURCE_BIT
+	// ExternalMemoryHandleTypeOpaqueFD specifies a POSIX file descriptor handle that has only limited
+	// valid usage outside of Vulkan and other compatible APIs
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkExternalMemoryHandleTypeFlagBits.html
+	ExternalMemoryHandleTypeOpaqueFD ExternalMemoryHandleTypeFlags = C.VK_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_FD_BIT
+	// ExternalMemoryHandleTypeOpaqueWin32 specifies an NT handle that has only limited valid usage
+	// outside of Vulkan and other compatible APIs
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkExternalMemoryHandleTypeFlagBits.html
+	ExternalMemoryHandleTypeOpaqueWin32 ExternalMemoryHandleTypeFlags = C.VK_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_BIT
+	// ExternalMemoryHandleTypeOpaqueWin32KMT specifies a global share handle that has only
+	// limited valid usage outside of Vulkan and other compatible APIs
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkExternalMemoryHandleTypeFlagBits.html
+	ExternalMemoryHandleTypeOpaqueWin32KMT ExternalMemoryHandleTypeFlags = C.VK_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT
 )
 
 func init() {
@@ -70,10 +117,18 @@ func init() {
 
 ////
 
+// ExternalMemoryProperties specifies external memory handle type capabilities
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkExternalMemoryProperties.html
 type ExternalMemoryProperties struct {
-	ExternalMemoryFeatures        ExternalMemoryFeatureFlags
+	// ExternalMemoryFeatures specifies the features of the handle type
+	ExternalMemoryFeatures ExternalMemoryFeatureFlags
+	// ExportFromImportedHandleTypes specifies which types of imported handle the handle type can
+	// be exported from
 	ExportFromImportedHandleTypes ExternalMemoryHandleTypeFlags
-	CompatibleHandleTypes         ExternalMemoryHandleTypeFlags
+	// CompatibleHandleTypes specifies handle types which can be specified at the same time as the
+	// handle type which creating an Image compatible with external memory
+	CompatibleHandleTypes ExternalMemoryHandleTypeFlags
 }
 
 func (o ExternalMemoryProperties) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer) (unsafe.Pointer, error) {
@@ -100,9 +155,16 @@ func (o *ExternalMemoryProperties) PopulateOutData(cDataPointer unsafe.Pointer) 
 
 ////
 
+// PhysicalDeviceExternalBufferInfo specifies Buffer creation parameters
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkPhysicalDeviceExternalBufferInfo.html
 type PhysicalDeviceExternalBufferInfo struct {
-	Flags      core1_0.BufferCreateFlags
-	Usage      core1_0.BufferUsageFlags
+	// Flags describes additional parameters of the Buffer, corresponding to BufferCreateInfo.Flags
+	Flags core1_0.BufferCreateFlags
+	// Usage describes the intended usage of the Buffer, corresponding to BufferCreateInfo.Usage
+	Usage core1_0.BufferUsageFlags
+	// HandleType specifies the memory handle type that will be used with the memory
+	// associated with the Buffer
 	HandleType ExternalMemoryHandleTypeFlags
 
 	common.NextOptions
@@ -125,7 +187,12 @@ func (o PhysicalDeviceExternalBufferInfo) PopulateCPointer(allocator *cgoparam.A
 
 ////
 
+// ExternalBufferProperties specifies supported external handle capabilities
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkExternalBufferProperties.html
 type ExternalBufferProperties struct {
+	// ExternalMemoryProperties specifies various capabilities of the external handle type when
+	// used with the specified Buffer creation parameters
 	ExternalMemoryProperties ExternalMemoryProperties
 
 	common.NextOutData
@@ -151,7 +218,11 @@ func (o *ExternalBufferProperties) PopulateOutData(cDataPointer unsafe.Pointer, 
 
 ////
 
+// ExternalMemoryBufferCreateInfo specifies that a Buffer may be backed by external memory
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkExternalMemoryBufferCreateInfo.html
 type ExternalMemoryBufferCreateInfo struct {
+	// HandleTypes specifies one or more external memory handle types
 	HandleTypes ExternalMemoryHandleTypeFlags
 
 	common.NextOptions
@@ -172,7 +243,11 @@ func (o ExternalMemoryBufferCreateInfo) PopulateCPointer(allocator *cgoparam.All
 
 ////
 
+// ExternalMemoryImageCreateInfo specifies that an Image may be backed by external memory
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkExternalMemoryImageCreateInfo.html
 type ExternalMemoryImageCreateInfo struct {
+	// HandleTypes specifies one or more external memory handle types
 	HandleTypes ExternalMemoryHandleTypeFlags
 
 	common.NextOptions
@@ -193,7 +268,12 @@ func (o ExternalMemoryImageCreateInfo) PopulateCPointer(allocator *cgoparam.Allo
 
 ////
 
+// PhysicalDeviceExternalImageFormatInfo specifies external Image creation parameters
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkPhysicalDeviceExternalImageFormatInfo.html
 type PhysicalDeviceExternalImageFormatInfo struct {
+	// HandleType specifies the memory handle type that will be used with the memory associated
+	// with the Image
 	HandleType ExternalMemoryHandleTypeFlags
 
 	common.NextOptions
@@ -215,7 +295,12 @@ func (o PhysicalDeviceExternalImageFormatInfo) PopulateCPointer(allocator *cgopa
 
 ////
 
+// ExportMemoryAllocateInfo specifies exportable handle types for a DeviceMemory object
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkExportMemoryAllocateInfo.html
 type ExportMemoryAllocateInfo struct {
+	// HandleTypes specifies one or more memory handle types the application can export from
+	// the resulting allocation
 	HandleTypes ExternalMemoryHandleTypeFlags
 
 	common.NextOptions
@@ -236,7 +321,12 @@ func (o ExportMemoryAllocateInfo) PopulateCPointer(allocator *cgoparam.Allocator
 
 ////
 
+// ExternalImageFormatProperties specifies supported external handle properties
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkExternalImageFormatProperties.html
 type ExternalImageFormatProperties struct {
+	// ExternalMemoryProperties specifies various capabilities of the external handle type when used
+	// with the specified Image creation parameters
 	ExternalMemoryProperties ExternalMemoryProperties
 
 	common.NextOutData

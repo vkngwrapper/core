@@ -12,7 +12,9 @@ import (
 	"unsafe"
 )
 
+// ImageViewUsageCreateInfo specifies the intended usage of an ImageView
 type ImageViewUsageCreateInfo struct {
+	// Usage specifies allowed usages of the ImageView
 	Usage core1_0.ImageUsageFlags
 
 	common.NextOptions

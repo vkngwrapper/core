@@ -12,7 +12,12 @@ import (
 	"unsafe"
 )
 
+// PhysicalDeviceFeatures2 describes the fine-grained features that can be supported
+// by an implementation
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkPhysicalDeviceFeatures2.html
 type PhysicalDeviceFeatures2 struct {
+	// Features describes the fine-grained features of the Vulkan 1.0 API
 	Features core1_0.PhysicalDeviceFeatures
 
 	common.NextOptions
@@ -54,11 +59,23 @@ func (o PhysicalDeviceFeatures2) PopulateCPointer(allocator *cgoparam.Allocator,
 
 ////
 
+// PhysicalDevice16BitStorageFeatures describes features supported by khr_16bit_storage
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkPhysicalDevice16BitStorageFeatures.html
 type PhysicalDevice16BitStorageFeatures struct {
-	StorageBuffer16BitAccess           bool
+	// StorageBuffer16BitAccess specifies whether objects in the StorageBuffer, ShaderRecordBufferKHR,
+	// or PhysicalStorageBuffer storage class with the Block decoration can have 16-bit integer and
+	// 16-bit floating-point members
+	StorageBuffer16BitAccess bool
+	// UniformAndStorageBuffer16BitAccess specifies whether objects in the Uniform storage class with
+	// the Block decoration can have 16-bit integer and 16-bit floating-point members
 	UniformAndStorageBuffer16BitAccess bool
-	StoragePushConstant16              bool
-	StorageInputOutput16               bool
+	// StoragePushConstant16 specifies whether objects in the PushConstant storage class can have
+	// 16-bit integer and 16-bit floating-point members
+	StoragePushConstant16 bool
+	// StorageInputOutput16 specifies whether objects in the Input and Output storage classes can
+	// have 16-bit integer and 16-bit floating-point members
+	StorageInputOutput16 bool
 
 	common.NextOptions
 	common.NextOutData
@@ -122,9 +139,20 @@ func (o PhysicalDevice16BitStorageFeatures) PopulateCPointer(allocator *cgoparam
 
 ////
 
+// PhysicalDeviceMultiviewFeatures describes multiview features that can be supported by
+// an implementation
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkPhysicalDeviceMultiviewFeatures.html
 type PhysicalDeviceMultiviewFeatures struct {
-	Multiview                   bool
-	MultiviewGeometryShader     bool
+	// Multiview specifies whether the implementation supports multiview rendering within a
+	// RenderPass. If this feature is not enabled, the view mask of each subpass must always
+	// be zero
+	Multiview bool
+	// MultiviewGeometryShader specifies whether the implementation supports multiview rendering
+	// within a RenderPass, with geometry shaders
+	MultiviewGeometryShader bool
+	// MultiviewTessellationShader specifies whether the implementation supports multiview rendering
+	// within a RenderPass, with tessellation shaders
 	MultiviewTessellationShader bool
 
 	common.NextOptions
@@ -180,7 +208,12 @@ func (o PhysicalDeviceMultiviewFeatures) PopulateCPointer(allocator *cgoparam.Al
 
 ////
 
+// PhysicalDeviceProtectedMemoryFeatures describes protected memory features that can be supported
+// by an implementation
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkPhysicalDeviceProtectedMemoryFeatures.html
 type PhysicalDeviceProtectedMemoryFeatures struct {
+	// ProtectedMemory specifies whether protected memory is supported
 	ProtectedMemory bool
 
 	common.NextOptions
@@ -226,7 +259,12 @@ func (o PhysicalDeviceProtectedMemoryFeatures) PopulateCPointer(allocator *cgopa
 
 ////
 
+// PhysicalDeviceSamplerYcbcrConversionFeatures describes Y'CbCr conversion features that can
+// be supported by an implementation
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkPhysicalDeviceSamplerYcbcrConversionFeatures.html
 type PhysicalDeviceSamplerYcbcrConversionFeatures struct {
+	// SamplerYcbcrConversion specifies whether the implementation support sampler Y'CbCr conversion.
 	SamplerYcbcrConversion bool
 
 	common.NextOptions
@@ -271,7 +309,13 @@ func (o PhysicalDeviceSamplerYcbcrConversionFeatures) PopulateCPointer(allocator
 
 ////
 
+// PhysicalDeviceShaderDrawParametersFeatures describes shader draw parameter features that
+// can be supported by an implementation
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkPhysicalDeviceShaderDrawParametersFeatures.html
 type PhysicalDeviceShaderDrawParametersFeatures struct {
+	// ShaderDrawParameters specifies whether the implementation supports the SPIR-V DrawParameters
+	// capability
 	ShaderDrawParameters bool
 
 	common.NextOptions
@@ -317,9 +361,17 @@ func (o PhysicalDeviceShaderDrawParametersFeatures) PopulateCPointer(allocator *
 
 ////
 
+// PhysicalDeviceVariablePointersFeatures describes variable pointer features that can be
+// supported by an implementation
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkPhysicalDeviceVariablePointersFeatures.html
 type PhysicalDeviceVariablePointersFeatures struct {
+	// VariablePointersStorageBuffer specifies whether the implementation supports the SPIR-V
+	// VariablePointersStorageBuffer capability
 	VariablePointersStorageBuffer bool
-	VariablePointers              bool
+	// VariablePointers specifies whether the implementation supports the SPIR-V VariablePointers
+	// capability
+	VariablePointers bool
 
 	common.NextOptions
 	common.NextOutData
