@@ -47,22 +47,6 @@ func TestCommandPoolCreateBasic(t *testing.T) {
 	require.Equal(t, expectedPoolHandle, pool.Handle())
 }
 
-func TestCommandPoolNullQueue(t *testing.T) {
-	ctrl := gomock.NewController(t)
-	defer ctrl.Finish()
-
-	mockDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_0)
-
-	device := internal_mocks.EasyDummyDevice(mockDriver)
-
-	pool, res, err := device.CreateCommandPool(nil, core1_0.CommandPoolCreateInfo{
-		Flags: core1_0.CommandPoolCreateResetBuffer,
-	})
-	require.Error(t, err)
-	require.Equal(t, core1_0.VKErrorUnknown, res)
-	require.Nil(t, pool)
-}
-
 func TestCommandBufferSingleAllocateFree(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()

@@ -1129,7 +1129,7 @@ func TestVulkanDevice_CreateDeviceWithFeatures(t *testing.T) {
 			require.Equal(t, uint64(0), v.FieldByName("flags").Uint())
 			require.Equal(t, uint64(2), v.FieldByName("queueCreateInfoCount").Uint())
 			require.Equal(t, uint64(2), v.FieldByName("enabledExtensionCount").Uint())
-			require.Equal(t, uint64(1), v.FieldByName("enabledLayerCount").Uint())
+			require.Equal(t, uint64(0), v.FieldByName("enabledLayerCount").Uint())
 			require.True(t, v.FieldByName("pEnabledFeatures").IsNil())
 
 			extensionNamePtr := (**driver.Char)(unsafe.Pointer(v.FieldByName("ppEnabledExtensionNames").Elem().UnsafeAddr()))
@@ -1152,25 +1152,7 @@ func TestVulkanDevice_CreateDeviceWithFeatures(t *testing.T) {
 
 			require.ElementsMatch(t, []string{"a", "b"}, extensionNames)
 
-			layerNamePtr := (**driver.Char)(unsafe.Pointer(v.FieldByName("ppEnabledLayerNames").Elem().UnsafeAddr()))
-			layerNameSlice := ([]*driver.Char)(unsafe.Slice(layerNamePtr, 1))
-
-			var layerNames []string
-			for _, layerNameBytes := range layerNameSlice {
-				var layerNameRunes []rune
-				layerNameByteSlice := ([]driver.Char)(unsafe.Slice(layerNameBytes, 1<<30))
-				for _, nameByte := range layerNameByteSlice {
-					if nameByte == 0 {
-						break
-					}
-
-					layerNameRunes = append(layerNameRunes, rune(nameByte))
-				}
-
-				layerNames = append(layerNames, string(layerNameRunes))
-			}
-
-			require.ElementsMatch(t, []string{"c"}, layerNames)
+			require.True(t, v.FieldByName("ppEnabledLayerNames").IsNil())
 
 			queueCreateInfoPtr := (*driver.VkDeviceQueueCreateInfo)(unsafe.Pointer(v.FieldByName("pQueueCreateInfos").Elem().UnsafeAddr()))
 			queueCreateInfoSlice := ([]driver.VkDeviceQueueCreateInfo)(unsafe.Slice(queueCreateInfoPtr, 2))
@@ -1224,7 +1206,6 @@ func TestVulkanDevice_CreateDeviceWithFeatures(t *testing.T) {
 			},
 		},
 		EnabledExtensionNames: []string{"a", "b"},
-		EnabledLayerNames:     []string{"c"},
 	}
 	features := core1_1.PhysicalDeviceFeatures2{
 		Features: core1_0.PhysicalDeviceFeatures{

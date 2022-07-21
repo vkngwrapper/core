@@ -34,7 +34,7 @@ func TestVulkanLoader1_0_CreateDevice_Success(t *testing.T) {
 			require.Equal(t, uint64(0), v.FieldByName("flags").Uint())
 			require.Equal(t, uint64(2), v.FieldByName("queueCreateInfoCount").Uint())
 			require.Equal(t, uint64(3), v.FieldByName("enabledExtensionCount").Uint())
-			require.Equal(t, uint64(2), v.FieldByName("enabledLayerCount").Uint())
+			require.Equal(t, uint64(0), v.FieldByName("enabledLayerCount").Uint())
 
 			featuresV := v.FieldByName("pEnabledFeatures").Elem()
 
@@ -62,25 +62,7 @@ func TestVulkanLoader1_0_CreateDevice_Success(t *testing.T) {
 
 			require.ElementsMatch(t, []string{"A", "B", "C"}, extensionNames)
 
-			layerNamePtr := (**driver.Char)(unsafe.Pointer(v.FieldByName("ppEnabledLayerNames").Elem().UnsafeAddr()))
-			layerNameSlice := ([]*driver.Char)(unsafe.Slice(layerNamePtr, 2))
-
-			var layerNames []string
-			for _, layerNameBytes := range layerNameSlice {
-				var layerNameRunes []rune
-				layerNameByteSlice := ([]driver.Char)(unsafe.Slice(layerNameBytes, 1<<30))
-				for _, nameByte := range layerNameByteSlice {
-					if nameByte == 0 {
-						break
-					}
-
-					layerNameRunes = append(layerNameRunes, rune(nameByte))
-				}
-
-				layerNames = append(layerNames, string(layerNameRunes))
-			}
-
-			require.ElementsMatch(t, []string{"D", "E"}, layerNames)
+			require.True(t, v.FieldByName("ppEnabledLayerNames").IsNil())
 
 			queueCreateInfoPtr := (*driver.VkDeviceQueueCreateInfo)(unsafe.Pointer(v.FieldByName("pQueueCreateInfos").Elem().UnsafeAddr()))
 			queueCreateInfoSlice := ([]driver.VkDeviceQueueCreateInfo)(unsafe.Slice(queueCreateInfoPtr, 2))
@@ -125,7 +107,6 @@ func TestVulkanLoader1_0_CreateDevice_Success(t *testing.T) {
 			},
 		},
 		EnabledExtensionNames: []string{"A", "B", "C"},
-		EnabledLayerNames:     []string{"D", "E"},
 		EnabledFeatures: &core1_0.PhysicalDeviceFeatures{
 			OcclusionQueryPrecise: true,
 			TessellationShader:    true,
@@ -147,7 +128,6 @@ func TestVulkanLoader1_0_CreateDevice_FailNoQueueFamilies(t *testing.T) {
 	_, _, err := physicalDevice.CreateDevice(nil, core1_0.DeviceCreateInfo{
 		QueueCreateInfos:      []core1_0.DeviceQueueCreateInfo{},
 		EnabledExtensionNames: []string{"A", "B", "C"},
-		EnabledLayerNames:     []string{"D", "E"},
 		EnabledFeatures: &core1_0.PhysicalDeviceFeatures{
 			OcclusionQueryPrecise: true,
 			TessellationShader:    true,
@@ -176,7 +156,6 @@ func TestVulkanLoader1_0_CreateDevice_FailFamilyWithoutPriorities(t *testing.T) 
 			},
 		},
 		EnabledExtensionNames: []string{"A", "B", "C"},
-		EnabledLayerNames:     []string{"D", "E"},
 		EnabledFeatures: &core1_0.PhysicalDeviceFeatures{
 			OcclusionQueryPrecise: true,
 			TessellationShader:    true,
