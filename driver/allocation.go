@@ -56,6 +56,9 @@ import (
 	"unsafe"
 )
 
+// CreateAllocationCallbacks accepts a (mutable) AllocationCallbacksOptions and produces an
+// (immutable) AllocationCallbacks object representing the callbacks in the
+// AllocationCallbacksOptions
 func CreateAllocationCallbacks(o *common.AllocationCallbackOptions) *AllocationCallbacks {
 	callbacks := &AllocationCallbacks{
 		allocation:         o.Allocation,
@@ -70,6 +73,9 @@ func CreateAllocationCallbacks(o *common.AllocationCallbackOptions) *AllocationC
 	return callbacks
 }
 
+// AllocationCallbacks is a Vulkan structure that controls allocation and deallocation behavior
+// for Vulkan objects. It works by passing it to Create/Free methods. This object is immutable and
+// must be created with CreateAllocationCallbacks.
 type AllocationCallbacks struct {
 	userData           any
 	allocation         common.AllocationFunction
