@@ -12,6 +12,9 @@ import (
 	"unsafe"
 )
 
+// DescriptorBindingFlags specifies DescriptorSetLayout binding properties
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkDescriptorBindingFlagBits.html
 type DescriptorBindingFlags int32
 
 var descriptorBindingFlagsMapping = common.NewFlagStringMapping[DescriptorBindingFlags]()
@@ -26,11 +29,37 @@ func (f DescriptorBindingFlags) String() string {
 ////
 
 const (
-	DescriptorBindingPartiallyBound           DescriptorBindingFlags = C.VK_DESCRIPTOR_BINDING_PARTIALLY_BOUND_BIT
-	DescriptorBindingUpdateAfterBind          DescriptorBindingFlags = C.VK_DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT
+	// DescriptorBindingPartiallyBound indicates that descriptors in this binding that are
+	// not dynamically used need not contain valid descriptors at the time the descriptors
+	// are consumed
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkDescriptorBindingFlagBits.html
+	DescriptorBindingPartiallyBound DescriptorBindingFlags = C.VK_DESCRIPTOR_BINDING_PARTIALLY_BOUND_BIT
+	// DescriptorBindingUpdateAfterBind indicates that if descriptors in this binding are updated
+	// between when the DescriptorSet is bound in a CommandBuffer and when that CommandBuffer is
+	// submitted to a Queue, then the submission will use the most recently-set descriptors
+	// for this binding and the updates do not invalidate the CommandBuffer
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkDescriptorBindingFlagBits.html
+	DescriptorBindingUpdateAfterBind DescriptorBindingFlags = C.VK_DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT
+	// DescriptorBindingUpdateUnusedWhilePending indicates that descriptors in this binding can be
+	// updated after a CommandBuffer has bound this DescriptorSet, or while a CommandBuffer that
+	// uses this DescriptorSet is pending execution, as long as the descriptors that are updated
+	// are not used by those CommandBuffer objects
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkDescriptorBindingFlagBits.html
 	DescriptorBindingUpdateUnusedWhilePending DescriptorBindingFlags = C.VK_DESCRIPTOR_BINDING_UPDATE_UNUSED_WHILE_PENDING_BIT
-	DescriptorBindingVariableDescriptorCount  DescriptorBindingFlags = C.VK_DESCRIPTOR_BINDING_VARIABLE_DESCRIPTOR_COUNT_BIT
+	// DescriptorBindingVariableDescriptorCount indicates that this is a variable-sized descriptor
+	// binding whose size will be specified when a DescriptorSet is allocated using this layout
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkDescriptorBindingFlagBits.html
+	DescriptorBindingVariableDescriptorCount DescriptorBindingFlags = C.VK_DESCRIPTOR_BINDING_VARIABLE_DESCRIPTOR_COUNT_BIT
 
+	// DescriptorSetLayoutCreateUpdateAfterBindPool specifies that DescriptorSet objects using this
+	// layout must be allocated from a DescriptorPool created with DescriptorPoolCreateUpdateAfterBind
+	// set
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkDescriptorSetLayoutCreateFlagBits.html
 	DescriptorSetLayoutCreateUpdateAfterBindPool core1_0.DescriptorSetLayoutCreateFlags = C.VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT
 )
 
@@ -45,7 +74,14 @@ func init() {
 
 ////
 
+// DescriptorSetVariableDescriptorCountAllocateInfo specifies additional allocation parameters
+// for DescritorSet objects
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkDescriptorSetVariableDescriptorCountAllocateInfo.html
 type DescriptorSetVariableDescriptorCountAllocateInfo struct {
+	// DescriptorCounts is a slice of descriptor counts, with each member specifying the number
+	// of descriptors in a variable-sized descriptor binding in the corresponding DescriptorSet
+	// being allocated
 	DescriptorCounts []int
 
 	common.NextOptions
@@ -77,7 +113,12 @@ func (o DescriptorSetVariableDescriptorCountAllocateInfo) PopulateCPointer(alloc
 
 ////
 
+// DescriptorSetLayoutBindingFlagsCreateInfo specifies parameters of a newly-created
+// DescriptorSetLayout
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkDescriptorSetLayoutBindingFlagsCreateInfo.html
 type DescriptorSetLayoutBindingFlagsCreateInfo struct {
+	// BindingFlags is a slice of DescriptorBindingFlags, one for each DescriptorSetLayout binding
 	BindingFlags []DescriptorBindingFlags
 
 	common.NextOptions
@@ -110,7 +151,13 @@ func (o DescriptorSetLayoutBindingFlagsCreateInfo) PopulateCPointer(allocator *c
 
 ////
 
+// DescriptorSetVariableDescriptorCountLayoutSupport returns information about whether a
+// DescriptorSetLayout can be supported
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkDescriptorSetVariableDescriptorCountLayoutSupport.html
 type DescriptorSetVariableDescriptorCountLayoutSupport struct {
+	// MaxVariableDescriptorCount indicates the maximum number of descriptors supported in the
+	// highest numbered binding of the layout, if that binding is variable-sized
 	MaxVariableDescriptorCount int
 
 	common.NextOutData

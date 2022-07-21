@@ -15,13 +15,33 @@ import (
 )
 
 const (
+	// BufferCreateDeviceAddressCaptureReplay specifies that the Buffer object's address can
+	// be saved and reused on a subsequent run (e.g. for trace capture and replay)
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkBufferCreateFlagBits.html
 	BufferCreateDeviceAddressCaptureReplay core1_0.BufferCreateFlags = C.VK_BUFFER_CREATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT
 
+	// BufferUsageShaderDeviceAddress specifies that the Buffer can be used to retrieve a
+	// Buffer device address via Device.GetBufferDeviceAddress and use that address to
+	// access the Buffer object's memory from a shader
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkBufferUsageFlagBits.html
 	BufferUsageShaderDeviceAddress core1_0.BufferUsageFlags = C.VK_BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT
 
-	MemoryAllocateDeviceAddress              core1_1.MemoryAllocateFlags = C.VK_MEMORY_ALLOCATE_DEVICE_ADDRESS_BIT
+	// MemoryAllocateDeviceAddress specifies that the memory can be attached to a Buffer object
+	// created with BufferUsageShaderDeviceAddress set in Usage, and that the DeviceMemory object
+	// can be used to retrieve an opaque address via Device.GetDeviceMemoryOpaqueCaptureAddress
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkMemoryAllocateFlagBits.html
+	MemoryAllocateDeviceAddress core1_1.MemoryAllocateFlags = C.VK_MEMORY_ALLOCATE_DEVICE_ADDRESS_BIT
+	// MemoryAllocateDeviceAddressCaptureReplay specifies that the memory's address can be saved
+	// and reused on a subsequent run (e.g. for trace capture and replay)
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkMemoryAllocateFlagBits.html
 	MemoryAllocateDeviceAddressCaptureReplay core1_1.MemoryAllocateFlags = C.VK_MEMORY_ALLOCATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT
 
+	// VkErrorInvalidOpaqueCaptureAddress indicates a Buffer creation or memory allocation failed
+	// because the requested address is not available
 	VkErrorInvalidOpaqueCaptureAddress common.VkResult = C.VK_ERROR_INVALID_OPAQUE_CAPTURE_ADDRESS
 )
 
@@ -38,7 +58,11 @@ func init() {
 
 ////
 
+// BufferDeviceAddressInfo specifies the Buffer to query an address for
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkBufferDeviceAddressInfo.html
 type BufferDeviceAddressInfo struct {
+	// Buffer specifies the Buffer whose address is beign queried
 	Buffer core1_0.Buffer
 
 	common.NextOptions
@@ -68,7 +92,11 @@ func (o BufferDeviceAddressInfo) PopulateOutData(cDataPointer unsafe.Pointer, he
 
 ////
 
+// DeviceMemoryOpaqueCaptureAddressInfo specifies the DeviceMemory object to query an address for
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkDeviceMemoryOpaqueCaptureAddressInfo.html
 type DeviceMemoryOpaqueCaptureAddressInfo struct {
+	// Memory specifies the DeviceMemory whose address is being queried
 	Memory core1_0.DeviceMemory
 
 	common.NextOptions
@@ -89,6 +117,9 @@ func (o DeviceMemoryOpaqueCaptureAddressInfo) PopulateCPointer(allocator *cgopar
 
 ////
 
+// BufferOpaqueCaptureAddressCreateInfo requests a specific address for a Buffer
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkBufferOpaqueCaptureAddressCreateInfo.html
 type BufferOpaqueCaptureAddressCreateInfo struct {
 	OpaqueCaptureAddress uint64
 
@@ -110,7 +141,11 @@ func (o BufferOpaqueCaptureAddressCreateInfo) PopulateCPointer(allocator *cgopar
 
 ////
 
+// MemoryOpaqueCaptureAddressAllocateInfo requests a specific address for a memory allocation
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkMemoryOpaqueCaptureAddressAllocateInfoKHR.html
 type MemoryOpaqueCaptureAddressAllocateInfo struct {
+	// OpaqueCaptureAddress is the opaque capture address requested for the memory allocation
 	OpaqueCaptureAddress uint64
 
 	common.NextOptions

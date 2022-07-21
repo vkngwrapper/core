@@ -13,6 +13,11 @@ import (
 )
 
 const (
+	// FramebufferCreateImageless specifies that ImageView objects are not specified, and only
+	// attachment compatibility information will be provided via a FramebufferAttachmentImageInfo
+	// structure
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkFramebufferCreateFlagBits.html
 	FramebufferCreateImageless core1_0.FramebufferCreateFlags = C.VK_FRAMEBUFFER_CREATE_IMAGELESS_BIT
 )
 
@@ -22,13 +27,28 @@ func init() {
 
 ////
 
+// FramebufferAttachmentImageInfo specifies parameters of an Image that will be used with a
+// Framebuffer
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkFramebufferAttachmentImageInfo.html
 type FramebufferAttachmentImageInfo struct {
-	Flags      core1_0.ImageCreateFlags
-	Usage      core1_0.ImageUsageFlags
-	Width      int
-	Height     int
+	// Flags matches the value of ImageCreateInfo.Flags used to create an Image that will be used
+	// with this Framebuffer
+	Flags core1_0.ImageCreateFlags
+	// Usage matches the value of ImageCreateInfo.Usage used to create an Image used with this
+	// Framebuffer
+	Usage core1_0.ImageUsageFlags
+	// Width is the width of the ImageView used for rendering
+	Width int
+	// Height is the height of ImageView used for rendering
+	Height int
+	// LayerCount is the number of array layers of the ImageView used for rendering
 	LayerCount int
 
+	// ViewFormats is a slice of core1_0.Format values specifying all of the formats which
+	// can be used when creating views of the Image, matching the value of
+	// ImageFormatListCreateInfo.ViewFormats used to create an Image used with this
+	// Framebuffer
 	ViewFormats []core1_0.Format
 
 	common.NextOptions
@@ -65,7 +85,13 @@ func (o FramebufferAttachmentImageInfo) PopulateCPointer(allocator *cgoparam.All
 
 ////
 
+// FramebufferAttachmentsCreateInfo specifies parameters of Image objects that will be used with
+// a Framebuffer
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkFramebufferAttachmentsCreateInfo.html
 type FramebufferAttachmentsCreateInfo struct {
+	// AttachmentImageInfos is a slice of FramebufferAttachmentInfo structures, each structure
+	// describing a number of parameters of the corresponding attachment in a RenderPass instance
 	AttachmentImageInfos []FramebufferAttachmentImageInfo
 
 	common.NextOptions

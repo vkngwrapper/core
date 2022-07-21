@@ -15,6 +15,9 @@ import (
 	"unsafe"
 )
 
+// DriverID specifies khronos driver id's
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkDriverId.html
 type DriverID int32
 
 var driverIDMapping = make(map[DriverID]string)
@@ -27,6 +30,9 @@ func (e DriverID) String() string {
 	return driverIDMapping[e]
 }
 
+// ResolveModeFlags indicates supported depth and stencil resolve modes
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkResolveModeFlagBits.html
 type ResolveModeFlags int32
 
 var resolveModeFlagsMapping = common.NewFlagStringMapping[ResolveModeFlags]()
@@ -41,6 +47,8 @@ func (f ResolveModeFlags) String() string {
 
 ////
 
+// ShaderFloatControlsIndependence specifies whether, and how, shader float controls
+// can be set separately
 type ShaderFloatControlsIndependence int32
 
 var shaderFloatControlsIndependenceMapping = make(map[ShaderFloatControlsIndependence]string)
@@ -56,31 +64,104 @@ func (e ShaderFloatControlsIndependence) String() string {
 ////
 
 const (
+	// MaxDriverInfoSize is the length of a PhysicalDevice driver information string
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VK_MAX_DRIVER_INFO_SIZE.html
 	MaxDriverInfoSize int = C.VK_MAX_DRIVER_INFO_SIZE
+	// MaxDriverNameSize is the maximum length of a PhysicalDevice driver name string
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VK_MAX_DRIVER_NAME_SIZE.html
 	MaxDriverNameSize int = C.VK_MAX_DRIVER_NAME_SIZE
 
-	DriverIDAmdOpenSource           DriverID = C.VK_DRIVER_ID_AMD_OPEN_SOURCE
-	DriverIDAmdProprietary          DriverID = C.VK_DRIVER_ID_AMD_PROPRIETARY
-	DriverIDArmProprietary          DriverID = C.VK_DRIVER_ID_ARM_PROPRIETARY
-	DriverIDBroadcomProprietary     DriverID = C.VK_DRIVER_ID_BROADCOM_PROPRIETARY
-	DriverIDGgpProprietary          DriverID = C.VK_DRIVER_ID_GGP_PROPRIETARY
-	DriverIDGoogleSwiftshader       DriverID = C.VK_DRIVER_ID_GOOGLE_SWIFTSHADER
-	DriverIDImaginationProprietary  DriverID = C.VK_DRIVER_ID_IMAGINATION_PROPRIETARY
-	DriverIDIntelOpenSourceMesa     DriverID = C.VK_DRIVER_ID_INTEL_OPEN_SOURCE_MESA
+	// DriverIDAmdOpenSource indicates open-source AMD drivers
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkDriverId.html
+	DriverIDAmdOpenSource DriverID = C.VK_DRIVER_ID_AMD_OPEN_SOURCE
+	// DriverIDAmdProprietary indicates proprietary AMD drivers
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkDriverId.html
+	DriverIDAmdProprietary DriverID = C.VK_DRIVER_ID_AMD_PROPRIETARY
+	// DriverIDArmProprietary indicates proprietary ARM drivers
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkDriverId.html
+	DriverIDArmProprietary DriverID = C.VK_DRIVER_ID_ARM_PROPRIETARY
+	// DriverIDBroadcomProprietary indicates proprietary Broadcom drivers
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkDriverId.html
+	DriverIDBroadcomProprietary DriverID = C.VK_DRIVER_ID_BROADCOM_PROPRIETARY
+	// DriverIDGgpProprietary indicates proprietary GGP drivers
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkDriverId.html
+	DriverIDGgpProprietary DriverID = C.VK_DRIVER_ID_GGP_PROPRIETARY
+	// DriverIDGoogleSwiftshader indicates Google Swiftshader drivers
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkDriverId.html
+	DriverIDGoogleSwiftshader DriverID = C.VK_DRIVER_ID_GOOGLE_SWIFTSHADER
+	// DriverIDImaginationProprietary indicates proprietary Imagination drivers
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkDriverId.html
+	DriverIDImaginationProprietary DriverID = C.VK_DRIVER_ID_IMAGINATION_PROPRIETARY
+	// DriverIDIntelOpenSourceMesa indicates open-source Mesa drivers
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkDriverId.html
+	DriverIDIntelOpenSourceMesa DriverID = C.VK_DRIVER_ID_INTEL_OPEN_SOURCE_MESA
+	// DriverIDIntelProprietaryWindows indicates proprietary Intel drivers for Windows
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkDriverId.html
 	DriverIDIntelProprietaryWindows DriverID = C.VK_DRIVER_ID_INTEL_PROPRIETARY_WINDOWS
-	DriverIDMesaRadV                DriverID = C.VK_DRIVER_ID_MESA_RADV
-	DriverIDNvidiaProprietary       DriverID = C.VK_DRIVER_ID_NVIDIA_PROPRIETARY
-	DriverIDQualcommProprietary     DriverID = C.VK_DRIVER_ID_QUALCOMM_PROPRIETARY
+	// DriverIDMesaRadV indicates Mesa Rad-V drivers
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkDriverId.html
+	DriverIDMesaRadV DriverID = C.VK_DRIVER_ID_MESA_RADV
+	// DriverIDNvidiaProprietary indicates proprietary NVidia drivers
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkDriverId.html
+	DriverIDNvidiaProprietary DriverID = C.VK_DRIVER_ID_NVIDIA_PROPRIETARY
+	// DriverIDQualcommProprietary indicates proprietary Qualcomm drivers
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkDriverId.html
+	DriverIDQualcommProprietary DriverID = C.VK_DRIVER_ID_QUALCOMM_PROPRIETARY
 
-	ResolveModeAverage    ResolveModeFlags = C.VK_RESOLVE_MODE_AVERAGE_BIT
-	ResolveModeMax        ResolveModeFlags = C.VK_RESOLVE_MODE_MAX_BIT
-	ResolveModeMin        ResolveModeFlags = C.VK_RESOLVE_MODE_MIN_BIT
-	ResolveModeNone       ResolveModeFlags = C.VK_RESOLVE_MODE_NONE
+	// ResolveModeAverage indicates that the result of the resolve operation is the average
+	// of the sample values
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkResolveModeFlagBits.html
+	ResolveModeAverage ResolveModeFlags = C.VK_RESOLVE_MODE_AVERAGE_BIT
+	// ResolveModeMax indicates that the result of the resolve operation is the maximum of the
+	// sample values
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkResolveModeFlagBits.html
+	ResolveModeMax ResolveModeFlags = C.VK_RESOLVE_MODE_MAX_BIT
+	// ResolveModeMin indicates that the result of the resolve operation is the minimum of the
+	// sample values
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkResolveModeFlagBits.html
+	ResolveModeMin ResolveModeFlags = C.VK_RESOLVE_MODE_MIN_BIT
+	// ResolveModeNone indicates that no resolve operation is performed
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkResolveModeFlagBits.html
+	ResolveModeNone ResolveModeFlags = C.VK_RESOLVE_MODE_NONE
+	// ResolveModeSampleZero indicates that the result of the resolve operation is equal to
+	// the value of sample 0
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkResolveModeFlagBits.html
 	ResolveModeSampleZero ResolveModeFlags = C.VK_RESOLVE_MODE_SAMPLE_ZERO_BIT
 
+	// ShaderFloatControlsIndependence32BitOnly specifies that shader float controls for 32-bit
+	// floating point can be set independently
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkShaderFloatControlsIndependence.html
 	ShaderFloatControlsIndependence32BitOnly ShaderFloatControlsIndependence = C.VK_SHADER_FLOAT_CONTROLS_INDEPENDENCE_32_BIT_ONLY
-	ShaderFloatControlsIndependenceAll       ShaderFloatControlsIndependence = C.VK_SHADER_FLOAT_CONTROLS_INDEPENDENCE_ALL
-	ShaderFloatControlsIndependenceNone      ShaderFloatControlsIndependence = C.VK_SHADER_FLOAT_CONTROLS_INDEPENDENCE_NONE
+	// ShaderFloatControlsIndependenceAll specifies that shader float controls for all
+	// bit widths can be set independently
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkShaderFloatControlsIndependence.html
+	ShaderFloatControlsIndependenceAll ShaderFloatControlsIndependence = C.VK_SHADER_FLOAT_CONTROLS_INDEPENDENCE_ALL
+	// ShaderFloatControlsIndependenceNone specifies that shader float controls for all bit widths
+	// must be set identically
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkShaderFloatControlsIndependence.html
+	ShaderFloatControlsIndependenceNone ShaderFloatControlsIndependence = C.VK_SHADER_FLOAT_CONTROLS_INDEPENDENCE_NONE
 )
 
 func init() {
@@ -110,13 +191,22 @@ func init() {
 
 ////
 
+// ConformanceVersion contains the comformance test suite version the implementation is
+// compliant with
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkConformanceVersionKHR.html
 type ConformanceVersion struct {
-	Major    uint8
-	Minor    uint8
+	// Major is the major version number of the conformance test suite
+	Major uint8
+	// Minor is the minor version number of the conformance test suite
+	Minor uint8
+	// Subminor is the subminor version number of the conformance test suite
 	Subminor uint8
-	Patch    uint8
+	// Patch is the patch version number of the conformance test suite
+	Patch uint8
 }
 
+// IsAtLeast returns true if the other ConformanceVersion is at least as high as this one
 func (v ConformanceVersion) IsAtLeast(other ConformanceVersion) bool {
 	if v.Major > other.Major {
 		return true
@@ -141,10 +231,18 @@ func (v ConformanceVersion) IsAtLeast(other ConformanceVersion) bool {
 
 ////
 
+// PhysicalDeviceDriverProperties contains driver identification information
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkPhysicalDeviceDriverProperties.html
 type PhysicalDeviceDriverProperties struct {
-	DriverID           DriverID
-	DriverName         string
-	DriverInfo         string
+	// DriverID is a unique identifier for the driver of the PhysicalDevice
+	DriverID DriverID
+	// DriverName is a string which is the name of the driver
+	DriverName string
+	// DriverInfo is a string with additional information about the driver
+	DriverInfo string
+	// ConformanceVersion is the version of the Vulkan conformance test thsi driver is conformant
+	// against
 	ConformanceVersion ConformanceVersion
 
 	common.NextOutData
@@ -177,11 +275,22 @@ func (o *PhysicalDeviceDriverProperties) PopulateOutData(cDataPointer unsafe.Poi
 
 ////
 
+// PhysicalDeviceDepthStencilResolveProperties describes depth/stencil resolve properties that can
+// be supported by an implementation
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkPhysicalDeviceDepthStencilResolveProperties.html
 type PhysicalDeviceDepthStencilResolveProperties struct {
-	SupportedDepthResolveModes   ResolveModeFlags
+	// SupportedDepthResolveModes indicates the set of supported depth resolve modes
+	SupportedDepthResolveModes ResolveModeFlags
+	// SupportedStencilResolveModes indicates the set of supported stencil resolve modes
 	SupportedStencilResolveModes ResolveModeFlags
-	IndependentResolveNone       bool
-	IndependentResolve           bool
+	// IndependentResolveNone is true if the implementation supports setting the depth
+	// and stencil resolve modes to different values when one of those modes is ResolveModeNone
+	IndependentResolveNone bool
+	// IndependentResolve is true if the implementation supports all combinations of the supported
+	// depth and stencil resolve modes, including setting either depth or stencil resolve mode to
+	// ResolveModeNone
+	IndependentResolve bool
 
 	common.NextOutData
 }
@@ -210,32 +319,102 @@ func (o *PhysicalDeviceDepthStencilResolveProperties) PopulateOutData(cDataPoint
 
 ////
 
+// PhysicalDeviceDescriptorIndexingProperties describes descriptor indexing properties
+// that can be supported by an implementation
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkPhysicalDeviceDescriptorIndexingProperties.html
 type PhysicalDeviceDescriptorIndexingProperties struct {
-	MaxUpdateAfterBindDescriptorsInAllPools            int
-	ShaderUniformBufferArrayNonUniformIndexingNative   bool
-	ShaderSampledImageArrayNonUniformIndexingNative    bool
-	ShaderStorageBufferArrayNonUniformIndexingNative   bool
-	ShaderStorageImageArrayNonUniformIndexingNative    bool
+	// MaxUpdateAfterBindDescriptorsInAllPools is the maximum number of descriptors (summed over
+	// all descriptor types) that can be created across all pools that are created with
+	// DescriptorPoolCreateUpdateAfterBind
+	MaxUpdateAfterBindDescriptorsInAllPools int
+	// ShaderUniformBufferArrayNonUniformIndexingNative is a boolean value indicating whether
+	// uniform Buffer descriptors natively support nonuniform indexing
+	ShaderUniformBufferArrayNonUniformIndexingNative bool
+	// ShaderSampledImageArrayNonUniformIndexingNative is a boolean value indicating whether
+	// Sampler and Image descriptors natively support nonuniform indexing
+	ShaderSampledImageArrayNonUniformIndexingNative bool
+	// ShaderStorageBufferArrayNonUniformIndexingNative is a boolean value indicating whether
+	// storage Buffer descriptors natively support nonuniform indexing
+	ShaderStorageBufferArrayNonUniformIndexingNative bool
+	// ShaderStorageImageArrayNonUniformIndexingNative is a boolean value indicating whether storage
+	// Image descriptors natively support nonuniform indexing
+	ShaderStorageImageArrayNonUniformIndexingNative bool
+	// ShaderInputAttachmentArrayNonUniformIndexingNative is a boolean value indicating whether
+	// input attachment descriptors natively support nonuniform indexing
 	ShaderInputAttachmentArrayNonUniformIndexingNative bool
-	RobustBufferAccessUpdateAfterBind                  bool
-	QuadDivergentImplicitLod                           bool
+	// RobustBufferAccessUpdateAfterBind is a boolean value indicating whether RobustBufferAccess
+	// can be enabled in a Device simultaneously with DescriptorBindingUniformBufferUpdateAfterBind,
+	// DescriptorBindingStorageBufferUpdateAfterBind,
+	// DescriptorBindingUniformTexelBufferUpdateAfterBind, and/or
+	// DescriptorBindingStorageTexelBufferUpdateAfterBind
+	RobustBufferAccessUpdateAfterBind bool
+	// QuadDivergentImplicitLod is a boolean value indicating whether implicit level of detail
+	// calculations for Image operations have well-defined results when the Image and/or Sampler
+	// objects used for the instruction are not uniform within a quad
+	QuadDivergentImplicitLod bool
 
-	MaxPerStageDescriptorUpdateAfterBindSamplers         int
-	MaxPerStageDescriptorUpdateAfterBindUniformBuffers   int
-	MaxPerStageDescriptorUpdateAfterBindStorageBuffers   int
-	MaxPerStageDescriptorUpdateAfterBindSampledImages    int
-	MaxPerStageDescriptorUpdateAfterBindStorageImages    int
+	// MaxPerStageDescriptorUpdateAfterBindSamplers is similar to <axPerStageDescriptorSamplers
+	// but counts descriptors from descriptor sets created with or without
+	// DescriptorSetLayoutCreateUpdateAfterBindPool
+	MaxPerStageDescriptorUpdateAfterBindSamplers int
+	// MaxPerStageDescriptorUpdateAfterBindUniformBuffers is similar to
+	// MaxPerStageDescriptorUniformBuffers but counts descriptors from DescriptorSet objects
+	// created with or without DescriptorSetLayoutCreateUpdateAfterBindPool
+	MaxPerStageDescriptorUpdateAfterBindUniformBuffers int
+	// MaxPerStageDescriptorUpdateAfterBindStorageBuffers is similar to
+	// MaxPerStageDescriptorStorageBuffers but counts descriptors from DescriptorSet created with
+	// or without DescriptorSetLayoutCreateUpdateAfterBindPool
+	MaxPerStageDescriptorUpdateAfterBindStorageBuffers int
+	// MaxPerStageDescriptorUpdateAfterBindSampledImages is similar to
+	// MaxPerStageDescriptorSampledImages but counts descriptors from DescriptorSets created with
+	// or without DescriptorSetLayoutCreateUpdateAfterBindPool
+	MaxPerStageDescriptorUpdateAfterBindSampledImages int
+	// MaxPerStageDescriptorUpdateAfterBindStorageImages is similar to
+	// MaxPerStageDescriptorStorageImages but counts descriptors from DescriptorSet objects created
+	// with or without DescriptorSetLayoutCreateUpdateAfterBindPool
+	MaxPerStageDescriptorUpdateAfterBindStorageImages int
+	// MaxPerStageDescriptorUpdateAfterBindInputAttachments  is similar to
+	// MaxPerStageDescriptorInputAttachments but counts descriptors from DescriptorSet objects
+	// created with or without DescriptorSetLayoutCreateUpdateAfterBindPool
 	MaxPerStageDescriptorUpdateAfterBindInputAttachments int
-	MaxPerStageUpdateAfterBindResources                  int
+	// MaxPerStageUpdateAfterBindResources is similar to MaxPerStageResources but counts
+	// descriptors from DescriptorSet objects created with or without
+	// DescriptorSetLayoutCreateUpdateAfterBindPool
+	MaxPerStageUpdateAfterBindResources int
 
-	MaxDescriptorSetUpdateAfterBindSamplers              int
-	MaxDescriptorSetUpdateAfterBindUniformBuffers        int
+	// MaxDescriptorSetUpdateAfterBindSamplers is similar to MaxDescriptorSetSamplers but counts
+	// descriptors from DescriptorSet created with or without
+	// DescriptorSetLayoutCreateUpdateAfterBindPool
+	MaxDescriptorSetUpdateAfterBindSamplers int
+	// MaxDescriptorSetUpdateAfterBindUniformBuffers is similar to MaxDescriptorSetUniformBuffers
+	// but counts descriptors from DescriptorSet objects created with or without
+	// DescriptorSetLayoutCreateUpdateAfterBindPool
+	MaxDescriptorSetUpdateAfterBindUniformBuffers int
+	// MaxDescriptorSetUpdateAfterBindUniformBuffersDynamic is similar to
+	// MaxDescriptorSetUniformBuffersDynamic but counts descriptors from DescriptorSet objects
+	// created with or without DescriptorSetLayoutCreateUpdateAfterBindPool
 	MaxDescriptorSetUpdateAfterBindUniformBuffersDynamic int
-	MaxDescriptorSetUpdateAfterBindStorageBuffers        int
+	// MaxDescriptorSetUpdateAfterBindStorageBuffers is similar to MaxDescriptorSetStorageBuffers
+	// but counts descriptors from DescriptorSet objects created with or without
+	// DescriptorSetLayoutCreateUpdateAfterBindPool
+	MaxDescriptorSetUpdateAfterBindStorageBuffers int
+	// MaxDescriptorSetUpdateAfterBindStorageBuffersDynamic is similar to
+	// MaxDescriptorSetStorageBuffersDynamic but counts descriptors from DescriptorSet objects
+	// created with or without DescriptorSetLayoutCreateUpdateAfterBindPool
 	MaxDescriptorSetUpdateAfterBindStorageBuffersDynamic int
-	MaxDescriptorSetUpdateAfterBindSampledImages         int
-	MaxDescriptorSetUpdateAfterBindStorageImages         int
-	MaxDescriptorSetUpdateAfterBindInputAttachments      int
+	// MaxDescriptorSetUpdateAfterBindSampledImages is similar to MaxDescriptorSetSampledImages
+	// but counts descriptors from DescriptorSet objects created with or without
+	// DescriptorSetLayoutCreateUpdateAfterBindPool
+	MaxDescriptorSetUpdateAfterBindSampledImages int
+	// MaxDescriptorSetUpdateAfterBindStorageImages is similar to MaxDescriptorSetStorageImages
+	// but counts descriptors from DescriptorSet objects created with or without
+	// DescriptorSetLayoutCreateUpdateAfterBindPool
+	MaxDescriptorSetUpdateAfterBindStorageImages int
+	// MaxDescriptorSetUpdateAfterBindInputAttachments is similar to MaxDescriptorSetInputAttachments
+	// but counts descriptors from DescriptorSet objects created with or without
+	// DescriptorSetLayoutCreateUpdateAfterBindPool
+	MaxDescriptorSetUpdateAfterBindInputAttachments int
 
 	common.NextOutData
 }
@@ -286,25 +465,62 @@ func (o *PhysicalDeviceDescriptorIndexingProperties) PopulateOutData(cDataPointe
 
 ////
 
+// PhysicalDeviceFloatControlsProperties describes properties supported by khr_shader_float_controls
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkPhysicalDeviceFloatControlsProperties.html
 type PhysicalDeviceFloatControlsProperties struct {
+	// DenormBehaviorIndependence indicates whether, and how, denorm behavior can be
+	// set independently for different bit widths
 	DenormBehaviorIndependence ShaderFloatControlsIndependence
-	RoundingMoundIndependence  ShaderFloatControlsIndependence
+	// RoundingModeIndependence indicates whether, and how, rounding modes can be set indpendently
+	// for different bit widths
+	RoundingModeIndependence ShaderFloatControlsIndependence
 
+	// ShaderSignedZeroInfNanPreserveFloat16 indicates whether the sign of zero, NaN, and +/- infinity
+	// can be preserved in 16-bit floating-point computations
 	ShaderSignedZeroInfNanPreserveFloat16 bool
+	// ShaderSignedZeroInfNanPreserveFloat32 indicates whether the sign of zero, NaN, and +/- infinity
+	// can be preserved in 32-bit floating-point computations
 	ShaderSignedZeroInfNanPreserveFloat32 bool
+	// ShaderSignedZeroInfNanPreserveFloat64 indicates whether the sign of zero, NaN, and +/- infinity
+	// can be preserved in 64-bit floating-point computations
 	ShaderSignedZeroInfNanPreserveFloat64 bool
-	ShaderDenormPreserveFloat16           bool
-	ShaderDenormPreserveFloat32           bool
-	ShaderDenormPreserveFloat64           bool
-	ShaderDenormFlushToZeroFloat16        bool
-	ShaderDenormFlushToZeroFloat32        bool
-	ShaderDenormFlushToZeroFloat64        bool
-	ShaderRoundingModeRTEFloat16          bool
-	ShaderRoundingModeRTEFloat32          bool
-	ShaderRoundingModeRTEFloat64          bool
-	ShaderRoundingModeRTZFloat16          bool
-	ShaderRoundingModeRTZFloat32          bool
-	ShaderRoundingModeRTZFloat64          bool
+	// ShaderDenormPreserveFloat16 indicates whether denormals can be preserved in 16-bit floating-point
+	// computations
+	ShaderDenormPreserveFloat16 bool
+	// ShaderDenormPreserveFloat32 indicates whether denormals can be preserved in 32-bit floating-point
+	// computations
+	ShaderDenormPreserveFloat32 bool
+	// ShaderDenormPreserveFloat64 indicates whether denormals can be preserved in 64-bit floating-point
+	// computations
+	ShaderDenormPreserveFloat64 bool
+	// ShaderDenormFlushToZeroFloat16 indicates whether denormals can be flushed to zero in 16-bit
+	// floating-point computations
+	ShaderDenormFlushToZeroFloat16 bool
+	// ShaderDenormFlushToZeroFloat32 indicates whether denormals can be flushed to zero in 32-bit
+	// floating-point computations
+	ShaderDenormFlushToZeroFloat32 bool
+	// ShaderDenormFlushToZeroFloat64 indicates whether denormals can be flushed to zero in 64-bit
+	// floating-point computations
+	ShaderDenormFlushToZeroFloat64 bool
+	// ShaderRoundingModeRTEFloat16 indicates whether an implementation supports the round-to-nearest-even
+	// rounding mode for 16-bit floating-point arithmetic and conversion instructions
+	ShaderRoundingModeRTEFloat16 bool
+	// ShaderRoundingModeRTEFloat32 indicates whether an implementation supports the round-to-nearest-even
+	// rounding mode for 32-bit floating-point arithmetic and conversion instructions
+	ShaderRoundingModeRTEFloat32 bool
+	// ShaderRoundingModeRTEFloat64 indicates whether an implementation supports the round-to-nearest-even
+	// rounding mode for 64-bit floating-point arithmetic and conversion instructions
+	ShaderRoundingModeRTEFloat64 bool
+	// ShaderRoundingModeRTZFloat16 indicates whether an implementation supports the round-toward-zero
+	// rounding mode for 16-bit floating-point arithmetic and conversion instructions
+	ShaderRoundingModeRTZFloat16 bool
+	// ShaderRoundingModeRTZFloat32 indicates whether an implementation supports the round-toward-zero
+	// rounding mode for 32-bit floating-point arithmetic and conversion instructions
+	ShaderRoundingModeRTZFloat32 bool
+	// ShaderRoundingModeRTZFloat64 indicates whether an implementation supports the round-toward-zero
+	// rounding mode for 64-bit floating-point arithmetic and conversion instructions
+	ShaderRoundingModeRTZFloat64 bool
 
 	common.NextOutData
 }
@@ -325,7 +541,7 @@ func (o *PhysicalDeviceFloatControlsProperties) PopulateOutData(cDataPointer uns
 	info := (*C.VkPhysicalDeviceFloatControlsProperties)(cDataPointer)
 
 	o.DenormBehaviorIndependence = ShaderFloatControlsIndependence(info.denormBehaviorIndependence)
-	o.RoundingMoundIndependence = ShaderFloatControlsIndependence(info.roundingModeIndependence)
+	o.RoundingModeIndependence = ShaderFloatControlsIndependence(info.roundingModeIndependence)
 	o.ShaderSignedZeroInfNanPreserveFloat16 = info.shaderSignedZeroInfNanPreserveFloat16 != C.VkBool32(0)
 	o.ShaderSignedZeroInfNanPreserveFloat32 = info.shaderSignedZeroInfNanPreserveFloat32 != C.VkBool32(0)
 	o.ShaderSignedZeroInfNanPreserveFloat64 = info.shaderSignedZeroInfNanPreserveFloat64 != C.VkBool32(0)
@@ -347,9 +563,17 @@ func (o *PhysicalDeviceFloatControlsProperties) PopulateOutData(cDataPointer uns
 
 ////
 
+// PhysicalDeviceSamplerFilterMinmaxProperties describes Sampler filter minmax limits that can
+// be supported by an implementation
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkPhysicalDeviceSamplerFilterMinmaxProperties.html
 type PhysicalDeviceSamplerFilterMinmaxProperties struct {
+	// FilterMinmaxSingleComponentFormats indicates whether a minimum set of required formats
+	// support min/max filtering
 	FilterMinmaxSingleComponentFormats bool
-	FilterMinmaxImageComponentMapping  bool
+	// FilterMinmaxImageComponentMapping indicates whether the implementation support non-identity
+	// component mapping of the Image when doing min/max filtering
+	FilterMinmaxImageComponentMapping bool
 
 	common.NextOutData
 }
@@ -377,7 +601,14 @@ func (o *PhysicalDeviceSamplerFilterMinmaxProperties) PopulateOutData(cDataPoint
 
 ////
 
+// PhysicalDeviceTimelineSemaphoreProperties describes timeline Semaphore properties that
+// can be supported by an implementation
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkPhysicalDeviceTimelineSemaphoreProperties.html
 type PhysicalDeviceTimelineSemaphoreProperties struct {
+	// MaxTimelineSemaphoreValueDifference indicates the maximum difference allowed by the
+	// implementation between the current value of a timeline Semaphore and any pending signal or
+	// wait operations
 	MaxTimelineSemaphoreValueDifference uint64
 
 	common.NextOutData
@@ -405,25 +636,57 @@ func (o *PhysicalDeviceTimelineSemaphoreProperties) PopulateOutData(cDataPointer
 
 ////
 
+// PhysicalDeviceVulkan11Properties specifies PhysicalDevice properties for functionality
+// promoted to Vulkan 1.1
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkPhysicalDeviceVulkan11Properties.html
 type PhysicalDeviceVulkan11Properties struct {
+	// DeviceUUID represents a universally-unique identifier for the Device
 	DeviceUUID uuid.UUID
+	// DriverUUID represents a universally-unique identifier for the driver build in use by
+	// the Device
 	DriverUUID uuid.UUID
+	// DeviceLUID represents a locally-unique identifier for the Device
 	DeviceLUID uint64
 
-	DeviceNodeMask  uint32
+	// DeviceNodeMask identifies the node within a linked Device adapter corresponding to the
+	// Device
+	DeviceNodeMask uint32
+	// DeviceLUIDValid is true if DeviceLUID contains a valid LUID and DeviceNodeMask contains
+	// a valid node mask
 	DeviceLUIDValid bool
 
-	SubgroupSize                      int
-	SubgroupSupportedStages           core1_0.ShaderStageFlags
-	SubgroupSupportedOperations       core1_1.SubgroupFeatureFlags
+	// SubgroupSize is the default number of invocations in each subgroup
+	SubgroupSize int
+	// SubgroupSupportedStages describes the shader stages that group operations with
+	// subgroup scope are supported in
+	SubgroupSupportedStages core1_0.ShaderStageFlags
+	// SubgroupSupportedOperations specifies the sets of group operations with subgroup
+	// scope supported on this Device
+	SubgroupSupportedOperations core1_1.SubgroupFeatureFlags
+	// SubgroupQuadOperationsInAllStages specifies whether quad group operations are available
+	// in all stages, or are restricted to fragment and compute stages
 	SubgroupQuadOperationsInAllStages bool
 
-	PointClippingBehavior     core1_1.PointClippingBehavior
-	MaxMultiviewViewCount     int
+	// PointClippingBehavior specifies the point clipping behavior supported by the implementation
+	PointClippingBehavior core1_1.PointClippingBehavior
+	// MaxMultiviewViewCount is one greater than the maximum view index that can be used in a
+	// subpass
+	MaxMultiviewViewCount int
+	// MaxMultiviewInstanceIndex is the maximum valid value of instance index allowed to be
+	// generated by a drawing command recorded within a subpass of a multiview RenderPass instance
 	MaxMultiviewInstanceIndex int
-	ProtectedNoFault          bool
-	MaxPerSetDescriptors      int
-	MaxMemoryAllocationSize   int
+	// ProtectedNoFault specifies how an implementation behaves when an application attempts to write
+	// to unprotected memory in a protected Queue operation, read from protected memory in an
+	// unprotected Queue operation, or perform a query in a protected Queue operation
+	ProtectedNoFault bool
+	// MaxPerSetDescriptors is a maximum number of descriptors (summed over all descriptor types)
+	// in a single DescriptorSet that is guaranteed to satisfy any implementation-dependent contraints
+	// on the size of a DescriptorSet itself
+	MaxPerSetDescriptors int
+	// MaxMemoryAllocationSize is the maximum size of a memory allocation that can be created,
+	// even if there is more space available in the heap
+	MaxMemoryAllocationSize int
 
 	common.NextOutData
 }
@@ -474,67 +737,198 @@ func (o *PhysicalDeviceVulkan11Properties) PopulateOutData(cDataPointer unsafe.P
 
 ////
 
+// PhysicalDeviceVulkan12Properties specifies PhysicalDevice properties for functionality
+// promoted to Vulkan 1.2
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkPhysicalDeviceVulkan12Properties.html
 type PhysicalDeviceVulkan12Properties struct {
-	DriverID           DriverID
-	DriverName         string
-	DriverInfo         string
+	// DriverID is a unique identifier for the driver of the PhysicalDevice
+	DriverID DriverID
+	// DriverName is a string which is the name of the driver
+	DriverName string
+	// DriverInfo is a string with additional information about the driver
+	DriverInfo string
+	// ConformanceVersion is the version of the Vulkan conformance test this driver is
+	// comformant against
 	ConformanceVersion ConformanceVersion
 
+	// DenormBehaviorIndependence indicates whether, and how, denorm behavior can be set
+	// independently for different bit widths
 	DenormBehaviorIndependence ShaderFloatControlsIndependence
-	RoundingModeIndependence   ShaderFloatControlsIndependence
+	// RoundingModeIndependence indicates whether, and how, rounding modes can be set
+	// independently for different bit widths
+	RoundingModeIndependence ShaderFloatControlsIndependence
 
+	// ShaderSignedZeroInfNanPreserveFloat16 indicates whether the sign of zero, NaN, and
+	// +/- infinity can be preserved in 16-bit floating-point computations
 	ShaderSignedZeroInfNanPreserveFloat16 bool
+	// ShaderSignedZeroInfNanPreserveFloat32 indicates whether the sign of zero, NaN, and
+	// +/- infinity can be preserved in 32-bit floating-point computations
 	ShaderSignedZeroInfNanPreserveFloat32 bool
+	// ShaderSignedZeroInfNanPreserveFloat64 indicates whether the sign of zero, NaN, and
+	// +/- infinity can be preserved in 64-bit floating-point computations
 	ShaderSignedZeroInfNanPreserveFloat64 bool
-	ShaderDenormPreserveFloat16           bool
-	ShaderDenormPreserveFloat32           bool
-	ShaderDenormPreserveFloat64           bool
-	ShaderDenormFlushToZeroFloat16        bool
-	ShaderDenormFlushToZeroFloat32        bool
-	ShaderDenormFlushToZeroFloat64        bool
-	ShaderRoundingModeRTEFloat16          bool
-	ShaderRoundingModeRTEFloat32          bool
-	ShaderRoundingModeRTEFloat64          bool
-	ShaderRoundingModeRTZFloat16          bool
-	ShaderRoundingModeRTZFloat32          bool
-	ShaderRoundingModeRTZFloat64          bool
+	// ShaderDenormPreserveFloat16 indicates whether denormals can be preserved in 16-bit
+	// floating-point computations
+	ShaderDenormPreserveFloat16 bool
+	// ShaderDenormPreserveFloat32 indicates whether denormals can be preserved in 32-bit
+	// floating-point computations
+	ShaderDenormPreserveFloat32 bool
+	// ShaderDenormPreserveFloat64 indicates whether denormals can be preserved in 64-bit
+	// floating-point computations
+	ShaderDenormPreserveFloat64 bool
+	// ShaderDenormFlushToZeroFloat16 indicates whether denormals can be flushed to zero
+	// in 16-bit floating-point computations
+	ShaderDenormFlushToZeroFloat16 bool
+	// ShaderDenormFlushToZeroFloat32 indicates whether denormals can be flushed to zero
+	// in 32-bit floating-point computations
+	ShaderDenormFlushToZeroFloat32 bool
+	// ShaderDenormFlushToZeroFloat64 indicates whether denormals can be flushed to zero
+	// in 64-bit floating-point computations
+	ShaderDenormFlushToZeroFloat64 bool
+	// ShaderRoundingModeRTEFloat16 indicates whether an implementation supports the
+	// round-to-nearest-even rounding mode for 16-bit floating-point arithmetic and conversion
+	// instructions
+	ShaderRoundingModeRTEFloat16 bool
+	// ShaderRoundingModeRTEFloat32 indicates whether an implementation supports the
+	// round-to-nearest-even rounding mode for 32-bit floating-point arithmetic and conversion
+	// instructions
+	ShaderRoundingModeRTEFloat32 bool
+	// ShaderRoundingModeRTEFloat64 indicates whether an implementation supports the
+	// round-to-nearest-even rounding mode for 64-bit floating-point arithmetic and conversion
+	// instructions
+	ShaderRoundingModeRTEFloat64 bool
+	// ShaderRoundingModeRTZFloat16 indicates whether an implementation supports the
+	// round-towards-zero rounding mode for 16-bit floating-point arithmetic and conversion
+	// instructions
+	ShaderRoundingModeRTZFloat16 bool
+	// ShaderRoundingModeRTZFloat32 indicates whether an implementation supports the
+	// round-towards-zero rounding mode for 32-bit floating-point arithmetic and conversion
+	// instructions
+	ShaderRoundingModeRTZFloat32 bool
+	// ShaderRoundingModeRTZFloat64 indicates whether an implementation supports the
+	// round-towards-zero rounding mode for 64-bit floating-point arithmetic and conversion
+	// instructions
+	ShaderRoundingModeRTZFloat64 bool
 
-	MaxUpdateAfterBindDescriptorsInAllPools            int
-	ShaderUniformBufferArrayNonUniformIndexingNative   bool
-	ShaderSampledImageArrayNonUniformIndexingNative    bool
-	ShaderStorageBufferArrayNonUniformIndexingNative   bool
-	ShaderStorageImageArrayNonUniformIndexingNative    bool
+	// MaxUpdateAfterBindDescriptorsInAllPools is the maximum number of descriptors
+	// (summed over all descriptor types) that can be created across all pools that are
+	// created with DescriptorPoolCreateUpdateAfterBind
+	MaxUpdateAfterBindDescriptorsInAllPools int
+	// ShaderUniformBufferArrayNonUniformIndexingNative indicates whether uniform Buffer
+	// descriptors natively support nonuniform indexing
+	ShaderUniformBufferArrayNonUniformIndexingNative bool
+	// ShaderSampledImageArrayNonUniformIndexingNative indicates whether Sampler and Image
+	// descriptors natively support nonuniform indexing
+	ShaderSampledImageArrayNonUniformIndexingNative bool
+	// ShaderStorageBufferArrayNonUniformIndexingNative indicates whether storage Buffer
+	// descriptors natively support nonuniform indexing
+	ShaderStorageBufferArrayNonUniformIndexingNative bool
+	// ShaderStorageImageArrayNonUniformIndexingNative indicates whether storage Image
+	// descriptors natively support nonuniform indexing
+	ShaderStorageImageArrayNonUniformIndexingNative bool
+	// ShaderInputAttachmentArrayNonUniformIndexingNative indicates whether input attachment
+	// descriptors natively support nonuniform indexing
 	ShaderInputAttachmentArrayNonUniformIndexingNative bool
 
+	// RobustBufferAccessUpdateAfterBind indicates whether RobustBufferAccess can be enabled
+	// in a Device simultaneously with DescriptorBindingUniformBufferUpdateAfterBind,
+	// DescriptorBindingStorageBufferUpdateAfterBind,
+	// DescriptorBindingUniformTexelBufferUpdateAfterBind, and/or
+	// DescriptorBindingStorageTexelBufferUpdateAfterBind
 	RobustBufferAccessUpdateAfterBind bool
-	QuadDivergentImplicitLod          bool
+	// QuadDivergentImplicitLod indicates whether imlicit level of detail calculations for Image
+	// operations have well-defined results when the Image and/or Sampler objects used for
+	// the instructions are not uniform within a quad
+	QuadDivergentImplicitLod bool
 
-	MaxPerStageDescriptorUpdateAfterBindSamplers         int
-	MaxPerStageDescriptorUpdateAfterBindUniformBuffers   int
-	MaxPerStageDescriptorUpdateAfterBindStorageBuffers   int
-	MaxPerStageDescriptorUpdateAfterBindSampledImages    int
-	MaxPerStageDescriptorUpdateAfterBindStorageImages    int
+	// MaxPerStageDescriptorUpdateAfterBindSamplers is similar to MaxPerStageDescriptorSamplers
+	// but counts descriptors from DescriptorSet objects created with or without
+	// DescriptorSetLayoutCreateUpdateAfterBindPool
+	MaxPerStageDescriptorUpdateAfterBindSamplers int
+	// MaxPerStageDescriptorUpdateAfterBindUniformBuffers is similar to
+	// MaxPerStageDescriptorUniformBuffers but counts descriptors from DescriptorSet objects
+	// created with or without DescriptorSetLayoutCreateUpdateAfterBindPool
+	MaxPerStageDescriptorUpdateAfterBindUniformBuffers int
+	// MaxPerStageDescriptorUpdateAfterBindStorageBuffers is similar to
+	// MaxPerStageDescriptorStorageBuffers but counts descriptors from DescriptorSet objects
+	// created with or without DescriptorSetLayoutCreateUpdateAfterBindPool
+	MaxPerStageDescriptorUpdateAfterBindStorageBuffers int
+	// MaxPerStageDescriptorUpdateAfterBindSampledImages is similar to
+	// MaxPerStageDescriptorSampledImages but counts descriptors from DescriptorSet objects
+	// created with or without DescriptorSetLayoutCreateUpdateAfterBindPool
+	MaxPerStageDescriptorUpdateAfterBindSampledImages int
+	// MaxPerStageDescriptorUpdateAfterBindStorageImages is similar to
+	// MaxPerStageDescriptorStorageImages but counts descriptors from DescriptorSet objects
+	// created with or without DescriptorSetLayoutCreateUpdateAfterBindPool
+	MaxPerStageDescriptorUpdateAfterBindStorageImages int
+	// MaxPerStageDescriptorUpdateAfterBindInputAttachments is similar to
+	// MaxPerStageDescriptorInputAttachments but counts descriptors from DescriptorSet objects
+	// created with or without DescriptorSetLayoutCreateUpdateAfterBindPool
 	MaxPerStageDescriptorUpdateAfterBindInputAttachments int
-	MaxPerStageUpdateAfterBindResources                  int
+	// MaxPerStageUpdateAfterBindResources is similar to MaxPerStageResources but counts
+	// descriptors from DescriptorSet objects created with or without
+	// DescriptorSetLayoutCreateUpdateAfterBindPool
+	MaxPerStageUpdateAfterBindResources int
 
-	MaxDescriptorSetUpdateAfterBindSamplers              int
-	MaxDescriptorSetUpdateAfterBindUniformBuffers        int
+	// MaxDescriptorSetUpdateAfterBindSamplers is similar to MaxDescriptorSetSamplers but counts
+	// descriptors from DescriptorSet objects created with or without
+	// DescriptorSetLayoutCreateUpdateAfterBindPool
+	MaxDescriptorSetUpdateAfterBindSamplers int
+	// MaxDescriptorSetUpdateAfterBindUniformBuffers is similar to MaxDescriptorSetUniformBuffers
+	// but counts descriptors from DescriptorSet objects created with or without
+	// DescriptorSetLayoutCreateUpdateAfterBindPool
+	MaxDescriptorSetUpdateAfterBindUniformBuffers int
+	// MaxDescriptorSetUpdateAfterBindUniformBuffersDynamic is similar to
+	// MaxDescriptorSetUniformBuffersDynamic but counts descriptors from DescriptorSet objects
+	// created with or without DescriptorSetLayoutCreateUpdateAfterBindPool
 	MaxDescriptorSetUpdateAfterBindUniformBuffersDynamic int
-	MaxDescriptorSetUpdateAfterBindStorageBuffers        int
+	// MaxDescriptorSetUpdateAfterBindStorageBuffers is similar to MaxDescriptorSetStorageBuffers
+	// but counts descriptors from DescriptorSet objects created with or without
+	// DescriptorSetLayoutCreateUpdateAfterBindPool
+	MaxDescriptorSetUpdateAfterBindStorageBuffers int
+	// MaxDescriptorSetUpdateAfterBindStorageBuffersDynamic is similar to
+	// MaxDescriptorSetStorageBuffersDynamic but counts descriptors from DescriptorSet objects
+	// created with or without DescriptorSetLayoutCreateUpdateAfterBindPool
 	MaxDescriptorSetUpdateAfterBindStorageBuffersDynamic int
-	MaxDescriptorSetUpdateAfterBindSampledImages         int
-	MaxDescriptorSetUpdateAfterBindStorageImages         int
-	MaxDescriptorSetUpdateAfterBindInputAttachments      int
+	// MaxDescriptorSetUpdateAfterBindSampledImages is similar to MaxDescriptorSetSampledImages
+	// but counts descriptors from DescriptorSet objects created with or without
+	// DescriptorSetLayoutCreateUpdateAfterBindPool
+	MaxDescriptorSetUpdateAfterBindSampledImages int
+	// MaxDescriptorSetUpdateAfterBindStorageImages is similar to MaxDescriptorSetStorageImages
+	// but counts descriptors from descriptor sets created with or without
+	// DescriptorSetLayoutCreateUpdateAfterBindPool
+	MaxDescriptorSetUpdateAfterBindStorageImages int
+	// MaxDescriptorSetUpdateAfterBindInputAttachments is similar to
+	// MaxDescriptorSetInputAttachments but counts descriptors from DescriptorSet objects
+	// created with or without DescriptorSetLayoutCreateUpdateAfterBindPool
+	MaxDescriptorSetUpdateAfterBindInputAttachments int
 
-	SupportedDepthResolveModes   ResolveModeFlags
+	// SupportedDepthResolveModes indicates the set of supported depth resolve modes
+	SupportedDepthResolveModes ResolveModeFlags
+	// SupportedStencilResolveModes idnicates the set of supported stencil resolve modes
 	SupportedStencilResolveModes ResolveModeFlags
-	IndependentResolveNone       bool
-	IndependentResolve           bool
+	// IndependentResolveNone is true if the implementation supports setting the depth and
+	// stencil resolve modes to different values when one of those modes is ResolveModeNone
+	IndependentResolveNone bool
+	// IndependentResolve is true if the implementation supports all combinations of the supported
+	// depth and stencil resolve modes, including setting either depth or stencil resolve mode
+	// to ResolveModeNone
+	IndependentResolve bool
 
+	// FilterMinmaxSingleComponentFormats indicates whether a minimum set of required formats
+	// support min/max filtering
 	FilterMinmaxSingleComponentFormats bool
-	FilterMinmaxImageComponentMapping  bool
+	// FilterMinmaxImageComponentMapping indicates whether the implementation supports non-identity
+	// component mapping of the Image when doing min/max filtering
+	FilterMinmaxImageComponentMapping bool
 
+	// MaxTimelineSemaphoreValueDifference indicates the maximum difference allowed by the
+	// implementation between the current value of a timeline Semaphore and any pending
+	// signal or wait operations
 	MaxTimelineSemaphoreValueDifference uint64
+	// FramebufferIntegerColorSampleCounts indicates the color sample counts that are supported
+	// for all Framebuffer color attachments with integer formats
 	FramebufferIntegerColorSampleCounts core1_0.SampleCountFlags
 
 	common.NextOutData

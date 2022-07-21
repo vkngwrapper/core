@@ -13,10 +13,26 @@ import (
 )
 
 const (
-	ImageLayoutDepthAttachmentOptimal   core1_0.ImageLayout = C.VK_IMAGE_LAYOUT_DEPTH_ATTACHMENT_OPTIMAL
-	ImageLayoutDepthReadOnlyOptimal     core1_0.ImageLayout = C.VK_IMAGE_LAYOUT_DEPTH_READ_ONLY_OPTIMAL
+	// ImageLayoutDepthAttachmentOptimal specifies a layout for the depth aspect of a depth/stencil
+	// format Image allowing read and write access as a depth attachment
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkImageLayout.html
+	ImageLayoutDepthAttachmentOptimal core1_0.ImageLayout = C.VK_IMAGE_LAYOUT_DEPTH_ATTACHMENT_OPTIMAL
+	// ImageLayoutDepthReadOnlyOptimal specifies a layout for the depth aspect of a depth/stencil
+	// format Image allowing read-only access as a depth attachment or in shaders as a sampled Image,
+	// combined Image/Sampler, or input attachment
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkImageLayout.html
+	ImageLayoutDepthReadOnlyOptimal core1_0.ImageLayout = C.VK_IMAGE_LAYOUT_DEPTH_READ_ONLY_OPTIMAL
+	// ImageLayoutStencilAttachmentOptimal specifies a layout for the stencil aspect of a
+	// depth/stencil format Image allowing read and write access as a stencil attachment
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkImageLayout.html
 	ImageLayoutStencilAttachmentOptimal core1_0.ImageLayout = C.VK_IMAGE_LAYOUT_STENCIL_ATTACHMENT_OPTIMAL
-	ImageLayoutStencilReadOnlyOptimal   core1_0.ImageLayout = C.VK_IMAGE_LAYOUT_STENCIL_READ_ONLY_OPTIMAL
+	// ImageLayoutStencilReadOnlyOptimal specifies a layout for the stencil aspect of a depth/stencil
+	// format Image allowing read-only access as a stencil attachment or in shaders as a sampled
+	// Image, combined Image/Sampler, or input attachment
+	ImageLayoutStencilReadOnlyOptimal core1_0.ImageLayout = C.VK_IMAGE_LAYOUT_STENCIL_READ_ONLY_OPTIMAL
 )
 
 func init() {
@@ -28,7 +44,12 @@ func init() {
 
 ////
 
+// ImageStencilUsageCreateInfo specifies separate usage flags for the stencil aspect of a
+// depth-stencil Image
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkImageStencilUsageCreateInfo.html
 type ImageStencilUsageCreateInfo struct {
+	// StencilUsage describes the intended usage of the stencil aspect of the Image
 	StencilUsage core1_0.ImageUsageFlags
 
 	common.NextOptions
@@ -49,7 +70,12 @@ func (o ImageStencilUsageCreateInfo) PopulateCPointer(allocator *cgoparam.Alloca
 
 ////
 
+// ImageFormatListCreateInfo specifies that an Image can be used with a particular set of formats
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkImageFormatListCreateInfo.html
 type ImageFormatListCreateInfo struct {
+	// ViewFormats is a slice of core1_0.Format values specifying all formats which can be used
+	// when creating views of this Image
 	ViewFormats []core1_0.Format
 
 	common.NextOptions

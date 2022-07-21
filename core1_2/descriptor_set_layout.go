@@ -13,6 +13,11 @@ type VulkanDescriptorSetLayout struct {
 	core1_1.DescriptorSetLayout
 }
 
+// PromoteDescriptorSetLayout accepts a DescriptorSetLayout object from any core version. If provided a descriptor set layout that supports
+// at least core 1.2, it will return a core1_2.DescriptorSetLayout. Otherwise, it will return nil. This method
+// will always return a core1_2.VulkanDescriptorSetLayout, even if it is provided a VulkanDescriptorSetLayout from a higher
+// core version. Two Vulkan 1.2 compatible DescriptorSetLayout objects with the same DescriptorSetLayout.Handle will
+// return the same interface value when passed to this method.
 func PromoteDescriptorSetLayout(layout core1_0.DescriptorSetLayout) DescriptorSetLayout {
 	if !layout.APIVersion().IsAtLeast(common.Vulkan1_2) {
 		return nil

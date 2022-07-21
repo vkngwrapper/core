@@ -13,7 +13,11 @@ import (
 	"unsafe"
 )
 
+// SubpassBeginInfo specifies subpass begin information
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkSubpassBeginInfoKHR.html
 type SubpassBeginInfo struct {
+	// Contents specifies how the commands in the next subpass will be provided
 	Contents core1_0.SubpassContents
 
 	common.NextOptions
@@ -34,6 +38,7 @@ func (o SubpassBeginInfo) PopulateCPointer(allocator *cgoparam.Allocator, preall
 
 ////
 
+// SubpassEndInfo specifies subpass end information
 type SubpassEndInfo struct {
 	common.NextOptions
 }
@@ -52,16 +57,34 @@ func (o SubpassEndInfo) PopulateCPointer(allocator *cgoparam.Allocator, prealloc
 
 ////
 
+// AttachmentDescription2 specifies an attachment description
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkAttachmentDescription2.html
 type AttachmentDescription2 struct {
-	Flags          core1_0.AttachmentDescriptionFlags
-	Format         core1_0.Format
-	Samples        core1_0.SampleCountFlags
-	LoadOp         core1_0.AttachmentLoadOp
-	StoreOp        core1_0.AttachmentStoreOp
-	StencilLoadOp  core1_0.AttachmentLoadOp
+	// Flags specifies additional properties of the attachment
+	Flags core1_0.AttachmentDescriptionFlags
+	// Format specifies the format of the Image that will be used for the attachment
+	Format core1_0.Format
+	// Samples specifies the number of samples of the Image
+	Samples core1_0.SampleCountFlags
+	// LoadOp specifies how the contents of color and depth components of the attachment
+	// are treated at the beginning of the subpass where it is first used
+	LoadOp core1_0.AttachmentLoadOp
+	// StoreOp specifies how the contents of color and depth components of the attachment
+	// are treated at the end of the subpass where it is last used
+	StoreOp core1_0.AttachmentStoreOp
+	// StencilLoadOp specifies how the contents of stencil components of the attachment
+	// are treated at the beginning of the subpass where it is first used
+	StencilLoadOp core1_0.AttachmentLoadOp
+	// StencilStoreOp specifies how the contents of the stencil components of the attachment
+	// are treated at the end of the last subpass where it is used
 	StencilStoreOp core1_0.AttachmentStoreOp
-	InitialLayout  core1_0.ImageLayout
-	FinalLayout    core1_0.ImageLayout
+	// InitialLayout is the layout of the attachment Image subresource will be in when
+	// a RenderPass instance begins
+	InitialLayout core1_0.ImageLayout
+	// FinalLayout is the layout the attachment Image subresource will be transitioned to
+	// when a RenderPass instance ends
+	FinalLayout core1_0.ImageLayout
 
 	common.NextOptions
 }
@@ -89,9 +112,17 @@ func (o AttachmentDescription2) PopulateCPointer(allocator *cgoparam.Allocator, 
 
 ////
 
+// AttachmentReference2 specifies an attachment reference
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkAttachmentReference2.html
 type AttachmentReference2 struct {
+	// Attachment identifies an attachment at the corresponding index in
+	// RenderPassCreateInfo2.Attachments, or core1_0.AttachmentUnused
 	Attachment int
-	Layout     core1_0.ImageLayout
+	// Layout specifies the layout the attachment uses during the subpass
+	Layout core1_0.ImageLayout
+	// AspectMask is a mask of which aspect(s) can be accessed within the specified
+	// subpass as an input attachment
 	AspectMask core1_0.ImageAspectFlags
 
 	common.NextOptions
@@ -114,15 +145,33 @@ func (o AttachmentReference2) PopulateCPointer(allocator *cgoparam.Allocator, pr
 
 ////
 
+// SubpassDescription2 specifies a subpass description
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkSubpassDescription2.html
 type SubpassDescription2 struct {
-	Flags                  core1_0.SubpassDescriptionFlags
-	PipelineBindPoint      core1_0.PipelineBindPoint
-	ViewMask               uint32
-	InputAttachments       []AttachmentReference2
-	ColorAttachments       []AttachmentReference2
-	ResolveAttachments     []AttachmentReference2
+	// Flags specifies usage of the subpass
+	Flags core1_0.SubpassDescriptionFlags
+	// PipelineBindPoint specifies the Pipeline type supported for this subpass
+	PipelineBindPoint core1_0.PipelineBindPoint
+	// ViewMask describes which views rendering is broadcast to in this subpass, when
+	// multiview is enabled
+	ViewMask uint32
+	// InputAttachments is a slice of AttachmentReference2 structures defining the input
+	// attachments for this subpass and their layouts
+	InputAttachments []AttachmentReference2
+	// ColorAttachments is a slice of AttachmentReference2 structures defining the color
+	// attachments for this subpass and their layouts
+	ColorAttachments []AttachmentReference2
+	// ResolveAttachments is a slice of AttachmentReference2 structures defining the resolve
+	// attachments for this subpass and their layouts
+	ResolveAttachments []AttachmentReference2
+	// DepthStencilAttachment specifies the depth/stencil attachment for this subpass and
+	// its layout
 	DepthStencilAttachment *AttachmentReference2
-	PreserveAttachments    []int
+	// PreserveAttachments is a slice of RenderPass attachment indices identifying attachments
+	// that are not used by this subpass, but whose contents must be preserved throughout the
+	// subpass
+	PreserveAttachments []int
 
 	common.NextOptions
 }
@@ -200,15 +249,29 @@ func (o SubpassDescription2) PopulateCPointer(allocator *cgoparam.Allocator, pre
 
 ////
 
+// SubpassDependency2 specifies a subpass dependency
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkSubpassDependency2.html
 type SubpassDependency2 struct {
-	SrcSubpass      int
-	DstSubpass      int
-	SrcStageMask    core1_0.PipelineStageFlags
-	DstStageMask    core1_0.PipelineStageFlags
-	SrcAccessMask   core1_0.AccessFlags
-	DstAccessMask   core1_0.AccessFlags
+	// SrcSubpass is the subpass index of the first subpass in the dependency, or
+	// core1_0.SubpassExternal
+	SrcSubpass int
+	// DstSubpass is the subpass index of the second subpass in the dependency, or
+	// core1_0.SubpassExternal
+	DstSubpass int
+	// SrcStageMask specifies the source stage mask
+	SrcStageMask core1_0.PipelineStageFlags
+	// DstStageMask specifies the destination stage mask
+	DstStageMask core1_0.PipelineStageFlags
+	// SrcAccessMask specifies a source access mask
+	SrcAccessMask core1_0.AccessFlags
+	// DstAccessMask specifies a source access mask
+	DstAccessMask core1_0.AccessFlags
+	// DependencyFlags is a set of dependency flags
 	DependencyFlags core1_0.DependencyFlags
-	ViewOffset      int
+	// ViewOffset controls which views in the source subpass the views in the destination
+	// subpass depend on
+	ViewOffset int
 
 	common.NextOptions
 }
@@ -235,13 +298,24 @@ func (o SubpassDependency2) PopulateCPointer(allocator *cgoparam.Allocator, prea
 
 ////
 
+// RenderPassCreateInfo2 specifies parameters of a newly-created RenderPass
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkRenderPassCreateInfo2.html
 type RenderPassCreateInfo2 struct {
+	// Flags is reserved for future use
 	Flags core1_0.RenderPassCreateFlags
 
-	Attachments  []AttachmentDescription2
-	Subpasses    []SubpassDescription2
+	// Attachments is a slice of AttachmentDescription2 structures describing the attachments
+	// used by the RenderPass
+	Attachments []AttachmentDescription2
+	// Subpasses is a slice of SubpassDescription2 structures describing each subpass
+	Subpasses []SubpassDescription2
+	// Dependencies is a slice of SubpassDependency2 structures describing dependencies
+	// between pairs of subpasses
 	Dependencies []SubpassDependency2
 
+	// CorrelatedViewMasks is a slice of view masks indicating sets of views that may be
+	// more efficient to render concurrently
 	CorrelatedViewMasks []uint32
 
 	common.NextOptions
@@ -307,9 +381,16 @@ func (o RenderPassCreateInfo2) PopulateCPointer(allocator *cgoparam.Allocator, p
 
 ////
 
+// AttachmentDescriptionStencilLayout specifies an attachment description
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkAttachmentDescriptionStencilLayout.html
 type AttachmentDescriptionStencilLayout struct {
+	// StencilInitialLayout is the layout of the stencil aspect of the attachment Image
+	// subresource will be in when a RenderPass instance begins
 	StencilInitialLayout core1_0.ImageLayout
-	StencilFinalLayout   core1_0.ImageLayout
+	// StencilFinalLayout is the layout the stencil aspect of the attachment Image subresource
+	// will be transitioned to when a RenderPass instance ends
+	StencilFinalLayout core1_0.ImageLayout
 
 	common.NextOptions
 }
@@ -330,7 +411,11 @@ func (o AttachmentDescriptionStencilLayout) PopulateCPointer(allocator *cgoparam
 
 ////
 
+// AttachmentReferenceStencilLayout specifies an attachment description
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkAttachmentReferenceStencilLayout.html
 type AttachmentReferenceStencilLayout struct {
+	// StencilLayout specifies the layout the stencil aspect of the attachment uses during hte subpass
 	StencilLayout core1_0.ImageLayout
 
 	common.NextOptions
@@ -351,7 +436,12 @@ func (o AttachmentReferenceStencilLayout) PopulateCPointer(allocator *cgoparam.A
 
 ////
 
+// RenderPassAttachmentBeginInfo specifies Image objects to be used as Framebuffer attachments
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkRenderPassAttachmentBeginInfo.html
 type RenderPassAttachmentBeginInfo struct {
+	// Attachments is a slice of ImageView objects, each of which will be used as the corresponding
+	// attachment in the RenderPass instance
 	Attachments []core1_0.ImageView
 
 	common.NextOptions
@@ -383,9 +473,17 @@ func (o RenderPassAttachmentBeginInfo) PopulateCPointer(allocator *cgoparam.Allo
 
 ////
 
+// SubpassDescriptionDepthStencilResolve specifies depth/stencil resolve operations for
+// a subpass
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkSubpassDescriptionDepthStencilResolve.html
 type SubpassDescriptionDepthStencilResolve struct {
-	DepthResolveMode              ResolveModeFlags
-	StencilResolveMode            ResolveModeFlags
+	// DepthResolveMode describes the depth resolve mode
+	DepthResolveMode ResolveModeFlags
+	// StencilResolveMode describes the stencil resolve mode
+	StencilResolveMode ResolveModeFlags
+	// DepthStencilResolveAttachment defines the depth/stencil resolve attachment
+	// for this subpass and its layout
 	DepthStencilResolveAttachment *AttachmentReference2
 
 	common.NextOptions

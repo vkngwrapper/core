@@ -11,10 +11,19 @@ import (
 	"unsafe"
 )
 
+// PhysicalDevice8BitStorageFeatures describes features supported by khr_8bit_storage
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkPhysicalDevice8BitStorageFeatures.html
 type PhysicalDevice8BitStorageFeatures struct {
-	StorageBuffer8BitAccess           bool
+	// StorageBuffer8BitAccess indicates whether objects in the StorageBuffer, ShaderRecordBufferKHR,
+	// or PhysicalStorageBuffer storage class with the Block decoration can have 8-bit integer members
+	StorageBuffer8BitAccess bool
+	// UniformAndStorageBuffer8BitAccess indicates whether objects in the Uniform storage class
+	// with the Block decoration can have 8-bit integer members
 	UniformAndStorageBuffer8BitAccess bool
-	StoragePushConstant8              bool
+	// StoragePushConstant8 indicates whether objects in the PushConstant storage class can have 8-bit
+	// integer members
+	StoragePushConstant8 bool
 
 	common.NextOptions
 	common.NextOutData
@@ -70,10 +79,21 @@ func (o PhysicalDevice8BitStorageFeatures) PopulateCPointer(allocator *cgoparam.
 
 ////
 
+// PhysicalDeviceBufferDeviceAddressFeatures describes Buffer address features that can
+// be supported by an implementation
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkPhysicalDeviceBufferDeviceAddressFeatures.html
 type PhysicalDeviceBufferDeviceAddressFeatures struct {
-	BufferDeviceAddress              bool
+	// BufferDeviceAddress indicates that the implementation supports accessing Buffer memory
+	// in shaders as storage Buffer objects via an address queried from Device.GetBufferDeviceAddress
+	BufferDeviceAddress bool
+	// BufferDeviceAddressCaptureReplay indicates that the implementation supports saving and
+	// reusing Buffer and Device addresses, e.g. for trace capture and replay
 	BufferDeviceAddressCaptureReplay bool
-	BufferDeviceAddressMultiDevice   bool
+	// BufferDeviceAddressMultiDevice indicates that the implementation supports the
+	// BufferDeviceAddress, RayTracingPipeline, and RayQuery features for logical Device objects
+	// created with multiple PhysicalDevice objects
+	BufferDeviceAddressMultiDevice bool
 
 	common.NextOptions
 	common.NextOutData
@@ -130,27 +150,71 @@ func (o PhysicalDeviceBufferDeviceAddressFeatures) PopulateCPointer(allocator *c
 
 ////
 
+// PhysicalDeviceDescriptorIndexingFeatures describes descriptor indexing
+// features that can be supported by an implementation
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkPhysicalDeviceDescriptorIndexingFeatures.html
 type PhysicalDeviceDescriptorIndexingFeatures struct {
-	ShaderInputAttachmentArrayDynamicIndexing          bool
-	ShaderUniformTexelBufferArrayDynamicIndexing       bool
-	ShaderStorageTexelBufferArrayDynamicIndexing       bool
-	ShaderUniformBufferArrayNonUniformIndexing         bool
-	ShaderSampledImageArrayNonUniformIndexing          bool
-	ShaderStorageBufferArrayNonUniformIndexing         bool
-	ShaderStorageImageArrayNonUniformIndexing          bool
-	ShaderInputAttachmentArrayNonUniformIndexing       bool
-	ShaderUniformTexelBufferArrayNonUniformIndexing    bool
-	ShaderStorageTexelBufferArrayNonUniformIndexing    bool
-	DescriptorBindingUniformBufferUpdateAfterBind      bool
-	DescriptorBindingSampledImageUpdateAfterBind       bool
-	DescriptorBindingStorageImageUpdateAfterBind       bool
-	DescriptorBindingStorageBufferUpdateAfterBind      bool
+	// ShaderInputAttachmentArrayDynamicIndexing indicates whether arrays of input attachments
+	// can be indexed by dynamically uniform integer expressions in shader code
+	ShaderInputAttachmentArrayDynamicIndexing bool
+	// ShaderUniformTexelBufferArrayDynamicIndexing indicates whether arrays of uniform texel
+	// Buffer objects can be indexed by dynamically uniform integer expressions in shader code
+	ShaderUniformTexelBufferArrayDynamicIndexing bool
+	// ShaderStorageTexelBufferArrayDynamicIndexing indicates whether arrays of storage texel
+	// Buffer objects can be indexed by dynamically uniform integer expressions in shader code
+	ShaderStorageTexelBufferArrayDynamicIndexing bool
+	// ShaderUniformBufferArrayNonUniformIndexing indicates whether arrays of uniform Buffer objects
+	// can be indexed by non-uniform integer expressions in shader code.
+	ShaderUniformBufferArrayNonUniformIndexing bool
+	// ShaderSampledImageArrayNonUniformIndexing indicates whether arrays of Sampler objects or sampled
+	// Image objects can be indexed by non-uniform integer expressions in shader code
+	ShaderSampledImageArrayNonUniformIndexing bool
+	// ShaderStorageBufferArrayNonUniformIndexing indicates whether arrays of storage buffers
+	// can be indexed by non-uniform integer expressions in shader code
+	ShaderStorageBufferArrayNonUniformIndexing bool
+	// ShaderStorageImageArrayNonUniformIndexing indicates whether arrays of storage Image objects can
+	// be indexed by non-uniform integer expressions in shader code
+	ShaderStorageImageArrayNonUniformIndexing bool
+	// ShaderInputAttachmentArrayNonUniformIndexing indicates whether arrays of input attachments
+	// can be indexed by non-uniform integer expressions in shader code
+	ShaderInputAttachmentArrayNonUniformIndexing bool
+	// ShaderUniformTexelBufferArrayNonUniformIndexing indicates whether arrays of uniform texel
+	// Buffer objects can be indexed by non-uniform integer expressions in shader code
+	ShaderUniformTexelBufferArrayNonUniformIndexing bool
+	// ShaderStorageTexelBufferArrayNonUniformIndexing indicates whether arrays of storage texel
+	// Buffer objects can be indexed by non-uniform integer expressions in shader code
+	ShaderStorageTexelBufferArrayNonUniformIndexing bool
+	// DescriptorBindingUniformBufferUpdateAfterBind indicates whether the implementation supports
+	// updating uniform Buffer descriptors after a set is bound
+	DescriptorBindingUniformBufferUpdateAfterBind bool
+	// DescriptorBindingSampledImageUpdateAfterBind indicates whether the implementation supports
+	// updating sampled Image descriptors after a set is bound
+	DescriptorBindingSampledImageUpdateAfterBind bool
+	// DescriptorBindingStorageImageUpdateAfterBind indicates whether the implementation supports
+	// updating storage Image descriptors after a set is bound
+	DescriptorBindingStorageImageUpdateAfterBind bool
+	// DescriptorBindingStorageBufferUpdateAfterBind indicates whether the implementation
+	// supports updating storage Buffer descriptors after a set is bound
+	DescriptorBindingStorageBufferUpdateAfterBind bool
+	// DescriptorBindingUniformTexelBufferUpdateAfterBind indicates whether the implementation
+	// supports updating uniform texel Buffer descriptors after a set is bound
 	DescriptorBindingUniformTexelBufferUpdateAfterBind bool
+	// DescriptorBindingStorageTexelBufferUpdateAfterBind indicates whether the impelementation
+	// supports updating storage texel Buffer descriptors after a set is bound
 	DescriptorBindingStorageTexelBufferUpdateAfterBind bool
-	DescriptorBindingUpdateUnusedWhilePending          bool
-	DescriptorBindingPartiallyBound                    bool
-	DescriptorBindingVariableDescriptorCount           bool
-	RuntimeDescriptorArray                             bool
+	// DescriptorBindingUpdateUnusedWhilePending indicates whether the implementation supports
+	// updating descriptors while the set is in use
+	DescriptorBindingUpdateUnusedWhilePending bool
+	// DescriptorBindingPartiallyBound indicates whether the implementation supports statically
+	// using a DescriptorSet binding in which some descriptors are not valid
+	DescriptorBindingPartiallyBound bool
+	// DescriptorBindingVariableDescriptorCount indicates whether the implementation supports
+	// DescriptorSet object with a variable-sized last binding
+	DescriptorBindingVariableDescriptorCount bool
+	// RuntimeDescriptorArray indicates whether the implementation supports the SPIR-V
+	// RuntimeDescriptorArray capability
+	RuntimeDescriptorArray bool
 
 	common.NextOptions
 	common.NextOutData
@@ -309,7 +373,12 @@ func (o PhysicalDeviceDescriptorIndexingFeatures) PopulateCPointer(allocator *cg
 
 ////
 
+// PhysicalDeviceHostQueryResetFeatures describes whether queries can be reset from the host
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkPhysicalDeviceHostQueryResetFeatures.html
 type PhysicalDeviceHostQueryResetFeatures struct {
+	// HostQueryReset indicates that hte implementation supports resetting queries from the host
+	// with QueryPool.Reset
 	HostQueryReset bool
 
 	common.NextOptions
@@ -354,7 +423,12 @@ func (o PhysicalDeviceHostQueryResetFeatures) PopulateCPointer(allocator *cgopar
 
 ////
 
+// PhysicalDeviceImagelessFramebufferFeatures indicates supports for imageless Framebuffer objects
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkPhysicalDeviceImagelessFramebufferFeatures.html
 type PhysicalDeviceImagelessFramebufferFeatures struct {
+	// ImagelessFramebuffer indicates that the implementation supports specifying the ImageView for
+	// attachments at RenderPass begin time via RenderPassAttachmentBeginInfo
 	ImagelessFramebuffer bool
 
 	common.NextOptions
@@ -400,7 +474,12 @@ func (o PhysicalDeviceImagelessFramebufferFeatures) PopulateCPointer(allocator *
 
 ////
 
+// PhysicalDeviceScalarBlockLayoutFeatures indicates support for scalar block layouts
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkPhysicalDeviceScalarBlockLayoutFeatures.html
 type PhysicalDeviceScalarBlockLayoutFeatures struct {
+	// ScalarBlockLayout indicates that the implementation supports the layout of resource blocks
+	// in shaders using scalar alignment
 	ScalarBlockLayout bool
 
 	common.NextOptions
@@ -446,7 +525,16 @@ func (o PhysicalDeviceScalarBlockLayoutFeatures) PopulateCPointer(allocator *cgo
 
 ////
 
+// PhysicalDeviceSeparateDepthStencilLayoutsFeatures describes whether the implementation
+// can do depth and stencil Image barriers separately
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkPhysicalDeviceSeparateDepthStencilLayoutsFeatures.html
 type PhysicalDeviceSeparateDepthStencilLayoutsFeatures struct {
+	// SeparateDepthStencilLayouts indicates whether the implementation supports an
+	// ImageMemoryBarrier for a depth/stencil Image with only one of core1_0.ImageAspectDepth or
+	// core1_0.ImageAspectStencil, and whether ImageLayoutDepthAttachmentOptimal,
+	// ImageLayoutDepthReadOnlyOptimal, ImageLayoutStencilAttachmentOptimal, or
+	// ImageLayoutStencilReadOnlyOptimal can be used
 	SeparateDepthStencilLayouts bool
 
 	common.NextOptions
@@ -492,8 +580,15 @@ func (o PhysicalDeviceSeparateDepthStencilLayoutsFeatures) PopulateCPointer(allo
 
 ////
 
+// PhysicalDeviceShaderAtomicInt64Features describes features supported by khr_shader_atomic_int64
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkPhysicalDeviceShaderAtomicInt64Features.html
 type PhysicalDeviceShaderAtomicInt64Features struct {
+	// ShaderBufferInt64Atomics indicates whether shaders can perform 64-bit unsigned and signed
+	// integer atomic operations on Buffer objects
 	ShaderBufferInt64Atomics bool
+	// ShaderSharedInt64Atomics indicates whether shaders can 64-bit unsigned and signed integer
+	// atomic operations on shared memory
 	ShaderSharedInt64Atomics bool
 
 	common.NextOptions
@@ -547,9 +642,15 @@ func (o PhysicalDeviceShaderAtomicInt64Features) PopulateCPointer(allocator *cgo
 
 ////
 
+// PhysicalDeviceShaderFloat16Int8Features describes features supported by khr_shader_float16_int8
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkPhysicalDeviceShaderFloat16Int8Features.html
 type PhysicalDeviceShaderFloat16Int8Features struct {
+	// ShaderFloat16 indicates whether 16-bit floats (halfs) are supported in shader code
 	ShaderFloat16 bool
-	ShaderInt8    bool
+	// ShaderInt8 indicates whether 8-bit integer (signed and unsigned) are supported in
+	// shader code
+	ShaderInt8 bool
 
 	common.NextOptions
 	common.NextOutData
@@ -600,7 +701,14 @@ func (o PhysicalDeviceShaderFloat16Int8Features) PopulateCPointer(allocator *cgo
 
 ////
 
+// PhysicalDeviceShaderSubgroupExtendedTypesFeatures describes the extended types subgroups
+// support feature for an implementation
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkPhysicalDeviceShaderSubgroupExtendedTypesFeatures.html
 type PhysicalDeviceShaderSubgroupExtendedTypesFeatures struct {
+	// ShaderSubgroupExtendedTypes specifies whether subgroup operations can use 8-bit integer,
+	// 16-bit integer, 64-bit integer, 16-bit floating-point, and vectors of these types
+	// in group operations with subgroup scope, if the implementation supports the types
 	ShaderSubgroupExtendedTypes bool
 
 	common.NextOptions
@@ -646,7 +754,13 @@ func (o PhysicalDeviceShaderSubgroupExtendedTypesFeatures) PopulateCPointer(allo
 
 ////
 
+// PhysicalDeviceTimelineSemaphoreFeatures describes timeline Semaphore features that can be
+// supported by an implementation
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkPhysicalDeviceTimelineSemaphoreFeatures.html
 type PhysicalDeviceTimelineSemaphoreFeatures struct {
+	// TimelineSemaphore indicates whether Semaphore objects created with a SemaphoreType
+	// of SemaphoreTypeTimeline are supported
 	TimelineSemaphore bool
 
 	common.NextOptions
@@ -692,7 +806,13 @@ func (o PhysicalDeviceTimelineSemaphoreFeatures) PopulateCPointer(allocator *cgo
 
 ////
 
+// PhysicalDeviceUniformBufferStandardLayoutFeatures indicates support for std430-like
+// packing in uniform Buffer objects
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkPhysicalDeviceUniformBufferStandardLayoutFeatures.html
 type PhysicalDeviceUniformBufferStandardLayoutFeatures struct {
+	// UniformBufferStandardLayout indicates that the implementation supports the same layouts
+	// for uniform Buffer objects as for storage and other kinds of Buffer objects
 	UniformBufferStandardLayout bool
 
 	common.NextOptions
@@ -738,9 +858,17 @@ func (o PhysicalDeviceUniformBufferStandardLayoutFeatures) PopulateCPointer(allo
 
 ////
 
+// PhysicalDeviceVulkanMemoryModelFeatures describes features supported by the memory model
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkPhysicalDeviceVulkanMemoryModelFeatures.html
 type PhysicalDeviceVulkanMemoryModelFeatures struct {
-	VulkanMemoryModel                             bool
-	VulkanMemoryModelDeviceScope                  bool
+	// VulkanMemoryModel indicates whether the Vulkan Memory Model is supported
+	VulkanMemoryModel bool
+	// VulkanMemoryModelDeviceScope indicates whether the Vulkan Memory Model can use Device
+	// scope synchronization
+	VulkanMemoryModelDeviceScope bool
+	// VulkanMemoryModelAvailabilityVisibilityChains indicates whether the Vulkan Memory Model
+	// can use available and visibility chains with more than one element
 	VulkanMemoryModelAvailabilityVisibilityChains bool
 
 	common.NextOptions
@@ -798,19 +926,47 @@ func (o PhysicalDeviceVulkanMemoryModelFeatures) PopulateCPointer(allocator *cgo
 
 ////
 
+// PhysicalDeviceVulkan11Features describes the Vulkan 1.1 features that can be supported
+// by an implementation
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkPhysicalDeviceVulkan11Features.html
 type PhysicalDeviceVulkan11Features struct {
-	StorageBuffer16BitAccess           bool
+	// StorageBuffer16BitAccess specifies whether objects in the StorageBuffer, ShaderRecordBufferKHR,
+	// or PhysicalStorageBuffer storage class with the Block decoration can have 16-bit integer
+	// and 16-bit floating-point members
+	StorageBuffer16BitAccess bool
+	// UniformAndStorageBuffer16BitAccess specifies whether objects in the Uniform storage class
+	// with the Block decoration can have 16-bit integer and 16-bit floating-point members
 	UniformAndStorageBuffer16BitAccess bool
-	StoragePushConstant16              bool
-	StorageInputOutput16               bool
-	Multiview                          bool
-	MultiviewGeometryShader            bool
-	MultiviewTessellationShader        bool
-	VariablePointersStorageBuffer      bool
-	VariablePointers                   bool
-	ProtectedMemory                    bool
-	SamplerYcbcrConversion             bool
-	ShaderDrawParameters               bool
+	// StoragePushConstant16 specifies whether objects in the PushConstant storage class can have
+	// 16-bit integer and 16-bit floating-point members
+	StoragePushConstant16 bool
+	// StorageInputOutput16 specifies whether objects in the Input and Output storage classes can
+	// have 16-bit integer and 16-bit floating-point members
+	StorageInputOutput16 bool
+	// Multiview specifies whether the implementation supports multiview rendering within a
+	// render pass. If this feature is not enabled, the view mask of each subpass must always be
+	// zero
+	Multiview bool
+	// MultiviewGeometryShader specifies whether the implementation supports multiview rendering
+	// within a RenderPass, with geometry shaders
+	MultiviewGeometryShader bool
+	// MultiviewTessellationShader specifies whether the implementation supports multiview
+	// rendering within a RenderPass, with tessellation shaders
+	MultiviewTessellationShader bool
+	// VariablePointersStorageBuffer specifies whether the implementation supports the SPIR-V
+	// VariablePointersStorageBuffer capability
+	VariablePointersStorageBuffer bool
+	// VariablePointers specifies whether the implementation supports the SPIR-V
+	// VariablePointers capability
+	VariablePointers bool
+	// ProtectedMemory specifies whether protected memory is supported
+	ProtectedMemory bool
+	// SamplerYcbcrConversion specifies whether the implementation supports SamplerYcbcrConversion
+	SamplerYcbcrConversion bool
+	// ShaderDrawParameters specifies whether the implementation supports the SPIR-V
+	// DrawParameters capability
+	ShaderDrawParameters bool
 
 	common.NextOptions
 	common.NextOutData
@@ -933,58 +1089,163 @@ func (o PhysicalDeviceVulkan11Features) PopulateCPointer(allocator *cgoparam.All
 
 ////
 
+// PhysicalDeviceVulkan12Features describes the Vulkan 1.2 features that can be supported by
+// an implementation
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkPhysicalDeviceVulkan12Features.html
 type PhysicalDeviceVulkan12Features struct {
-	SamplerMirrorClampToEdge          bool
-	DrawIndirectCount                 bool
-	StorageBuffer8BitAccess           bool
+	// SamplerMirrorClampToEdge indicates whether the implementation supports the
+	// SamplerAddressModeMirrorClampToEdge sampler address mode
+	SamplerMirrorClampToEdge bool
+	// DrawIndirectCount indicates whether the implementation supports the
+	// CommandBuffer.CmdDrawIndirectCount and CommandBuffer.CmdDrawIndexedIndirectCount functions
+	DrawIndirectCount bool
+	// StorageBuffer8BitAccess indicates whether objects in the StorageBuffer,
+	// ShaderRecordBufferKHR, or PhysicalStorageBuffer storage class with the Block decoration
+	// can have 8-bit integer members
+	StorageBuffer8BitAccess bool
+	// UniformAndStorageBuffer8BitAccess indicates whether objects in the Uniform storage class
+	// with the Block decoration can have 8-bit integer members
 	UniformAndStorageBuffer8BitAccess bool
-	StoragePushConstant8              bool
-	ShaderBufferInt64Atomics          bool
-	ShaderSharedInt64Atomics          bool
-	ShaderFloat16                     bool
-	ShaderInt8                        bool
-	DescriptorIndexing                bool
+	// StoragePushConstant8 indicates whether objects in the PushConstant storage class can
+	// have 8-bit integer members
+	StoragePushConstant8 bool
+	// ShaderBufferInt64Atomics indicates whether shaders can perform 64-bit unsigned and signed
+	// integer atomic operations on Buffer objects
+	ShaderBufferInt64Atomics bool
+	// ShaderSharedInt64Atomics indicates whether shaders can perform 64-bit unsigned and signed
+	// integer atomic operations on shared memory
+	ShaderSharedInt64Atomics bool
+	// ShaderFloat16 indicates whether 16-bit floats (halfs) are supported in shader code
+	ShaderFloat16 bool
+	// ShaderInt8 indicates whether 8-bit integers (signed and unsigned) are supported in shader
+	// code
+	ShaderInt8 bool
+	// DescriptorIndexing indicates whether the implementation supports the minimum set of
+	// descriptor indexing features as described in the Feature Requirements section
+	DescriptorIndexing bool
 
-	ShaderInputAttachmentArrayDynamicIndexing       bool
-	ShaderUniformTexelBufferArrayDynamicIndexing    bool
-	ShaderStorageTexelBufferArrayDynamicIndexing    bool
-	ShaderUniformBufferArrayNonUniformIndexing      bool
-	ShaderSampledImageArrayNonUniformIndexing       bool
-	ShaderStorageBufferArrayNonUniformIndexing      bool
-	ShaderStorageImageArrayNonUniformIndexing       bool
-	ShaderInputAttachmentArrayNonUniformIndexing    bool
+	// ShaderInputAttachmentArrayDynamicIndexing indicates whether arrays of input attachments
+	// can be indexed by dynamically uniform integer expressions in shader code
+	ShaderInputAttachmentArrayDynamicIndexing bool
+	// ShaderUniformTexelBufferArrayDynamicIndexing indicates whether arrays of uniform texel
+	// Buffer objects can be indexed by dynamically uniform integer expressions in shader code
+	ShaderUniformTexelBufferArrayDynamicIndexing bool
+	// ShaderStorageTexelBufferArrayDynamicIndexing indicates whether arrays of storage texel
+	// Buffer objects can be indexed by dynamically uniform integer expressions in shader code
+	ShaderStorageTexelBufferArrayDynamicIndexing bool
+	// ShaderUniformBufferArrayNonUniformIndexing indicates whether arrays of uniform Buffer objects
+	// can be indexed by non-uniform integer expressions in shader code
+	ShaderUniformBufferArrayNonUniformIndexing bool
+	// ShaderSampledImageArrayNonUniformIndexing indicates whether arrays of Sampler objects or sampled
+	// Image objects can be indexed by non-uniform integer expressions in shader code
+	ShaderSampledImageArrayNonUniformIndexing bool
+	// ShaderStorageBufferArrayNonUniformIndexing indicates whether arrays of storage Buffer objects can
+	// be indexed by non-uniform integer expressions in shader code
+	ShaderStorageBufferArrayNonUniformIndexing bool
+	// ShaderStorageImageArrayNonUniformIndexing indicates whether arrays of storage Image objects can
+	// be indexed by non-uniform integer expressions in shader code
+	ShaderStorageImageArrayNonUniformIndexing bool
+	// ShaderInputAttachmentArrayNonUniformIndexing indicates whether arrays of input attachments
+	// can be indexed by non-uniform integer expressions in shader code
+	ShaderInputAttachmentArrayNonUniformIndexing bool
+	// ShaderUniformTexelBufferArrayNonUniformIndexing indicates whether arrays of uniform texel
+	// Buffer objects can be indexed by non-uniform integer expressions in shader code
 	ShaderUniformTexelBufferArrayNonUniformIndexing bool
+	// ShaderStorageTexelBufferArrayNonUniformIndexing indicates whether arrays of storage texel
+	// Buffer objects can be indexed by non-uniform integer expressions in shader code
 	ShaderStorageTexelBufferArrayNonUniformIndexing bool
 
-	DescriptorBindingUniformBufferUpdateAfterBind      bool
-	DescriptorBindingSampledImageUpdateAfterBind       bool
-	DescriptorBindingStorageImageUpdateAfterBind       bool
-	DescriptorBindingStorageBufferUpdateAfterBind      bool
+	// DescriptorBindingUniformBufferUpdateAfterBind indicates whether the implementation
+	// supports updating uniform Buffer descriptors after a set is bound
+	DescriptorBindingUniformBufferUpdateAfterBind bool
+	// DescriptorBindingSampledImageUpdateAfterBind indicates whether the implementation supports
+	// updating sampled Image descriptors after a set is bound
+	DescriptorBindingSampledImageUpdateAfterBind bool
+	// DescriptorBindingStorageImageUpdateAfterBind indicates whether the implementation supports
+	// updating storage Image descriptors after a set is bound
+	DescriptorBindingStorageImageUpdateAfterBind bool
+	// DescriptorBindingStorageBufferUpdateAfterBind indicates whether the implementation supports
+	// updating storage Buffer descriptors after a set is bound
+	DescriptorBindingStorageBufferUpdateAfterBind bool
+	// DescriptorBindingUniformTexelBufferUpdateAfterBind indicates whether the implementation
+	// supports updating uniform texel Buffer descriptors after a set is bound
 	DescriptorBindingUniformTexelBufferUpdateAfterBind bool
+	// DescriptorBindingStorageTexelBufferUpdateAfterBind indicates whether the implementation
+	// supports updating storage texel buffer descriptors after a set is bound
 	DescriptorBindingStorageTexelBufferUpdateAfterBind bool
 
+	// DescriptorBindingUpdateUnusedWhilePending indicates whether the implementation supports
+	// updating descriptors while the set is in use
 	DescriptorBindingUpdateUnusedWhilePending bool
-	DescriptorBindingPartiallyBound           bool
-	DescriptorBindingVariableDescriptorCount  bool
+	// DescriptorBindingPartiallyBound indicates whether the implementation supports statically
+	// using a DescriptorSet binding in which some descriptors are not valid
+	DescriptorBindingPartiallyBound bool
+	// DescriptorBindingVariableDescriptorCount indicates whether the implementation supports
+	// DescriptorSet with a variable-sized last binding
+	DescriptorBindingVariableDescriptorCount bool
 
-	RuntimeDescriptorArray                        bool
-	SamplerFilterMinmax                           bool
-	ScalarBlockLayout                             bool
-	ImagelessFramebuffer                          bool
-	UniformBufferStandardLayout                   bool
-	ShaderSubgroupExtendedTypes                   bool
-	SeparateDepthStencilLayouts                   bool
-	HostQueryReset                                bool
-	TimelineSemaphore                             bool
-	BufferDeviceAddress                           bool
-	BufferDeviceAddressCaptureReplay              bool
-	BufferDeviceAddressMultiDevice                bool
-	VulkanMemoryModel                             bool
-	VulkanMemoryModelDeviceScope                  bool
+	// RuntimeDescriptorArray indicates whether the implementation supports the SPIR-V
+	// RuntimeDescriptorArray capability
+	RuntimeDescriptorArray bool
+	// SamplerFilterMinmax indicates whether the implementation supports a minimum set of
+	// required formats supporting min/max filtering as defined by the
+	// filterMinmaxSingleComponentFormats property minimum requirements
+	SamplerFilterMinmax bool
+	// ScalarBlockLayout indicates that the implementation supports the layout of resource blocks
+	// in shaders using scalar alignment
+	ScalarBlockLayout bool
+	// ImagelessFramebuffer indicates that the implementation supports specifying the ImageView for
+	// attachments at RenderPass begin time via RenderPassAttachmentBeginInfo
+	ImagelessFramebuffer bool
+	// UniformBufferStandardLayout indicates that the implementation supports the same layouts for
+	// uniform Buffer objects as for storage and other kinds of Buffer objects
+	UniformBufferStandardLayout bool
+	// ShaderSubgroupExtendedTypes is a boolean specifying whether subgroup operations can use
+	// 8-bit integer, 16-bit integer, 64-bit integer, 16-bit floating-point, and vectors of these
+	// types in group operations with subgroup scope, if the implementation supports the types
+	ShaderSubgroupExtendedTypes bool
+	// SeparateDepthStencilLayouts indicates whether the implementation supports an ImageMemoryBarrier
+	// for a depth/stencil Image with only one of core1_0.ImageAspectDepth or core1_0.ImageAspectStencil,
+	// and whether ImageLayoutDepthAttachmentOptimal, ImageLayoutDepthReadOnlyOptimal,
+	// ImageLayoutStencilAttachmentOptimal, ImageLayoutStencilReadOnlyOptimal can be used
+	SeparateDepthStencilLayouts bool
+	// HostQueryReset indicates that the implementation supports resetting queries from the host with
+	// QueryPool.Reset
+	HostQueryReset bool
+	// TimelineSemaphore indicates whether Semaphore objects created with a SemaphoreType of
+	// SemaphoreTypeTimeline are supported
+	TimelineSemaphore bool
+	// BufferDeviceAddress indicates that the implementation supports accessing Buffer memory in shaders
+	// as storage Buffer objects via an address queries from Device.GetBufferDeviceAddress
+	BufferDeviceAddress bool
+	// BufferDeviceAddressCaptureReplay indicates that the implementation supports saving and
+	// reusing Buffer and Device addresses, e.g. for trace capture and replay
+	BufferDeviceAddressCaptureReplay bool
+	// BufferDeviceAddressMultiDevice indicates that the implementation supports the
+	// BufferDeviceAddress, RayTracingPipeline and RayQuery features for logical Device objects
+	// created with multiple PhysicalDevice objects
+	BufferDeviceAddressMultiDevice bool
+	// VulkanMemoryModel indicates whether the Vulkan Memory Model is supported
+	VulkanMemoryModel bool
+	// VulkanMemoryModelDeviceScope indicates whether the Vulkan Memory Model can use Device
+	// scope synchronization
+	VulkanMemoryModelDeviceScope bool
+	// VulkanMemoryModelAvailabilityVisibilityChains indicates whether the Vulkan Memory Model
+	// can use availability and visibility chains with more than one element
 	VulkanMemoryModelAvailabilityVisibilityChains bool
-	ShaderOutputViewportIndex                     bool
-	ShaderOutputLayer                             bool
-	SubgroupBroadcastDynamicID                    bool
+	// ShaderOutputViewportIndex indicates whether the implementation supports the
+	// ShaderViewportIndex SPIR-V capability enabling variables decorated with the ViewportIndex
+	// built-in to be exported from vertex or tessellation evaluation shaders
+	ShaderOutputViewportIndex bool
+	// ShaderOutputLayer indicates whether the implementation supports the ShaderLayer SPIR-V
+	// capability enabling variables decorated with the Layer built-in to be exported from vertex
+	// or tessellation evaluation shaders
+	ShaderOutputLayer bool
+	// SubgroupBroadcastDynamicID indicates whether the "Id" operand of OpGroupNonUniformBroadcast
+	// can be dynamically uniform within a subgroup, and whether the "Index" operand of
+	// OpGroupNonUniformQuadBroadcast can be dynamically uniform within the derivative group
+	SubgroupBroadcastDynamicID bool
 
 	common.NextOptions
 	common.NextOutData

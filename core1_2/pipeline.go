@@ -32,6 +32,12 @@ func PromotePipeline(pipeline core1_0.Pipeline) Pipeline {
 		}).(Pipeline)
 }
 
+// PromotePipelineSlice accepts a slice of Pipeline objects from any core version.
+// If provided a pipeline that supports at least core 1.2, it will return a core1_2.Pipeline.
+// Otherwise, it will left out of the returned slice. This method will always return a
+// core1_2.VulkanPipeline, even if it is provided a VulkanPipeline from a higher core version. Two
+// Vulkan 1.2 compatible Pipeline objects with the same Pipeline.Handle will return the same interface
+// value when passed to this method.
 func PromotePipelineSlice(pipelines []core1_0.Pipeline) []Pipeline {
 	outPipelines := make([]Pipeline, len(pipelines))
 	for i := 0; i < len(pipelines); i++ {

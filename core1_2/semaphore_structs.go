@@ -13,6 +13,9 @@ import (
 	"unsafe"
 )
 
+// SemaphoreType specifies the type of a Semaphore object
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkSemaphoreType.html
 type SemaphoreType int32
 
 var semaphoreTypeMapping = make(map[SemaphoreType]string)
@@ -27,6 +30,9 @@ func (e SemaphoreType) String() string {
 
 ////
 
+// SemaphoreWaitFlags specifies additional parameters of a Semaphore wait operation
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkSemaphoreWaitFlagBits.html
 type SemaphoreWaitFlags int32
 
 var semaphoreWaitFlagsMapping = common.NewFlagStringMapping[SemaphoreWaitFlags]()
@@ -41,9 +47,23 @@ func (f SemaphoreWaitFlags) String() string {
 ////
 
 const (
-	SemaphoreTypeBinary   SemaphoreType = C.VK_SEMAPHORE_TYPE_BINARY
+	// SemaphoreTypeBinary specifies a binary Semaphore type that has a boolean payload
+	// indicating whether the Semaphore is currently signaled or unsignaled
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkSemaphoreType.html
+	SemaphoreTypeBinary SemaphoreType = C.VK_SEMAPHORE_TYPE_BINARY
+	// SemaphoreTypeTimeline specifies a timeline Semaphore type that has a strictly
+	// increasing 64-bit unsigned integer payload indicating whether the Semaphore is signaled
+	// with respect to a particular reference value
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkSemaphoreType.html
 	SemaphoreTypeTimeline SemaphoreType = C.VK_SEMAPHORE_TYPE_TIMELINE
 
+	// SemaphoreWaitAny specifies that the Semaphore wait condition is that at least one of
+	// the Semaphore objects in SemaphoreWaitInfo.Semaphores has reached the value specified
+	// by the corresponding element of SemaphoreWaitInfo.Values
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkSemaphoreWaitFlagBits.html
 	SemaphoreWaitAny SemaphoreWaitFlags = C.VK_SEMAPHORE_WAIT_ANY_BIT
 )
 
@@ -56,9 +76,14 @@ func init() {
 
 ////
 
+// SemaphoreSignalInfo contains information about a Semaphore signal operation
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkSemaphoreSignalInfo.html
 type SemaphoreSignalInfo struct {
+	// Semaphore is the Semaphore object to signal
 	Semaphore core1_0.Semaphore
-	Value     uint64
+	// Value is the value to signal
+	Value uint64
 
 	common.NextOptions
 }
@@ -83,10 +108,16 @@ func (o SemaphoreSignalInfo) PopulateCPointer(allocator *cgoparam.Allocator, pre
 
 ////
 
+// SemaphoreWaitInfo contains information about the Semaphore wait condition
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkSemaphoreWaitInfo.html
 type SemaphoreWaitInfo struct {
-	Flags      SemaphoreWaitFlags
+	// Flags specifies additional parameters for the Semaphore wait operation
+	Flags SemaphoreWaitFlags
+	// Semaphores is a slice of Semaphore objects to wait on
 	Semaphores []core1_0.Semaphore
-	Values     []uint64
+	// Values is a slice of timeline Semaphore values
+	Values []uint64
 
 	common.NextOptions
 }
@@ -132,9 +163,14 @@ func (o SemaphoreWaitInfo) PopulateCPointer(allocator *cgoparam.Allocator, preal
 
 ////
 
+// SemaphoreTypeCreateInfo specifies the type of a newly-created Semaphore
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkSemaphoreTypeCreateInfo.html
 type SemaphoreTypeCreateInfo struct {
+	// SemaphoreType specifies the type of the Semaphore
 	SemaphoreType SemaphoreType
-	InitialValue  uint64
+	// InitialValue is the initial payload value if SemaphoreType is SemaphoreTypeTimeline
+	InitialValue uint64
 
 	common.NextOptions
 }
@@ -155,8 +191,15 @@ func (o SemaphoreTypeCreateInfo) PopulateCPointer(allocator *cgoparam.Allocator,
 
 ////
 
+// TimelineSemaphoreSubmitInfo specifies signal and wait values for timeline Semaphore objects
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkTimelineSemaphoreSubmitInfoKHR.html
 type TimelineSemaphoreSubmitInfo struct {
-	WaitSemaphoreValues   []uint64
+	// WaitSemaphoreValues is a slice of values for the corresponding Semaphore objects in
+	// SubmitInfo.WaitSemaphores to wait for
+	WaitSemaphoreValues []uint64
+	// SignalSemaphoreValues is a slice of values for the corresponding Semaphore objects in
+	// SubmitInfo.SignalSemaphores to set when signaled
 	SignalSemaphoreValues []uint64
 
 	common.NextOptions

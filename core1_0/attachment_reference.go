@@ -1,9 +1,15 @@
 package core1_0
 
+/*
+#include <stdlib.h>
+#include "vulkan/vulkan.h"
+*/
+import "C"
+
 // AttachmentUnused indicates that a render pass attachment is not used
 //
 // https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/VK_ATTACHMENT_UNUSED.html
-const AttachmentUnused int = -1
+const AttachmentUnused int = C.VK_ATTACHMENT_UNUSED
 
 // AttachmentReference specifies an attachment reference
 //

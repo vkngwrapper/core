@@ -259,7 +259,7 @@ func TestPhysicalDeviceFloatControlsOutData(t *testing.T) {
 	require.NoError(t, err)
 	require.Equal(t, core1_2.PhysicalDeviceFloatControlsProperties{
 		DenormBehaviorIndependence: core1_2.ShaderFloatControlsIndependence32BitOnly,
-		RoundingMoundIndependence:  core1_2.ShaderFloatControlsIndependenceAll,
+		RoundingModeIndependence:   core1_2.ShaderFloatControlsIndependenceAll,
 
 		ShaderSignedZeroInfNanPreserveFloat16: true,
 		ShaderSignedZeroInfNanPreserveFloat32: false,

@@ -12,6 +12,9 @@ import (
 	"unsafe"
 )
 
+// SamplerReductionMode specifies reduction mode for texture filtering
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkSamplerReductionMode.html
 type SamplerReductionMode int32
 
 var samplerReductionModeMapping = make(map[SamplerReductionMode]string)
@@ -27,6 +30,8 @@ func (e SamplerReductionMode) String() string {
 ////
 
 const (
+	// SamplerAddressModeMirrorClampToEdge specifies that the mirror clamp to edge wrap mode will
+	// be used
 	SamplerAddressModeMirrorClampToEdge core1_0.SamplerAddressMode = C.VK_SAMPLER_ADDRESS_MODE_MIRROR_CLAMP_TO_EDGE
 )
 
@@ -37,10 +42,18 @@ func init() {
 ////
 
 const (
+	// FormatFeatureSampledImageFilterMinmax specifies the Image can be used as a sampled Image
+	// with a min or max SamplerReductionMode
 	FormatFeatureSampledImageFilterMinmax core1_0.FormatFeatureFlags = C.VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_MINMAX_BIT
 
-	SamplerReductionModeMax             SamplerReductionMode = C.VK_SAMPLER_REDUCTION_MODE_MAX
-	SamplerReductionModeMin             SamplerReductionMode = C.VK_SAMPLER_REDUCTION_MODE_MIN
+	// SamplerReductionModeMax specifies that texel values are combined by taking
+	// the component-wise maximum of values in the footprint with non-zero weights
+	SamplerReductionModeMax SamplerReductionMode = C.VK_SAMPLER_REDUCTION_MODE_MAX
+	// SamplerReductionModeMin specifies that texel values are combined by taking the
+	// component-wise minimum of values in the footprint with non-zero weights
+	SamplerReductionModeMin SamplerReductionMode = C.VK_SAMPLER_REDUCTION_MODE_MIN
+	// SamplerReductionModeWeightedAverage specifies that texel values are combined by
+	// computing a weighted average of values in the footprint
 	SamplerReductionModeWeightedAverage SamplerReductionMode = C.VK_SAMPLER_REDUCTION_MODE_WEIGHTED_AVERAGE
 )
 
@@ -54,7 +67,11 @@ func init() {
 
 ////
 
+// SamplerReductionModeCreateInfo specifies a Sampler reduction mode
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkSamplerReductionModeCreateInfoEXT.html
 type SamplerReductionModeCreateInfo struct {
+	// ReductionMode controls how texture filtering combines texel values
 	ReductionMode SamplerReductionMode
 
 	common.NextOptions
