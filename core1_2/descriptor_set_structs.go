@@ -75,7 +75,7 @@ func init() {
 ////
 
 // DescriptorSetVariableDescriptorCountAllocateInfo specifies additional allocation parameters
-// for DescritorSet objects
+// for DescriptorSet objects
 //
 // https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkDescriptorSetVariableDescriptorCountAllocateInfo.html
 type DescriptorSetVariableDescriptorCountAllocateInfo struct {
