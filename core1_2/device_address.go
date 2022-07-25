@@ -42,6 +42,8 @@ const (
 
 	// VkErrorInvalidOpaqueCaptureAddress indicates a Buffer creation or memory allocation failed
 	// because the requested address is not available
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkResult.html
 	VkErrorInvalidOpaqueCaptureAddress common.VkResult = C.VK_ERROR_INVALID_OPAQUE_CAPTURE_ADDRESS
 )
 
@@ -62,7 +64,7 @@ func init() {
 //
 // https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkBufferDeviceAddressInfo.html
 type BufferDeviceAddressInfo struct {
-	// Buffer specifies the Buffer whose address is beign queried
+	// Buffer specifies the Buffer whose address is being queried
 	Buffer core1_0.Buffer
 
 	common.NextOptions
@@ -121,6 +123,7 @@ func (o DeviceMemoryOpaqueCaptureAddressInfo) PopulateCPointer(allocator *cgopar
 //
 // https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkBufferOpaqueCaptureAddressCreateInfo.html
 type BufferOpaqueCaptureAddressCreateInfo struct {
+	// OpaqueCaptureAddress is the opaque capture address requested for the Buffer
 	OpaqueCaptureAddress uint64
 
 	common.NextOptions
