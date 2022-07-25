@@ -37,7 +37,27 @@ type BufferView interface {
 type CommandBuffer interface {
 	core1_0.CommandBuffer
 
+	// CmdDispatchBase dispatches compute work items with non-zero base values for the workgroup IDs
+	//
+	// baseGroupX - The start value of the X component of WorkgroupId
+	//
+	// baseGroupY - The start value of the Y component of WorkGroupId
+	//
+	// baseGroupZ - The start value of the Z component of WorkGroupId
+	//
+	// groupCountX - The number of local workgroups to dispatch in the X dimension
+	//
+	// groupCountY - The number of local workgroups to dispatch in the Y dimension
+	//
+	// groupCountZ - The number of local workgroups to dispatch in the Z dimension
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/vkCmdDispatchBase.html
 	CmdDispatchBase(baseGroupX, baseGroupY, baseGroupZ, groupCountX, groupCountY, groupCountZ int)
+	// CmdSetDeviceMask modifies the device mask of a CommandBuffer
+	//
+	// deviceMask - The new value of the current Device mask
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/vkCmdSetDeviceMask.html
 	CmdSetDeviceMask(deviceMask uint32)
 }
 
@@ -49,6 +69,11 @@ type CommandBuffer interface {
 type CommandPool interface {
 	core1_0.CommandPool
 
+	// TrimCommandPool trims a CommandPool
+	//
+	// flags - Reserved for future use
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/vkTrimCommandPool.html
 	TrimCommandPool(flags CommandPoolTrimFlags)
 }
 
@@ -87,20 +112,89 @@ type DescriptorSetLayout interface {
 type Device interface {
 	core1_0.Device
 
+	// BindBufferMemory2 binds DeviceMemory to Buffer objects
+	//
+	// o - A slice of BindBufferMemoryInfo structures describing Buffer objects and memory to bind
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/vkBindBufferMemory2.html
 	BindBufferMemory2(o []BindBufferMemoryInfo) (common.VkResult, error)
+	// BindImageMemory2 binds DeviceMemory to Image objects
+	//
+	// o - A slice of BindImageMemoryInfo structures describing Image objects and memory to bind
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/vkBindImageMemory2.html
 	BindImageMemory2(o []BindImageMemoryInfo) (common.VkResult, error)
 
+	// BufferMemoryRequirements2 returns the memory requirements for the specified Vulkan object
+	//
+	// o - Contains parameters required for the memory requirements query
+	//
+	// out - A pre-allocated object in which the memory requirements of the Buffer object will be
+	// populated. It should include any desired chained OutData objects
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/vkGetBufferMemoryRequirements2.html
 	BufferMemoryRequirements2(o BufferMemoryRequirementsInfo2, out *MemoryRequirements2) error
+	// ImageMemoryRequirements2 returns the memory requirements for the specified Vulkan object
+	//
+	// o - Contains parameters required for the memory requirements query
+	//
+	// out - A pre-allocated object in which the memory requirements of the Image object will be
+	// populated. It should include any desired chained OutData objects
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/vkGetImageMemoryRequirements2.html
 	ImageMemoryRequirements2(o ImageMemoryRequirementsInfo2, out *MemoryRequirements2) error
+	// ImageSparseMemoryRequirements2 queries the memory requirements for a sparse Image
+	//
+	// o - Contains parameters required for the memory requirements query
+	//
+	// outDataFactory - This method can be provided to allocate each SparseImageMemoryRequirements2 object
+	// that is returned, along with any chained OutData structures. It can also be left nil, in which case
+	// SparseImageMemoryRequirements2 will be allocated with no chained structures.
 	ImageSparseMemoryRequirements2(o ImageSparseMemoryRequirementsInfo2, outDataFactory func() *SparseImageMemoryRequirements2) ([]*SparseImageMemoryRequirements2, error)
 
+	// DescriptorSetLayoutSupport queries whether a DescriptorSetLayout can be created
+	//
+	// o - Specifies the state of the DescriptorSetLayout object
+	//
+	// outData - A pre-allocated object in which information about support for the DescriptorSetLayout
+	// object will be populated. It should include any desired chained OutData objects
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/vkGetDescriptorSetLayoutSupport.html
 	DescriptorSetLayoutSupport(o core1_0.DescriptorSetLayoutCreateInfo, outData *DescriptorSetLayoutSupport) error
 
+	// DeviceGroupPeerMemoryFeatures queries supported peer memory features of a Device
+	//
+	// heapIndex - The index of the memory heap from which the memory is allocated
+	//
+	// localDeviceIndex - The device index of the PhysicalDevice that performs the memory access
+	//
+	// remoteDeviceIndex - The device index of the PhysicalDevice that the memory is allocated for
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/vkGetDeviceGroupPeerMemoryFeatures.html
 	DeviceGroupPeerMemoryFeatures(heapIndex, localDeviceIndex, remoteDeviceIndex int) PeerMemoryFeatureFlags
 
+	// CreateDescriptorUpdateTemplate creates a new DescriptorUpdateTemplate
+	//
+	// o - Specifies the set of descriptors to update with a single call to DescriptorUpdateTemplate.UpdateDescriptorSet...
+	//
+	// allocator - Controls host allocation behavior
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/vkCreateDescriptorUpdateTemplate.html
 	CreateDescriptorUpdateTemplate(o DescriptorUpdateTemplateCreateInfo, allocator *driver.AllocationCallbacks) (DescriptorUpdateTemplate, common.VkResult, error)
+	// CreateSamplerYcbcrConversion creates a new Y'CbCr conversion
+	//
+	// o - Specifies the requested sampler Y'CbCr conversion
+	//
+	// allocator - Controls host allocation behavior
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/vkCreateSamplerYcbcrConversion.html
 	CreateSamplerYcbcrConversion(o SamplerYcbcrConversionCreateInfo, allocator *driver.AllocationCallbacks) (SamplerYcbcrConversion, common.VkResult, error)
 
+	// GetQueue2 gets a Queue object from this Device
+	//
+	// o - Describes parameters of the Device Queue to be retrieved
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/vkGetDeviceQueue2.html
 	GetQueue2(o DeviceQueueInfo2) (core1_0.Queue, error)
 }
 
