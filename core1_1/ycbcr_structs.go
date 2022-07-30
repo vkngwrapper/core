@@ -274,6 +274,8 @@ func (o *SamplerYcbcrConversionImageFormatProperties) PopulateOutData(cDataPoint
 //
 // https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkImagePlaneMemoryRequirementsInfo.html
 type ImagePlaneMemoryRequirementsInfo struct {
+	// PlaneAspect specifies the aspect corresponding to the Image plane
+	// to query
 	PlaneAspect core1_0.ImageAspectFlags
 
 	common.NextOptions

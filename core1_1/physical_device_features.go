@@ -12,6 +12,23 @@ import (
 	"unsafe"
 )
 
+const (
+	// FormatFeatureTransferDst specifies that an Image can be used as a destination Image for copy
+	// commands and clear commands
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkFormatFeatureFlagBits.html
+	FormatFeatureTransferDst core1_0.FormatFeatureFlags = C.VK_FORMAT_FEATURE_TRANSFER_DST_BIT
+	// FormatFeatureTransferSrc specifies that an Image can be used as a source Image for copy commands
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkFormatFeatureFlagBits.html
+	FormatFeatureTransferSrc core1_0.FormatFeatureFlags = C.VK_FORMAT_FEATURE_TRANSFER_SRC_BIT
+)
+
+func init() {
+	FormatFeatureTransferDst.Register("Transfer Destination")
+	FormatFeatureTransferSrc.Register("Transfer Source")
+}
+
 // PhysicalDeviceFeatures2 describes the fine-grained features that can be supported
 // by an implementation
 //

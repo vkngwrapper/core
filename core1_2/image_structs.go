@@ -32,6 +32,8 @@ const (
 	// ImageLayoutStencilReadOnlyOptimal specifies a layout for the stencil aspect of a depth/stencil
 	// format Image allowing read-only access as a stencil attachment or in shaders as a sampled
 	// Image, combined Image/Sampler, or input attachment
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkImageLayout.html
 	ImageLayoutStencilReadOnlyOptimal core1_0.ImageLayout = C.VK_IMAGE_LAYOUT_STENCIL_READ_ONLY_OPTIMAL
 )
 

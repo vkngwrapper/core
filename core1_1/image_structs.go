@@ -70,6 +70,8 @@ const (
 	// allowing read and write access to the stencil aspect as a stencil attachment, and read-only access
 	// to the depth aspect as a depth attachment or in shaders as a sampled Image, combined Image/Sampler,
 	// or input attachment
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkImageLayout.html
 	ImageLayoutDepthReadOnlyStencilAttachmentOptimal core1_0.ImageLayout = C.VK_IMAGE_LAYOUT_DEPTH_READ_ONLY_STENCIL_ATTACHMENT_OPTIMAL
 )
 

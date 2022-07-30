@@ -32,6 +32,8 @@ func (e SamplerReductionMode) String() string {
 const (
 	// SamplerAddressModeMirrorClampToEdge specifies that the mirror clamp to edge wrap mode will
 	// be used
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkSamplerAddressMode.html
 	SamplerAddressModeMirrorClampToEdge core1_0.SamplerAddressMode = C.VK_SAMPLER_ADDRESS_MODE_MIRROR_CLAMP_TO_EDGE
 )
 

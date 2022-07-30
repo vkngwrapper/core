@@ -102,7 +102,7 @@ const (
 	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkExternalSemaphoreHandleTypeFlagBits.html
 	ExternalSemaphoreHandleTypeSyncFD ExternalSemaphoreHandleTypeFlags = C.VK_EXTERNAL_SEMAPHORE_HANDLE_TYPE_SYNC_FD_BIT
 
-	// SemaphoreImportTemporary specifies that the Semaphore payload will be improted only
+	// SemaphoreImportTemporary specifies that the Semaphore payload will be imported only
 	// temporarily, regardless of the permanence of the handle type
 	//
 	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkSemaphoreImportFlagBits.html

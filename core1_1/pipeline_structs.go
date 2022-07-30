@@ -63,7 +63,7 @@ func init() {
 
 ////
 
-// PipelineTessellationDomainOriginStateCreateInfo
+// PipelineTessellationDomainOriginStateCreateInfo specifies the origin of the tessellation domain
 //
 // https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkPipelineTessellationDomainOriginStateCreateInfo.html
 type PipelineTessellationDomainOriginStateCreateInfo struct {

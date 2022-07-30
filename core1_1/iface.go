@@ -316,7 +316,7 @@ type ImageView interface {
 type Instance interface {
 	core1_0.Instance
 
-	// EnumeratePhysicalDeviceGroups enumerates groups of PHysicalDevice objects that can be used to
+	// EnumeratePhysicalDeviceGroups enumerates groups of PhysicalDevice objects that can be used to
 	// create a single logical Device
 	//
 	// outDataFactory - This method can be provided to allocate each PhysicalDeviceGroupProperties object
@@ -427,6 +427,8 @@ type InstanceScopedPhysicalDevice interface {
 	// outDataFactory - This method can be provided to allocate each SparseImageFormatProperties2 object
 	// that is returned, along with any chained OutData structures. It can also be left nil, in which case
 	// SparseImageFormatProperties2 will be allocated with no chained structures.
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/vkGetPhysicalDeviceSparseImageFormatProperties2KHR.html
 	SparseImageFormatProperties2(o PhysicalDeviceSparseImageFormatInfo2, outDataFactory func() *SparseImageFormatProperties2) ([]*SparseImageFormatProperties2, error)
 }
 
@@ -539,6 +541,13 @@ type SamplerYcbcrConversion interface {
 	// core1_2.SamplerYcbcrConversion, etc.
 	APIVersion() common.APIVersion
 
+	// Destroy destroys the SamplerYcbcrConversion object and the underlying structures. **Warning** after
+	// destruction, this object will continue to exist, but the Vulkan object handle that backs it will
+	// be invalid. Do not call further methods on this object.
+	//
+	// callbacks - Controls host memory deallocation
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/vkDestroySamplerYcbcrConversion.html
 	Destroy(allocator *driver.AllocationCallbacks)
 }
 

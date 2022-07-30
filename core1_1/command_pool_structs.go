@@ -11,6 +11,8 @@ import (
 )
 
 // CommandPoolTrimFlags is reserved for future use
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkCommandPoolTrimFlagsKHR.html
 type CommandPoolTrimFlags int32
 
 var commandPoolTrimFlagsMapping = common.NewFlagStringMapping[CommandPoolTrimFlags]()

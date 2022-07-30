@@ -97,6 +97,8 @@ func (e DescriptorUpdateTemplateEntry) PopulateCPointer(allocator *cgoparam.Allo
 
 // DescriptorUpdateTemplateCreateInfo specifies parameters of a newly-created Descriptor Update
 // Template
+//
+// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkDescriptorUpdateTemplateCreateInfo.html
 type DescriptorUpdateTemplateCreateInfo struct {
 	// Flags is reserved for future use
 	Flags DescriptorUpdateTemplateCreateFlags

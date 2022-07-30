@@ -143,9 +143,12 @@ func (o PhysicalDeviceExternalFenceInfo) PopulateCPointer(allocator *cgoparam.Al
 //
 // https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkExternalFenceProperties.html
 type ExternalFenceProperties struct {
+	// ExportFromImportedHandleTypes indicates which type of imported handle HandleType can be exported from
 	ExportFromImportedHandleTypes ExternalFenceHandleTypeFlags
-	CompatibleHandleTypes         ExternalFenceHandleTypeFlags
-	ExternalFenceFeatures         ExternalFenceFeatureFlags
+	// CompatibleHandleTypes specifies handle types which can be specified at the same time as HandleType when creating a Fence
+	CompatibleHandleTypes ExternalFenceHandleTypeFlags
+	// ExternalFenceFeatures indicates the features of HandleType
+	ExternalFenceFeatures ExternalFenceFeatureFlags
 
 	common.NextOutData
 }

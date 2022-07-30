@@ -51,6 +51,8 @@ const (
 
 	// QueueFamilyExternal represents any Queue external to the resource's current Vulkan instance,
 	// as long as the Queue uses the same underlying Device group or PhysicalDevice
+	//
+	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VK_QUEUE_FAMILY_EXTERNAL_KHR.html
 	QueueFamilyExternal int = C.VK_QUEUE_FAMILY_EXTERNAL
 
 	// DependencyDeviceGroup specifies that dependencies are non-device-local
