@@ -243,3 +243,24 @@ Some structures (mainly Features structures) have both `NextOptions` and `NextOu
 
 Chained structures in the wrong field will be ignored.
 
+### Separate PhysicalDevice Functionality Into Instance And Device Scope
+
+All Vulkan extensions fall into one of two categories: instance extensions, and device extensions. When 
+ an extension is promoted to a core version, an unusual state can come about. In rare cases, a user's system
+ may support a higher core version than specific devices on that system (for example, if a user has multiple
+ devices). In this case, `Instance` objects on that system can support the higher functionality, but `Device`
+ objects cannot.
+
+For example, if a user has a physical device that supports core 1.2 and another that only supports core 1.1,
+ when working with the core 1.1 device, core 1.2 functionality will still be available, but only for the
+ functionality that was promoted from instance extensions, nto the functionality that was promoted from device
+ extensions.
+
+But what of `PhysicalDevice` objects? The `PhysicalDevice` is the only Vulkan object that may have its functionality
+ expanded in both instance and device extensions.  In this case, the higher-versioned instance extension functionality is available,
+ and the higher-versioned device extension functionality is not.
+
+As a result, beginning with core 1.1, `PhysicalDevice` objects are split into `InstanceScopedPhysicalDevice`,
+ which contains promoted instance extension functionality, and `PhysicalDevice`, which contains promoted
+ device extension functionality, and a method to return an `InstanceScopedPhysicalDevice` of the same version. `core1_0.PhysicalObject`
+ objects can be promoted directly to `InstanceScopedPhysicalDevice` objects, as well.
