@@ -2,7 +2,7 @@ package core
 
 /*
 #include <stdlib.h>
-#include "vulkan/vulkan.h"
+#include "common/vulkan.h"
 */
 import "C"
 import (
