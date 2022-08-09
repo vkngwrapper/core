@@ -102,7 +102,7 @@ func (o GraphicsPipelineCreateInfo) PopulateCPointer(allocator *cgoparam.Allocat
 	createInfo.layout = nil
 	createInfo.renderPass = nil
 	createInfo.subpass = C.uint32_t(o.Subpass)
-	createInfo.basePipelineHandle = (C.VkPipeline)(C.VK_NULL_HANDLE)
+	createInfo.basePipelineHandle = (C.VkPipeline)(nil)
 	createInfo.basePipelineIndex = C.int32_t(o.BasePipelineIndex)
 
 	if o.Layout != nil {
