@@ -1,8 +1,7 @@
 package driver
 
 /*
-#cgo windows LDFLAGS: -lvulkan
-#cgo linux freebsd openbsd pkg-config: vulkan
+#cgo LDFLAGS: -lvulkan
 #include "driver.h"
 */
 import "C"
