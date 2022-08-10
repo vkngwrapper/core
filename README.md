@@ -27,6 +27,11 @@ For more information about our future roadmap, see [the org page](https://github
 
 ## Getting Started
 
+Before building any Vulkan application, you will need to install [the Vulkan SDK](https://www.lunarg.com/vulkan-sdk/)
+ for your operating system. Additionally, if you intend to use SDL2 to create windows, as in vkngwrapper's examples,
+ it may be necessary to download SDL2 using your local package manager. For more information, 
+ see [go-sdl2 requirements](https://github.com/veandco/go-sdl2#requirements).
+
 The first step to using vkngwrapper is to create a [Loader](https://pkg.go.dev/github.com/vkngwrapper/core#Loader).
  While we offer the option to create a Loader from a ProcAddr provided by a windowing system (such as SDL2),
  the easiest way is to build a loader from the system's local Vulkan library:
