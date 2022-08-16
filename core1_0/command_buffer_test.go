@@ -219,7 +219,7 @@ func TestVulkanCommandBuffer_CmdBindVertexBuffers(t *testing.T) {
 			require.ElementsMatch(t, []driver.VkDeviceSize{2}, singleOffset)
 		})
 
-	buffer.CmdBindVertexBuffers([]core1_0.Buffer{vertexBuffer}, []int{2})
+	buffer.CmdBindVertexBuffers(0, []core1_0.Buffer{vertexBuffer}, []int{2})
 }
 
 func TestVulkanCommandBuffer_CmdBindIndexBuffer(t *testing.T) {

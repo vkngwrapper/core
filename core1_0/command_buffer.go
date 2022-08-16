@@ -120,7 +120,7 @@ func (c *VulkanCommandBuffer) CmdDrawIndexed(indexCount, instanceCount int, firs
 	c.commandCounter.DrawCallCount++
 }
 
-func (c *VulkanCommandBuffer) CmdBindVertexBuffers(buffers []Buffer, bufferOffsets []int) {
+func (c *VulkanCommandBuffer) CmdBindVertexBuffers(firstBinding int, buffers []Buffer, bufferOffsets []int) {
 	allocator := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(allocator)
 
@@ -140,7 +140,7 @@ func (c *VulkanCommandBuffer) CmdBindVertexBuffers(buffers []Buffer, bufferOffse
 		offsetArraySlice[i] = driver.VkDeviceSize(bufferOffsets[i])
 	}
 
-	c.deviceDriver.VkCmdBindVertexBuffers(c.commandBufferHandle, driver.Uint32(0), driver.Uint32(bufferCount), bufferArrayPtr, offsetArrayPtr)
+	c.deviceDriver.VkCmdBindVertexBuffers(c.commandBufferHandle, driver.Uint32(firstBinding), driver.Uint32(bufferCount), bufferArrayPtr, offsetArrayPtr)
 	c.commandCounter.CommandCount++
 }
 

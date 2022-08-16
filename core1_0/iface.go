@@ -170,12 +170,14 @@ type CommandBuffer interface {
 	CmdDrawIndexed(indexCount, instanceCount int, firstIndex uint32, vertexOffset int, firstInstance uint32)
 	// CmdBindVertexBuffers binds vertex Buffers to this CommandBuffer
 	//
+	// firstBinding - The index of the first input binding whose state is updated by the command
+	//
 	// buffers - A slice of Buffer objects
 	//
 	// bufferOffsets - A slice of Buffer offsets
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkCmdBindVertexBuffers.html
-	CmdBindVertexBuffers(buffers []Buffer, bufferOffsets []int)
+	CmdBindVertexBuffers(firstBinding int, buffers []Buffer, bufferOffsets []int)
 	// CmdBindIndexBuffer binds an index Buffer to this CommandBuffer
 	//
 	// buffer - The Buffer being bound

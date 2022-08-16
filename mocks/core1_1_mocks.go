@@ -342,15 +342,15 @@ func (mr *CommandBuffer1_1MockRecorder) CmdBindPipeline(bindPoint, pipeline inte
 }
 
 // CmdBindVertexBuffers mocks base method.
-func (m *CommandBuffer1_1) CmdBindVertexBuffers(buffers []core1_0.Buffer, bufferOffsets []int) {
+func (m *CommandBuffer1_1) CmdBindVertexBuffers(firstBinding int, buffers []core1_0.Buffer, bufferOffsets []int) {
 	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "CmdBindVertexBuffers", buffers, bufferOffsets)
+	m.ctrl.Call(m, "CmdBindVertexBuffers", firstBinding, buffers, bufferOffsets)
 }
 
 // CmdBindVertexBuffers indicates an expected call of CmdBindVertexBuffers.
-func (mr *CommandBuffer1_1MockRecorder) CmdBindVertexBuffers(buffers, bufferOffsets interface{}) *gomock.Call {
+func (mr *CommandBuffer1_1MockRecorder) CmdBindVertexBuffers(firstBinding, buffers, bufferOffsets interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CmdBindVertexBuffers", reflect.TypeOf((*CommandBuffer1_1)(nil).CmdBindVertexBuffers), buffers, bufferOffsets)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CmdBindVertexBuffers", reflect.TypeOf((*CommandBuffer1_1)(nil).CmdBindVertexBuffers), firstBinding, buffers, bufferOffsets)
 }
 
 // CmdBlitImage mocks base method.
