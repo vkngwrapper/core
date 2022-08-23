@@ -5,7 +5,7 @@ package core1_1
 #include "../common/vulkan.h"
 */
 import "C"
-import "github.com/vkngwrapper/core/common"
+import "github.com/vkngwrapper/core/v2/common"
 
 const (
 	// VkErrorInvalidExternalHandle indicates an external handle is not a valid handle

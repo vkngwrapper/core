@@ -1,6 +1,6 @@
-# vkngwrapper/core
+# vkngwrapper/core/v2
 
-[![Go Reference](https://pkg.go.dev/badge/github.com/vkngwrapper/core.svg)](https://pkg.go.dev/github.com/vkngwrapper/core)
+[![Go Reference](https://pkg.go.dev/badge/github.com/vkngwrapper/core/v2.svg)](https://pkg.go.dev/github.com/vkngwrapper/core/v2)
 
 Vkngwrapper (proununced "Viking Wrapper") is a handwritten cgo wrapper for the Vulkan graphics and compute API.
  The goal is to produce fast, easy-to-use, low-go-allocation, and idiomatic Go code to communicate with your graphics
@@ -32,7 +32,7 @@ Before building any Vulkan application, you will need to install [the Vulkan SDK
  it may be necessary to download SDL2 using your local package manager. For more information, 
  see [go-sdl2 requirements](https://github.com/veandco/go-sdl2#requirements).
 
-The first step to using vkngwrapper is to create a [Loader](https://pkg.go.dev/github.com/vkngwrapper/core#Loader).
+The first step to using vkngwrapper is to create a [Loader](https://pkg.go.dev/github.com/vkngwrapper/core/v2#Loader).
  While we offer the option to create a Loader from a ProcAddr provided by a windowing system (such as SDL2),
  the easiest way is to build a loader from the system's local Vulkan library:
 
@@ -43,9 +43,9 @@ if err != nil {
 }
 ```
  
-Once you have a Loader, you can use that Loader to create an [Instance](https://pkg.go.dev/github.com/vkngwrapper/core/core1_0#Instance),
- the Instance to create a [PhysicalDevice](https://pkg.go.dev/github.com/vkngwrapper/core/core1_0#PhysicalDevice), 
- and the PhysicalDevice to create a [Device](https://pkg.go.dev/github.com/vkngwrapper/core/core1_0#Device).
+Once you have a Loader, you can use that Loader to create an [Instance](https://pkg.go.dev/github.com/vkngwrapper/core/v2/core1_0#Instance),
+ the Instance to create a [PhysicalDevice](https://pkg.go.dev/github.com/vkngwrapper/core/v2/core1_0#PhysicalDevice), 
+ and the PhysicalDevice to create a [Device](https://pkg.go.dev/github.com/vkngwrapper/core/v2/core1_0#Device).
 
 ```go
 instanceOptions := core1_0.InstanceCreateInfo{
@@ -107,8 +107,8 @@ While vkngwrapper labors to follow the Vulkan specification fairly closely, ther
 Vulkan represents all persistent structures using *object handles*, opaque pointers that are passed to and from Vulkan
  to indicate a particular Vulkan object.  vkngwrapper wraps these handles with a Go object, and exposed Vulkan commands
  in an object-oriented fashion. For instance, the Vulkan command `vkCreateBuffer` accepts a Device handle (`VkDevice`),
- and returns a Buffer handle (`VkBuffer`).  By contrast, [Device](https://pkg.go.dev/github.com/vkngwrapper/core/core1_0#Device).CreateBuffer
- is located on a Device object and returns a [Buffer](https://pkg.go.dev/github.com/vkngwrapper/core/core1_0#Buffer) object.
+ and returns a Buffer handle (`VkBuffer`).  By contrast, [Device](https://pkg.go.dev/github.com/vkngwrapper/core/v2/core1_0#Device).CreateBuffer
+ is located on a Device object and returns a [Buffer](https://pkg.go.dev/github.com/vkngwrapper/core/v2/core1_0#Buffer) object.
 
 One of the principals of vkngwrapper is that two Vulkan objects of the same type with the same handle should compare as
  true. As a result, vkngwrapper utilizes an internal cache of Vulkan objects to ensure that the same object is returned
@@ -143,20 +143,20 @@ When representing integer numbers, most types in vkngwrapper are simply `int`, w
 All types, methods, and constants in vkngwrapper (both here in the core library, as well as the [extensions library](https://github.com/vkngwrapper/extensions))
  are packaged under the Vulkan version or extension that makes them available for use. For instance, SamplerYcbcrConversion objects
  were introduced in the [VK_KHR_sampler_ycbcr_conversion](https://pkg.go.dev/github.com/vkngwrapper/extensions/khr_sampler_ycbcr_conversion)
- extension, and then later promoted to [core 1.1](https://pkg.go.dev/github.com/vkngwrapper/core/core1_1). As a result, 
+ extension, and then later promoted to [core 1.1](https://pkg.go.dev/github.com/vkngwrapper/core/v2/core1_1). As a result, 
  the SamplerYcbcrConversion interface is available via [khr_sampler_ycbcr_conversion.SamplerYcbcrConversion](https://pkg.go.dev/github.com/vkngwrapper/extensions/khr_sampler_ycbcr_conversion#SamplerYcbcrConversion)
- and [core1_1.SamplerYcbcrConversion](https://pkg.go.dev/github.com/vkngwrapper/core/core1_1#SamplerYcbcrConversion).
+ and [core1_1.SamplerYcbcrConversion](https://pkg.go.dev/github.com/vkngwrapper/core/v2/core1_1#SamplerYcbcrConversion).
 
 All symbols that are available in the C Vulkan headers are namespaced in this manner, with the exception of 
- [driver.AllocationCallbacks](https://pkg.go.dev/github.com/vkngwrapper/core/driver#AllocationCallbacks) which
+ [driver.AllocationCallbacks](https://pkg.go.dev/github.com/vkngwrapper/core/v2/driver#AllocationCallbacks) which
  is special for silly package interdependency and cgo reasons. Arguments that accept `*driver.AllocationCallbacks` can
  usually be left nil, but if you would like to receive callbacks when Vulkan makes internal allocations and deallocations,
  do the following:
 
-1. Create a [common.AllocationCallbackOptions](https://pkg.go.dev/github.com/vkngwrapper/core/common#AllocationCallbackOptions)
+1. Create a [common.AllocationCallbackOptions](https://pkg.go.dev/github.com/vkngwrapper/core/v2/common#AllocationCallbackOptions)
    object with the callback methods you would like to be executed, and optionally, a UserData object to be passed to all
    callbacks.
-2. Use [driver.CreateAllocationCallbacks](https://pkg.go.dev/github.com/vkngwrapper/core/driver#CreateAllocationCallbacks)
+2. Use [driver.CreateAllocationCallbacks](https://pkg.go.dev/github.com/vkngwrapper/core/v2/driver#CreateAllocationCallbacks)
    to create a `driver.AllocationCallbacks` object, which can be passed to Create, Destroy, and Free methods.
 
 While `driver.AllocationCallbacks` objects are immutable, `common.AllocationCallbackOptions` structures are not. They
@@ -177,15 +177,15 @@ It is helpful to be able to request information about Vulkan support from any Vu
 ### Promote to Add Functionality
 
 All Vulkan versions from 1.1 upward provide *promoted* versions of Vulkan objects introduced in previous core versions.
- As an example, consider the CommandBuffer.  [core1_0.CommandBuffer](pkg.go.dev/github.com/vkngwrapper/core/core1_0#CommandBuffer)
- introduces 58 Vulkan commands and has several utility methods. [core1_1.CommandBuffer](https://pkg.go.dev/github.com/vkngwrapper/core/core1_1#CommandBuffer)
+ As an example, consider the CommandBuffer.  [core1_0.CommandBuffer](pkg.go.dev/github.com/vkngwrapper/core/v2/core1_0#CommandBuffer)
+ introduces 58 Vulkan commands and has several utility methods. [core1_1.CommandBuffer](https://pkg.go.dev/github.com/vkngwrapper/core/v2/core1_1#CommandBuffer)
  extends `core1_0.CommandBuffer` and adds 2 additional Vulkan commands introduced in core 1.1.
- [core1_2.CommandBuffer](https://pkg.go.dev/github.com/vkngwrapper/core/core1_2#CommandBuffer) extends
+ [core1_2.CommandBuffer](https://pkg.go.dev/github.com/vkngwrapper/core/v2/core1_2#CommandBuffer) extends
  `core1_1.CommandBuffer` and adds 5 more commands. In environments where you are making use of core 1.1 
  functionality, you may find it easier to work with `core1_1.CommandBuffer`.
 
-You may use [core1_1.PromoteCommandBuffer](https://pkg.go.dev/github.com/vkngwrapper/core/core1_1#PromoteCommandBuffer)
- or [core1_1.PromoteCommandBufferSlice](https://pkg.go.dev/github.com/vkngwrapper/core/core1_1#PromoteCommandBufferSlice)
+You may use [core1_1.PromoteCommandBuffer](https://pkg.go.dev/github.com/vkngwrapper/core/v2/core1_1#PromoteCommandBuffer)
+ or [core1_1.PromoteCommandBufferSlice](https://pkg.go.dev/github.com/vkngwrapper/core/v2/core1_1#PromoteCommandBufferSlice)
  to convert any `CommandBuffer` objects into a `core1_1.CommandBuffer`. If the `CommandBuffer` passed to
  a promote method does not support core 1.1, a promoted version will not be included in the results. 
  `core1_1.PromoteCommandBuffer` will return nil, and `core1_1.PromoteCommandBufferSlice` will not include
@@ -196,15 +196,15 @@ Recall in the `Objects, Not Handles` section that objects will only compare to t
  type, even if they share the same handle. `core1_1.PromoteCommandBuffer` will always return an object
  of an underlying core 1.1 type, even if a `CommandBuffer` from a higher version was passed in. However,
  if you are uncertain which version an object is from and don't want to perform a version promotion (they
- aren't free!), you may prefer to compare the handles returned from [CommandBuffer.Handle](https://pkg.go.dev/github.com/vkngwrapper/core/core1_0#CommandBuffer)
+ aren't free!), you may prefer to compare the handles returned from [CommandBuffer.Handle](https://pkg.go.dev/github.com/vkngwrapper/core/v2/core1_0#CommandBuffer)
  or other `Handle` methods on other objects.
 
 ### Chain Options and OutData
 
 Vulkan has the capability to allow existing structure and method behavior to be extended by chaining
  structures using a `pNext` field added to most Vulkan structures. This field is represented in vkngwrapper
- using the [NextOptions](https://pkg.go.dev/github.com/vkngwrapper/core/common#NextOptions) and 
- [NextOutData](https://pkg.go.dev/github.com/vkngwrapper/core/common#NextOutData) embedded structures.
+ using the [NextOptions](https://pkg.go.dev/github.com/vkngwrapper/core/v2/common#NextOptions) and 
+ [NextOutData](https://pkg.go.dev/github.com/vkngwrapper/core/v2/common#NextOutData) embedded structures.
 
 Take a look at this example:
 
@@ -240,10 +240,10 @@ While Vulkan has specific Options types that are intended to go together (and mo
  can be chained onto any other structure with `NextOutData`.
 
 Some structures (mainly Features structures) have both `NextOptions` and `NextOutData`.  When they are being
- used to pass data into Vulkan (such as in [core1_0.PhysicalDevice.CreateDevice](https://pkg.go.dev/github.com/vkngwrapper/core/core1_0#PhysicalDevice),
+ used to pass data into Vulkan (such as in [core1_0.PhysicalDevice.CreateDevice](https://pkg.go.dev/github.com/vkngwrapper/core/v2/core1_0#PhysicalDevice),
  when it is specifying which features to activate), you must use `NextOptions` to chain further structures.
  When they are being used to retrieve data from Vulkan (such as in 
- [core1_1.InstanceScopedPhysicalDevice.Features2](https://pkg.go.dev/github.com/vkngwrapper/core/core1_1#InstanceScopedPhysicalDevice),
+ [core1_1.InstanceScopedPhysicalDevice.Features2](https://pkg.go.dev/github.com/vkngwrapper/core/v2/core1_1#InstanceScopedPhysicalDevice),
  when it is retrieving feature support from the device), you must use `NextOutData` to chain further structures.
 
 Chained structures in the wrong field will be ignored.

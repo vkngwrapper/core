@@ -1,9 +1,9 @@
 package core1_1
 
 import (
-	"github.com/vkngwrapper/core/common"
-	"github.com/vkngwrapper/core/core1_0"
-	"github.com/vkngwrapper/core/driver"
+	"github.com/vkngwrapper/core/v2/common"
+	"github.com/vkngwrapper/core/v2/core1_0"
+	"github.com/vkngwrapper/core/v2/driver"
 )
 
 // VulkanShaderModule is an implementation of the ShaderModule interface that actually communicates with Vulkan. This

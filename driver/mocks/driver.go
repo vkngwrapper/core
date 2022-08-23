@@ -9,8 +9,8 @@ import (
 	unsafe "unsafe"
 
 	gomock "github.com/golang/mock/gomock"
-	common "github.com/vkngwrapper/core/common"
-	driver "github.com/vkngwrapper/core/driver"
+	common "github.com/vkngwrapper/core/v2/common"
+	driver "github.com/vkngwrapper/core/v2/driver"
 )
 
 // MockDriver is a mock of Driver interface.

@@ -1,10 +1,10 @@
 package dummies
 
 import (
-	"github.com/vkngwrapper/core/common/extensions"
-	"github.com/vkngwrapper/core/core1_0"
-	"github.com/vkngwrapper/core/driver"
-	"github.com/vkngwrapper/core/mocks"
+	"github.com/vkngwrapper/core/v2/common/extensions"
+	"github.com/vkngwrapper/core/v2/core1_0"
+	"github.com/vkngwrapper/core/v2/driver"
+	"github.com/vkngwrapper/core/v2/mocks"
 )
 
 func EasyDummyBuffer(driver driver.Driver, device core1_0.Device) core1_0.Buffer {

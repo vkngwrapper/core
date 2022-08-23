@@ -2,12 +2,12 @@ package core1_2_test
 
 import (
 	"github.com/golang/mock/gomock"
-	"github.com/vkngwrapper/core/common"
-	"github.com/vkngwrapper/core/core1_2"
-	"github.com/vkngwrapper/core/driver"
-	mock_driver "github.com/vkngwrapper/core/driver/mocks"
-	"github.com/vkngwrapper/core/internal/dummies"
-	"github.com/vkngwrapper/core/mocks"
+	"github.com/vkngwrapper/core/v2/internal/dummies"
+	"github.com/vkngwrapper/core/v2/mocks"
+	"github.com/vkngwrapper/core/v2/common"
+	"github.com/vkngwrapper/core/v2/core1_2"
+	"github.com/vkngwrapper/core/v2/driver"
+	mock_driver "github.com/vkngwrapper/core/v2/driver/mocks"
 	"testing"
 )
 

@@ -1,9 +1,9 @@
 package core1_2
 
 import (
-	"github.com/vkngwrapper/core/common"
-	"github.com/vkngwrapper/core/core1_1"
-	"github.com/vkngwrapper/core/driver"
+	"github.com/vkngwrapper/core/v2/common"
+	"github.com/vkngwrapper/core/v2/core1_1"
+	"github.com/vkngwrapper/core/v2/driver"
 )
 
 // VulkanDescriptorUpdateTemplate is an implementation of the DescriptorUpdateTemplate interface that actually communicates with Vulkan. This

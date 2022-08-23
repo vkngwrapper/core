@@ -7,8 +7,8 @@ package core1_0
 import "C"
 import (
 	"github.com/CannibalVox/cgoparam"
-	"github.com/vkngwrapper/core/common"
-	"github.com/vkngwrapper/core/driver"
+	"github.com/vkngwrapper/core/v2/common"
+	"github.com/vkngwrapper/core/v2/driver"
 	"unsafe"
 )
 
@@ -149,7 +149,7 @@ func (c *VulkanCommandBuffer) CmdBindIndexBuffer(buffer Buffer, offset int, inde
 	c.commandCounter.CommandCount++
 }
 
-func (c *VulkanCommandBuffer) CmdBindDescriptorSets(bindPoint PipelineBindPoint, layout PipelineLayout, sets []DescriptorSet, dynamicOffsets []int) {
+func (c *VulkanCommandBuffer) CmdBindDescriptorSets(bindPoint PipelineBindPoint, layout PipelineLayout, firstSet int, sets []DescriptorSet, dynamicOffsets []int) {
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
@@ -179,7 +179,7 @@ func (c *VulkanCommandBuffer) CmdBindDescriptorSets(bindPoint PipelineBindPoint,
 	c.deviceDriver.VkCmdBindDescriptorSets(c.commandBufferHandle,
 		driver.VkPipelineBindPoint(bindPoint),
 		layout.Handle(),
-		driver.Uint32(0),
+		driver.Uint32(firstSet),
 		driver.Uint32(setCount),
 		(*driver.VkDescriptorSet)(setPtr),
 		driver.Uint32(dynamicOffsetCount),

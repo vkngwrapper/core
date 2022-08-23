@@ -9,8 +9,8 @@ import (
 	"github.com/CannibalVox/cgoparam"
 	"github.com/cockroachdb/errors"
 	"github.com/google/uuid"
-	"github.com/vkngwrapper/core/common"
-	"github.com/vkngwrapper/core/core1_0"
+	"github.com/vkngwrapper/core/v2/common"
+	"github.com/vkngwrapper/core/v2/core1_0"
 	"unsafe"
 )
 

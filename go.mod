@@ -1,4 +1,4 @@
-module github.com/vkngwrapper/core
+module github.com/vkngwrapper/core/v2
 
 go 1.18
 
@@ -9,7 +9,6 @@ require (
 	github.com/golang/mock v1.6.0
 	github.com/google/uuid v1.3.0
 	github.com/stretchr/testify v1.8.0
-	github.com/vkngwrapper/core v0.0.0-20220707035000-5ae1f4d28e8f
 )
 
 require (

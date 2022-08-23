@@ -1,8 +1,8 @@
 package core1_0
 
 import (
-	"github.com/vkngwrapper/core/common"
-	"github.com/vkngwrapper/core/driver"
+	"github.com/vkngwrapper/core/v2/common"
+	"github.com/vkngwrapper/core/v2/driver"
 	"time"
 	"unsafe"
 )
@@ -204,12 +204,14 @@ type CommandBuffer interface {
 	//
 	// layout - A PipelineLayout object used to program the bindings
 	//
+	// firstSet - The set number of the first DescriptorSet to be bound
+	//
 	// sets - A slice of DescriptorSet objects describing the DescriptorSets to bind
 	//
 	// dynamicOffsets - A slice of values specifying dynamic offsets
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkCmdBindDescriptorSets.html
-	CmdBindDescriptorSets(bindPoint PipelineBindPoint, layout PipelineLayout, sets []DescriptorSet, dynamicOffsets []int)
+	CmdBindDescriptorSets(bindPoint PipelineBindPoint, layout PipelineLayout, firstSet int, sets []DescriptorSet, dynamicOffsets []int)
 	// CmdPipelineBarrier inserts a memory dependency into the recorded commands
 	//
 	// srcStageMask - Specifies the source stages

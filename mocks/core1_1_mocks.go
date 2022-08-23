@@ -10,10 +10,10 @@ import (
 	unsafe "unsafe"
 
 	gomock "github.com/golang/mock/gomock"
-	common "github.com/vkngwrapper/core/common"
-	core1_0 "github.com/vkngwrapper/core/core1_0"
-	core1_1 "github.com/vkngwrapper/core/core1_1"
-	driver "github.com/vkngwrapper/core/driver"
+	common "github.com/vkngwrapper/core/v2/common"
+	core1_0 "github.com/vkngwrapper/core/v2/core1_0"
+	core1_1 "github.com/vkngwrapper/core/v2/core1_1"
+	driver "github.com/vkngwrapper/core/v2/driver"
 )
 
 // Buffer1_1 is a mock of Buffer interface.
@@ -306,15 +306,15 @@ func (mr *CommandBuffer1_1MockRecorder) CmdBeginRenderPass(contents, o interface
 }
 
 // CmdBindDescriptorSets mocks base method.
-func (m *CommandBuffer1_1) CmdBindDescriptorSets(bindPoint core1_0.PipelineBindPoint, layout core1_0.PipelineLayout, sets []core1_0.DescriptorSet, dynamicOffsets []int) {
+func (m *CommandBuffer1_1) CmdBindDescriptorSets(bindPoint core1_0.PipelineBindPoint, layout core1_0.PipelineLayout, firstSet int, sets []core1_0.DescriptorSet, dynamicOffsets []int) {
 	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "CmdBindDescriptorSets", bindPoint, layout, sets, dynamicOffsets)
+	m.ctrl.Call(m, "CmdBindDescriptorSets", bindPoint, layout, firstSet, sets, dynamicOffsets)
 }
 
 // CmdBindDescriptorSets indicates an expected call of CmdBindDescriptorSets.
-func (mr *CommandBuffer1_1MockRecorder) CmdBindDescriptorSets(bindPoint, layout, sets, dynamicOffsets interface{}) *gomock.Call {
+func (mr *CommandBuffer1_1MockRecorder) CmdBindDescriptorSets(bindPoint, layout, firstSet, sets, dynamicOffsets interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CmdBindDescriptorSets", reflect.TypeOf((*CommandBuffer1_1)(nil).CmdBindDescriptorSets), bindPoint, layout, sets, dynamicOffsets)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CmdBindDescriptorSets", reflect.TypeOf((*CommandBuffer1_1)(nil).CmdBindDescriptorSets), bindPoint, layout, firstSet, sets, dynamicOffsets)
 }
 
 // CmdBindIndexBuffer mocks base method.

@@ -8,9 +8,9 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
-	common "github.com/vkngwrapper/core/common"
-	core1_0 "github.com/vkngwrapper/core/core1_0"
-	driver "github.com/vkngwrapper/core/driver"
+	common "github.com/vkngwrapper/core/v2/common"
+	core1_0 "github.com/vkngwrapper/core/v2/core1_0"
+	driver "github.com/vkngwrapper/core/v2/driver"
 )
 
 // MockLoader is a mock of Loader interface.

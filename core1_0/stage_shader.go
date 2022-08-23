@@ -10,7 +10,7 @@ import (
 	"encoding/binary"
 	"github.com/CannibalVox/cgoparam"
 	"github.com/cockroachdb/errors"
-	"github.com/vkngwrapper/core/common"
+	"github.com/vkngwrapper/core/v2/common"
 	"unsafe"
 )
 

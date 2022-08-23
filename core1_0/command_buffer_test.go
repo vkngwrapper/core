@@ -5,12 +5,12 @@ import (
 	"encoding/binary"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/require"
-	"github.com/vkngwrapper/core/common"
-	"github.com/vkngwrapper/core/core1_0"
-	"github.com/vkngwrapper/core/driver"
-	mock_driver "github.com/vkngwrapper/core/driver/mocks"
-	internal_mocks "github.com/vkngwrapper/core/internal/dummies"
-	"github.com/vkngwrapper/core/mocks"
+	"github.com/vkngwrapper/core/v2/common"
+	"github.com/vkngwrapper/core/v2/core1_0"
+	"github.com/vkngwrapper/core/v2/driver"
+	mock_driver "github.com/vkngwrapper/core/v2/driver/mocks"
+	internal_mocks "github.com/vkngwrapper/core/v2/internal/dummies"
+	"github.com/vkngwrapper/core/v2/mocks"
 	"reflect"
 	"testing"
 	"unsafe"
@@ -255,7 +255,7 @@ func TestVulkanCommandBuffer_CmdBindDescriptorSets(t *testing.T) {
 		buffer.Handle(),
 		driver.VkPipelineBindPoint(1), /* VK_PIPELINE_BIND_POINT_RAY_TRACING_KHR */
 		pipelineLayoutHandle,
-		driver.Uint32(0),
+		driver.Uint32(3),
 		driver.Uint32(1),
 		gomock.Not(nil),
 		driver.Uint32(3),
@@ -268,7 +268,7 @@ func TestVulkanCommandBuffer_CmdBindDescriptorSets(t *testing.T) {
 			require.ElementsMatch(t, []driver.Uint32{4, 5, 6}, dynamicOffsetSlice)
 		})
 
-	buffer.CmdBindDescriptorSets(core1_0.PipelineBindPointCompute, pipelineLayout, []core1_0.DescriptorSet{
+	buffer.CmdBindDescriptorSets(core1_0.PipelineBindPointCompute, pipelineLayout, 3, []core1_0.DescriptorSet{
 		descriptorSet,
 	}, []int{4, 5, 6})
 }

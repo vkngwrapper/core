@@ -8,9 +8,9 @@ import "C"
 import (
 	"github.com/CannibalVox/cgoparam"
 	"github.com/cockroachdb/errors"
-	"github.com/vkngwrapper/core/common"
-	"github.com/vkngwrapper/core/core1_0"
-	"github.com/vkngwrapper/core/core1_1"
+	"github.com/vkngwrapper/core/v2/common"
+	"github.com/vkngwrapper/core/v2/core1_0"
+	"github.com/vkngwrapper/core/v2/core1_1"
 	"unsafe"
 )
 

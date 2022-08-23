@@ -7,9 +7,9 @@ package core1_1
 import "C"
 import (
 	"github.com/CannibalVox/cgoparam"
-	"github.com/vkngwrapper/core/common"
-	"github.com/vkngwrapper/core/core1_0"
-	"github.com/vkngwrapper/core/driver"
+	"github.com/vkngwrapper/core/v2/common"
+	"github.com/vkngwrapper/core/v2/core1_0"
+	"github.com/vkngwrapper/core/v2/driver"
 	"unsafe"
 )
 
@@ -256,7 +256,7 @@ func (d *VulkanDevice) CreateSamplerYcbcrConversion(o SamplerYcbcrConversionCrea
 	return CreateSamplerYcbcrConversion(d.DeviceDriver, d.DeviceHandle, ycbcrHandle, d.MaximumAPIVersion), res, nil
 }
 
-//go:linkname createQueueObject github.com/vkngwrapper/core/core1_0.createQueueObject
+//go:linkname createQueueObject github.com/vkngwrapper/core/v2/core1_0.createQueueObject
 func createQueueObject(coreDriver driver.Driver, device driver.VkDevice, handle driver.VkQueue, version common.APIVersion) *core1_0.VulkanQueue
 
 func (d *VulkanDevice) GetQueue2(o DeviceQueueInfo2) (core1_0.Queue, error) {

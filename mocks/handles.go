@@ -1,7 +1,7 @@
 package mocks
 
 import (
-	"github.com/vkngwrapper/core/driver"
+	"github.com/vkngwrapper/core/v2/driver"
 	"math/rand"
 	"unsafe"
 )

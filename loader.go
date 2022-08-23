@@ -7,9 +7,9 @@ package core
 import "C"
 import (
 	"github.com/CannibalVox/cgoparam"
-	"github.com/vkngwrapper/core/common"
-	"github.com/vkngwrapper/core/core1_0"
-	"github.com/vkngwrapper/core/driver"
+	"github.com/vkngwrapper/core/v2/common"
+	"github.com/vkngwrapper/core/v2/core1_0"
+	"github.com/vkngwrapper/core/v2/driver"
 	"unsafe"
 )
 
@@ -158,7 +158,7 @@ func (l *VulkanLoader) AvailableLayers() (map[string]*core1_0.LayerProperties, c
 	return layers, result, err
 }
 
-//go:linkname createInstanceObject github.com/vkngwrapper/core/core1_0.createInstanceObject
+//go:linkname createInstanceObject github.com/vkngwrapper/core/v2/core1_0.createInstanceObject
 func createInstanceObject(instanceDriver driver.Driver, handle driver.VkInstance, version common.APIVersion) *core1_0.VulkanInstance
 
 func (l *VulkanLoader) CreateInstance(allocationCallbacks *driver.AllocationCallbacks, options core1_0.InstanceCreateInfo) (core1_0.Instance, common.VkResult, error) {
