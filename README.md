@@ -2,6 +2,8 @@
 
 [![Go Reference](https://pkg.go.dev/badge/github.com/vkngwrapper/core/v2.svg)](https://pkg.go.dev/github.com/vkngwrapper/core/v2)
 
+`go get github.com/vkngwrapper/core/v2`
+
 Vkngwrapper (proununced "Viking Wrapper") is a handwritten cgo wrapper for the Vulkan graphics and compute API.
  The goal is to produce fast, easy-to-use, low-go-allocation, and idiomatic Go code to communicate with your graphics
  card and enable games and other graphical applications. Vkngwrapper currently supports core versions 1.0-1.2,
@@ -142,9 +144,9 @@ When representing integer numbers, most types in vkngwrapper are simply `int`, w
 
 All types, methods, and constants in vkngwrapper (both here in the core library, as well as the [extensions library](https://github.com/vkngwrapper/extensions))
  are packaged under the Vulkan version or extension that makes them available for use. For instance, SamplerYcbcrConversion objects
- were introduced in the [VK_KHR_sampler_ycbcr_conversion](https://pkg.go.dev/github.com/vkngwrapper/extensions/khr_sampler_ycbcr_conversion)
+ were introduced in the [VK_KHR_sampler_ycbcr_conversion](https://pkg.go.dev/github.com/vkngwrapper/extensions/v2/khr_sampler_ycbcr_conversion)
  extension, and then later promoted to [core 1.1](https://pkg.go.dev/github.com/vkngwrapper/core/v2/core1_1). As a result, 
- the SamplerYcbcrConversion interface is available via [khr_sampler_ycbcr_conversion.SamplerYcbcrConversion](https://pkg.go.dev/github.com/vkngwrapper/extensions/khr_sampler_ycbcr_conversion#SamplerYcbcrConversion)
+ the SamplerYcbcrConversion interface is available via [khr_sampler_ycbcr_conversion.SamplerYcbcrConversion](https://pkg.go.dev/github.com/vkngwrapper/extensions/v2/khr_sampler_ycbcr_conversion#SamplerYcbcrConversion)
  and [core1_1.SamplerYcbcrConversion](https://pkg.go.dev/github.com/vkngwrapper/core/v2/core1_1#SamplerYcbcrConversion).
 
 All symbols that are available in the C Vulkan headers are namespaced in this manner, with the exception of 
