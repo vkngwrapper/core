@@ -7,6 +7,7 @@ package core1_0
 import "C"
 import (
 	"github.com/CannibalVox/cgoparam"
+	"github.com/cockroachdb/errors"
 	"github.com/vkngwrapper/core/v2/common"
 	"unsafe"
 )
@@ -230,6 +231,9 @@ type ComputePipelineCreateInfo struct {
 }
 
 func (o ComputePipelineCreateInfo) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+	if o.Layout == nil {
+		return nil, errors.New("core1_0.ComputePipelineCreateInfo.Layout cannot be nil")
+	}
 	if preallocatedPointer == unsafe.Pointer(nil) {
 		preallocatedPointer = allocator.Malloc(C.sizeof_struct_VkComputePipelineCreateInfo)
 	}
@@ -238,14 +242,18 @@ func (o ComputePipelineCreateInfo) PopulateCPointer(allocator *cgoparam.Allocato
 	createInfo.sType = C.VK_STRUCTURE_TYPE_COMPUTE_PIPELINE_CREATE_INFO
 	createInfo.pNext = next
 	createInfo.flags = C.VkPipelineCreateFlags(o.Flags)
+	createInfo.basePipelineHandle = (C.VkPipeline)(nil)
 
 	_, err := common.AllocOptions(allocator, &o.Stage, unsafe.Pointer(&createInfo.stage))
 	if err != nil {
 		return nil, err
 	}
 
+	if o.BasePipeline != nil {
+		createInfo.basePipelineHandle = C.VkPipeline(unsafe.Pointer(o.BasePipeline.Handle()))
+	}
+
 	createInfo.layout = C.VkPipelineLayout(unsafe.Pointer(o.Layout.Handle()))
-	createInfo.basePipelineHandle = C.VkPipeline(unsafe.Pointer(o.BasePipeline.Handle()))
 	createInfo.basePipelineIndex = C.int32_t(o.BasePipelineIndex)
 
 	return preallocatedPointer, nil

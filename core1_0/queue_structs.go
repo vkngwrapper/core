@@ -7,6 +7,7 @@ package core1_0
 import "C"
 import (
 	"github.com/CannibalVox/cgoparam"
+	"github.com/cockroachdb/errors"
 	"github.com/vkngwrapper/core/v2/common"
 	"unsafe"
 )
@@ -49,9 +50,13 @@ func (b SparseMemoryBind) PopulateCPointer(allocator *cgoparam.Allocator, preall
 	bind := (*C.VkSparseMemoryBind)(preallocatedPointer)
 	bind.resourceOffset = C.VkDeviceSize(b.ResourceOffset)
 	bind.size = C.VkDeviceSize(b.Size)
-	bind.memory = C.VkDeviceMemory(unsafe.Pointer(b.Memory.Handle()))
+	bind.memory = nil
 	bind.memoryOffset = C.VkDeviceSize(b.MemoryOffset)
 	bind.flags = C.VkSparseMemoryBindFlags(b.Flags)
+
+	if b.Memory != nil {
+		bind.memory = C.VkDeviceMemory(unsafe.Pointer(b.Memory.Handle()))
+	}
 
 	return preallocatedPointer, nil
 }
@@ -160,6 +165,9 @@ func (b BindSparseInfo) PopulateCPointer(allocator *cgoparam.Allocator, prealloc
 		waitSemaphoreSlice := ([]C.VkSemaphore)(unsafe.Slice(waitSemaphorePtr, waitSemaphoreCount))
 
 		for i := 0; i < waitSemaphoreCount; i++ {
+			if b.WaitSemaphores[i] == nil {
+				return nil, errors.Newf("core1_0.BindSparseInfo.WaitSemaphores cannot contain nil elements, but element %d is nil", i)
+			}
 			waitSemaphoreSlice[i] = C.VkSemaphore(unsafe.Pointer(b.WaitSemaphores[i].Handle()))
 		}
 
@@ -171,6 +179,10 @@ func (b BindSparseInfo) PopulateCPointer(allocator *cgoparam.Allocator, prealloc
 		bufferBindSlice := ([]C.VkSparseBufferMemoryBindInfo)(unsafe.Slice(bufferBindPtr, bufferBindCount))
 
 		for i := 0; i < bufferBindCount; i++ {
+			if b.BufferBinds[i].Buffer == nil {
+				return nil, errors.Newf("core1_0.SparseBufferMemoryBindInfo.Buffer cannot be nil, but "+
+					"core1_0.BindSparseInfo.BufferBinds element %d has a nil Buffer", i)
+			}
 			bufferBindSlice[i].buffer = C.VkBuffer(unsafe.Pointer(b.BufferBinds[i].Buffer.Handle()))
 			bindCount := len(b.BufferBinds[i].Binds)
 			bufferBindSlice[i].bindCount = C.uint32_t(bindCount)
@@ -192,6 +204,10 @@ func (b BindSparseInfo) PopulateCPointer(allocator *cgoparam.Allocator, prealloc
 		imageOpaqueBindSlice := ([]C.VkSparseImageOpaqueMemoryBindInfo)(unsafe.Slice(imageOpaqueBindPtr, imageOpaqueBindCount))
 
 		for i := 0; i < imageOpaqueBindCount; i++ {
+			if b.ImageOpaqueBinds[i].Image == nil {
+				return nil, errors.Newf("core1_0.SparseImageOpaqueMemoryBindInfo.Image must not be null, but "+
+					"core1_0.BindParseInfo.ImageOpaqueBinds element %d has a nil Image", i)
+			}
 			imageOpaqueBindSlice[i].image = C.VkImage(unsafe.Pointer(b.ImageOpaqueBinds[i].Image.Handle()))
 			bindCount := len(b.ImageOpaqueBinds[i].Binds)
 			imageOpaqueBindSlice[i].bindCount = C.uint32_t(bindCount)
@@ -213,6 +229,11 @@ func (b BindSparseInfo) PopulateCPointer(allocator *cgoparam.Allocator, prealloc
 		imageBindSlice := ([]C.VkSparseImageMemoryBindInfo)(unsafe.Slice(imageBindPtr, imageBindCount))
 
 		for i := 0; i < imageBindCount; i++ {
+			if b.ImageBinds[i].Image == nil {
+				return nil, errors.Newf("core1_0.SparseImageMemoryBindInfo.Image must not be null, but "+
+					"core1_0.BindParseInfo.ImageBinds element %d has a nil Image", i)
+			}
+
 			imageBindSlice[i].image = C.VkImage(unsafe.Pointer(b.ImageBinds[i].Image.Handle()))
 			bindCount := len(b.ImageBinds[i].Binds)
 			imageBindSlice[i].bindCount = C.uint32_t(bindCount)
@@ -232,9 +253,13 @@ func (b BindSparseInfo) PopulateCPointer(allocator *cgoparam.Allocator, prealloc
 					bindSlice[j].extent.width = C.uint32_t(b.ImageBinds[i].Binds[j].Extent.Width)
 					bindSlice[j].extent.height = C.uint32_t(b.ImageBinds[i].Binds[j].Extent.Height)
 					bindSlice[j].extent.depth = C.uint32_t(b.ImageBinds[i].Binds[j].Extent.Depth)
-					bindSlice[j].memory = C.VkDeviceMemory(unsafe.Pointer(b.ImageBinds[i].Binds[j].Memory.Handle()))
+					bindSlice[j].memory = nil
 					bindSlice[j].memoryOffset = C.VkDeviceSize(b.ImageBinds[i].Binds[j].MemoryOffset)
 					bindSlice[j].flags = C.VkSparseMemoryBindFlags(b.ImageBinds[i].Binds[j].Flags)
+
+					if b.ImageBinds[i].Binds[j].Memory != nil {
+						bindSlice[j].memory = C.VkDeviceMemory(unsafe.Pointer(b.ImageBinds[i].Binds[j].Memory.Handle()))
+					}
 				}
 
 				imageBindSlice[i].pBinds = bindPtr
@@ -249,6 +274,10 @@ func (b BindSparseInfo) PopulateCPointer(allocator *cgoparam.Allocator, prealloc
 		signalSemaphoreSlice := ([]C.VkSemaphore)(unsafe.Slice(signalSemaphorePtr, signalSemaphoreCount))
 
 		for i := 0; i < signalSemaphoreCount; i++ {
+			if b.SignalSemaphores[i] == nil {
+				return nil, errors.Newf("core1_0.BindSparseInfo.SignalSemaphores cannot contain nil elements, "+
+					"but element %d is nil", i)
+			}
 			signalSemaphoreSlice[i] = C.VkSemaphore(unsafe.Pointer(b.SignalSemaphores[i].Handle()))
 		}
 

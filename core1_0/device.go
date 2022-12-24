@@ -6,6 +6,7 @@ package core1_0
 */
 import "C"
 import (
+	"fmt"
 	"github.com/CannibalVox/cgoparam"
 	"github.com/cockroachdb/errors"
 	"github.com/vkngwrapper/core/v2/common"
@@ -61,6 +62,9 @@ func (d *VulkanDevice) WaitForFences(waitForAll bool, timeout time.Duration, fen
 
 	fenceSlice := ([]driver.VkFence)(unsafe.Slice(fencePtr, fenceCount))
 	for i := 0; i < fenceCount; i++ {
+		if fences[i] == nil {
+			panic(fmt.Sprintf("element %d of slice fences is nil", i))
+		}
 		fenceSlice[i] = fences[i].Handle()
 	}
 
@@ -82,6 +86,9 @@ func (d *VulkanDevice) ResetFences(fences []Fence) (common.VkResult, error) {
 	fencePtr := (*driver.VkFence)(fenceUnsafePtr)
 	fenceSlice := ([]driver.VkFence)(unsafe.Slice(fencePtr, fenceCount))
 	for i := 0; i < fenceCount; i++ {
+		if fences[i] == nil {
+			panic(fmt.Sprintf("element %d of slice fences is nil", i))
+		}
 		fenceSlice[i] = fences[i].Handle()
 	}
 
@@ -618,14 +625,20 @@ func (d *VulkanDevice) freeCommandBufferSlice(buffers []CommandBuffer) {
 	bufferArraySlice := ([]driver.VkCommandBuffer)(unsafe.Slice(bufferArrayPtr, bufferCount))
 
 	for i := 0; i < bufferCount; i++ {
-		bufferArraySlice[i] = buffers[i].Handle()
+		bufferArraySlice[i] = driver.VkCommandBuffer(0)
+
+		if buffers[i] != nil {
+			bufferArraySlice[i] = buffers[i].Handle()
+		}
 	}
 
 	bufferDriver.VkFreeCommandBuffers(bufferDevice, bufferPool, driver.Uint32(bufferCount), bufferArrayPtr)
 
 	objStore := d.deviceDriver.ObjectStore()
 	for i := 0; i < bufferCount; i++ {
-		objStore.Delete(driver.VulkanHandle(buffers[i].Handle()))
+		if buffers[i] != nil {
+			objStore.Delete(driver.VulkanHandle(buffers[i].Handle()))
+		}
 	}
 }
 
@@ -731,7 +744,10 @@ func (d *VulkanDevice) freeDescriptorSetSlice(sets []DescriptorSet) (common.VkRe
 	arraySlice := ([]driver.VkDescriptorSet)(unsafe.Slice(arrayPtr, setSize))
 
 	for i := 0; i < setSize; i++ {
-		arraySlice[i] = sets[i].Handle()
+		arraySlice[i] = driver.VkDescriptorSet(0)
+		if sets[i] != nil {
+			arraySlice[i] = sets[i].Handle()
+		}
 	}
 
 	setDriver := sets[0].Driver()
@@ -745,7 +761,9 @@ func (d *VulkanDevice) freeDescriptorSetSlice(sets []DescriptorSet) (common.VkRe
 
 	objStore := setDriver.ObjectStore()
 	for i := 0; i < setSize; i++ {
-		objStore.Delete(driver.VulkanHandle(sets[i].Handle()))
+		if sets[i] != nil {
+			objStore.Delete(driver.VulkanHandle(sets[i].Handle()))
+		}
 	}
 
 	return res, nil

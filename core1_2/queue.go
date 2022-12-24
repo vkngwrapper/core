@@ -19,6 +19,9 @@ type VulkanQueue struct {
 // core version. Two Vulkan 1.2 compatible Queue objects with the same Queue.Handle will
 // return the same interface value when passed to this method.
 func PromoteQueue(queue core1_0.Queue) Queue {
+	if queue == nil {
+		return queue
+	}
 	if !queue.APIVersion().IsAtLeast(common.Vulkan1_2) {
 		return nil
 	}

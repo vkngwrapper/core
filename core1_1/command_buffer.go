@@ -28,6 +28,9 @@ type VulkanCommandBuffer struct {
 // core version. Two Vulkan 1.1 compatible CommandBuffer objects with the same CommandBuffer.Handle will
 // return the same interface value when passed to this method.
 func PromoteCommandBuffer(commandBuffer core1_0.CommandBuffer) CommandBuffer {
+	if commandBuffer == nil {
+		return nil
+	}
 	if !commandBuffer.APIVersion().IsAtLeast(common.Vulkan1_1) {
 		return nil
 	}

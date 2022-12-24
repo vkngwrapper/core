@@ -19,6 +19,9 @@ type VulkanPipelineLayout struct {
 // core version. Two Vulkan 1.2 compatible PipelineLayout objects with the same PipelineLayout.Handle will
 // return the same interface value when passed to this method.
 func PromotePipelineLayout(layout core1_0.PipelineLayout) PipelineLayout {
+	if layout == nil {
+		return nil
+	}
 	if !layout.APIVersion().IsAtLeast(common.Vulkan1_2) {
 		return nil
 	}

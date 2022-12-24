@@ -19,6 +19,9 @@ type VulkanImageView struct {
 // core version. Two Vulkan 1.2 compatible ImageView objects with the same ImageView.Handle will
 // return the same interface value when passed to this method.
 func PromoteImageView(imageView core1_0.ImageView) ImageView {
+	if imageView == nil {
+		return nil
+	}
 	if !imageView.APIVersion().IsAtLeast(common.Vulkan1_2) {
 		return nil
 	}

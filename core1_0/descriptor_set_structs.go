@@ -25,6 +25,9 @@ type DescriptorSetAllocateInfo struct {
 }
 
 func (o DescriptorSetAllocateInfo) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+	if o.DescriptorPool == nil {
+		return nil, errors.New("core1_0.DescriptorSetAllocateInfo.DescriptorPool cannot be nil")
+	}
 	if preallocatedPointer == unsafe.Pointer(nil) {
 		preallocatedPointer = allocator.Malloc(C.sizeof_struct_VkDescriptorSetAllocateInfo)
 	}
@@ -43,6 +46,10 @@ func (o DescriptorSetAllocateInfo) PopulateCPointer(allocator *cgoparam.Allocato
 		layoutsSlice := ([]C.VkDescriptorSetLayout)(unsafe.Slice(layoutsPtr, setCount))
 
 		for i := 0; i < setCount; i++ {
+			if o.SetLayouts[i] == nil {
+				return nil, errors.New("core1_0.DescriptorSetAllocateInfo.SetLayouts cannot contain any nil elements")
+			}
+
 			layoutsSlice[i] = C.VkDescriptorSetLayout(unsafe.Pointer(o.SetLayouts[i].Handle()))
 		}
 
@@ -151,6 +158,10 @@ func (o WriteDescriptorSet) PopulateCPointer(allocator *cgoparam.Allocator, prea
 		return nil, errors.New("an extension descriptor source for a WriteDescriptorSet has been included, but so has a traditional descriptor source: ImageInfo, BufferInfo, or TexelBufferView")
 	}
 
+	if o.DstSet == nil {
+		return nil, errors.New("core1_0.WriteDescriptorSet.DstSet cannot be nil")
+	}
+
 	createInfo.sType = C.VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET
 	createInfo.pNext = next
 
@@ -192,7 +203,12 @@ func (o WriteDescriptorSet) PopulateCPointer(allocator *cgoparam.Allocator, prea
 		bufferInfoPtr := (*C.VkDescriptorBufferInfo)(allocator.Malloc(bufferInfoCount * C.sizeof_struct_VkDescriptorBufferInfo))
 		bufferInfoSlice := ([]C.VkDescriptorBufferInfo)(unsafe.Slice(bufferInfoPtr, bufferInfoCount))
 		for i := 0; i < bufferInfoCount; i++ {
-			bufferInfoSlice[i].buffer = C.VkBuffer(unsafe.Pointer(o.BufferInfo[i].Buffer.Handle()))
+			bufferInfoSlice[i].buffer = nil
+
+			if o.BufferInfo[i].Buffer != nil {
+				bufferInfoSlice[i].buffer = C.VkBuffer(unsafe.Pointer(o.BufferInfo[i].Buffer.Handle()))
+			}
+
 			bufferInfoSlice[i].offset = C.VkDeviceSize(o.BufferInfo[i].Offset)
 			bufferInfoSlice[i]._range = C.VkDeviceSize(o.BufferInfo[i].Range)
 		}
@@ -203,7 +219,11 @@ func (o WriteDescriptorSet) PopulateCPointer(allocator *cgoparam.Allocator, prea
 		texelBufferPtr := (*C.VkBufferView)(allocator.Malloc(texelBufferCount * int(unsafe.Sizeof([1]C.VkBufferView{}))))
 		texelBufferSlice := ([]C.VkBufferView)(unsafe.Slice(texelBufferPtr, texelBufferCount))
 		for i := 0; i < texelBufferCount; i++ {
-			texelBufferSlice[i] = C.VkBufferView(unsafe.Pointer(o.TexelBufferView[i].Handle()))
+			texelBufferSlice[i] = nil
+
+			if o.TexelBufferView[i] != nil {
+				texelBufferSlice[i] = C.VkBufferView(unsafe.Pointer(o.TexelBufferView[i].Handle()))
+			}
 		}
 
 		createInfo.pTexelBufferView = texelBufferPtr
@@ -239,6 +259,12 @@ type CopyDescriptorSet struct {
 func (o CopyDescriptorSet) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if preallocatedPointer == unsafe.Pointer(nil) {
 		preallocatedPointer = allocator.Malloc(C.sizeof_struct_VkCopyDescriptorSet)
+	}
+	if o.SrcSet == nil {
+		return nil, errors.New("core1_0.CopyDescriptorSet.SrcSet cannot be nil")
+	}
+	if o.DstSet == nil {
+		return nil, errors.New("core1_0.CopyDescriptorSet.DstSet cannot be nil")
 	}
 
 	createInfo := (*C.VkCopyDescriptorSet)(preallocatedPointer)

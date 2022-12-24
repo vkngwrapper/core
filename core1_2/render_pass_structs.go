@@ -466,6 +466,10 @@ func (o RenderPassAttachmentBeginInfo) PopulateCPointer(allocator *cgoparam.Allo
 		info.pAttachments = (*C.VkImageView)(allocator.Malloc(count * int(unsafe.Sizeof([1]C.VkImageView{}))))
 		attachmentSlice := unsafe.Slice(info.pAttachments, count)
 		for i := 0; i < count; i++ {
+			if o.Attachments[i] == nil {
+				return nil, errors.Newf("core1_2.RenderPassAttachmentBeginInfo.Attachments cannot have nil "+
+					"elements, but element %d is nil", i)
+			}
 			attachmentSlice[i] = C.VkImageView(unsafe.Pointer(o.Attachments[i].Handle()))
 		}
 	}

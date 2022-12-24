@@ -25,6 +25,9 @@ type VulkanCommandBuffer struct {
 // core version. Two Vulkan 1.2 compatible CommandBuffer objects with the same CommandBuffer.Handle will
 // return the same interface value when passed to this method.
 func PromoteCommandBuffer(commandBuffer core1_0.CommandBuffer) CommandBuffer {
+	if commandBuffer == nil {
+		return nil
+	}
 	if !commandBuffer.APIVersion().IsAtLeast(common.Vulkan1_2) {
 		return nil
 	}
@@ -144,6 +147,12 @@ func (c *VulkanCommandBuffer) CmdNextSubpass2(subpassBegin SubpassBeginInfo, sub
 }
 
 func (c *VulkanCommandBuffer) CmdDrawIndexedIndirectCount(buffer core1_0.Buffer, offset uint64, countBuffer core1_0.Buffer, countBufferOffset uint64, maxDrawCount, stride int) {
+	if buffer == nil {
+		panic("buffer cannot be nil")
+	}
+	if countBuffer == nil {
+		panic("countBuffer cannot be nil")
+	}
 	c.DeviceDriver.VkCmdDrawIndexedIndirectCount(
 		c.CommandBufferHandle,
 		buffer.Handle(),
@@ -158,6 +167,12 @@ func (c *VulkanCommandBuffer) CmdDrawIndexedIndirectCount(buffer core1_0.Buffer,
 }
 
 func (c *VulkanCommandBuffer) CmdDrawIndirectCount(buffer core1_0.Buffer, offset uint64, countBuffer core1_0.Buffer, countBufferOffset uint64, maxDrawCount, stride int) {
+	if buffer == nil {
+		panic("buffer cannot be nil")
+	}
+	if countBuffer == nil {
+		panic("countBuffer cannot be nil")
+	}
 	c.DeviceDriver.VkCmdDrawIndirectCount(
 		c.CommandBufferHandle,
 		buffer.Handle(),

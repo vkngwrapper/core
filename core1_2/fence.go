@@ -19,6 +19,9 @@ type VulkanFence struct {
 // core version. Two Vulkan 1.2 compatible Fence objects with the same Fence.Handle will
 // return the same interface value when passed to this method.
 func PromoteFence(fence core1_0.Fence) Fence {
+	if fence == nil {
+		return nil
+	}
 	if !fence.APIVersion().IsAtLeast(common.Vulkan1_2) {
 		return nil
 	}

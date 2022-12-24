@@ -19,6 +19,9 @@ type VulkanFramebuffer struct {
 // core version. Two Vulkan 1.2 compatible Framebuffer objects with the same Framebuffer.Handle will
 // return the same interface value when passed to this method.
 func PromoteFramebuffer(framebuffer core1_0.Framebuffer) Framebuffer {
+	if framebuffer == nil {
+		return nil
+	}
 	if !framebuffer.APIVersion().IsAtLeast(common.Vulkan1_2) {
 		return nil
 	}

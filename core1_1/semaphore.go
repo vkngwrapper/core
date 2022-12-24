@@ -18,6 +18,9 @@ type VulkanSemaphore struct {
 // core version. Two Vulkan 1.1 compatible Semaphore objects with the same Semaphore.Handle will
 // return the same interface value when passed to this method.
 func PromoteSemaphore(semaphore core1_0.Semaphore) Semaphore {
+	if semaphore == nil {
+		return nil
+	}
 	if !semaphore.APIVersion().IsAtLeast(common.Vulkan1_1) {
 		return nil
 	}

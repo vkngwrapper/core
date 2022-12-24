@@ -13,6 +13,13 @@ import (
 )
 
 func (c *VulkanCommandBuffer) CmdCopyBuffer(srcBuffer Buffer, dstBuffer Buffer, copyRegions []BufferCopy) error {
+	if srcBuffer == nil {
+		panic("srcBuffer cannot be nil")
+	}
+	if dstBuffer == nil {
+		panic("dstBuffer cannot be nil")
+	}
+
 	allocator := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(allocator)
 
@@ -26,6 +33,12 @@ func (c *VulkanCommandBuffer) CmdCopyBuffer(srcBuffer Buffer, dstBuffer Buffer, 
 }
 
 func (c *VulkanCommandBuffer) CmdCopyImage(srcImage Image, srcImageLayout ImageLayout, dstImage Image, dstImageLayout ImageLayout, regions []ImageCopy) error {
+	if srcImage == nil {
+		panic("srcImage cannot be nil")
+	}
+	if dstImage == nil {
+		panic("dstImage cannot be nil")
+	}
 	allocator := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(allocator)
 

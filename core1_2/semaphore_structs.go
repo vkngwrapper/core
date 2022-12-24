@@ -89,6 +89,9 @@ type SemaphoreSignalInfo struct {
 }
 
 func (o SemaphoreSignalInfo) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+	if o.Semaphore == nil {
+		return nil, errors.New("core1_2.SemaphoreSignalInfo.Semaphore cannot be nil")
+	}
 	if preallocatedPointer == nil {
 		preallocatedPointer = allocator.Malloc(int(unsafe.Sizeof(C.VkSemaphoreSignalInfo{})))
 	}
@@ -150,7 +153,8 @@ func (o SemaphoreWaitInfo) PopulateCPointer(allocator *cgoparam.Allocator, preal
 
 		for i := 0; i < count; i++ {
 			if o.Semaphores[i] == nil {
-				return nil, errors.Newf("the SemaphoreWaitInfo 'Semaphores' list has a nil semaphore at element %d- all elements must be non-nil", i)
+				return nil, errors.Newf("core1_2.SemaphoreWaitInfo.Semaphores cannot contain nil elements, "+
+					"but element %d is nil", i)
 			}
 
 			semaphoreSlice[i] = C.VkSemaphore(unsafe.Pointer(o.Semaphores[i].Handle()))

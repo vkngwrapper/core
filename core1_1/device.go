@@ -29,6 +29,9 @@ type VulkanDevice struct {
 // core version. Two Vulkan 1.1 compatible Device objects with the same Device.Handle will
 // return the same interface value when passed to this method.
 func PromoteDevice(device core1_0.Device) Device {
+	if device == nil {
+		return nil
+	}
 	if !device.APIVersion().IsAtLeast(common.Vulkan1_1) {
 		return nil
 	}

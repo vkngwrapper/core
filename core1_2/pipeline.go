@@ -19,6 +19,9 @@ type VulkanPipeline struct {
 // core version. Two Vulkan 1.2 compatible Pipeline objects with the same Pipeline.Handle will
 // return the same interface value when passed to this method.
 func PromotePipeline(pipeline core1_0.Pipeline) Pipeline {
+	if pipeline == nil {
+		return nil
+	}
 	if !pipeline.APIVersion().IsAtLeast(common.Vulkan1_2) {
 		return nil
 	}

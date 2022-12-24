@@ -31,6 +31,9 @@ func (p *VulkanPhysicalDevice) InstanceScopedPhysicalDevice1_1() InstanceScopedP
 // core version. Two Vulkan 1.1 compatible PhysicalDevice objects with the same PhysicalDevice.Handle will
 // return the same interface value when passed to this method.
 func PromotePhysicalDevice(physicalDevice core1_0.PhysicalDevice) PhysicalDevice {
+	if physicalDevice == nil {
+		return nil
+	}
 	if !physicalDevice.DeviceAPIVersion().IsAtLeast(common.Vulkan1_1) {
 		return nil
 	}
@@ -64,6 +67,9 @@ type VulkanInstanceScopedPhysicalDevice struct {
 // core version. Two Vulkan 1.1 compatible InstanceScopedPhysicalDevice objects with the same InstanceScopedPhysicalDevice.Handle will
 // return the same interface value when passed to this method.
 func PromoteInstanceScopedPhysicalDevice(physicalDevice core1_0.PhysicalDevice) InstanceScopedPhysicalDevice {
+	if physicalDevice == nil {
+		return nil
+	}
 	if !physicalDevice.InstanceAPIVersion().IsAtLeast(common.Vulkan1_1) {
 		return nil
 	}

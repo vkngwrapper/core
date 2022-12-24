@@ -19,6 +19,9 @@ type VulkanCommandPool struct {
 // core version. Two Vulkan 1.2 compatible CommandPool objects with the same CommandPool.Handle will
 // return the same interface value when passed to this method.
 func PromoteCommandPool(commandPool core1_0.CommandPool) CommandPool {
+	if commandPool == nil {
+		return nil
+	}
 	if !commandPool.APIVersion().IsAtLeast(common.Vulkan1_2) {
 		return nil
 	}

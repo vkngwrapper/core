@@ -18,6 +18,9 @@ type VulkanSamplerYcbcrConversion struct {
 // core version. Two Vulkan 1.2 compatible SamplerYcbcrConversion objects with the same SamplerYcbcrConversion.Handle will
 // return the same interface value when passed to this method.
 func PromoteSamplerYcbcrConversion(ycbcr core1_1.SamplerYcbcrConversion) SamplerYcbcrConversion {
+	if ycbcr == nil {
+		return nil
+	}
 	if !ycbcr.APIVersion().IsAtLeast(common.Vulkan1_2) {
 		return nil
 	}
