@@ -138,6 +138,9 @@ func (o DescriptorSetLayoutCreateInfo) PopulateCPointer(allocator *cgoparam.Allo
 				immutableSamplerSlice := ([]C.VkSampler)(unsafe.Slice(immutableSamplerPtr, samplerCount))
 
 				for samplerIndex := 0; samplerIndex < samplerCount; samplerIndex++ {
+					if o.Bindings[i].ImmutableSamplers[samplerIndex] == nil {
+						return nil, errors.Newf("Bindings[%d].ImmutableSamplers element %d is nil", i, samplerIndex)
+					}
 					immutableSamplerSlice[samplerIndex] = C.VkSampler(unsafe.Pointer(o.Bindings[i].ImmutableSamplers[samplerIndex].Handle()))
 				}
 

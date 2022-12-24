@@ -19,6 +19,9 @@ type VulkanPipelineCache struct {
 // core version. Two Vulkan 1.2 compatible PipelineCache objects with the same PipelineCache.Handle will
 // return the same interface value when passed to this method.
 func PromotePipelineCache(pipelineCache core1_0.PipelineCache) PipelineCache {
+	if pipelineCache == nil {
+		return nil
+	}
 	if !pipelineCache.APIVersion().IsAtLeast(common.Vulkan1_2) {
 		return nil
 	}

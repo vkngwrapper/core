@@ -18,6 +18,9 @@ type VulkanSampler struct {
 // core version. Two Vulkan 1.1 compatible Sampler objects with the same Sampler.Handle will
 // return the same interface value when passed to this method.
 func PromoteSampler(sampler core1_0.Sampler) Sampler {
+	if sampler == nil {
+		return nil
+	}
 	if !sampler.APIVersion().IsAtLeast(common.Vulkan1_1) {
 		return nil
 	}

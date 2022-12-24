@@ -71,12 +71,11 @@ type BufferDeviceAddressInfo struct {
 }
 
 func (o BufferDeviceAddressInfo) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
-	if preallocatedPointer == nil {
-		preallocatedPointer = allocator.Malloc(int(unsafe.Sizeof(C.VkBufferDeviceAddressInfo{})))
-	}
-
 	if o.Buffer == nil {
 		return nil, errors.New("core1_2.DeviceMemoryAddressOptions.Buffer cannot be nil")
+	}
+	if preallocatedPointer == nil {
+		preallocatedPointer = allocator.Malloc(int(unsafe.Sizeof(C.VkBufferDeviceAddressInfo{})))
 	}
 
 	info := (*C.VkBufferDeviceAddressInfo)(preallocatedPointer)
@@ -105,6 +104,9 @@ type DeviceMemoryOpaqueCaptureAddressInfo struct {
 }
 
 func (o DeviceMemoryOpaqueCaptureAddressInfo) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+	if o.Memory == nil {
+		return nil, errors.New("core1_2.DeviceMemoryOpaqueCaptureAddressInfo.Memory cannot be nil")
+	}
 	if preallocatedPointer == nil {
 		preallocatedPointer = allocator.Malloc(int(unsafe.Sizeof(C.VkDeviceMemoryOpaqueCaptureAddressInfo{})))
 	}

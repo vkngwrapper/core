@@ -5,12 +5,12 @@ import (
 	"encoding/binary"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/require"
-	internal_mocks "github.com/vkngwrapper/core/v2/internal/dummies"
-	"github.com/vkngwrapper/core/v2/mocks"
 	"github.com/vkngwrapper/core/v2/common"
 	"github.com/vkngwrapper/core/v2/core1_0"
 	"github.com/vkngwrapper/core/v2/driver"
 	mock_driver "github.com/vkngwrapper/core/v2/driver/mocks"
+	internal_mocks "github.com/vkngwrapper/core/v2/internal/dummies"
+	"github.com/vkngwrapper/core/v2/mocks"
 	"reflect"
 	"testing"
 	"unsafe"
@@ -1034,6 +1034,119 @@ func TestVulkanLoader1_0_CreateComputePipelines_EmptySuccess(t *testing.T) {
 
 			BasePipeline:      basePipeline,
 			BasePipelineIndex: 3,
+		},
+	})
+	require.NoError(t, err)
+	require.Len(t, pipelines, 1)
+	require.NotNil(t, pipelines[0])
+	require.Equal(t, pipelineHandle, pipelines[0].Handle())
+}
+
+func TestVulkanLoader1_0_CreateComputePipelines_NilBasePipeline(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	mockDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_0)
+	device := internal_mocks.EasyDummyDevice(mockDriver)
+	layout := mocks.EasyMockPipelineLayout(ctrl)
+	shaderModule := mocks.EasyMockShaderModule(ctrl)
+	pipelineHandle := mocks.NewFakePipeline()
+
+	mockDriver.EXPECT().VkCreateComputePipelines(device.Handle(), driver.VkPipelineCache(driver.NullHandle), driver.Uint32(1), gomock.Not(nil), nil, gomock.Not(nil)).DoAndReturn(
+		func(device driver.VkDevice, cache driver.VkPipelineCache, createInfoCount driver.Uint32, pCreateInfos *driver.VkComputePipelineCreateInfo, pAllocator *driver.VkAllocationCallbacks, pGraphicsPipelines *driver.VkPipeline) (common.VkResult, error) {
+			createInfos := reflect.ValueOf(([]driver.VkComputePipelineCreateInfo)(unsafe.Slice(pCreateInfos, 1)))
+			pipelines := ([]driver.VkPipeline)(unsafe.Slice(pGraphicsPipelines, 1))
+			pipelines[0] = pipelineHandle
+
+			createInfo := createInfos.Index(0)
+			require.Equal(t, uint64(29), createInfo.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_COMPUTE_PIPELINE_CREATE_INFO
+			require.True(t, createInfo.FieldByName("pNext").IsNil())
+			require.Equal(t, uint64(0x00000004), createInfo.FieldByName("flags").Uint()) // VK_PIPELINE_CREATE_DERIVATIVE_BIT
+
+			shader := createInfo.FieldByName("stage")
+
+			require.Equal(t, uint64(0), shader.FieldByName("flags").Uint())
+			require.Equal(t, uint64(0x20), shader.FieldByName("stage").Uint()) // VK_SHADER_STAGE_COMPUTE_BIT
+			module := (driver.VkShaderModule)(unsafe.Pointer(shader.FieldByName("module").Elem().UnsafeAddr()))
+			require.Equal(t, shaderModule.Handle(), module)
+			namePtr := (*driver.Char)(unsafe.Pointer(shader.FieldByName("pName").Elem().UnsafeAddr()))
+			nameSlice := ([]driver.Char)(unsafe.Slice(namePtr, 256))
+			expectedName := "some compute shader"
+			for i, r := range expectedName {
+				require.Equal(t, r, rune(nameSlice[i]))
+			}
+			require.Equal(t, 0, int(nameSlice[len(expectedName)]))
+
+			specInfo := shader.FieldByName("pSpecializationInfo").Elem()
+			require.Equal(t, uint64(2), specInfo.FieldByName("mapEntryCount").Uint())
+			mapEntryPtr := (*driver.VkSpecializationMapEntry)(unsafe.Pointer(specInfo.FieldByName("pMapEntries").Elem().UnsafeAddr()))
+			mapEntrySlice := reflect.ValueOf(([]driver.VkSpecializationMapEntry)(unsafe.Slice(mapEntryPtr, 2)))
+
+			firstEntryID := mapEntrySlice.Index(0).FieldByName("constantID").Uint()
+			secondEntryID := mapEntrySlice.Index(1).FieldByName("constantID").Uint()
+
+			// We deliver the map as a go map so it could come out in any order
+			require.ElementsMatch(t, []uint64{1, 2}, []uint64{firstEntryID, secondEntryID})
+
+			firstEntryOffset := mapEntrySlice.Index(0).FieldByName("offset").Uint()
+			firstEntrySize := mapEntrySlice.Index(0).FieldByName("size").Uint()
+
+			secondEntryOffset := mapEntrySlice.Index(1).FieldByName("offset").Uint()
+			secondEntrySize := mapEntrySlice.Index(1).FieldByName("size").Uint()
+
+			require.Equal(t, uint64(0), firstEntryOffset)
+			require.Equal(t, firstEntrySize, secondEntryOffset)
+
+			require.Equal(t, firstEntrySize+secondEntrySize, specInfo.FieldByName("dataSize").Uint())
+			dataPtr := (*byte)(unsafe.Pointer(specInfo.FieldByName("pData").Pointer()))
+			dataSlice := ([]byte)(unsafe.Slice(dataPtr, firstEntrySize+secondEntrySize))
+
+			firstEntryBytes := bytes.NewBuffer(dataSlice[:firstEntrySize])
+			secondEntryBytes := bytes.NewBuffer(dataSlice[firstEntrySize : firstEntrySize+secondEntrySize])
+
+			firstValueBytes := firstEntryBytes
+			secondValueBytes := secondEntryBytes
+
+			if firstEntryID == 2 {
+				firstValueBytes = secondEntryBytes
+				secondValueBytes = firstEntryBytes
+			}
+
+			var boolVal uint32
+			err := binary.Read(firstValueBytes, binary.LittleEndian, &boolVal)
+			require.NoError(t, err)
+			require.Equal(t, uint32(1), boolVal)
+
+			var floatVal float64
+			err = binary.Read(secondValueBytes, binary.LittleEndian, &floatVal)
+			require.NoError(t, err)
+			require.Equal(t, float64(7.6), floatVal)
+
+			actualLayout := (driver.VkPipelineLayout)(unsafe.Pointer(createInfo.FieldByName("layout").Elem().UnsafeAddr()))
+			require.Equal(t, layout.Handle(), actualLayout)
+			require.True(t, createInfo.FieldByName("basePipelineHandle").IsZero())
+
+			require.Equal(t, int64(-1), createInfo.FieldByName("basePipelineIndex").Int())
+
+			return core1_0.VKSuccess, nil
+		})
+
+	pipelines, _, err := device.CreateComputePipelines(nil, nil, []core1_0.ComputePipelineCreateInfo{
+		{
+			Flags: core1_0.PipelineCreateDerivative,
+			Stage: core1_0.PipelineShaderStageCreateInfo{
+				Flags:  0,
+				Name:   "some compute shader",
+				Stage:  core1_0.StageCompute,
+				Module: shaderModule,
+				SpecializationInfo: map[uint32]any{
+					1: true,
+					2: float64(7.6),
+				},
+			},
+			Layout: layout,
+
+			BasePipelineIndex: -1,
 		},
 	})
 	require.NoError(t, err)

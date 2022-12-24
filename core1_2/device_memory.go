@@ -19,6 +19,9 @@ type VulkanDeviceMemory struct {
 // core version. Two Vulkan 1.2 compatible DeviceMemory objects with the same DeviceMemory.Handle will
 // return the same interface value when passed to this method.
 func PromoteDeviceMemory(deviceMemory core1_0.DeviceMemory) DeviceMemory {
+	if deviceMemory == nil {
+		return nil
+	}
 	if !deviceMemory.APIVersion().IsAtLeast(common.Vulkan1_2) {
 		return nil
 	}

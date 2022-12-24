@@ -18,6 +18,10 @@ type VulkanDescriptorPool struct {
 // core version. Two Vulkan 1.1 compatible DescriptorPool objects with the same DescriptorPool.Handle will
 // return the same interface value when passed to this method.
 func PromoteDescriptorPool(descriptorPool core1_0.DescriptorPool) DescriptorPool {
+	if descriptorPool == nil {
+		return nil
+	}
+
 	if !descriptorPool.APIVersion().IsAtLeast(common.Vulkan1_1) {
 		return nil
 	}

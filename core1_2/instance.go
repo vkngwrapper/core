@@ -19,6 +19,9 @@ type VulkanInstance struct {
 // core version. Two Vulkan 1.2 compatible Instance objects with the same Instance.Handle will
 // return the same interface value when passed to this method.
 func PromoteInstance(instance core1_0.Instance) Instance {
+	if instance == nil {
+		return nil
+	}
 	if !instance.APIVersion().IsAtLeast(common.Vulkan1_2) {
 		return nil
 	}

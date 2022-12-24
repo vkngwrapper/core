@@ -77,7 +77,11 @@ func (o PipelineLayoutCreateInfo) PopulateCPointer(allocator *cgoparam.Allocator
 		setLayoutSlice := ([]C.VkDescriptorSetLayout)(unsafe.Slice(setLayoutPtr, setLayoutCount))
 
 		for i := 0; i < setLayoutCount; i++ {
-			setLayoutSlice[i] = (C.VkDescriptorSetLayout)(unsafe.Pointer(o.SetLayouts[i].Handle()))
+			setLayoutSlice[i] = nil
+
+			if o.SetLayouts[i] != nil {
+				setLayoutSlice[i] = (C.VkDescriptorSetLayout)(unsafe.Pointer(o.SetLayouts[i].Handle()))
+			}
 		}
 		createInfo.pSetLayouts = setLayoutPtr
 	}

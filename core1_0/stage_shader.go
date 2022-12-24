@@ -76,6 +76,10 @@ type PipelineShaderStageCreateInfo struct {
 }
 
 func (s PipelineShaderStageCreateInfo) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+	if s.Module == nil {
+		return nil, errors.New("core1_0.PipelineShaderStageCreateInfo.Module cannot be nil")
+	}
+
 	if preallocatedPointer == unsafe.Pointer(nil) {
 		preallocatedPointer = allocator.Malloc(C.sizeof_struct_VkPipelineShaderStageCreateInfo)
 	}

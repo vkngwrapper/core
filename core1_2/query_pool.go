@@ -23,6 +23,9 @@ type VulkanQueryPool struct {
 // core version. Two Vulkan 1.2 compatible QueryPool objects with the same QueryPool.Handle will
 // return the same interface value when passed to this method.
 func PromoteQueryPool(queryPool core1_0.QueryPool) QueryPool {
+	if queryPool == nil {
+		return nil
+	}
 	if !queryPool.APIVersion().IsAtLeast(common.Vulkan1_2) {
 		return nil
 	}

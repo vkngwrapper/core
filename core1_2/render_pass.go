@@ -19,6 +19,9 @@ type VulkanRenderPass struct {
 // core version. Two Vulkan 1.2 compatible RenderPass objects with the same RenderPass.Handle will
 // return the same interface value when passed to this method.
 func PromoteRenderPass(renderPass core1_0.RenderPass) RenderPass {
+	if renderPass == nil {
+		return nil
+	}
 	if !renderPass.APIVersion().IsAtLeast(common.Vulkan1_2) {
 		return nil
 	}

@@ -18,6 +18,10 @@ type VulkanBuffer struct {
 // core version. Two Vulkan 1.1 compatible Buffer objects with the same Buffer.Handle will
 // return the same interface value when passed to this method.
 func PromoteBuffer(buffer core1_0.Buffer) Buffer {
+	if buffer == nil {
+		return nil
+	}
+
 	if !buffer.APIVersion().IsAtLeast(common.Vulkan1_1) {
 		return nil
 	}

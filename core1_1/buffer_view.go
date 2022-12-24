@@ -18,6 +18,9 @@ type VulkanBufferView struct {
 // core version. Two Vulkan 1.1 compatible BufferView objects with the same BufferView.Handle will
 // return the same interface value when passed to this method.
 func PromoteBufferView(bufferView core1_0.BufferView) BufferView {
+	if bufferView == nil {
+		return nil
+	}
 	if !bufferView.APIVersion().IsAtLeast(common.Vulkan1_1) {
 		return nil
 	}

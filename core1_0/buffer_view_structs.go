@@ -7,6 +7,7 @@ package core1_0
 import "C"
 import (
 	"github.com/CannibalVox/cgoparam"
+	"github.com/cockroachdb/errors"
 	"github.com/vkngwrapper/core/v2/common"
 	"unsafe"
 )
@@ -47,6 +48,10 @@ type BufferViewCreateInfo struct {
 }
 
 func (o BufferViewCreateInfo) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+	if o.Buffer == nil {
+		return nil, errors.New("core1_0.BufferViewCreateInfo.Buffer cannot be nil")
+	}
+
 	if preallocatedPointer == unsafe.Pointer(nil) {
 		preallocatedPointer = allocator.Malloc(C.sizeof_struct_VkBufferViewCreateInfo)
 	}

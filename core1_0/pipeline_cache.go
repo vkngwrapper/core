@@ -6,6 +6,7 @@ package core1_0
 */
 import "C"
 import (
+	"fmt"
 	"github.com/CannibalVox/cgoparam"
 	"github.com/vkngwrapper/core/v2/common"
 	"github.com/vkngwrapper/core/v2/driver"
@@ -78,6 +79,9 @@ func (c *VulkanPipelineCache) MergePipelineCaches(srcCaches []PipelineCache) (co
 	srcSlice := ([]driver.VkPipelineCache)(unsafe.Slice(srcPtr, srcCount))
 
 	for i := 0; i < srcCount; i++ {
+		if srcCaches[i] == nil {
+			panic(fmt.Sprintf("elements of srcCaches cannot be nil- element %d is nil", i))
+		}
 		srcSlice[i] = srcCaches[i].Handle()
 	}
 

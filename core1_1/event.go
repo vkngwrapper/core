@@ -18,6 +18,9 @@ type VulkanEvent struct {
 // core version. Two Vulkan 1.1 compatible Event objects with the same Event.Handle will
 // return the same interface value when passed to this method.
 func PromoteEvent(event core1_0.Event) Event {
+	if event == nil {
+		return nil
+	}
 	if !event.APIVersion().IsAtLeast(common.Vulkan1_1) {
 		return nil
 	}

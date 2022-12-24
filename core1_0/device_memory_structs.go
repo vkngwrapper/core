@@ -7,6 +7,7 @@ package core1_0
 import "C"
 import (
 	"github.com/CannibalVox/cgoparam"
+	"github.com/cockroachdb/errors"
 	"github.com/vkngwrapper/core/v2/common"
 	"unsafe"
 )
@@ -63,6 +64,9 @@ type MappedMemoryRange struct {
 }
 
 func (r MappedMemoryRange) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+	if r.Memory == nil {
+		return nil, errors.New("core1_0.MappedMemoryRange.Memory cannot be nil")
+	}
 	if preallocatedPointer == unsafe.Pointer(nil) {
 		preallocatedPointer = allocator.Malloc(C.sizeof_struct_VkMappedMemoryRange)
 	}

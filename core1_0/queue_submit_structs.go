@@ -173,6 +173,10 @@ func (o SubmitInfo) PopulateCPointer(allocator *cgoparam.Allocator, preallocated
 		stageSlice := ([]C.VkPipelineStageFlags)(unsafe.Slice(stagePtr, waitSemaphoreCount))
 
 		for i := 0; i < waitSemaphoreCount; i++ {
+			if o.WaitSemaphores[i] == nil {
+				return nil, errors.Newf("core1_0.SubmitInfo.WaitSemaphores cannot contain nil elements, but "+
+					"element %d is nil", i)
+			}
 			semaphoreSlice[i] = (C.VkSemaphore)(unsafe.Pointer(o.WaitSemaphores[i].Handle()))
 			stageSlice[i] = (C.VkPipelineStageFlags)(o.WaitDstStageMask[i])
 		}
@@ -189,6 +193,10 @@ func (o SubmitInfo) PopulateCPointer(allocator *cgoparam.Allocator, preallocated
 		semaphoreSlice := ([]C.VkSemaphore)(unsafe.Slice(semaphorePtr, signalSemaphoreCount))
 
 		for i := 0; i < signalSemaphoreCount; i++ {
+			if o.SignalSemaphores[i] == nil {
+				return nil, errors.Newf("core1_0.SubmitInfo.SignalSemaphores cannot contain nil elements, but "+
+					"element %d is nil", i)
+			}
 			semaphoreSlice[i] = (C.VkSemaphore)(unsafe.Pointer(o.SignalSemaphores[i].Handle()))
 		}
 
@@ -203,6 +211,10 @@ func (o SubmitInfo) PopulateCPointer(allocator *cgoparam.Allocator, preallocated
 		commandBufferSlice := ([]driver.VkCommandBuffer)(unsafe.Slice((*driver.VkCommandBuffer)(commandBufferPtrUnsafe), commandBufferCount))
 
 		for i := 0; i < commandBufferCount; i++ {
+			if o.CommandBuffers[i] == nil {
+				return nil, errors.Newf("core1_0.SubmitInfo.CommandBuffers cannot contain nil elements, but "+
+					"element %d is nil", i)
+			}
 			commandBufferSlice[i] = o.CommandBuffers[i].Handle()
 		}
 

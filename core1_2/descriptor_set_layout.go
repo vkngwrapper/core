@@ -19,6 +19,9 @@ type VulkanDescriptorSetLayout struct {
 // core version. Two Vulkan 1.2 compatible DescriptorSetLayout objects with the same DescriptorSetLayout.Handle will
 // return the same interface value when passed to this method.
 func PromoteDescriptorSetLayout(layout core1_0.DescriptorSetLayout) DescriptorSetLayout {
+	if layout == nil {
+		return nil
+	}
 	if !layout.APIVersion().IsAtLeast(common.Vulkan1_2) {
 		return nil
 	}

@@ -18,6 +18,10 @@ type VulkanDescriptorSet struct {
 // core version. Two Vulkan 1.1 compatible DescriptorSet objects with the same DescriptorSet.Handle will
 // return the same interface value when passed to this method.
 func PromoteDescriptorSet(set core1_0.DescriptorSet) DescriptorSet {
+	if set == nil {
+		return nil
+	}
+
 	if !set.APIVersion().IsAtLeast(common.Vulkan1_1) {
 		return nil
 	}

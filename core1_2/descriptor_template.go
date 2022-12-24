@@ -18,6 +18,9 @@ type VulkanDescriptorUpdateTemplate struct {
 // core version. Two Vulkan 1.2 compatible DescriptorUpdateTemplate objects with the same DescriptorUpdateTemplate.Handle will
 // return the same interface value when passed to this method.
 func PromoteDescriptorUpdateTemplate(template core1_1.DescriptorUpdateTemplate) DescriptorSetLayout {
+	if template == nil {
+		return nil
+	}
 	if !template.APIVersion().IsAtLeast(common.Vulkan1_2) {
 		return nil
 	}

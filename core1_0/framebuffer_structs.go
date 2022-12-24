@@ -7,6 +7,7 @@ package core1_0
 import "C"
 import (
 	"github.com/CannibalVox/cgoparam"
+	"github.com/cockroachdb/errors"
 	"github.com/vkngwrapper/core/v2/common"
 	"unsafe"
 )
@@ -54,6 +55,9 @@ func (o FramebufferCreateInfo) PopulateCPointer(allocator *cgoparam.Allocator, p
 		attachmentsSlice := ([]C.VkImageView)(unsafe.Slice(attachmentsPtr, attachmentCount))
 
 		for i := 0; i < attachmentCount; i++ {
+			if o.Attachments[i] == nil {
+				return nil, errors.Newf("core1_0.FrameBufferCreateInfo.Attachments cannot contain nil elements, but element %d is nil", i)
+			}
 			attachmentsSlice[i] = C.VkImageView(unsafe.Pointer(o.Attachments[i].Handle()))
 		}
 

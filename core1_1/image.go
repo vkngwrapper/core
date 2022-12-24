@@ -18,6 +18,9 @@ type VulkanImage struct {
 // core version. Two Vulkan 1.1 compatible Image objects with the same Image.Handle will
 // return the same interface value when passed to this method.
 func PromoteImage(image core1_0.Image) Image {
+	if image == nil {
+		return nil
+	}
 	if !image.APIVersion().IsAtLeast(common.Vulkan1_1) {
 		return nil
 	}

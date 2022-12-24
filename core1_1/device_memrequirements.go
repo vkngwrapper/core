@@ -7,6 +7,7 @@ package core1_1
 import "C"
 import (
 	"github.com/CannibalVox/cgoparam"
+	"github.com/cockroachdb/errors"
 	"github.com/vkngwrapper/core/v2/common"
 	"github.com/vkngwrapper/core/v2/core1_0"
 	"unsafe"
@@ -45,6 +46,9 @@ type BufferMemoryRequirementsInfo2 struct {
 }
 
 func (o BufferMemoryRequirementsInfo2) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+	if o.Buffer == nil {
+		return nil, errors.New("core1_1.BufferMemoryRequirementsInfo2.Buffer cannot be nil")
+	}
 	if preallocatedPointer == nil {
 		preallocatedPointer = allocator.Malloc(int(unsafe.Sizeof(C.VkBufferMemoryRequirementsInfo2{})))
 	}
@@ -70,6 +74,9 @@ type ImageMemoryRequirementsInfo2 struct {
 }
 
 func (o ImageMemoryRequirementsInfo2) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+	if o.Image == nil {
+		return nil, errors.New("core1_1.ImageMemoryRequirementsInfo2.Image cannot be nil")
+	}
 	if preallocatedPointer == nil {
 		preallocatedPointer = allocator.Malloc(int(unsafe.Sizeof(C.VkImageMemoryRequirementsInfo2{})))
 	}
@@ -128,6 +135,9 @@ type ImageSparseMemoryRequirementsInfo2 struct {
 }
 
 func (o ImageSparseMemoryRequirementsInfo2) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+	if o.Image == nil {
+		return nil, errors.New("core1_1.ImageSparseMemoryRequirementsInfo2.Image cannot be nil")
+	}
 	if preallocatedPointer == nil {
 		preallocatedPointer = allocator.Malloc(int(unsafe.Sizeof(C.VkImageSparseMemoryRequirementsInfo2{})))
 	}

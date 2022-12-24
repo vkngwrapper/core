@@ -7,6 +7,7 @@ package core1_1
 import "C"
 import (
 	"github.com/CannibalVox/cgoparam"
+	"github.com/cockroachdb/errors"
 	"github.com/vkngwrapper/core/v2/common"
 	"github.com/vkngwrapper/core/v2/core1_0"
 	"unsafe"
@@ -27,6 +28,12 @@ type BindBufferMemoryInfo struct {
 }
 
 func (o BindBufferMemoryInfo) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+	if o.Buffer == nil {
+		return nil, errors.Newf("core1_1.BindBufferMemoryInfo.Buffer cannot be nil")
+	}
+	if o.Memory == nil {
+		return nil, errors.Newf("core1_1.BindBufferMemoryInfo.Memory cannot be nil")
+	}
 	if preallocatedPointer == nil {
 		preallocatedPointer = allocator.Malloc(int(unsafe.Sizeof(C.VkBindBufferMemoryInfo{})))
 	}
@@ -56,6 +63,12 @@ type BindImageMemoryInfo struct {
 }
 
 func (o BindImageMemoryInfo) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
+	if o.Image == nil {
+		return nil, errors.Newf("core1_1.BindImageMemoryInfo.Image cannot be nil")
+	}
+	if o.Memory == nil {
+		return nil, errors.Newf("core1_1.BindImageMemoryInfo.Memory cannot be nil")
+	}
 	if preallocatedPointer == nil {
 		preallocatedPointer = allocator.Malloc(int(unsafe.Sizeof(C.VkBindImageMemoryInfo{})))
 	}

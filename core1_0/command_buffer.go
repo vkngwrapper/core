@@ -6,6 +6,7 @@ package core1_0
 */
 import "C"
 import (
+	"fmt"
 	"github.com/CannibalVox/cgoparam"
 	"github.com/vkngwrapper/core/v2/common"
 	"github.com/vkngwrapper/core/v2/driver"
@@ -104,6 +105,10 @@ func (c *VulkanCommandBuffer) CmdEndRenderPass() {
 }
 
 func (c *VulkanCommandBuffer) CmdBindPipeline(bindPoint PipelineBindPoint, pipeline Pipeline) {
+	if pipeline == nil {
+		panic("pipeline cannot be nil")
+	}
+
 	c.deviceDriver.VkCmdBindPipeline(c.commandBufferHandle, driver.VkPipelineBindPoint(bindPoint), pipeline.Handle())
 	c.commandCounter.CommandCount++
 }
@@ -136,6 +141,9 @@ func (c *VulkanCommandBuffer) CmdBindVertexBuffers(firstBinding int, buffers []B
 	offsetArraySlice := ([]driver.VkDeviceSize)(unsafe.Slice(offsetArrayPtr, bufferCount))
 
 	for i := 0; i < bufferCount; i++ {
+		if buffers[i] == nil {
+			panic(fmt.Sprintf("element %d of buffers slice is nil", i))
+		}
 		bufferArraySlice[i] = buffers[i].Handle()
 		offsetArraySlice[i] = driver.VkDeviceSize(bufferOffsets[i])
 	}
@@ -150,6 +158,10 @@ func (c *VulkanCommandBuffer) CmdBindIndexBuffer(buffer Buffer, offset int, inde
 }
 
 func (c *VulkanCommandBuffer) CmdBindDescriptorSets(bindPoint PipelineBindPoint, layout PipelineLayout, firstSet int, sets []DescriptorSet, dynamicOffsets []int) {
+	if layout == nil {
+		panic("layout cannot be nil")
+	}
+
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
@@ -163,7 +175,11 @@ func (c *VulkanCommandBuffer) CmdBindDescriptorSets(bindPoint PipelineBindPoint,
 		setPtr = arena.Malloc(setCount * int(unsafe.Sizeof([1]C.VkDescriptorSet{})))
 		setSlice := ([]C.VkDescriptorSet)(unsafe.Slice((*C.VkDescriptorSet)(setPtr), setCount))
 		for i := 0; i < setCount; i++ {
-			setSlice[i] = (C.VkDescriptorSet)(unsafe.Pointer(sets[i].Handle()))
+			setSlice[i] = nil
+
+			if sets[i] != nil {
+				setSlice[i] = (C.VkDescriptorSet)(unsafe.Pointer(sets[i].Handle()))
+			}
 		}
 	}
 
@@ -227,6 +243,12 @@ func (c *VulkanCommandBuffer) CmdPipelineBarrier(srcStageMask, dstStageMask Pipe
 }
 
 func (c *VulkanCommandBuffer) CmdCopyBufferToImage(buffer Buffer, image Image, layout ImageLayout, regions []BufferImageCopy) error {
+	if buffer == nil {
+		panic("buffer cannot be nil")
+	}
+	if image == nil {
+		panic("image cannot be nil")
+	}
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
@@ -247,6 +269,15 @@ func (c *VulkanCommandBuffer) CmdCopyBufferToImage(buffer Buffer, image Image, l
 }
 
 func (c *VulkanCommandBuffer) CmdBlitImage(sourceImage Image, sourceImageLayout ImageLayout, destinationImage Image, destinationImageLayout ImageLayout, regions []ImageBlit, filter Filter) error {
+
+	if sourceImage == nil {
+		panic("sourceImage must not be nil")
+	}
+
+	if destinationImage == nil {
+		panic("destinationImage must not be nil")
+	}
+
 	allocator := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(allocator)
 
@@ -259,9 +290,9 @@ func (c *VulkanCommandBuffer) CmdBlitImage(sourceImage Image, sourceImageLayout 
 
 	c.deviceDriver.VkCmdBlitImage(
 		c.commandBufferHandle,
-		driver.VkImage(sourceImage.Handle()),
+		sourceImage.Handle(),
 		driver.VkImageLayout(sourceImageLayout),
-		driver.VkImage(destinationImage.Handle()),
+		destinationImage.Handle(),
 		driver.VkImageLayout(destinationImageLayout),
 		driver.Uint32(regionCount),
 		(*driver.VkImageBlit)(unsafe.Pointer(regionPtr)),
@@ -271,6 +302,10 @@ func (c *VulkanCommandBuffer) CmdBlitImage(sourceImage Image, sourceImageLayout 
 }
 
 func (c *VulkanCommandBuffer) CmdPushConstants(layout PipelineLayout, stageFlags ShaderStageFlags, offset int, valueBytes []byte) {
+	if layout == nil {
+		panic("layout cannot be nil")
+	}
+
 	alloc := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(alloc)
 
@@ -355,6 +390,9 @@ func (c *VulkanCommandBuffer) CmdWaitEvents(events []Event, srcStageMask Pipelin
 		eventSlice := ([]C.VkEvent)(unsafe.Slice(eventPtr, eventCount))
 
 		for i := 0; i < eventCount; i++ {
+			if events[i] == nil {
+				panic(fmt.Sprintf("element %d of the events slice was nil", i))
+			}
 			eventSlice[i] = C.VkEvent(unsafe.Pointer(events[i].Handle()))
 		}
 	}
@@ -386,11 +424,19 @@ func (c *VulkanCommandBuffer) CmdWaitEvents(events []Event, srcStageMask Pipelin
 }
 
 func (c *VulkanCommandBuffer) CmdSetEvent(event Event, stageMask PipelineStageFlags) {
+	if event == nil {
+		panic("event cannot be nil")
+	}
+
 	c.deviceDriver.VkCmdSetEvent(c.commandBufferHandle, event.Handle(), driver.VkPipelineStageFlags(stageMask))
 	c.commandCounter.CommandCount++
 }
 
 func (c *VulkanCommandBuffer) CmdClearColorImage(image Image, imageLayout ImageLayout, color ClearColorValue, ranges []ImageSubresourceRange) {
+	if image == nil {
+		panic("image cannot be nil")
+	}
+
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
@@ -421,21 +467,39 @@ func (c *VulkanCommandBuffer) CmdClearColorImage(image Image, imageLayout ImageL
 }
 
 func (c *VulkanCommandBuffer) CmdResetQueryPool(queryPool QueryPool, startQuery, queryCount int) {
+	if queryPool == nil {
+		panic("queryPool cannot be nil")
+	}
+
 	c.deviceDriver.VkCmdResetQueryPool(c.commandBufferHandle, queryPool.Handle(), driver.Uint32(startQuery), driver.Uint32(queryCount))
 	c.commandCounter.CommandCount++
 }
 
 func (c *VulkanCommandBuffer) CmdBeginQuery(queryPool QueryPool, query int, flags QueryControlFlags) {
+	if queryPool == nil {
+		panic("queryPool cannot be nil")
+	}
+
 	c.deviceDriver.VkCmdBeginQuery(c.commandBufferHandle, queryPool.Handle(), driver.Uint32(query), driver.VkQueryControlFlags(flags))
 	c.commandCounter.CommandCount++
 }
 
 func (c *VulkanCommandBuffer) CmdEndQuery(queryPool QueryPool, query int) {
+	if queryPool == nil {
+		panic("queryPool cannot be nil")
+	}
+
 	c.deviceDriver.VkCmdEndQuery(c.commandBufferHandle, queryPool.Handle(), driver.Uint32(query))
 	c.commandCounter.CommandCount++
 }
 
 func (c *VulkanCommandBuffer) CmdCopyQueryPoolResults(queryPool QueryPool, firstQuery, queryCount int, dstBuffer Buffer, dstOffset, stride int, flags QueryResultFlags) {
+	if queryPool == nil {
+		panic("queryPool cannot be nil")
+	}
+	if dstBuffer == nil {
+		panic("dstBuffer cannot be nil")
+	}
 	c.deviceDriver.VkCmdCopyQueryPoolResults(c.commandBufferHandle, queryPool.Handle(), driver.Uint32(firstQuery), driver.Uint32(queryCount), dstBuffer.Handle(), driver.VkDeviceSize(dstOffset), driver.VkDeviceSize(stride), driver.VkQueryResultFlags(flags))
 	c.commandCounter.CommandCount++
 }
@@ -451,6 +515,9 @@ func (c *VulkanCommandBuffer) CmdExecuteCommands(commandBuffers []CommandBuffer)
 	var addToDrawCount int
 	var addToDispatchCount int
 	for i := 0; i < bufferCount; i++ {
+		if commandBuffers[i] == nil {
+			panic(fmt.Sprintf("element %d of the commandBuffers slice was nil", i))
+		}
 		commandBufferSlice[i] = C.VkCommandBuffer(unsafe.Pointer(commandBuffers[i].Handle()))
 		addToDrawCount += commandBuffers[i].DrawsRecorded()
 		addToDispatchCount += commandBuffers[i].DispatchesRecorded()
@@ -484,6 +551,9 @@ func (c *VulkanCommandBuffer) CmdClearAttachments(attachments []ClearAttachment,
 }
 
 func (c *VulkanCommandBuffer) CmdClearDepthStencilImage(image Image, imageLayout ImageLayout, depthStencil *ClearValueDepthStencil, ranges []ImageSubresourceRange) {
+	if image == nil {
+		panic("image cannot be nil")
+	}
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
@@ -508,6 +578,12 @@ func (c *VulkanCommandBuffer) CmdClearDepthStencilImage(image Image, imageLayout
 }
 
 func (c *VulkanCommandBuffer) CmdCopyImageToBuffer(srcImage Image, srcImageLayout ImageLayout, dstBuffer Buffer, regions []BufferImageCopy) error {
+	if srcImage == nil {
+		panic("srcImage cannot be nil")
+	}
+	if dstBuffer == nil {
+		panic("dstBuffer cannot be nil")
+	}
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
@@ -529,34 +605,55 @@ func (c *VulkanCommandBuffer) CmdDispatch(groupCountX, groupCountY, groupCountZ 
 }
 
 func (c *VulkanCommandBuffer) CmdDispatchIndirect(buffer Buffer, offset int) {
+	if buffer == nil {
+		panic("buffer cannot be nil")
+	}
 	c.deviceDriver.VkCmdDispatchIndirect(c.commandBufferHandle, buffer.Handle(), driver.VkDeviceSize(offset))
 	c.commandCounter.CommandCount++
 	c.commandCounter.DispatchCount++
 }
 
 func (c *VulkanCommandBuffer) CmdDrawIndexedIndirect(buffer Buffer, offset int, drawCount, stride int) {
+	if buffer == nil {
+		panic("buffer cannot be nil")
+	}
 	c.deviceDriver.VkCmdDrawIndexedIndirect(c.commandBufferHandle, buffer.Handle(), driver.VkDeviceSize(offset), driver.Uint32(drawCount), driver.Uint32(stride))
 	c.commandCounter.CommandCount++
 	c.commandCounter.DrawCallCount++
 }
 
 func (c *VulkanCommandBuffer) CmdDrawIndirect(buffer Buffer, offset int, drawCount, stride int) {
+	if buffer == nil {
+		panic("buffer cannot be nil")
+	}
 	c.deviceDriver.VkCmdDrawIndirect(c.commandBufferHandle, buffer.Handle(), driver.VkDeviceSize(offset), driver.Uint32(drawCount), driver.Uint32(stride))
 	c.commandCounter.CommandCount++
 	c.commandCounter.DrawCallCount++
 }
 
 func (c *VulkanCommandBuffer) CmdFillBuffer(dstBuffer Buffer, dstOffset int, size int, data uint32) {
+	if dstBuffer == nil {
+		panic("dstBuffer cannot be nil")
+	}
 	c.deviceDriver.VkCmdFillBuffer(c.commandBufferHandle, dstBuffer.Handle(), driver.VkDeviceSize(dstOffset), driver.VkDeviceSize(size), driver.Uint32(data))
 	c.commandCounter.CommandCount++
 }
 
 func (c *VulkanCommandBuffer) CmdResetEvent(event Event, stageMask PipelineStageFlags) {
+	if event == nil {
+		panic("event cannot be nil")
+	}
 	c.deviceDriver.VkCmdResetEvent(c.commandBufferHandle, event.Handle(), driver.VkPipelineStageFlags(stageMask))
 	c.commandCounter.CommandCount++
 }
 
 func (c *VulkanCommandBuffer) CmdResolveImage(srcImage Image, srcImageLayout ImageLayout, dstImage Image, dstImageLayout ImageLayout, regions []ImageResolve) error {
+	if srcImage == nil {
+		panic("srcImage cannot be nil")
+	}
+	if dstImage == nil {
+		panic("dstImage cannot be nil")
+	}
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
@@ -617,6 +714,9 @@ func (c *VulkanCommandBuffer) CmdSetStencilWriteMask(faceMask StencilFaceFlags, 
 }
 
 func (c *VulkanCommandBuffer) CmdUpdateBuffer(dstBuffer Buffer, dstOffset int, dataSize int, data []byte) {
+	if dstBuffer == nil {
+		panic("dstBuffer cannot be nil")
+	}
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
@@ -630,6 +730,10 @@ func (c *VulkanCommandBuffer) CmdUpdateBuffer(dstBuffer Buffer, dstOffset int, d
 }
 
 func (c *VulkanCommandBuffer) CmdWriteTimestamp(pipelineStage PipelineStageFlags, queryPool QueryPool, query int) {
+	if queryPool == nil {
+		panic("queryPool cannot be nil")
+	}
+
 	c.deviceDriver.VkCmdWriteTimestamp(c.commandBufferHandle, driver.VkPipelineStageFlags(pipelineStage), queryPool.Handle(), driver.Uint32(query))
 	c.commandCounter.CommandCount++
 }

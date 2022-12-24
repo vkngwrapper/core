@@ -19,6 +19,9 @@ type VulkanShaderModule struct {
 // core version. Two Vulkan 1.2 compatible ShaderModule objects with the same ShaderModule.Handle will
 // return the same interface value when passed to this method.
 func PromoteShaderModule(shaderModule core1_0.ShaderModule) ShaderModule {
+	if shaderModule == nil {
+		return nil
+	}
 	if !shaderModule.APIVersion().IsAtLeast(common.Vulkan1_2) {
 		return nil
 	}

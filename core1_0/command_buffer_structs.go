@@ -76,6 +76,9 @@ func (o CommandBufferAllocateInfo) PopulateCPointer(allocator *cgoparam.Allocato
 	if o.CommandBufferCount == 0 {
 		return nil, errors.New("attempted to create 0 command buffers")
 	}
+	if o.CommandPool == nil {
+		return nil, errors.New("core1_0.CommandBufferAllocateInfo.CommandPool may not be nil")
+	}
 
 	if preallocatedPointer == unsafe.Pointer(nil) {
 		preallocatedPointer = allocator.Malloc(int(unsafe.Sizeof([1]C.VkCommandBufferAllocateInfo{})))
