@@ -47,6 +47,10 @@ const (
 	//
 	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkMemoryPropertyFlagBits.html
 	MemoryPropertyHostCoherent MemoryPropertyFlags = C.VK_MEMORY_PROPERTY_HOST_COHERENT_BIT
+	//MemoryPropertyHostCached specifies that memory allocated with this type is cached on the host. Host
+	// memory accesses to uncached memory are slower than to cached memory, however uncached memory is always
+	// host coherent
+	MemoryPropertyHostCached MemoryPropertyFlags = C.VK_MEMORY_PROPERTY_HOST_CACHED_BIT
 	// MemoryPropertyLazilyAllocated specifies that the memory type only allows Device access to
 	// the memory
 	MemoryPropertyLazilyAllocated MemoryPropertyFlags = C.VK_MEMORY_PROPERTY_LAZILY_ALLOCATED_BIT
@@ -89,6 +93,7 @@ func init() {
 	MemoryPropertyDeviceLocal.Register("Device Local")
 	MemoryPropertyHostVisible.Register("Host Visible")
 	MemoryPropertyHostCoherent.Register("Host Coherent")
+	MemoryPropertyHostCached.Register("Host Cached")
 	MemoryPropertyLazilyAllocated.Register("Lazily Allocated")
 
 	MemoryHeapDeviceLocal.Register("Device Local")
