@@ -45,6 +45,7 @@ func (d *VulkanDevice) IsDeviceExtensionActive(extensionName string) bool {
 func (d *VulkanDevice) Destroy(callbacks *driver.AllocationCallbacks) {
 	d.deviceDriver.VkDestroyDevice(d.deviceHandle, callbacks.Handle())
 	d.deviceDriver.ObjectStore().Delete(driver.VulkanHandle(d.deviceHandle))
+	d.deviceDriver.Destroy()
 }
 
 func (d *VulkanDevice) WaitIdle() (common.VkResult, error) {

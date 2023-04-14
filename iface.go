@@ -50,11 +50,6 @@ type Loader interface {
 	CreateInstance(allocationCallbacks *driver.AllocationCallbacks, options core1_0.InstanceCreateInfo) (core1_0.Instance, common.VkResult, error)
 }
 
-// CreateSystemLoader generates a Loader from a vulkan-1.dll/so located on the local file system
-func CreateSystemLoader() (*VulkanLoader, error) {
-	return CreateLoaderFromProcAddr(unsafe.Pointer(C.vkGetInstanceProcAddr))
-}
-
 // CreateLoaderFromProcAddr generates a Loader from a ProcAddr provided by another library,
 // such as the address provided by sdl2's SDL_Vulkan_GetVkInstanceProcAddr
 func CreateLoaderFromProcAddr(addr unsafe.Pointer) (*VulkanLoader, error) {
