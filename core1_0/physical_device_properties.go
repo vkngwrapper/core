@@ -6,10 +6,11 @@ package core1_0
 */
 import "C"
 import (
-	"github.com/cockroachdb/errors"
-	"github.com/google/uuid"
-	"github.com/vkngwrapper/core/v2/common"
 	"unsafe"
+
+	"github.com/google/uuid"
+	"github.com/pkg/errors"
+	"github.com/vkngwrapper/core/v2/common"
 )
 
 const (

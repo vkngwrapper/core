@@ -6,11 +6,12 @@ package core1_0
 */
 import "C"
 import (
+	"unsafe"
+
 	"github.com/CannibalVox/cgoparam"
-	"github.com/cockroachdb/errors"
+	"github.com/pkg/errors"
 	"github.com/vkngwrapper/core/v2/common"
 	"github.com/vkngwrapper/core/v2/driver"
-	"unsafe"
 )
 
 // VulkanImage is an implementation of the Image interface that actually communicates with Vulkan. This

@@ -6,11 +6,12 @@ package core1_1
 */
 import "C"
 import (
+	"unsafe"
+
 	"github.com/CannibalVox/cgoparam"
-	"github.com/cockroachdb/errors"
+	"github.com/pkg/errors"
 	"github.com/vkngwrapper/core/v2/common"
 	"github.com/vkngwrapper/core/v2/core1_0"
-	"unsafe"
 )
 
 // InputAttachmentAspectReference specifies a subpass/input attachment pair and an aspect mask that

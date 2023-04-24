@@ -7,12 +7,13 @@ package core1_0
 import "C"
 import (
 	"fmt"
-	"github.com/CannibalVox/cgoparam"
-	"github.com/cockroachdb/errors"
-	"github.com/vkngwrapper/core/v2/common"
-	"github.com/vkngwrapper/core/v2/driver"
 	"time"
 	"unsafe"
+
+	"github.com/CannibalVox/cgoparam"
+	"github.com/pkg/errors"
+	"github.com/vkngwrapper/core/v2/common"
+	"github.com/vkngwrapper/core/v2/driver"
 )
 
 // VulkanDevice is an implementation of the Device interface that actually communicates with Vulkan. This

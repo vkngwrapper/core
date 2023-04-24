@@ -1,6 +1,6 @@
 package common
 
-import "github.com/cockroachdb/errors"
+import "github.com/pkg/errors"
 
 ////
 

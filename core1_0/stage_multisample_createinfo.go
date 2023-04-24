@@ -6,10 +6,11 @@ package core1_0
 */
 import "C"
 import (
-	"github.com/CannibalVox/cgoparam"
-	"github.com/cockroachdb/errors"
-	"github.com/vkngwrapper/core/v2/common"
 	"unsafe"
+
+	"github.com/CannibalVox/cgoparam"
+	"github.com/pkg/errors"
+	"github.com/vkngwrapper/core/v2/common"
 )
 
 // PipelineMultisampleStateCreateFlags is reserved for future use
@@ -93,7 +94,7 @@ func (o PipelineMultisampleStateCreateInfo) PopulateCPointer(allocator *cgoparam
 		}
 
 		if len(o.SampleMask) != maskSize {
-			return nil, errors.Newf("expected a sample mask size of %d, because %d rasterization samples were specified- however, received a sample mask size of %d", maskSize, sampleCount, len(o.SampleMask))
+			return nil, errors.Errorf("expected a sample mask size of %d, because %d rasterization samples were specified- however, received a sample mask size of %d", maskSize, sampleCount, len(o.SampleMask))
 		}
 
 		sampleMaskPtr := (*C.VkSampleMask)(allocator.Malloc(maskSize * int(unsafe.Sizeof(C.VkSampleMask(0)))))
