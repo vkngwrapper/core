@@ -6,11 +6,12 @@ package core1_0
 */
 import "C"
 import (
+	"unsafe"
+
 	"github.com/CannibalVox/cgoparam"
-	"github.com/cockroachdb/errors"
+	"github.com/pkg/errors"
 	"github.com/vkngwrapper/core/v2/common"
 	"github.com/vkngwrapper/core/v2/driver"
-	"unsafe"
 )
 
 const (
@@ -151,7 +152,7 @@ type SubmitInfo struct {
 
 func (o SubmitInfo) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if len(o.WaitSemaphores) != len(o.WaitDstStageMask) {
-		return nil, errors.Newf("attempted to submit with %d wait semaphores but %d dst stages- these should match", len(o.WaitSemaphores), len(o.WaitDstStageMask))
+		return nil, errors.Errorf("attempted to submit with %d wait semaphores but %d dst stages- these should match", len(o.WaitSemaphores), len(o.WaitDstStageMask))
 	}
 	if preallocatedPointer == unsafe.Pointer(nil) {
 		preallocatedPointer = allocator.Malloc(C.sizeof_struct_VkSubmitInfo)
@@ -174,7 +175,7 @@ func (o SubmitInfo) PopulateCPointer(allocator *cgoparam.Allocator, preallocated
 
 		for i := 0; i < waitSemaphoreCount; i++ {
 			if o.WaitSemaphores[i] == nil {
-				return nil, errors.Newf("core1_0.SubmitInfo.WaitSemaphores cannot contain nil elements, but "+
+				return nil, errors.Errorf("core1_0.SubmitInfo.WaitSemaphores cannot contain nil elements, but "+
 					"element %d is nil", i)
 			}
 			semaphoreSlice[i] = (C.VkSemaphore)(unsafe.Pointer(o.WaitSemaphores[i].Handle()))
@@ -194,7 +195,7 @@ func (o SubmitInfo) PopulateCPointer(allocator *cgoparam.Allocator, preallocated
 
 		for i := 0; i < signalSemaphoreCount; i++ {
 			if o.SignalSemaphores[i] == nil {
-				return nil, errors.Newf("core1_0.SubmitInfo.SignalSemaphores cannot contain nil elements, but "+
+				return nil, errors.Errorf("core1_0.SubmitInfo.SignalSemaphores cannot contain nil elements, but "+
 					"element %d is nil", i)
 			}
 			semaphoreSlice[i] = (C.VkSemaphore)(unsafe.Pointer(o.SignalSemaphores[i].Handle()))
@@ -212,7 +213,7 @@ func (o SubmitInfo) PopulateCPointer(allocator *cgoparam.Allocator, preallocated
 
 		for i := 0; i < commandBufferCount; i++ {
 			if o.CommandBuffers[i] == nil {
-				return nil, errors.Newf("core1_0.SubmitInfo.CommandBuffers cannot contain nil elements, but "+
+				return nil, errors.Errorf("core1_0.SubmitInfo.CommandBuffers cannot contain nil elements, but "+
 					"element %d is nil", i)
 			}
 			commandBufferSlice[i] = o.CommandBuffers[i].Handle()

@@ -6,11 +6,12 @@ package core1_1
 */
 import "C"
 import (
+	"unsafe"
+
 	"github.com/CannibalVox/cgoparam"
-	"github.com/cockroachdb/errors"
+	"github.com/pkg/errors"
 	"github.com/vkngwrapper/core/v2/common"
 	"github.com/vkngwrapper/core/v2/core1_0"
-	"unsafe"
 )
 
 // MemoryAllocateFlags specifies flags for a DeviceMemory allocation
@@ -74,7 +75,7 @@ func (o DeviceGroupDeviceCreateInfo) PopulateCPointer(allocator *cgoparam.Alloca
 
 	for i := 0; i < count; i++ {
 		if o.PhysicalDevices[i] == nil {
-			return nil, errors.Newf("core1_1.DeviceGroupDeviceCreateInfo.PhysicalDevices cannot contain nil "+
+			return nil, errors.Errorf("core1_1.DeviceGroupDeviceCreateInfo.PhysicalDevices cannot contain nil "+
 				"elements, but elements %d is nil", i)
 		}
 		physicalDevicesSlice[i] = C.VkPhysicalDevice(unsafe.Pointer(o.PhysicalDevices[i].Handle()))

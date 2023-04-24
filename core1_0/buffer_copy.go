@@ -6,9 +6,10 @@ package core1_0
 */
 import "C"
 import (
-	"github.com/CannibalVox/cgoparam"
-	"github.com/cockroachdb/errors"
 	"unsafe"
+
+	"github.com/CannibalVox/cgoparam"
+	"github.com/pkg/errors"
 )
 
 // BufferCopy specifies a buffer copy operation via CommandBuffer.CmdCopyBuffer

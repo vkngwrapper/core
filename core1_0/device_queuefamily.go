@@ -6,10 +6,11 @@ package core1_0
 */
 import "C"
 import (
-	"github.com/CannibalVox/cgoparam"
-	"github.com/cockroachdb/errors"
-	"github.com/vkngwrapper/core/v2/common"
 	"unsafe"
+
+	"github.com/CannibalVox/cgoparam"
+	"github.com/pkg/errors"
+	"github.com/vkngwrapper/core/v2/common"
 )
 
 // DeviceQueueCreateInfo specifies parameters of a newly-created Device Queue
@@ -36,7 +37,7 @@ func (o DeviceQueueCreateInfo) PopulateCPointer(allocator *cgoparam.Allocator, p
 	createInfo := (*C.VkDeviceQueueCreateInfo)(preallocatedPointer)
 
 	if len(o.QueuePriorities) == 0 {
-		return nil, errors.Newf("alloc DeviceCreateInfo: queue family %d had no queue priorities", o.QueueFamilyIndex)
+		return nil, errors.Errorf("alloc DeviceCreateInfo: queue family %d had no queue priorities", o.QueueFamilyIndex)
 	}
 
 	prioritiesPtr := allocator.Malloc(len(o.QueuePriorities) * int(unsafe.Sizeof(C.float(0))))

@@ -6,10 +6,11 @@ package core1_0
 */
 import "C"
 import (
-	"github.com/CannibalVox/cgoparam"
-	"github.com/cockroachdb/errors"
-	"github.com/vkngwrapper/core/v2/common"
 	"unsafe"
+
+	"github.com/CannibalVox/cgoparam"
+	"github.com/pkg/errors"
+	"github.com/vkngwrapper/core/v2/common"
 )
 
 const (
@@ -229,7 +230,7 @@ func (o RenderPassCreateInfo) PopulateCPointer(allocator *cgoparam.Allocator, pr
 			colorAttachmentCount := len(o.Subpasses[i].ColorAttachments)
 
 			if resolveAttachmentCount > 0 && resolveAttachmentCount != colorAttachmentCount {
-				return nil, errors.Newf("in subpass %d, %d color attachments are defined, but %d resolve attachments are defined", i, colorAttachmentCount, resolveAttachmentCount)
+				return nil, errors.Errorf("in subpass %d, %d color attachments are defined, but %d resolve attachments are defined", i, colorAttachmentCount, resolveAttachmentCount)
 			}
 
 			subPassSlice[i].flags = C.VkSubpassDescriptionFlags(o.Subpasses[i].Flags)

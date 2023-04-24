@@ -6,12 +6,13 @@ package core1_2
 */
 import "C"
 import (
+	"unsafe"
+
 	"github.com/CannibalVox/cgoparam"
-	"github.com/cockroachdb/errors"
+	"github.com/pkg/errors"
 	"github.com/vkngwrapper/core/v2/common"
 	"github.com/vkngwrapper/core/v2/core1_0"
 	"github.com/vkngwrapper/core/v2/core1_1"
-	"unsafe"
 )
 
 const (

@@ -6,11 +6,12 @@ package core1_2
 */
 import "C"
 import (
+	"unsafe"
+
 	"github.com/CannibalVox/cgoparam"
-	"github.com/cockroachdb/errors"
+	"github.com/pkg/errors"
 	"github.com/vkngwrapper/core/v2/common"
 	"github.com/vkngwrapper/core/v2/core1_0"
-	"unsafe"
 )
 
 // SubpassBeginInfo specifies subpass begin information
@@ -196,7 +197,7 @@ func (o SubpassDescription2) PopulateCPointer(allocator *cgoparam.Allocator, pre
 	preserveAttachmentCount := len(o.PreserveAttachments)
 
 	if resolveAttachmentCount > 0 && resolveAttachmentCount != colorAttachmentCount {
-		return nil, errors.Newf("in this subpass, %d color attachments are defined, but %d resolve attachments are defined- they should be equal", colorAttachmentCount, resolveAttachmentCount)
+		return nil, errors.Errorf("in this subpass, %d color attachments are defined, but %d resolve attachments are defined- they should be equal", colorAttachmentCount, resolveAttachmentCount)
 	}
 
 	info.inputAttachmentCount = C.uint32_t(inputAttachmentCount)
@@ -467,7 +468,7 @@ func (o RenderPassAttachmentBeginInfo) PopulateCPointer(allocator *cgoparam.Allo
 		attachmentSlice := unsafe.Slice(info.pAttachments, count)
 		for i := 0; i < count; i++ {
 			if o.Attachments[i] == nil {
-				return nil, errors.Newf("core1_2.RenderPassAttachmentBeginInfo.Attachments cannot have nil "+
+				return nil, errors.Errorf("core1_2.RenderPassAttachmentBeginInfo.Attachments cannot have nil "+
 					"elements, but element %d is nil", i)
 			}
 			attachmentSlice[i] = C.VkImageView(unsafe.Pointer(o.Attachments[i].Handle()))

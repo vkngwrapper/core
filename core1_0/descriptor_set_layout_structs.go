@@ -6,10 +6,11 @@ package core1_0
 */
 import "C"
 import (
-	"github.com/CannibalVox/cgoparam"
-	"github.com/cockroachdb/errors"
-	"github.com/vkngwrapper/core/v2/common"
 	"unsafe"
+
+	"github.com/CannibalVox/cgoparam"
+	"github.com/pkg/errors"
+	"github.com/vkngwrapper/core/v2/common"
 )
 
 const (
@@ -124,7 +125,7 @@ func (o DescriptorSetLayoutCreateInfo) PopulateCPointer(allocator *cgoparam.Allo
 		for i := 0; i < bindingCount; i++ {
 			samplerCount := len(o.Bindings[i].ImmutableSamplers)
 			if samplerCount != 0 && samplerCount != o.Bindings[i].DescriptorCount {
-				return nil, errors.Newf("allocate descriptor set layout bindings: binding %d has %d descriptors, but %d immutable samplers. if immutable samplers are provided, they must match the descriptor count", i, o.Bindings[i].DescriptorCount, len(o.Bindings[i].ImmutableSamplers))
+				return nil, errors.Errorf("allocate descriptor set layout bindings: binding %d has %d descriptors, but %d immutable samplers. if immutable samplers are provided, they must match the descriptor count", i, o.Bindings[i].DescriptorCount, len(o.Bindings[i].ImmutableSamplers))
 			}
 
 			bindingsSlice[i].binding = C.uint32_t(o.Bindings[i].Binding)
@@ -139,7 +140,7 @@ func (o DescriptorSetLayoutCreateInfo) PopulateCPointer(allocator *cgoparam.Allo
 
 				for samplerIndex := 0; samplerIndex < samplerCount; samplerIndex++ {
 					if o.Bindings[i].ImmutableSamplers[samplerIndex] == nil {
-						return nil, errors.Newf("Bindings[%d].ImmutableSamplers element %d is nil", i, samplerIndex)
+						return nil, errors.Errorf("Bindings[%d].ImmutableSamplers element %d is nil", i, samplerIndex)
 					}
 					immutableSamplerSlice[samplerIndex] = C.VkSampler(unsafe.Pointer(o.Bindings[i].ImmutableSamplers[samplerIndex].Handle()))
 				}

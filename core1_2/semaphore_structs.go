@@ -6,11 +6,12 @@ package core1_2
 */
 import "C"
 import (
+	"unsafe"
+
 	"github.com/CannibalVox/cgoparam"
-	"github.com/cockroachdb/errors"
+	"github.com/pkg/errors"
 	"github.com/vkngwrapper/core/v2/common"
 	"github.com/vkngwrapper/core/v2/core1_0"
-	"unsafe"
 )
 
 // SemaphoreType specifies the type of a Semaphore object
@@ -131,7 +132,7 @@ func (o SemaphoreWaitInfo) PopulateCPointer(allocator *cgoparam.Allocator, preal
 	}
 
 	if len(o.Semaphores) != len(o.Values) {
-		return nil, errors.Newf("the SemaphoreWaitInfo 'Semaphores' list has %d elements, but the 'Values' list has %d elements- these lists must be the same size", len(o.Semaphores), len(o.Values))
+		return nil, errors.Errorf("the SemaphoreWaitInfo 'Semaphores' list has %d elements, but the 'Values' list has %d elements- these lists must be the same size", len(o.Semaphores), len(o.Values))
 	}
 
 	info := (*C.VkSemaphoreWaitInfo)(preallocatedPointer)
@@ -153,7 +154,7 @@ func (o SemaphoreWaitInfo) PopulateCPointer(allocator *cgoparam.Allocator, preal
 
 		for i := 0; i < count; i++ {
 			if o.Semaphores[i] == nil {
-				return nil, errors.Newf("core1_2.SemaphoreWaitInfo.Semaphores cannot contain nil elements, "+
+				return nil, errors.Errorf("core1_2.SemaphoreWaitInfo.Semaphores cannot contain nil elements, "+
 					"but element %d is nil", i)
 			}
 

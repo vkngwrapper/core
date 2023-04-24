@@ -18,9 +18,10 @@ PFN_vkVoidFunction device_proc_addr(DriverFuncPtrs *funcPtrs, VkDevice device, c
 */
 import "C"
 import (
-	"github.com/cockroachdb/errors"
-	"github.com/vkngwrapper/core/v2/common"
 	"unsafe"
+
+	"github.com/pkg/errors"
+	"github.com/vkngwrapper/core/v2/common"
 )
 
 type vulkanDriver struct {
