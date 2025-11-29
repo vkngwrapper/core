@@ -1,7 +1,9 @@
 package core1_2_test
 
 import (
-	"github.com/golang/mock/gomock"
+	"reflect"
+	"testing"
+
 	"github.com/stretchr/testify/require"
 	"github.com/vkngwrapper/core/v2/common"
 	"github.com/vkngwrapper/core/v2/common/extensions"
@@ -10,8 +12,7 @@ import (
 	"github.com/vkngwrapper/core/v2/driver"
 	mock_driver "github.com/vkngwrapper/core/v2/driver/mocks"
 	"github.com/vkngwrapper/core/v2/mocks"
-	"reflect"
-	"testing"
+	"go.uber.org/mock/gomock"
 )
 
 func TestSamplerReductionModeCreateOptions(t *testing.T) {

@@ -3,7 +3,10 @@ package core1_0_test
 import (
 	"bytes"
 	"encoding/binary"
-	"github.com/golang/mock/gomock"
+	"reflect"
+	"testing"
+	"unsafe"
+
 	"github.com/stretchr/testify/require"
 	"github.com/vkngwrapper/core/v2/common"
 	"github.com/vkngwrapper/core/v2/core1_0"
@@ -11,9 +14,7 @@ import (
 	mock_driver "github.com/vkngwrapper/core/v2/driver/mocks"
 	internal_mocks "github.com/vkngwrapper/core/v2/internal/dummies"
 	"github.com/vkngwrapper/core/v2/mocks"
-	"reflect"
-	"testing"
-	"unsafe"
+	"go.uber.org/mock/gomock"
 )
 
 func setup(t *testing.T, ctrl *gomock.Controller) (*mock_driver.MockDriver, core1_0.CommandBuffer) {

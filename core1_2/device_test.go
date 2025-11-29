@@ -1,7 +1,11 @@
 package core1_2_test
 
 import (
-	"github.com/golang/mock/gomock"
+	"reflect"
+	"testing"
+	"time"
+	"unsafe"
+
 	"github.com/stretchr/testify/require"
 	"github.com/vkngwrapper/core/v2/common"
 	"github.com/vkngwrapper/core/v2/common/extensions"
@@ -11,10 +15,7 @@ import (
 	mock_driver "github.com/vkngwrapper/core/v2/driver/mocks"
 	"github.com/vkngwrapper/core/v2/internal/dummies"
 	"github.com/vkngwrapper/core/v2/mocks"
-	"reflect"
-	"testing"
-	"time"
-	"unsafe"
+	"go.uber.org/mock/gomock"
 )
 
 func TestDevice_CreateRenderPass(t *testing.T) {

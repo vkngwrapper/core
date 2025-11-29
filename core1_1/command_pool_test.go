@@ -1,14 +1,15 @@
 package core1_1_test
 
 import (
-	"github.com/golang/mock/gomock"
+	"testing"
+
 	"github.com/vkngwrapper/core/v2/common"
 	"github.com/vkngwrapper/core/v2/core1_1"
 	"github.com/vkngwrapper/core/v2/driver"
 	mock_driver "github.com/vkngwrapper/core/v2/driver/mocks"
 	"github.com/vkngwrapper/core/v2/internal/dummies"
 	"github.com/vkngwrapper/core/v2/mocks"
-	"testing"
+	"go.uber.org/mock/gomock"
 )
 
 func TestVulkanCommandPool_TrimCommandPool(t *testing.T) {

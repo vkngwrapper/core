@@ -1,16 +1,17 @@
 package core1_0_test
 
 import (
-	"github.com/golang/mock/gomock"
+	"reflect"
+	"testing"
+
 	"github.com/stretchr/testify/require"
-	"github.com/vkngwrapper/core/v2/mocks"
 	"github.com/vkngwrapper/core/v2/common"
 	"github.com/vkngwrapper/core/v2/core1_0"
 	"github.com/vkngwrapper/core/v2/driver"
 	mock_driver "github.com/vkngwrapper/core/v2/driver/mocks"
 	internal_mocks "github.com/vkngwrapper/core/v2/internal/dummies"
-	"reflect"
-	"testing"
+	"github.com/vkngwrapper/core/v2/mocks"
+	"go.uber.org/mock/gomock"
 )
 
 func TestVulkanLoader1_0_CreateEvent(t *testing.T) {

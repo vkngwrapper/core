@@ -1,14 +1,15 @@
 package core1_2_test
 
 import (
-	"github.com/golang/mock/gomock"
-	"github.com/vkngwrapper/core/v2/internal/dummies"
-	"github.com/vkngwrapper/core/v2/mocks"
+	"testing"
+
 	"github.com/vkngwrapper/core/v2/common"
 	"github.com/vkngwrapper/core/v2/core1_2"
 	"github.com/vkngwrapper/core/v2/driver"
 	mock_driver "github.com/vkngwrapper/core/v2/driver/mocks"
-	"testing"
+	"github.com/vkngwrapper/core/v2/internal/dummies"
+	"github.com/vkngwrapper/core/v2/mocks"
+	"go.uber.org/mock/gomock"
 )
 
 func TestVulkanQueryPool_ResetQueryPool(t *testing.T) {

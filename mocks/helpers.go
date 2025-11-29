@@ -1,9 +1,9 @@
 package mocks
 
 import (
-	"github.com/golang/mock/gomock"
 	"github.com/vkngwrapper/core/v2/core1_0"
 	"github.com/vkngwrapper/core/v2/driver"
+	gomock "go.uber.org/mock/gomock"
 )
 
 func EasyMockBuffer(ctrl *gomock.Controller) *MockBuffer {

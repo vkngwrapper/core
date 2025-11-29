@@ -3,7 +3,10 @@ package core1_0_test
 import (
 	"bytes"
 	"encoding/binary"
-	"github.com/golang/mock/gomock"
+	"reflect"
+	"testing"
+	"unsafe"
+
 	"github.com/stretchr/testify/require"
 	"github.com/vkngwrapper/core/v2/common"
 	"github.com/vkngwrapper/core/v2/core1_0"
@@ -11,9 +14,7 @@ import (
 	mock_driver "github.com/vkngwrapper/core/v2/driver/mocks"
 	internal_mocks "github.com/vkngwrapper/core/v2/internal/dummies"
 	"github.com/vkngwrapper/core/v2/mocks"
-	"reflect"
-	"testing"
-	"unsafe"
+	"go.uber.org/mock/gomock"
 )
 
 func TestVulkanLoader1_0_CreateGraphicsPipelines_EmptySuccess(t *testing.T) {
@@ -244,7 +245,7 @@ func TestVulkanLoader1_0_CreateGraphicsPipelines_ShaderStagesFailure_InvalidSpec
 				},
 			},
 		}})
-	require.EqualError(t, err, "failed to populate shader stage with specialization values: 1 -> wow, this is invalid: binary.Write: invalid type string")
+	require.EqualError(t, err, "failed to populate shader stage with specialization values: 1 -> wow, this is invalid: binary.Write: some values are not fixed-sized in type string")
 }
 
 func TestVulkanLoader1_0_CreateGraphicsPipelines_VertexInputSuccess(t *testing.T) {

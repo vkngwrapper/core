@@ -1,9 +1,9 @@
 package mock_driver
 
 import (
-	"github.com/golang/mock/gomock"
 	"github.com/vkngwrapper/core/v2/common"
 	"github.com/vkngwrapper/core/v2/driver"
+	gomock "go.uber.org/mock/gomock"
 )
 
 func DriverForVersion(ctrl *gomock.Controller, version common.APIVersion) *MockDriver {
