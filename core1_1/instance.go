@@ -6,11 +6,12 @@ package core1_1
 */
 import "C"
 import (
+	"unsafe"
+
 	"github.com/CannibalVox/cgoparam"
 	"github.com/vkngwrapper/core/v2/common"
 	"github.com/vkngwrapper/core/v2/core1_0"
 	"github.com/vkngwrapper/core/v2/driver"
-	"unsafe"
 )
 
 // VulkanInstance is an implementation of the Instance interface that actually communicates with Vulkan. This
@@ -35,6 +36,11 @@ func PromoteInstance(instance core1_0.Instance) Instance {
 	}
 	if !instance.APIVersion().IsAtLeast(common.Vulkan1_1) {
 		return nil
+	}
+
+	promoted, alreadyPromoted := instance.(Instance)
+	if alreadyPromoted {
+		return promoted
 	}
 
 	return instance.Driver().ObjectStore().GetOrCreate(

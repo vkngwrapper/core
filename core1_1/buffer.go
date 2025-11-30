@@ -26,6 +26,11 @@ func PromoteBuffer(buffer core1_0.Buffer) Buffer {
 		return nil
 	}
 
+	promoted, alreadyPromoted := buffer.(Buffer)
+	if alreadyPromoted {
+		return promoted
+	}
+
 	return buffer.Driver().ObjectStore().GetOrCreate(
 		driver.VulkanHandle(buffer.Handle()),
 		driver.Core1_1,

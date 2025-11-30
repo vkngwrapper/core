@@ -30,6 +30,11 @@ func PromoteSemaphore(semaphore core1_0.Semaphore) Semaphore {
 		return nil
 	}
 
+	promoted, alreadyPromoted := semaphore.(Semaphore)
+	if alreadyPromoted {
+		return promoted
+	}
+
 	promotedSemaphore := core1_1.PromoteSemaphore(semaphore)
 	return semaphore.Driver().ObjectStore().GetOrCreate(
 		driver.VulkanHandle(semaphore.Handle()),

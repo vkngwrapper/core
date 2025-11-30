@@ -26,6 +26,11 @@ func PromoteDescriptorPool(descriptorPool core1_0.DescriptorPool) DescriptorPool
 		return nil
 	}
 
+	promoted, alreadyPromoted := descriptorPool.(DescriptorPool)
+	if alreadyPromoted {
+		return promoted
+	}
+
 	return descriptorPool.Driver().ObjectStore().GetOrCreate(
 		driver.VulkanHandle(descriptorPool.Handle()),
 		driver.Core1_1,

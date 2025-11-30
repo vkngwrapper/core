@@ -32,6 +32,11 @@ func PromoteCommandBuffer(commandBuffer core1_0.CommandBuffer) CommandBuffer {
 		return nil
 	}
 
+	promoted, alreadyPromoted := commandBuffer.(CommandBuffer)
+	if alreadyPromoted {
+		return promoted
+	}
+
 	promotedBuffer := core1_1.PromoteCommandBuffer(commandBuffer)
 
 	return commandBuffer.Driver().ObjectStore().GetOrCreate(
@@ -67,6 +72,12 @@ func PromoteCommandBuffer(commandBuffer core1_0.CommandBuffer) CommandBuffer {
 }
 
 func PromoteCommandBufferSlice(commandBuffers []core1_0.CommandBuffer) []CommandBuffer {
+	for i := 0; i < len(commandBuffers); i++ {
+		if commandBuffers[i].APIVersion() < common.Vulkan1_2 {
+			return nil
+		}
+	}
+
 	outBuffers := make([]CommandBuffer, len(commandBuffers))
 
 	for i := 0; i < len(commandBuffers); i++ {

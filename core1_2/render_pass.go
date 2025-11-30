@@ -26,6 +26,11 @@ func PromoteRenderPass(renderPass core1_0.RenderPass) RenderPass {
 		return nil
 	}
 
+	promoted, alreadyPromoted := renderPass.(RenderPass)
+	if alreadyPromoted {
+		return promoted
+	}
+
 	promotedRenderPass := core1_1.PromoteRenderPass(renderPass)
 	return renderPass.Driver().ObjectStore().GetOrCreate(
 		driver.VulkanHandle(renderPass.Handle()),

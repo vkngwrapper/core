@@ -25,6 +25,11 @@ func PromoteQueue(queue core1_0.Queue) Queue {
 		return nil
 	}
 
+	promoted, alreadyPromoted := queue.(Queue)
+	if alreadyPromoted {
+		return promoted
+	}
+
 	return queue.Driver().ObjectStore().GetOrCreate(
 		driver.VulkanHandle(queue.Handle()),
 		driver.Core1_1,

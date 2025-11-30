@@ -26,6 +26,11 @@ func PromoteSampler(sampler core1_0.Sampler) Sampler {
 		return nil
 	}
 
+	promoted, alreadyPromoted := sampler.(Sampler)
+	if alreadyPromoted {
+		return promoted
+	}
+
 	promotedSampler := core1_1.PromoteSampler(sampler)
 	return sampler.Driver().ObjectStore().GetOrCreate(
 		driver.VulkanHandle(sampler.Handle()),

@@ -25,6 +25,11 @@ func PromoteSamplerYcbcrConversion(ycbcr core1_1.SamplerYcbcrConversion) Sampler
 		return nil
 	}
 
+	promoted, alreadyPromoted := ycbcr.(SamplerYcbcrConversion)
+	if alreadyPromoted {
+		return promoted
+	}
+
 	return ycbcr.Driver().ObjectStore().GetOrCreate(
 		driver.VulkanHandle(ycbcr.Handle()),
 		driver.Core1_2,

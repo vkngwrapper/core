@@ -6,11 +6,12 @@ package core1_1
 */
 import "C"
 import (
+	"unsafe"
+
 	"github.com/CannibalVox/cgoparam"
 	"github.com/vkngwrapper/core/v2/common"
 	"github.com/vkngwrapper/core/v2/core1_0"
 	"github.com/vkngwrapper/core/v2/driver"
-	"unsafe"
 )
 
 // VulkanPhysicalDevice is an implementation of the PhysicalDevice interface that actually communicates with Vulkan. This
@@ -36,6 +37,11 @@ func PromotePhysicalDevice(physicalDevice core1_0.PhysicalDevice) PhysicalDevice
 	}
 	if !physicalDevice.DeviceAPIVersion().IsAtLeast(common.Vulkan1_1) {
 		return nil
+	}
+
+	promoted, alreadyPromoted := physicalDevice.(PhysicalDevice)
+	if alreadyPromoted {
+		return promoted
 	}
 
 	instanceScoped := PromoteInstanceScopedPhysicalDevice(physicalDevice)
@@ -72,6 +78,11 @@ func PromoteInstanceScopedPhysicalDevice(physicalDevice core1_0.PhysicalDevice) 
 	}
 	if !physicalDevice.InstanceAPIVersion().IsAtLeast(common.Vulkan1_1) {
 		return nil
+	}
+
+	promoted, alreadyPromoted := physicalDevice.(PhysicalDevice)
+	if alreadyPromoted {
+		return promoted.InstanceScopedPhysicalDevice1_1()
 	}
 
 	return physicalDevice.Driver().ObjectStore().GetOrCreate(

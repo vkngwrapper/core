@@ -26,6 +26,11 @@ func PromoteImageView(imageView core1_0.ImageView) ImageView {
 		return nil
 	}
 
+	promoted, alreadyPromoted := imageView.(ImageView)
+	if alreadyPromoted {
+		return promoted
+	}
+
 	promotedImageView := core1_1.PromoteImageView(imageView)
 	return imageView.Driver().ObjectStore().GetOrCreate(
 		driver.VulkanHandle(imageView.Handle()),

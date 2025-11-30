@@ -25,6 +25,11 @@ func PromoteFence(fence core1_0.Fence) Fence {
 		return nil
 	}
 
+	promoted, alreadyPromoted := fence.(Fence)
+	if alreadyPromoted {
+		return promoted
+	}
+
 	return fence.Driver().ObjectStore().GetOrCreate(
 		driver.VulkanHandle(fence.Handle()),
 		driver.Core1_1,

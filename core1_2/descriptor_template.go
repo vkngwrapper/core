@@ -17,7 +17,7 @@ type VulkanDescriptorUpdateTemplate struct {
 // will always return a core1_2.VulkanDescriptorUpdateTemplate, even if it is provided a VulkanDescriptorUpdateTemplate from a higher
 // core version. Two Vulkan 1.2 compatible DescriptorUpdateTemplate objects with the same DescriptorUpdateTemplate.Handle will
 // return the same interface value when passed to this method.
-func PromoteDescriptorUpdateTemplate(template core1_1.DescriptorUpdateTemplate) DescriptorSetLayout {
+func PromoteDescriptorUpdateTemplate(template core1_1.DescriptorUpdateTemplate) DescriptorUpdateTemplate {
 	if template == nil {
 		return nil
 	}
@@ -25,10 +25,15 @@ func PromoteDescriptorUpdateTemplate(template core1_1.DescriptorUpdateTemplate) 
 		return nil
 	}
 
+	promoted, alreadyPromoted := template.(DescriptorUpdateTemplate)
+	if alreadyPromoted {
+		return promoted
+	}
+
 	return template.Driver().ObjectStore().GetOrCreate(
 		driver.VulkanHandle(template.Handle()),
 		driver.Core1_2,
 		func() any {
 			return &VulkanDescriptorUpdateTemplate{template}
-		}).(DescriptorSetLayout)
+		}).(DescriptorUpdateTemplate)
 }

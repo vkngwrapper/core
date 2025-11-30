@@ -26,6 +26,11 @@ func PromoteBufferView(bufferView core1_0.BufferView) BufferView {
 		return nil
 	}
 
+	promoted, alreadyPromoted := bufferView.(BufferView)
+	if alreadyPromoted {
+		return promoted
+	}
+
 	promotedBufferView := core1_1.PromoteBufferView(bufferView)
 
 	return bufferView.Driver().ObjectStore().GetOrCreate(

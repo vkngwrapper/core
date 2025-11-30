@@ -26,6 +26,11 @@ func PromotePipelineCache(pipelineCache core1_0.PipelineCache) PipelineCache {
 		return nil
 	}
 
+	promoted, alreadyPromoted := pipelineCache.(PipelineCache)
+	if alreadyPromoted {
+		return promoted
+	}
+
 	promotedPipelineCache := core1_1.PromotePipelineCache(pipelineCache)
 	return pipelineCache.Driver().ObjectStore().GetOrCreate(
 		driver.VulkanHandle(pipelineCache.Handle()),

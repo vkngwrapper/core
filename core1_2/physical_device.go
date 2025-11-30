@@ -32,6 +32,11 @@ func PromotePhysicalDevice(physicalDevice core1_0.PhysicalDevice) PhysicalDevice
 		return nil
 	}
 
+	promoted, alreadyPromoted := physicalDevice.(PhysicalDevice)
+	if alreadyPromoted {
+		return promoted
+	}
+
 	instanceScoped := PromoteInstanceScopedPhysicalDevice(physicalDevice)
 	promotedPhysicalDevice := core1_1.PromotePhysicalDevice(physicalDevice)
 
@@ -64,6 +69,11 @@ func PromoteInstanceScopedPhysicalDevice(physicalDevice core1_0.PhysicalDevice) 
 	}
 	if !physicalDevice.InstanceAPIVersion().IsAtLeast(common.Vulkan1_2) {
 		return nil
+	}
+
+	promoted, alreadyPromoted := physicalDevice.(PhysicalDevice)
+	if alreadyPromoted {
+		return promoted.InstanceScopedPhysicalDevice1_2()
 	}
 
 	promotedPhysicalDevice := core1_1.PromoteInstanceScopedPhysicalDevice(physicalDevice)

@@ -25,6 +25,11 @@ func PromoteImage(image core1_0.Image) Image {
 		return nil
 	}
 
+	promoted, alreadyPromoted := image.(Image)
+	if alreadyPromoted {
+		return promoted
+	}
+
 	return image.Driver().ObjectStore().GetOrCreate(
 		driver.VulkanHandle(image.Handle()),
 		driver.Core1_1,

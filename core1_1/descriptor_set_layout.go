@@ -26,6 +26,11 @@ func PromoteDescriptorSetLayout(layout core1_0.DescriptorSetLayout) DescriptorSe
 		return nil
 	}
 
+	promoted, alreadyPromoted := layout.(DescriptorSetLayout)
+	if alreadyPromoted {
+		return promoted
+	}
+
 	return layout.Driver().ObjectStore().GetOrCreate(
 		driver.VulkanHandle(layout.Handle()),
 		driver.Core1_1,

@@ -26,6 +26,11 @@ func PromoteCommandPool(commandPool core1_0.CommandPool) CommandPool {
 		return nil
 	}
 
+	promoted, alreadyPromoted := commandPool.(CommandPool)
+	if alreadyPromoted {
+		return promoted
+	}
+
 	promotedCommandPool := core1_1.PromoteCommandPool(commandPool)
 
 	return commandPool.Driver().ObjectStore().GetOrCreate(

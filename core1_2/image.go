@@ -26,6 +26,11 @@ func PromoteImage(image core1_0.Image) Image {
 		return nil
 	}
 
+	promoted, alreadyPromoted := image.(Image)
+	if alreadyPromoted {
+		return promoted
+	}
+
 	promotedImage := core1_1.PromoteImage(image)
 
 	return image.Driver().ObjectStore().GetOrCreate(

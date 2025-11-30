@@ -26,6 +26,11 @@ func PromoteShaderModule(shaderModule core1_0.ShaderModule) ShaderModule {
 		return nil
 	}
 
+	promoted, alreadyPromoted := shaderModule.(ShaderModule)
+	if alreadyPromoted {
+		return promoted
+	}
+
 	promotedShaderModule := core1_1.PromoteShaderModule(shaderModule)
 	return shaderModule.Driver().ObjectStore().GetOrCreate(
 		driver.VulkanHandle(shaderModule.Handle()),

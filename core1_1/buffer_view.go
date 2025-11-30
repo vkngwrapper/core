@@ -25,6 +25,11 @@ func PromoteBufferView(bufferView core1_0.BufferView) BufferView {
 		return nil
 	}
 
+	promoted, alreadyPromoted := bufferView.(BufferView)
+	if alreadyPromoted {
+		return promoted
+	}
+
 	return bufferView.Driver().ObjectStore().GetOrCreate(
 		driver.VulkanHandle(bufferView.Handle()),
 		driver.Core1_1,

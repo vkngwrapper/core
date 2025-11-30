@@ -6,11 +6,12 @@ package core1_1
 */
 import "C"
 import (
+	"unsafe"
+
 	"github.com/CannibalVox/cgoparam"
 	"github.com/vkngwrapper/core/v2/common"
 	"github.com/vkngwrapper/core/v2/core1_0"
 	"github.com/vkngwrapper/core/v2/driver"
-	"unsafe"
 )
 
 // VulkanDevice is an implementation of the Device interface that actually communicates with Vulkan. This
@@ -34,6 +35,10 @@ func PromoteDevice(device core1_0.Device) Device {
 	}
 	if !device.APIVersion().IsAtLeast(common.Vulkan1_1) {
 		return nil
+	}
+	promoted, alreadyPromoted := device.(Device)
+	if alreadyPromoted {
+		return promoted
 	}
 
 	return device.Driver().ObjectStore().GetOrCreate(

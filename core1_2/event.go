@@ -26,6 +26,11 @@ func PromoteEvent(event core1_0.Event) Event {
 		return nil
 	}
 
+	promoted, alreadyPromoted := event.(Event)
+	if alreadyPromoted {
+		return promoted
+	}
+
 	promotedEvent := core1_1.PromoteEvent(event)
 	return event.Driver().ObjectStore().GetOrCreate(
 		driver.VulkanHandle(event.Handle()),

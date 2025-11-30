@@ -25,6 +25,11 @@ func PromoteFramebuffer(framebuffer core1_0.Framebuffer) Framebuffer {
 		return nil
 	}
 
+	promoted, alreadyPromoted := framebuffer.(Framebuffer)
+	if alreadyPromoted {
+		return promoted
+	}
+
 	return framebuffer.Driver().ObjectStore().GetOrCreate(
 		driver.VulkanHandle(framebuffer.Handle()),
 		driver.Core1_1,

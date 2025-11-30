@@ -26,6 +26,11 @@ func PromoteDeviceMemory(deviceMemory core1_0.DeviceMemory) DeviceMemory {
 		return nil
 	}
 
+	promoted, alreadyPromoted := deviceMemory.(DeviceMemory)
+	if alreadyPromoted {
+		return promoted
+	}
+
 	promotedDeviceMemory := core1_1.PromoteDeviceMemory(deviceMemory)
 
 	return deviceMemory.Driver().ObjectStore().GetOrCreate(

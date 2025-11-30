@@ -25,6 +25,11 @@ func PromotePipeline(pipeline core1_0.Pipeline) Pipeline {
 		return nil
 	}
 
+	promoted, alreadyPromoted := pipeline.(Pipeline)
+	if alreadyPromoted {
+		return promoted
+	}
+
 	return pipeline.Driver().ObjectStore().GetOrCreate(
 		driver.VulkanHandle(pipeline.Handle()),
 		driver.Core1_1,
@@ -40,6 +45,12 @@ func PromotePipeline(pipeline core1_0.Pipeline) Pipeline {
 // Vulkan 1.1 compatible Pipeline objects with the same Pipeline.Handle will return the same interface
 // value when passed to this method.
 func PromotePipelineSlice(pipelines []core1_0.Pipeline) []Pipeline {
+	for i := 0; i < len(pipelines); i++ {
+		if pipelines[i].APIVersion() < common.Vulkan1_1 {
+			return nil
+		}
+	}
+
 	outPipelines := make([]Pipeline, len(pipelines))
 	for i := 0; i < len(pipelines); i++ {
 		outPipelines[i] = PromotePipeline(pipelines[i])

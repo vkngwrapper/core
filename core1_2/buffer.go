@@ -26,6 +26,11 @@ func PromoteBuffer(buffer core1_0.Buffer) Buffer {
 		return nil
 	}
 
+	promoted, alreadyPromoted := buffer.(Buffer)
+	if alreadyPromoted {
+		return promoted
+	}
+
 	promotedBuffer := core1_1.PromoteBuffer(buffer)
 
 	return buffer.Driver().ObjectStore().GetOrCreate(

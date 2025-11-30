@@ -25,6 +25,11 @@ func PromoteQueryPool(queryPool core1_0.QueryPool) QueryPool {
 		return nil
 	}
 
+	promoted, alreadyPromoted := queryPool.(QueryPool)
+	if alreadyPromoted {
+		return promoted
+	}
+
 	return queryPool.Driver().ObjectStore().GetOrCreate(
 		driver.VulkanHandle(queryPool.Handle()),
 		driver.Core1_1,

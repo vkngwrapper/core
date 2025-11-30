@@ -26,6 +26,11 @@ func PromoteDescriptorPool(descriptorPool core1_0.DescriptorPool) DescriptorPool
 		return nil
 	}
 
+	promoted, alreadyPromoted := descriptorPool.(DescriptorPool)
+	if alreadyPromoted {
+		return promoted
+	}
+
 	promotedDescriptorPool := core1_1.PromoteDescriptorPool(descriptorPool)
 
 	return descriptorPool.Driver().ObjectStore().GetOrCreate(

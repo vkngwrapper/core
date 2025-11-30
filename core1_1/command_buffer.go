@@ -35,6 +35,11 @@ func PromoteCommandBuffer(commandBuffer core1_0.CommandBuffer) CommandBuffer {
 		return nil
 	}
 
+	promoted, alreadyPromoted := commandBuffer.(CommandBuffer)
+	if alreadyPromoted {
+		return promoted
+	}
+
 	return commandBuffer.Driver().ObjectStore().GetOrCreate(
 		driver.VulkanHandle(commandBuffer.Handle()),
 		driver.Core1_1,
@@ -68,6 +73,12 @@ func PromoteCommandBuffer(commandBuffer core1_0.CommandBuffer) CommandBuffer {
 // Vulkan 1.1 compatible CommandBuffer objects with the same CommandBuffer.Handle will return the same interface
 // value when passed to this method.
 func PromoteCommandBufferSlice(commandBuffers []core1_0.CommandBuffer) []CommandBuffer {
+	for i := 0; i < len(commandBuffers); i++ {
+		if commandBuffers[i].APIVersion() < common.Vulkan1_1 {
+			return nil
+		}
+	}
+
 	outBuffers := make([]CommandBuffer, len(commandBuffers))
 
 	for i := 0; i < len(commandBuffers); i++ {

@@ -25,6 +25,11 @@ func PromoteDeviceMemory(deviceMemory core1_0.DeviceMemory) DeviceMemory {
 		return nil
 	}
 
+	promoted, alreadyPromoted := deviceMemory.(DeviceMemory)
+	if alreadyPromoted {
+		return promoted
+	}
+
 	return deviceMemory.Driver().ObjectStore().GetOrCreate(
 		driver.VulkanHandle(deviceMemory.Handle()),
 		driver.Core1_1,

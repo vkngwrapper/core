@@ -26,6 +26,11 @@ func PromotePipelineLayout(layout core1_0.PipelineLayout) PipelineLayout {
 		return nil
 	}
 
+	promoted, alreadyPromoted := layout.(PipelineLayout)
+	if alreadyPromoted {
+		return promoted
+	}
+
 	promotedLayout := core1_1.PromotePipelineLayout(layout)
 	return layout.Driver().ObjectStore().GetOrCreate(
 		driver.VulkanHandle(layout.Handle()),

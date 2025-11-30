@@ -26,6 +26,11 @@ func PromoteDescriptorSet(set core1_0.DescriptorSet) DescriptorSet {
 		return nil
 	}
 
+	promoted, alreadyPromoted := set.(DescriptorSet)
+	if alreadyPromoted {
+		return promoted
+	}
+
 	return set.Driver().ObjectStore().GetOrCreate(
 		driver.VulkanHandle(set.Handle()),
 		driver.Core1_1,
@@ -41,6 +46,12 @@ func PromoteDescriptorSet(set core1_0.DescriptorSet) DescriptorSet {
 // Vulkan 1.1 compatible DescriptorSet objects with the same DescriptorSet.Handle will return the same interface
 // value when passed to this method.
 func PromoteDescriptorSetSlice(sets []core1_0.DescriptorSet) []DescriptorSet {
+	for i := 0; i < len(sets); i++ {
+		if sets[i].APIVersion() < common.Vulkan1_1 {
+			return nil
+		}
+	}
+
 	outSets := make([]DescriptorSet, len(sets))
 	for i := 0; i < len(sets); i++ {
 		outSets[i] = PromoteDescriptorSet(sets[i])

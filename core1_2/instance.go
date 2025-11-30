@@ -26,6 +26,11 @@ func PromoteInstance(instance core1_0.Instance) Instance {
 		return nil
 	}
 
+	promoted, alreadyPromoted := instance.(Instance)
+	if alreadyPromoted {
+		return promoted
+	}
+
 	promotedInstance := core1_1.PromoteInstance(instance)
 	return instance.Driver().ObjectStore().GetOrCreate(
 		driver.VulkanHandle(instance.Handle()),
