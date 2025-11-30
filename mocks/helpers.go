@@ -1,10 +1,165 @@
 package mocks
 
 import (
+	common "github.com/vkngwrapper/core/v2/common"
 	"github.com/vkngwrapper/core/v2/core1_0"
+	core1_1 "github.com/vkngwrapper/core/v2/core1_1"
+	"github.com/vkngwrapper/core/v2/core1_2"
 	"github.com/vkngwrapper/core/v2/driver"
+	mock_driver "github.com/vkngwrapper/core/v2/driver/mocks"
 	gomock "go.uber.org/mock/gomock"
 )
+
+func MockRig1_0(ctrl *gomock.Controller, deviceVersion common.APIVersion, instanceExtensions []string, deviceExtensions []string) (core1_0.Instance, core1_0.PhysicalDevice, core1_0.Device) {
+	driver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_0)
+
+	instance := NewMockInstance(ctrl)
+	instance.EXPECT().Handle().Return(NewFakeInstanceHandle()).AnyTimes()
+	instance.EXPECT().Driver().Return(driver).AnyTimes()
+	instance.EXPECT().APIVersion().Return(common.Vulkan1_0)
+	instance.EXPECT().IsInstanceExtensionActive(gomock.Any()).AnyTimes().DoAndReturn(
+		func(extension string) bool {
+			for _, ext := range instanceExtensions {
+				if ext == extension {
+					return true
+				}
+			}
+
+			return false
+		},
+	)
+
+	physicalDevice := NewMockPhysicalDevice(ctrl)
+	physicalDevice.EXPECT().Handle().Return(NewFakePhysicalDeviceHandle()).AnyTimes()
+	physicalDevice.EXPECT().Driver().Return(driver).AnyTimes()
+	physicalDevice.EXPECT().DeviceAPIVersion().Return(deviceVersion).AnyTimes()
+	physicalDevice.EXPECT().InstanceAPIVersion().Return(common.Vulkan1_0).AnyTimes()
+
+	device := NewMockDevice(ctrl)
+	device.EXPECT().Handle().Return(NewFakeDeviceHandle()).AnyTimes()
+	device.EXPECT().Driver().AnyTimes().Return(driver)
+	device.EXPECT().APIVersion().AnyTimes().Return(deviceVersion)
+	device.EXPECT().IsDeviceExtensionActive(gomock.Any()).AnyTimes().DoAndReturn(
+		func(extension string) bool {
+			for _, ext := range deviceExtensions {
+				if ext == extension {
+					return true
+				}
+			}
+
+			return false
+		},
+	)
+
+	return instance, physicalDevice, device
+}
+
+func MockRig1_1(ctrl *gomock.Controller, deviceVersion common.APIVersion, instanceExtensions []string, deviceExtensions []string) (core1_1.Instance, core1_1.PhysicalDevice, core1_1.Device) {
+	driver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_0)
+
+	instance := NewInstance1_1(ctrl)
+	instance.EXPECT().Handle().Return(NewFakeInstanceHandle()).AnyTimes()
+	instance.EXPECT().Driver().Return(driver).AnyTimes()
+	instance.EXPECT().APIVersion().Return(common.Vulkan1_1)
+	instance.EXPECT().IsInstanceExtensionActive(gomock.Any()).AnyTimes().DoAndReturn(
+		func(extension string) bool {
+			for _, ext := range instanceExtensions {
+				if ext == extension {
+					return true
+				}
+			}
+
+			return false
+		},
+	)
+
+	physDeviceHandle := NewFakePhysicalDeviceHandle()
+
+	instanceScopedPhysicalDevice := NewMockInstanceScopedPhysicalDevice(ctrl)
+	instanceScopedPhysicalDevice.EXPECT().Handle().AnyTimes().Return(physDeviceHandle)
+	instanceScopedPhysicalDevice.EXPECT().Driver().AnyTimes().Return(driver)
+	instanceScopedPhysicalDevice.EXPECT().InstanceAPIVersion().AnyTimes().Return(common.Vulkan1_1)
+	instanceScopedPhysicalDevice.EXPECT().DeviceAPIVersion().AnyTimes().Return(deviceVersion)
+
+	physicalDevice := NewPhysicalDevice1_1(ctrl)
+	physicalDevice.EXPECT().Handle().Return(physDeviceHandle).AnyTimes()
+	physicalDevice.EXPECT().Driver().Return(driver).AnyTimes()
+	physicalDevice.EXPECT().DeviceAPIVersion().Return(deviceVersion).AnyTimes()
+	physicalDevice.EXPECT().InstanceAPIVersion().Return(common.Vulkan1_1).AnyTimes()
+	physicalDevice.EXPECT().InstanceScopedPhysicalDevice1_1().AnyTimes().Return(instanceScopedPhysicalDevice)
+
+	device := NewDevice1_1(ctrl)
+	device.EXPECT().Handle().Return(NewFakeDeviceHandle()).AnyTimes()
+	device.EXPECT().Driver().AnyTimes().Return(driver)
+	device.EXPECT().APIVersion().AnyTimes().Return(deviceVersion)
+	device.EXPECT().IsDeviceExtensionActive(gomock.Any()).AnyTimes().DoAndReturn(
+		func(extension string) bool {
+			for _, ext := range deviceExtensions {
+				if ext == extension {
+					return true
+				}
+			}
+
+			return false
+		},
+	)
+
+	return instance, physicalDevice, device
+}
+
+func MockRig1_2(ctrl *gomock.Controller, deviceVersion common.APIVersion, instanceExtensions []string, deviceExtensions []string) (core1_2.Instance, core1_2.PhysicalDevice, core1_2.Device) {
+	driver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_0)
+
+	instance := NewInstance1_1(ctrl)
+	instance.EXPECT().Handle().Return(NewFakeInstanceHandle()).AnyTimes()
+	instance.EXPECT().Driver().Return(driver).AnyTimes()
+	instance.EXPECT().APIVersion().Return(common.Vulkan1_2)
+	instance.EXPECT().IsInstanceExtensionActive(gomock.Any()).AnyTimes().DoAndReturn(
+		func(extension string) bool {
+			for _, ext := range instanceExtensions {
+				if ext == extension {
+					return true
+				}
+			}
+
+			return false
+		},
+	)
+
+	physDeviceHandle := NewFakePhysicalDeviceHandle()
+
+	instanceScopedPhysicalDevice := NewInstanceScopedPhysicalDevice1_2(ctrl)
+	instanceScopedPhysicalDevice.EXPECT().Handle().AnyTimes().Return(physDeviceHandle)
+	instanceScopedPhysicalDevice.EXPECT().Driver().AnyTimes().Return(driver)
+	instanceScopedPhysicalDevice.EXPECT().InstanceAPIVersion().AnyTimes().Return(common.Vulkan1_2)
+	instanceScopedPhysicalDevice.EXPECT().DeviceAPIVersion().AnyTimes().Return(deviceVersion)
+
+	physicalDevice := NewPhysicalDevice1_2(ctrl)
+	physicalDevice.EXPECT().Handle().Return(physDeviceHandle).AnyTimes()
+	physicalDevice.EXPECT().Driver().Return(driver).AnyTimes()
+	physicalDevice.EXPECT().DeviceAPIVersion().Return(deviceVersion).AnyTimes()
+	physicalDevice.EXPECT().InstanceAPIVersion().Return(common.Vulkan1_2).AnyTimes()
+	physicalDevice.EXPECT().InstanceScopedPhysicalDevice1_1().AnyTimes().Return(instanceScopedPhysicalDevice)
+	physicalDevice.EXPECT().InstanceScopedPhysicalDevice1_2().AnyTimes().Return(instanceScopedPhysicalDevice)
+
+	device := NewDevice1_2(ctrl)
+	device.EXPECT().Handle().Return(NewFakeDeviceHandle()).AnyTimes()
+	device.EXPECT().Driver().AnyTimes().Return(driver)
+	device.EXPECT().APIVersion().AnyTimes().Return(deviceVersion)
+	device.EXPECT().IsDeviceExtensionActive(gomock.Any()).AnyTimes().DoAndReturn(
+		func(extension string) bool {
+			for _, ext := range deviceExtensions {
+				if ext == extension {
+					return true
+				}
+			}
+
+			return false
+		},
+	)
+
+	return instance, physicalDevice, device
+}
 
 func EasyMockBuffer(ctrl *gomock.Controller) *MockBuffer {
 	buffer := NewMockBuffer(ctrl)
