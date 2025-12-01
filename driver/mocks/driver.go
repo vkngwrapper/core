@@ -84,6 +84,20 @@ func (mr *MockDriverMockRecorder) Destroy() *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Destroy", reflect.TypeOf((*MockDriver)(nil).Destroy))
 }
 
+// LoadInstanceProcAddr mocks base method.
+func (m *MockDriver) LoadInstanceProcAddr(name *driver.Char) unsafe.Pointer {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "LoadInstanceProcAddr", name)
+	ret0, _ := ret[0].(unsafe.Pointer)
+	return ret0
+}
+
+// LoadInstanceProcAddr indicates an expected call of LoadInstanceProcAddr.
+func (mr *MockDriverMockRecorder) LoadInstanceProcAddr(name any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "LoadInstanceProcAddr", reflect.TypeOf((*MockDriver)(nil).LoadInstanceProcAddr), name)
+}
+
 // LoadProcAddr mocks base method.
 func (m *MockDriver) LoadProcAddr(name *driver.Char) unsafe.Pointer {
 	m.ctrl.T.Helper()

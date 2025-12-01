@@ -1,22 +1,23 @@
 package mocks
 
 import (
+	unsafe "unsafe"
+
 	common "github.com/vkngwrapper/core/v2/common"
 	"github.com/vkngwrapper/core/v2/core1_0"
-	core1_1 "github.com/vkngwrapper/core/v2/core1_1"
-	"github.com/vkngwrapper/core/v2/core1_2"
 	"github.com/vkngwrapper/core/v2/driver"
 	mock_driver "github.com/vkngwrapper/core/v2/driver/mocks"
 	gomock "go.uber.org/mock/gomock"
 )
 
-func MockRig1_0(ctrl *gomock.Controller, deviceVersion common.APIVersion, instanceExtensions []string, deviceExtensions []string) (core1_0.Instance, core1_0.PhysicalDevice, core1_0.Device) {
+func MockRig1_0(ctrl *gomock.Controller, deviceVersion common.APIVersion, instanceExtensions []string, deviceExtensions []string) (*MockInstance, *MockPhysicalDevice, *MockDevice) {
 	driver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_0)
+	driver.EXPECT().LoadProcAddr(gomock.Any()).AnyTimes().Return(unsafe.Pointer(nil))
 
 	instance := NewMockInstance(ctrl)
 	instance.EXPECT().Handle().Return(NewFakeInstanceHandle()).AnyTimes()
 	instance.EXPECT().Driver().Return(driver).AnyTimes()
-	instance.EXPECT().APIVersion().Return(common.Vulkan1_0)
+	instance.EXPECT().APIVersion().Return(common.Vulkan1_0).AnyTimes()
 	instance.EXPECT().IsInstanceExtensionActive(gomock.Any()).AnyTimes().DoAndReturn(
 		func(extension string) bool {
 			for _, ext := range instanceExtensions {
@@ -54,13 +55,14 @@ func MockRig1_0(ctrl *gomock.Controller, deviceVersion common.APIVersion, instan
 	return instance, physicalDevice, device
 }
 
-func MockRig1_1(ctrl *gomock.Controller, deviceVersion common.APIVersion, instanceExtensions []string, deviceExtensions []string) (core1_1.Instance, core1_1.PhysicalDevice, core1_1.Device) {
+func MockRig1_1(ctrl *gomock.Controller, deviceVersion common.APIVersion, instanceExtensions []string, deviceExtensions []string) (*Instance1_1, *PhysicalDevice1_1, *Device1_1) {
 	driver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_0)
+	driver.EXPECT().LoadProcAddr(gomock.Any()).AnyTimes().Return(unsafe.Pointer(nil))
 
 	instance := NewInstance1_1(ctrl)
 	instance.EXPECT().Handle().Return(NewFakeInstanceHandle()).AnyTimes()
 	instance.EXPECT().Driver().Return(driver).AnyTimes()
-	instance.EXPECT().APIVersion().Return(common.Vulkan1_1)
+	instance.EXPECT().APIVersion().Return(common.Vulkan1_1).AnyTimes()
 	instance.EXPECT().IsInstanceExtensionActive(gomock.Any()).AnyTimes().DoAndReturn(
 		func(extension string) bool {
 			for _, ext := range instanceExtensions {
@@ -107,13 +109,14 @@ func MockRig1_1(ctrl *gomock.Controller, deviceVersion common.APIVersion, instan
 	return instance, physicalDevice, device
 }
 
-func MockRig1_2(ctrl *gomock.Controller, deviceVersion common.APIVersion, instanceExtensions []string, deviceExtensions []string) (core1_2.Instance, core1_2.PhysicalDevice, core1_2.Device) {
+func MockRig1_2(ctrl *gomock.Controller, deviceVersion common.APIVersion, instanceExtensions []string, deviceExtensions []string) (*Instance1_2, *PhysicalDevice1_2, *Device1_2) {
 	driver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_0)
+	driver.EXPECT().LoadProcAddr(gomock.Any()).AnyTimes().Return(unsafe.Pointer(nil))
 
-	instance := NewInstance1_1(ctrl)
+	instance := NewInstance1_2(ctrl)
 	instance.EXPECT().Handle().Return(NewFakeInstanceHandle()).AnyTimes()
 	instance.EXPECT().Driver().Return(driver).AnyTimes()
-	instance.EXPECT().APIVersion().Return(common.Vulkan1_2)
+	instance.EXPECT().APIVersion().Return(common.Vulkan1_2).AnyTimes()
 	instance.EXPECT().IsInstanceExtensionActive(gomock.Any()).AnyTimes().DoAndReturn(
 		func(extension string) bool {
 			for _, ext := range instanceExtensions {

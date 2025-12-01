@@ -1,8 +1,9 @@
 package driver
 
 import (
-	"github.com/vkngwrapper/core/v2/common"
 	"unsafe"
+
+	"github.com/vkngwrapper/core/v2/common"
 )
 
 //go:generate mockgen -source iface.go -destination ./mocks/driver.go
@@ -12,6 +13,7 @@ type Driver interface {
 	CreateInstanceDriver(instance VkInstance) (Driver, error)
 	CreateDeviceDriver(device VkDevice) (Driver, error)
 	LoadProcAddr(name *Char) unsafe.Pointer
+	LoadInstanceProcAddr(name *Char) unsafe.Pointer
 	Version() common.APIVersion
 	ObjectStore() *VulkanObjectStore
 

@@ -100,6 +100,10 @@ func (l *vulkanDriver) LoadProcAddr(name *Char) unsafe.Pointer {
 	}
 }
 
+func (l *vulkanDriver) LoadInstanceProcAddr(name *Char) unsafe.Pointer {
+	return unsafe.Pointer(C.instance_proc_addr(l.funcPtrs, C.VkInstance(unsafe.Pointer(l.instance)), (*C.char)(name)))
+}
+
 func (l *vulkanDriver) Version() common.APIVersion {
 	return l.version
 }
