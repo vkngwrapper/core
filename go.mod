@@ -1,6 +1,6 @@
 module github.com/vkngwrapper/core/v2
 
-go 1.23.0
+go 1.25
 
 require (
 	github.com/CannibalVox/VKng v0.0.0-20220707035000-0931f864c378
