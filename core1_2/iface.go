@@ -1,11 +1,12 @@
 package core1_2
 
 import (
-	"github.com/vkngwrapper/core/v2/common"
-	"github.com/vkngwrapper/core/v2/core1_0"
-	"github.com/vkngwrapper/core/v2/core1_1"
-	"github.com/vkngwrapper/core/v2/driver"
 	"time"
+
+	"github.com/vkngwrapper/core/v3/common"
+	"github.com/vkngwrapper/core/v3/core1_0"
+	"github.com/vkngwrapper/core/v3/core1_1"
+	"github.com/vkngwrapper/core/v3/driver"
 )
 
 //go:generate mockgen -source ./iface.go -destination ../mocks/core1_2_mocks.go -package mocks -mock_names CommandBuffer=CommandBuffer1_2,CommandPool=CommandPool1_2,Device=Device1_2,DescriptorUpdateTemplate=DescriptorUpdateTemplate1_2,Instance=Instance1_2,PhysicalDevice=PhysicalDevice1_2,Buffer=Buffer1_2,BufferView=BufferView1_2,DescriptorPool=DescriptorPool1_2,DescriptorSet=DescriptorSet1_2,DescriptorSetLayout=DescriptorSetLayout1_2,DeviceMemory=DeviceMemory1_2,Event=Event1_2,Fence=Fence1_2,Framebuffer=Framebuffer1_2,Image=Image1_2,ImageView=ImageView1_2,Pipeline=Pipeline1_2,PipelineCache=PipelineCache1_2,PipelineLayout=PipelineLayout1_2,QueryPool=QueryPool1_2,Queue=Queue1_2,RenderPass=RenderPass1_2,Sampler=Sampler1_2,Semaphore=Semaphore1_2,ShaderModule=ShaderModule1_2,InstanceScopedPhysicalDevice=InstanceScopedPhysicalDevice1_2,SamplerYcbcrConversion=SamplerYcbcrConversion1_2,DescriptorUpdateTemplate=DescriptorUpdateTemplate1_2
@@ -25,7 +26,7 @@ type Buffer interface {
 //
 // This interface includes all commands included in Vulkan 1.2.
 //
-//https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/VkBufferView.html
+// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/VkBufferView.html
 type BufferView interface {
 	core1_1.BufferView
 }

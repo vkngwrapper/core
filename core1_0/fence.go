@@ -6,11 +6,12 @@ package core1_0
 */
 import "C"
 import (
-	"github.com/CannibalVox/cgoparam"
-	"github.com/vkngwrapper/core/v2/common"
-	"github.com/vkngwrapper/core/v2/driver"
 	"time"
 	"unsafe"
+
+	"github.com/CannibalVox/cgoparam"
+	"github.com/vkngwrapper/core/v3/common"
+	"github.com/vkngwrapper/core/v3/driver"
 )
 
 // VulkanFence is an implementation of the Fence interface that actually communicates with Vulkan. This

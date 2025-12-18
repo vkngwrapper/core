@@ -5,7 +5,7 @@ package core1_0
 #include "../common/vulkan.h"
 */
 import "C"
-import "github.com/vkngwrapper/core/v2/common"
+import "github.com/vkngwrapper/core/v3/common"
 
 const (
 	// VKSuccess indicates the command was successfully completed

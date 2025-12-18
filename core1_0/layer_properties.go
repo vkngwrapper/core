@@ -1,6 +1,6 @@
 package core1_0
 
-import "github.com/vkngwrapper/core/v2/common"
+import "github.com/vkngwrapper/core/v3/common"
 
 // LayerProperties specifies layer properties
 //

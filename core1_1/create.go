@@ -1,8 +1,8 @@
 package core1_1
 
 import (
-	"github.com/vkngwrapper/core/v2/common"
-	"github.com/vkngwrapper/core/v2/driver"
+	"github.com/vkngwrapper/core/v3/common"
+	"github.com/vkngwrapper/core/v3/driver"
 )
 
 func CreateDescriptorUpdateTemplate(coreDriver driver.Driver, device driver.VkDevice, handle driver.VkDescriptorUpdateTemplate, version common.APIVersion) *VulkanDescriptorUpdateTemplate {

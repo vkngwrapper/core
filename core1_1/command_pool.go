@@ -6,9 +6,9 @@ package core1_1
 */
 import "C"
 import (
-	"github.com/vkngwrapper/core/v2/common"
-	"github.com/vkngwrapper/core/v2/core1_0"
-	"github.com/vkngwrapper/core/v2/driver"
+	"github.com/vkngwrapper/core/v3/common"
+	"github.com/vkngwrapper/core/v3/core1_0"
+	"github.com/vkngwrapper/core/v3/driver"
 )
 
 // VulkanCommandPool is an implementation of the CommandPool interface that actually communicates with Vulkan. This

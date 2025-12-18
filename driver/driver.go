@@ -200,7 +200,7 @@ import (
 	"unsafe"
 
 	"github.com/pkg/errors"
-	"github.com/vkngwrapper/core/v2/common"
+	"github.com/vkngwrapper/core/v3/common"
 )
 
 type vulkanDriver struct {

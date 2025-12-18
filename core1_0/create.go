@@ -1,8 +1,8 @@
 package core1_0
 
 import (
-	"github.com/vkngwrapper/core/v2/common"
-	"github.com/vkngwrapper/core/v2/driver"
+	"github.com/vkngwrapper/core/v3/common"
+	"github.com/vkngwrapper/core/v3/driver"
 )
 
 func createInstanceObject(instanceDriver driver.Driver, handle driver.VkInstance, version common.APIVersion) *VulkanInstance {

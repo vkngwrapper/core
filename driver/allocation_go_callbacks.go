@@ -6,9 +6,10 @@ package driver
 */
 import "C"
 import (
-	"github.com/vkngwrapper/core/v2/common"
 	"runtime/cgo"
 	"unsafe"
+
+	"github.com/vkngwrapper/core/v3/common"
 )
 
 //export goAllocationCallback

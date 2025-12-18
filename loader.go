@@ -6,11 +6,12 @@ package core
 */
 import "C"
 import (
-	"github.com/CannibalVox/cgoparam"
-	"github.com/vkngwrapper/core/v2/common"
-	"github.com/vkngwrapper/core/v2/core1_0"
-	"github.com/vkngwrapper/core/v2/driver"
 	"unsafe"
+
+	"github.com/CannibalVox/cgoparam"
+	"github.com/vkngwrapper/core/v3/common"
+	"github.com/vkngwrapper/core/v3/core1_0"
+	"github.com/vkngwrapper/core/v3/driver"
 )
 
 type VulkanLoader struct {
@@ -158,7 +159,7 @@ func (l *VulkanLoader) AvailableLayers() (map[string]*core1_0.LayerProperties, c
 	return layers, result, err
 }
 
-//go:linkname createInstanceObject github.com/vkngwrapper/core/v2/core1_0.createInstanceObject
+//go:linkname createInstanceObject github.com/vkngwrapper/core/v3/core1_0.createInstanceObject
 func createInstanceObject(instanceDriver driver.Driver, handle driver.VkInstance, version common.APIVersion) *core1_0.VulkanInstance
 
 func (l *VulkanLoader) CreateInstance(allocationCallbacks *driver.AllocationCallbacks, options core1_0.InstanceCreateInfo) (core1_0.Instance, common.VkResult, error) {

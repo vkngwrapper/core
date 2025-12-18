@@ -6,9 +6,10 @@ package core1_0
 */
 import "C"
 import (
-	"github.com/CannibalVox/cgoparam"
-	"github.com/vkngwrapper/core/v2/driver"
 	"unsafe"
+
+	"github.com/CannibalVox/cgoparam"
+	"github.com/vkngwrapper/core/v3/driver"
 )
 
 func (i *VulkanImage) SparseMemoryRequirements() []SparseImageMemoryRequirements {

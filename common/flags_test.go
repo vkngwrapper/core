@@ -2,7 +2,8 @@ package common_test
 
 import (
 	"fmt"
-	"github.com/vkngwrapper/core/v2/common"
+
+	"github.com/vkngwrapper/core/v3/common"
 )
 
 type CoolFlags int32

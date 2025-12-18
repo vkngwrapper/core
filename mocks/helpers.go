@@ -3,10 +3,10 @@ package mocks
 import (
 	unsafe "unsafe"
 
-	common "github.com/vkngwrapper/core/v2/common"
-	"github.com/vkngwrapper/core/v2/core1_0"
-	"github.com/vkngwrapper/core/v2/driver"
-	mock_driver "github.com/vkngwrapper/core/v2/driver/mocks"
+	common "github.com/vkngwrapper/core/v3/common"
+	"github.com/vkngwrapper/core/v3/core1_0"
+	"github.com/vkngwrapper/core/v3/driver"
+	mock_driver "github.com/vkngwrapper/core/v3/driver/mocks"
 	gomock "go.uber.org/mock/gomock"
 )
 

@@ -6,10 +6,11 @@ package core1_0
 */
 import "C"
 import (
-	"github.com/CannibalVox/cgoparam"
-	"github.com/vkngwrapper/core/v2/common"
-	"github.com/vkngwrapper/core/v2/driver"
 	"unsafe"
+
+	"github.com/CannibalVox/cgoparam"
+	"github.com/vkngwrapper/core/v3/common"
+	"github.com/vkngwrapper/core/v3/driver"
 )
 
 // VulkanQueue is an implementation of the Queue interface that actually communicates with Vulkan. This

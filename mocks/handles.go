@@ -1,9 +1,10 @@
 package mocks
 
 import (
-	"github.com/vkngwrapper/core/v2/driver"
 	"math/rand"
 	"unsafe"
+
+	"github.com/vkngwrapper/core/v3/driver"
 )
 
 func fakePointer() unsafe.Pointer {

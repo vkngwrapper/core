@@ -6,9 +6,10 @@ package core1_1
 */
 import "C"
 import (
-	"github.com/CannibalVox/cgoparam"
-	"github.com/vkngwrapper/core/v2/common"
 	"unsafe"
+
+	"github.com/CannibalVox/cgoparam"
+	"github.com/vkngwrapper/core/v3/common"
 )
 
 // SemaphoreImportFlags specifies additional parameters of Semaphore payload import

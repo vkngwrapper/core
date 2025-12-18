@@ -9,9 +9,9 @@ import (
 	"unsafe"
 
 	"github.com/CannibalVox/cgoparam"
-	"github.com/vkngwrapper/core/v2/common"
-	"github.com/vkngwrapper/core/v2/core1_0"
-	"github.com/vkngwrapper/core/v2/driver"
+	"github.com/vkngwrapper/core/v3/common"
+	"github.com/vkngwrapper/core/v3/core1_0"
+	"github.com/vkngwrapper/core/v3/driver"
 )
 
 // VulkanDevice is an implementation of the Device interface that actually communicates with Vulkan. This
@@ -264,7 +264,7 @@ func (d *VulkanDevice) CreateSamplerYcbcrConversion(o SamplerYcbcrConversionCrea
 	return CreateSamplerYcbcrConversion(d.DeviceDriver, d.DeviceHandle, ycbcrHandle, d.MaximumAPIVersion), res, nil
 }
 
-//go:linkname createQueueObject github.com/vkngwrapper/core/v2/core1_0.createQueueObject
+//go:linkname createQueueObject github.com/vkngwrapper/core/v3/core1_0.createQueueObject
 func createQueueObject(coreDriver driver.Driver, device driver.VkDevice, handle driver.VkQueue, version common.APIVersion) *core1_0.VulkanQueue
 
 func (d *VulkanDevice) GetQueue2(o DeviceQueueInfo2) (core1_0.Queue, error) {

@@ -1,10 +1,11 @@
 package core1_0
 
 import (
-	"github.com/vkngwrapper/core/v2/common"
-	"github.com/vkngwrapper/core/v2/driver"
 	"time"
 	"unsafe"
+
+	"github.com/vkngwrapper/core/v3/common"
+	"github.com/vkngwrapper/core/v3/driver"
 )
 
 //go:generate mockgen -source ./iface.go -destination ../mocks/core1_0_mocks.go -package mocks

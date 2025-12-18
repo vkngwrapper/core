@@ -5,17 +5,16 @@ import (
 	"testing"
 	"unsafe"
 
-	ext_descriptor_indexing_driver "github.com/CannibalVox/VKng/extensions/ext_descriptor_indexing/driver"
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/require"
-	"github.com/vkngwrapper/core/v2/common"
-	"github.com/vkngwrapper/core/v2/core1_0"
-	"github.com/vkngwrapper/core/v2/core1_1"
-	"github.com/vkngwrapper/core/v2/core1_2"
-	"github.com/vkngwrapper/core/v2/driver"
-	mock_driver "github.com/vkngwrapper/core/v2/driver/mocks"
-	"github.com/vkngwrapper/core/v2/internal/dummies"
-	"github.com/vkngwrapper/core/v2/mocks"
+	"github.com/vkngwrapper/core/v3/common"
+	"github.com/vkngwrapper/core/v3/core1_0"
+	"github.com/vkngwrapper/core/v3/core1_1"
+	"github.com/vkngwrapper/core/v3/core1_2"
+	"github.com/vkngwrapper/core/v3/driver"
+	mock_driver "github.com/vkngwrapper/core/v3/driver/mocks"
+	"github.com/vkngwrapper/core/v3/internal/dummies"
+	"github.com/vkngwrapper/core/v3/mocks"
 	"go.uber.org/mock/gomock"
 )
 
@@ -140,7 +139,7 @@ func TestPhysicalDeviceDescriptorIndexingOutData(t *testing.T) {
 
 		val := reflect.ValueOf(pProperties).Elem()
 		require.Equal(t, uint64(1000059001), val.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PROPERTIES_2
-		next := (*ext_descriptor_indexing_driver.VkPhysicalDeviceDescriptorIndexingPropertiesEXT)(val.FieldByName("pNext").UnsafePointer())
+		next := (*driver.VkPhysicalDeviceDescriptorIndexingProperties)(val.FieldByName("pNext").UnsafePointer())
 
 		val = reflect.ValueOf(next).Elem()
 		require.Equal(t, uint64(1000161002), val.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_PROPERTIES_EXT

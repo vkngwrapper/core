@@ -14,11 +14,11 @@ import (
 	time "time"
 	unsafe "unsafe"
 
-	common "github.com/vkngwrapper/core/v2/common"
-	core1_0 "github.com/vkngwrapper/core/v2/core1_0"
-	core1_1 "github.com/vkngwrapper/core/v2/core1_1"
-	core1_2 "github.com/vkngwrapper/core/v2/core1_2"
-	driver "github.com/vkngwrapper/core/v2/driver"
+	common "github.com/vkngwrapper/core/v3/common"
+	core1_0 "github.com/vkngwrapper/core/v3/core1_0"
+	core1_1 "github.com/vkngwrapper/core/v3/core1_1"
+	core1_2 "github.com/vkngwrapper/core/v3/core1_2"
+	driver "github.com/vkngwrapper/core/v3/driver"
 	gomock "go.uber.org/mock/gomock"
 )
 

@@ -6,8 +6,9 @@ package driver
 */
 import "C"
 import (
-	"github.com/vkngwrapper/core/v2/common"
 	"unsafe"
+
+	"github.com/vkngwrapper/core/v3/common"
 )
 
 func (l *vulkanDriver) VkEnumerateInstanceExtensionProperties(pLayerName *Char, pPropertyCount *Uint32, pProperties *VkExtensionProperties) (common.VkResult, error) {

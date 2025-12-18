@@ -7,10 +7,11 @@ package core1_0
 import "C"
 import (
 	"fmt"
-	"github.com/CannibalVox/cgoparam"
-	"github.com/vkngwrapper/core/v2/common"
-	"github.com/vkngwrapper/core/v2/driver"
 	"unsafe"
+
+	"github.com/CannibalVox/cgoparam"
+	"github.com/vkngwrapper/core/v3/common"
+	"github.com/vkngwrapper/core/v3/driver"
 )
 
 // VulkanCommandBuffer is an implementation of the CommandBuffer interface that actually communicates with Vulkan. This

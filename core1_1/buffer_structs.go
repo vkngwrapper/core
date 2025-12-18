@@ -5,7 +5,7 @@ package core1_1
 #include "../common/vulkan.h"
 */
 import "C"
-import "github.com/vkngwrapper/core/v2/core1_0"
+import "github.com/vkngwrapper/core/v3/core1_0"
 
 const (
 	// BufferCreateProtected specifies that the Buffer is a protected Buffer

@@ -1,8 +1,8 @@
 package core1_0
 
 import (
-	"github.com/vkngwrapper/core/v2/common"
-	"github.com/vkngwrapper/core/v2/driver"
+	"github.com/vkngwrapper/core/v3/common"
+	"github.com/vkngwrapper/core/v3/driver"
 )
 
 // VulkanSampler is an implementation of the Sampler interface that actually communicates with Vulkan. This

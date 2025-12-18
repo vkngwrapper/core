@@ -5,7 +5,7 @@ package core1_1
 #include "../common/vulkan.h"
 */
 import "C"
-import "github.com/vkngwrapper/core/v2/core1_0"
+import "github.com/vkngwrapper/core/v3/core1_0"
 
 const (
 	// FormatB10X6G10X6R10X6G10X6HorizontalChromaComponentPacked specifies a four-component, 64-bit
