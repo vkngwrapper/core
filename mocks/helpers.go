@@ -55,7 +55,7 @@ func MockRig1_0(ctrl *gomock.Controller, deviceVersion common.APIVersion, instan
 	return instance, physicalDevice, device
 }
 
-func MockRig1_1(ctrl *gomock.Controller, deviceVersion common.APIVersion, instanceExtensions []string, deviceExtensions []string) (*Instance1_1, *PhysicalDevice1_1, *Device1_1) {
+func MockRig1_1(ctrl *gomock.Controller, deviceVersion common.APIVersion, instanceExtensions []string, deviceExtensions []string) (*Instance1_1, *MockInstanceScopedPhysicalDevice, *PhysicalDevice1_1, *Device1_1) {
 	driver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_0)
 	driver.EXPECT().LoadProcAddr(gomock.Any()).AnyTimes().Return(unsafe.Pointer(nil))
 
@@ -106,10 +106,10 @@ func MockRig1_1(ctrl *gomock.Controller, deviceVersion common.APIVersion, instan
 		},
 	)
 
-	return instance, physicalDevice, device
+	return instance, instanceScopedPhysicalDevice, physicalDevice, device
 }
 
-func MockRig1_2(ctrl *gomock.Controller, deviceVersion common.APIVersion, instanceExtensions []string, deviceExtensions []string) (*Instance1_2, *PhysicalDevice1_2, *Device1_2) {
+func MockRig1_2(ctrl *gomock.Controller, deviceVersion common.APIVersion, instanceExtensions []string, deviceExtensions []string) (*Instance1_2, *InstanceScopedPhysicalDevice1_2, *PhysicalDevice1_2, *Device1_2) {
 	driver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_0)
 	driver.EXPECT().LoadProcAddr(gomock.Any()).AnyTimes().Return(unsafe.Pointer(nil))
 
@@ -161,7 +161,7 @@ func MockRig1_2(ctrl *gomock.Controller, deviceVersion common.APIVersion, instan
 		},
 	)
 
-	return instance, physicalDevice, device
+	return instance, instanceScopedPhysicalDevice, physicalDevice, device
 }
 
 func EasyMockBuffer(ctrl *gomock.Controller) *MockBuffer {
