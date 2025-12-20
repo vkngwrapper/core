@@ -4019,3 +4019,387 @@ func (mr *MockShaderModuleMockRecorder) Handle() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Handle", reflect.TypeOf((*MockShaderModule)(nil).Handle))
 }
+
+// MockInstanceObjectBuilder is a mock of InstanceObjectBuilder interface.
+type MockInstanceObjectBuilder struct {
+	ctrl     *gomock.Controller
+	recorder *MockInstanceObjectBuilderMockRecorder
+	isgomock struct{}
+}
+
+// MockInstanceObjectBuilderMockRecorder is the mock recorder for MockInstanceObjectBuilder.
+type MockInstanceObjectBuilderMockRecorder struct {
+	mock *MockInstanceObjectBuilder
+}
+
+// NewMockInstanceObjectBuilder creates a new mock instance.
+func NewMockInstanceObjectBuilder(ctrl *gomock.Controller) *MockInstanceObjectBuilder {
+	mock := &MockInstanceObjectBuilder{ctrl: ctrl}
+	mock.recorder = &MockInstanceObjectBuilderMockRecorder{mock}
+	return mock
+}
+
+// EXPECT returns an object that allows the caller to indicate expected use.
+func (m *MockInstanceObjectBuilder) EXPECT() *MockInstanceObjectBuilderMockRecorder {
+	return m.recorder
+}
+
+// CreateDeviceObject mocks base method.
+func (m *MockInstanceObjectBuilder) CreateDeviceObject(deviceDriver driver.Driver, handle driver.VkDevice, version common.APIVersion, deviceExtensionNames []string) core1_0.Device {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreateDeviceObject", deviceDriver, handle, version, deviceExtensionNames)
+	ret0, _ := ret[0].(core1_0.Device)
+	return ret0
+}
+
+// CreateDeviceObject indicates an expected call of CreateDeviceObject.
+func (mr *MockInstanceObjectBuilderMockRecorder) CreateDeviceObject(deviceDriver, handle, version, deviceExtensionNames any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateDeviceObject", reflect.TypeOf((*MockInstanceObjectBuilder)(nil).CreateDeviceObject), deviceDriver, handle, version, deviceExtensionNames)
+}
+
+// CreatePhysicalDeviceObject mocks base method.
+func (m *MockInstanceObjectBuilder) CreatePhysicalDeviceObject(coreDriver driver.Driver, instance driver.VkInstance, handle driver.VkPhysicalDevice, instanceVersion, deviceVersion common.APIVersion) core1_0.PhysicalDevice {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreatePhysicalDeviceObject", coreDriver, instance, handle, instanceVersion, deviceVersion)
+	ret0, _ := ret[0].(core1_0.PhysicalDevice)
+	return ret0
+}
+
+// CreatePhysicalDeviceObject indicates an expected call of CreatePhysicalDeviceObject.
+func (mr *MockInstanceObjectBuilderMockRecorder) CreatePhysicalDeviceObject(coreDriver, instance, handle, instanceVersion, deviceVersion any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreatePhysicalDeviceObject", reflect.TypeOf((*MockInstanceObjectBuilder)(nil).CreatePhysicalDeviceObject), coreDriver, instance, handle, instanceVersion, deviceVersion)
+}
+
+// MockDeviceObjectBuilder is a mock of DeviceObjectBuilder interface.
+type MockDeviceObjectBuilder struct {
+	ctrl     *gomock.Controller
+	recorder *MockDeviceObjectBuilderMockRecorder
+	isgomock struct{}
+}
+
+// MockDeviceObjectBuilderMockRecorder is the mock recorder for MockDeviceObjectBuilder.
+type MockDeviceObjectBuilderMockRecorder struct {
+	mock *MockDeviceObjectBuilder
+}
+
+// NewMockDeviceObjectBuilder creates a new mock instance.
+func NewMockDeviceObjectBuilder(ctrl *gomock.Controller) *MockDeviceObjectBuilder {
+	mock := &MockDeviceObjectBuilder{ctrl: ctrl}
+	mock.recorder = &MockDeviceObjectBuilderMockRecorder{mock}
+	return mock
+}
+
+// EXPECT returns an object that allows the caller to indicate expected use.
+func (m *MockDeviceObjectBuilder) EXPECT() *MockDeviceObjectBuilderMockRecorder {
+	return m.recorder
+}
+
+// CreateBufferObject mocks base method.
+func (m *MockDeviceObjectBuilder) CreateBufferObject(coreDriver driver.Driver, device driver.VkDevice, handle driver.VkBuffer, version common.APIVersion) core1_0.Buffer {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreateBufferObject", coreDriver, device, handle, version)
+	ret0, _ := ret[0].(core1_0.Buffer)
+	return ret0
+}
+
+// CreateBufferObject indicates an expected call of CreateBufferObject.
+func (mr *MockDeviceObjectBuilderMockRecorder) CreateBufferObject(coreDriver, device, handle, version any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateBufferObject", reflect.TypeOf((*MockDeviceObjectBuilder)(nil).CreateBufferObject), coreDriver, device, handle, version)
+}
+
+// CreateBufferViewObject mocks base method.
+func (m *MockDeviceObjectBuilder) CreateBufferViewObject(coreDriver driver.Driver, device driver.VkDevice, handle driver.VkBufferView, version common.APIVersion) core1_0.BufferView {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreateBufferViewObject", coreDriver, device, handle, version)
+	ret0, _ := ret[0].(core1_0.BufferView)
+	return ret0
+}
+
+// CreateBufferViewObject indicates an expected call of CreateBufferViewObject.
+func (mr *MockDeviceObjectBuilderMockRecorder) CreateBufferViewObject(coreDriver, device, handle, version any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateBufferViewObject", reflect.TypeOf((*MockDeviceObjectBuilder)(nil).CreateBufferViewObject), coreDriver, device, handle, version)
+}
+
+// CreateCommandBufferObject mocks base method.
+func (m *MockDeviceObjectBuilder) CreateCommandBufferObject(coreDriver driver.Driver, commandPool driver.VkCommandPool, device driver.VkDevice, handle driver.VkCommandBuffer, version common.APIVersion) core1_0.CommandBuffer {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreateCommandBufferObject", coreDriver, commandPool, device, handle, version)
+	ret0, _ := ret[0].(core1_0.CommandBuffer)
+	return ret0
+}
+
+// CreateCommandBufferObject indicates an expected call of CreateCommandBufferObject.
+func (mr *MockDeviceObjectBuilderMockRecorder) CreateCommandBufferObject(coreDriver, commandPool, device, handle, version any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateCommandBufferObject", reflect.TypeOf((*MockDeviceObjectBuilder)(nil).CreateCommandBufferObject), coreDriver, commandPool, device, handle, version)
+}
+
+// CreateCommandPoolObject mocks base method.
+func (m *MockDeviceObjectBuilder) CreateCommandPoolObject(coreDriver driver.Driver, device driver.VkDevice, handle driver.VkCommandPool, version common.APIVersion) core1_0.CommandPool {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreateCommandPoolObject", coreDriver, device, handle, version)
+	ret0, _ := ret[0].(core1_0.CommandPool)
+	return ret0
+}
+
+// CreateCommandPoolObject indicates an expected call of CreateCommandPoolObject.
+func (mr *MockDeviceObjectBuilderMockRecorder) CreateCommandPoolObject(coreDriver, device, handle, version any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateCommandPoolObject", reflect.TypeOf((*MockDeviceObjectBuilder)(nil).CreateCommandPoolObject), coreDriver, device, handle, version)
+}
+
+// CreateDescriptorPoolObject mocks base method.
+func (m *MockDeviceObjectBuilder) CreateDescriptorPoolObject(coreDriver driver.Driver, device driver.VkDevice, handle driver.VkDescriptorPool, version common.APIVersion) core1_0.DescriptorPool {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreateDescriptorPoolObject", coreDriver, device, handle, version)
+	ret0, _ := ret[0].(core1_0.DescriptorPool)
+	return ret0
+}
+
+// CreateDescriptorPoolObject indicates an expected call of CreateDescriptorPoolObject.
+func (mr *MockDeviceObjectBuilderMockRecorder) CreateDescriptorPoolObject(coreDriver, device, handle, version any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateDescriptorPoolObject", reflect.TypeOf((*MockDeviceObjectBuilder)(nil).CreateDescriptorPoolObject), coreDriver, device, handle, version)
+}
+
+// CreateDescriptorSetLayoutObject mocks base method.
+func (m *MockDeviceObjectBuilder) CreateDescriptorSetLayoutObject(coreDriver driver.Driver, device driver.VkDevice, handle driver.VkDescriptorSetLayout, version common.APIVersion) core1_0.DescriptorSetLayout {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreateDescriptorSetLayoutObject", coreDriver, device, handle, version)
+	ret0, _ := ret[0].(core1_0.DescriptorSetLayout)
+	return ret0
+}
+
+// CreateDescriptorSetLayoutObject indicates an expected call of CreateDescriptorSetLayoutObject.
+func (mr *MockDeviceObjectBuilderMockRecorder) CreateDescriptorSetLayoutObject(coreDriver, device, handle, version any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateDescriptorSetLayoutObject", reflect.TypeOf((*MockDeviceObjectBuilder)(nil).CreateDescriptorSetLayoutObject), coreDriver, device, handle, version)
+}
+
+// CreateDescriptorSetObject mocks base method.
+func (m *MockDeviceObjectBuilder) CreateDescriptorSetObject(coreDriver driver.Driver, device driver.VkDevice, descriptorPool driver.VkDescriptorPool, handle driver.VkDescriptorSet, version common.APIVersion) core1_0.DescriptorSet {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreateDescriptorSetObject", coreDriver, device, descriptorPool, handle, version)
+	ret0, _ := ret[0].(core1_0.DescriptorSet)
+	return ret0
+}
+
+// CreateDescriptorSetObject indicates an expected call of CreateDescriptorSetObject.
+func (mr *MockDeviceObjectBuilderMockRecorder) CreateDescriptorSetObject(coreDriver, device, descriptorPool, handle, version any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateDescriptorSetObject", reflect.TypeOf((*MockDeviceObjectBuilder)(nil).CreateDescriptorSetObject), coreDriver, device, descriptorPool, handle, version)
+}
+
+// CreateDeviceMemoryObject mocks base method.
+func (m *MockDeviceObjectBuilder) CreateDeviceMemoryObject(coreDriver driver.Driver, device driver.VkDevice, handle driver.VkDeviceMemory, version common.APIVersion, size int) core1_0.DeviceMemory {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreateDeviceMemoryObject", coreDriver, device, handle, version, size)
+	ret0, _ := ret[0].(core1_0.DeviceMemory)
+	return ret0
+}
+
+// CreateDeviceMemoryObject indicates an expected call of CreateDeviceMemoryObject.
+func (mr *MockDeviceObjectBuilderMockRecorder) CreateDeviceMemoryObject(coreDriver, device, handle, version, size any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateDeviceMemoryObject", reflect.TypeOf((*MockDeviceObjectBuilder)(nil).CreateDeviceMemoryObject), coreDriver, device, handle, version, size)
+}
+
+// CreateEventObject mocks base method.
+func (m *MockDeviceObjectBuilder) CreateEventObject(coreDriver driver.Driver, device driver.VkDevice, handle driver.VkEvent, version common.APIVersion) core1_0.Event {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreateEventObject", coreDriver, device, handle, version)
+	ret0, _ := ret[0].(core1_0.Event)
+	return ret0
+}
+
+// CreateEventObject indicates an expected call of CreateEventObject.
+func (mr *MockDeviceObjectBuilderMockRecorder) CreateEventObject(coreDriver, device, handle, version any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateEventObject", reflect.TypeOf((*MockDeviceObjectBuilder)(nil).CreateEventObject), coreDriver, device, handle, version)
+}
+
+// CreateFenceObject mocks base method.
+func (m *MockDeviceObjectBuilder) CreateFenceObject(coreDriver driver.Driver, device driver.VkDevice, handle driver.VkFence, version common.APIVersion) core1_0.Fence {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreateFenceObject", coreDriver, device, handle, version)
+	ret0, _ := ret[0].(core1_0.Fence)
+	return ret0
+}
+
+// CreateFenceObject indicates an expected call of CreateFenceObject.
+func (mr *MockDeviceObjectBuilderMockRecorder) CreateFenceObject(coreDriver, device, handle, version any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateFenceObject", reflect.TypeOf((*MockDeviceObjectBuilder)(nil).CreateFenceObject), coreDriver, device, handle, version)
+}
+
+// CreateFramebufferObject mocks base method.
+func (m *MockDeviceObjectBuilder) CreateFramebufferObject(coreDriver driver.Driver, device driver.VkDevice, handle driver.VkFramebuffer, version common.APIVersion) core1_0.Framebuffer {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreateFramebufferObject", coreDriver, device, handle, version)
+	ret0, _ := ret[0].(core1_0.Framebuffer)
+	return ret0
+}
+
+// CreateFramebufferObject indicates an expected call of CreateFramebufferObject.
+func (mr *MockDeviceObjectBuilderMockRecorder) CreateFramebufferObject(coreDriver, device, handle, version any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateFramebufferObject", reflect.TypeOf((*MockDeviceObjectBuilder)(nil).CreateFramebufferObject), coreDriver, device, handle, version)
+}
+
+// CreateImageObject mocks base method.
+func (m *MockDeviceObjectBuilder) CreateImageObject(coreDriver driver.Driver, device driver.VkDevice, handle driver.VkImage, version common.APIVersion) core1_0.Image {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreateImageObject", coreDriver, device, handle, version)
+	ret0, _ := ret[0].(core1_0.Image)
+	return ret0
+}
+
+// CreateImageObject indicates an expected call of CreateImageObject.
+func (mr *MockDeviceObjectBuilderMockRecorder) CreateImageObject(coreDriver, device, handle, version any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateImageObject", reflect.TypeOf((*MockDeviceObjectBuilder)(nil).CreateImageObject), coreDriver, device, handle, version)
+}
+
+// CreateImageViewObject mocks base method.
+func (m *MockDeviceObjectBuilder) CreateImageViewObject(coreDriver driver.Driver, device driver.VkDevice, handle driver.VkImageView, version common.APIVersion) core1_0.ImageView {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreateImageViewObject", coreDriver, device, handle, version)
+	ret0, _ := ret[0].(core1_0.ImageView)
+	return ret0
+}
+
+// CreateImageViewObject indicates an expected call of CreateImageViewObject.
+func (mr *MockDeviceObjectBuilderMockRecorder) CreateImageViewObject(coreDriver, device, handle, version any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateImageViewObject", reflect.TypeOf((*MockDeviceObjectBuilder)(nil).CreateImageViewObject), coreDriver, device, handle, version)
+}
+
+// CreatePipelineCacheObject mocks base method.
+func (m *MockDeviceObjectBuilder) CreatePipelineCacheObject(coreDriver driver.Driver, device driver.VkDevice, handle driver.VkPipelineCache, version common.APIVersion) core1_0.PipelineCache {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreatePipelineCacheObject", coreDriver, device, handle, version)
+	ret0, _ := ret[0].(core1_0.PipelineCache)
+	return ret0
+}
+
+// CreatePipelineCacheObject indicates an expected call of CreatePipelineCacheObject.
+func (mr *MockDeviceObjectBuilderMockRecorder) CreatePipelineCacheObject(coreDriver, device, handle, version any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreatePipelineCacheObject", reflect.TypeOf((*MockDeviceObjectBuilder)(nil).CreatePipelineCacheObject), coreDriver, device, handle, version)
+}
+
+// CreatePipelineLayoutObject mocks base method.
+func (m *MockDeviceObjectBuilder) CreatePipelineLayoutObject(coreDriver driver.Driver, device driver.VkDevice, handle driver.VkPipelineLayout, version common.APIVersion) core1_0.PipelineLayout {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreatePipelineLayoutObject", coreDriver, device, handle, version)
+	ret0, _ := ret[0].(core1_0.PipelineLayout)
+	return ret0
+}
+
+// CreatePipelineLayoutObject indicates an expected call of CreatePipelineLayoutObject.
+func (mr *MockDeviceObjectBuilderMockRecorder) CreatePipelineLayoutObject(coreDriver, device, handle, version any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreatePipelineLayoutObject", reflect.TypeOf((*MockDeviceObjectBuilder)(nil).CreatePipelineLayoutObject), coreDriver, device, handle, version)
+}
+
+// CreatePipelineObject mocks base method.
+func (m *MockDeviceObjectBuilder) CreatePipelineObject(coreDriver driver.Driver, device driver.VkDevice, handle driver.VkPipeline, version common.APIVersion) core1_0.Pipeline {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreatePipelineObject", coreDriver, device, handle, version)
+	ret0, _ := ret[0].(core1_0.Pipeline)
+	return ret0
+}
+
+// CreatePipelineObject indicates an expected call of CreatePipelineObject.
+func (mr *MockDeviceObjectBuilderMockRecorder) CreatePipelineObject(coreDriver, device, handle, version any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreatePipelineObject", reflect.TypeOf((*MockDeviceObjectBuilder)(nil).CreatePipelineObject), coreDriver, device, handle, version)
+}
+
+// CreateQueryPoolObject mocks base method.
+func (m *MockDeviceObjectBuilder) CreateQueryPoolObject(coreDriver driver.Driver, device driver.VkDevice, handle driver.VkQueryPool, version common.APIVersion) core1_0.QueryPool {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreateQueryPoolObject", coreDriver, device, handle, version)
+	ret0, _ := ret[0].(core1_0.QueryPool)
+	return ret0
+}
+
+// CreateQueryPoolObject indicates an expected call of CreateQueryPoolObject.
+func (mr *MockDeviceObjectBuilderMockRecorder) CreateQueryPoolObject(coreDriver, device, handle, version any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateQueryPoolObject", reflect.TypeOf((*MockDeviceObjectBuilder)(nil).CreateQueryPoolObject), coreDriver, device, handle, version)
+}
+
+// CreateQueueObject mocks base method.
+func (m *MockDeviceObjectBuilder) CreateQueueObject(coreDriver driver.Driver, device driver.VkDevice, handle driver.VkQueue, version common.APIVersion) core1_0.Queue {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreateQueueObject", coreDriver, device, handle, version)
+	ret0, _ := ret[0].(core1_0.Queue)
+	return ret0
+}
+
+// CreateQueueObject indicates an expected call of CreateQueueObject.
+func (mr *MockDeviceObjectBuilderMockRecorder) CreateQueueObject(coreDriver, device, handle, version any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateQueueObject", reflect.TypeOf((*MockDeviceObjectBuilder)(nil).CreateQueueObject), coreDriver, device, handle, version)
+}
+
+// CreateRenderPassObject mocks base method.
+func (m *MockDeviceObjectBuilder) CreateRenderPassObject(coreDriver driver.Driver, device driver.VkDevice, handle driver.VkRenderPass, version common.APIVersion) core1_0.RenderPass {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreateRenderPassObject", coreDriver, device, handle, version)
+	ret0, _ := ret[0].(core1_0.RenderPass)
+	return ret0
+}
+
+// CreateRenderPassObject indicates an expected call of CreateRenderPassObject.
+func (mr *MockDeviceObjectBuilderMockRecorder) CreateRenderPassObject(coreDriver, device, handle, version any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateRenderPassObject", reflect.TypeOf((*MockDeviceObjectBuilder)(nil).CreateRenderPassObject), coreDriver, device, handle, version)
+}
+
+// CreateSamplerObject mocks base method.
+func (m *MockDeviceObjectBuilder) CreateSamplerObject(coreDriver driver.Driver, device driver.VkDevice, handle driver.VkSampler, version common.APIVersion) core1_0.Sampler {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreateSamplerObject", coreDriver, device, handle, version)
+	ret0, _ := ret[0].(core1_0.Sampler)
+	return ret0
+}
+
+// CreateSamplerObject indicates an expected call of CreateSamplerObject.
+func (mr *MockDeviceObjectBuilderMockRecorder) CreateSamplerObject(coreDriver, device, handle, version any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateSamplerObject", reflect.TypeOf((*MockDeviceObjectBuilder)(nil).CreateSamplerObject), coreDriver, device, handle, version)
+}
+
+// CreateSemaphoreObject mocks base method.
+func (m *MockDeviceObjectBuilder) CreateSemaphoreObject(coreDriver driver.Driver, device driver.VkDevice, handle driver.VkSemaphore, version common.APIVersion) core1_0.Semaphore {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreateSemaphoreObject", coreDriver, device, handle, version)
+	ret0, _ := ret[0].(core1_0.Semaphore)
+	return ret0
+}
+
+// CreateSemaphoreObject indicates an expected call of CreateSemaphoreObject.
+func (mr *MockDeviceObjectBuilderMockRecorder) CreateSemaphoreObject(coreDriver, device, handle, version any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateSemaphoreObject", reflect.TypeOf((*MockDeviceObjectBuilder)(nil).CreateSemaphoreObject), coreDriver, device, handle, version)
+}
+
+// CreateShaderModuleObject mocks base method.
+func (m *MockDeviceObjectBuilder) CreateShaderModuleObject(coreDriver driver.Driver, device driver.VkDevice, handle driver.VkShaderModule, version common.APIVersion) core1_0.ShaderModule {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreateShaderModuleObject", coreDriver, device, handle, version)
+	ret0, _ := ret[0].(core1_0.ShaderModule)
+	return ret0
+}
+
+// CreateShaderModuleObject indicates an expected call of CreateShaderModuleObject.
+func (mr *MockDeviceObjectBuilderMockRecorder) CreateShaderModuleObject(coreDriver, device, handle, version any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateShaderModuleObject", reflect.TypeOf((*MockDeviceObjectBuilder)(nil).CreateShaderModuleObject), coreDriver, device, handle, version)
+}
