@@ -327,22 +327,13 @@ type Instance interface {
 	EnumeratePhysicalDeviceGroups(outDataFactory func() *PhysicalDeviceGroupProperties) ([]*PhysicalDeviceGroupProperties, common.VkResult, error)
 }
 
-// InstanceScopedPhysicalDevice represents the instance-scoped functionality of a single complete
+// PhysicalDevice represents the device-scoped functionality of a single complete
 // implementation of Vulkan available to the host, of which there are a finite number.
 //
-// This interface includes all instance-scoped commands included in Vulkan 1.1.
-//
-// PhysicalDevice objects are unusual in that they exist between the Instance and (logical) Device level.
-// As a result, PhysicalDevice is the only object that can be extended by both Instance and Device
-// extensions. Consequently, there are some unusual cases in which a higher core version may be available
-// for some PhysicalDevice functionality but not others. In order to represent this, physical devices
-// are split into two objects at core1.1+, the PhysicalDevice and the "instance-scoped" PhysicalDevice.
-//
-// The InstanceScopedPhysicalDevice is usually available at the same core versions as PhysicalDevice, but
-// in rare cases, a higher core version may be available.
+// This interface includes all commands included in Vulkan 1.1.
 //
 // https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/VkPhysicalDevice.html
-type InstanceScopedPhysicalDevice interface {
+type PhysicalDevice interface {
 	core1_0.PhysicalDevice
 
 	// ExternalFenceProperties queries external Fence capabilities
@@ -430,31 +421,6 @@ type InstanceScopedPhysicalDevice interface {
 	//
 	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/vkGetPhysicalDeviceSparseImageFormatProperties2KHR.html
 	SparseImageFormatProperties2(o PhysicalDeviceSparseImageFormatInfo2, outDataFactory func() *SparseImageFormatProperties2) ([]*SparseImageFormatProperties2, error)
-}
-
-// PhysicalDevice represents the device-scoped functionality of a single complete
-// implementation of Vulkan available to the host, of which there are a finite number.
-//
-// This interface includes all commands included in Vulkan 1.1.
-//
-// PhysicalDevice objects are unusual in that they exist between the Instance and (logical) Device level.
-// As a result, PhysicalDevice is the only object that can be extended by both Instance and Device
-// extensions. Consequently, there are some unusual cases in which a higher core version may be available
-// for some PhysicalDevice functionality but not others. In order to represent this, physical devices
-// are split into two objects at core1.1+, the PhysicalDevice and the "instance-scoped" PhysicalDevice.
-//
-// The InstanceScopedPhysicalDevice is usually available at the same core versions as PhysicalDevice, but
-// in rare cases, a higher core version may be available.
-//
-// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/VkPhysicalDevice.html
-type PhysicalDevice interface {
-	core1_0.PhysicalDevice
-
-	// InstanceScopedPhysicalDevice1_1 returns the InstanceScopedPhysicalDevice that represents the
-	// instance-scoped portion of this PhysicalDevice object's functionality. Since the instance-scoped
-	// support is always equal-to-or-greater-than the device-scoped support, this method will always
-	// return a functioning InstanceScopedPhysicalDevice
-	InstanceScopedPhysicalDevice1_1() InstanceScopedPhysicalDevice
 }
 
 // Pipeline represents compute, ray tracing, and graphics pipelines
@@ -568,4 +534,11 @@ type Semaphore interface {
 // https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/VkShaderModule.html
 type ShaderModule interface {
 	core1_0.ShaderModule
+}
+
+// DeviceObjectBuilder is an internal type exposed by Device to allow objects to be create from
+// vulkan handles.  This used by extensions and should not be used by most consumers.
+type DeviceObjectBuilder interface {
+	CreateDescriptorUpdateTemplate(coreDriver driver.Driver, device driver.VkDevice, handle driver.VkDescriptorUpdateTemplate, version common.APIVersion) DescriptorUpdateTemplate
+	CreateSamplerYcbcrConversion(coreDriver driver.Driver, device driver.VkDevice, handle driver.VkSamplerYcbcrConversion, version common.APIVersion) SamplerYcbcrConversion
 }

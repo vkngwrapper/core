@@ -112,20 +112,6 @@ func (mr *MockDriverMockRecorder) LoadProcAddr(name any) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "LoadProcAddr", reflect.TypeOf((*MockDriver)(nil).LoadProcAddr), name)
 }
 
-// ObjectStore mocks base method.
-func (m *MockDriver) ObjectStore() *driver.VulkanObjectStore {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "ObjectStore")
-	ret0, _ := ret[0].(*driver.VulkanObjectStore)
-	return ret0
-}
-
-// ObjectStore indicates an expected call of ObjectStore.
-func (mr *MockDriverMockRecorder) ObjectStore() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ObjectStore", reflect.TypeOf((*MockDriver)(nil).ObjectStore))
-}
-
 // Version mocks base method.
 func (m *MockDriver) Version() common.APIVersion {
 	m.ctrl.T.Helper()

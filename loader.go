@@ -12,6 +12,9 @@ import (
 	"github.com/vkngwrapper/core/v3/common"
 	"github.com/vkngwrapper/core/v3/core1_0"
 	"github.com/vkngwrapper/core/v3/driver"
+	"github.com/vkngwrapper/core/v3/internal/impl1_0"
+	"github.com/vkngwrapper/core/v3/internal/impl1_1"
+	"github.com/vkngwrapper/core/v3/internal/impl1_2"
 )
 
 type VulkanLoader struct {
@@ -159,8 +162,16 @@ func (l *VulkanLoader) AvailableLayers() (map[string]*core1_0.LayerProperties, c
 	return layers, result, err
 }
 
-//go:linkname createInstanceObject github.com/vkngwrapper/core/v3/core1_0.createInstanceObject
-func createInstanceObject(instanceDriver driver.Driver, handle driver.VkInstance, version common.APIVersion) *core1_0.VulkanInstance
+func createInstanceObject(instanceDriver driver.Driver, handle driver.VkInstance, version common.APIVersion, instanceExtensions []string) core1_0.Instance {
+	switch version {
+	case common.Vulkan1_2:
+		return impl1_2.CreateInstanceObject(instanceDriver, handle, version, instanceExtensions)
+	case common.Vulkan1_1:
+		return impl1_1.CreateInstanceObject(instanceDriver, handle, version, instanceExtensions)
+	default:
+		return impl1_0.CreateInstanceObject(instanceDriver, handle, version, instanceExtensions)
+	}
+}
 
 func (l *VulkanLoader) CreateInstance(allocationCallbacks *driver.AllocationCallbacks, options core1_0.InstanceCreateInfo) (core1_0.Instance, common.VkResult, error) {
 	arena := cgoparam.GetAlloc()
@@ -184,11 +195,6 @@ func (l *VulkanLoader) CreateInstance(allocationCallbacks *driver.AllocationCall
 	}
 
 	version := l.APIVersion().Min(options.APIVersion)
-	instance := createInstanceObject(instanceDriver, instanceHandle, version)
 
-	for _, extension := range options.EnabledExtensionNames {
-		instance.ActiveInstanceExtensions[extension] = struct{}{}
-	}
-
-	return instance, res, nil
+	return createInstanceObject(instanceDriver, instanceHandle, version, options.EnabledExtensionNames), res, nil
 }

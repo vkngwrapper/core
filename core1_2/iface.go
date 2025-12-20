@@ -262,48 +262,14 @@ type Instance interface {
 	core1_1.Instance
 }
 
-// InstanceScopedPhysicalDevice represents the instance-scoped functionality of a single complete
-// implementation of Vulkan available to the host, of which there are a finite number.
-//
-// This interface includes all instance-scoped commands included in Vulkan 1.2.
-//
-// PhysicalDevice objects are unusual in that they exist between the Instance and (logical) Device level.
-// As a result, PhysicalDevice is the only object that can be extended by both Instance and Device
-// extensions. Consequently, there are some unusual cases in which a higher core version may be available
-// for some PhysicalDevice functionality but not others. In order to represent this, physical devices
-// are split into two objects at core1.1+, the PhysicalDevice and the "instance-scoped" PhysicalDevice.
-//
-// The InstanceScopedPhysicalDevice is usually available at the same core versions as PhysicalDevice, but
-// in rare cases, a higher core version may be available.
-//
-// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/VkPhysicalDevice.html
-type InstanceScopedPhysicalDevice interface {
-	core1_1.InstanceScopedPhysicalDevice
-}
-
 // PhysicalDevice represents the device-scoped functionality of a single complete
 // implementation of Vulkan available to the host, of which there are a finite number.
 //
 // This interface includes all commands included in Vulkan 1.2.
 //
-// PhysicalDevice objects are unusual in that they exist between the Instance and (logical) Device level.
-// As a result, PhysicalDevice is the only object that can be extended by both Instance and Device
-// extensions. Consequently, there are some unusual cases in which a higher core version may be available
-// for some PhysicalDevice functionality but not others. In order to represent this, physical devices
-// are split into two objects at core1.1+, the PhysicalDevice and the "instance-scoped" PhysicalDevice.
-//
-// The InstanceScopedPhysicalDevice is usually available at the same core versions as PhysicalDevice, but
-// in rare cases, a higher core version may be available.
-//
 // https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/VkPhysicalDevice.html
 type PhysicalDevice interface {
 	core1_1.PhysicalDevice
-
-	// InstanceScopedPhysicalDevice1_2 returns the InstanceScopedPhysicalDevice that represents the
-	// instance-scoped portion of this PhysicalDevice object's functionality. Since the instance-scoped
-	// support is always equal-to-or-greater-than the device-scoped support, this method will always
-	// return a functioning InstanceScopedPhysicalDevice
-	InstanceScopedPhysicalDevice1_2() InstanceScopedPhysicalDevice
 }
 
 // Pipeline represents compute, ray tracing, and graphics pipelines

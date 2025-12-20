@@ -15,7 +15,6 @@ type Driver interface {
 	LoadProcAddr(name *Char) unsafe.Pointer
 	LoadInstanceProcAddr(name *Char) unsafe.Pointer
 	Version() common.APIVersion
-	ObjectStore() *VulkanObjectStore
 
 	VkEnumerateInstanceVersion(pApiVersion *Uint32) (common.VkResult, error)
 

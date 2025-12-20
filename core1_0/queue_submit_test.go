@@ -10,7 +10,7 @@ import (
 	"github.com/vkngwrapper/core/v3/core1_0"
 	"github.com/vkngwrapper/core/v3/driver"
 	mock_driver "github.com/vkngwrapper/core/v3/driver/mocks"
-	internal_mocks "github.com/vkngwrapper/core/v3/internal/dummies"
+	"github.com/vkngwrapper/core/v3/internal/impl1_0"
 	"github.com/vkngwrapper/core/v3/mocks"
 	"go.uber.org/mock/gomock"
 )
@@ -22,7 +22,8 @@ func TestSubmitToQueue_SignalSuccess(t *testing.T) {
 	mockDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_0)
 
 	mockDevice := mocks.EasyMockDevice(ctrl, mockDriver)
-	queue := internal_mocks.EasyDummyQueue(mockDriver, mockDevice)
+	builder := impl1_0.DeviceObjectBuilderImpl{}
+	queue := builder.CreateQueueObject(mockDriver, mockDevice.Handle(), mocks.NewFakeQueue(), common.Vulkan1_0)
 
 	fence := mocks.EasyMockFence(ctrl)
 	buffer := mocks.EasyMockCommandBuffer(ctrl)
@@ -91,7 +92,8 @@ func TestSubmitToQueue_NoSignalSuccess(t *testing.T) {
 	mockDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_0)
 
 	mockDevice := mocks.EasyMockDevice(ctrl, mockDriver)
-	queue := internal_mocks.EasyDummyQueue(mockDriver, mockDevice)
+	builder := impl1_0.DeviceObjectBuilderImpl{}
+	queue := builder.CreateQueueObject(mockDriver, mockDevice.Handle(), mocks.NewFakeQueue(), common.Vulkan1_0)
 
 	buffer := mocks.EasyMockCommandBuffer(ctrl)
 
@@ -138,7 +140,8 @@ func TestSubmitToQueue_MismatchWaitSemaphores(t *testing.T) {
 	mockDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_0)
 
 	mockDevice := mocks.EasyMockDevice(ctrl, mockDriver)
-	queue := internal_mocks.EasyDummyQueue(mockDriver, mockDevice)
+	builder := impl1_0.DeviceObjectBuilderImpl{}
+	queue := builder.CreateQueueObject(mockDriver, mockDevice.Handle(), mocks.NewFakeQueue(), common.Vulkan1_0)
 
 	buffer := mocks.EasyMockCommandBuffer(ctrl)
 

@@ -7,13 +7,12 @@ import (
 
 	"github.com/stretchr/testify/require"
 	"github.com/vkngwrapper/core/v3/common"
-	"github.com/vkngwrapper/core/v3/common/extensions"
 	"github.com/vkngwrapper/core/v3/core1_0"
 	"github.com/vkngwrapper/core/v3/core1_1"
 	"github.com/vkngwrapper/core/v3/core1_2"
 	"github.com/vkngwrapper/core/v3/driver"
 	mock_driver "github.com/vkngwrapper/core/v3/driver/mocks"
-	"github.com/vkngwrapper/core/v3/internal/dummies"
+	"github.com/vkngwrapper/core/v3/internal/impl1_2"
 	"github.com/vkngwrapper/core/v3/mocks"
 	"go.uber.org/mock/gomock"
 )
@@ -23,7 +22,9 @@ func TestDescriptorSetVariableDescriptorCountAllocateOptions(t *testing.T) {
 	defer ctrl.Finish()
 
 	coreDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_2)
-	device := extensions.CreateDeviceObject(coreDriver, mocks.NewFakeDeviceHandle(), common.Vulkan1_2)
+
+	builder := &impl1_2.InstanceObjectBuilderImpl{}
+	device := builder.CreateDeviceObject(coreDriver, mocks.NewFakeDeviceHandle(), common.Vulkan1_2, []string{})
 	descriptorPool := mocks.EasyMockDescriptorPool(ctrl, device)
 	descriptorLayout1 := mocks.EasyMockDescriptorSetLayout(ctrl)
 	descriptorLayout2 := mocks.EasyMockDescriptorSetLayout(ctrl)
@@ -101,7 +102,8 @@ func TestDescriptorSetLayoutBindingFlagsCreateOptions(t *testing.T) {
 	defer ctrl.Finish()
 
 	coreDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_2)
-	device := extensions.CreateDeviceObject(coreDriver, mocks.NewFakeDeviceHandle(), common.Vulkan1_0)
+	builder := &impl1_2.InstanceObjectBuilderImpl{}
+	device := builder.CreateDeviceObject(coreDriver, mocks.NewFakeDeviceHandle(), common.Vulkan1_0, []string{})
 	mockDescriptorSetLayout := mocks.EasyMockDescriptorSetLayout(ctrl)
 
 	coreDriver.EXPECT().VkCreateDescriptorSetLayout(
@@ -150,7 +152,8 @@ func TestDescriptorSetVariableDescriptorCountLayoutSupportOutData(t *testing.T) 
 	defer ctrl.Finish()
 
 	coreDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_2)
-	device := core1_2.PromoteDevice(dummies.EasyDummyDevice(coreDriver))
+	builder := &impl1_2.InstanceObjectBuilderImpl{}
+	device := builder.CreateDeviceObject(coreDriver, mocks.NewFakeDeviceHandle(), common.Vulkan1_2, []string{}).(core1_2.Device)
 
 	coreDriver.EXPECT().VkGetDescriptorSetLayoutSupport(
 		device.Handle(),

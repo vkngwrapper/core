@@ -55,7 +55,7 @@ func MockRig1_0(ctrl *gomock.Controller, deviceVersion common.APIVersion, instan
 	return instance, physicalDevice, device
 }
 
-func MockRig1_1(ctrl *gomock.Controller, deviceVersion common.APIVersion, instanceExtensions []string, deviceExtensions []string) (*Instance1_1, *MockInstanceScopedPhysicalDevice, *PhysicalDevice1_1, *Device1_1) {
+func MockRig1_1(ctrl *gomock.Controller, deviceVersion common.APIVersion, instanceExtensions []string, deviceExtensions []string) (*Instance1_1, *PhysicalDevice1_1, *Device1_1) {
 	driver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_0)
 	driver.EXPECT().LoadProcAddr(gomock.Any()).AnyTimes().Return(unsafe.Pointer(nil))
 
@@ -77,18 +77,11 @@ func MockRig1_1(ctrl *gomock.Controller, deviceVersion common.APIVersion, instan
 
 	physDeviceHandle := NewFakePhysicalDeviceHandle()
 
-	instanceScopedPhysicalDevice := NewMockInstanceScopedPhysicalDevice(ctrl)
-	instanceScopedPhysicalDevice.EXPECT().Handle().AnyTimes().Return(physDeviceHandle)
-	instanceScopedPhysicalDevice.EXPECT().Driver().AnyTimes().Return(driver)
-	instanceScopedPhysicalDevice.EXPECT().InstanceAPIVersion().AnyTimes().Return(common.Vulkan1_1)
-	instanceScopedPhysicalDevice.EXPECT().DeviceAPIVersion().AnyTimes().Return(deviceVersion)
-
 	physicalDevice := NewPhysicalDevice1_1(ctrl)
 	physicalDevice.EXPECT().Handle().Return(physDeviceHandle).AnyTimes()
 	physicalDevice.EXPECT().Driver().Return(driver).AnyTimes()
 	physicalDevice.EXPECT().DeviceAPIVersion().Return(deviceVersion).AnyTimes()
 	physicalDevice.EXPECT().InstanceAPIVersion().Return(common.Vulkan1_1).AnyTimes()
-	physicalDevice.EXPECT().InstanceScopedPhysicalDevice1_1().AnyTimes().Return(instanceScopedPhysicalDevice)
 
 	device := NewDevice1_1(ctrl)
 	device.EXPECT().Handle().Return(NewFakeDeviceHandle()).AnyTimes()
@@ -106,10 +99,10 @@ func MockRig1_1(ctrl *gomock.Controller, deviceVersion common.APIVersion, instan
 		},
 	)
 
-	return instance, instanceScopedPhysicalDevice, physicalDevice, device
+	return instance, physicalDevice, device
 }
 
-func MockRig1_2(ctrl *gomock.Controller, deviceVersion common.APIVersion, instanceExtensions []string, deviceExtensions []string) (*Instance1_2, *InstanceScopedPhysicalDevice1_2, *PhysicalDevice1_2, *Device1_2) {
+func MockRig1_2(ctrl *gomock.Controller, deviceVersion common.APIVersion, instanceExtensions []string, deviceExtensions []string) (*Instance1_2, *PhysicalDevice1_2, *Device1_2) {
 	driver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_0)
 	driver.EXPECT().LoadProcAddr(gomock.Any()).AnyTimes().Return(unsafe.Pointer(nil))
 
@@ -131,19 +124,11 @@ func MockRig1_2(ctrl *gomock.Controller, deviceVersion common.APIVersion, instan
 
 	physDeviceHandle := NewFakePhysicalDeviceHandle()
 
-	instanceScopedPhysicalDevice := NewInstanceScopedPhysicalDevice1_2(ctrl)
-	instanceScopedPhysicalDevice.EXPECT().Handle().AnyTimes().Return(physDeviceHandle)
-	instanceScopedPhysicalDevice.EXPECT().Driver().AnyTimes().Return(driver)
-	instanceScopedPhysicalDevice.EXPECT().InstanceAPIVersion().AnyTimes().Return(common.Vulkan1_2)
-	instanceScopedPhysicalDevice.EXPECT().DeviceAPIVersion().AnyTimes().Return(deviceVersion)
-
 	physicalDevice := NewPhysicalDevice1_2(ctrl)
 	physicalDevice.EXPECT().Handle().Return(physDeviceHandle).AnyTimes()
 	physicalDevice.EXPECT().Driver().Return(driver).AnyTimes()
 	physicalDevice.EXPECT().DeviceAPIVersion().Return(deviceVersion).AnyTimes()
 	physicalDevice.EXPECT().InstanceAPIVersion().Return(common.Vulkan1_2).AnyTimes()
-	physicalDevice.EXPECT().InstanceScopedPhysicalDevice1_1().AnyTimes().Return(instanceScopedPhysicalDevice)
-	physicalDevice.EXPECT().InstanceScopedPhysicalDevice1_2().AnyTimes().Return(instanceScopedPhysicalDevice)
 
 	device := NewDevice1_2(ctrl)
 	device.EXPECT().Handle().Return(NewFakeDeviceHandle()).AnyTimes()
@@ -161,7 +146,7 @@ func MockRig1_2(ctrl *gomock.Controller, deviceVersion common.APIVersion, instan
 		},
 	)
 
-	return instance, instanceScopedPhysicalDevice, physicalDevice, device
+	return instance, physicalDevice, device
 }
 
 func EasyMockBuffer(ctrl *gomock.Controller) *MockBuffer {
