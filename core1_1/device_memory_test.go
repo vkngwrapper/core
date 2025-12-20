@@ -1,4 +1,4 @@
-package impl1_1_test
+package core1_1_test
 
 import (
 	"reflect"
