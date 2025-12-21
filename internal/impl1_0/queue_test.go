@@ -12,6 +12,7 @@ import (
 	mock_driver "github.com/vkngwrapper/core/v3/driver/mocks"
 	"github.com/vkngwrapper/core/v3/internal/impl1_0"
 	"github.com/vkngwrapper/core/v3/mocks"
+	"github.com/vkngwrapper/core/v3/mocks/mocks1_0"
 	"go.uber.org/mock/gomock"
 )
 
@@ -20,7 +21,7 @@ func TestVulkanQueue_WaitForIdle(t *testing.T) {
 	defer ctrl.Finish()
 
 	driver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_0)
-	device := mocks.EasyMockDevice(ctrl, driver)
+	device := mocks1_0.EasyMockDevice(ctrl, driver)
 
 	builder := &impl1_0.DeviceObjectBuilderImpl{}
 	queue := builder.CreateQueueObject(driver, device.Handle(), mocks.NewFakeQueue(), common.Vulkan1_0)
@@ -36,21 +37,21 @@ func TestVulkanQueue_BindSparse(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_0)
-	device := mocks.EasyMockDevice(ctrl, mockDriver)
+	device := mocks1_0.EasyMockDevice(ctrl, mockDriver)
 	builder := &impl1_0.DeviceObjectBuilderImpl{}
 	queue := builder.CreateQueueObject(mockDriver, device.Handle(), mocks.NewFakeQueue(), common.Vulkan1_0)
 
-	semaphore1 := mocks.EasyMockSemaphore(ctrl)
-	semaphore2 := mocks.EasyMockSemaphore(ctrl)
-	semaphore3 := mocks.EasyMockSemaphore(ctrl)
+	semaphore1 := mocks1_0.EasyMockSemaphore(ctrl)
+	semaphore2 := mocks1_0.EasyMockSemaphore(ctrl)
+	semaphore3 := mocks1_0.EasyMockSemaphore(ctrl)
 
-	buffer := mocks.EasyMockBuffer(ctrl)
-	image1 := mocks.EasyMockImage(ctrl)
-	image2 := mocks.EasyMockImage(ctrl)
-	memory1 := mocks.EasyMockDeviceMemory(ctrl)
-	memory2 := mocks.EasyMockDeviceMemory(ctrl)
-	memory3 := mocks.EasyMockDeviceMemory(ctrl)
-	memory4 := mocks.EasyMockDeviceMemory(ctrl)
+	buffer := mocks1_0.EasyMockBuffer(ctrl)
+	image1 := mocks1_0.EasyMockImage(ctrl)
+	image2 := mocks1_0.EasyMockImage(ctrl)
+	memory1 := mocks1_0.EasyMockDeviceMemory(ctrl)
+	memory2 := mocks1_0.EasyMockDeviceMemory(ctrl)
+	memory3 := mocks1_0.EasyMockDeviceMemory(ctrl)
+	memory4 := mocks1_0.EasyMockDeviceMemory(ctrl)
 
 	mockDriver.EXPECT().VkQueueBindSparse(queue.Handle(), driver.Uint32(1), gomock.Not(nil), driver.VkFence(driver.NullHandle)).DoAndReturn(
 		func(queue driver.VkQueue, bindInfoCount driver.Uint32, pBindInfo *driver.VkBindSparseInfo, fence driver.VkFence) (common.VkResult, error) {

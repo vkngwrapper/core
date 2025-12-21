@@ -12,6 +12,7 @@ import (
 	mock_driver "github.com/vkngwrapper/core/v3/driver/mocks"
 	"github.com/vkngwrapper/core/v3/internal/impl1_0"
 	"github.com/vkngwrapper/core/v3/mocks"
+	"github.com/vkngwrapper/core/v3/mocks/mocks1_0"
 	"go.uber.org/mock/gomock"
 )
 
@@ -79,10 +80,10 @@ func TestDescriptorPool_AllocAndFree_Single(t *testing.T) {
 	mockDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_0)
 	builder := impl1_0.InstanceObjectBuilderImpl{}
 	device := builder.CreateDeviceObject(mockDriver, mocks.NewFakeDeviceHandle(), common.Vulkan1_0, []string{})
-	pool := mocks.EasyMockDescriptorPool(ctrl, device)
+	pool := mocks1_0.EasyMockDescriptorPool(ctrl, device)
 
 	setHandle := mocks.NewFakeDescriptorSet()
-	layout := mocks.EasyMockDescriptorSetLayout(ctrl)
+	layout := mocks1_0.EasyMockDescriptorSetLayout(ctrl)
 
 	mockDriver.EXPECT().VkAllocateDescriptorSets(device.Handle(), gomock.Not(nil), gomock.Not(nil)).DoAndReturn(
 		func(device driver.VkDevice, pAllocateInfo *driver.VkDescriptorSetAllocateInfo, pSets *driver.VkDescriptorSet) (common.VkResult, error) {
@@ -135,14 +136,14 @@ func TestDescriptorPool_AllocAndFree_Multi(t *testing.T) {
 	mockDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_0)
 	builder := impl1_0.InstanceObjectBuilderImpl{}
 	device := builder.CreateDeviceObject(mockDriver, mocks.NewFakeDeviceHandle(), common.Vulkan1_0, []string{})
-	pool := mocks.EasyMockDescriptorPool(ctrl, device)
+	pool := mocks1_0.EasyMockDescriptorPool(ctrl, device)
 
 	setHandle1 := mocks.NewFakeDescriptorSet()
 	setHandle2 := mocks.NewFakeDescriptorSet()
 	setHandle3 := mocks.NewFakeDescriptorSet()
-	layout1 := mocks.EasyMockDescriptorSetLayout(ctrl)
-	layout2 := mocks.EasyMockDescriptorSetLayout(ctrl)
-	layout3 := mocks.EasyMockDescriptorSetLayout(ctrl)
+	layout1 := mocks1_0.EasyMockDescriptorSetLayout(ctrl)
+	layout2 := mocks1_0.EasyMockDescriptorSetLayout(ctrl)
+	layout3 := mocks1_0.EasyMockDescriptorSetLayout(ctrl)
 
 	mockDriver.EXPECT().VkAllocateDescriptorSets(device.Handle(), gomock.Not(nil), gomock.Not(nil)).DoAndReturn(
 		func(device driver.VkDevice, pAllocateInfo *driver.VkDescriptorSetAllocateInfo, pSets *driver.VkDescriptorSet) (common.VkResult, error) {
@@ -202,7 +203,7 @@ func TestVulkanDescriptorPool_Reset(t *testing.T) {
 
 	mockDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_0)
 
-	mockDevice := mocks.EasyMockDevice(ctrl, mockDriver)
+	mockDevice := mocks1_0.EasyMockDevice(ctrl, mockDriver)
 	builder := &impl1_0.DeviceObjectBuilderImpl{}
 	pool := builder.CreateDescriptorPoolObject(mockDriver, mockDevice.Handle(), mocks.NewFakeDescriptorPool(), common.Vulkan1_0)
 

@@ -12,6 +12,7 @@ import (
 	mock_driver "github.com/vkngwrapper/core/v3/driver/mocks"
 	"github.com/vkngwrapper/core/v3/internal/impl1_0"
 	"github.com/vkngwrapper/core/v3/mocks"
+	"github.com/vkngwrapper/core/v3/mocks/mocks1_0"
 	"go.uber.org/mock/gomock"
 )
 
@@ -553,7 +554,7 @@ func TestVulkanRenderPass_RenderAreaGranularity(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_0)
-	device := mocks.EasyMockDevice(ctrl, mockDriver)
+	device := mocks1_0.EasyMockDevice(ctrl, mockDriver)
 
 	builder := impl1_0.DeviceObjectBuilderImpl{}
 	renderPass := builder.CreateRenderPassObject(mockDriver, device.Handle(), mocks.NewFakeRenderPassHandle(), common.Vulkan1_0)

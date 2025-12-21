@@ -13,6 +13,7 @@ import (
 	mock_driver "github.com/vkngwrapper/core/v3/driver/mocks"
 	"github.com/vkngwrapper/core/v3/internal/impl1_1"
 	"github.com/vkngwrapper/core/v3/mocks"
+	"github.com/vkngwrapper/core/v3/mocks/mocks1_1"
 	"go.uber.org/mock/gomock"
 )
 
@@ -69,11 +70,11 @@ func TestVulkanDevice_BindBufferMemory(t *testing.T) {
 	builder := &impl1_1.InstanceObjectBuilderImpl{}
 	device := builder.CreateDeviceObject(coreDriver, mocks.NewFakeDeviceHandle(), common.Vulkan1_1, []string{}).(core1_1.Device)
 
-	buffer1 := mocks.EasyMockBuffer(ctrl)
-	buffer2 := mocks.EasyMockBuffer(ctrl)
+	buffer1 := mocks1_1.EasyMockBuffer(ctrl)
+	buffer2 := mocks1_1.EasyMockBuffer(ctrl)
 
-	memory1 := mocks.EasyMockDeviceMemory(ctrl)
-	memory2 := mocks.EasyMockDeviceMemory(ctrl)
+	memory1 := mocks1_1.EasyMockDeviceMemory(ctrl)
+	memory2 := mocks1_1.EasyMockDeviceMemory(ctrl)
 
 	coreDriver.EXPECT().VkBindBufferMemory2(device.Handle(), driver.Uint32(2), gomock.Not(gomock.Nil())).
 		DoAndReturn(func(device driver.VkDevice, bindInfoCount driver.Uint32, pBindInfos *driver.VkBindBufferMemoryInfo) (common.VkResult, error) {
@@ -120,11 +121,11 @@ func TestVulkanDevice_BindImageMemory(t *testing.T) {
 	builder := &impl1_1.InstanceObjectBuilderImpl{}
 	device := builder.CreateDeviceObject(coreDriver, mocks.NewFakeDeviceHandle(), common.Vulkan1_1, []string{}).(core1_1.Device)
 
-	image1 := mocks.EasyMockImage(ctrl)
-	image2 := mocks.EasyMockImage(ctrl)
+	image1 := mocks1_1.EasyMockImage(ctrl)
+	image2 := mocks1_1.EasyMockImage(ctrl)
 
-	memory1 := mocks.EasyMockDeviceMemory(ctrl)
-	memory2 := mocks.EasyMockDeviceMemory(ctrl)
+	memory1 := mocks1_1.EasyMockDeviceMemory(ctrl)
+	memory2 := mocks1_1.EasyMockDeviceMemory(ctrl)
 
 	coreDriver.EXPECT().VkBindImageMemory2(device.Handle(), driver.Uint32(2), gomock.Not(gomock.Nil())).
 		DoAndReturn(func(device driver.VkDevice, bindInfoCount driver.Uint32, pBindInfos *driver.VkBindImageMemoryInfo) (common.VkResult, error) {
@@ -172,7 +173,7 @@ func TestVulkanDevice_BufferMemoryRequirements(t *testing.T) {
 	builder := &impl1_1.InstanceObjectBuilderImpl{}
 	device := builder.CreateDeviceObject(coreDriver, mocks.NewFakeDeviceHandle(), common.Vulkan1_1, []string{}).(core1_1.Device)
 
-	buffer := mocks.EasyMockBuffer(ctrl)
+	buffer := mocks1_1.EasyMockBuffer(ctrl)
 
 	coreDriver.EXPECT().VkGetBufferMemoryRequirements2(
 		device.Handle(),
@@ -217,7 +218,7 @@ func TestVulkanDevice_ImageMemoryRequirements(t *testing.T) {
 	builder := &impl1_1.InstanceObjectBuilderImpl{}
 	device := builder.CreateDeviceObject(coreDriver, mocks.NewFakeDeviceHandle(), common.Vulkan1_1, []string{}).(core1_1.Device)
 
-	image := mocks.EasyMockImage(ctrl)
+	image := mocks1_1.EasyMockImage(ctrl)
 
 	coreDriver.EXPECT().VkGetImageMemoryRequirements2(
 		device.Handle(),
@@ -261,7 +262,7 @@ func TestVulkanExtension_SparseImageMemoryRequirements(t *testing.T) {
 	builder := &impl1_1.InstanceObjectBuilderImpl{}
 	device := builder.CreateDeviceObject(coreDriver, mocks.NewFakeDeviceHandle(), common.Vulkan1_1, []string{}).(core1_1.Device)
 
-	image := mocks.EasyMockImage(ctrl)
+	image := mocks1_1.EasyMockImage(ctrl)
 
 	coreDriver.EXPECT().VkGetImageSparseMemoryRequirements2(
 		device.Handle(),
@@ -421,7 +422,7 @@ func TestVulkanLoader_CreateSamplerYcbcrConversion(t *testing.T) {
 	builder := &impl1_1.InstanceObjectBuilderImpl{}
 	device := builder.CreateDeviceObject(coreDriver, mocks.NewFakeDeviceHandle(), common.Vulkan1_1, []string{}).(core1_1.Device)
 
-	mockYcbcr := mocks.EasyMockSamplerYcbcrConversion(ctrl)
+	mockYcbcr := mocks1_1.EasyMockSamplerYcbcrConversion(ctrl)
 
 	coreDriver.EXPECT().VkCreateSamplerYcbcrConversion(
 		device.Handle(),
@@ -491,7 +492,7 @@ func TestVulkanLoader1_1_CreateDescriptorUpdateTemplate(t *testing.T) {
 	builder := &impl1_1.InstanceObjectBuilderImpl{}
 	device := builder.CreateDeviceObject(coreDriver, mocks.NewFakeDeviceHandle(), common.Vulkan1_1, []string{}).(core1_1.Device)
 
-	mockQueue := mocks.EasyMockQueue(ctrl)
+	mockQueue := mocks1_1.EasyMockQueue(ctrl)
 
 	coreDriver.EXPECT().VkGetDeviceQueue2(
 		device.Handle(),

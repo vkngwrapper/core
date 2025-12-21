@@ -13,6 +13,7 @@ import (
 	mock_driver "github.com/vkngwrapper/core/v3/driver/mocks"
 	"github.com/vkngwrapper/core/v3/internal/impl1_2"
 	"github.com/vkngwrapper/core/v3/mocks"
+	"github.com/vkngwrapper/core/v3/mocks/mocks1_2"
 	"go.uber.org/mock/gomock"
 )
 
@@ -23,7 +24,7 @@ func TestAttachmentDescriptionStencilLayoutOptions(t *testing.T) {
 	coreDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_2)
 	builder := &impl1_2.InstanceObjectBuilderImpl{}
 	device := builder.CreateDeviceObject(coreDriver, mocks.NewFakeDeviceHandle(), common.Vulkan1_2, []string{}).(core1_2.Device)
-	mockRenderPass := mocks.EasyMockRenderPass(ctrl)
+	mockRenderPass := mocks1_2.EasyMockRenderPass(ctrl)
 
 	coreDriver.EXPECT().VkCreateRenderPass2(
 		device.Handle(),
@@ -105,13 +106,13 @@ func TestRenderPassAttachmentBeginInfo(t *testing.T) {
 	defer ctrl.Finish()
 
 	coreDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_2)
-	device := mocks.EasyMockDevice(ctrl, coreDriver)
-	commandPool := mocks.EasyMockCommandPool(ctrl, device)
+	device := mocks1_2.EasyMockDevice(ctrl, coreDriver)
+	commandPool := mocks1_2.EasyMockCommandPool(ctrl, device)
 	builder := &impl1_2.DeviceObjectBuilderImpl{}
 	commandBuffer := builder.CreateCommandBufferObject(coreDriver, commandPool.Handle(), device.Handle(), mocks.NewFakeCommandBufferHandle(), common.Vulkan1_0)
 
-	imageView1 := mocks.EasyMockImageView(ctrl)
-	imageView2 := mocks.EasyMockImageView(ctrl)
+	imageView1 := mocks1_2.EasyMockImageView(ctrl)
+	imageView2 := mocks1_2.EasyMockImageView(ctrl)
 
 	coreDriver.EXPECT().VkCmdBeginRenderPass(
 		commandBuffer.Handle(),
@@ -153,7 +154,7 @@ func TestSubpassDescriptionDepthStencilResolveOptions(t *testing.T) {
 	coreDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_2)
 	builder := &impl1_2.InstanceObjectBuilderImpl{}
 	device := builder.CreateDeviceObject(coreDriver, mocks.NewFakeDeviceHandle(), common.Vulkan1_2, []string{}).(core1_2.Device)
-	mockRenderPass := mocks.EasyMockRenderPass(ctrl)
+	mockRenderPass := mocks1_2.EasyMockRenderPass(ctrl)
 
 	coreDriver.EXPECT().VkCreateRenderPass2(
 		device.Handle(),

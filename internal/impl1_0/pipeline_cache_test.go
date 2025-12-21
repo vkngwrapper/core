@@ -12,6 +12,7 @@ import (
 	mock_driver "github.com/vkngwrapper/core/v3/driver/mocks"
 	"github.com/vkngwrapper/core/v3/internal/impl1_0"
 	"github.com/vkngwrapper/core/v3/mocks"
+	"github.com/vkngwrapper/core/v3/mocks/mocks1_0"
 	"go.uber.org/mock/gomock"
 )
 
@@ -60,7 +61,7 @@ func TestVulkanPipelineCache_CacheData(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_0)
-	device := mocks.EasyMockDevice(ctrl, mockDriver)
+	device := mocks1_0.EasyMockDevice(ctrl, mockDriver)
 	builder := impl1_0.DeviceObjectBuilderImpl{}
 	pipelineCache := builder.CreatePipelineCacheObject(mockDriver, device.Handle(), mocks.NewFakePipelineCache(), common.Vulkan1_0)
 
@@ -87,13 +88,13 @@ func TestVulkanPipelineCache_MergePipelineCaches(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_0)
-	device := mocks.EasyMockDevice(ctrl, mockDriver)
+	device := mocks1_0.EasyMockDevice(ctrl, mockDriver)
 	builder := impl1_0.DeviceObjectBuilderImpl{}
 	pipelineCache := builder.CreatePipelineCacheObject(mockDriver, device.Handle(), mocks.NewFakePipelineCache(), common.Vulkan1_0)
 
-	srcPipeline1 := mocks.EasyMockPipelineCache(ctrl)
-	srcPipeline2 := mocks.EasyMockPipelineCache(ctrl)
-	srcPipeline3 := mocks.EasyMockPipelineCache(ctrl)
+	srcPipeline1 := mocks1_0.EasyMockPipelineCache(ctrl)
+	srcPipeline2 := mocks1_0.EasyMockPipelineCache(ctrl)
+	srcPipeline3 := mocks1_0.EasyMockPipelineCache(ctrl)
 
 	mockDriver.EXPECT().VkMergePipelineCaches(device.Handle(), pipelineCache.Handle(), driver.Uint32(3), gomock.Not(nil)).DoAndReturn(
 		func(device driver.VkDevice, dstCache driver.VkPipelineCache, srcCacheCount driver.Uint32, pSrcCaches *driver.VkPipelineCache) (common.VkResult, error) {

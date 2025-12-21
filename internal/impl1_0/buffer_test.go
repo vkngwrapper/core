@@ -12,6 +12,7 @@ import (
 	mock_driver "github.com/vkngwrapper/core/v3/driver/mocks"
 	"github.com/vkngwrapper/core/v3/internal/impl1_0"
 	"github.com/vkngwrapper/core/v3/mocks"
+	"github.com/vkngwrapper/core/v3/mocks/mocks1_0"
 	"go.uber.org/mock/gomock"
 )
 
@@ -106,7 +107,7 @@ func TestBuffer_MemoryRequirements(t *testing.T) {
 
 	mockDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_0)
 
-	device := mocks.EasyMockDevice(ctrl, mockDriver)
+	device := mocks1_0.EasyMockDevice(ctrl, mockDriver)
 
 	builder := impl1_0.DeviceObjectBuilderImpl{}
 	buffer := builder.CreateBufferObject(mockDriver, device.Handle(), mocks.NewFakeBufferHandle(), common.Vulkan1_0)
@@ -131,10 +132,10 @@ func TestBuffer_BindBufferMemory_Success(t *testing.T) {
 
 	mockDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_0)
 
-	device := mocks.EasyMockDevice(ctrl, mockDriver)
+	device := mocks1_0.EasyMockDevice(ctrl, mockDriver)
 	builder := impl1_0.DeviceObjectBuilderImpl{}
 	buffer := builder.CreateBufferObject(mockDriver, device.Handle(), mocks.NewFakeBufferHandle(), common.Vulkan1_0)
-	memory := mocks.EasyMockDeviceMemory(ctrl)
+	memory := mocks1_0.EasyMockDeviceMemory(ctrl)
 
 	mockDriver.EXPECT().VkBindBufferMemory(device.Handle(), buffer.Handle(), memory.Handle(), driver.VkDeviceSize(3)).Return(core1_0.VKSuccess, nil)
 	_, err := buffer.BindBufferMemory(memory, 3)
@@ -147,7 +148,7 @@ func TestBuffer_BindBufferMemory_FailNilMemory(t *testing.T) {
 
 	mockDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_0)
 
-	device := mocks.EasyMockDevice(ctrl, mockDriver)
+	device := mocks1_0.EasyMockDevice(ctrl, mockDriver)
 	builder := impl1_0.DeviceObjectBuilderImpl{}
 	buffer := builder.CreateBufferObject(mockDriver, device.Handle(), mocks.NewFakeBufferHandle(), common.Vulkan1_0)
 

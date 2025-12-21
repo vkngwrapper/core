@@ -13,6 +13,7 @@ import (
 	"github.com/vkngwrapper/core/v3/internal/impl1_0"
 	"github.com/vkngwrapper/core/v3/internal/impl1_2"
 	"github.com/vkngwrapper/core/v3/mocks"
+	"github.com/vkngwrapper/core/v3/mocks/mocks1_2"
 	"go.uber.org/mock/gomock"
 )
 
@@ -23,7 +24,7 @@ func TestBufferOpaqueCaptureAddressCreateOptions(t *testing.T) {
 	coreDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_2)
 	builder := &impl1_2.InstanceObjectBuilderImpl{}
 	device := builder.CreateDeviceObject(coreDriver, mocks.NewFakeDeviceHandle(), common.Vulkan1_2, []string{}).(core1_2.Device)
-	mockBuffer := mocks.EasyMockBuffer(ctrl)
+	mockBuffer := mocks1_2.EasyMockBuffer(ctrl)
 
 	coreDriver.EXPECT().VkCreateBuffer(
 		device.Handle(),
@@ -70,7 +71,7 @@ func TestMemoryOpaqueCaptureAddressAllocateOptions(t *testing.T) {
 	coreDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_0)
 	builder := &impl1_0.InstanceObjectBuilderImpl{}
 	device := builder.CreateDeviceObject(coreDriver, mocks.NewFakeDeviceHandle(), common.Vulkan1_2, []string{})
-	mockMemory := mocks.EasyMockDeviceMemory(ctrl)
+	mockMemory := mocks1_2.EasyMockDeviceMemory(ctrl)
 
 	coreDriver.EXPECT().VkAllocateMemory(
 		device.Handle(),

@@ -13,6 +13,7 @@ import (
 	mock_driver "github.com/vkngwrapper/core/v3/driver/mocks"
 	"github.com/vkngwrapper/core/v3/internal/impl1_2"
 	"github.com/vkngwrapper/core/v3/mocks"
+	"github.com/vkngwrapper/core/v3/mocks/mocks1_2"
 	"go.uber.org/mock/gomock"
 )
 
@@ -21,12 +22,12 @@ func TestCommandBuffer_CmdBeginRenderPass2(t *testing.T) {
 	defer ctrl.Finish()
 
 	coreDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_2)
-	device := mocks.EasyMockDevice(ctrl, coreDriver)
-	commandPool := mocks.EasyMockCommandPool(ctrl, device)
+	device := mocks1_2.EasyMockDevice(ctrl, coreDriver)
+	commandPool := mocks1_2.EasyMockCommandPool(ctrl, device)
 	builder := impl1_2.DeviceObjectBuilderImpl{}
 	commandBuffer := builder.CreateCommandBufferObject(coreDriver, commandPool.Handle(), device.Handle(), mocks.NewFakeCommandBufferHandle(), common.Vulkan1_2).(core1_2.CommandBuffer)
-	renderPass := mocks.EasyMockRenderPass(ctrl)
-	framebuffer := mocks.EasyMockFramebuffer(ctrl)
+	renderPass := mocks1_2.EasyMockRenderPass(ctrl)
+	framebuffer := mocks1_2.EasyMockFramebuffer(ctrl)
 
 	coreDriver.EXPECT().VkCmdBeginRenderPass2(
 		commandBuffer.Handle(),
@@ -79,8 +80,8 @@ func TestCommandBuffer_CmdEndRenderPass2(t *testing.T) {
 	defer ctrl.Finish()
 
 	coreDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_2)
-	device := mocks.EasyMockDevice(ctrl, coreDriver)
-	commandPool := mocks.EasyMockCommandPool(ctrl, device)
+	device := mocks1_2.EasyMockDevice(ctrl, coreDriver)
+	commandPool := mocks1_2.EasyMockCommandPool(ctrl, device)
 	builder := impl1_2.DeviceObjectBuilderImpl{}
 	commandBuffer := builder.CreateCommandBufferObject(coreDriver, commandPool.Handle(), device.Handle(), mocks.NewFakeCommandBufferHandle(), common.Vulkan1_2).(core1_2.CommandBuffer)
 
@@ -105,8 +106,8 @@ func TestVulkanExtension_CmdNextSubpass2(t *testing.T) {
 	defer ctrl.Finish()
 
 	coreDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_2)
-	device := mocks.EasyMockDevice(ctrl, coreDriver)
-	commandPool := mocks.EasyMockCommandPool(ctrl, device)
+	device := mocks1_2.EasyMockDevice(ctrl, coreDriver)
+	commandPool := mocks1_2.EasyMockCommandPool(ctrl, device)
 	builder := impl1_2.DeviceObjectBuilderImpl{}
 	commandBuffer := builder.CreateCommandBufferObject(coreDriver, commandPool.Handle(), device.Handle(), mocks.NewFakeCommandBufferHandle(), common.Vulkan1_2).(core1_2.CommandBuffer)
 
@@ -141,13 +142,13 @@ func TestCommandBuffer_CmdDrawIndexedIndirectCount(t *testing.T) {
 	defer ctrl.Finish()
 
 	coreDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_2)
-	device := mocks.EasyMockDevice(ctrl, coreDriver)
-	commandPool := mocks.EasyMockCommandPool(ctrl, device)
+	device := mocks1_2.EasyMockDevice(ctrl, coreDriver)
+	commandPool := mocks1_2.EasyMockCommandPool(ctrl, device)
 	builder := impl1_2.DeviceObjectBuilderImpl{}
 	commandBuffer := builder.CreateCommandBufferObject(coreDriver, commandPool.Handle(), device.Handle(), mocks.NewFakeCommandBufferHandle(), common.Vulkan1_2).(core1_2.CommandBuffer)
 
-	buffer := mocks.EasyMockBuffer(ctrl)
-	countBuffer := mocks.EasyMockBuffer(ctrl)
+	buffer := mocks1_2.EasyMockBuffer(ctrl)
+	countBuffer := mocks1_2.EasyMockBuffer(ctrl)
 
 	coreDriver.EXPECT().VkCmdDrawIndexedIndirectCount(
 		commandBuffer.Handle(),
@@ -174,13 +175,13 @@ func TestCommandBuffer_CmdDrawIndirectCount(t *testing.T) {
 	defer ctrl.Finish()
 
 	coreDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_2)
-	device := mocks.EasyMockDevice(ctrl, coreDriver)
-	commandPool := mocks.EasyMockCommandPool(ctrl, device)
+	device := mocks1_2.EasyMockDevice(ctrl, coreDriver)
+	commandPool := mocks1_2.EasyMockCommandPool(ctrl, device)
 	builder := impl1_2.DeviceObjectBuilderImpl{}
 	commandBuffer := builder.CreateCommandBufferObject(coreDriver, commandPool.Handle(), device.Handle(), mocks.NewFakeCommandBufferHandle(), common.Vulkan1_2).(core1_2.CommandBuffer)
 
-	buffer := mocks.EasyMockBuffer(ctrl)
-	countBuffer := mocks.EasyMockBuffer(ctrl)
+	buffer := mocks1_2.EasyMockBuffer(ctrl)
+	countBuffer := mocks1_2.EasyMockBuffer(ctrl)
 
 	coreDriver.EXPECT().VkCmdDrawIndirectCount(
 		commandBuffer.Handle(),

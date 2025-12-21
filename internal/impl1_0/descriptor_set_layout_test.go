@@ -12,6 +12,7 @@ import (
 	mock_driver "github.com/vkngwrapper/core/v3/driver/mocks"
 	"github.com/vkngwrapper/core/v3/internal/impl1_0"
 	"github.com/vkngwrapper/core/v3/mocks"
+	"github.com/vkngwrapper/core/v3/mocks/mocks1_0"
 	"go.uber.org/mock/gomock"
 )
 
@@ -72,10 +73,10 @@ func TestDescriptorSetLayout_Create_SingleBindingImmutableSamplers(t *testing.T)
 	device := builder.CreateDeviceObject(mockDriver, mocks.NewFakeDeviceHandle(), common.Vulkan1_0, []string{})
 	layoutHandle := mocks.NewFakeDescriptorSetLayout()
 
-	sampler1 := mocks.EasyMockSampler(ctrl)
-	sampler2 := mocks.EasyMockSampler(ctrl)
-	sampler3 := mocks.EasyMockSampler(ctrl)
-	sampler4 := mocks.EasyMockSampler(ctrl)
+	sampler1 := mocks1_0.EasyMockSampler(ctrl)
+	sampler2 := mocks1_0.EasyMockSampler(ctrl)
+	sampler3 := mocks1_0.EasyMockSampler(ctrl)
+	sampler4 := mocks1_0.EasyMockSampler(ctrl)
 
 	mockDriver.EXPECT().VkCreateDescriptorSetLayout(device.Handle(), gomock.Not(nil), nil, gomock.Not(nil)).DoAndReturn(
 		func(device driver.VkDevice, pCreateInfo *driver.VkDescriptorSetLayoutCreateInfo, pAllocator *driver.VkAllocationCallbacks, pDescriptorSetLayout *driver.VkDescriptorSetLayout) (common.VkResult, error) {
@@ -134,10 +135,10 @@ func TestDescriptorSetLayout_Create_FailBindingSamplerMismatch(t *testing.T) {
 	builder := impl1_0.InstanceObjectBuilderImpl{}
 	device := builder.CreateDeviceObject(mockDriver, mocks.NewFakeDeviceHandle(), common.Vulkan1_0, []string{})
 
-	sampler1 := mocks.EasyMockSampler(ctrl)
-	sampler2 := mocks.EasyMockSampler(ctrl)
-	sampler3 := mocks.EasyMockSampler(ctrl)
-	sampler4 := mocks.EasyMockSampler(ctrl)
+	sampler1 := mocks1_0.EasyMockSampler(ctrl)
+	sampler2 := mocks1_0.EasyMockSampler(ctrl)
+	sampler3 := mocks1_0.EasyMockSampler(ctrl)
+	sampler4 := mocks1_0.EasyMockSampler(ctrl)
 
 	_, _, err := device.CreateDescriptorSetLayout(nil, core1_0.DescriptorSetLayoutCreateInfo{
 		Flags: 0,

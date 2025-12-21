@@ -12,6 +12,7 @@ import (
 	mock_driver "github.com/vkngwrapper/core/v3/driver/mocks"
 	"github.com/vkngwrapper/core/v3/internal/impl1_0"
 	"github.com/vkngwrapper/core/v3/mocks"
+	"github.com/vkngwrapper/core/v3/mocks/mocks1_0"
 	"go.uber.org/mock/gomock"
 )
 
@@ -57,7 +58,7 @@ func TestCommandBufferSingleAllocateFree(t *testing.T) {
 	builder := impl1_0.InstanceObjectBuilderImpl{}
 	device := builder.CreateDeviceObject(mockDriver, mocks.NewFakeDeviceHandle(), common.Vulkan1_0, []string{})
 
-	commandPool := mocks.EasyMockCommandPool(ctrl, device)
+	commandPool := mocks1_0.EasyMockCommandPool(ctrl, device)
 
 	bufferHandle := mocks.NewFakeCommandBufferHandle()
 
@@ -107,7 +108,7 @@ func TestCommandBufferMultiAllocateFree(t *testing.T) {
 	builder := impl1_0.InstanceObjectBuilderImpl{}
 	device := builder.CreateDeviceObject(mockDriver, mocks.NewFakeDeviceHandle(), common.Vulkan1_0, []string{})
 
-	commandPool := mocks.EasyMockCommandPool(ctrl, device)
+	commandPool := mocks1_0.EasyMockCommandPool(ctrl, device)
 
 	bufferHandles := []driver.VkCommandBuffer{
 		mocks.NewFakeCommandBufferHandle(),
@@ -163,7 +164,7 @@ func TestVulkanCommandPool_Reset(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_0)
-	mockDevice := mocks.EasyMockDevice(ctrl, mockDriver)
+	mockDevice := mocks1_0.EasyMockDevice(ctrl, mockDriver)
 
 	builder := impl1_0.DeviceObjectBuilderImpl{}
 	commandPool := builder.CreateCommandPoolObject(mockDriver, mockDevice.Handle(), mocks.NewFakeCommandPoolHandle(), common.Vulkan1_0)

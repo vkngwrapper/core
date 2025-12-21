@@ -13,6 +13,7 @@ import (
 	mock_driver "github.com/vkngwrapper/core/v3/driver/mocks"
 	"github.com/vkngwrapper/core/v3/internal/impl1_2"
 	"github.com/vkngwrapper/core/v3/mocks"
+	"github.com/vkngwrapper/core/v3/mocks/mocks1_2"
 	"go.uber.org/mock/gomock"
 )
 
@@ -24,7 +25,7 @@ func TestSemaphoreTypeCreateOptions(t *testing.T) {
 
 	builder := &impl1_2.InstanceObjectBuilderImpl{}
 	device := builder.CreateDeviceObject(coreDriver, mocks.NewFakeDeviceHandle(), common.Vulkan1_2, []string{})
-	mockSemaphore := mocks.EasyMockSemaphore(ctrl)
+	mockSemaphore := mocks1_2.EasyMockSemaphore(ctrl)
 
 	coreDriver.EXPECT().VkCreateSemaphore(
 		device.Handle(),
@@ -69,10 +70,10 @@ func TestTimelineSemaphoreSubmitOptions(t *testing.T) {
 	defer ctrl.Finish()
 
 	coreDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_2)
-	device := mocks.EasyMockDevice(ctrl, coreDriver)
+	device := mocks1_2.EasyMockDevice(ctrl, coreDriver)
 	builder := &impl1_2.DeviceObjectBuilderImpl{}
 	queue := builder.CreateQueueObject(coreDriver, device.Handle(), mocks.NewFakeQueue(), common.Vulkan1_2)
-	fence := mocks.EasyMockFence(ctrl)
+	fence := mocks1_2.EasyMockFence(ctrl)
 
 	coreDriver.EXPECT().VkQueueSubmit(
 		queue.Handle(),

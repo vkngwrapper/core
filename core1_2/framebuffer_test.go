@@ -13,6 +13,7 @@ import (
 	mock_driver "github.com/vkngwrapper/core/v3/driver/mocks"
 	"github.com/vkngwrapper/core/v3/internal/impl1_2"
 	"github.com/vkngwrapper/core/v3/mocks"
+	"github.com/vkngwrapper/core/v3/mocks/mocks1_2"
 	"go.uber.org/mock/gomock"
 )
 
@@ -24,7 +25,7 @@ func TestFramebufferAttachmentsCreateOptions(t *testing.T) {
 	builder := &impl1_2.InstanceObjectBuilderImpl{}
 	device := builder.CreateDeviceObject(coreDriver, mocks.NewFakeDeviceHandle(), common.Vulkan1_2, []string{})
 
-	mockFramebuffer := mocks.EasyMockFramebuffer(ctrl)
+	mockFramebuffer := mocks1_2.EasyMockFramebuffer(ctrl)
 
 	coreDriver.EXPECT().VkCreateFramebuffer(
 		device.Handle(),

@@ -14,6 +14,7 @@ import (
 	mock_driver "github.com/vkngwrapper/core/v3/driver/mocks"
 	"github.com/vkngwrapper/core/v3/internal/impl1_2"
 	"github.com/vkngwrapper/core/v3/mocks"
+	"github.com/vkngwrapper/core/v3/mocks/mocks1_2"
 	"go.uber.org/mock/gomock"
 )
 
@@ -25,16 +26,16 @@ func TestDescriptorSetVariableDescriptorCountAllocateOptions(t *testing.T) {
 
 	builder := &impl1_2.InstanceObjectBuilderImpl{}
 	device := builder.CreateDeviceObject(coreDriver, mocks.NewFakeDeviceHandle(), common.Vulkan1_2, []string{})
-	descriptorPool := mocks.EasyMockDescriptorPool(ctrl, device)
-	descriptorLayout1 := mocks.EasyMockDescriptorSetLayout(ctrl)
-	descriptorLayout2 := mocks.EasyMockDescriptorSetLayout(ctrl)
-	descriptorLayout3 := mocks.EasyMockDescriptorSetLayout(ctrl)
-	descriptorLayout4 := mocks.EasyMockDescriptorSetLayout(ctrl)
+	descriptorPool := mocks1_2.EasyMockDescriptorPool(ctrl, device)
+	descriptorLayout1 := mocks1_2.EasyMockDescriptorSetLayout(ctrl)
+	descriptorLayout2 := mocks1_2.EasyMockDescriptorSetLayout(ctrl)
+	descriptorLayout3 := mocks1_2.EasyMockDescriptorSetLayout(ctrl)
+	descriptorLayout4 := mocks1_2.EasyMockDescriptorSetLayout(ctrl)
 
-	mockDescriptorSet1 := mocks.EasyMockDescriptorSet(ctrl)
-	mockDescriptorSet2 := mocks.EasyMockDescriptorSet(ctrl)
-	mockDescriptorSet3 := mocks.EasyMockDescriptorSet(ctrl)
-	mockDescriptorSet4 := mocks.EasyMockDescriptorSet(ctrl)
+	mockDescriptorSet1 := mocks1_2.EasyMockDescriptorSet(ctrl)
+	mockDescriptorSet2 := mocks1_2.EasyMockDescriptorSet(ctrl)
+	mockDescriptorSet3 := mocks1_2.EasyMockDescriptorSet(ctrl)
+	mockDescriptorSet4 := mocks1_2.EasyMockDescriptorSet(ctrl)
 
 	coreDriver.EXPECT().VkAllocateDescriptorSets(
 		device.Handle(),
@@ -104,7 +105,7 @@ func TestDescriptorSetLayoutBindingFlagsCreateOptions(t *testing.T) {
 	coreDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_2)
 	builder := &impl1_2.InstanceObjectBuilderImpl{}
 	device := builder.CreateDeviceObject(coreDriver, mocks.NewFakeDeviceHandle(), common.Vulkan1_0, []string{})
-	mockDescriptorSetLayout := mocks.EasyMockDescriptorSetLayout(ctrl)
+	mockDescriptorSetLayout := mocks1_2.EasyMockDescriptorSetLayout(ctrl)
 
 	coreDriver.EXPECT().VkCreateDescriptorSetLayout(
 		device.Handle(),

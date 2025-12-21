@@ -13,6 +13,7 @@ import (
 	mock_driver "github.com/vkngwrapper/core/v3/driver/mocks"
 	"github.com/vkngwrapper/core/v3/internal/impl1_2"
 	"github.com/vkngwrapper/core/v3/mocks"
+	"github.com/vkngwrapper/core/v3/mocks/mocks1_2"
 	"go.uber.org/mock/gomock"
 )
 
@@ -23,7 +24,7 @@ func TestImageStencilUsageCreateOptions(t *testing.T) {
 	coreDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_0)
 	builder := &impl1_2.InstanceObjectBuilderImpl{}
 	device := builder.CreateDeviceObject(coreDriver, mocks.NewFakeDeviceHandle(), common.Vulkan1_0, []string{})
-	mockImage := mocks.EasyMockImage(ctrl)
+	mockImage := mocks1_2.EasyMockImage(ctrl)
 
 	coreDriver.EXPECT().VkCreateImage(
 		device.Handle(),
@@ -69,7 +70,7 @@ func TestImageFormatListCreateOptions(t *testing.T) {
 	builder := &impl1_2.InstanceObjectBuilderImpl{}
 	device := builder.CreateDeviceObject(coreDriver, mocks.NewFakeDeviceHandle(), common.Vulkan1_2, []string{})
 
-	mockImage := mocks.EasyMockImage(ctrl)
+	mockImage := mocks1_2.EasyMockImage(ctrl)
 
 	coreDriver.EXPECT().VkCreateImage(
 		device.Handle(),

@@ -12,6 +12,7 @@ import (
 	mock_driver "github.com/vkngwrapper/core/v3/driver/mocks"
 	"github.com/vkngwrapper/core/v3/internal/impl1_0"
 	"github.com/vkngwrapper/core/v3/mocks"
+	"github.com/vkngwrapper/core/v3/mocks/mocks1_0"
 	"go.uber.org/mock/gomock"
 )
 
@@ -21,19 +22,19 @@ func TestSubmitToQueue_SignalSuccess(t *testing.T) {
 
 	mockDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_0)
 
-	mockDevice := mocks.EasyMockDevice(ctrl, mockDriver)
+	mockDevice := mocks1_0.EasyMockDevice(ctrl, mockDriver)
 	builder := impl1_0.DeviceObjectBuilderImpl{}
 	queue := builder.CreateQueueObject(mockDriver, mockDevice.Handle(), mocks.NewFakeQueue(), common.Vulkan1_0)
 
-	fence := mocks.EasyMockFence(ctrl)
-	buffer := mocks.EasyMockCommandBuffer(ctrl)
+	fence := mocks1_0.EasyMockFence(ctrl)
+	buffer := mocks1_0.EasyMockCommandBuffer(ctrl)
 
-	waitSemaphore1 := mocks.EasyMockSemaphore(ctrl)
-	waitSemaphore2 := mocks.EasyMockSemaphore(ctrl)
+	waitSemaphore1 := mocks1_0.EasyMockSemaphore(ctrl)
+	waitSemaphore2 := mocks1_0.EasyMockSemaphore(ctrl)
 
-	signalSemaphore1 := mocks.EasyMockSemaphore(ctrl)
-	signalSemaphore2 := mocks.EasyMockSemaphore(ctrl)
-	signalSemaphore3 := mocks.EasyMockSemaphore(ctrl)
+	signalSemaphore1 := mocks1_0.EasyMockSemaphore(ctrl)
+	signalSemaphore2 := mocks1_0.EasyMockSemaphore(ctrl)
+	signalSemaphore3 := mocks1_0.EasyMockSemaphore(ctrl)
 
 	mockDriver.EXPECT().VkQueueSubmit(queue.Handle(), driver.Uint32(1), gomock.Not(nil), fence.Handle()).DoAndReturn(
 		func(queue driver.VkQueue, submitCount driver.Uint32, pSubmits *driver.VkSubmitInfo, fence driver.VkFence) (common.VkResult, error) {
@@ -91,11 +92,11 @@ func TestSubmitToQueue_NoSignalSuccess(t *testing.T) {
 
 	mockDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_0)
 
-	mockDevice := mocks.EasyMockDevice(ctrl, mockDriver)
+	mockDevice := mocks1_0.EasyMockDevice(ctrl, mockDriver)
 	builder := impl1_0.DeviceObjectBuilderImpl{}
 	queue := builder.CreateQueueObject(mockDriver, mockDevice.Handle(), mocks.NewFakeQueue(), common.Vulkan1_0)
 
-	buffer := mocks.EasyMockCommandBuffer(ctrl)
+	buffer := mocks1_0.EasyMockCommandBuffer(ctrl)
 
 	mockDriver.EXPECT().VkQueueSubmit(queue.Handle(), driver.Uint32(1), gomock.Not(nil), driver.VkFence(driver.NullHandle)).DoAndReturn(
 		func(queue driver.VkQueue, submitCount driver.Uint32, pSubmits *driver.VkSubmitInfo, fence driver.VkFence) (common.VkResult, error) {
@@ -139,14 +140,14 @@ func TestSubmitToQueue_MismatchWaitSemaphores(t *testing.T) {
 
 	mockDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_0)
 
-	mockDevice := mocks.EasyMockDevice(ctrl, mockDriver)
+	mockDevice := mocks1_0.EasyMockDevice(ctrl, mockDriver)
 	builder := impl1_0.DeviceObjectBuilderImpl{}
 	queue := builder.CreateQueueObject(mockDriver, mockDevice.Handle(), mocks.NewFakeQueue(), common.Vulkan1_0)
 
-	buffer := mocks.EasyMockCommandBuffer(ctrl)
+	buffer := mocks1_0.EasyMockCommandBuffer(ctrl)
 
-	waitSemaphore1 := mocks.EasyMockSemaphore(ctrl)
-	waitSemaphore2 := mocks.EasyMockSemaphore(ctrl)
+	waitSemaphore1 := mocks1_0.EasyMockSemaphore(ctrl)
+	waitSemaphore2 := mocks1_0.EasyMockSemaphore(ctrl)
 
 	_, err := queue.Submit(nil, []core1_0.SubmitInfo{
 		{

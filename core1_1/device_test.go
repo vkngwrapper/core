@@ -13,6 +13,7 @@ import (
 	mock_driver "github.com/vkngwrapper/core/v3/driver/mocks"
 	"github.com/vkngwrapper/core/v3/internal/impl1_1"
 	"github.com/vkngwrapper/core/v3/mocks"
+	"github.com/vkngwrapper/core/v3/mocks/mocks1_1"
 	"go.uber.org/mock/gomock"
 )
 
@@ -24,8 +25,8 @@ func TestBindBufferMemoryDeviceGroupOptions(t *testing.T) {
 	builder := &impl1_1.InstanceObjectBuilderImpl{}
 	device := builder.CreateDeviceObject(coreDriver, mocks.NewFakeDeviceHandle(), common.Vulkan1_1, []string{}).(core1_1.Device)
 
-	buffer := mocks.EasyMockBuffer(ctrl)
-	memory := mocks.EasyMockDeviceMemory(ctrl)
+	buffer := mocks1_1.EasyMockBuffer(ctrl)
+	memory := mocks1_1.EasyMockDeviceMemory(ctrl)
 
 	coreDriver.EXPECT().VkBindBufferMemory2(
 		device.Handle(),
@@ -84,8 +85,8 @@ func TestBindImageMemoryDeviceGroupOptions(t *testing.T) {
 	builder := &impl1_1.InstanceObjectBuilderImpl{}
 	device := builder.CreateDeviceObject(coreDriver, mocks.NewFakeDeviceHandle(), common.Vulkan1_1, []string{}).(core1_1.Device)
 
-	image := mocks.EasyMockImage(ctrl)
-	memory := mocks.EasyMockDeviceMemory(ctrl)
+	image := mocks1_1.EasyMockImage(ctrl)
+	memory := mocks1_1.EasyMockDeviceMemory(ctrl)
 
 	coreDriver.EXPECT().VkBindImageMemory2(
 		device.Handle(),
@@ -172,8 +173,8 @@ func TestBindImagePlaneMemoryOptions(t *testing.T) {
 	builder := &impl1_1.InstanceObjectBuilderImpl{}
 	device := builder.CreateDeviceObject(coreDriver, mocks.NewFakeDeviceHandle(), common.Vulkan1_1, []string{}).(core1_1.Device)
 
-	image := mocks.EasyMockImage(ctrl)
-	memory := mocks.EasyMockDeviceMemory(ctrl)
+	image := mocks1_1.EasyMockImage(ctrl)
+	memory := mocks1_1.EasyMockDeviceMemory(ctrl)
 
 	coreDriver.EXPECT().VkBindImageMemory2(
 		device.Handle(),
@@ -222,11 +223,11 @@ func TestDeviceGroupBindSparseOptions(t *testing.T) {
 	builder := &impl1_1.InstanceObjectBuilderImpl{}
 	device := builder.CreateDeviceObject(coreDriver, mocks.NewFakeDeviceHandle(), common.Vulkan1_1, []string{}).(core1_1.Device)
 
-	fence := mocks.EasyMockFence(ctrl)
+	fence := mocks1_1.EasyMockFence(ctrl)
 
-	semaphore1 := mocks.EasyMockSemaphore(ctrl)
-	semaphore2 := mocks.EasyMockSemaphore(ctrl)
-	semaphore3 := mocks.EasyMockSemaphore(ctrl)
+	semaphore1 := mocks1_1.EasyMockSemaphore(ctrl)
+	semaphore2 := mocks1_1.EasyMockSemaphore(ctrl)
+	semaphore3 := mocks1_1.EasyMockSemaphore(ctrl)
 
 	devBuilder := &impl1_1.DeviceObjectBuilderImpl{}
 	queue := devBuilder.CreateQueueObject(coreDriver, device.Handle(), mocks.NewFakeQueue(), common.Vulkan1_1)

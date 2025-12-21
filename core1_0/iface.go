@@ -8,7 +8,7 @@ import (
 	"github.com/vkngwrapper/core/v3/driver"
 )
 
-//go:generate mockgen -source ./iface.go -destination ../mocks/core1_0_mocks.go -package mocks
+//go:generate mockgen -source ./iface.go -destination ../mocks/mocks1_0/mocks.go -package mocks1_0
 
 // Buffer represents a linear array of data, which is used for various purposes by binding it
 // to a graphics or compute pipeline.

@@ -13,6 +13,7 @@ import (
 	mock_driver "github.com/vkngwrapper/core/v3/driver/mocks"
 	"github.com/vkngwrapper/core/v3/internal/impl1_1"
 	"github.com/vkngwrapper/core/v3/mocks"
+	"github.com/vkngwrapper/core/v3/mocks/mocks1_1"
 	"go.uber.org/mock/gomock"
 )
 
@@ -22,13 +23,13 @@ func TestDeviceGroupSubmitOptions(t *testing.T) {
 
 	coreDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_1)
 
-	device := mocks.EasyMockDevice(ctrl, coreDriver)
-	fence := mocks.EasyMockFence(ctrl)
-	commandBuffer := mocks.EasyMockCommandBuffer(ctrl)
+	device := mocks1_1.EasyMockDevice(ctrl, coreDriver)
+	fence := mocks1_1.EasyMockFence(ctrl)
+	commandBuffer := mocks1_1.EasyMockCommandBuffer(ctrl)
 
-	semaphore1 := mocks.EasyMockSemaphore(ctrl)
-	semaphore2 := mocks.EasyMockSemaphore(ctrl)
-	semaphore3 := mocks.EasyMockSemaphore(ctrl)
+	semaphore1 := mocks1_1.EasyMockSemaphore(ctrl)
+	semaphore2 := mocks1_1.EasyMockSemaphore(ctrl)
+	semaphore3 := mocks1_1.EasyMockSemaphore(ctrl)
 
 	builder := &impl1_1.DeviceObjectBuilderImpl{}
 	queue := builder.CreateQueueObject(coreDriver, device.Handle(), mocks.NewFakeQueue(), common.Vulkan1_1)
@@ -99,13 +100,13 @@ func TestProtectedMemorySubmitOptions(t *testing.T) {
 
 	coreDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_1)
 
-	device := mocks.EasyMockDevice(ctrl, coreDriver)
-	fence := mocks.EasyMockFence(ctrl)
-	commandBuffer := mocks.EasyMockCommandBuffer(ctrl)
+	device := mocks1_1.EasyMockDevice(ctrl, coreDriver)
+	fence := mocks1_1.EasyMockFence(ctrl)
+	commandBuffer := mocks1_1.EasyMockCommandBuffer(ctrl)
 
-	semaphore1 := mocks.EasyMockSemaphore(ctrl)
-	semaphore2 := mocks.EasyMockSemaphore(ctrl)
-	semaphore3 := mocks.EasyMockSemaphore(ctrl)
+	semaphore1 := mocks1_1.EasyMockSemaphore(ctrl)
+	semaphore2 := mocks1_1.EasyMockSemaphore(ctrl)
+	semaphore3 := mocks1_1.EasyMockSemaphore(ctrl)
 
 	builder := &impl1_1.DeviceObjectBuilderImpl{}
 	queue := builder.CreateQueueObject(coreDriver, device.Handle(), mocks.NewFakeQueue(), common.Vulkan1_1)

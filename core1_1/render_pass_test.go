@@ -13,6 +13,7 @@ import (
 	mock_driver "github.com/vkngwrapper/core/v3/driver/mocks"
 	"github.com/vkngwrapper/core/v3/internal/impl1_1"
 	"github.com/vkngwrapper/core/v3/mocks"
+	"github.com/vkngwrapper/core/v3/mocks/mocks1_1"
 	"go.uber.org/mock/gomock"
 )
 
@@ -24,7 +25,7 @@ func TestInputAttachmentAspectOptions(t *testing.T) {
 	builder := &impl1_1.InstanceObjectBuilderImpl{}
 	device := builder.CreateDeviceObject(coreDriver, mocks.NewFakeDeviceHandle(), common.Vulkan1_1, []string{}).(core1_1.Device)
 
-	expectedRenderPass := mocks.EasyMockRenderPass(ctrl)
+	expectedRenderPass := mocks1_1.EasyMockRenderPass(ctrl)
 
 	coreDriver.EXPECT().VkCreateRenderPass(device.Handle(), gomock.Not(gomock.Nil()), gomock.Nil(), gomock.Not(gomock.Nil())).
 		DoAndReturn(func(device driver.VkDevice, pCreateInfo *driver.VkRenderPassCreateInfo, pAllocator *driver.VkAllocationCallbacks, pRenderPass *driver.VkRenderPass) (common.VkResult, error) {
@@ -81,13 +82,13 @@ func TestDeviceGroupRenderPassBeginOptions(t *testing.T) {
 	defer ctrl.Finish()
 
 	coreDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_0)
-	device := mocks.EasyMockDevice(ctrl, coreDriver)
-	commandPool := mocks.EasyMockCommandPool(ctrl, device)
+	device := mocks1_1.EasyMockDevice(ctrl, coreDriver)
+	commandPool := mocks1_1.EasyMockCommandPool(ctrl, device)
 
 	builder := &impl1_1.DeviceObjectBuilderImpl{}
 	commandBuffer := builder.CreateCommandBufferObject(coreDriver, commandPool.Handle(), device.Handle(), mocks.NewFakeCommandBufferHandle(), common.Vulkan1_1)
-	renderPass := mocks.EasyMockRenderPass(ctrl)
-	framebuffer := mocks.EasyMockFramebuffer(ctrl)
+	renderPass := mocks1_1.EasyMockRenderPass(ctrl)
+	framebuffer := mocks1_1.EasyMockFramebuffer(ctrl)
 
 	coreDriver.EXPECT().VkCmdBeginRenderPass(
 		commandBuffer.Handle(),
@@ -161,7 +162,7 @@ func TestRenderPassMultiviewOptions(t *testing.T) {
 	builder := &impl1_1.InstanceObjectBuilderImpl{}
 	device := builder.CreateDeviceObject(coreDriver, mocks.NewFakeDeviceHandle(), common.Vulkan1_1, []string{}).(core1_1.Device)
 
-	mockRenderPass := mocks.EasyMockRenderPass(ctrl)
+	mockRenderPass := mocks1_1.EasyMockRenderPass(ctrl)
 
 	coreDriver.EXPECT().VkCreateRenderPass(
 		device.Handle(),

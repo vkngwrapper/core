@@ -14,12 +14,13 @@ import (
 	mock_driver "github.com/vkngwrapper/core/v3/driver/mocks"
 	"github.com/vkngwrapper/core/v3/internal/impl1_0"
 	"github.com/vkngwrapper/core/v3/mocks"
+	"github.com/vkngwrapper/core/v3/mocks/mocks1_0"
 	"go.uber.org/mock/gomock"
 )
 
 func setup(t *testing.T, ctrl *gomock.Controller) (*mock_driver.MockDriver, core1_0.CommandBuffer) {
 	mockDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_0)
-	mockDevice := mocks.EasyMockDevice(ctrl, mockDriver)
+	mockDevice := mocks1_0.EasyMockDevice(ctrl, mockDriver)
 
 	builder := &impl1_0.DeviceObjectBuilderImpl{}
 	buffer := builder.CreateCommandBufferObject(mockDriver, mocks.NewFakeCommandPoolHandle(), mockDevice.Handle(), mocks.NewFakeCommandBufferHandle(), common.Vulkan1_0)
@@ -29,7 +30,7 @@ func setup(t *testing.T, ctrl *gomock.Controller) (*mock_driver.MockDriver, core
 
 func setupWithRenderPass(t *testing.T, ctrl *gomock.Controller) (*mock_driver.MockDriver, core1_0.CommandBuffer, core1_0.RenderPass, core1_0.Framebuffer) {
 	mockDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_0)
-	mockDevice := mocks.EasyMockDevice(ctrl, mockDriver)
+	mockDevice := mocks1_0.EasyMockDevice(ctrl, mockDriver)
 
 	builder := &impl1_0.DeviceObjectBuilderImpl{}
 	buffer := builder.CreateCommandBufferObject(mockDriver, mocks.NewFakeCommandPoolHandle(), mockDevice.Handle(), mocks.NewFakeCommandBufferHandle(), common.Vulkan1_0)
@@ -168,7 +169,7 @@ func TestCommandBuffer_CmdBindGraphicsPipeline(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_0)
-	mockDevice := mocks.EasyMockDevice(ctrl, mockDriver)
+	mockDevice := mocks1_0.EasyMockDevice(ctrl, mockDriver)
 
 	builder := impl1_0.DeviceObjectBuilderImpl{}
 	buffer := builder.CreateCommandBufferObject(mockDriver, mocks.NewFakeCommandPoolHandle(), mockDevice.Handle(), mocks.NewFakeCommandBufferHandle(), common.Vulkan1_0)
@@ -208,7 +209,7 @@ func TestVulkanCommandBuffer_CmdBindVertexBuffers(t *testing.T) {
 	mockDriver, buffer := setup(t, ctrl)
 
 	bufferHandle := mocks.NewFakeBufferHandle()
-	vertexBuffer := mocks.NewMockBuffer(ctrl)
+	vertexBuffer := mocks1_0.NewMockBuffer(ctrl)
 	vertexBuffer.EXPECT().Handle().Return(bufferHandle)
 
 	mockDriver.EXPECT().VkCmdBindVertexBuffers(buffer.Handle(), driver.Uint32(0), driver.Uint32(1), gomock.Not(nil), gomock.Not(nil)).DoAndReturn(
@@ -230,7 +231,7 @@ func TestVulkanCommandBuffer_CmdBindIndexBuffer(t *testing.T) {
 	mockDriver, buffer := setup(t, ctrl)
 
 	bufferHandle := mocks.NewFakeBufferHandle()
-	indexBuffer := mocks.NewMockBuffer(ctrl)
+	indexBuffer := mocks1_0.NewMockBuffer(ctrl)
 	indexBuffer.EXPECT().Handle().Return(bufferHandle)
 
 	mockDriver.EXPECT().VkCmdBindIndexBuffer(buffer.Handle(), bufferHandle, driver.VkDeviceSize(2), driver.VkIndexType(1) /* VK_INDEX_TYPE_UINT32*/)
@@ -245,11 +246,11 @@ func TestVulkanCommandBuffer_CmdBindDescriptorSets(t *testing.T) {
 	mockDriver, buffer := setup(t, ctrl)
 
 	pipelineLayoutHandle := mocks.NewFakePipelineLayout()
-	pipelineLayout := mocks.NewMockPipelineLayout(ctrl)
+	pipelineLayout := mocks1_0.NewMockPipelineLayout(ctrl)
 	pipelineLayout.EXPECT().Handle().Return(pipelineLayoutHandle)
 
 	descriptorSetHandle := mocks.NewFakeDescriptorSet()
-	descriptorSet := mocks.NewMockDescriptorSet(ctrl)
+	descriptorSet := mocks1_0.NewMockDescriptorSet(ctrl)
 	descriptorSet.EXPECT().Handle().Return(descriptorSetHandle)
 
 	mockDriver.EXPECT().VkCmdBindDescriptorSets(
@@ -279,8 +280,8 @@ func TestVulkanCommandBuffer_CmdCopyBuffer(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockDriver, buffer := setup(t, ctrl)
-	src := mocks.EasyMockBuffer(ctrl)
-	dest := mocks.EasyMockBuffer(ctrl)
+	src := mocks1_0.EasyMockBuffer(ctrl)
+	dest := mocks1_0.EasyMockBuffer(ctrl)
 
 	mockDriver.EXPECT().VkCmdCopyBuffer(buffer.Handle(), src.Handle(), dest.Handle(), driver.Uint32(2), gomock.Not(nil)).DoAndReturn(
 		func(buffer driver.VkCommandBuffer, src driver.VkBuffer, dest driver.VkBuffer, regionCount driver.Uint32, pRegions *driver.VkBufferCopy) {
@@ -317,8 +318,8 @@ func TestVulkanCommandBuffer_CmdPipelineBarrier(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockDriver, buffer := setup(t, ctrl)
-	mockBuffer := mocks.EasyMockBuffer(ctrl)
-	mockImage := mocks.EasyMockImage(ctrl)
+	mockBuffer := mocks1_0.EasyMockBuffer(ctrl)
+	mockImage := mocks1_0.EasyMockImage(ctrl)
 
 	mockDriver.EXPECT().VkCmdPipelineBarrier(buffer.Handle(),
 		driver.VkPipelineStageFlags(0x00010000), // VK_PIPELINE_STAGE_ALL_COMMANDS_BIT
@@ -434,8 +435,8 @@ func TestVulkanCommandBuffer_CmdCopyBufferToImage(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockDriver, buffer := setup(t, ctrl)
-	mockBuffer := mocks.EasyMockBuffer(ctrl)
-	mockImage := mocks.EasyMockImage(ctrl)
+	mockBuffer := mocks1_0.EasyMockBuffer(ctrl)
+	mockImage := mocks1_0.EasyMockImage(ctrl)
 
 	mockDriver.EXPECT().VkCmdCopyBufferToImage(buffer.Handle(),
 		mockBuffer.Handle(),
@@ -542,8 +543,8 @@ func TestVulkanCommandBuffer_CmdBlitImage(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockDriver, buffer := setup(t, ctrl)
-	sourceImage := mocks.EasyMockImage(ctrl)
-	destImage := mocks.EasyMockImage(ctrl)
+	sourceImage := mocks1_0.EasyMockImage(ctrl)
+	destImage := mocks1_0.EasyMockImage(ctrl)
 
 	mockDriver.EXPECT().VkCmdBlitImage(buffer.Handle(),
 		sourceImage.Handle(),
@@ -654,7 +655,7 @@ func TestVulkanCommandBuffer_CmdPushConstants(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockDriver, buffer := setup(t, ctrl)
-	pipelineLayout := mocks.EasyMockPipelineLayout(ctrl)
+	pipelineLayout := mocks1_0.EasyMockPipelineLayout(ctrl)
 
 	mockDriver.EXPECT().VkCmdPushConstants(buffer.Handle(),
 		pipelineLayout.Handle(),
@@ -791,8 +792,8 @@ func TestVulkanCommandBuffer_CmdCopyImage(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockDriver, buffer := setup(t, ctrl)
-	srcImage := mocks.EasyMockImage(ctrl)
-	dstImage := mocks.EasyMockImage(ctrl)
+	srcImage := mocks1_0.EasyMockImage(ctrl)
+	dstImage := mocks1_0.EasyMockImage(ctrl)
 
 	mockDriver.EXPECT().VkCmdCopyImage(buffer.Handle(),
 		srcImage.Handle(),
@@ -922,10 +923,10 @@ func TestVulkanCommandBuffer_CmdWaitEvents(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockDriver, buffer := setup(t, ctrl)
-	mockBuffer := mocks.EasyMockBuffer(ctrl)
-	mockImage := mocks.EasyMockImage(ctrl)
-	event1 := mocks.EasyMockEvent(ctrl)
-	event2 := mocks.EasyMockEvent(ctrl)
+	mockBuffer := mocks1_0.EasyMockBuffer(ctrl)
+	mockImage := mocks1_0.EasyMockImage(ctrl)
+	event1 := mocks1_0.EasyMockEvent(ctrl)
+	event2 := mocks1_0.EasyMockEvent(ctrl)
 
 	mockDriver.EXPECT().VkCmdWaitEvents(buffer.Handle(),
 		driver.Uint32(2),
@@ -1046,7 +1047,7 @@ func TestVulkanCommandBuffer_CmdSetEvent(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockDriver, buffer := setup(t, ctrl)
-	event := mocks.EasyMockEvent(ctrl)
+	event := mocks1_0.EasyMockEvent(ctrl)
 
 	mockDriver.EXPECT().VkCmdSetEvent(buffer.Handle(), event.Handle(), driver.VkPipelineStageFlags(0x80) /*VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT*/)
 
@@ -1058,7 +1059,7 @@ func TestVulkanCommandBuffer_CmdClearColorImage(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockDriver, buffer := setup(t, ctrl)
-	image := mocks.EasyMockImage(ctrl)
+	image := mocks1_0.EasyMockImage(ctrl)
 
 	mockDriver.EXPECT().VkCmdClearColorImage(buffer.Handle(),
 		image.Handle(),
@@ -1126,7 +1127,7 @@ func TestVulkanCommandBuffer_CmdResetQueryPool(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockDriver, buffer := setup(t, ctrl)
-	queryPool := mocks.EasyMockQueryPool(ctrl)
+	queryPool := mocks1_0.EasyMockQueryPool(ctrl)
 
 	mockDriver.EXPECT().VkCmdResetQueryPool(buffer.Handle(), queryPool.Handle(), driver.Uint32(1), driver.Uint32(3))
 
@@ -1138,7 +1139,7 @@ func TestVulkanCommandBuffer_CmdBeginQuery(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockDriver, buffer := setup(t, ctrl)
-	queryPool := mocks.EasyMockQueryPool(ctrl)
+	queryPool := mocks1_0.EasyMockQueryPool(ctrl)
 
 	mockDriver.EXPECT().VkCmdBeginQuery(
 		buffer.Handle(),
@@ -1155,7 +1156,7 @@ func TestVulkanCommandBuffer_CmdEndQuery(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockDriver, buffer := setup(t, ctrl)
-	queryPool := mocks.EasyMockQueryPool(ctrl)
+	queryPool := mocks1_0.EasyMockQueryPool(ctrl)
 
 	mockDriver.EXPECT().VkCmdEndQuery(
 		buffer.Handle(),
@@ -1171,8 +1172,8 @@ func TestVulkanCommandBuffer_CmdCopyQueryPoolResults(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockDriver, buffer := setup(t, ctrl)
-	queryPool := mocks.EasyMockQueryPool(ctrl)
-	dstBuffer := mocks.EasyMockBuffer(ctrl)
+	queryPool := mocks1_0.EasyMockQueryPool(ctrl)
+	dstBuffer := mocks1_0.EasyMockBuffer(ctrl)
 
 	mockDriver.EXPECT().VkCmdCopyQueryPoolResults(
 		buffer.Handle(),
@@ -1194,15 +1195,15 @@ func TestVulkanCommandBuffer_CmdExecuteCommands(t *testing.T) {
 
 	mockDriver, buffer := setup(t, ctrl)
 
-	cmd1 := mocks.EasyMockCommandBuffer(ctrl)
+	cmd1 := mocks1_0.EasyMockCommandBuffer(ctrl)
 	cmd1.EXPECT().DrawsRecorded().Return(1)
 	cmd1.EXPECT().DispatchesRecorded().Return(3)
 
-	cmd2 := mocks.EasyMockCommandBuffer(ctrl)
+	cmd2 := mocks1_0.EasyMockCommandBuffer(ctrl)
 	cmd2.EXPECT().DrawsRecorded().Return(5)
 	cmd2.EXPECT().DispatchesRecorded().Return(7)
 
-	cmd3 := mocks.EasyMockCommandBuffer(ctrl)
+	cmd3 := mocks1_0.EasyMockCommandBuffer(ctrl)
 	cmd3.EXPECT().DrawsRecorded().Return(11)
 	cmd3.EXPECT().DispatchesRecorded().Return(13)
 
@@ -1303,7 +1304,7 @@ func TestVulkanCommandBuffer_CmdClearDepthStencilImage(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockDriver, buffer := setup(t, ctrl)
-	image := mocks.EasyMockImage(ctrl)
+	image := mocks1_0.EasyMockImage(ctrl)
 
 	mockDriver.EXPECT().VkCmdClearDepthStencilImage(buffer.Handle(), image.Handle(),
 		driver.VkImageLayout(5), // VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL
@@ -1359,8 +1360,8 @@ func TestVulkanCommandBuffer_CmdCopyImageToBuffer(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockDriver, buffer := setup(t, ctrl)
-	image := mocks.EasyMockImage(ctrl)
-	dstBuffer := mocks.EasyMockBuffer(ctrl)
+	image := mocks1_0.EasyMockImage(ctrl)
+	dstBuffer := mocks1_0.EasyMockBuffer(ctrl)
 
 	mockDriver.EXPECT().VkCmdCopyImageToBuffer(buffer.Handle(), image.Handle(),
 		driver.VkImageLayout(1), // VK_IMAGE_LAYOUT_GENERAL
@@ -1422,7 +1423,7 @@ func TestVulkanCommandBuffer_CmdDispatchIndirect(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockDriver, buffer := setup(t, ctrl)
-	indirectBuffer := mocks.EasyMockBuffer(ctrl)
+	indirectBuffer := mocks1_0.EasyMockBuffer(ctrl)
 
 	mockDriver.EXPECT().VkCmdDispatchIndirect(buffer.Handle(), indirectBuffer.Handle(), driver.VkDeviceSize(3))
 
@@ -1434,7 +1435,7 @@ func TestVulkanCommandBuffer_CmdDrawIndexedIndirect(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockDriver, buffer := setup(t, ctrl)
-	indirectBuffer := mocks.EasyMockBuffer(ctrl)
+	indirectBuffer := mocks1_0.EasyMockBuffer(ctrl)
 
 	mockDriver.EXPECT().VkCmdDrawIndexedIndirect(buffer.Handle(), indirectBuffer.Handle(), driver.VkDeviceSize(3), driver.Uint32(5), driver.Uint32(7))
 
@@ -1446,7 +1447,7 @@ func TestVulkanCommandBuffer_CmdDrawIndirect(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockDriver, buffer := setup(t, ctrl)
-	indirectBuffer := mocks.EasyMockBuffer(ctrl)
+	indirectBuffer := mocks1_0.EasyMockBuffer(ctrl)
 
 	mockDriver.EXPECT().VkCmdDrawIndirect(buffer.Handle(), indirectBuffer.Handle(), driver.VkDeviceSize(3), driver.Uint32(5), driver.Uint32(7))
 
@@ -1458,7 +1459,7 @@ func TestVulkanCommandBuffer_CmdFillBuffer(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockDriver, buffer := setup(t, ctrl)
-	fillBuffer := mocks.EasyMockBuffer(ctrl)
+	fillBuffer := mocks1_0.EasyMockBuffer(ctrl)
 
 	mockDriver.EXPECT().VkCmdFillBuffer(buffer.Handle(), fillBuffer.Handle(), driver.VkDeviceSize(1), driver.VkDeviceSize(3), driver.Uint32(5))
 
@@ -1470,7 +1471,7 @@ func TestVulkanCommandBuffer_CmdResetEvent(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockDriver, buffer := setup(t, ctrl)
-	event := mocks.EasyMockEvent(ctrl)
+	event := mocks1_0.EasyMockEvent(ctrl)
 
 	mockDriver.EXPECT().VkCmdResetEvent(
 		buffer.Handle(), event.Handle(),
@@ -1485,8 +1486,8 @@ func TestVulkanCommandBuffer_CmdResolveImage(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockDriver, buffer := setup(t, ctrl)
-	srcImage := mocks.EasyMockImage(ctrl)
-	dstImage := mocks.EasyMockImage(ctrl)
+	srcImage := mocks1_0.EasyMockImage(ctrl)
+	dstImage := mocks1_0.EasyMockImage(ctrl)
 
 	mockDriver.EXPECT().VkCmdResolveImage(
 		buffer.Handle(),
@@ -1700,7 +1701,7 @@ func TestVulkanCommandBuffer_CmdUpdateBuffer(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockDriver, buffer := setup(t, ctrl)
-	dstBuffer := mocks.EasyMockBuffer(ctrl)
+	dstBuffer := mocks1_0.EasyMockBuffer(ctrl)
 
 	mockDriver.EXPECT().VkCmdUpdateBuffer(buffer.Handle(), dstBuffer.Handle(), driver.VkDeviceSize(1), driver.VkDeviceSize(3), gomock.Not(nil)).DoAndReturn(
 		func(commandBuffer driver.VkCommandBuffer, dstBuffer driver.VkBuffer, dstOffset driver.VkDeviceSize, dataSize driver.VkDeviceSize, pData unsafe.Pointer) {
@@ -1717,7 +1718,7 @@ func TestVulkanCommandBuffer_CmdWriteTimestamp(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockDriver, buffer := setup(t, ctrl)
-	queryPool := mocks.EasyMockQueryPool(ctrl)
+	queryPool := mocks1_0.EasyMockQueryPool(ctrl)
 
 	mockDriver.EXPECT().VkCmdWriteTimestamp(buffer.Handle(),
 		driver.VkPipelineStageFlags(0x800), // VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT

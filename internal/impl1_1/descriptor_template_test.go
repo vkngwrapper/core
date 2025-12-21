@@ -13,6 +13,7 @@ import (
 	mock_driver "github.com/vkngwrapper/core/v3/driver/mocks"
 	"github.com/vkngwrapper/core/v3/internal/impl1_1"
 	"github.com/vkngwrapper/core/v3/mocks"
+	"github.com/vkngwrapper/core/v3/mocks/mocks1_1"
 	"go.uber.org/mock/gomock"
 )
 
@@ -24,8 +25,8 @@ func TestVulkanExtension_CreateDescriptorUpdateTemplate(t *testing.T) {
 
 	builder := &impl1_1.InstanceObjectBuilderImpl{}
 	device := builder.CreateDeviceObject(coreDriver, mocks.NewFakeDeviceHandle(), common.Vulkan1_1, []string{}).(core1_1.Device)
-	descriptorLayout := mocks.EasyMockDescriptorSetLayout(ctrl)
-	pipelineLayout := mocks.EasyMockPipelineLayout(ctrl)
+	descriptorLayout := mocks1_1.EasyMockDescriptorSetLayout(ctrl)
+	pipelineLayout := mocks1_1.EasyMockPipelineLayout(ctrl)
 
 	handle := mocks.NewFakeDescriptorUpdateTemplate()
 
@@ -121,8 +122,8 @@ func TestVulkanDescriptorTemplate_UpdateDescriptorSetFromBuffer(t *testing.T) {
 
 	builder := &impl1_1.InstanceObjectBuilderImpl{}
 	device := builder.CreateDeviceObject(coreDriver, mocks.NewFakeDeviceHandle(), common.Vulkan1_1, []string{}).(core1_1.Device)
-	descriptorSet := mocks.EasyMockDescriptorSet(ctrl)
-	buffer := mocks.EasyMockBuffer(ctrl)
+	descriptorSet := mocks1_1.EasyMockDescriptorSet(ctrl)
+	buffer := mocks1_1.EasyMockBuffer(ctrl)
 
 	handle := mocks.NewFakeDescriptorUpdateTemplate()
 
@@ -179,9 +180,9 @@ func TestVulkanDescriptorTemplate_UpdateDescriptorSetFromImage(t *testing.T) {
 
 	builder := &impl1_1.InstanceObjectBuilderImpl{}
 	device := builder.CreateDeviceObject(coreDriver, mocks.NewFakeDeviceHandle(), common.Vulkan1_1, []string{}).(core1_1.Device)
-	descriptorSet := mocks.EasyMockDescriptorSet(ctrl)
-	sampler := mocks.EasyMockSampler(ctrl)
-	imageView := mocks.EasyMockImageView(ctrl)
+	descriptorSet := mocks1_1.EasyMockDescriptorSet(ctrl)
+	sampler := mocks1_1.EasyMockSampler(ctrl)
+	imageView := mocks1_1.EasyMockImageView(ctrl)
 
 	handle := mocks.NewFakeDescriptorUpdateTemplate()
 
@@ -238,8 +239,8 @@ func TestVulkanDescriptorTemplate_UpdateDescriptorSetFromObjectHandle(t *testing
 
 	builder := &impl1_1.InstanceObjectBuilderImpl{}
 	device := builder.CreateDeviceObject(coreDriver, mocks.NewFakeDeviceHandle(), common.Vulkan1_1, []string{}).(core1_1.Device)
-	descriptorSet := mocks.EasyMockDescriptorSet(ctrl)
-	bufferView := mocks.EasyMockBufferView(ctrl)
+	descriptorSet := mocks1_1.EasyMockDescriptorSet(ctrl)
+	bufferView := mocks1_1.EasyMockBufferView(ctrl)
 
 	handle := mocks.NewFakeDescriptorUpdateTemplate()
 

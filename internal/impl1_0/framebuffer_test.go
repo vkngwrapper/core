@@ -12,6 +12,7 @@ import (
 	mock_driver "github.com/vkngwrapper/core/v3/driver/mocks"
 	"github.com/vkngwrapper/core/v3/internal/impl1_0"
 	"github.com/vkngwrapper/core/v3/mocks"
+	"github.com/vkngwrapper/core/v3/mocks/mocks1_0"
 	"go.uber.org/mock/gomock"
 )
 
@@ -22,9 +23,9 @@ func TestVulkanLoader1_0_CreateFrameBuffer(t *testing.T) {
 	mockDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_0)
 	builder := &impl1_0.InstanceObjectBuilderImpl{}
 	device := builder.CreateDeviceObject(mockDriver, mocks.NewFakeDeviceHandle(), common.Vulkan1_0, []string{})
-	renderPass := mocks.EasyMockRenderPass(ctrl)
-	imageView1 := mocks.EasyMockImageView(ctrl)
-	imageView2 := mocks.EasyMockImageView(ctrl)
+	renderPass := mocks1_0.EasyMockRenderPass(ctrl)
+	imageView1 := mocks1_0.EasyMockImageView(ctrl)
+	imageView2 := mocks1_0.EasyMockImageView(ctrl)
 	framebufferHandle := mocks.NewFakeFramebufferHandle()
 
 	mockDriver.EXPECT().VkCreateFramebuffer(device.Handle(), gomock.Not(nil), nil, gomock.Not(nil)).DoAndReturn(

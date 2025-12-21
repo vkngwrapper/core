@@ -12,6 +12,7 @@ import (
 	mock_driver "github.com/vkngwrapper/core/v3/driver/mocks"
 	"github.com/vkngwrapper/core/v3/internal/impl1_1"
 	"github.com/vkngwrapper/core/v3/mocks"
+	"github.com/vkngwrapper/core/v3/mocks/mocks1_1"
 	"go.uber.org/mock/gomock"
 )
 
@@ -23,7 +24,7 @@ func TestExportFenceOptions(t *testing.T) {
 	builder := &impl1_1.InstanceObjectBuilderImpl{}
 	device := builder.CreateDeviceObject(coreDriver, mocks.NewFakeDeviceHandle(), common.Vulkan1_1, []string{}).(core1_1.Device)
 
-	mockFence := mocks.EasyMockFence(ctrl)
+	mockFence := mocks1_1.EasyMockFence(ctrl)
 
 	coreDriver.EXPECT().VkCreateFence(
 		device.Handle(),

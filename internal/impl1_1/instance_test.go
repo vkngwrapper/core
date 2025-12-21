@@ -13,6 +13,7 @@ import (
 	mock_driver "github.com/vkngwrapper/core/v3/driver/mocks"
 	"github.com/vkngwrapper/core/v3/internal/impl1_1"
 	"github.com/vkngwrapper/core/v3/mocks"
+	"github.com/vkngwrapper/core/v3/mocks/mocks1_1"
 	"go.uber.org/mock/gomock"
 )
 
@@ -23,12 +24,12 @@ func TestVulkanInstance_EnumeratePhysicalDeviceGroups(t *testing.T) {
 	coreDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_1)
 	instance := impl1_1.CreateInstanceObject(coreDriver, mocks.NewFakeInstanceHandle(), common.Vulkan1_1, []string{}).(core1_1.Instance)
 
-	physicalDevice1 := mocks.EasyMockPhysicalDevice(ctrl, coreDriver)
-	physicalDevice2 := mocks.EasyMockPhysicalDevice(ctrl, coreDriver)
-	physicalDevice3 := mocks.EasyMockPhysicalDevice(ctrl, coreDriver)
-	physicalDevice4 := mocks.EasyMockPhysicalDevice(ctrl, coreDriver)
-	physicalDevice5 := mocks.EasyMockPhysicalDevice(ctrl, coreDriver)
-	physicalDevice6 := mocks.EasyMockPhysicalDevice(ctrl, coreDriver)
+	physicalDevice1 := mocks1_1.EasyMockPhysicalDevice(ctrl, coreDriver)
+	physicalDevice2 := mocks1_1.EasyMockPhysicalDevice(ctrl, coreDriver)
+	physicalDevice3 := mocks1_1.EasyMockPhysicalDevice(ctrl, coreDriver)
+	physicalDevice4 := mocks1_1.EasyMockPhysicalDevice(ctrl, coreDriver)
+	physicalDevice5 := mocks1_1.EasyMockPhysicalDevice(ctrl, coreDriver)
+	physicalDevice6 := mocks1_1.EasyMockPhysicalDevice(ctrl, coreDriver)
 
 	coreDriver.EXPECT().VkEnumeratePhysicalDeviceGroups(
 		instance.Handle(),
@@ -144,12 +145,12 @@ func TestVulkanInstance_EnumeratePhysicalDeviceGroups_Incomplete(t *testing.T) {
 	coreDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_1)
 	instance := impl1_1.CreateInstanceObject(coreDriver, mocks.NewFakeInstanceHandle(), common.Vulkan1_1, []string{}).(core1_1.Instance)
 
-	physicalDevice1 := mocks.EasyMockPhysicalDevice(ctrl, coreDriver)
-	physicalDevice2 := mocks.EasyMockPhysicalDevice(ctrl, coreDriver)
-	physicalDevice3 := mocks.EasyMockPhysicalDevice(ctrl, coreDriver)
-	physicalDevice4 := mocks.EasyMockPhysicalDevice(ctrl, coreDriver)
-	physicalDevice5 := mocks.EasyMockPhysicalDevice(ctrl, coreDriver)
-	physicalDevice6 := mocks.EasyMockPhysicalDevice(ctrl, coreDriver)
+	physicalDevice1 := mocks1_1.EasyMockPhysicalDevice(ctrl, coreDriver)
+	physicalDevice2 := mocks1_1.EasyMockPhysicalDevice(ctrl, coreDriver)
+	physicalDevice3 := mocks1_1.EasyMockPhysicalDevice(ctrl, coreDriver)
+	physicalDevice4 := mocks1_1.EasyMockPhysicalDevice(ctrl, coreDriver)
+	physicalDevice5 := mocks1_1.EasyMockPhysicalDevice(ctrl, coreDriver)
+	physicalDevice6 := mocks1_1.EasyMockPhysicalDevice(ctrl, coreDriver)
 
 	coreDriver.EXPECT().VkEnumeratePhysicalDeviceGroups(
 		instance.Handle(),

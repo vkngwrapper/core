@@ -14,6 +14,7 @@ import (
 	mock_driver "github.com/vkngwrapper/core/v3/driver/mocks"
 	"github.com/vkngwrapper/core/v3/internal/impl1_1"
 	"github.com/vkngwrapper/core/v3/mocks"
+	"github.com/vkngwrapper/core/v3/mocks/mocks1_1"
 	"go.uber.org/mock/gomock"
 )
 
@@ -23,7 +24,7 @@ func TestVulkanPhysicalDevice_PhysicalDeviceExternalFenceProperties(t *testing.T
 
 	coreDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_1)
 
-	instance := mocks.EasyMockInstance(ctrl, coreDriver)
+	instance := mocks1_1.EasyMockInstance(ctrl, coreDriver)
 	builder := &impl1_1.InstanceObjectBuilderImpl{}
 	physicalDevice := builder.CreatePhysicalDeviceObject(coreDriver, instance.Handle(), mocks.NewFakePhysicalDeviceHandle(), common.Vulkan1_1, common.Vulkan1_1).(core1_1.PhysicalDevice)
 
@@ -66,7 +67,7 @@ func TestVulkanPhysicalDevice_ExternalBufferProperties(t *testing.T) {
 	defer ctrl.Finish()
 
 	coreDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_1)
-	instance := mocks.EasyMockInstance(ctrl, coreDriver)
+	instance := mocks1_1.EasyMockInstance(ctrl, coreDriver)
 	builder := &impl1_1.InstanceObjectBuilderImpl{}
 	physicalDevice := builder.CreatePhysicalDeviceObject(coreDriver, instance.Handle(), mocks.NewFakePhysicalDeviceHandle(), common.Vulkan1_1, common.Vulkan1_1).(core1_1.PhysicalDevice)
 
@@ -115,7 +116,7 @@ func TestVulkanPhysicalDevice_ExternalSemaphoreProperties(t *testing.T) {
 	defer ctrl.Finish()
 
 	coreDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_1)
-	instance := mocks.EasyMockInstance(ctrl, coreDriver)
+	instance := mocks1_1.EasyMockInstance(ctrl, coreDriver)
 	builder := &impl1_1.InstanceObjectBuilderImpl{}
 	physicalDevice := builder.CreatePhysicalDeviceObject(coreDriver, instance.Handle(), mocks.NewFakePhysicalDeviceHandle(), common.Vulkan1_1, common.Vulkan1_1).(core1_1.PhysicalDevice)
 
@@ -162,7 +163,7 @@ func TestVulkanPhysicalDevice_Features(t *testing.T) {
 	defer ctrl.Finish()
 
 	coreDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_1)
-	instance := mocks.EasyMockInstance(ctrl, coreDriver)
+	instance := mocks1_1.EasyMockInstance(ctrl, coreDriver)
 	builder := &impl1_1.InstanceObjectBuilderImpl{}
 	physicalDevice := builder.CreatePhysicalDeviceObject(coreDriver, instance.Handle(), mocks.NewFakePhysicalDeviceHandle(), common.Vulkan1_1, common.Vulkan1_1).(core1_1.PhysicalDevice)
 
@@ -301,7 +302,7 @@ func TestVulkanPhysicalDevice_FormatProperties(t *testing.T) {
 	defer ctrl.Finish()
 
 	coreDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_1)
-	instance := mocks.EasyMockInstance(ctrl, coreDriver)
+	instance := mocks1_1.EasyMockInstance(ctrl, coreDriver)
 	builder := &impl1_1.InstanceObjectBuilderImpl{}
 	physicalDevice := builder.CreatePhysicalDeviceObject(coreDriver, instance.Handle(), mocks.NewFakePhysicalDeviceHandle(), common.Vulkan1_1, common.Vulkan1_1).(core1_1.PhysicalDevice)
 
@@ -339,7 +340,7 @@ func TestVulkanPhysicalDevice_ImageFormatProperties(t *testing.T) {
 	defer ctrl.Finish()
 
 	coreDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_1)
-	instance := mocks.EasyMockInstance(ctrl, coreDriver)
+	instance := mocks1_1.EasyMockInstance(ctrl, coreDriver)
 	builder := &impl1_1.InstanceObjectBuilderImpl{}
 	physicalDevice := builder.CreatePhysicalDeviceObject(coreDriver, instance.Handle(), mocks.NewFakePhysicalDeviceHandle(), common.Vulkan1_1, common.Vulkan1_1).(core1_1.PhysicalDevice)
 
@@ -399,7 +400,7 @@ func TestVulkanPhysicalDevice_MemoryProperties(t *testing.T) {
 	defer ctrl.Finish()
 
 	coreDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_1)
-	instance := mocks.EasyMockInstance(ctrl, coreDriver)
+	instance := mocks1_1.EasyMockInstance(ctrl, coreDriver)
 	builder := &impl1_1.InstanceObjectBuilderImpl{}
 	physicalDevice := builder.CreatePhysicalDeviceObject(coreDriver, instance.Handle(), mocks.NewFakePhysicalDeviceHandle(), common.Vulkan1_1, common.Vulkan1_1).(core1_1.PhysicalDevice)
 
@@ -445,7 +446,7 @@ func TestVulkanPhysicalDevice_Properties(t *testing.T) {
 	defer ctrl.Finish()
 
 	coreDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_1)
-	instance := mocks.EasyMockInstance(ctrl, coreDriver)
+	instance := mocks1_1.EasyMockInstance(ctrl, coreDriver)
 	builder := &impl1_1.InstanceObjectBuilderImpl{}
 	physicalDevice := builder.CreatePhysicalDeviceObject(coreDriver, instance.Handle(), mocks.NewFakePhysicalDeviceHandle(), common.Vulkan1_1, common.Vulkan1_1).(core1_1.PhysicalDevice)
 
@@ -533,7 +534,7 @@ func TestVulkanPhysicalDevice_QueueFamilyProperties(t *testing.T) {
 	defer ctrl.Finish()
 
 	coreDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_1)
-	instance := mocks.EasyMockInstance(ctrl, coreDriver)
+	instance := mocks1_1.EasyMockInstance(ctrl, coreDriver)
 	builder := &impl1_1.InstanceObjectBuilderImpl{}
 	physicalDevice := builder.CreatePhysicalDeviceObject(coreDriver, instance.Handle(), mocks.NewFakePhysicalDeviceHandle(), common.Vulkan1_1, common.Vulkan1_1).(core1_1.PhysicalDevice)
 
@@ -614,7 +615,7 @@ func TestVulkanPhysicalDevice_SparseImageFormatProperties(t *testing.T) {
 	defer ctrl.Finish()
 
 	coreDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_1)
-	instance := mocks.EasyMockInstance(ctrl, coreDriver)
+	instance := mocks1_1.EasyMockInstance(ctrl, coreDriver)
 	builder := &impl1_1.InstanceObjectBuilderImpl{}
 	physicalDevice := builder.CreatePhysicalDeviceObject(coreDriver, instance.Handle(), mocks.NewFakePhysicalDeviceHandle(), common.Vulkan1_1, common.Vulkan1_1).(core1_1.PhysicalDevice)
 
@@ -704,7 +705,7 @@ func TestVulkanExtension_PhysicalDeviceFeatures(t *testing.T) {
 	defer ctrl.Finish()
 
 	coreDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_1)
-	instance := mocks.EasyMockInstance(ctrl, coreDriver)
+	instance := mocks1_1.EasyMockInstance(ctrl, coreDriver)
 	builder := &impl1_1.InstanceObjectBuilderImpl{}
 	physicalDevice := builder.CreatePhysicalDeviceObject(coreDriver, instance.Handle(), mocks.NewFakePhysicalDeviceHandle(), common.Vulkan1_1, common.Vulkan1_1).(core1_1.PhysicalDevice)
 
@@ -844,10 +845,10 @@ func TestVulkanDevice_CreateDeviceWithFeatures(t *testing.T) {
 	coreDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_1)
 	coreDriver.EXPECT().CreateDeviceDriver(gomock.Any()).Return(coreDriver, nil).AnyTimes()
 
-	instance := mocks.EasyMockInstance(ctrl, coreDriver)
+	instance := mocks1_1.EasyMockInstance(ctrl, coreDriver)
 	builder := &impl1_1.InstanceObjectBuilderImpl{}
 	physicalDevice := builder.CreatePhysicalDeviceObject(coreDriver, instance.Handle(), mocks.NewFakePhysicalDeviceHandle(), common.Vulkan1_1, common.Vulkan1_1).(core1_1.PhysicalDevice)
-	device := mocks.EasyMockDevice(ctrl, coreDriver)
+	device := mocks1_1.EasyMockDevice(ctrl, coreDriver)
 
 	coreDriver.EXPECT().VkCreateDevice(physicalDevice.Handle(), gomock.Not(nil), nil, gomock.Not(nil)).DoAndReturn(
 		func(physicalDevice driver.VkPhysicalDevice, pCreateInfo *driver.VkDeviceCreateInfo, pAllocator *driver.VkAllocationCallbacks, pDevice *driver.VkDevice) (common.VkResult, error) {

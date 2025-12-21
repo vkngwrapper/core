@@ -9,6 +9,7 @@ import (
 	mock_driver "github.com/vkngwrapper/core/v3/driver/mocks"
 	"github.com/vkngwrapper/core/v3/internal/impl1_1"
 	"github.com/vkngwrapper/core/v3/mocks"
+	"github.com/vkngwrapper/core/v3/mocks/mocks1_1"
 	"go.uber.org/mock/gomock"
 )
 
@@ -17,7 +18,7 @@ func TestVulkanCommandPool_TrimCommandPool(t *testing.T) {
 	defer ctrl.Finish()
 
 	coreDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_1)
-	device := mocks.EasyMockDevice(ctrl, coreDriver)
+	device := mocks1_1.EasyMockDevice(ctrl, coreDriver)
 	builder := &impl1_1.DeviceObjectBuilderImpl{}
 	commandPool := builder.CreateCommandPoolObject(coreDriver, device.Handle(), mocks.NewFakeCommandPoolHandle(), common.Vulkan1_1).(core1_1.CommandPool)
 
