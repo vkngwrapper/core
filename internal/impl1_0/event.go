@@ -1,48 +1,42 @@
 package impl1_0
 
 import (
+	"fmt"
+
 	"github.com/vkngwrapper/core/v3/common"
+	"github.com/vkngwrapper/core/v3/core1_0"
 	"github.com/vkngwrapper/core/v3/driver"
+	"github.com/vkngwrapper/core/v3/types"
 )
 
-// VulkanEvent is an implementation of the Event interface that actually communicates with Vulkan. This
-// is the default implementation. See the interface for more documentation.
-type VulkanEvent struct {
-	EventHandle  driver.VkEvent
-	Device       driver.VkDevice
-	DeviceDriver driver.Driver
+func (v *Vulkan) DestroyEvent(event types.Event, callbacks *driver.AllocationCallbacks) {
+	if event.Handle() == 0 {
+		panic("event was uninitialized")
+	}
 
-	MaximumAPIVersion common.APIVersion
+	v.Driver.VkDestroyEvent(event.DeviceHandle(), event.Handle(), callbacks.Handle())
 }
 
-func (e *VulkanEvent) Handle() driver.VkEvent {
-	return e.EventHandle
+func (v *Vulkan) Set(event types.Event) (common.VkResult, error) {
+	if event.Handle() == 0 {
+		return core1_0.VKErrorUnknown, fmt.Errorf("event was uninitialized")
+	}
+
+	return v.Driver.VkSetEvent(event.DeviceHandle(), event.Handle())
 }
 
-func (e *VulkanEvent) DeviceHandle() driver.VkDevice {
-	return e.Device
+func (v *Vulkan) ResetEvent(event types.Event) (common.VkResult, error) {
+	if event.Handle() == 0 {
+		return core1_0.VKErrorUnknown, fmt.Errorf("event was uninitialized")
+	}
+
+	return v.Driver.VkResetEvent(event.DeviceHandle(), event.Handle())
 }
 
-func (e *VulkanEvent) Driver() driver.Driver {
-	return e.DeviceDriver
-}
+func (v *Vulkan) GetEventStatus(event types.Event) (common.VkResult, error) {
+	if event.Handle() == 0 {
+		return core1_0.VKErrorUnknown, fmt.Errorf("event was uninitialized")
+	}
 
-func (e *VulkanEvent) APIVersion() common.APIVersion {
-	return e.MaximumAPIVersion
-}
-
-func (e *VulkanEvent) Destroy(callbacks *driver.AllocationCallbacks) {
-	e.DeviceDriver.VkDestroyEvent(e.Device, e.EventHandle, callbacks.Handle())
-}
-
-func (e *VulkanEvent) Set() (common.VkResult, error) {
-	return e.DeviceDriver.VkSetEvent(e.Device, e.EventHandle)
-}
-
-func (e *VulkanEvent) Reset() (common.VkResult, error) {
-	return e.DeviceDriver.VkResetEvent(e.Device, e.EventHandle)
-}
-
-func (e *VulkanEvent) Status() (common.VkResult, error) {
-	return e.DeviceDriver.VkGetEventStatus(e.Device, e.EventHandle)
+	return v.Driver.VkGetEventStatus(event.DeviceHandle(), event.Handle())
 }

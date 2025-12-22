@@ -11,6 +11,7 @@ import (
 	"github.com/CannibalVox/cgoparam"
 	"github.com/pkg/errors"
 	"github.com/vkngwrapper/core/v3/common"
+	"github.com/vkngwrapper/core/v3/types"
 )
 
 // BufferViewCreateFlags is a set of flags reserved for future use
@@ -35,7 +36,7 @@ func (f BufferViewCreateFlags) String() string {
 // https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkBufferViewCreateInfo.html
 type BufferViewCreateInfo struct {
 	// Buffer is the Buffer on which the view will be created
-	Buffer Buffer
+	Buffer types.Buffer
 	// Flags is reserved for future use
 	Flags BufferViewCreateFlags
 	// Format describes the format of the data element in the Buffer
@@ -49,8 +50,8 @@ type BufferViewCreateInfo struct {
 }
 
 func (o BufferViewCreateInfo) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
-	if o.Buffer == nil {
-		return nil, errors.New("core1_0.BufferViewCreateInfo.Buffer cannot be nil")
+	if o.Buffer.Handle() == 0 {
+		return nil, errors.New("core1_0.BufferViewCreateInfo.Buffer cannot be left unset")
 	}
 
 	if preallocatedPointer == unsafe.Pointer(nil) {

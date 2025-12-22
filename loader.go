@@ -189,12 +189,7 @@ func (l *VulkanLoader) CreateInstance(allocationCallbacks *driver.AllocationCall
 		return nil, res, err
 	}
 
-	instanceDriver, err := l.driver.CreateInstanceDriver((driver.VkInstance)(instanceHandle))
-	if err != nil {
-		return nil, core1_0.VKErrorUnknown, err
-	}
-
 	version := l.APIVersion().Min(options.APIVersion)
 
-	return createInstanceObject(instanceDriver, instanceHandle, version, options.EnabledExtensionNames), res, nil
+	return createInstanceObject(l.driver, instanceHandle, version, options.EnabledExtensionNames), res, nil
 }

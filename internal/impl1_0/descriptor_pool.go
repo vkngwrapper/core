@@ -1,41 +1,23 @@
 package impl1_0
 
 import (
+	"github.com/pkg/errors"
 	"github.com/vkngwrapper/core/v3/common"
 	"github.com/vkngwrapper/core/v3/core1_0"
 	"github.com/vkngwrapper/core/v3/driver"
+	"github.com/vkngwrapper/core/v3/types"
 )
 
-// VulkanDescriptorPool is an implementation of the DescriptorPool interface that actually communicates with Vulkan. This
-// is the default implementation. See the interface for more documentation.
-type VulkanDescriptorPool struct {
-	DeviceDriver         driver.Driver
-	DescriptorPoolHandle driver.VkDescriptorPool
-	Device               driver.VkDevice
-
-	MaximumAPIVersion common.APIVersion
+func (v *Vulkan) DestroyDescriptorPool(descriptorPool types.DescriptorPool, callbacks *driver.AllocationCallbacks) {
+	if descriptorPool.Handle() == 0 {
+		panic("descriptorPool was uninitialized")
+	}
+	v.Driver.VkDestroyDescriptorPool(descriptorPool.DeviceHandle(), descriptorPool.Handle(), callbacks.Handle())
 }
 
-func (p *VulkanDescriptorPool) Handle() driver.VkDescriptorPool {
-	return p.DescriptorPoolHandle
-}
-
-func (p *VulkanDescriptorPool) DeviceHandle() driver.VkDevice {
-	return p.Device
-}
-
-func (p *VulkanDescriptorPool) Driver() driver.Driver {
-	return p.DeviceDriver
-}
-
-func (p *VulkanDescriptorPool) APIVersion() common.APIVersion {
-	return p.MaximumAPIVersion
-}
-
-func (p *VulkanDescriptorPool) Destroy(callbacks *driver.AllocationCallbacks) {
-	p.DeviceDriver.VkDestroyDescriptorPool(p.Device, p.DescriptorPoolHandle, callbacks.Handle())
-}
-
-func (p *VulkanDescriptorPool) Reset(flags core1_0.DescriptorPoolResetFlags) (common.VkResult, error) {
-	return p.DeviceDriver.VkResetDescriptorPool(p.Device, p.DescriptorPoolHandle, driver.VkDescriptorPoolResetFlags(flags))
+func (v *Vulkan) ResetDescriptorPool(descriptorPool types.DescriptorPool, flags core1_0.DescriptorPoolResetFlags) (common.VkResult, error) {
+	if descriptorPool.Handle() == 0 {
+		return core1_0.VKErrorUnknown, errors.New("descriptorPool was uninitialized")
+	}
+	return v.Driver.VkResetDescriptorPool(descriptorPool.DeviceHandle(), descriptorPool.Handle(), driver.VkDescriptorPoolResetFlags(flags))
 }

@@ -6,50 +6,32 @@ package impl1_0
 */
 import "C"
 import (
+	"fmt"
 	"unsafe"
 
 	"github.com/CannibalVox/cgoparam"
 	"github.com/vkngwrapper/core/v3/common"
 	"github.com/vkngwrapper/core/v3/core1_0"
 	"github.com/vkngwrapper/core/v3/driver"
+	"github.com/vkngwrapper/core/v3/types"
 )
 
-// VulkanQueue is an implementation of the Queue interface that actually communicates with Vulkan. This
-// is the default implementation. See the interface for more documentation.
-type VulkanQueue struct {
-	DeviceDriver driver.Driver
-	Device       driver.VkDevice
-	QueueHandle  driver.VkQueue
-
-	MaximumAPIVersion common.APIVersion
+func (v *Vulkan) QueueWaitIdle(queue types.Queue) (common.VkResult, error) {
+	if queue.Handle() == 0 {
+		return core1_0.VKErrorUnknown, fmt.Errorf("queue is uninitialized")
+	}
+	return v.Driver.VkQueueWaitIdle(queue.Handle())
 }
 
-func (q *VulkanQueue) Handle() driver.VkQueue {
-	return q.QueueHandle
-}
-
-func (q *VulkanQueue) Driver() driver.Driver {
-	return q.DeviceDriver
-}
-
-func (q *VulkanQueue) DeviceHandle() driver.VkDevice {
-	return q.Device
-}
-
-func (q *VulkanQueue) APIVersion() common.APIVersion {
-	return q.MaximumAPIVersion
-}
-
-func (q *VulkanQueue) WaitIdle() (common.VkResult, error) {
-	return q.DeviceDriver.VkQueueWaitIdle(q.QueueHandle)
-}
-
-func (q *VulkanQueue) BindSparse(fence core1_0.Fence, bindInfos []core1_0.BindSparseInfo) (common.VkResult, error) {
+func (v *Vulkan) QueueBindSparse(queue types.Queue, fence types.Fence, bindInfos []core1_0.BindSparseInfo) (common.VkResult, error) {
+	if queue.Handle() == 0 {
+		return core1_0.VKErrorUnknown, fmt.Errorf("queue is uninitialized")
+	}
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
 	var fenceHandle driver.VkFence
-	if fence != nil {
+	if fence.Handle() != 0 {
 		fenceHandle = fence.Handle()
 	}
 
@@ -59,5 +41,5 @@ func (q *VulkanQueue) BindSparse(fence core1_0.Fence, bindInfos []core1_0.BindSp
 		return core1_0.VKErrorUnknown, err
 	}
 
-	return q.DeviceDriver.VkQueueBindSparse(q.QueueHandle, driver.Uint32(bindInfoCount), (*driver.VkBindSparseInfo)(unsafe.Pointer(bindInfoPtr)), fenceHandle)
+	return v.Driver.VkQueueBindSparse(queue.Handle(), driver.Uint32(bindInfoCount), (*driver.VkBindSparseInfo)(unsafe.Pointer(bindInfoPtr)), fenceHandle)
 }

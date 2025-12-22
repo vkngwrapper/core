@@ -18,3243 +18,1439 @@ import (
 	core1_0 "github.com/vkngwrapper/core/v3/core1_0"
 	core1_1 "github.com/vkngwrapper/core/v3/core1_1"
 	driver "github.com/vkngwrapper/core/v3/driver"
+	types "github.com/vkngwrapper/core/v3/types"
 	gomock "go.uber.org/mock/gomock"
 )
 
-// MockBuffer is a mock of Buffer interface.
-type MockBuffer struct {
+// MockVulkan is a mock of Vulkan interface.
+type MockVulkan struct {
 	ctrl     *gomock.Controller
-	recorder *MockBufferMockRecorder
+	recorder *MockVulkanMockRecorder
 	isgomock struct{}
 }
 
-// MockBufferMockRecorder is the mock recorder for MockBuffer.
-type MockBufferMockRecorder struct {
-	mock *MockBuffer
+// MockVulkanMockRecorder is the mock recorder for MockVulkan.
+type MockVulkanMockRecorder struct {
+	mock *MockVulkan
 }
 
-// NewMockBuffer creates a new mock instance.
-func NewMockBuffer(ctrl *gomock.Controller) *MockBuffer {
-	mock := &MockBuffer{ctrl: ctrl}
-	mock.recorder = &MockBufferMockRecorder{mock}
+// NewMockVulkan creates a new mock instance.
+func NewMockVulkan(ctrl *gomock.Controller) *MockVulkan {
+	mock := &MockVulkan{ctrl: ctrl}
+	mock.recorder = &MockVulkanMockRecorder{mock}
 	return mock
 }
 
 // EXPECT returns an object that allows the caller to indicate expected use.
-func (m *MockBuffer) EXPECT() *MockBufferMockRecorder {
+func (m *MockVulkan) EXPECT() *MockVulkanMockRecorder {
 	return m.recorder
-}
-
-// APIVersion mocks base method.
-func (m *MockBuffer) APIVersion() common.APIVersion {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "APIVersion")
-	ret0, _ := ret[0].(common.APIVersion)
-	return ret0
-}
-
-// APIVersion indicates an expected call of APIVersion.
-func (mr *MockBufferMockRecorder) APIVersion() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "APIVersion", reflect.TypeOf((*MockBuffer)(nil).APIVersion))
-}
-
-// BindBufferMemory mocks base method.
-func (m *MockBuffer) BindBufferMemory(memory core1_0.DeviceMemory, offset int) (common.VkResult, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "BindBufferMemory", memory, offset)
-	ret0, _ := ret[0].(common.VkResult)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// BindBufferMemory indicates an expected call of BindBufferMemory.
-func (mr *MockBufferMockRecorder) BindBufferMemory(memory, offset any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "BindBufferMemory", reflect.TypeOf((*MockBuffer)(nil).BindBufferMemory), memory, offset)
-}
-
-// Destroy mocks base method.
-func (m *MockBuffer) Destroy(callbacks *driver.AllocationCallbacks) {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "Destroy", callbacks)
-}
-
-// Destroy indicates an expected call of Destroy.
-func (mr *MockBufferMockRecorder) Destroy(callbacks any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Destroy", reflect.TypeOf((*MockBuffer)(nil).Destroy), callbacks)
-}
-
-// DeviceHandle mocks base method.
-func (m *MockBuffer) DeviceHandle() driver.VkDevice {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "DeviceHandle")
-	ret0, _ := ret[0].(driver.VkDevice)
-	return ret0
-}
-
-// DeviceHandle indicates an expected call of DeviceHandle.
-func (mr *MockBufferMockRecorder) DeviceHandle() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeviceHandle", reflect.TypeOf((*MockBuffer)(nil).DeviceHandle))
-}
-
-// Driver mocks base method.
-func (m *MockBuffer) Driver() driver.Driver {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Driver")
-	ret0, _ := ret[0].(driver.Driver)
-	return ret0
-}
-
-// Driver indicates an expected call of Driver.
-func (mr *MockBufferMockRecorder) Driver() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Driver", reflect.TypeOf((*MockBuffer)(nil).Driver))
-}
-
-// Handle mocks base method.
-func (m *MockBuffer) Handle() driver.VkBuffer {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Handle")
-	ret0, _ := ret[0].(driver.VkBuffer)
-	return ret0
-}
-
-// Handle indicates an expected call of Handle.
-func (mr *MockBufferMockRecorder) Handle() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Handle", reflect.TypeOf((*MockBuffer)(nil).Handle))
-}
-
-// MemoryRequirements mocks base method.
-func (m *MockBuffer) MemoryRequirements() *core1_0.MemoryRequirements {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "MemoryRequirements")
-	ret0, _ := ret[0].(*core1_0.MemoryRequirements)
-	return ret0
-}
-
-// MemoryRequirements indicates an expected call of MemoryRequirements.
-func (mr *MockBufferMockRecorder) MemoryRequirements() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "MemoryRequirements", reflect.TypeOf((*MockBuffer)(nil).MemoryRequirements))
-}
-
-// MockBufferView is a mock of BufferView interface.
-type MockBufferView struct {
-	ctrl     *gomock.Controller
-	recorder *MockBufferViewMockRecorder
-	isgomock struct{}
-}
-
-// MockBufferViewMockRecorder is the mock recorder for MockBufferView.
-type MockBufferViewMockRecorder struct {
-	mock *MockBufferView
-}
-
-// NewMockBufferView creates a new mock instance.
-func NewMockBufferView(ctrl *gomock.Controller) *MockBufferView {
-	mock := &MockBufferView{ctrl: ctrl}
-	mock.recorder = &MockBufferViewMockRecorder{mock}
-	return mock
-}
-
-// EXPECT returns an object that allows the caller to indicate expected use.
-func (m *MockBufferView) EXPECT() *MockBufferViewMockRecorder {
-	return m.recorder
-}
-
-// APIVersion mocks base method.
-func (m *MockBufferView) APIVersion() common.APIVersion {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "APIVersion")
-	ret0, _ := ret[0].(common.APIVersion)
-	return ret0
-}
-
-// APIVersion indicates an expected call of APIVersion.
-func (mr *MockBufferViewMockRecorder) APIVersion() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "APIVersion", reflect.TypeOf((*MockBufferView)(nil).APIVersion))
-}
-
-// Destroy mocks base method.
-func (m *MockBufferView) Destroy(callbacks *driver.AllocationCallbacks) {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "Destroy", callbacks)
-}
-
-// Destroy indicates an expected call of Destroy.
-func (mr *MockBufferViewMockRecorder) Destroy(callbacks any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Destroy", reflect.TypeOf((*MockBufferView)(nil).Destroy), callbacks)
-}
-
-// DeviceHandle mocks base method.
-func (m *MockBufferView) DeviceHandle() driver.VkDevice {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "DeviceHandle")
-	ret0, _ := ret[0].(driver.VkDevice)
-	return ret0
-}
-
-// DeviceHandle indicates an expected call of DeviceHandle.
-func (mr *MockBufferViewMockRecorder) DeviceHandle() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeviceHandle", reflect.TypeOf((*MockBufferView)(nil).DeviceHandle))
-}
-
-// Driver mocks base method.
-func (m *MockBufferView) Driver() driver.Driver {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Driver")
-	ret0, _ := ret[0].(driver.Driver)
-	return ret0
-}
-
-// Driver indicates an expected call of Driver.
-func (mr *MockBufferViewMockRecorder) Driver() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Driver", reflect.TypeOf((*MockBufferView)(nil).Driver))
-}
-
-// Handle mocks base method.
-func (m *MockBufferView) Handle() driver.VkBufferView {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Handle")
-	ret0, _ := ret[0].(driver.VkBufferView)
-	return ret0
-}
-
-// Handle indicates an expected call of Handle.
-func (mr *MockBufferViewMockRecorder) Handle() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Handle", reflect.TypeOf((*MockBufferView)(nil).Handle))
-}
-
-// MockCommandBuffer is a mock of CommandBuffer interface.
-type MockCommandBuffer struct {
-	ctrl     *gomock.Controller
-	recorder *MockCommandBufferMockRecorder
-	isgomock struct{}
-}
-
-// MockCommandBufferMockRecorder is the mock recorder for MockCommandBuffer.
-type MockCommandBufferMockRecorder struct {
-	mock *MockCommandBuffer
-}
-
-// NewMockCommandBuffer creates a new mock instance.
-func NewMockCommandBuffer(ctrl *gomock.Controller) *MockCommandBuffer {
-	mock := &MockCommandBuffer{ctrl: ctrl}
-	mock.recorder = &MockCommandBufferMockRecorder{mock}
-	return mock
-}
-
-// EXPECT returns an object that allows the caller to indicate expected use.
-func (m *MockCommandBuffer) EXPECT() *MockCommandBufferMockRecorder {
-	return m.recorder
-}
-
-// APIVersion mocks base method.
-func (m *MockCommandBuffer) APIVersion() common.APIVersion {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "APIVersion")
-	ret0, _ := ret[0].(common.APIVersion)
-	return ret0
-}
-
-// APIVersion indicates an expected call of APIVersion.
-func (mr *MockCommandBufferMockRecorder) APIVersion() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "APIVersion", reflect.TypeOf((*MockCommandBuffer)(nil).APIVersion))
-}
-
-// Begin mocks base method.
-func (m *MockCommandBuffer) Begin(o core1_0.CommandBufferBeginInfo) (common.VkResult, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Begin", o)
-	ret0, _ := ret[0].(common.VkResult)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// Begin indicates an expected call of Begin.
-func (mr *MockCommandBufferMockRecorder) Begin(o any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Begin", reflect.TypeOf((*MockCommandBuffer)(nil).Begin), o)
-}
-
-// CmdBeginQuery mocks base method.
-func (m *MockCommandBuffer) CmdBeginQuery(queryPool core1_0.QueryPool, query int, flags core1_0.QueryControlFlags) {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "CmdBeginQuery", queryPool, query, flags)
-}
-
-// CmdBeginQuery indicates an expected call of CmdBeginQuery.
-func (mr *MockCommandBufferMockRecorder) CmdBeginQuery(queryPool, query, flags any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CmdBeginQuery", reflect.TypeOf((*MockCommandBuffer)(nil).CmdBeginQuery), queryPool, query, flags)
-}
-
-// CmdBeginRenderPass mocks base method.
-func (m *MockCommandBuffer) CmdBeginRenderPass(contents core1_0.SubpassContents, o core1_0.RenderPassBeginInfo) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CmdBeginRenderPass", contents, o)
-	ret0, _ := ret[0].(error)
-	return ret0
-}
-
-// CmdBeginRenderPass indicates an expected call of CmdBeginRenderPass.
-func (mr *MockCommandBufferMockRecorder) CmdBeginRenderPass(contents, o any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CmdBeginRenderPass", reflect.TypeOf((*MockCommandBuffer)(nil).CmdBeginRenderPass), contents, o)
-}
-
-// CmdBindDescriptorSets mocks base method.
-func (m *MockCommandBuffer) CmdBindDescriptorSets(bindPoint core1_0.PipelineBindPoint, layout core1_0.PipelineLayout, firstSet int, sets []core1_0.DescriptorSet, dynamicOffsets []int) {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "CmdBindDescriptorSets", bindPoint, layout, firstSet, sets, dynamicOffsets)
-}
-
-// CmdBindDescriptorSets indicates an expected call of CmdBindDescriptorSets.
-func (mr *MockCommandBufferMockRecorder) CmdBindDescriptorSets(bindPoint, layout, firstSet, sets, dynamicOffsets any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CmdBindDescriptorSets", reflect.TypeOf((*MockCommandBuffer)(nil).CmdBindDescriptorSets), bindPoint, layout, firstSet, sets, dynamicOffsets)
-}
-
-// CmdBindIndexBuffer mocks base method.
-func (m *MockCommandBuffer) CmdBindIndexBuffer(buffer core1_0.Buffer, offset int, indexType core1_0.IndexType) {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "CmdBindIndexBuffer", buffer, offset, indexType)
-}
-
-// CmdBindIndexBuffer indicates an expected call of CmdBindIndexBuffer.
-func (mr *MockCommandBufferMockRecorder) CmdBindIndexBuffer(buffer, offset, indexType any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CmdBindIndexBuffer", reflect.TypeOf((*MockCommandBuffer)(nil).CmdBindIndexBuffer), buffer, offset, indexType)
-}
-
-// CmdBindPipeline mocks base method.
-func (m *MockCommandBuffer) CmdBindPipeline(bindPoint core1_0.PipelineBindPoint, pipeline core1_0.Pipeline) {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "CmdBindPipeline", bindPoint, pipeline)
-}
-
-// CmdBindPipeline indicates an expected call of CmdBindPipeline.
-func (mr *MockCommandBufferMockRecorder) CmdBindPipeline(bindPoint, pipeline any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CmdBindPipeline", reflect.TypeOf((*MockCommandBuffer)(nil).CmdBindPipeline), bindPoint, pipeline)
-}
-
-// CmdBindVertexBuffers mocks base method.
-func (m *MockCommandBuffer) CmdBindVertexBuffers(firstBinding int, buffers []core1_0.Buffer, bufferOffsets []int) {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "CmdBindVertexBuffers", firstBinding, buffers, bufferOffsets)
-}
-
-// CmdBindVertexBuffers indicates an expected call of CmdBindVertexBuffers.
-func (mr *MockCommandBufferMockRecorder) CmdBindVertexBuffers(firstBinding, buffers, bufferOffsets any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CmdBindVertexBuffers", reflect.TypeOf((*MockCommandBuffer)(nil).CmdBindVertexBuffers), firstBinding, buffers, bufferOffsets)
-}
-
-// CmdBlitImage mocks base method.
-func (m *MockCommandBuffer) CmdBlitImage(sourceImage core1_0.Image, sourceImageLayout core1_0.ImageLayout, destinationImage core1_0.Image, destinationImageLayout core1_0.ImageLayout, regions []core1_0.ImageBlit, filter core1_0.Filter) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CmdBlitImage", sourceImage, sourceImageLayout, destinationImage, destinationImageLayout, regions, filter)
-	ret0, _ := ret[0].(error)
-	return ret0
-}
-
-// CmdBlitImage indicates an expected call of CmdBlitImage.
-func (mr *MockCommandBufferMockRecorder) CmdBlitImage(sourceImage, sourceImageLayout, destinationImage, destinationImageLayout, regions, filter any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CmdBlitImage", reflect.TypeOf((*MockCommandBuffer)(nil).CmdBlitImage), sourceImage, sourceImageLayout, destinationImage, destinationImageLayout, regions, filter)
-}
-
-// CmdClearAttachments mocks base method.
-func (m *MockCommandBuffer) CmdClearAttachments(attachments []core1_0.ClearAttachment, rects []core1_0.ClearRect) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CmdClearAttachments", attachments, rects)
-	ret0, _ := ret[0].(error)
-	return ret0
-}
-
-// CmdClearAttachments indicates an expected call of CmdClearAttachments.
-func (mr *MockCommandBufferMockRecorder) CmdClearAttachments(attachments, rects any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CmdClearAttachments", reflect.TypeOf((*MockCommandBuffer)(nil).CmdClearAttachments), attachments, rects)
-}
-
-// CmdClearColorImage mocks base method.
-func (m *MockCommandBuffer) CmdClearColorImage(image core1_0.Image, imageLayout core1_0.ImageLayout, color core1_0.ClearColorValue, ranges []core1_0.ImageSubresourceRange) {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "CmdClearColorImage", image, imageLayout, color, ranges)
-}
-
-// CmdClearColorImage indicates an expected call of CmdClearColorImage.
-func (mr *MockCommandBufferMockRecorder) CmdClearColorImage(image, imageLayout, color, ranges any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CmdClearColorImage", reflect.TypeOf((*MockCommandBuffer)(nil).CmdClearColorImage), image, imageLayout, color, ranges)
-}
-
-// CmdClearDepthStencilImage mocks base method.
-func (m *MockCommandBuffer) CmdClearDepthStencilImage(image core1_0.Image, imageLayout core1_0.ImageLayout, depthStencil *core1_0.ClearValueDepthStencil, ranges []core1_0.ImageSubresourceRange) {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "CmdClearDepthStencilImage", image, imageLayout, depthStencil, ranges)
-}
-
-// CmdClearDepthStencilImage indicates an expected call of CmdClearDepthStencilImage.
-func (mr *MockCommandBufferMockRecorder) CmdClearDepthStencilImage(image, imageLayout, depthStencil, ranges any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CmdClearDepthStencilImage", reflect.TypeOf((*MockCommandBuffer)(nil).CmdClearDepthStencilImage), image, imageLayout, depthStencil, ranges)
-}
-
-// CmdCopyBuffer mocks base method.
-func (m *MockCommandBuffer) CmdCopyBuffer(srcBuffer, dstBuffer core1_0.Buffer, copyRegions []core1_0.BufferCopy) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CmdCopyBuffer", srcBuffer, dstBuffer, copyRegions)
-	ret0, _ := ret[0].(error)
-	return ret0
-}
-
-// CmdCopyBuffer indicates an expected call of CmdCopyBuffer.
-func (mr *MockCommandBufferMockRecorder) CmdCopyBuffer(srcBuffer, dstBuffer, copyRegions any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CmdCopyBuffer", reflect.TypeOf((*MockCommandBuffer)(nil).CmdCopyBuffer), srcBuffer, dstBuffer, copyRegions)
-}
-
-// CmdCopyBufferToImage mocks base method.
-func (m *MockCommandBuffer) CmdCopyBufferToImage(buffer core1_0.Buffer, image core1_0.Image, layout core1_0.ImageLayout, regions []core1_0.BufferImageCopy) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CmdCopyBufferToImage", buffer, image, layout, regions)
-	ret0, _ := ret[0].(error)
-	return ret0
-}
-
-// CmdCopyBufferToImage indicates an expected call of CmdCopyBufferToImage.
-func (mr *MockCommandBufferMockRecorder) CmdCopyBufferToImage(buffer, image, layout, regions any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CmdCopyBufferToImage", reflect.TypeOf((*MockCommandBuffer)(nil).CmdCopyBufferToImage), buffer, image, layout, regions)
-}
-
-// CmdCopyImage mocks base method.
-func (m *MockCommandBuffer) CmdCopyImage(srcImage core1_0.Image, srcImageLayout core1_0.ImageLayout, dstImage core1_0.Image, dstImageLayout core1_0.ImageLayout, regions []core1_0.ImageCopy) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CmdCopyImage", srcImage, srcImageLayout, dstImage, dstImageLayout, regions)
-	ret0, _ := ret[0].(error)
-	return ret0
-}
-
-// CmdCopyImage indicates an expected call of CmdCopyImage.
-func (mr *MockCommandBufferMockRecorder) CmdCopyImage(srcImage, srcImageLayout, dstImage, dstImageLayout, regions any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CmdCopyImage", reflect.TypeOf((*MockCommandBuffer)(nil).CmdCopyImage), srcImage, srcImageLayout, dstImage, dstImageLayout, regions)
-}
-
-// CmdCopyImageToBuffer mocks base method.
-func (m *MockCommandBuffer) CmdCopyImageToBuffer(srcImage core1_0.Image, srcImageLayout core1_0.ImageLayout, dstBuffer core1_0.Buffer, regions []core1_0.BufferImageCopy) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CmdCopyImageToBuffer", srcImage, srcImageLayout, dstBuffer, regions)
-	ret0, _ := ret[0].(error)
-	return ret0
-}
-
-// CmdCopyImageToBuffer indicates an expected call of CmdCopyImageToBuffer.
-func (mr *MockCommandBufferMockRecorder) CmdCopyImageToBuffer(srcImage, srcImageLayout, dstBuffer, regions any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CmdCopyImageToBuffer", reflect.TypeOf((*MockCommandBuffer)(nil).CmdCopyImageToBuffer), srcImage, srcImageLayout, dstBuffer, regions)
-}
-
-// CmdCopyQueryPoolResults mocks base method.
-func (m *MockCommandBuffer) CmdCopyQueryPoolResults(queryPool core1_0.QueryPool, firstQuery, queryCount int, dstBuffer core1_0.Buffer, dstOffset, stride int, flags core1_0.QueryResultFlags) {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "CmdCopyQueryPoolResults", queryPool, firstQuery, queryCount, dstBuffer, dstOffset, stride, flags)
-}
-
-// CmdCopyQueryPoolResults indicates an expected call of CmdCopyQueryPoolResults.
-func (mr *MockCommandBufferMockRecorder) CmdCopyQueryPoolResults(queryPool, firstQuery, queryCount, dstBuffer, dstOffset, stride, flags any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CmdCopyQueryPoolResults", reflect.TypeOf((*MockCommandBuffer)(nil).CmdCopyQueryPoolResults), queryPool, firstQuery, queryCount, dstBuffer, dstOffset, stride, flags)
-}
-
-// CmdDispatch mocks base method.
-func (m *MockCommandBuffer) CmdDispatch(groupCountX, groupCountY, groupCountZ int) {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "CmdDispatch", groupCountX, groupCountY, groupCountZ)
-}
-
-// CmdDispatch indicates an expected call of CmdDispatch.
-func (mr *MockCommandBufferMockRecorder) CmdDispatch(groupCountX, groupCountY, groupCountZ any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CmdDispatch", reflect.TypeOf((*MockCommandBuffer)(nil).CmdDispatch), groupCountX, groupCountY, groupCountZ)
-}
-
-// CmdDispatchBase mocks base method.
-func (m *MockCommandBuffer) CmdDispatchBase(baseGroupX, baseGroupY, baseGroupZ, groupCountX, groupCountY, groupCountZ int) {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "CmdDispatchBase", baseGroupX, baseGroupY, baseGroupZ, groupCountX, groupCountY, groupCountZ)
-}
-
-// CmdDispatchBase indicates an expected call of CmdDispatchBase.
-func (mr *MockCommandBufferMockRecorder) CmdDispatchBase(baseGroupX, baseGroupY, baseGroupZ, groupCountX, groupCountY, groupCountZ any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CmdDispatchBase", reflect.TypeOf((*MockCommandBuffer)(nil).CmdDispatchBase), baseGroupX, baseGroupY, baseGroupZ, groupCountX, groupCountY, groupCountZ)
-}
-
-// CmdDispatchIndirect mocks base method.
-func (m *MockCommandBuffer) CmdDispatchIndirect(buffer core1_0.Buffer, offset int) {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "CmdDispatchIndirect", buffer, offset)
-}
-
-// CmdDispatchIndirect indicates an expected call of CmdDispatchIndirect.
-func (mr *MockCommandBufferMockRecorder) CmdDispatchIndirect(buffer, offset any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CmdDispatchIndirect", reflect.TypeOf((*MockCommandBuffer)(nil).CmdDispatchIndirect), buffer, offset)
-}
-
-// CmdDraw mocks base method.
-func (m *MockCommandBuffer) CmdDraw(vertexCount, instanceCount int, firstVertex, firstInstance uint32) {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "CmdDraw", vertexCount, instanceCount, firstVertex, firstInstance)
-}
-
-// CmdDraw indicates an expected call of CmdDraw.
-func (mr *MockCommandBufferMockRecorder) CmdDraw(vertexCount, instanceCount, firstVertex, firstInstance any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CmdDraw", reflect.TypeOf((*MockCommandBuffer)(nil).CmdDraw), vertexCount, instanceCount, firstVertex, firstInstance)
-}
-
-// CmdDrawIndexed mocks base method.
-func (m *MockCommandBuffer) CmdDrawIndexed(indexCount, instanceCount int, firstIndex uint32, vertexOffset int, firstInstance uint32) {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "CmdDrawIndexed", indexCount, instanceCount, firstIndex, vertexOffset, firstInstance)
-}
-
-// CmdDrawIndexed indicates an expected call of CmdDrawIndexed.
-func (mr *MockCommandBufferMockRecorder) CmdDrawIndexed(indexCount, instanceCount, firstIndex, vertexOffset, firstInstance any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CmdDrawIndexed", reflect.TypeOf((*MockCommandBuffer)(nil).CmdDrawIndexed), indexCount, instanceCount, firstIndex, vertexOffset, firstInstance)
-}
-
-// CmdDrawIndexedIndirect mocks base method.
-func (m *MockCommandBuffer) CmdDrawIndexedIndirect(buffer core1_0.Buffer, offset, drawCount, stride int) {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "CmdDrawIndexedIndirect", buffer, offset, drawCount, stride)
-}
-
-// CmdDrawIndexedIndirect indicates an expected call of CmdDrawIndexedIndirect.
-func (mr *MockCommandBufferMockRecorder) CmdDrawIndexedIndirect(buffer, offset, drawCount, stride any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CmdDrawIndexedIndirect", reflect.TypeOf((*MockCommandBuffer)(nil).CmdDrawIndexedIndirect), buffer, offset, drawCount, stride)
-}
-
-// CmdDrawIndirect mocks base method.
-func (m *MockCommandBuffer) CmdDrawIndirect(buffer core1_0.Buffer, offset, drawCount, stride int) {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "CmdDrawIndirect", buffer, offset, drawCount, stride)
-}
-
-// CmdDrawIndirect indicates an expected call of CmdDrawIndirect.
-func (mr *MockCommandBufferMockRecorder) CmdDrawIndirect(buffer, offset, drawCount, stride any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CmdDrawIndirect", reflect.TypeOf((*MockCommandBuffer)(nil).CmdDrawIndirect), buffer, offset, drawCount, stride)
-}
-
-// CmdEndQuery mocks base method.
-func (m *MockCommandBuffer) CmdEndQuery(queryPool core1_0.QueryPool, query int) {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "CmdEndQuery", queryPool, query)
-}
-
-// CmdEndQuery indicates an expected call of CmdEndQuery.
-func (mr *MockCommandBufferMockRecorder) CmdEndQuery(queryPool, query any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CmdEndQuery", reflect.TypeOf((*MockCommandBuffer)(nil).CmdEndQuery), queryPool, query)
-}
-
-// CmdEndRenderPass mocks base method.
-func (m *MockCommandBuffer) CmdEndRenderPass() {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "CmdEndRenderPass")
-}
-
-// CmdEndRenderPass indicates an expected call of CmdEndRenderPass.
-func (mr *MockCommandBufferMockRecorder) CmdEndRenderPass() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CmdEndRenderPass", reflect.TypeOf((*MockCommandBuffer)(nil).CmdEndRenderPass))
-}
-
-// CmdExecuteCommands mocks base method.
-func (m *MockCommandBuffer) CmdExecuteCommands(commandBuffers []core1_0.CommandBuffer) {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "CmdExecuteCommands", commandBuffers)
-}
-
-// CmdExecuteCommands indicates an expected call of CmdExecuteCommands.
-func (mr *MockCommandBufferMockRecorder) CmdExecuteCommands(commandBuffers any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CmdExecuteCommands", reflect.TypeOf((*MockCommandBuffer)(nil).CmdExecuteCommands), commandBuffers)
-}
-
-// CmdFillBuffer mocks base method.
-func (m *MockCommandBuffer) CmdFillBuffer(dstBuffer core1_0.Buffer, dstOffset, size int, data uint32) {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "CmdFillBuffer", dstBuffer, dstOffset, size, data)
-}
-
-// CmdFillBuffer indicates an expected call of CmdFillBuffer.
-func (mr *MockCommandBufferMockRecorder) CmdFillBuffer(dstBuffer, dstOffset, size, data any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CmdFillBuffer", reflect.TypeOf((*MockCommandBuffer)(nil).CmdFillBuffer), dstBuffer, dstOffset, size, data)
-}
-
-// CmdNextSubpass mocks base method.
-func (m *MockCommandBuffer) CmdNextSubpass(contents core1_0.SubpassContents) {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "CmdNextSubpass", contents)
-}
-
-// CmdNextSubpass indicates an expected call of CmdNextSubpass.
-func (mr *MockCommandBufferMockRecorder) CmdNextSubpass(contents any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CmdNextSubpass", reflect.TypeOf((*MockCommandBuffer)(nil).CmdNextSubpass), contents)
-}
-
-// CmdPipelineBarrier mocks base method.
-func (m *MockCommandBuffer) CmdPipelineBarrier(srcStageMask, dstStageMask core1_0.PipelineStageFlags, dependencies core1_0.DependencyFlags, memoryBarriers []core1_0.MemoryBarrier, bufferMemoryBarriers []core1_0.BufferMemoryBarrier, imageMemoryBarriers []core1_0.ImageMemoryBarrier) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CmdPipelineBarrier", srcStageMask, dstStageMask, dependencies, memoryBarriers, bufferMemoryBarriers, imageMemoryBarriers)
-	ret0, _ := ret[0].(error)
-	return ret0
-}
-
-// CmdPipelineBarrier indicates an expected call of CmdPipelineBarrier.
-func (mr *MockCommandBufferMockRecorder) CmdPipelineBarrier(srcStageMask, dstStageMask, dependencies, memoryBarriers, bufferMemoryBarriers, imageMemoryBarriers any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CmdPipelineBarrier", reflect.TypeOf((*MockCommandBuffer)(nil).CmdPipelineBarrier), srcStageMask, dstStageMask, dependencies, memoryBarriers, bufferMemoryBarriers, imageMemoryBarriers)
-}
-
-// CmdPushConstants mocks base method.
-func (m *MockCommandBuffer) CmdPushConstants(layout core1_0.PipelineLayout, stageFlags core1_0.ShaderStageFlags, offset int, valueBytes []byte) {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "CmdPushConstants", layout, stageFlags, offset, valueBytes)
-}
-
-// CmdPushConstants indicates an expected call of CmdPushConstants.
-func (mr *MockCommandBufferMockRecorder) CmdPushConstants(layout, stageFlags, offset, valueBytes any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CmdPushConstants", reflect.TypeOf((*MockCommandBuffer)(nil).CmdPushConstants), layout, stageFlags, offset, valueBytes)
-}
-
-// CmdResetEvent mocks base method.
-func (m *MockCommandBuffer) CmdResetEvent(event core1_0.Event, stageMask core1_0.PipelineStageFlags) {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "CmdResetEvent", event, stageMask)
-}
-
-// CmdResetEvent indicates an expected call of CmdResetEvent.
-func (mr *MockCommandBufferMockRecorder) CmdResetEvent(event, stageMask any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CmdResetEvent", reflect.TypeOf((*MockCommandBuffer)(nil).CmdResetEvent), event, stageMask)
-}
-
-// CmdResetQueryPool mocks base method.
-func (m *MockCommandBuffer) CmdResetQueryPool(queryPool core1_0.QueryPool, startQuery, queryCount int) {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "CmdResetQueryPool", queryPool, startQuery, queryCount)
-}
-
-// CmdResetQueryPool indicates an expected call of CmdResetQueryPool.
-func (mr *MockCommandBufferMockRecorder) CmdResetQueryPool(queryPool, startQuery, queryCount any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CmdResetQueryPool", reflect.TypeOf((*MockCommandBuffer)(nil).CmdResetQueryPool), queryPool, startQuery, queryCount)
-}
-
-// CmdResolveImage mocks base method.
-func (m *MockCommandBuffer) CmdResolveImage(srcImage core1_0.Image, srcImageLayout core1_0.ImageLayout, dstImage core1_0.Image, dstImageLayout core1_0.ImageLayout, regions []core1_0.ImageResolve) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CmdResolveImage", srcImage, srcImageLayout, dstImage, dstImageLayout, regions)
-	ret0, _ := ret[0].(error)
-	return ret0
-}
-
-// CmdResolveImage indicates an expected call of CmdResolveImage.
-func (mr *MockCommandBufferMockRecorder) CmdResolveImage(srcImage, srcImageLayout, dstImage, dstImageLayout, regions any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CmdResolveImage", reflect.TypeOf((*MockCommandBuffer)(nil).CmdResolveImage), srcImage, srcImageLayout, dstImage, dstImageLayout, regions)
-}
-
-// CmdSetBlendConstants mocks base method.
-func (m *MockCommandBuffer) CmdSetBlendConstants(blendConstants [4]float32) {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "CmdSetBlendConstants", blendConstants)
-}
-
-// CmdSetBlendConstants indicates an expected call of CmdSetBlendConstants.
-func (mr *MockCommandBufferMockRecorder) CmdSetBlendConstants(blendConstants any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CmdSetBlendConstants", reflect.TypeOf((*MockCommandBuffer)(nil).CmdSetBlendConstants), blendConstants)
-}
-
-// CmdSetDepthBias mocks base method.
-func (m *MockCommandBuffer) CmdSetDepthBias(depthBiasConstantFactor, depthBiasClamp, depthBiasSlopeFactor float32) {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "CmdSetDepthBias", depthBiasConstantFactor, depthBiasClamp, depthBiasSlopeFactor)
-}
-
-// CmdSetDepthBias indicates an expected call of CmdSetDepthBias.
-func (mr *MockCommandBufferMockRecorder) CmdSetDepthBias(depthBiasConstantFactor, depthBiasClamp, depthBiasSlopeFactor any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CmdSetDepthBias", reflect.TypeOf((*MockCommandBuffer)(nil).CmdSetDepthBias), depthBiasConstantFactor, depthBiasClamp, depthBiasSlopeFactor)
-}
-
-// CmdSetDepthBounds mocks base method.
-func (m *MockCommandBuffer) CmdSetDepthBounds(min, max float32) {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "CmdSetDepthBounds", min, max)
-}
-
-// CmdSetDepthBounds indicates an expected call of CmdSetDepthBounds.
-func (mr *MockCommandBufferMockRecorder) CmdSetDepthBounds(min, max any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CmdSetDepthBounds", reflect.TypeOf((*MockCommandBuffer)(nil).CmdSetDepthBounds), min, max)
-}
-
-// CmdSetDeviceMask mocks base method.
-func (m *MockCommandBuffer) CmdSetDeviceMask(deviceMask uint32) {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "CmdSetDeviceMask", deviceMask)
-}
-
-// CmdSetDeviceMask indicates an expected call of CmdSetDeviceMask.
-func (mr *MockCommandBufferMockRecorder) CmdSetDeviceMask(deviceMask any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CmdSetDeviceMask", reflect.TypeOf((*MockCommandBuffer)(nil).CmdSetDeviceMask), deviceMask)
-}
-
-// CmdSetEvent mocks base method.
-func (m *MockCommandBuffer) CmdSetEvent(event core1_0.Event, stageMask core1_0.PipelineStageFlags) {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "CmdSetEvent", event, stageMask)
-}
-
-// CmdSetEvent indicates an expected call of CmdSetEvent.
-func (mr *MockCommandBufferMockRecorder) CmdSetEvent(event, stageMask any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CmdSetEvent", reflect.TypeOf((*MockCommandBuffer)(nil).CmdSetEvent), event, stageMask)
-}
-
-// CmdSetLineWidth mocks base method.
-func (m *MockCommandBuffer) CmdSetLineWidth(lineWidth float32) {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "CmdSetLineWidth", lineWidth)
-}
-
-// CmdSetLineWidth indicates an expected call of CmdSetLineWidth.
-func (mr *MockCommandBufferMockRecorder) CmdSetLineWidth(lineWidth any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CmdSetLineWidth", reflect.TypeOf((*MockCommandBuffer)(nil).CmdSetLineWidth), lineWidth)
-}
-
-// CmdSetScissor mocks base method.
-func (m *MockCommandBuffer) CmdSetScissor(scissors []core1_0.Rect2D) {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "CmdSetScissor", scissors)
-}
-
-// CmdSetScissor indicates an expected call of CmdSetScissor.
-func (mr *MockCommandBufferMockRecorder) CmdSetScissor(scissors any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CmdSetScissor", reflect.TypeOf((*MockCommandBuffer)(nil).CmdSetScissor), scissors)
-}
-
-// CmdSetStencilCompareMask mocks base method.
-func (m *MockCommandBuffer) CmdSetStencilCompareMask(faceMask core1_0.StencilFaceFlags, compareMask uint32) {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "CmdSetStencilCompareMask", faceMask, compareMask)
-}
-
-// CmdSetStencilCompareMask indicates an expected call of CmdSetStencilCompareMask.
-func (mr *MockCommandBufferMockRecorder) CmdSetStencilCompareMask(faceMask, compareMask any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CmdSetStencilCompareMask", reflect.TypeOf((*MockCommandBuffer)(nil).CmdSetStencilCompareMask), faceMask, compareMask)
-}
-
-// CmdSetStencilReference mocks base method.
-func (m *MockCommandBuffer) CmdSetStencilReference(faceMask core1_0.StencilFaceFlags, reference uint32) {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "CmdSetStencilReference", faceMask, reference)
-}
-
-// CmdSetStencilReference indicates an expected call of CmdSetStencilReference.
-func (mr *MockCommandBufferMockRecorder) CmdSetStencilReference(faceMask, reference any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CmdSetStencilReference", reflect.TypeOf((*MockCommandBuffer)(nil).CmdSetStencilReference), faceMask, reference)
-}
-
-// CmdSetStencilWriteMask mocks base method.
-func (m *MockCommandBuffer) CmdSetStencilWriteMask(faceMask core1_0.StencilFaceFlags, writeMask uint32) {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "CmdSetStencilWriteMask", faceMask, writeMask)
-}
-
-// CmdSetStencilWriteMask indicates an expected call of CmdSetStencilWriteMask.
-func (mr *MockCommandBufferMockRecorder) CmdSetStencilWriteMask(faceMask, writeMask any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CmdSetStencilWriteMask", reflect.TypeOf((*MockCommandBuffer)(nil).CmdSetStencilWriteMask), faceMask, writeMask)
-}
-
-// CmdSetViewport mocks base method.
-func (m *MockCommandBuffer) CmdSetViewport(viewports []core1_0.Viewport) {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "CmdSetViewport", viewports)
-}
-
-// CmdSetViewport indicates an expected call of CmdSetViewport.
-func (mr *MockCommandBufferMockRecorder) CmdSetViewport(viewports any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CmdSetViewport", reflect.TypeOf((*MockCommandBuffer)(nil).CmdSetViewport), viewports)
-}
-
-// CmdUpdateBuffer mocks base method.
-func (m *MockCommandBuffer) CmdUpdateBuffer(dstBuffer core1_0.Buffer, dstOffset, dataSize int, data []byte) {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "CmdUpdateBuffer", dstBuffer, dstOffset, dataSize, data)
-}
-
-// CmdUpdateBuffer indicates an expected call of CmdUpdateBuffer.
-func (mr *MockCommandBufferMockRecorder) CmdUpdateBuffer(dstBuffer, dstOffset, dataSize, data any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CmdUpdateBuffer", reflect.TypeOf((*MockCommandBuffer)(nil).CmdUpdateBuffer), dstBuffer, dstOffset, dataSize, data)
-}
-
-// CmdWaitEvents mocks base method.
-func (m *MockCommandBuffer) CmdWaitEvents(events []core1_0.Event, srcStageMask, dstStageMask core1_0.PipelineStageFlags, memoryBarriers []core1_0.MemoryBarrier, bufferMemoryBarriers []core1_0.BufferMemoryBarrier, imageMemoryBarriers []core1_0.ImageMemoryBarrier) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CmdWaitEvents", events, srcStageMask, dstStageMask, memoryBarriers, bufferMemoryBarriers, imageMemoryBarriers)
-	ret0, _ := ret[0].(error)
-	return ret0
-}
-
-// CmdWaitEvents indicates an expected call of CmdWaitEvents.
-func (mr *MockCommandBufferMockRecorder) CmdWaitEvents(events, srcStageMask, dstStageMask, memoryBarriers, bufferMemoryBarriers, imageMemoryBarriers any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CmdWaitEvents", reflect.TypeOf((*MockCommandBuffer)(nil).CmdWaitEvents), events, srcStageMask, dstStageMask, memoryBarriers, bufferMemoryBarriers, imageMemoryBarriers)
-}
-
-// CmdWriteTimestamp mocks base method.
-func (m *MockCommandBuffer) CmdWriteTimestamp(pipelineStage core1_0.PipelineStageFlags, queryPool core1_0.QueryPool, query int) {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "CmdWriteTimestamp", pipelineStage, queryPool, query)
-}
-
-// CmdWriteTimestamp indicates an expected call of CmdWriteTimestamp.
-func (mr *MockCommandBufferMockRecorder) CmdWriteTimestamp(pipelineStage, queryPool, query any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CmdWriteTimestamp", reflect.TypeOf((*MockCommandBuffer)(nil).CmdWriteTimestamp), pipelineStage, queryPool, query)
-}
-
-// CommandPoolHandle mocks base method.
-func (m *MockCommandBuffer) CommandPoolHandle() driver.VkCommandPool {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CommandPoolHandle")
-	ret0, _ := ret[0].(driver.VkCommandPool)
-	return ret0
-}
-
-// CommandPoolHandle indicates an expected call of CommandPoolHandle.
-func (mr *MockCommandBufferMockRecorder) CommandPoolHandle() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CommandPoolHandle", reflect.TypeOf((*MockCommandBuffer)(nil).CommandPoolHandle))
-}
-
-// CommandsRecorded mocks base method.
-func (m *MockCommandBuffer) CommandsRecorded() int {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CommandsRecorded")
-	ret0, _ := ret[0].(int)
-	return ret0
-}
-
-// CommandsRecorded indicates an expected call of CommandsRecorded.
-func (mr *MockCommandBufferMockRecorder) CommandsRecorded() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CommandsRecorded", reflect.TypeOf((*MockCommandBuffer)(nil).CommandsRecorded))
-}
-
-// DeviceHandle mocks base method.
-func (m *MockCommandBuffer) DeviceHandle() driver.VkDevice {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "DeviceHandle")
-	ret0, _ := ret[0].(driver.VkDevice)
-	return ret0
-}
-
-// DeviceHandle indicates an expected call of DeviceHandle.
-func (mr *MockCommandBufferMockRecorder) DeviceHandle() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeviceHandle", reflect.TypeOf((*MockCommandBuffer)(nil).DeviceHandle))
-}
-
-// DispatchesRecorded mocks base method.
-func (m *MockCommandBuffer) DispatchesRecorded() int {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "DispatchesRecorded")
-	ret0, _ := ret[0].(int)
-	return ret0
-}
-
-// DispatchesRecorded indicates an expected call of DispatchesRecorded.
-func (mr *MockCommandBufferMockRecorder) DispatchesRecorded() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DispatchesRecorded", reflect.TypeOf((*MockCommandBuffer)(nil).DispatchesRecorded))
-}
-
-// DrawsRecorded mocks base method.
-func (m *MockCommandBuffer) DrawsRecorded() int {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "DrawsRecorded")
-	ret0, _ := ret[0].(int)
-	return ret0
-}
-
-// DrawsRecorded indicates an expected call of DrawsRecorded.
-func (mr *MockCommandBufferMockRecorder) DrawsRecorded() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DrawsRecorded", reflect.TypeOf((*MockCommandBuffer)(nil).DrawsRecorded))
-}
-
-// Driver mocks base method.
-func (m *MockCommandBuffer) Driver() driver.Driver {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Driver")
-	ret0, _ := ret[0].(driver.Driver)
-	return ret0
-}
-
-// Driver indicates an expected call of Driver.
-func (mr *MockCommandBufferMockRecorder) Driver() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Driver", reflect.TypeOf((*MockCommandBuffer)(nil).Driver))
-}
-
-// End mocks base method.
-func (m *MockCommandBuffer) End() (common.VkResult, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "End")
-	ret0, _ := ret[0].(common.VkResult)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// End indicates an expected call of End.
-func (mr *MockCommandBufferMockRecorder) End() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "End", reflect.TypeOf((*MockCommandBuffer)(nil).End))
-}
-
-// Free mocks base method.
-func (m *MockCommandBuffer) Free() {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "Free")
-}
-
-// Free indicates an expected call of Free.
-func (mr *MockCommandBufferMockRecorder) Free() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Free", reflect.TypeOf((*MockCommandBuffer)(nil).Free))
-}
-
-// Handle mocks base method.
-func (m *MockCommandBuffer) Handle() driver.VkCommandBuffer {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Handle")
-	ret0, _ := ret[0].(driver.VkCommandBuffer)
-	return ret0
-}
-
-// Handle indicates an expected call of Handle.
-func (mr *MockCommandBufferMockRecorder) Handle() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Handle", reflect.TypeOf((*MockCommandBuffer)(nil).Handle))
-}
-
-// Reset mocks base method.
-func (m *MockCommandBuffer) Reset(flags core1_0.CommandBufferResetFlags) (common.VkResult, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Reset", flags)
-	ret0, _ := ret[0].(common.VkResult)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// Reset indicates an expected call of Reset.
-func (mr *MockCommandBufferMockRecorder) Reset(flags any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Reset", reflect.TypeOf((*MockCommandBuffer)(nil).Reset), flags)
-}
-
-// MockCommandPool is a mock of CommandPool interface.
-type MockCommandPool struct {
-	ctrl     *gomock.Controller
-	recorder *MockCommandPoolMockRecorder
-	isgomock struct{}
-}
-
-// MockCommandPoolMockRecorder is the mock recorder for MockCommandPool.
-type MockCommandPoolMockRecorder struct {
-	mock *MockCommandPool
-}
-
-// NewMockCommandPool creates a new mock instance.
-func NewMockCommandPool(ctrl *gomock.Controller) *MockCommandPool {
-	mock := &MockCommandPool{ctrl: ctrl}
-	mock.recorder = &MockCommandPoolMockRecorder{mock}
-	return mock
-}
-
-// EXPECT returns an object that allows the caller to indicate expected use.
-func (m *MockCommandPool) EXPECT() *MockCommandPoolMockRecorder {
-	return m.recorder
-}
-
-// APIVersion mocks base method.
-func (m *MockCommandPool) APIVersion() common.APIVersion {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "APIVersion")
-	ret0, _ := ret[0].(common.APIVersion)
-	return ret0
-}
-
-// APIVersion indicates an expected call of APIVersion.
-func (mr *MockCommandPoolMockRecorder) APIVersion() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "APIVersion", reflect.TypeOf((*MockCommandPool)(nil).APIVersion))
-}
-
-// Destroy mocks base method.
-func (m *MockCommandPool) Destroy(callbacks *driver.AllocationCallbacks) {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "Destroy", callbacks)
-}
-
-// Destroy indicates an expected call of Destroy.
-func (mr *MockCommandPoolMockRecorder) Destroy(callbacks any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Destroy", reflect.TypeOf((*MockCommandPool)(nil).Destroy), callbacks)
-}
-
-// DeviceHandle mocks base method.
-func (m *MockCommandPool) DeviceHandle() driver.VkDevice {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "DeviceHandle")
-	ret0, _ := ret[0].(driver.VkDevice)
-	return ret0
-}
-
-// DeviceHandle indicates an expected call of DeviceHandle.
-func (mr *MockCommandPoolMockRecorder) DeviceHandle() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeviceHandle", reflect.TypeOf((*MockCommandPool)(nil).DeviceHandle))
-}
-
-// Driver mocks base method.
-func (m *MockCommandPool) Driver() driver.Driver {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Driver")
-	ret0, _ := ret[0].(driver.Driver)
-	return ret0
-}
-
-// Driver indicates an expected call of Driver.
-func (mr *MockCommandPoolMockRecorder) Driver() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Driver", reflect.TypeOf((*MockCommandPool)(nil).Driver))
-}
-
-// Handle mocks base method.
-func (m *MockCommandPool) Handle() driver.VkCommandPool {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Handle")
-	ret0, _ := ret[0].(driver.VkCommandPool)
-	return ret0
-}
-
-// Handle indicates an expected call of Handle.
-func (mr *MockCommandPoolMockRecorder) Handle() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Handle", reflect.TypeOf((*MockCommandPool)(nil).Handle))
-}
-
-// Reset mocks base method.
-func (m *MockCommandPool) Reset(flags core1_0.CommandPoolResetFlags) (common.VkResult, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Reset", flags)
-	ret0, _ := ret[0].(common.VkResult)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// Reset indicates an expected call of Reset.
-func (mr *MockCommandPoolMockRecorder) Reset(flags any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Reset", reflect.TypeOf((*MockCommandPool)(nil).Reset), flags)
-}
-
-// TrimCommandPool mocks base method.
-func (m *MockCommandPool) TrimCommandPool(flags core1_1.CommandPoolTrimFlags) {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "TrimCommandPool", flags)
-}
-
-// TrimCommandPool indicates an expected call of TrimCommandPool.
-func (mr *MockCommandPoolMockRecorder) TrimCommandPool(flags any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "TrimCommandPool", reflect.TypeOf((*MockCommandPool)(nil).TrimCommandPool), flags)
-}
-
-// MockDescriptorPool is a mock of DescriptorPool interface.
-type MockDescriptorPool struct {
-	ctrl     *gomock.Controller
-	recorder *MockDescriptorPoolMockRecorder
-	isgomock struct{}
-}
-
-// MockDescriptorPoolMockRecorder is the mock recorder for MockDescriptorPool.
-type MockDescriptorPoolMockRecorder struct {
-	mock *MockDescriptorPool
-}
-
-// NewMockDescriptorPool creates a new mock instance.
-func NewMockDescriptorPool(ctrl *gomock.Controller) *MockDescriptorPool {
-	mock := &MockDescriptorPool{ctrl: ctrl}
-	mock.recorder = &MockDescriptorPoolMockRecorder{mock}
-	return mock
-}
-
-// EXPECT returns an object that allows the caller to indicate expected use.
-func (m *MockDescriptorPool) EXPECT() *MockDescriptorPoolMockRecorder {
-	return m.recorder
-}
-
-// APIVersion mocks base method.
-func (m *MockDescriptorPool) APIVersion() common.APIVersion {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "APIVersion")
-	ret0, _ := ret[0].(common.APIVersion)
-	return ret0
-}
-
-// APIVersion indicates an expected call of APIVersion.
-func (mr *MockDescriptorPoolMockRecorder) APIVersion() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "APIVersion", reflect.TypeOf((*MockDescriptorPool)(nil).APIVersion))
-}
-
-// Destroy mocks base method.
-func (m *MockDescriptorPool) Destroy(callbacks *driver.AllocationCallbacks) {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "Destroy", callbacks)
-}
-
-// Destroy indicates an expected call of Destroy.
-func (mr *MockDescriptorPoolMockRecorder) Destroy(callbacks any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Destroy", reflect.TypeOf((*MockDescriptorPool)(nil).Destroy), callbacks)
-}
-
-// DeviceHandle mocks base method.
-func (m *MockDescriptorPool) DeviceHandle() driver.VkDevice {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "DeviceHandle")
-	ret0, _ := ret[0].(driver.VkDevice)
-	return ret0
-}
-
-// DeviceHandle indicates an expected call of DeviceHandle.
-func (mr *MockDescriptorPoolMockRecorder) DeviceHandle() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeviceHandle", reflect.TypeOf((*MockDescriptorPool)(nil).DeviceHandle))
-}
-
-// Driver mocks base method.
-func (m *MockDescriptorPool) Driver() driver.Driver {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Driver")
-	ret0, _ := ret[0].(driver.Driver)
-	return ret0
-}
-
-// Driver indicates an expected call of Driver.
-func (mr *MockDescriptorPoolMockRecorder) Driver() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Driver", reflect.TypeOf((*MockDescriptorPool)(nil).Driver))
-}
-
-// Handle mocks base method.
-func (m *MockDescriptorPool) Handle() driver.VkDescriptorPool {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Handle")
-	ret0, _ := ret[0].(driver.VkDescriptorPool)
-	return ret0
-}
-
-// Handle indicates an expected call of Handle.
-func (mr *MockDescriptorPoolMockRecorder) Handle() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Handle", reflect.TypeOf((*MockDescriptorPool)(nil).Handle))
-}
-
-// Reset mocks base method.
-func (m *MockDescriptorPool) Reset(flags core1_0.DescriptorPoolResetFlags) (common.VkResult, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Reset", flags)
-	ret0, _ := ret[0].(common.VkResult)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// Reset indicates an expected call of Reset.
-func (mr *MockDescriptorPoolMockRecorder) Reset(flags any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Reset", reflect.TypeOf((*MockDescriptorPool)(nil).Reset), flags)
-}
-
-// MockDescriptorSet is a mock of DescriptorSet interface.
-type MockDescriptorSet struct {
-	ctrl     *gomock.Controller
-	recorder *MockDescriptorSetMockRecorder
-	isgomock struct{}
-}
-
-// MockDescriptorSetMockRecorder is the mock recorder for MockDescriptorSet.
-type MockDescriptorSetMockRecorder struct {
-	mock *MockDescriptorSet
-}
-
-// NewMockDescriptorSet creates a new mock instance.
-func NewMockDescriptorSet(ctrl *gomock.Controller) *MockDescriptorSet {
-	mock := &MockDescriptorSet{ctrl: ctrl}
-	mock.recorder = &MockDescriptorSetMockRecorder{mock}
-	return mock
-}
-
-// EXPECT returns an object that allows the caller to indicate expected use.
-func (m *MockDescriptorSet) EXPECT() *MockDescriptorSetMockRecorder {
-	return m.recorder
-}
-
-// APIVersion mocks base method.
-func (m *MockDescriptorSet) APIVersion() common.APIVersion {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "APIVersion")
-	ret0, _ := ret[0].(common.APIVersion)
-	return ret0
-}
-
-// APIVersion indicates an expected call of APIVersion.
-func (mr *MockDescriptorSetMockRecorder) APIVersion() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "APIVersion", reflect.TypeOf((*MockDescriptorSet)(nil).APIVersion))
-}
-
-// DescriptorPoolHandle mocks base method.
-func (m *MockDescriptorSet) DescriptorPoolHandle() driver.VkDescriptorPool {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "DescriptorPoolHandle")
-	ret0, _ := ret[0].(driver.VkDescriptorPool)
-	return ret0
-}
-
-// DescriptorPoolHandle indicates an expected call of DescriptorPoolHandle.
-func (mr *MockDescriptorSetMockRecorder) DescriptorPoolHandle() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DescriptorPoolHandle", reflect.TypeOf((*MockDescriptorSet)(nil).DescriptorPoolHandle))
-}
-
-// DeviceHandle mocks base method.
-func (m *MockDescriptorSet) DeviceHandle() driver.VkDevice {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "DeviceHandle")
-	ret0, _ := ret[0].(driver.VkDevice)
-	return ret0
-}
-
-// DeviceHandle indicates an expected call of DeviceHandle.
-func (mr *MockDescriptorSetMockRecorder) DeviceHandle() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeviceHandle", reflect.TypeOf((*MockDescriptorSet)(nil).DeviceHandle))
-}
-
-// Driver mocks base method.
-func (m *MockDescriptorSet) Driver() driver.Driver {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Driver")
-	ret0, _ := ret[0].(driver.Driver)
-	return ret0
-}
-
-// Driver indicates an expected call of Driver.
-func (mr *MockDescriptorSetMockRecorder) Driver() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Driver", reflect.TypeOf((*MockDescriptorSet)(nil).Driver))
-}
-
-// Free mocks base method.
-func (m *MockDescriptorSet) Free() (common.VkResult, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Free")
-	ret0, _ := ret[0].(common.VkResult)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// Free indicates an expected call of Free.
-func (mr *MockDescriptorSetMockRecorder) Free() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Free", reflect.TypeOf((*MockDescriptorSet)(nil).Free))
-}
-
-// Handle mocks base method.
-func (m *MockDescriptorSet) Handle() driver.VkDescriptorSet {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Handle")
-	ret0, _ := ret[0].(driver.VkDescriptorSet)
-	return ret0
-}
-
-// Handle indicates an expected call of Handle.
-func (mr *MockDescriptorSetMockRecorder) Handle() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Handle", reflect.TypeOf((*MockDescriptorSet)(nil).Handle))
-}
-
-// MockDescriptorSetLayout is a mock of DescriptorSetLayout interface.
-type MockDescriptorSetLayout struct {
-	ctrl     *gomock.Controller
-	recorder *MockDescriptorSetLayoutMockRecorder
-	isgomock struct{}
-}
-
-// MockDescriptorSetLayoutMockRecorder is the mock recorder for MockDescriptorSetLayout.
-type MockDescriptorSetLayoutMockRecorder struct {
-	mock *MockDescriptorSetLayout
-}
-
-// NewMockDescriptorSetLayout creates a new mock instance.
-func NewMockDescriptorSetLayout(ctrl *gomock.Controller) *MockDescriptorSetLayout {
-	mock := &MockDescriptorSetLayout{ctrl: ctrl}
-	mock.recorder = &MockDescriptorSetLayoutMockRecorder{mock}
-	return mock
-}
-
-// EXPECT returns an object that allows the caller to indicate expected use.
-func (m *MockDescriptorSetLayout) EXPECT() *MockDescriptorSetLayoutMockRecorder {
-	return m.recorder
-}
-
-// APIVersion mocks base method.
-func (m *MockDescriptorSetLayout) APIVersion() common.APIVersion {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "APIVersion")
-	ret0, _ := ret[0].(common.APIVersion)
-	return ret0
-}
-
-// APIVersion indicates an expected call of APIVersion.
-func (mr *MockDescriptorSetLayoutMockRecorder) APIVersion() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "APIVersion", reflect.TypeOf((*MockDescriptorSetLayout)(nil).APIVersion))
-}
-
-// Destroy mocks base method.
-func (m *MockDescriptorSetLayout) Destroy(callbacks *driver.AllocationCallbacks) {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "Destroy", callbacks)
-}
-
-// Destroy indicates an expected call of Destroy.
-func (mr *MockDescriptorSetLayoutMockRecorder) Destroy(callbacks any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Destroy", reflect.TypeOf((*MockDescriptorSetLayout)(nil).Destroy), callbacks)
-}
-
-// DeviceHandle mocks base method.
-func (m *MockDescriptorSetLayout) DeviceHandle() driver.VkDevice {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "DeviceHandle")
-	ret0, _ := ret[0].(driver.VkDevice)
-	return ret0
-}
-
-// DeviceHandle indicates an expected call of DeviceHandle.
-func (mr *MockDescriptorSetLayoutMockRecorder) DeviceHandle() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeviceHandle", reflect.TypeOf((*MockDescriptorSetLayout)(nil).DeviceHandle))
-}
-
-// Driver mocks base method.
-func (m *MockDescriptorSetLayout) Driver() driver.Driver {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Driver")
-	ret0, _ := ret[0].(driver.Driver)
-	return ret0
-}
-
-// Driver indicates an expected call of Driver.
-func (mr *MockDescriptorSetLayoutMockRecorder) Driver() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Driver", reflect.TypeOf((*MockDescriptorSetLayout)(nil).Driver))
-}
-
-// Handle mocks base method.
-func (m *MockDescriptorSetLayout) Handle() driver.VkDescriptorSetLayout {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Handle")
-	ret0, _ := ret[0].(driver.VkDescriptorSetLayout)
-	return ret0
-}
-
-// Handle indicates an expected call of Handle.
-func (mr *MockDescriptorSetLayoutMockRecorder) Handle() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Handle", reflect.TypeOf((*MockDescriptorSetLayout)(nil).Handle))
-}
-
-// MockDevice is a mock of Device interface.
-type MockDevice struct {
-	ctrl     *gomock.Controller
-	recorder *MockDeviceMockRecorder
-	isgomock struct{}
-}
-
-// MockDeviceMockRecorder is the mock recorder for MockDevice.
-type MockDeviceMockRecorder struct {
-	mock *MockDevice
-}
-
-// NewMockDevice creates a new mock instance.
-func NewMockDevice(ctrl *gomock.Controller) *MockDevice {
-	mock := &MockDevice{ctrl: ctrl}
-	mock.recorder = &MockDeviceMockRecorder{mock}
-	return mock
-}
-
-// EXPECT returns an object that allows the caller to indicate expected use.
-func (m *MockDevice) EXPECT() *MockDeviceMockRecorder {
-	return m.recorder
-}
-
-// APIVersion mocks base method.
-func (m *MockDevice) APIVersion() common.APIVersion {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "APIVersion")
-	ret0, _ := ret[0].(common.APIVersion)
-	return ret0
-}
-
-// APIVersion indicates an expected call of APIVersion.
-func (mr *MockDeviceMockRecorder) APIVersion() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "APIVersion", reflect.TypeOf((*MockDevice)(nil).APIVersion))
 }
 
 // AllocateCommandBuffers mocks base method.
-func (m *MockDevice) AllocateCommandBuffers(o core1_0.CommandBufferAllocateInfo) ([]core1_0.CommandBuffer, common.VkResult, error) {
+func (m *MockVulkan) AllocateCommandBuffers(device types.Device, o core1_0.CommandBufferAllocateInfo) ([]types.CommandBuffer, common.VkResult, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "AllocateCommandBuffers", o)
-	ret0, _ := ret[0].([]core1_0.CommandBuffer)
+	ret := m.ctrl.Call(m, "AllocateCommandBuffers", device, o)
+	ret0, _ := ret[0].([]types.CommandBuffer)
 	ret1, _ := ret[1].(common.VkResult)
 	ret2, _ := ret[2].(error)
 	return ret0, ret1, ret2
 }
 
 // AllocateCommandBuffers indicates an expected call of AllocateCommandBuffers.
-func (mr *MockDeviceMockRecorder) AllocateCommandBuffers(o any) *gomock.Call {
+func (mr *MockVulkanMockRecorder) AllocateCommandBuffers(device, o any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AllocateCommandBuffers", reflect.TypeOf((*MockDevice)(nil).AllocateCommandBuffers), o)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AllocateCommandBuffers", reflect.TypeOf((*MockVulkan)(nil).AllocateCommandBuffers), device, o)
 }
 
 // AllocateDescriptorSets mocks base method.
-func (m *MockDevice) AllocateDescriptorSets(o core1_0.DescriptorSetAllocateInfo) ([]core1_0.DescriptorSet, common.VkResult, error) {
+func (m *MockVulkan) AllocateDescriptorSets(device types.Device, o core1_0.DescriptorSetAllocateInfo) ([]types.DescriptorSet, common.VkResult, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "AllocateDescriptorSets", o)
-	ret0, _ := ret[0].([]core1_0.DescriptorSet)
+	ret := m.ctrl.Call(m, "AllocateDescriptorSets", device, o)
+	ret0, _ := ret[0].([]types.DescriptorSet)
 	ret1, _ := ret[1].(common.VkResult)
 	ret2, _ := ret[2].(error)
 	return ret0, ret1, ret2
 }
 
 // AllocateDescriptorSets indicates an expected call of AllocateDescriptorSets.
-func (mr *MockDeviceMockRecorder) AllocateDescriptorSets(o any) *gomock.Call {
+func (mr *MockVulkanMockRecorder) AllocateDescriptorSets(device, o any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AllocateDescriptorSets", reflect.TypeOf((*MockDevice)(nil).AllocateDescriptorSets), o)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AllocateDescriptorSets", reflect.TypeOf((*MockVulkan)(nil).AllocateDescriptorSets), device, o)
 }
 
 // AllocateMemory mocks base method.
-func (m *MockDevice) AllocateMemory(allocationCallbacks *driver.AllocationCallbacks, o core1_0.MemoryAllocateInfo) (core1_0.DeviceMemory, common.VkResult, error) {
+func (m *MockVulkan) AllocateMemory(device types.Device, allocationCallbacks *driver.AllocationCallbacks, o core1_0.MemoryAllocateInfo) (types.DeviceMemory, common.VkResult, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "AllocateMemory", allocationCallbacks, o)
-	ret0, _ := ret[0].(core1_0.DeviceMemory)
+	ret := m.ctrl.Call(m, "AllocateMemory", device, allocationCallbacks, o)
+	ret0, _ := ret[0].(types.DeviceMemory)
 	ret1, _ := ret[1].(common.VkResult)
 	ret2, _ := ret[2].(error)
 	return ret0, ret1, ret2
 }
 
 // AllocateMemory indicates an expected call of AllocateMemory.
-func (mr *MockDeviceMockRecorder) AllocateMemory(allocationCallbacks, o any) *gomock.Call {
+func (mr *MockVulkanMockRecorder) AllocateMemory(device, allocationCallbacks, o any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AllocateMemory", reflect.TypeOf((*MockDevice)(nil).AllocateMemory), allocationCallbacks, o)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AllocateMemory", reflect.TypeOf((*MockVulkan)(nil).AllocateMemory), device, allocationCallbacks, o)
+}
+
+// BeginCommandBuffer mocks base method.
+func (m *MockVulkan) BeginCommandBuffer(commandBuffer types.CommandBuffer, o core1_0.CommandBufferBeginInfo) (common.VkResult, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "BeginCommandBuffer", commandBuffer, o)
+	ret0, _ := ret[0].(common.VkResult)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// BeginCommandBuffer indicates an expected call of BeginCommandBuffer.
+func (mr *MockVulkanMockRecorder) BeginCommandBuffer(commandBuffer, o any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "BeginCommandBuffer", reflect.TypeOf((*MockVulkan)(nil).BeginCommandBuffer), commandBuffer, o)
+}
+
+// BindBufferMemory mocks base method.
+func (m *MockVulkan) BindBufferMemory(buffer types.Buffer, memory types.DeviceMemory, offset int) (common.VkResult, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "BindBufferMemory", buffer, memory, offset)
+	ret0, _ := ret[0].(common.VkResult)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// BindBufferMemory indicates an expected call of BindBufferMemory.
+func (mr *MockVulkanMockRecorder) BindBufferMemory(buffer, memory, offset any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "BindBufferMemory", reflect.TypeOf((*MockVulkan)(nil).BindBufferMemory), buffer, memory, offset)
 }
 
 // BindBufferMemory2 mocks base method.
-func (m *MockDevice) BindBufferMemory2(o []core1_1.BindBufferMemoryInfo) (common.VkResult, error) {
+func (m *MockVulkan) BindBufferMemory2(device types.Device, o []core1_1.BindBufferMemoryInfo) (common.VkResult, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "BindBufferMemory2", o)
+	ret := m.ctrl.Call(m, "BindBufferMemory2", device, o)
 	ret0, _ := ret[0].(common.VkResult)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // BindBufferMemory2 indicates an expected call of BindBufferMemory2.
-func (mr *MockDeviceMockRecorder) BindBufferMemory2(o any) *gomock.Call {
+func (mr *MockVulkanMockRecorder) BindBufferMemory2(device, o any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "BindBufferMemory2", reflect.TypeOf((*MockDevice)(nil).BindBufferMemory2), o)
-}
-
-// BindImageMemory2 mocks base method.
-func (m *MockDevice) BindImageMemory2(o []core1_1.BindImageMemoryInfo) (common.VkResult, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "BindImageMemory2", o)
-	ret0, _ := ret[0].(common.VkResult)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// BindImageMemory2 indicates an expected call of BindImageMemory2.
-func (mr *MockDeviceMockRecorder) BindImageMemory2(o any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "BindImageMemory2", reflect.TypeOf((*MockDevice)(nil).BindImageMemory2), o)
-}
-
-// BufferMemoryRequirements2 mocks base method.
-func (m *MockDevice) BufferMemoryRequirements2(o core1_1.BufferMemoryRequirementsInfo2, out *core1_1.MemoryRequirements2) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "BufferMemoryRequirements2", o, out)
-	ret0, _ := ret[0].(error)
-	return ret0
-}
-
-// BufferMemoryRequirements2 indicates an expected call of BufferMemoryRequirements2.
-func (mr *MockDeviceMockRecorder) BufferMemoryRequirements2(o, out any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "BufferMemoryRequirements2", reflect.TypeOf((*MockDevice)(nil).BufferMemoryRequirements2), o, out)
-}
-
-// CreateBuffer mocks base method.
-func (m *MockDevice) CreateBuffer(allocationCallbacks *driver.AllocationCallbacks, o core1_0.BufferCreateInfo) (core1_0.Buffer, common.VkResult, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreateBuffer", allocationCallbacks, o)
-	ret0, _ := ret[0].(core1_0.Buffer)
-	ret1, _ := ret[1].(common.VkResult)
-	ret2, _ := ret[2].(error)
-	return ret0, ret1, ret2
-}
-
-// CreateBuffer indicates an expected call of CreateBuffer.
-func (mr *MockDeviceMockRecorder) CreateBuffer(allocationCallbacks, o any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateBuffer", reflect.TypeOf((*MockDevice)(nil).CreateBuffer), allocationCallbacks, o)
-}
-
-// CreateBufferView mocks base method.
-func (m *MockDevice) CreateBufferView(allocationCallbacks *driver.AllocationCallbacks, o core1_0.BufferViewCreateInfo) (core1_0.BufferView, common.VkResult, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreateBufferView", allocationCallbacks, o)
-	ret0, _ := ret[0].(core1_0.BufferView)
-	ret1, _ := ret[1].(common.VkResult)
-	ret2, _ := ret[2].(error)
-	return ret0, ret1, ret2
-}
-
-// CreateBufferView indicates an expected call of CreateBufferView.
-func (mr *MockDeviceMockRecorder) CreateBufferView(allocationCallbacks, o any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateBufferView", reflect.TypeOf((*MockDevice)(nil).CreateBufferView), allocationCallbacks, o)
-}
-
-// CreateCommandPool mocks base method.
-func (m *MockDevice) CreateCommandPool(allocationCallbacks *driver.AllocationCallbacks, o core1_0.CommandPoolCreateInfo) (core1_0.CommandPool, common.VkResult, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreateCommandPool", allocationCallbacks, o)
-	ret0, _ := ret[0].(core1_0.CommandPool)
-	ret1, _ := ret[1].(common.VkResult)
-	ret2, _ := ret[2].(error)
-	return ret0, ret1, ret2
-}
-
-// CreateCommandPool indicates an expected call of CreateCommandPool.
-func (mr *MockDeviceMockRecorder) CreateCommandPool(allocationCallbacks, o any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateCommandPool", reflect.TypeOf((*MockDevice)(nil).CreateCommandPool), allocationCallbacks, o)
-}
-
-// CreateComputePipelines mocks base method.
-func (m *MockDevice) CreateComputePipelines(pipelineCache core1_0.PipelineCache, allocationCallbacks *driver.AllocationCallbacks, o []core1_0.ComputePipelineCreateInfo) ([]core1_0.Pipeline, common.VkResult, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreateComputePipelines", pipelineCache, allocationCallbacks, o)
-	ret0, _ := ret[0].([]core1_0.Pipeline)
-	ret1, _ := ret[1].(common.VkResult)
-	ret2, _ := ret[2].(error)
-	return ret0, ret1, ret2
-}
-
-// CreateComputePipelines indicates an expected call of CreateComputePipelines.
-func (mr *MockDeviceMockRecorder) CreateComputePipelines(pipelineCache, allocationCallbacks, o any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateComputePipelines", reflect.TypeOf((*MockDevice)(nil).CreateComputePipelines), pipelineCache, allocationCallbacks, o)
-}
-
-// CreateDescriptorPool mocks base method.
-func (m *MockDevice) CreateDescriptorPool(allocationCallbacks *driver.AllocationCallbacks, o core1_0.DescriptorPoolCreateInfo) (core1_0.DescriptorPool, common.VkResult, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreateDescriptorPool", allocationCallbacks, o)
-	ret0, _ := ret[0].(core1_0.DescriptorPool)
-	ret1, _ := ret[1].(common.VkResult)
-	ret2, _ := ret[2].(error)
-	return ret0, ret1, ret2
-}
-
-// CreateDescriptorPool indicates an expected call of CreateDescriptorPool.
-func (mr *MockDeviceMockRecorder) CreateDescriptorPool(allocationCallbacks, o any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateDescriptorPool", reflect.TypeOf((*MockDevice)(nil).CreateDescriptorPool), allocationCallbacks, o)
-}
-
-// CreateDescriptorSetLayout mocks base method.
-func (m *MockDevice) CreateDescriptorSetLayout(allocationCallbacks *driver.AllocationCallbacks, o core1_0.DescriptorSetLayoutCreateInfo) (core1_0.DescriptorSetLayout, common.VkResult, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreateDescriptorSetLayout", allocationCallbacks, o)
-	ret0, _ := ret[0].(core1_0.DescriptorSetLayout)
-	ret1, _ := ret[1].(common.VkResult)
-	ret2, _ := ret[2].(error)
-	return ret0, ret1, ret2
-}
-
-// CreateDescriptorSetLayout indicates an expected call of CreateDescriptorSetLayout.
-func (mr *MockDeviceMockRecorder) CreateDescriptorSetLayout(allocationCallbacks, o any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateDescriptorSetLayout", reflect.TypeOf((*MockDevice)(nil).CreateDescriptorSetLayout), allocationCallbacks, o)
-}
-
-// CreateDescriptorUpdateTemplate mocks base method.
-func (m *MockDevice) CreateDescriptorUpdateTemplate(o core1_1.DescriptorUpdateTemplateCreateInfo, allocator *driver.AllocationCallbacks) (core1_1.DescriptorUpdateTemplate, common.VkResult, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreateDescriptorUpdateTemplate", o, allocator)
-	ret0, _ := ret[0].(core1_1.DescriptorUpdateTemplate)
-	ret1, _ := ret[1].(common.VkResult)
-	ret2, _ := ret[2].(error)
-	return ret0, ret1, ret2
-}
-
-// CreateDescriptorUpdateTemplate indicates an expected call of CreateDescriptorUpdateTemplate.
-func (mr *MockDeviceMockRecorder) CreateDescriptorUpdateTemplate(o, allocator any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateDescriptorUpdateTemplate", reflect.TypeOf((*MockDevice)(nil).CreateDescriptorUpdateTemplate), o, allocator)
-}
-
-// CreateEvent mocks base method.
-func (m *MockDevice) CreateEvent(allocationCallbacks *driver.AllocationCallbacks, options core1_0.EventCreateInfo) (core1_0.Event, common.VkResult, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreateEvent", allocationCallbacks, options)
-	ret0, _ := ret[0].(core1_0.Event)
-	ret1, _ := ret[1].(common.VkResult)
-	ret2, _ := ret[2].(error)
-	return ret0, ret1, ret2
-}
-
-// CreateEvent indicates an expected call of CreateEvent.
-func (mr *MockDeviceMockRecorder) CreateEvent(allocationCallbacks, options any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateEvent", reflect.TypeOf((*MockDevice)(nil).CreateEvent), allocationCallbacks, options)
-}
-
-// CreateFence mocks base method.
-func (m *MockDevice) CreateFence(allocationCallbacks *driver.AllocationCallbacks, o core1_0.FenceCreateInfo) (core1_0.Fence, common.VkResult, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreateFence", allocationCallbacks, o)
-	ret0, _ := ret[0].(core1_0.Fence)
-	ret1, _ := ret[1].(common.VkResult)
-	ret2, _ := ret[2].(error)
-	return ret0, ret1, ret2
-}
-
-// CreateFence indicates an expected call of CreateFence.
-func (mr *MockDeviceMockRecorder) CreateFence(allocationCallbacks, o any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateFence", reflect.TypeOf((*MockDevice)(nil).CreateFence), allocationCallbacks, o)
-}
-
-// CreateFramebuffer mocks base method.
-func (m *MockDevice) CreateFramebuffer(allocationCallbacks *driver.AllocationCallbacks, o core1_0.FramebufferCreateInfo) (core1_0.Framebuffer, common.VkResult, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreateFramebuffer", allocationCallbacks, o)
-	ret0, _ := ret[0].(core1_0.Framebuffer)
-	ret1, _ := ret[1].(common.VkResult)
-	ret2, _ := ret[2].(error)
-	return ret0, ret1, ret2
-}
-
-// CreateFramebuffer indicates an expected call of CreateFramebuffer.
-func (mr *MockDeviceMockRecorder) CreateFramebuffer(allocationCallbacks, o any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateFramebuffer", reflect.TypeOf((*MockDevice)(nil).CreateFramebuffer), allocationCallbacks, o)
-}
-
-// CreateGraphicsPipelines mocks base method.
-func (m *MockDevice) CreateGraphicsPipelines(pipelineCache core1_0.PipelineCache, allocationCallbacks *driver.AllocationCallbacks, o []core1_0.GraphicsPipelineCreateInfo) ([]core1_0.Pipeline, common.VkResult, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreateGraphicsPipelines", pipelineCache, allocationCallbacks, o)
-	ret0, _ := ret[0].([]core1_0.Pipeline)
-	ret1, _ := ret[1].(common.VkResult)
-	ret2, _ := ret[2].(error)
-	return ret0, ret1, ret2
-}
-
-// CreateGraphicsPipelines indicates an expected call of CreateGraphicsPipelines.
-func (mr *MockDeviceMockRecorder) CreateGraphicsPipelines(pipelineCache, allocationCallbacks, o any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateGraphicsPipelines", reflect.TypeOf((*MockDevice)(nil).CreateGraphicsPipelines), pipelineCache, allocationCallbacks, o)
-}
-
-// CreateImage mocks base method.
-func (m *MockDevice) CreateImage(allocationCallbacks *driver.AllocationCallbacks, options core1_0.ImageCreateInfo) (core1_0.Image, common.VkResult, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreateImage", allocationCallbacks, options)
-	ret0, _ := ret[0].(core1_0.Image)
-	ret1, _ := ret[1].(common.VkResult)
-	ret2, _ := ret[2].(error)
-	return ret0, ret1, ret2
-}
-
-// CreateImage indicates an expected call of CreateImage.
-func (mr *MockDeviceMockRecorder) CreateImage(allocationCallbacks, options any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateImage", reflect.TypeOf((*MockDevice)(nil).CreateImage), allocationCallbacks, options)
-}
-
-// CreateImageView mocks base method.
-func (m *MockDevice) CreateImageView(allocationCallbacks *driver.AllocationCallbacks, o core1_0.ImageViewCreateInfo) (core1_0.ImageView, common.VkResult, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreateImageView", allocationCallbacks, o)
-	ret0, _ := ret[0].(core1_0.ImageView)
-	ret1, _ := ret[1].(common.VkResult)
-	ret2, _ := ret[2].(error)
-	return ret0, ret1, ret2
-}
-
-// CreateImageView indicates an expected call of CreateImageView.
-func (mr *MockDeviceMockRecorder) CreateImageView(allocationCallbacks, o any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateImageView", reflect.TypeOf((*MockDevice)(nil).CreateImageView), allocationCallbacks, o)
-}
-
-// CreatePipelineCache mocks base method.
-func (m *MockDevice) CreatePipelineCache(allocationCallbacks *driver.AllocationCallbacks, o core1_0.PipelineCacheCreateInfo) (core1_0.PipelineCache, common.VkResult, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreatePipelineCache", allocationCallbacks, o)
-	ret0, _ := ret[0].(core1_0.PipelineCache)
-	ret1, _ := ret[1].(common.VkResult)
-	ret2, _ := ret[2].(error)
-	return ret0, ret1, ret2
-}
-
-// CreatePipelineCache indicates an expected call of CreatePipelineCache.
-func (mr *MockDeviceMockRecorder) CreatePipelineCache(allocationCallbacks, o any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreatePipelineCache", reflect.TypeOf((*MockDevice)(nil).CreatePipelineCache), allocationCallbacks, o)
-}
-
-// CreatePipelineLayout mocks base method.
-func (m *MockDevice) CreatePipelineLayout(allocationCallbacks *driver.AllocationCallbacks, o core1_0.PipelineLayoutCreateInfo) (core1_0.PipelineLayout, common.VkResult, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreatePipelineLayout", allocationCallbacks, o)
-	ret0, _ := ret[0].(core1_0.PipelineLayout)
-	ret1, _ := ret[1].(common.VkResult)
-	ret2, _ := ret[2].(error)
-	return ret0, ret1, ret2
-}
-
-// CreatePipelineLayout indicates an expected call of CreatePipelineLayout.
-func (mr *MockDeviceMockRecorder) CreatePipelineLayout(allocationCallbacks, o any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreatePipelineLayout", reflect.TypeOf((*MockDevice)(nil).CreatePipelineLayout), allocationCallbacks, o)
-}
-
-// CreateQueryPool mocks base method.
-func (m *MockDevice) CreateQueryPool(allocationCallbacks *driver.AllocationCallbacks, o core1_0.QueryPoolCreateInfo) (core1_0.QueryPool, common.VkResult, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreateQueryPool", allocationCallbacks, o)
-	ret0, _ := ret[0].(core1_0.QueryPool)
-	ret1, _ := ret[1].(common.VkResult)
-	ret2, _ := ret[2].(error)
-	return ret0, ret1, ret2
-}
-
-// CreateQueryPool indicates an expected call of CreateQueryPool.
-func (mr *MockDeviceMockRecorder) CreateQueryPool(allocationCallbacks, o any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateQueryPool", reflect.TypeOf((*MockDevice)(nil).CreateQueryPool), allocationCallbacks, o)
-}
-
-// CreateRenderPass mocks base method.
-func (m *MockDevice) CreateRenderPass(allocationCallbacks *driver.AllocationCallbacks, o core1_0.RenderPassCreateInfo) (core1_0.RenderPass, common.VkResult, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreateRenderPass", allocationCallbacks, o)
-	ret0, _ := ret[0].(core1_0.RenderPass)
-	ret1, _ := ret[1].(common.VkResult)
-	ret2, _ := ret[2].(error)
-	return ret0, ret1, ret2
-}
-
-// CreateRenderPass indicates an expected call of CreateRenderPass.
-func (mr *MockDeviceMockRecorder) CreateRenderPass(allocationCallbacks, o any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateRenderPass", reflect.TypeOf((*MockDevice)(nil).CreateRenderPass), allocationCallbacks, o)
-}
-
-// CreateSampler mocks base method.
-func (m *MockDevice) CreateSampler(allocationCallbacks *driver.AllocationCallbacks, o core1_0.SamplerCreateInfo) (core1_0.Sampler, common.VkResult, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreateSampler", allocationCallbacks, o)
-	ret0, _ := ret[0].(core1_0.Sampler)
-	ret1, _ := ret[1].(common.VkResult)
-	ret2, _ := ret[2].(error)
-	return ret0, ret1, ret2
-}
-
-// CreateSampler indicates an expected call of CreateSampler.
-func (mr *MockDeviceMockRecorder) CreateSampler(allocationCallbacks, o any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateSampler", reflect.TypeOf((*MockDevice)(nil).CreateSampler), allocationCallbacks, o)
-}
-
-// CreateSamplerYcbcrConversion mocks base method.
-func (m *MockDevice) CreateSamplerYcbcrConversion(o core1_1.SamplerYcbcrConversionCreateInfo, allocator *driver.AllocationCallbacks) (core1_1.SamplerYcbcrConversion, common.VkResult, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreateSamplerYcbcrConversion", o, allocator)
-	ret0, _ := ret[0].(core1_1.SamplerYcbcrConversion)
-	ret1, _ := ret[1].(common.VkResult)
-	ret2, _ := ret[2].(error)
-	return ret0, ret1, ret2
-}
-
-// CreateSamplerYcbcrConversion indicates an expected call of CreateSamplerYcbcrConversion.
-func (mr *MockDeviceMockRecorder) CreateSamplerYcbcrConversion(o, allocator any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateSamplerYcbcrConversion", reflect.TypeOf((*MockDevice)(nil).CreateSamplerYcbcrConversion), o, allocator)
-}
-
-// CreateSemaphore mocks base method.
-func (m *MockDevice) CreateSemaphore(allocationCallbacks *driver.AllocationCallbacks, o core1_0.SemaphoreCreateInfo) (core1_0.Semaphore, common.VkResult, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreateSemaphore", allocationCallbacks, o)
-	ret0, _ := ret[0].(core1_0.Semaphore)
-	ret1, _ := ret[1].(common.VkResult)
-	ret2, _ := ret[2].(error)
-	return ret0, ret1, ret2
-}
-
-// CreateSemaphore indicates an expected call of CreateSemaphore.
-func (mr *MockDeviceMockRecorder) CreateSemaphore(allocationCallbacks, o any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateSemaphore", reflect.TypeOf((*MockDevice)(nil).CreateSemaphore), allocationCallbacks, o)
-}
-
-// CreateShaderModule mocks base method.
-func (m *MockDevice) CreateShaderModule(allocationCallbacks *driver.AllocationCallbacks, o core1_0.ShaderModuleCreateInfo) (core1_0.ShaderModule, common.VkResult, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreateShaderModule", allocationCallbacks, o)
-	ret0, _ := ret[0].(core1_0.ShaderModule)
-	ret1, _ := ret[1].(common.VkResult)
-	ret2, _ := ret[2].(error)
-	return ret0, ret1, ret2
-}
-
-// CreateShaderModule indicates an expected call of CreateShaderModule.
-func (mr *MockDeviceMockRecorder) CreateShaderModule(allocationCallbacks, o any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateShaderModule", reflect.TypeOf((*MockDevice)(nil).CreateShaderModule), allocationCallbacks, o)
-}
-
-// DescriptorSetLayoutSupport mocks base method.
-func (m *MockDevice) DescriptorSetLayoutSupport(o core1_0.DescriptorSetLayoutCreateInfo, outData *core1_1.DescriptorSetLayoutSupport) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "DescriptorSetLayoutSupport", o, outData)
-	ret0, _ := ret[0].(error)
-	return ret0
-}
-
-// DescriptorSetLayoutSupport indicates an expected call of DescriptorSetLayoutSupport.
-func (mr *MockDeviceMockRecorder) DescriptorSetLayoutSupport(o, outData any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DescriptorSetLayoutSupport", reflect.TypeOf((*MockDevice)(nil).DescriptorSetLayoutSupport), o, outData)
-}
-
-// Destroy mocks base method.
-func (m *MockDevice) Destroy(callbacks *driver.AllocationCallbacks) {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "Destroy", callbacks)
-}
-
-// Destroy indicates an expected call of Destroy.
-func (mr *MockDeviceMockRecorder) Destroy(callbacks any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Destroy", reflect.TypeOf((*MockDevice)(nil).Destroy), callbacks)
-}
-
-// DeviceGroupPeerMemoryFeatures mocks base method.
-func (m *MockDevice) DeviceGroupPeerMemoryFeatures(heapIndex, localDeviceIndex, remoteDeviceIndex int) core1_1.PeerMemoryFeatureFlags {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "DeviceGroupPeerMemoryFeatures", heapIndex, localDeviceIndex, remoteDeviceIndex)
-	ret0, _ := ret[0].(core1_1.PeerMemoryFeatureFlags)
-	return ret0
-}
-
-// DeviceGroupPeerMemoryFeatures indicates an expected call of DeviceGroupPeerMemoryFeatures.
-func (mr *MockDeviceMockRecorder) DeviceGroupPeerMemoryFeatures(heapIndex, localDeviceIndex, remoteDeviceIndex any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeviceGroupPeerMemoryFeatures", reflect.TypeOf((*MockDevice)(nil).DeviceGroupPeerMemoryFeatures), heapIndex, localDeviceIndex, remoteDeviceIndex)
-}
-
-// Driver mocks base method.
-func (m *MockDevice) Driver() driver.Driver {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Driver")
-	ret0, _ := ret[0].(driver.Driver)
-	return ret0
-}
-
-// Driver indicates an expected call of Driver.
-func (mr *MockDeviceMockRecorder) Driver() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Driver", reflect.TypeOf((*MockDevice)(nil).Driver))
-}
-
-// FlushMappedMemoryRanges mocks base method.
-func (m *MockDevice) FlushMappedMemoryRanges(ranges []core1_0.MappedMemoryRange) (common.VkResult, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "FlushMappedMemoryRanges", ranges)
-	ret0, _ := ret[0].(common.VkResult)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// FlushMappedMemoryRanges indicates an expected call of FlushMappedMemoryRanges.
-func (mr *MockDeviceMockRecorder) FlushMappedMemoryRanges(ranges any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FlushMappedMemoryRanges", reflect.TypeOf((*MockDevice)(nil).FlushMappedMemoryRanges), ranges)
-}
-
-// FreeCommandBuffers mocks base method.
-func (m *MockDevice) FreeCommandBuffers(buffers []core1_0.CommandBuffer) {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "FreeCommandBuffers", buffers)
-}
-
-// FreeCommandBuffers indicates an expected call of FreeCommandBuffers.
-func (mr *MockDeviceMockRecorder) FreeCommandBuffers(buffers any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FreeCommandBuffers", reflect.TypeOf((*MockDevice)(nil).FreeCommandBuffers), buffers)
-}
-
-// FreeDescriptorSets mocks base method.
-func (m *MockDevice) FreeDescriptorSets(sets []core1_0.DescriptorSet) (common.VkResult, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "FreeDescriptorSets", sets)
-	ret0, _ := ret[0].(common.VkResult)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// FreeDescriptorSets indicates an expected call of FreeDescriptorSets.
-func (mr *MockDeviceMockRecorder) FreeDescriptorSets(sets any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FreeDescriptorSets", reflect.TypeOf((*MockDevice)(nil).FreeDescriptorSets), sets)
-}
-
-// FreeMemory mocks base method.
-func (m *MockDevice) FreeMemory(deviceMemory core1_0.DeviceMemory, allocationCallbacks *driver.AllocationCallbacks) {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "FreeMemory", deviceMemory, allocationCallbacks)
-}
-
-// FreeMemory indicates an expected call of FreeMemory.
-func (mr *MockDeviceMockRecorder) FreeMemory(deviceMemory, allocationCallbacks any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FreeMemory", reflect.TypeOf((*MockDevice)(nil).FreeMemory), deviceMemory, allocationCallbacks)
-}
-
-// GetQueue mocks base method.
-func (m *MockDevice) GetQueue(queueFamilyIndex, queueIndex int) core1_0.Queue {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetQueue", queueFamilyIndex, queueIndex)
-	ret0, _ := ret[0].(core1_0.Queue)
-	return ret0
-}
-
-// GetQueue indicates an expected call of GetQueue.
-func (mr *MockDeviceMockRecorder) GetQueue(queueFamilyIndex, queueIndex any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetQueue", reflect.TypeOf((*MockDevice)(nil).GetQueue), queueFamilyIndex, queueIndex)
-}
-
-// GetQueue2 mocks base method.
-func (m *MockDevice) GetQueue2(o core1_1.DeviceQueueInfo2) (core1_0.Queue, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetQueue2", o)
-	ret0, _ := ret[0].(core1_0.Queue)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// GetQueue2 indicates an expected call of GetQueue2.
-func (mr *MockDeviceMockRecorder) GetQueue2(o any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetQueue2", reflect.TypeOf((*MockDevice)(nil).GetQueue2), o)
-}
-
-// Handle mocks base method.
-func (m *MockDevice) Handle() driver.VkDevice {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Handle")
-	ret0, _ := ret[0].(driver.VkDevice)
-	return ret0
-}
-
-// Handle indicates an expected call of Handle.
-func (mr *MockDeviceMockRecorder) Handle() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Handle", reflect.TypeOf((*MockDevice)(nil).Handle))
-}
-
-// ImageMemoryRequirements2 mocks base method.
-func (m *MockDevice) ImageMemoryRequirements2(o core1_1.ImageMemoryRequirementsInfo2, out *core1_1.MemoryRequirements2) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "ImageMemoryRequirements2", o, out)
-	ret0, _ := ret[0].(error)
-	return ret0
-}
-
-// ImageMemoryRequirements2 indicates an expected call of ImageMemoryRequirements2.
-func (mr *MockDeviceMockRecorder) ImageMemoryRequirements2(o, out any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ImageMemoryRequirements2", reflect.TypeOf((*MockDevice)(nil).ImageMemoryRequirements2), o, out)
-}
-
-// ImageSparseMemoryRequirements2 mocks base method.
-func (m *MockDevice) ImageSparseMemoryRequirements2(o core1_1.ImageSparseMemoryRequirementsInfo2, outDataFactory func() *core1_1.SparseImageMemoryRequirements2) ([]*core1_1.SparseImageMemoryRequirements2, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "ImageSparseMemoryRequirements2", o, outDataFactory)
-	ret0, _ := ret[0].([]*core1_1.SparseImageMemoryRequirements2)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// ImageSparseMemoryRequirements2 indicates an expected call of ImageSparseMemoryRequirements2.
-func (mr *MockDeviceMockRecorder) ImageSparseMemoryRequirements2(o, outDataFactory any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ImageSparseMemoryRequirements2", reflect.TypeOf((*MockDevice)(nil).ImageSparseMemoryRequirements2), o, outDataFactory)
-}
-
-// InvalidateMappedMemoryRanges mocks base method.
-func (m *MockDevice) InvalidateMappedMemoryRanges(ranges []core1_0.MappedMemoryRange) (common.VkResult, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "InvalidateMappedMemoryRanges", ranges)
-	ret0, _ := ret[0].(common.VkResult)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// InvalidateMappedMemoryRanges indicates an expected call of InvalidateMappedMemoryRanges.
-func (mr *MockDeviceMockRecorder) InvalidateMappedMemoryRanges(ranges any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "InvalidateMappedMemoryRanges", reflect.TypeOf((*MockDevice)(nil).InvalidateMappedMemoryRanges), ranges)
-}
-
-// IsDeviceExtensionActive mocks base method.
-func (m *MockDevice) IsDeviceExtensionActive(extensionName string) bool {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "IsDeviceExtensionActive", extensionName)
-	ret0, _ := ret[0].(bool)
-	return ret0
-}
-
-// IsDeviceExtensionActive indicates an expected call of IsDeviceExtensionActive.
-func (mr *MockDeviceMockRecorder) IsDeviceExtensionActive(extensionName any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "IsDeviceExtensionActive", reflect.TypeOf((*MockDevice)(nil).IsDeviceExtensionActive), extensionName)
-}
-
-// ResetFences mocks base method.
-func (m *MockDevice) ResetFences(fences []core1_0.Fence) (common.VkResult, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "ResetFences", fences)
-	ret0, _ := ret[0].(common.VkResult)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// ResetFences indicates an expected call of ResetFences.
-func (mr *MockDeviceMockRecorder) ResetFences(fences any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ResetFences", reflect.TypeOf((*MockDevice)(nil).ResetFences), fences)
-}
-
-// UpdateDescriptorSets mocks base method.
-func (m *MockDevice) UpdateDescriptorSets(writes []core1_0.WriteDescriptorSet, copies []core1_0.CopyDescriptorSet) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "UpdateDescriptorSets", writes, copies)
-	ret0, _ := ret[0].(error)
-	return ret0
-}
-
-// UpdateDescriptorSets indicates an expected call of UpdateDescriptorSets.
-func (mr *MockDeviceMockRecorder) UpdateDescriptorSets(writes, copies any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateDescriptorSets", reflect.TypeOf((*MockDevice)(nil).UpdateDescriptorSets), writes, copies)
-}
-
-// WaitForFences mocks base method.
-func (m *MockDevice) WaitForFences(waitForAll bool, timeout time.Duration, fences []core1_0.Fence) (common.VkResult, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "WaitForFences", waitForAll, timeout, fences)
-	ret0, _ := ret[0].(common.VkResult)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// WaitForFences indicates an expected call of WaitForFences.
-func (mr *MockDeviceMockRecorder) WaitForFences(waitForAll, timeout, fences any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "WaitForFences", reflect.TypeOf((*MockDevice)(nil).WaitForFences), waitForAll, timeout, fences)
-}
-
-// WaitIdle mocks base method.
-func (m *MockDevice) WaitIdle() (common.VkResult, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "WaitIdle")
-	ret0, _ := ret[0].(common.VkResult)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// WaitIdle indicates an expected call of WaitIdle.
-func (mr *MockDeviceMockRecorder) WaitIdle() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "WaitIdle", reflect.TypeOf((*MockDevice)(nil).WaitIdle))
-}
-
-// MockDeviceMemory is a mock of DeviceMemory interface.
-type MockDeviceMemory struct {
-	ctrl     *gomock.Controller
-	recorder *MockDeviceMemoryMockRecorder
-	isgomock struct{}
-}
-
-// MockDeviceMemoryMockRecorder is the mock recorder for MockDeviceMemory.
-type MockDeviceMemoryMockRecorder struct {
-	mock *MockDeviceMemory
-}
-
-// NewMockDeviceMemory creates a new mock instance.
-func NewMockDeviceMemory(ctrl *gomock.Controller) *MockDeviceMemory {
-	mock := &MockDeviceMemory{ctrl: ctrl}
-	mock.recorder = &MockDeviceMemoryMockRecorder{mock}
-	return mock
-}
-
-// EXPECT returns an object that allows the caller to indicate expected use.
-func (m *MockDeviceMemory) EXPECT() *MockDeviceMemoryMockRecorder {
-	return m.recorder
-}
-
-// APIVersion mocks base method.
-func (m *MockDeviceMemory) APIVersion() common.APIVersion {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "APIVersion")
-	ret0, _ := ret[0].(common.APIVersion)
-	return ret0
-}
-
-// APIVersion indicates an expected call of APIVersion.
-func (mr *MockDeviceMemoryMockRecorder) APIVersion() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "APIVersion", reflect.TypeOf((*MockDeviceMemory)(nil).APIVersion))
-}
-
-// Commitment mocks base method.
-func (m *MockDeviceMemory) Commitment() int {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Commitment")
-	ret0, _ := ret[0].(int)
-	return ret0
-}
-
-// Commitment indicates an expected call of Commitment.
-func (mr *MockDeviceMemoryMockRecorder) Commitment() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Commitment", reflect.TypeOf((*MockDeviceMemory)(nil).Commitment))
-}
-
-// DeviceHandle mocks base method.
-func (m *MockDeviceMemory) DeviceHandle() driver.VkDevice {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "DeviceHandle")
-	ret0, _ := ret[0].(driver.VkDevice)
-	return ret0
-}
-
-// DeviceHandle indicates an expected call of DeviceHandle.
-func (mr *MockDeviceMemoryMockRecorder) DeviceHandle() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeviceHandle", reflect.TypeOf((*MockDeviceMemory)(nil).DeviceHandle))
-}
-
-// Driver mocks base method.
-func (m *MockDeviceMemory) Driver() driver.Driver {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Driver")
-	ret0, _ := ret[0].(driver.Driver)
-	return ret0
-}
-
-// Driver indicates an expected call of Driver.
-func (mr *MockDeviceMemoryMockRecorder) Driver() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Driver", reflect.TypeOf((*MockDeviceMemory)(nil).Driver))
-}
-
-// FlushAll mocks base method.
-func (m *MockDeviceMemory) FlushAll() (common.VkResult, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "FlushAll")
-	ret0, _ := ret[0].(common.VkResult)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// FlushAll indicates an expected call of FlushAll.
-func (mr *MockDeviceMemoryMockRecorder) FlushAll() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FlushAll", reflect.TypeOf((*MockDeviceMemory)(nil).FlushAll))
-}
-
-// Free mocks base method.
-func (m *MockDeviceMemory) Free(callbacks *driver.AllocationCallbacks) {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "Free", callbacks)
-}
-
-// Free indicates an expected call of Free.
-func (mr *MockDeviceMemoryMockRecorder) Free(callbacks any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Free", reflect.TypeOf((*MockDeviceMemory)(nil).Free), callbacks)
-}
-
-// Handle mocks base method.
-func (m *MockDeviceMemory) Handle() driver.VkDeviceMemory {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Handle")
-	ret0, _ := ret[0].(driver.VkDeviceMemory)
-	return ret0
-}
-
-// Handle indicates an expected call of Handle.
-func (mr *MockDeviceMemoryMockRecorder) Handle() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Handle", reflect.TypeOf((*MockDeviceMemory)(nil).Handle))
-}
-
-// InvalidateAll mocks base method.
-func (m *MockDeviceMemory) InvalidateAll() (common.VkResult, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "InvalidateAll")
-	ret0, _ := ret[0].(common.VkResult)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// InvalidateAll indicates an expected call of InvalidateAll.
-func (mr *MockDeviceMemoryMockRecorder) InvalidateAll() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "InvalidateAll", reflect.TypeOf((*MockDeviceMemory)(nil).InvalidateAll))
-}
-
-// Map mocks base method.
-func (m *MockDeviceMemory) Map(offset, size int, flags core1_0.MemoryMapFlags) (unsafe.Pointer, common.VkResult, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Map", offset, size, flags)
-	ret0, _ := ret[0].(unsafe.Pointer)
-	ret1, _ := ret[1].(common.VkResult)
-	ret2, _ := ret[2].(error)
-	return ret0, ret1, ret2
-}
-
-// Map indicates an expected call of Map.
-func (mr *MockDeviceMemoryMockRecorder) Map(offset, size, flags any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Map", reflect.TypeOf((*MockDeviceMemory)(nil).Map), offset, size, flags)
-}
-
-// Unmap mocks base method.
-func (m *MockDeviceMemory) Unmap() {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "Unmap")
-}
-
-// Unmap indicates an expected call of Unmap.
-func (mr *MockDeviceMemoryMockRecorder) Unmap() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Unmap", reflect.TypeOf((*MockDeviceMemory)(nil).Unmap))
-}
-
-// MockDescriptorUpdateTemplate is a mock of DescriptorUpdateTemplate interface.
-type MockDescriptorUpdateTemplate struct {
-	ctrl     *gomock.Controller
-	recorder *MockDescriptorUpdateTemplateMockRecorder
-	isgomock struct{}
-}
-
-// MockDescriptorUpdateTemplateMockRecorder is the mock recorder for MockDescriptorUpdateTemplate.
-type MockDescriptorUpdateTemplateMockRecorder struct {
-	mock *MockDescriptorUpdateTemplate
-}
-
-// NewMockDescriptorUpdateTemplate creates a new mock instance.
-func NewMockDescriptorUpdateTemplate(ctrl *gomock.Controller) *MockDescriptorUpdateTemplate {
-	mock := &MockDescriptorUpdateTemplate{ctrl: ctrl}
-	mock.recorder = &MockDescriptorUpdateTemplateMockRecorder{mock}
-	return mock
-}
-
-// EXPECT returns an object that allows the caller to indicate expected use.
-func (m *MockDescriptorUpdateTemplate) EXPECT() *MockDescriptorUpdateTemplateMockRecorder {
-	return m.recorder
-}
-
-// APIVersion mocks base method.
-func (m *MockDescriptorUpdateTemplate) APIVersion() common.APIVersion {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "APIVersion")
-	ret0, _ := ret[0].(common.APIVersion)
-	return ret0
-}
-
-// APIVersion indicates an expected call of APIVersion.
-func (mr *MockDescriptorUpdateTemplateMockRecorder) APIVersion() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "APIVersion", reflect.TypeOf((*MockDescriptorUpdateTemplate)(nil).APIVersion))
-}
-
-// Destroy mocks base method.
-func (m *MockDescriptorUpdateTemplate) Destroy(allocator *driver.AllocationCallbacks) {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "Destroy", allocator)
-}
-
-// Destroy indicates an expected call of Destroy.
-func (mr *MockDescriptorUpdateTemplateMockRecorder) Destroy(allocator any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Destroy", reflect.TypeOf((*MockDescriptorUpdateTemplate)(nil).Destroy), allocator)
-}
-
-// DeviceHandle mocks base method.
-func (m *MockDescriptorUpdateTemplate) DeviceHandle() driver.VkDevice {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "DeviceHandle")
-	ret0, _ := ret[0].(driver.VkDevice)
-	return ret0
-}
-
-// DeviceHandle indicates an expected call of DeviceHandle.
-func (mr *MockDescriptorUpdateTemplateMockRecorder) DeviceHandle() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeviceHandle", reflect.TypeOf((*MockDescriptorUpdateTemplate)(nil).DeviceHandle))
-}
-
-// Driver mocks base method.
-func (m *MockDescriptorUpdateTemplate) Driver() driver.Driver {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Driver")
-	ret0, _ := ret[0].(driver.Driver)
-	return ret0
-}
-
-// Driver indicates an expected call of Driver.
-func (mr *MockDescriptorUpdateTemplateMockRecorder) Driver() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Driver", reflect.TypeOf((*MockDescriptorUpdateTemplate)(nil).Driver))
-}
-
-// Handle mocks base method.
-func (m *MockDescriptorUpdateTemplate) Handle() driver.VkDescriptorUpdateTemplate {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Handle")
-	ret0, _ := ret[0].(driver.VkDescriptorUpdateTemplate)
-	return ret0
-}
-
-// Handle indicates an expected call of Handle.
-func (mr *MockDescriptorUpdateTemplateMockRecorder) Handle() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Handle", reflect.TypeOf((*MockDescriptorUpdateTemplate)(nil).Handle))
-}
-
-// UpdateDescriptorSetFromBuffer mocks base method.
-func (m *MockDescriptorUpdateTemplate) UpdateDescriptorSetFromBuffer(descriptorSet core1_0.DescriptorSet, data core1_0.DescriptorBufferInfo) {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "UpdateDescriptorSetFromBuffer", descriptorSet, data)
-}
-
-// UpdateDescriptorSetFromBuffer indicates an expected call of UpdateDescriptorSetFromBuffer.
-func (mr *MockDescriptorUpdateTemplateMockRecorder) UpdateDescriptorSetFromBuffer(descriptorSet, data any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateDescriptorSetFromBuffer", reflect.TypeOf((*MockDescriptorUpdateTemplate)(nil).UpdateDescriptorSetFromBuffer), descriptorSet, data)
-}
-
-// UpdateDescriptorSetFromImage mocks base method.
-func (m *MockDescriptorUpdateTemplate) UpdateDescriptorSetFromImage(descriptorSet core1_0.DescriptorSet, data core1_0.DescriptorImageInfo) {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "UpdateDescriptorSetFromImage", descriptorSet, data)
-}
-
-// UpdateDescriptorSetFromImage indicates an expected call of UpdateDescriptorSetFromImage.
-func (mr *MockDescriptorUpdateTemplateMockRecorder) UpdateDescriptorSetFromImage(descriptorSet, data any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateDescriptorSetFromImage", reflect.TypeOf((*MockDescriptorUpdateTemplate)(nil).UpdateDescriptorSetFromImage), descriptorSet, data)
-}
-
-// UpdateDescriptorSetFromObjectHandle mocks base method.
-func (m *MockDescriptorUpdateTemplate) UpdateDescriptorSetFromObjectHandle(descriptorSet core1_0.DescriptorSet, data driver.VulkanHandle) {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "UpdateDescriptorSetFromObjectHandle", descriptorSet, data)
-}
-
-// UpdateDescriptorSetFromObjectHandle indicates an expected call of UpdateDescriptorSetFromObjectHandle.
-func (mr *MockDescriptorUpdateTemplateMockRecorder) UpdateDescriptorSetFromObjectHandle(descriptorSet, data any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateDescriptorSetFromObjectHandle", reflect.TypeOf((*MockDescriptorUpdateTemplate)(nil).UpdateDescriptorSetFromObjectHandle), descriptorSet, data)
-}
-
-// MockEvent is a mock of Event interface.
-type MockEvent struct {
-	ctrl     *gomock.Controller
-	recorder *MockEventMockRecorder
-	isgomock struct{}
-}
-
-// MockEventMockRecorder is the mock recorder for MockEvent.
-type MockEventMockRecorder struct {
-	mock *MockEvent
-}
-
-// NewMockEvent creates a new mock instance.
-func NewMockEvent(ctrl *gomock.Controller) *MockEvent {
-	mock := &MockEvent{ctrl: ctrl}
-	mock.recorder = &MockEventMockRecorder{mock}
-	return mock
-}
-
-// EXPECT returns an object that allows the caller to indicate expected use.
-func (m *MockEvent) EXPECT() *MockEventMockRecorder {
-	return m.recorder
-}
-
-// APIVersion mocks base method.
-func (m *MockEvent) APIVersion() common.APIVersion {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "APIVersion")
-	ret0, _ := ret[0].(common.APIVersion)
-	return ret0
-}
-
-// APIVersion indicates an expected call of APIVersion.
-func (mr *MockEventMockRecorder) APIVersion() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "APIVersion", reflect.TypeOf((*MockEvent)(nil).APIVersion))
-}
-
-// Destroy mocks base method.
-func (m *MockEvent) Destroy(callbacks *driver.AllocationCallbacks) {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "Destroy", callbacks)
-}
-
-// Destroy indicates an expected call of Destroy.
-func (mr *MockEventMockRecorder) Destroy(callbacks any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Destroy", reflect.TypeOf((*MockEvent)(nil).Destroy), callbacks)
-}
-
-// DeviceHandle mocks base method.
-func (m *MockEvent) DeviceHandle() driver.VkDevice {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "DeviceHandle")
-	ret0, _ := ret[0].(driver.VkDevice)
-	return ret0
-}
-
-// DeviceHandle indicates an expected call of DeviceHandle.
-func (mr *MockEventMockRecorder) DeviceHandle() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeviceHandle", reflect.TypeOf((*MockEvent)(nil).DeviceHandle))
-}
-
-// Driver mocks base method.
-func (m *MockEvent) Driver() driver.Driver {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Driver")
-	ret0, _ := ret[0].(driver.Driver)
-	return ret0
-}
-
-// Driver indicates an expected call of Driver.
-func (mr *MockEventMockRecorder) Driver() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Driver", reflect.TypeOf((*MockEvent)(nil).Driver))
-}
-
-// Handle mocks base method.
-func (m *MockEvent) Handle() driver.VkEvent {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Handle")
-	ret0, _ := ret[0].(driver.VkEvent)
-	return ret0
-}
-
-// Handle indicates an expected call of Handle.
-func (mr *MockEventMockRecorder) Handle() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Handle", reflect.TypeOf((*MockEvent)(nil).Handle))
-}
-
-// Reset mocks base method.
-func (m *MockEvent) Reset() (common.VkResult, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Reset")
-	ret0, _ := ret[0].(common.VkResult)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// Reset indicates an expected call of Reset.
-func (mr *MockEventMockRecorder) Reset() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Reset", reflect.TypeOf((*MockEvent)(nil).Reset))
-}
-
-// Set mocks base method.
-func (m *MockEvent) Set() (common.VkResult, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Set")
-	ret0, _ := ret[0].(common.VkResult)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// Set indicates an expected call of Set.
-func (mr *MockEventMockRecorder) Set() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Set", reflect.TypeOf((*MockEvent)(nil).Set))
-}
-
-// Status mocks base method.
-func (m *MockEvent) Status() (common.VkResult, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Status")
-	ret0, _ := ret[0].(common.VkResult)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// Status indicates an expected call of Status.
-func (mr *MockEventMockRecorder) Status() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Status", reflect.TypeOf((*MockEvent)(nil).Status))
-}
-
-// MockFence is a mock of Fence interface.
-type MockFence struct {
-	ctrl     *gomock.Controller
-	recorder *MockFenceMockRecorder
-	isgomock struct{}
-}
-
-// MockFenceMockRecorder is the mock recorder for MockFence.
-type MockFenceMockRecorder struct {
-	mock *MockFence
-}
-
-// NewMockFence creates a new mock instance.
-func NewMockFence(ctrl *gomock.Controller) *MockFence {
-	mock := &MockFence{ctrl: ctrl}
-	mock.recorder = &MockFenceMockRecorder{mock}
-	return mock
-}
-
-// EXPECT returns an object that allows the caller to indicate expected use.
-func (m *MockFence) EXPECT() *MockFenceMockRecorder {
-	return m.recorder
-}
-
-// APIVersion mocks base method.
-func (m *MockFence) APIVersion() common.APIVersion {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "APIVersion")
-	ret0, _ := ret[0].(common.APIVersion)
-	return ret0
-}
-
-// APIVersion indicates an expected call of APIVersion.
-func (mr *MockFenceMockRecorder) APIVersion() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "APIVersion", reflect.TypeOf((*MockFence)(nil).APIVersion))
-}
-
-// Destroy mocks base method.
-func (m *MockFence) Destroy(callbacks *driver.AllocationCallbacks) {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "Destroy", callbacks)
-}
-
-// Destroy indicates an expected call of Destroy.
-func (mr *MockFenceMockRecorder) Destroy(callbacks any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Destroy", reflect.TypeOf((*MockFence)(nil).Destroy), callbacks)
-}
-
-// DeviceHandle mocks base method.
-func (m *MockFence) DeviceHandle() driver.VkDevice {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "DeviceHandle")
-	ret0, _ := ret[0].(driver.VkDevice)
-	return ret0
-}
-
-// DeviceHandle indicates an expected call of DeviceHandle.
-func (mr *MockFenceMockRecorder) DeviceHandle() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeviceHandle", reflect.TypeOf((*MockFence)(nil).DeviceHandle))
-}
-
-// Driver mocks base method.
-func (m *MockFence) Driver() driver.Driver {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Driver")
-	ret0, _ := ret[0].(driver.Driver)
-	return ret0
-}
-
-// Driver indicates an expected call of Driver.
-func (mr *MockFenceMockRecorder) Driver() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Driver", reflect.TypeOf((*MockFence)(nil).Driver))
-}
-
-// Handle mocks base method.
-func (m *MockFence) Handle() driver.VkFence {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Handle")
-	ret0, _ := ret[0].(driver.VkFence)
-	return ret0
-}
-
-// Handle indicates an expected call of Handle.
-func (mr *MockFenceMockRecorder) Handle() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Handle", reflect.TypeOf((*MockFence)(nil).Handle))
-}
-
-// Reset mocks base method.
-func (m *MockFence) Reset() (common.VkResult, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Reset")
-	ret0, _ := ret[0].(common.VkResult)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// Reset indicates an expected call of Reset.
-func (mr *MockFenceMockRecorder) Reset() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Reset", reflect.TypeOf((*MockFence)(nil).Reset))
-}
-
-// Status mocks base method.
-func (m *MockFence) Status() (common.VkResult, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Status")
-	ret0, _ := ret[0].(common.VkResult)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// Status indicates an expected call of Status.
-func (mr *MockFenceMockRecorder) Status() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Status", reflect.TypeOf((*MockFence)(nil).Status))
-}
-
-// Wait mocks base method.
-func (m *MockFence) Wait(timeout time.Duration) (common.VkResult, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Wait", timeout)
-	ret0, _ := ret[0].(common.VkResult)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// Wait indicates an expected call of Wait.
-func (mr *MockFenceMockRecorder) Wait(timeout any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Wait", reflect.TypeOf((*MockFence)(nil).Wait), timeout)
-}
-
-// MockFramebuffer is a mock of Framebuffer interface.
-type MockFramebuffer struct {
-	ctrl     *gomock.Controller
-	recorder *MockFramebufferMockRecorder
-	isgomock struct{}
-}
-
-// MockFramebufferMockRecorder is the mock recorder for MockFramebuffer.
-type MockFramebufferMockRecorder struct {
-	mock *MockFramebuffer
-}
-
-// NewMockFramebuffer creates a new mock instance.
-func NewMockFramebuffer(ctrl *gomock.Controller) *MockFramebuffer {
-	mock := &MockFramebuffer{ctrl: ctrl}
-	mock.recorder = &MockFramebufferMockRecorder{mock}
-	return mock
-}
-
-// EXPECT returns an object that allows the caller to indicate expected use.
-func (m *MockFramebuffer) EXPECT() *MockFramebufferMockRecorder {
-	return m.recorder
-}
-
-// APIVersion mocks base method.
-func (m *MockFramebuffer) APIVersion() common.APIVersion {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "APIVersion")
-	ret0, _ := ret[0].(common.APIVersion)
-	return ret0
-}
-
-// APIVersion indicates an expected call of APIVersion.
-func (mr *MockFramebufferMockRecorder) APIVersion() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "APIVersion", reflect.TypeOf((*MockFramebuffer)(nil).APIVersion))
-}
-
-// Destroy mocks base method.
-func (m *MockFramebuffer) Destroy(callbacks *driver.AllocationCallbacks) {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "Destroy", callbacks)
-}
-
-// Destroy indicates an expected call of Destroy.
-func (mr *MockFramebufferMockRecorder) Destroy(callbacks any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Destroy", reflect.TypeOf((*MockFramebuffer)(nil).Destroy), callbacks)
-}
-
-// DeviceHandle mocks base method.
-func (m *MockFramebuffer) DeviceHandle() driver.VkDevice {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "DeviceHandle")
-	ret0, _ := ret[0].(driver.VkDevice)
-	return ret0
-}
-
-// DeviceHandle indicates an expected call of DeviceHandle.
-func (mr *MockFramebufferMockRecorder) DeviceHandle() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeviceHandle", reflect.TypeOf((*MockFramebuffer)(nil).DeviceHandle))
-}
-
-// Driver mocks base method.
-func (m *MockFramebuffer) Driver() driver.Driver {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Driver")
-	ret0, _ := ret[0].(driver.Driver)
-	return ret0
-}
-
-// Driver indicates an expected call of Driver.
-func (mr *MockFramebufferMockRecorder) Driver() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Driver", reflect.TypeOf((*MockFramebuffer)(nil).Driver))
-}
-
-// Handle mocks base method.
-func (m *MockFramebuffer) Handle() driver.VkFramebuffer {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Handle")
-	ret0, _ := ret[0].(driver.VkFramebuffer)
-	return ret0
-}
-
-// Handle indicates an expected call of Handle.
-func (mr *MockFramebufferMockRecorder) Handle() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Handle", reflect.TypeOf((*MockFramebuffer)(nil).Handle))
-}
-
-// MockImage is a mock of Image interface.
-type MockImage struct {
-	ctrl     *gomock.Controller
-	recorder *MockImageMockRecorder
-	isgomock struct{}
-}
-
-// MockImageMockRecorder is the mock recorder for MockImage.
-type MockImageMockRecorder struct {
-	mock *MockImage
-}
-
-// NewMockImage creates a new mock instance.
-func NewMockImage(ctrl *gomock.Controller) *MockImage {
-	mock := &MockImage{ctrl: ctrl}
-	mock.recorder = &MockImageMockRecorder{mock}
-	return mock
-}
-
-// EXPECT returns an object that allows the caller to indicate expected use.
-func (m *MockImage) EXPECT() *MockImageMockRecorder {
-	return m.recorder
-}
-
-// APIVersion mocks base method.
-func (m *MockImage) APIVersion() common.APIVersion {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "APIVersion")
-	ret0, _ := ret[0].(common.APIVersion)
-	return ret0
-}
-
-// APIVersion indicates an expected call of APIVersion.
-func (mr *MockImageMockRecorder) APIVersion() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "APIVersion", reflect.TypeOf((*MockImage)(nil).APIVersion))
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "BindBufferMemory2", reflect.TypeOf((*MockVulkan)(nil).BindBufferMemory2), device, o)
 }
 
 // BindImageMemory mocks base method.
-func (m *MockImage) BindImageMemory(memory core1_0.DeviceMemory, offset int) (common.VkResult, error) {
+func (m *MockVulkan) BindImageMemory(image types.Image, memory types.DeviceMemory, offset int) (common.VkResult, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "BindImageMemory", memory, offset)
+	ret := m.ctrl.Call(m, "BindImageMemory", image, memory, offset)
 	ret0, _ := ret[0].(common.VkResult)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // BindImageMemory indicates an expected call of BindImageMemory.
-func (mr *MockImageMockRecorder) BindImageMemory(memory, offset any) *gomock.Call {
+func (mr *MockVulkanMockRecorder) BindImageMemory(image, memory, offset any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "BindImageMemory", reflect.TypeOf((*MockImage)(nil).BindImageMemory), memory, offset)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "BindImageMemory", reflect.TypeOf((*MockVulkan)(nil).BindImageMemory), image, memory, offset)
 }
 
-// Destroy mocks base method.
-func (m *MockImage) Destroy(callbacks *driver.AllocationCallbacks) {
+// BindImageMemory2 mocks base method.
+func (m *MockVulkan) BindImageMemory2(device types.Device, o []core1_1.BindImageMemoryInfo) (common.VkResult, error) {
 	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "Destroy", callbacks)
+	ret := m.ctrl.Call(m, "BindImageMemory2", device, o)
+	ret0, _ := ret[0].(common.VkResult)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
 }
 
-// Destroy indicates an expected call of Destroy.
-func (mr *MockImageMockRecorder) Destroy(callbacks any) *gomock.Call {
+// BindImageMemory2 indicates an expected call of BindImageMemory2.
+func (mr *MockVulkanMockRecorder) BindImageMemory2(device, o any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Destroy", reflect.TypeOf((*MockImage)(nil).Destroy), callbacks)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "BindImageMemory2", reflect.TypeOf((*MockVulkan)(nil).BindImageMemory2), device, o)
 }
 
-// DeviceHandle mocks base method.
-func (m *MockImage) DeviceHandle() driver.VkDevice {
+// CmdBeginQuery mocks base method.
+func (m *MockVulkan) CmdBeginQuery(commandBuffer types.CommandBuffer, queryPool types.QueryPool, query int, flags core1_0.QueryControlFlags) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "DeviceHandle")
-	ret0, _ := ret[0].(driver.VkDevice)
+	m.ctrl.Call(m, "CmdBeginQuery", commandBuffer, queryPool, query, flags)
+}
+
+// CmdBeginQuery indicates an expected call of CmdBeginQuery.
+func (mr *MockVulkanMockRecorder) CmdBeginQuery(commandBuffer, queryPool, query, flags any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CmdBeginQuery", reflect.TypeOf((*MockVulkan)(nil).CmdBeginQuery), commandBuffer, queryPool, query, flags)
+}
+
+// CmdBeginRenderPass mocks base method.
+func (m *MockVulkan) CmdBeginRenderPass(commandBuffer types.CommandBuffer, contents core1_0.SubpassContents, o core1_0.RenderPassBeginInfo) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CmdBeginRenderPass", commandBuffer, contents, o)
+	ret0, _ := ret[0].(error)
 	return ret0
 }
 
-// DeviceHandle indicates an expected call of DeviceHandle.
-func (mr *MockImageMockRecorder) DeviceHandle() *gomock.Call {
+// CmdBeginRenderPass indicates an expected call of CmdBeginRenderPass.
+func (mr *MockVulkanMockRecorder) CmdBeginRenderPass(commandBuffer, contents, o any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeviceHandle", reflect.TypeOf((*MockImage)(nil).DeviceHandle))
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CmdBeginRenderPass", reflect.TypeOf((*MockVulkan)(nil).CmdBeginRenderPass), commandBuffer, contents, o)
 }
 
-// Driver mocks base method.
-func (m *MockImage) Driver() driver.Driver {
+// CmdBindDescriptorSets mocks base method.
+func (m *MockVulkan) CmdBindDescriptorSets(commandBuffer types.CommandBuffer, bindPoint core1_0.PipelineBindPoint, layout types.PipelineLayout, firstSet int, sets []types.DescriptorSet, dynamicOffsets []int) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Driver")
-	ret0, _ := ret[0].(driver.Driver)
+	m.ctrl.Call(m, "CmdBindDescriptorSets", commandBuffer, bindPoint, layout, firstSet, sets, dynamicOffsets)
+}
+
+// CmdBindDescriptorSets indicates an expected call of CmdBindDescriptorSets.
+func (mr *MockVulkanMockRecorder) CmdBindDescriptorSets(commandBuffer, bindPoint, layout, firstSet, sets, dynamicOffsets any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CmdBindDescriptorSets", reflect.TypeOf((*MockVulkan)(nil).CmdBindDescriptorSets), commandBuffer, bindPoint, layout, firstSet, sets, dynamicOffsets)
+}
+
+// CmdBindIndexBuffer mocks base method.
+func (m *MockVulkan) CmdBindIndexBuffer(commandBuffer types.CommandBuffer, buffer types.Buffer, offset int, indexType core1_0.IndexType) {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "CmdBindIndexBuffer", commandBuffer, buffer, offset, indexType)
+}
+
+// CmdBindIndexBuffer indicates an expected call of CmdBindIndexBuffer.
+func (mr *MockVulkanMockRecorder) CmdBindIndexBuffer(commandBuffer, buffer, offset, indexType any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CmdBindIndexBuffer", reflect.TypeOf((*MockVulkan)(nil).CmdBindIndexBuffer), commandBuffer, buffer, offset, indexType)
+}
+
+// CmdBindPipeline mocks base method.
+func (m *MockVulkan) CmdBindPipeline(commandBuffer types.CommandBuffer, bindPoint core1_0.PipelineBindPoint, pipeline types.Pipeline) {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "CmdBindPipeline", commandBuffer, bindPoint, pipeline)
+}
+
+// CmdBindPipeline indicates an expected call of CmdBindPipeline.
+func (mr *MockVulkanMockRecorder) CmdBindPipeline(commandBuffer, bindPoint, pipeline any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CmdBindPipeline", reflect.TypeOf((*MockVulkan)(nil).CmdBindPipeline), commandBuffer, bindPoint, pipeline)
+}
+
+// CmdBindVertexBuffers mocks base method.
+func (m *MockVulkan) CmdBindVertexBuffers(commandBuffer types.CommandBuffer, firstBinding int, buffers []types.Buffer, bufferOffsets []int) {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "CmdBindVertexBuffers", commandBuffer, firstBinding, buffers, bufferOffsets)
+}
+
+// CmdBindVertexBuffers indicates an expected call of CmdBindVertexBuffers.
+func (mr *MockVulkanMockRecorder) CmdBindVertexBuffers(commandBuffer, firstBinding, buffers, bufferOffsets any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CmdBindVertexBuffers", reflect.TypeOf((*MockVulkan)(nil).CmdBindVertexBuffers), commandBuffer, firstBinding, buffers, bufferOffsets)
+}
+
+// CmdBlitImage mocks base method.
+func (m *MockVulkan) CmdBlitImage(commandBuffer types.CommandBuffer, sourceImage types.Image, sourceImageLayout core1_0.ImageLayout, destinationImage types.Image, destinationImageLayout core1_0.ImageLayout, regions []core1_0.ImageBlit, filter core1_0.Filter) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CmdBlitImage", commandBuffer, sourceImage, sourceImageLayout, destinationImage, destinationImageLayout, regions, filter)
+	ret0, _ := ret[0].(error)
 	return ret0
 }
 
-// Driver indicates an expected call of Driver.
-func (mr *MockImageMockRecorder) Driver() *gomock.Call {
+// CmdBlitImage indicates an expected call of CmdBlitImage.
+func (mr *MockVulkanMockRecorder) CmdBlitImage(commandBuffer, sourceImage, sourceImageLayout, destinationImage, destinationImageLayout, regions, filter any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Driver", reflect.TypeOf((*MockImage)(nil).Driver))
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CmdBlitImage", reflect.TypeOf((*MockVulkan)(nil).CmdBlitImage), commandBuffer, sourceImage, sourceImageLayout, destinationImage, destinationImageLayout, regions, filter)
 }
 
-// Handle mocks base method.
-func (m *MockImage) Handle() driver.VkImage {
+// CmdClearAttachments mocks base method.
+func (m *MockVulkan) CmdClearAttachments(commandBuffer types.CommandBuffer, attachments []core1_0.ClearAttachment, rects []core1_0.ClearRect) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Handle")
-	ret0, _ := ret[0].(driver.VkImage)
+	ret := m.ctrl.Call(m, "CmdClearAttachments", commandBuffer, attachments, rects)
+	ret0, _ := ret[0].(error)
 	return ret0
 }
 
-// Handle indicates an expected call of Handle.
-func (mr *MockImageMockRecorder) Handle() *gomock.Call {
+// CmdClearAttachments indicates an expected call of CmdClearAttachments.
+func (mr *MockVulkanMockRecorder) CmdClearAttachments(commandBuffer, attachments, rects any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Handle", reflect.TypeOf((*MockImage)(nil).Handle))
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CmdClearAttachments", reflect.TypeOf((*MockVulkan)(nil).CmdClearAttachments), commandBuffer, attachments, rects)
 }
 
-// MemoryRequirements mocks base method.
-func (m *MockImage) MemoryRequirements() *core1_0.MemoryRequirements {
+// CmdClearColorImage mocks base method.
+func (m *MockVulkan) CmdClearColorImage(commandBuffer types.CommandBuffer, image types.Image, imageLayout core1_0.ImageLayout, color core1_0.ClearColorValue, ranges ...core1_0.ImageSubresourceRange) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "MemoryRequirements")
-	ret0, _ := ret[0].(*core1_0.MemoryRequirements)
+	varargs := []any{commandBuffer, image, imageLayout, color}
+	for _, a := range ranges {
+		varargs = append(varargs, a)
+	}
+	m.ctrl.Call(m, "CmdClearColorImage", varargs...)
+}
+
+// CmdClearColorImage indicates an expected call of CmdClearColorImage.
+func (mr *MockVulkanMockRecorder) CmdClearColorImage(commandBuffer, image, imageLayout, color any, ranges ...any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]any{commandBuffer, image, imageLayout, color}, ranges...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CmdClearColorImage", reflect.TypeOf((*MockVulkan)(nil).CmdClearColorImage), varargs...)
+}
+
+// CmdClearDepthStencilImage mocks base method.
+func (m *MockVulkan) CmdClearDepthStencilImage(commandBuffer types.CommandBuffer, image types.Image, imageLayout core1_0.ImageLayout, depthStencil *core1_0.ClearValueDepthStencil, ranges ...core1_0.ImageSubresourceRange) {
+	m.ctrl.T.Helper()
+	varargs := []any{commandBuffer, image, imageLayout, depthStencil}
+	for _, a := range ranges {
+		varargs = append(varargs, a)
+	}
+	m.ctrl.Call(m, "CmdClearDepthStencilImage", varargs...)
+}
+
+// CmdClearDepthStencilImage indicates an expected call of CmdClearDepthStencilImage.
+func (mr *MockVulkanMockRecorder) CmdClearDepthStencilImage(commandBuffer, image, imageLayout, depthStencil any, ranges ...any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]any{commandBuffer, image, imageLayout, depthStencil}, ranges...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CmdClearDepthStencilImage", reflect.TypeOf((*MockVulkan)(nil).CmdClearDepthStencilImage), varargs...)
+}
+
+// CmdCopyBuffer mocks base method.
+func (m *MockVulkan) CmdCopyBuffer(commandBuffer types.CommandBuffer, srcBuffer, dstBuffer types.Buffer, copyRegions ...core1_0.BufferCopy) error {
+	m.ctrl.T.Helper()
+	varargs := []any{commandBuffer, srcBuffer, dstBuffer}
+	for _, a := range copyRegions {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "CmdCopyBuffer", varargs...)
+	ret0, _ := ret[0].(error)
 	return ret0
 }
 
-// MemoryRequirements indicates an expected call of MemoryRequirements.
-func (mr *MockImageMockRecorder) MemoryRequirements() *gomock.Call {
+// CmdCopyBuffer indicates an expected call of CmdCopyBuffer.
+func (mr *MockVulkanMockRecorder) CmdCopyBuffer(commandBuffer, srcBuffer, dstBuffer any, copyRegions ...any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "MemoryRequirements", reflect.TypeOf((*MockImage)(nil).MemoryRequirements))
+	varargs := append([]any{commandBuffer, srcBuffer, dstBuffer}, copyRegions...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CmdCopyBuffer", reflect.TypeOf((*MockVulkan)(nil).CmdCopyBuffer), varargs...)
 }
 
-// SparseMemoryRequirements mocks base method.
-func (m *MockImage) SparseMemoryRequirements() []core1_0.SparseImageMemoryRequirements {
+// CmdCopyBufferToImage mocks base method.
+func (m *MockVulkan) CmdCopyBufferToImage(commandBuffer types.CommandBuffer, buffer types.Buffer, image types.Image, layout core1_0.ImageLayout, regions ...core1_0.BufferImageCopy) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SparseMemoryRequirements")
-	ret0, _ := ret[0].([]core1_0.SparseImageMemoryRequirements)
+	varargs := []any{commandBuffer, buffer, image, layout}
+	for _, a := range regions {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "CmdCopyBufferToImage", varargs...)
+	ret0, _ := ret[0].(error)
 	return ret0
 }
 
-// SparseMemoryRequirements indicates an expected call of SparseMemoryRequirements.
-func (mr *MockImageMockRecorder) SparseMemoryRequirements() *gomock.Call {
+// CmdCopyBufferToImage indicates an expected call of CmdCopyBufferToImage.
+func (mr *MockVulkanMockRecorder) CmdCopyBufferToImage(commandBuffer, buffer, image, layout any, regions ...any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SparseMemoryRequirements", reflect.TypeOf((*MockImage)(nil).SparseMemoryRequirements))
+	varargs := append([]any{commandBuffer, buffer, image, layout}, regions...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CmdCopyBufferToImage", reflect.TypeOf((*MockVulkan)(nil).CmdCopyBufferToImage), varargs...)
 }
 
-// SubresourceLayout mocks base method.
-func (m *MockImage) SubresourceLayout(subresource *core1_0.ImageSubresource) *core1_0.SubresourceLayout {
+// CmdCopyImage mocks base method.
+func (m *MockVulkan) CmdCopyImage(commandBuffer types.CommandBuffer, srcImage types.Image, srcImageLayout core1_0.ImageLayout, dstImage types.Image, dstImageLayout core1_0.ImageLayout, regions ...core1_0.ImageCopy) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SubresourceLayout", subresource)
-	ret0, _ := ret[0].(*core1_0.SubresourceLayout)
+	varargs := []any{commandBuffer, srcImage, srcImageLayout, dstImage, dstImageLayout}
+	for _, a := range regions {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "CmdCopyImage", varargs...)
+	ret0, _ := ret[0].(error)
 	return ret0
 }
 
-// SubresourceLayout indicates an expected call of SubresourceLayout.
-func (mr *MockImageMockRecorder) SubresourceLayout(subresource any) *gomock.Call {
+// CmdCopyImage indicates an expected call of CmdCopyImage.
+func (mr *MockVulkanMockRecorder) CmdCopyImage(commandBuffer, srcImage, srcImageLayout, dstImage, dstImageLayout any, regions ...any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SubresourceLayout", reflect.TypeOf((*MockImage)(nil).SubresourceLayout), subresource)
+	varargs := append([]any{commandBuffer, srcImage, srcImageLayout, dstImage, dstImageLayout}, regions...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CmdCopyImage", reflect.TypeOf((*MockVulkan)(nil).CmdCopyImage), varargs...)
 }
 
-// MockImageView is a mock of ImageView interface.
-type MockImageView struct {
-	ctrl     *gomock.Controller
-	recorder *MockImageViewMockRecorder
-	isgomock struct{}
-}
-
-// MockImageViewMockRecorder is the mock recorder for MockImageView.
-type MockImageViewMockRecorder struct {
-	mock *MockImageView
-}
-
-// NewMockImageView creates a new mock instance.
-func NewMockImageView(ctrl *gomock.Controller) *MockImageView {
-	mock := &MockImageView{ctrl: ctrl}
-	mock.recorder = &MockImageViewMockRecorder{mock}
-	return mock
-}
-
-// EXPECT returns an object that allows the caller to indicate expected use.
-func (m *MockImageView) EXPECT() *MockImageViewMockRecorder {
-	return m.recorder
-}
-
-// APIVersion mocks base method.
-func (m *MockImageView) APIVersion() common.APIVersion {
+// CmdCopyImageToBuffer mocks base method.
+func (m *MockVulkan) CmdCopyImageToBuffer(commandBuffer types.CommandBuffer, srcImage types.Image, srcImageLayout core1_0.ImageLayout, dstBuffer types.Buffer, regions ...core1_0.BufferImageCopy) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "APIVersion")
-	ret0, _ := ret[0].(common.APIVersion)
+	varargs := []any{commandBuffer, srcImage, srcImageLayout, dstBuffer}
+	for _, a := range regions {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "CmdCopyImageToBuffer", varargs...)
+	ret0, _ := ret[0].(error)
 	return ret0
 }
 
-// APIVersion indicates an expected call of APIVersion.
-func (mr *MockImageViewMockRecorder) APIVersion() *gomock.Call {
+// CmdCopyImageToBuffer indicates an expected call of CmdCopyImageToBuffer.
+func (mr *MockVulkanMockRecorder) CmdCopyImageToBuffer(commandBuffer, srcImage, srcImageLayout, dstBuffer any, regions ...any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "APIVersion", reflect.TypeOf((*MockImageView)(nil).APIVersion))
+	varargs := append([]any{commandBuffer, srcImage, srcImageLayout, dstBuffer}, regions...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CmdCopyImageToBuffer", reflect.TypeOf((*MockVulkan)(nil).CmdCopyImageToBuffer), varargs...)
 }
 
-// Destroy mocks base method.
-func (m *MockImageView) Destroy(callbacks *driver.AllocationCallbacks) {
+// CmdCopyQueryPoolResults mocks base method.
+func (m *MockVulkan) CmdCopyQueryPoolResults(commandBuffer types.CommandBuffer, queryPool types.QueryPool, firstQuery, queryCount int, dstBuffer types.Buffer, dstOffset, stride int, flags core1_0.QueryResultFlags) {
 	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "Destroy", callbacks)
+	m.ctrl.Call(m, "CmdCopyQueryPoolResults", commandBuffer, queryPool, firstQuery, queryCount, dstBuffer, dstOffset, stride, flags)
 }
 
-// Destroy indicates an expected call of Destroy.
-func (mr *MockImageViewMockRecorder) Destroy(callbacks any) *gomock.Call {
+// CmdCopyQueryPoolResults indicates an expected call of CmdCopyQueryPoolResults.
+func (mr *MockVulkanMockRecorder) CmdCopyQueryPoolResults(commandBuffer, queryPool, firstQuery, queryCount, dstBuffer, dstOffset, stride, flags any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Destroy", reflect.TypeOf((*MockImageView)(nil).Destroy), callbacks)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CmdCopyQueryPoolResults", reflect.TypeOf((*MockVulkan)(nil).CmdCopyQueryPoolResults), commandBuffer, queryPool, firstQuery, queryCount, dstBuffer, dstOffset, stride, flags)
 }
 
-// DeviceHandle mocks base method.
-func (m *MockImageView) DeviceHandle() driver.VkDevice {
+// CmdDispatch mocks base method.
+func (m *MockVulkan) CmdDispatch(commandBuffer types.CommandBuffer, groupCountX, groupCountY, groupCountZ int) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "DeviceHandle")
-	ret0, _ := ret[0].(driver.VkDevice)
+	m.ctrl.Call(m, "CmdDispatch", commandBuffer, groupCountX, groupCountY, groupCountZ)
+}
+
+// CmdDispatch indicates an expected call of CmdDispatch.
+func (mr *MockVulkanMockRecorder) CmdDispatch(commandBuffer, groupCountX, groupCountY, groupCountZ any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CmdDispatch", reflect.TypeOf((*MockVulkan)(nil).CmdDispatch), commandBuffer, groupCountX, groupCountY, groupCountZ)
+}
+
+// CmdDispatchBase mocks base method.
+func (m *MockVulkan) CmdDispatchBase(commandBuffer types.CommandBuffer, baseGroupX, baseGroupY, baseGroupZ, groupCountX, groupCountY, groupCountZ int) {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "CmdDispatchBase", commandBuffer, baseGroupX, baseGroupY, baseGroupZ, groupCountX, groupCountY, groupCountZ)
+}
+
+// CmdDispatchBase indicates an expected call of CmdDispatchBase.
+func (mr *MockVulkanMockRecorder) CmdDispatchBase(commandBuffer, baseGroupX, baseGroupY, baseGroupZ, groupCountX, groupCountY, groupCountZ any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CmdDispatchBase", reflect.TypeOf((*MockVulkan)(nil).CmdDispatchBase), commandBuffer, baseGroupX, baseGroupY, baseGroupZ, groupCountX, groupCountY, groupCountZ)
+}
+
+// CmdDispatchIndirect mocks base method.
+func (m *MockVulkan) CmdDispatchIndirect(commandBuffer types.CommandBuffer, buffer types.Buffer, offset int) {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "CmdDispatchIndirect", commandBuffer, buffer, offset)
+}
+
+// CmdDispatchIndirect indicates an expected call of CmdDispatchIndirect.
+func (mr *MockVulkanMockRecorder) CmdDispatchIndirect(commandBuffer, buffer, offset any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CmdDispatchIndirect", reflect.TypeOf((*MockVulkan)(nil).CmdDispatchIndirect), commandBuffer, buffer, offset)
+}
+
+// CmdDraw mocks base method.
+func (m *MockVulkan) CmdDraw(commandBuffer types.CommandBuffer, vertexCount, instanceCount int, firstVertex, firstInstance uint32) {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "CmdDraw", commandBuffer, vertexCount, instanceCount, firstVertex, firstInstance)
+}
+
+// CmdDraw indicates an expected call of CmdDraw.
+func (mr *MockVulkanMockRecorder) CmdDraw(commandBuffer, vertexCount, instanceCount, firstVertex, firstInstance any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CmdDraw", reflect.TypeOf((*MockVulkan)(nil).CmdDraw), commandBuffer, vertexCount, instanceCount, firstVertex, firstInstance)
+}
+
+// CmdDrawIndexed mocks base method.
+func (m *MockVulkan) CmdDrawIndexed(commandBuffer types.CommandBuffer, indexCount, instanceCount int, firstIndex uint32, vertexOffset int, firstInstance uint32) {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "CmdDrawIndexed", commandBuffer, indexCount, instanceCount, firstIndex, vertexOffset, firstInstance)
+}
+
+// CmdDrawIndexed indicates an expected call of CmdDrawIndexed.
+func (mr *MockVulkanMockRecorder) CmdDrawIndexed(commandBuffer, indexCount, instanceCount, firstIndex, vertexOffset, firstInstance any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CmdDrawIndexed", reflect.TypeOf((*MockVulkan)(nil).CmdDrawIndexed), commandBuffer, indexCount, instanceCount, firstIndex, vertexOffset, firstInstance)
+}
+
+// CmdDrawIndexedIndirect mocks base method.
+func (m *MockVulkan) CmdDrawIndexedIndirect(commandBuffer types.CommandBuffer, buffer types.Buffer, offset, drawCount, stride int) {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "CmdDrawIndexedIndirect", commandBuffer, buffer, offset, drawCount, stride)
+}
+
+// CmdDrawIndexedIndirect indicates an expected call of CmdDrawIndexedIndirect.
+func (mr *MockVulkanMockRecorder) CmdDrawIndexedIndirect(commandBuffer, buffer, offset, drawCount, stride any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CmdDrawIndexedIndirect", reflect.TypeOf((*MockVulkan)(nil).CmdDrawIndexedIndirect), commandBuffer, buffer, offset, drawCount, stride)
+}
+
+// CmdDrawIndirect mocks base method.
+func (m *MockVulkan) CmdDrawIndirect(commandBuffer types.CommandBuffer, buffer types.Buffer, offset, drawCount, stride int) {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "CmdDrawIndirect", commandBuffer, buffer, offset, drawCount, stride)
+}
+
+// CmdDrawIndirect indicates an expected call of CmdDrawIndirect.
+func (mr *MockVulkanMockRecorder) CmdDrawIndirect(commandBuffer, buffer, offset, drawCount, stride any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CmdDrawIndirect", reflect.TypeOf((*MockVulkan)(nil).CmdDrawIndirect), commandBuffer, buffer, offset, drawCount, stride)
+}
+
+// CmdEndQuery mocks base method.
+func (m *MockVulkan) CmdEndQuery(commandBuffer types.CommandBuffer, queryPool types.QueryPool, query int) {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "CmdEndQuery", commandBuffer, queryPool, query)
+}
+
+// CmdEndQuery indicates an expected call of CmdEndQuery.
+func (mr *MockVulkanMockRecorder) CmdEndQuery(commandBuffer, queryPool, query any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CmdEndQuery", reflect.TypeOf((*MockVulkan)(nil).CmdEndQuery), commandBuffer, queryPool, query)
+}
+
+// CmdEndRenderPass mocks base method.
+func (m *MockVulkan) CmdEndRenderPass(commandBuffer types.CommandBuffer) {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "CmdEndRenderPass", commandBuffer)
+}
+
+// CmdEndRenderPass indicates an expected call of CmdEndRenderPass.
+func (mr *MockVulkanMockRecorder) CmdEndRenderPass(commandBuffer any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CmdEndRenderPass", reflect.TypeOf((*MockVulkan)(nil).CmdEndRenderPass), commandBuffer)
+}
+
+// CmdExecuteCommands mocks base method.
+func (m *MockVulkan) CmdExecuteCommands(commandBuffer types.CommandBuffer, commandBuffers ...types.CommandBuffer) {
+	m.ctrl.T.Helper()
+	varargs := []any{commandBuffer}
+	for _, a := range commandBuffers {
+		varargs = append(varargs, a)
+	}
+	m.ctrl.Call(m, "CmdExecuteCommands", varargs...)
+}
+
+// CmdExecuteCommands indicates an expected call of CmdExecuteCommands.
+func (mr *MockVulkanMockRecorder) CmdExecuteCommands(commandBuffer any, commandBuffers ...any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]any{commandBuffer}, commandBuffers...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CmdExecuteCommands", reflect.TypeOf((*MockVulkan)(nil).CmdExecuteCommands), varargs...)
+}
+
+// CmdFillBuffer mocks base method.
+func (m *MockVulkan) CmdFillBuffer(commandBuffer types.CommandBuffer, dstBuffer types.Buffer, dstOffset, size int, data uint32) {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "CmdFillBuffer", commandBuffer, dstBuffer, dstOffset, size, data)
+}
+
+// CmdFillBuffer indicates an expected call of CmdFillBuffer.
+func (mr *MockVulkanMockRecorder) CmdFillBuffer(commandBuffer, dstBuffer, dstOffset, size, data any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CmdFillBuffer", reflect.TypeOf((*MockVulkan)(nil).CmdFillBuffer), commandBuffer, dstBuffer, dstOffset, size, data)
+}
+
+// CmdNextSubpass mocks base method.
+func (m *MockVulkan) CmdNextSubpass(commandBuffer types.CommandBuffer, contents core1_0.SubpassContents) {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "CmdNextSubpass", commandBuffer, contents)
+}
+
+// CmdNextSubpass indicates an expected call of CmdNextSubpass.
+func (mr *MockVulkanMockRecorder) CmdNextSubpass(commandBuffer, contents any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CmdNextSubpass", reflect.TypeOf((*MockVulkan)(nil).CmdNextSubpass), commandBuffer, contents)
+}
+
+// CmdPipelineBarrier mocks base method.
+func (m *MockVulkan) CmdPipelineBarrier(commandBuffer types.CommandBuffer, srcStageMask, dstStageMask core1_0.PipelineStageFlags, dependencies core1_0.DependencyFlags, memoryBarriers []core1_0.MemoryBarrier, bufferMemoryBarriers []core1_0.BufferMemoryBarrier, imageMemoryBarriers []core1_0.ImageMemoryBarrier) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CmdPipelineBarrier", commandBuffer, srcStageMask, dstStageMask, dependencies, memoryBarriers, bufferMemoryBarriers, imageMemoryBarriers)
+	ret0, _ := ret[0].(error)
 	return ret0
 }
 
-// DeviceHandle indicates an expected call of DeviceHandle.
-func (mr *MockImageViewMockRecorder) DeviceHandle() *gomock.Call {
+// CmdPipelineBarrier indicates an expected call of CmdPipelineBarrier.
+func (mr *MockVulkanMockRecorder) CmdPipelineBarrier(commandBuffer, srcStageMask, dstStageMask, dependencies, memoryBarriers, bufferMemoryBarriers, imageMemoryBarriers any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeviceHandle", reflect.TypeOf((*MockImageView)(nil).DeviceHandle))
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CmdPipelineBarrier", reflect.TypeOf((*MockVulkan)(nil).CmdPipelineBarrier), commandBuffer, srcStageMask, dstStageMask, dependencies, memoryBarriers, bufferMemoryBarriers, imageMemoryBarriers)
 }
 
-// Driver mocks base method.
-func (m *MockImageView) Driver() driver.Driver {
+// CmdPushConstants mocks base method.
+func (m *MockVulkan) CmdPushConstants(commandBuffer types.CommandBuffer, layout types.PipelineLayout, stageFlags core1_0.ShaderStageFlags, offset int, valueBytes []byte) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Driver")
-	ret0, _ := ret[0].(driver.Driver)
+	m.ctrl.Call(m, "CmdPushConstants", commandBuffer, layout, stageFlags, offset, valueBytes)
+}
+
+// CmdPushConstants indicates an expected call of CmdPushConstants.
+func (mr *MockVulkanMockRecorder) CmdPushConstants(commandBuffer, layout, stageFlags, offset, valueBytes any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CmdPushConstants", reflect.TypeOf((*MockVulkan)(nil).CmdPushConstants), commandBuffer, layout, stageFlags, offset, valueBytes)
+}
+
+// CmdResetEvent mocks base method.
+func (m *MockVulkan) CmdResetEvent(commandBuffer types.CommandBuffer, event types.Event, stageMask core1_0.PipelineStageFlags) {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "CmdResetEvent", commandBuffer, event, stageMask)
+}
+
+// CmdResetEvent indicates an expected call of CmdResetEvent.
+func (mr *MockVulkanMockRecorder) CmdResetEvent(commandBuffer, event, stageMask any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CmdResetEvent", reflect.TypeOf((*MockVulkan)(nil).CmdResetEvent), commandBuffer, event, stageMask)
+}
+
+// CmdResetQueryPool mocks base method.
+func (m *MockVulkan) CmdResetQueryPool(commandBuffer types.CommandBuffer, queryPool types.QueryPool, startQuery, queryCount int) {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "CmdResetQueryPool", commandBuffer, queryPool, startQuery, queryCount)
+}
+
+// CmdResetQueryPool indicates an expected call of CmdResetQueryPool.
+func (mr *MockVulkanMockRecorder) CmdResetQueryPool(commandBuffer, queryPool, startQuery, queryCount any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CmdResetQueryPool", reflect.TypeOf((*MockVulkan)(nil).CmdResetQueryPool), commandBuffer, queryPool, startQuery, queryCount)
+}
+
+// CmdResolveImage mocks base method.
+func (m *MockVulkan) CmdResolveImage(commandBuffer types.CommandBuffer, srcImage types.Image, srcImageLayout core1_0.ImageLayout, dstImage types.Image, dstImageLayout core1_0.ImageLayout, regions ...core1_0.ImageResolve) error {
+	m.ctrl.T.Helper()
+	varargs := []any{commandBuffer, srcImage, srcImageLayout, dstImage, dstImageLayout}
+	for _, a := range regions {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "CmdResolveImage", varargs...)
+	ret0, _ := ret[0].(error)
 	return ret0
 }
 
-// Driver indicates an expected call of Driver.
-func (mr *MockImageViewMockRecorder) Driver() *gomock.Call {
+// CmdResolveImage indicates an expected call of CmdResolveImage.
+func (mr *MockVulkanMockRecorder) CmdResolveImage(commandBuffer, srcImage, srcImageLayout, dstImage, dstImageLayout any, regions ...any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Driver", reflect.TypeOf((*MockImageView)(nil).Driver))
+	varargs := append([]any{commandBuffer, srcImage, srcImageLayout, dstImage, dstImageLayout}, regions...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CmdResolveImage", reflect.TypeOf((*MockVulkan)(nil).CmdResolveImage), varargs...)
 }
 
-// Handle mocks base method.
-func (m *MockImageView) Handle() driver.VkImageView {
+// CmdSetBlendConstants mocks base method.
+func (m *MockVulkan) CmdSetBlendConstants(commandBuffer types.CommandBuffer, blendConstants [4]float32) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Handle")
-	ret0, _ := ret[0].(driver.VkImageView)
+	m.ctrl.Call(m, "CmdSetBlendConstants", commandBuffer, blendConstants)
+}
+
+// CmdSetBlendConstants indicates an expected call of CmdSetBlendConstants.
+func (mr *MockVulkanMockRecorder) CmdSetBlendConstants(commandBuffer, blendConstants any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CmdSetBlendConstants", reflect.TypeOf((*MockVulkan)(nil).CmdSetBlendConstants), commandBuffer, blendConstants)
+}
+
+// CmdSetDepthBias mocks base method.
+func (m *MockVulkan) CmdSetDepthBias(commandBuffer types.CommandBuffer, depthBiasConstantFactor, depthBiasClamp, depthBiasSlopeFactor float32) {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "CmdSetDepthBias", commandBuffer, depthBiasConstantFactor, depthBiasClamp, depthBiasSlopeFactor)
+}
+
+// CmdSetDepthBias indicates an expected call of CmdSetDepthBias.
+func (mr *MockVulkanMockRecorder) CmdSetDepthBias(commandBuffer, depthBiasConstantFactor, depthBiasClamp, depthBiasSlopeFactor any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CmdSetDepthBias", reflect.TypeOf((*MockVulkan)(nil).CmdSetDepthBias), commandBuffer, depthBiasConstantFactor, depthBiasClamp, depthBiasSlopeFactor)
+}
+
+// CmdSetDepthBounds mocks base method.
+func (m *MockVulkan) CmdSetDepthBounds(commandBuffer types.CommandBuffer, min, max float32) {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "CmdSetDepthBounds", commandBuffer, min, max)
+}
+
+// CmdSetDepthBounds indicates an expected call of CmdSetDepthBounds.
+func (mr *MockVulkanMockRecorder) CmdSetDepthBounds(commandBuffer, min, max any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CmdSetDepthBounds", reflect.TypeOf((*MockVulkan)(nil).CmdSetDepthBounds), commandBuffer, min, max)
+}
+
+// CmdSetDeviceMask mocks base method.
+func (m *MockVulkan) CmdSetDeviceMask(commandBuffer types.CommandBuffer, deviceMask uint32) {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "CmdSetDeviceMask", commandBuffer, deviceMask)
+}
+
+// CmdSetDeviceMask indicates an expected call of CmdSetDeviceMask.
+func (mr *MockVulkanMockRecorder) CmdSetDeviceMask(commandBuffer, deviceMask any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CmdSetDeviceMask", reflect.TypeOf((*MockVulkan)(nil).CmdSetDeviceMask), commandBuffer, deviceMask)
+}
+
+// CmdSetEvent mocks base method.
+func (m *MockVulkan) CmdSetEvent(commandBuffer types.CommandBuffer, event types.Event, stageMask core1_0.PipelineStageFlags) {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "CmdSetEvent", commandBuffer, event, stageMask)
+}
+
+// CmdSetEvent indicates an expected call of CmdSetEvent.
+func (mr *MockVulkanMockRecorder) CmdSetEvent(commandBuffer, event, stageMask any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CmdSetEvent", reflect.TypeOf((*MockVulkan)(nil).CmdSetEvent), commandBuffer, event, stageMask)
+}
+
+// CmdSetLineWidth mocks base method.
+func (m *MockVulkan) CmdSetLineWidth(commandBuffer types.CommandBuffer, lineWidth float32) {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "CmdSetLineWidth", commandBuffer, lineWidth)
+}
+
+// CmdSetLineWidth indicates an expected call of CmdSetLineWidth.
+func (mr *MockVulkanMockRecorder) CmdSetLineWidth(commandBuffer, lineWidth any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CmdSetLineWidth", reflect.TypeOf((*MockVulkan)(nil).CmdSetLineWidth), commandBuffer, lineWidth)
+}
+
+// CmdSetScissor mocks base method.
+func (m *MockVulkan) CmdSetScissor(commandBuffer types.CommandBuffer, scissors ...core1_0.Rect2D) {
+	m.ctrl.T.Helper()
+	varargs := []any{commandBuffer}
+	for _, a := range scissors {
+		varargs = append(varargs, a)
+	}
+	m.ctrl.Call(m, "CmdSetScissor", varargs...)
+}
+
+// CmdSetScissor indicates an expected call of CmdSetScissor.
+func (mr *MockVulkanMockRecorder) CmdSetScissor(commandBuffer any, scissors ...any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]any{commandBuffer}, scissors...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CmdSetScissor", reflect.TypeOf((*MockVulkan)(nil).CmdSetScissor), varargs...)
+}
+
+// CmdSetStencilCompareMask mocks base method.
+func (m *MockVulkan) CmdSetStencilCompareMask(commandBuffer types.CommandBuffer, faceMask core1_0.StencilFaceFlags, compareMask uint32) {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "CmdSetStencilCompareMask", commandBuffer, faceMask, compareMask)
+}
+
+// CmdSetStencilCompareMask indicates an expected call of CmdSetStencilCompareMask.
+func (mr *MockVulkanMockRecorder) CmdSetStencilCompareMask(commandBuffer, faceMask, compareMask any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CmdSetStencilCompareMask", reflect.TypeOf((*MockVulkan)(nil).CmdSetStencilCompareMask), commandBuffer, faceMask, compareMask)
+}
+
+// CmdSetStencilReference mocks base method.
+func (m *MockVulkan) CmdSetStencilReference(commandBuffer types.CommandBuffer, faceMask core1_0.StencilFaceFlags, reference uint32) {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "CmdSetStencilReference", commandBuffer, faceMask, reference)
+}
+
+// CmdSetStencilReference indicates an expected call of CmdSetStencilReference.
+func (mr *MockVulkanMockRecorder) CmdSetStencilReference(commandBuffer, faceMask, reference any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CmdSetStencilReference", reflect.TypeOf((*MockVulkan)(nil).CmdSetStencilReference), commandBuffer, faceMask, reference)
+}
+
+// CmdSetStencilWriteMask mocks base method.
+func (m *MockVulkan) CmdSetStencilWriteMask(commandBuffer types.CommandBuffer, faceMask core1_0.StencilFaceFlags, writeMask uint32) {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "CmdSetStencilWriteMask", commandBuffer, faceMask, writeMask)
+}
+
+// CmdSetStencilWriteMask indicates an expected call of CmdSetStencilWriteMask.
+func (mr *MockVulkanMockRecorder) CmdSetStencilWriteMask(commandBuffer, faceMask, writeMask any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CmdSetStencilWriteMask", reflect.TypeOf((*MockVulkan)(nil).CmdSetStencilWriteMask), commandBuffer, faceMask, writeMask)
+}
+
+// CmdSetViewport mocks base method.
+func (m *MockVulkan) CmdSetViewport(commandBuffer types.CommandBuffer, viewports ...core1_0.Viewport) {
+	m.ctrl.T.Helper()
+	varargs := []any{commandBuffer}
+	for _, a := range viewports {
+		varargs = append(varargs, a)
+	}
+	m.ctrl.Call(m, "CmdSetViewport", varargs...)
+}
+
+// CmdSetViewport indicates an expected call of CmdSetViewport.
+func (mr *MockVulkanMockRecorder) CmdSetViewport(commandBuffer any, viewports ...any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]any{commandBuffer}, viewports...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CmdSetViewport", reflect.TypeOf((*MockVulkan)(nil).CmdSetViewport), varargs...)
+}
+
+// CmdUpdateBuffer mocks base method.
+func (m *MockVulkan) CmdUpdateBuffer(commandBuffer types.CommandBuffer, dstBuffer types.Buffer, dstOffset, dataSize int, data []byte) {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "CmdUpdateBuffer", commandBuffer, dstBuffer, dstOffset, dataSize, data)
+}
+
+// CmdUpdateBuffer indicates an expected call of CmdUpdateBuffer.
+func (mr *MockVulkanMockRecorder) CmdUpdateBuffer(commandBuffer, dstBuffer, dstOffset, dataSize, data any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CmdUpdateBuffer", reflect.TypeOf((*MockVulkan)(nil).CmdUpdateBuffer), commandBuffer, dstBuffer, dstOffset, dataSize, data)
+}
+
+// CmdWaitEvents mocks base method.
+func (m *MockVulkan) CmdWaitEvents(commandBuffer types.CommandBuffer, events []types.Event, srcStageMask, dstStageMask core1_0.PipelineStageFlags, memoryBarriers []core1_0.MemoryBarrier, bufferMemoryBarriers []core1_0.BufferMemoryBarrier, imageMemoryBarriers []core1_0.ImageMemoryBarrier) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CmdWaitEvents", commandBuffer, events, srcStageMask, dstStageMask, memoryBarriers, bufferMemoryBarriers, imageMemoryBarriers)
+	ret0, _ := ret[0].(error)
 	return ret0
 }
 
-// Handle indicates an expected call of Handle.
-func (mr *MockImageViewMockRecorder) Handle() *gomock.Call {
+// CmdWaitEvents indicates an expected call of CmdWaitEvents.
+func (mr *MockVulkanMockRecorder) CmdWaitEvents(commandBuffer, events, srcStageMask, dstStageMask, memoryBarriers, bufferMemoryBarriers, imageMemoryBarriers any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Handle", reflect.TypeOf((*MockImageView)(nil).Handle))
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CmdWaitEvents", reflect.TypeOf((*MockVulkan)(nil).CmdWaitEvents), commandBuffer, events, srcStageMask, dstStageMask, memoryBarriers, bufferMemoryBarriers, imageMemoryBarriers)
 }
 
-// MockInstance is a mock of Instance interface.
-type MockInstance struct {
-	ctrl     *gomock.Controller
-	recorder *MockInstanceMockRecorder
-	isgomock struct{}
-}
-
-// MockInstanceMockRecorder is the mock recorder for MockInstance.
-type MockInstanceMockRecorder struct {
-	mock *MockInstance
-}
-
-// NewMockInstance creates a new mock instance.
-func NewMockInstance(ctrl *gomock.Controller) *MockInstance {
-	mock := &MockInstance{ctrl: ctrl}
-	mock.recorder = &MockInstanceMockRecorder{mock}
-	return mock
-}
-
-// EXPECT returns an object that allows the caller to indicate expected use.
-func (m *MockInstance) EXPECT() *MockInstanceMockRecorder {
-	return m.recorder
-}
-
-// APIVersion mocks base method.
-func (m *MockInstance) APIVersion() common.APIVersion {
+// CmdWriteTimestamp mocks base method.
+func (m *MockVulkan) CmdWriteTimestamp(commandBuffer types.CommandBuffer, pipelineStage core1_0.PipelineStageFlags, queryPool types.QueryPool, query int) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "APIVersion")
-	ret0, _ := ret[0].(common.APIVersion)
-	return ret0
+	m.ctrl.Call(m, "CmdWriteTimestamp", commandBuffer, pipelineStage, queryPool, query)
 }
 
-// APIVersion indicates an expected call of APIVersion.
-func (mr *MockInstanceMockRecorder) APIVersion() *gomock.Call {
+// CmdWriteTimestamp indicates an expected call of CmdWriteTimestamp.
+func (mr *MockVulkanMockRecorder) CmdWriteTimestamp(commandBuffer, pipelineStage, queryPool, query any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "APIVersion", reflect.TypeOf((*MockInstance)(nil).APIVersion))
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CmdWriteTimestamp", reflect.TypeOf((*MockVulkan)(nil).CmdWriteTimestamp), commandBuffer, pipelineStage, queryPool, query)
 }
 
-// Destroy mocks base method.
-func (m *MockInstance) Destroy(callbacks *driver.AllocationCallbacks) {
+// CreateBuffer mocks base method.
+func (m *MockVulkan) CreateBuffer(device types.Device, allocationCallbacks *driver.AllocationCallbacks, o core1_0.BufferCreateInfo) (types.Buffer, common.VkResult, error) {
 	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "Destroy", callbacks)
-}
-
-// Destroy indicates an expected call of Destroy.
-func (mr *MockInstanceMockRecorder) Destroy(callbacks any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Destroy", reflect.TypeOf((*MockInstance)(nil).Destroy), callbacks)
-}
-
-// Driver mocks base method.
-func (m *MockInstance) Driver() driver.Driver {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Driver")
-	ret0, _ := ret[0].(driver.Driver)
-	return ret0
-}
-
-// Driver indicates an expected call of Driver.
-func (mr *MockInstanceMockRecorder) Driver() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Driver", reflect.TypeOf((*MockInstance)(nil).Driver))
-}
-
-// EnumeratePhysicalDeviceGroups mocks base method.
-func (m *MockInstance) EnumeratePhysicalDeviceGroups(outDataFactory func() *core1_1.PhysicalDeviceGroupProperties) ([]*core1_1.PhysicalDeviceGroupProperties, common.VkResult, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "EnumeratePhysicalDeviceGroups", outDataFactory)
-	ret0, _ := ret[0].([]*core1_1.PhysicalDeviceGroupProperties)
+	ret := m.ctrl.Call(m, "CreateBuffer", device, allocationCallbacks, o)
+	ret0, _ := ret[0].(types.Buffer)
 	ret1, _ := ret[1].(common.VkResult)
 	ret2, _ := ret[2].(error)
 	return ret0, ret1, ret2
 }
 
-// EnumeratePhysicalDeviceGroups indicates an expected call of EnumeratePhysicalDeviceGroups.
-func (mr *MockInstanceMockRecorder) EnumeratePhysicalDeviceGroups(outDataFactory any) *gomock.Call {
+// CreateBuffer indicates an expected call of CreateBuffer.
+func (mr *MockVulkanMockRecorder) CreateBuffer(device, allocationCallbacks, o any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "EnumeratePhysicalDeviceGroups", reflect.TypeOf((*MockInstance)(nil).EnumeratePhysicalDeviceGroups), outDataFactory)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateBuffer", reflect.TypeOf((*MockVulkan)(nil).CreateBuffer), device, allocationCallbacks, o)
 }
 
-// EnumeratePhysicalDevices mocks base method.
-func (m *MockInstance) EnumeratePhysicalDevices() ([]core1_0.PhysicalDevice, common.VkResult, error) {
+// CreateBufferView mocks base method.
+func (m *MockVulkan) CreateBufferView(device types.Device, allocationCallbacks *driver.AllocationCallbacks, o core1_0.BufferViewCreateInfo) (types.BufferView, common.VkResult, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "EnumeratePhysicalDevices")
-	ret0, _ := ret[0].([]core1_0.PhysicalDevice)
+	ret := m.ctrl.Call(m, "CreateBufferView", device, allocationCallbacks, o)
+	ret0, _ := ret[0].(types.BufferView)
 	ret1, _ := ret[1].(common.VkResult)
 	ret2, _ := ret[2].(error)
 	return ret0, ret1, ret2
 }
 
-// EnumeratePhysicalDevices indicates an expected call of EnumeratePhysicalDevices.
-func (mr *MockInstanceMockRecorder) EnumeratePhysicalDevices() *gomock.Call {
+// CreateBufferView indicates an expected call of CreateBufferView.
+func (mr *MockVulkanMockRecorder) CreateBufferView(device, allocationCallbacks, o any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "EnumeratePhysicalDevices", reflect.TypeOf((*MockInstance)(nil).EnumeratePhysicalDevices))
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateBufferView", reflect.TypeOf((*MockVulkan)(nil).CreateBufferView), device, allocationCallbacks, o)
 }
 
-// Handle mocks base method.
-func (m *MockInstance) Handle() driver.VkInstance {
+// CreateCommandPool mocks base method.
+func (m *MockVulkan) CreateCommandPool(device types.Device, allocationCallbacks *driver.AllocationCallbacks, o core1_0.CommandPoolCreateInfo) (types.CommandPool, common.VkResult, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Handle")
-	ret0, _ := ret[0].(driver.VkInstance)
-	return ret0
+	ret := m.ctrl.Call(m, "CreateCommandPool", device, allocationCallbacks, o)
+	ret0, _ := ret[0].(types.CommandPool)
+	ret1, _ := ret[1].(common.VkResult)
+	ret2, _ := ret[2].(error)
+	return ret0, ret1, ret2
 }
 
-// Handle indicates an expected call of Handle.
-func (mr *MockInstanceMockRecorder) Handle() *gomock.Call {
+// CreateCommandPool indicates an expected call of CreateCommandPool.
+func (mr *MockVulkanMockRecorder) CreateCommandPool(device, allocationCallbacks, o any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Handle", reflect.TypeOf((*MockInstance)(nil).Handle))
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateCommandPool", reflect.TypeOf((*MockVulkan)(nil).CreateCommandPool), device, allocationCallbacks, o)
 }
 
-// IsInstanceExtensionActive mocks base method.
-func (m *MockInstance) IsInstanceExtensionActive(extensionName string) bool {
+// CreateComputePipelines mocks base method.
+func (m *MockVulkan) CreateComputePipelines(device types.Device, pipelineCache types.PipelineCache, allocationCallbacks *driver.AllocationCallbacks, o ...core1_0.ComputePipelineCreateInfo) ([]types.Pipeline, common.VkResult, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "IsInstanceExtensionActive", extensionName)
-	ret0, _ := ret[0].(bool)
-	return ret0
+	varargs := []any{device, pipelineCache, allocationCallbacks}
+	for _, a := range o {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "CreateComputePipelines", varargs...)
+	ret0, _ := ret[0].([]types.Pipeline)
+	ret1, _ := ret[1].(common.VkResult)
+	ret2, _ := ret[2].(error)
+	return ret0, ret1, ret2
 }
 
-// IsInstanceExtensionActive indicates an expected call of IsInstanceExtensionActive.
-func (mr *MockInstanceMockRecorder) IsInstanceExtensionActive(extensionName any) *gomock.Call {
+// CreateComputePipelines indicates an expected call of CreateComputePipelines.
+func (mr *MockVulkanMockRecorder) CreateComputePipelines(device, pipelineCache, allocationCallbacks any, o ...any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "IsInstanceExtensionActive", reflect.TypeOf((*MockInstance)(nil).IsInstanceExtensionActive), extensionName)
+	varargs := append([]any{device, pipelineCache, allocationCallbacks}, o...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateComputePipelines", reflect.TypeOf((*MockVulkan)(nil).CreateComputePipelines), varargs...)
 }
 
-// MockPhysicalDevice is a mock of PhysicalDevice interface.
-type MockPhysicalDevice struct {
-	ctrl     *gomock.Controller
-	recorder *MockPhysicalDeviceMockRecorder
-	isgomock struct{}
+// CreateDescriptorPool mocks base method.
+func (m *MockVulkan) CreateDescriptorPool(device types.Device, allocationCallbacks *driver.AllocationCallbacks, o core1_0.DescriptorPoolCreateInfo) (types.DescriptorPool, common.VkResult, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreateDescriptorPool", device, allocationCallbacks, o)
+	ret0, _ := ret[0].(types.DescriptorPool)
+	ret1, _ := ret[1].(common.VkResult)
+	ret2, _ := ret[2].(error)
+	return ret0, ret1, ret2
 }
 
-// MockPhysicalDeviceMockRecorder is the mock recorder for MockPhysicalDevice.
-type MockPhysicalDeviceMockRecorder struct {
-	mock *MockPhysicalDevice
+// CreateDescriptorPool indicates an expected call of CreateDescriptorPool.
+func (mr *MockVulkanMockRecorder) CreateDescriptorPool(device, allocationCallbacks, o any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateDescriptorPool", reflect.TypeOf((*MockVulkan)(nil).CreateDescriptorPool), device, allocationCallbacks, o)
 }
 
-// NewMockPhysicalDevice creates a new mock instance.
-func NewMockPhysicalDevice(ctrl *gomock.Controller) *MockPhysicalDevice {
-	mock := &MockPhysicalDevice{ctrl: ctrl}
-	mock.recorder = &MockPhysicalDeviceMockRecorder{mock}
-	return mock
+// CreateDescriptorSetLayout mocks base method.
+func (m *MockVulkan) CreateDescriptorSetLayout(device types.Device, allocationCallbacks *driver.AllocationCallbacks, o core1_0.DescriptorSetLayoutCreateInfo) (types.DescriptorSetLayout, common.VkResult, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreateDescriptorSetLayout", device, allocationCallbacks, o)
+	ret0, _ := ret[0].(types.DescriptorSetLayout)
+	ret1, _ := ret[1].(common.VkResult)
+	ret2, _ := ret[2].(error)
+	return ret0, ret1, ret2
 }
 
-// EXPECT returns an object that allows the caller to indicate expected use.
-func (m *MockPhysicalDevice) EXPECT() *MockPhysicalDeviceMockRecorder {
-	return m.recorder
+// CreateDescriptorSetLayout indicates an expected call of CreateDescriptorSetLayout.
+func (mr *MockVulkanMockRecorder) CreateDescriptorSetLayout(device, allocationCallbacks, o any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateDescriptorSetLayout", reflect.TypeOf((*MockVulkan)(nil).CreateDescriptorSetLayout), device, allocationCallbacks, o)
+}
+
+// CreateDescriptorUpdateTemplate mocks base method.
+func (m *MockVulkan) CreateDescriptorUpdateTemplate(device types.Device, o core1_1.DescriptorUpdateTemplateCreateInfo, allocator *driver.AllocationCallbacks) (types.DescriptorUpdateTemplate, common.VkResult, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreateDescriptorUpdateTemplate", device, o, allocator)
+	ret0, _ := ret[0].(types.DescriptorUpdateTemplate)
+	ret1, _ := ret[1].(common.VkResult)
+	ret2, _ := ret[2].(error)
+	return ret0, ret1, ret2
+}
+
+// CreateDescriptorUpdateTemplate indicates an expected call of CreateDescriptorUpdateTemplate.
+func (mr *MockVulkanMockRecorder) CreateDescriptorUpdateTemplate(device, o, allocator any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateDescriptorUpdateTemplate", reflect.TypeOf((*MockVulkan)(nil).CreateDescriptorUpdateTemplate), device, o, allocator)
 }
 
 // CreateDevice mocks base method.
-func (m *MockPhysicalDevice) CreateDevice(allocationCallbacks *driver.AllocationCallbacks, options core1_0.DeviceCreateInfo) (core1_0.Device, common.VkResult, error) {
+func (m *MockVulkan) CreateDevice(physicalDevice types.PhysicalDevice, allocationCallbacks *driver.AllocationCallbacks, options core1_0.DeviceCreateInfo) (types.Device, common.VkResult, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreateDevice", allocationCallbacks, options)
-	ret0, _ := ret[0].(core1_0.Device)
+	ret := m.ctrl.Call(m, "CreateDevice", physicalDevice, allocationCallbacks, options)
+	ret0, _ := ret[0].(types.Device)
 	ret1, _ := ret[1].(common.VkResult)
 	ret2, _ := ret[2].(error)
 	return ret0, ret1, ret2
 }
 
 // CreateDevice indicates an expected call of CreateDevice.
-func (mr *MockPhysicalDeviceMockRecorder) CreateDevice(allocationCallbacks, options any) *gomock.Call {
+func (mr *MockVulkanMockRecorder) CreateDevice(physicalDevice, allocationCallbacks, options any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateDevice", reflect.TypeOf((*MockPhysicalDevice)(nil).CreateDevice), allocationCallbacks, options)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateDevice", reflect.TypeOf((*MockVulkan)(nil).CreateDevice), physicalDevice, allocationCallbacks, options)
 }
 
-// DeviceAPIVersion mocks base method.
-func (m *MockPhysicalDevice) DeviceAPIVersion() common.APIVersion {
+// CreateEvent mocks base method.
+func (m *MockVulkan) CreateEvent(device types.Device, allocationCallbacks *driver.AllocationCallbacks, options core1_0.EventCreateInfo) (types.Event, common.VkResult, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "DeviceAPIVersion")
-	ret0, _ := ret[0].(common.APIVersion)
-	return ret0
+	ret := m.ctrl.Call(m, "CreateEvent", device, allocationCallbacks, options)
+	ret0, _ := ret[0].(types.Event)
+	ret1, _ := ret[1].(common.VkResult)
+	ret2, _ := ret[2].(error)
+	return ret0, ret1, ret2
 }
 
-// DeviceAPIVersion indicates an expected call of DeviceAPIVersion.
-func (mr *MockPhysicalDeviceMockRecorder) DeviceAPIVersion() *gomock.Call {
+// CreateEvent indicates an expected call of CreateEvent.
+func (mr *MockVulkanMockRecorder) CreateEvent(device, allocationCallbacks, options any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeviceAPIVersion", reflect.TypeOf((*MockPhysicalDevice)(nil).DeviceAPIVersion))
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateEvent", reflect.TypeOf((*MockVulkan)(nil).CreateEvent), device, allocationCallbacks, options)
 }
 
-// Driver mocks base method.
-func (m *MockPhysicalDevice) Driver() driver.Driver {
+// CreateFence mocks base method.
+func (m *MockVulkan) CreateFence(device types.Device, allocationCallbacks *driver.AllocationCallbacks, o core1_0.FenceCreateInfo) (types.Fence, common.VkResult, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Driver")
-	ret0, _ := ret[0].(driver.Driver)
-	return ret0
+	ret := m.ctrl.Call(m, "CreateFence", device, allocationCallbacks, o)
+	ret0, _ := ret[0].(types.Fence)
+	ret1, _ := ret[1].(common.VkResult)
+	ret2, _ := ret[2].(error)
+	return ret0, ret1, ret2
 }
 
-// Driver indicates an expected call of Driver.
-func (mr *MockPhysicalDeviceMockRecorder) Driver() *gomock.Call {
+// CreateFence indicates an expected call of CreateFence.
+func (mr *MockVulkanMockRecorder) CreateFence(device, allocationCallbacks, o any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Driver", reflect.TypeOf((*MockPhysicalDevice)(nil).Driver))
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateFence", reflect.TypeOf((*MockVulkan)(nil).CreateFence), device, allocationCallbacks, o)
+}
+
+// CreateFramebuffer mocks base method.
+func (m *MockVulkan) CreateFramebuffer(device types.Device, allocationCallbacks *driver.AllocationCallbacks, o core1_0.FramebufferCreateInfo) (types.Framebuffer, common.VkResult, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreateFramebuffer", device, allocationCallbacks, o)
+	ret0, _ := ret[0].(types.Framebuffer)
+	ret1, _ := ret[1].(common.VkResult)
+	ret2, _ := ret[2].(error)
+	return ret0, ret1, ret2
+}
+
+// CreateFramebuffer indicates an expected call of CreateFramebuffer.
+func (mr *MockVulkanMockRecorder) CreateFramebuffer(device, allocationCallbacks, o any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateFramebuffer", reflect.TypeOf((*MockVulkan)(nil).CreateFramebuffer), device, allocationCallbacks, o)
+}
+
+// CreateGraphicsPipelines mocks base method.
+func (m *MockVulkan) CreateGraphicsPipelines(device types.Device, pipelineCache types.PipelineCache, allocationCallbacks *driver.AllocationCallbacks, o ...core1_0.GraphicsPipelineCreateInfo) ([]types.Pipeline, common.VkResult, error) {
+	m.ctrl.T.Helper()
+	varargs := []any{device, pipelineCache, allocationCallbacks}
+	for _, a := range o {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "CreateGraphicsPipelines", varargs...)
+	ret0, _ := ret[0].([]types.Pipeline)
+	ret1, _ := ret[1].(common.VkResult)
+	ret2, _ := ret[2].(error)
+	return ret0, ret1, ret2
+}
+
+// CreateGraphicsPipelines indicates an expected call of CreateGraphicsPipelines.
+func (mr *MockVulkanMockRecorder) CreateGraphicsPipelines(device, pipelineCache, allocationCallbacks any, o ...any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]any{device, pipelineCache, allocationCallbacks}, o...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateGraphicsPipelines", reflect.TypeOf((*MockVulkan)(nil).CreateGraphicsPipelines), varargs...)
+}
+
+// CreateImage mocks base method.
+func (m *MockVulkan) CreateImage(device types.Device, allocationCallbacks *driver.AllocationCallbacks, options core1_0.ImageCreateInfo) (types.Image, common.VkResult, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreateImage", device, allocationCallbacks, options)
+	ret0, _ := ret[0].(types.Image)
+	ret1, _ := ret[1].(common.VkResult)
+	ret2, _ := ret[2].(error)
+	return ret0, ret1, ret2
+}
+
+// CreateImage indicates an expected call of CreateImage.
+func (mr *MockVulkanMockRecorder) CreateImage(device, allocationCallbacks, options any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateImage", reflect.TypeOf((*MockVulkan)(nil).CreateImage), device, allocationCallbacks, options)
+}
+
+// CreateImageView mocks base method.
+func (m *MockVulkan) CreateImageView(device types.Device, allocationCallbacks *driver.AllocationCallbacks, o core1_0.ImageViewCreateInfo) (types.ImageView, common.VkResult, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreateImageView", device, allocationCallbacks, o)
+	ret0, _ := ret[0].(types.ImageView)
+	ret1, _ := ret[1].(common.VkResult)
+	ret2, _ := ret[2].(error)
+	return ret0, ret1, ret2
+}
+
+// CreateImageView indicates an expected call of CreateImageView.
+func (mr *MockVulkanMockRecorder) CreateImageView(device, allocationCallbacks, o any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateImageView", reflect.TypeOf((*MockVulkan)(nil).CreateImageView), device, allocationCallbacks, o)
+}
+
+// CreatePipelineCache mocks base method.
+func (m *MockVulkan) CreatePipelineCache(device types.Device, allocationCallbacks *driver.AllocationCallbacks, o core1_0.PipelineCacheCreateInfo) (types.PipelineCache, common.VkResult, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreatePipelineCache", device, allocationCallbacks, o)
+	ret0, _ := ret[0].(types.PipelineCache)
+	ret1, _ := ret[1].(common.VkResult)
+	ret2, _ := ret[2].(error)
+	return ret0, ret1, ret2
+}
+
+// CreatePipelineCache indicates an expected call of CreatePipelineCache.
+func (mr *MockVulkanMockRecorder) CreatePipelineCache(device, allocationCallbacks, o any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreatePipelineCache", reflect.TypeOf((*MockVulkan)(nil).CreatePipelineCache), device, allocationCallbacks, o)
+}
+
+// CreatePipelineLayout mocks base method.
+func (m *MockVulkan) CreatePipelineLayout(device types.Device, allocationCallbacks *driver.AllocationCallbacks, o core1_0.PipelineLayoutCreateInfo) (types.PipelineLayout, common.VkResult, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreatePipelineLayout", device, allocationCallbacks, o)
+	ret0, _ := ret[0].(types.PipelineLayout)
+	ret1, _ := ret[1].(common.VkResult)
+	ret2, _ := ret[2].(error)
+	return ret0, ret1, ret2
+}
+
+// CreatePipelineLayout indicates an expected call of CreatePipelineLayout.
+func (mr *MockVulkanMockRecorder) CreatePipelineLayout(device, allocationCallbacks, o any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreatePipelineLayout", reflect.TypeOf((*MockVulkan)(nil).CreatePipelineLayout), device, allocationCallbacks, o)
+}
+
+// CreateQueryPool mocks base method.
+func (m *MockVulkan) CreateQueryPool(device types.Device, allocationCallbacks *driver.AllocationCallbacks, o core1_0.QueryPoolCreateInfo) (types.QueryPool, common.VkResult, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreateQueryPool", device, allocationCallbacks, o)
+	ret0, _ := ret[0].(types.QueryPool)
+	ret1, _ := ret[1].(common.VkResult)
+	ret2, _ := ret[2].(error)
+	return ret0, ret1, ret2
+}
+
+// CreateQueryPool indicates an expected call of CreateQueryPool.
+func (mr *MockVulkanMockRecorder) CreateQueryPool(device, allocationCallbacks, o any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateQueryPool", reflect.TypeOf((*MockVulkan)(nil).CreateQueryPool), device, allocationCallbacks, o)
+}
+
+// CreateRenderPass mocks base method.
+func (m *MockVulkan) CreateRenderPass(device types.Device, allocationCallbacks *driver.AllocationCallbacks, o core1_0.RenderPassCreateInfo) (types.RenderPass, common.VkResult, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreateRenderPass", device, allocationCallbacks, o)
+	ret0, _ := ret[0].(types.RenderPass)
+	ret1, _ := ret[1].(common.VkResult)
+	ret2, _ := ret[2].(error)
+	return ret0, ret1, ret2
+}
+
+// CreateRenderPass indicates an expected call of CreateRenderPass.
+func (mr *MockVulkanMockRecorder) CreateRenderPass(device, allocationCallbacks, o any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateRenderPass", reflect.TypeOf((*MockVulkan)(nil).CreateRenderPass), device, allocationCallbacks, o)
+}
+
+// CreateSampler mocks base method.
+func (m *MockVulkan) CreateSampler(device types.Device, allocationCallbacks *driver.AllocationCallbacks, o core1_0.SamplerCreateInfo) (types.Sampler, common.VkResult, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreateSampler", device, allocationCallbacks, o)
+	ret0, _ := ret[0].(types.Sampler)
+	ret1, _ := ret[1].(common.VkResult)
+	ret2, _ := ret[2].(error)
+	return ret0, ret1, ret2
+}
+
+// CreateSampler indicates an expected call of CreateSampler.
+func (mr *MockVulkanMockRecorder) CreateSampler(device, allocationCallbacks, o any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateSampler", reflect.TypeOf((*MockVulkan)(nil).CreateSampler), device, allocationCallbacks, o)
+}
+
+// CreateSamplerYcbcrConversion mocks base method.
+func (m *MockVulkan) CreateSamplerYcbcrConversion(device types.Device, o core1_1.SamplerYcbcrConversionCreateInfo, allocator *driver.AllocationCallbacks) (types.SamplerYcbcrConversion, common.VkResult, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreateSamplerYcbcrConversion", device, o, allocator)
+	ret0, _ := ret[0].(types.SamplerYcbcrConversion)
+	ret1, _ := ret[1].(common.VkResult)
+	ret2, _ := ret[2].(error)
+	return ret0, ret1, ret2
+}
+
+// CreateSamplerYcbcrConversion indicates an expected call of CreateSamplerYcbcrConversion.
+func (mr *MockVulkanMockRecorder) CreateSamplerYcbcrConversion(device, o, allocator any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateSamplerYcbcrConversion", reflect.TypeOf((*MockVulkan)(nil).CreateSamplerYcbcrConversion), device, o, allocator)
+}
+
+// CreateSemaphore mocks base method.
+func (m *MockVulkan) CreateSemaphore(device types.Device, allocationCallbacks *driver.AllocationCallbacks, o core1_0.SemaphoreCreateInfo) (types.Semaphore, common.VkResult, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreateSemaphore", device, allocationCallbacks, o)
+	ret0, _ := ret[0].(types.Semaphore)
+	ret1, _ := ret[1].(common.VkResult)
+	ret2, _ := ret[2].(error)
+	return ret0, ret1, ret2
+}
+
+// CreateSemaphore indicates an expected call of CreateSemaphore.
+func (mr *MockVulkanMockRecorder) CreateSemaphore(device, allocationCallbacks, o any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateSemaphore", reflect.TypeOf((*MockVulkan)(nil).CreateSemaphore), device, allocationCallbacks, o)
+}
+
+// CreateShaderModule mocks base method.
+func (m *MockVulkan) CreateShaderModule(device types.Device, allocationCallbacks *driver.AllocationCallbacks, o core1_0.ShaderModuleCreateInfo) (types.ShaderModule, common.VkResult, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreateShaderModule", device, allocationCallbacks, o)
+	ret0, _ := ret[0].(types.ShaderModule)
+	ret1, _ := ret[1].(common.VkResult)
+	ret2, _ := ret[2].(error)
+	return ret0, ret1, ret2
+}
+
+// CreateShaderModule indicates an expected call of CreateShaderModule.
+func (mr *MockVulkanMockRecorder) CreateShaderModule(device, allocationCallbacks, o any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateShaderModule", reflect.TypeOf((*MockVulkan)(nil).CreateShaderModule), device, allocationCallbacks, o)
+}
+
+// DestroyBuffer mocks base method.
+func (m *MockVulkan) DestroyBuffer(buffer types.Buffer, callbacks *driver.AllocationCallbacks) {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "DestroyBuffer", buffer, callbacks)
+}
+
+// DestroyBuffer indicates an expected call of DestroyBuffer.
+func (mr *MockVulkanMockRecorder) DestroyBuffer(buffer, callbacks any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DestroyBuffer", reflect.TypeOf((*MockVulkan)(nil).DestroyBuffer), buffer, callbacks)
+}
+
+// DestroyBufferView mocks base method.
+func (m *MockVulkan) DestroyBufferView(buffer types.BufferView, callbacks *driver.AllocationCallbacks) {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "DestroyBufferView", buffer, callbacks)
+}
+
+// DestroyBufferView indicates an expected call of DestroyBufferView.
+func (mr *MockVulkanMockRecorder) DestroyBufferView(buffer, callbacks any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DestroyBufferView", reflect.TypeOf((*MockVulkan)(nil).DestroyBufferView), buffer, callbacks)
+}
+
+// DestroyCommandPool mocks base method.
+func (m *MockVulkan) DestroyCommandPool(commandPool types.CommandPool, callbacks *driver.AllocationCallbacks) {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "DestroyCommandPool", commandPool, callbacks)
+}
+
+// DestroyCommandPool indicates an expected call of DestroyCommandPool.
+func (mr *MockVulkanMockRecorder) DestroyCommandPool(commandPool, callbacks any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DestroyCommandPool", reflect.TypeOf((*MockVulkan)(nil).DestroyCommandPool), commandPool, callbacks)
+}
+
+// DestroyDescriptorPool mocks base method.
+func (m *MockVulkan) DestroyDescriptorPool(descriptorPool types.DescriptorPool, callbacks *driver.AllocationCallbacks) {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "DestroyDescriptorPool", descriptorPool, callbacks)
+}
+
+// DestroyDescriptorPool indicates an expected call of DestroyDescriptorPool.
+func (mr *MockVulkanMockRecorder) DestroyDescriptorPool(descriptorPool, callbacks any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DestroyDescriptorPool", reflect.TypeOf((*MockVulkan)(nil).DestroyDescriptorPool), descriptorPool, callbacks)
+}
+
+// DestroyDescriptorSetLayout mocks base method.
+func (m *MockVulkan) DestroyDescriptorSetLayout(descriptorSetLayout types.DescriptorSetLayout, callbacks *driver.AllocationCallbacks) {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "DestroyDescriptorSetLayout", descriptorSetLayout, callbacks)
+}
+
+// DestroyDescriptorSetLayout indicates an expected call of DestroyDescriptorSetLayout.
+func (mr *MockVulkanMockRecorder) DestroyDescriptorSetLayout(descriptorSetLayout, callbacks any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DestroyDescriptorSetLayout", reflect.TypeOf((*MockVulkan)(nil).DestroyDescriptorSetLayout), descriptorSetLayout, callbacks)
+}
+
+// DestroyDescriptorUpdateTemplate mocks base method.
+func (m *MockVulkan) DestroyDescriptorUpdateTemplate(template types.DescriptorUpdateTemplate, allocator *driver.AllocationCallbacks) {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "DestroyDescriptorUpdateTemplate", template, allocator)
+}
+
+// DestroyDescriptorUpdateTemplate indicates an expected call of DestroyDescriptorUpdateTemplate.
+func (mr *MockVulkanMockRecorder) DestroyDescriptorUpdateTemplate(template, allocator any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DestroyDescriptorUpdateTemplate", reflect.TypeOf((*MockVulkan)(nil).DestroyDescriptorUpdateTemplate), template, allocator)
+}
+
+// DestroyDevice mocks base method.
+func (m *MockVulkan) DestroyDevice(device types.Device, callbacks *driver.AllocationCallbacks) {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "DestroyDevice", device, callbacks)
+}
+
+// DestroyDevice indicates an expected call of DestroyDevice.
+func (mr *MockVulkanMockRecorder) DestroyDevice(device, callbacks any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DestroyDevice", reflect.TypeOf((*MockVulkan)(nil).DestroyDevice), device, callbacks)
+}
+
+// DestroyEvent mocks base method.
+func (m *MockVulkan) DestroyEvent(event types.Event, callbacks *driver.AllocationCallbacks) {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "DestroyEvent", event, callbacks)
+}
+
+// DestroyEvent indicates an expected call of DestroyEvent.
+func (mr *MockVulkanMockRecorder) DestroyEvent(event, callbacks any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DestroyEvent", reflect.TypeOf((*MockVulkan)(nil).DestroyEvent), event, callbacks)
+}
+
+// DestroyFence mocks base method.
+func (m *MockVulkan) DestroyFence(fence types.Fence, callbacks *driver.AllocationCallbacks) {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "DestroyFence", fence, callbacks)
+}
+
+// DestroyFence indicates an expected call of DestroyFence.
+func (mr *MockVulkanMockRecorder) DestroyFence(fence, callbacks any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DestroyFence", reflect.TypeOf((*MockVulkan)(nil).DestroyFence), fence, callbacks)
+}
+
+// DestroyFramebuffer mocks base method.
+func (m *MockVulkan) DestroyFramebuffer(framebuffer types.Framebuffer, callbacks *driver.AllocationCallbacks) {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "DestroyFramebuffer", framebuffer, callbacks)
+}
+
+// DestroyFramebuffer indicates an expected call of DestroyFramebuffer.
+func (mr *MockVulkanMockRecorder) DestroyFramebuffer(framebuffer, callbacks any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DestroyFramebuffer", reflect.TypeOf((*MockVulkan)(nil).DestroyFramebuffer), framebuffer, callbacks)
+}
+
+// DestroyImage mocks base method.
+func (m *MockVulkan) DestroyImage(image types.Image, callbacks *driver.AllocationCallbacks) {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "DestroyImage", image, callbacks)
+}
+
+// DestroyImage indicates an expected call of DestroyImage.
+func (mr *MockVulkanMockRecorder) DestroyImage(image, callbacks any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DestroyImage", reflect.TypeOf((*MockVulkan)(nil).DestroyImage), image, callbacks)
+}
+
+// DestroyImageView mocks base method.
+func (m *MockVulkan) DestroyImageView(image types.Image, callbacks *driver.AllocationCallbacks) {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "DestroyImageView", image, callbacks)
+}
+
+// DestroyImageView indicates an expected call of DestroyImageView.
+func (mr *MockVulkanMockRecorder) DestroyImageView(image, callbacks any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DestroyImageView", reflect.TypeOf((*MockVulkan)(nil).DestroyImageView), image, callbacks)
+}
+
+// DestroyInstance mocks base method.
+func (m *MockVulkan) DestroyInstance(instance types.Instance, callbacks *driver.AllocationCallbacks) {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "DestroyInstance", instance, callbacks)
+}
+
+// DestroyInstance indicates an expected call of DestroyInstance.
+func (mr *MockVulkanMockRecorder) DestroyInstance(instance, callbacks any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DestroyInstance", reflect.TypeOf((*MockVulkan)(nil).DestroyInstance), instance, callbacks)
+}
+
+// DestroyPipeline mocks base method.
+func (m *MockVulkan) DestroyPipeline(pipeline types.Pipeline, callbacks *driver.AllocationCallbacks) {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "DestroyPipeline", pipeline, callbacks)
+}
+
+// DestroyPipeline indicates an expected call of DestroyPipeline.
+func (mr *MockVulkanMockRecorder) DestroyPipeline(pipeline, callbacks any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DestroyPipeline", reflect.TypeOf((*MockVulkan)(nil).DestroyPipeline), pipeline, callbacks)
+}
+
+// DestroyPipelineCache mocks base method.
+func (m *MockVulkan) DestroyPipelineCache(cache types.PipelineCache, callbacks *driver.AllocationCallbacks) {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "DestroyPipelineCache", cache, callbacks)
+}
+
+// DestroyPipelineCache indicates an expected call of DestroyPipelineCache.
+func (mr *MockVulkanMockRecorder) DestroyPipelineCache(cache, callbacks any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DestroyPipelineCache", reflect.TypeOf((*MockVulkan)(nil).DestroyPipelineCache), cache, callbacks)
+}
+
+// DestroyPipelineLayout mocks base method.
+func (m *MockVulkan) DestroyPipelineLayout(layout types.PipelineLayout, callbacks *driver.AllocationCallbacks) {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "DestroyPipelineLayout", layout, callbacks)
+}
+
+// DestroyPipelineLayout indicates an expected call of DestroyPipelineLayout.
+func (mr *MockVulkanMockRecorder) DestroyPipelineLayout(layout, callbacks any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DestroyPipelineLayout", reflect.TypeOf((*MockVulkan)(nil).DestroyPipelineLayout), layout, callbacks)
+}
+
+// DestroyQueryPool mocks base method.
+func (m *MockVulkan) DestroyQueryPool(queryPool types.QueryPool, callbacks *driver.AllocationCallbacks) {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "DestroyQueryPool", queryPool, callbacks)
+}
+
+// DestroyQueryPool indicates an expected call of DestroyQueryPool.
+func (mr *MockVulkanMockRecorder) DestroyQueryPool(queryPool, callbacks any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DestroyQueryPool", reflect.TypeOf((*MockVulkan)(nil).DestroyQueryPool), queryPool, callbacks)
+}
+
+// DestroyRenderPass mocks base method.
+func (m *MockVulkan) DestroyRenderPass(renderPass types.RenderPass, callbacks *driver.AllocationCallbacks) {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "DestroyRenderPass", renderPass, callbacks)
+}
+
+// DestroyRenderPass indicates an expected call of DestroyRenderPass.
+func (mr *MockVulkanMockRecorder) DestroyRenderPass(renderPass, callbacks any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DestroyRenderPass", reflect.TypeOf((*MockVulkan)(nil).DestroyRenderPass), renderPass, callbacks)
+}
+
+// DestroySampler mocks base method.
+func (m *MockVulkan) DestroySampler(sampler types.Sampler, callbacks *driver.AllocationCallbacks) {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "DestroySampler", sampler, callbacks)
+}
+
+// DestroySampler indicates an expected call of DestroySampler.
+func (mr *MockVulkanMockRecorder) DestroySampler(sampler, callbacks any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DestroySampler", reflect.TypeOf((*MockVulkan)(nil).DestroySampler), sampler, callbacks)
+}
+
+// DestroySamplerYcbcrConversion mocks base method.
+func (m *MockVulkan) DestroySamplerYcbcrConversion(conversion types.SamplerYcbcrConversion, allocator *driver.AllocationCallbacks) {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "DestroySamplerYcbcrConversion", conversion, allocator)
+}
+
+// DestroySamplerYcbcrConversion indicates an expected call of DestroySamplerYcbcrConversion.
+func (mr *MockVulkanMockRecorder) DestroySamplerYcbcrConversion(conversion, allocator any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DestroySamplerYcbcrConversion", reflect.TypeOf((*MockVulkan)(nil).DestroySamplerYcbcrConversion), conversion, allocator)
+}
+
+// DestroySemaphore mocks base method.
+func (m *MockVulkan) DestroySemaphore(semaphore types.Semaphore, callbacks *driver.AllocationCallbacks) {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "DestroySemaphore", semaphore, callbacks)
+}
+
+// DestroySemaphore indicates an expected call of DestroySemaphore.
+func (mr *MockVulkanMockRecorder) DestroySemaphore(semaphore, callbacks any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DestroySemaphore", reflect.TypeOf((*MockVulkan)(nil).DestroySemaphore), semaphore, callbacks)
+}
+
+// DestroyShaderModule mocks base method.
+func (m *MockVulkan) DestroyShaderModule(shaderModule types.ShaderModule, callbacks *driver.AllocationCallbacks) {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "DestroyShaderModule", shaderModule, callbacks)
+}
+
+// DestroyShaderModule indicates an expected call of DestroyShaderModule.
+func (mr *MockVulkanMockRecorder) DestroyShaderModule(shaderModule, callbacks any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DestroyShaderModule", reflect.TypeOf((*MockVulkan)(nil).DestroyShaderModule), shaderModule, callbacks)
+}
+
+// DeviceWaitIdle mocks base method.
+func (m *MockVulkan) DeviceWaitIdle(device types.Device) (common.VkResult, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DeviceWaitIdle", device)
+	ret0, _ := ret[0].(common.VkResult)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// DeviceWaitIdle indicates an expected call of DeviceWaitIdle.
+func (mr *MockVulkanMockRecorder) DeviceWaitIdle(device any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeviceWaitIdle", reflect.TypeOf((*MockVulkan)(nil).DeviceWaitIdle), device)
+}
+
+// EndCommandBuffer mocks base method.
+func (m *MockVulkan) EndCommandBuffer(commandBuffer types.CommandBuffer) (common.VkResult, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "EndCommandBuffer", commandBuffer)
+	ret0, _ := ret[0].(common.VkResult)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// EndCommandBuffer indicates an expected call of EndCommandBuffer.
+func (mr *MockVulkanMockRecorder) EndCommandBuffer(commandBuffer any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "EndCommandBuffer", reflect.TypeOf((*MockVulkan)(nil).EndCommandBuffer), commandBuffer)
 }
 
 // EnumerateDeviceExtensionProperties mocks base method.
-func (m *MockPhysicalDevice) EnumerateDeviceExtensionProperties() (map[string]*core1_0.ExtensionProperties, common.VkResult, error) {
+func (m *MockVulkan) EnumerateDeviceExtensionProperties(physicalDevice types.PhysicalDevice) (map[string]*core1_0.ExtensionProperties, common.VkResult, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "EnumerateDeviceExtensionProperties")
+	ret := m.ctrl.Call(m, "EnumerateDeviceExtensionProperties", physicalDevice)
 	ret0, _ := ret[0].(map[string]*core1_0.ExtensionProperties)
 	ret1, _ := ret[1].(common.VkResult)
 	ret2, _ := ret[2].(error)
@@ -3262,15 +1458,15 @@ func (m *MockPhysicalDevice) EnumerateDeviceExtensionProperties() (map[string]*c
 }
 
 // EnumerateDeviceExtensionProperties indicates an expected call of EnumerateDeviceExtensionProperties.
-func (mr *MockPhysicalDeviceMockRecorder) EnumerateDeviceExtensionProperties() *gomock.Call {
+func (mr *MockVulkanMockRecorder) EnumerateDeviceExtensionProperties(physicalDevice any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "EnumerateDeviceExtensionProperties", reflect.TypeOf((*MockPhysicalDevice)(nil).EnumerateDeviceExtensionProperties))
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "EnumerateDeviceExtensionProperties", reflect.TypeOf((*MockVulkan)(nil).EnumerateDeviceExtensionProperties), physicalDevice)
 }
 
 // EnumerateDeviceExtensionPropertiesForLayer mocks base method.
-func (m *MockPhysicalDevice) EnumerateDeviceExtensionPropertiesForLayer(layerName string) (map[string]*core1_0.ExtensionProperties, common.VkResult, error) {
+func (m *MockVulkan) EnumerateDeviceExtensionPropertiesForLayer(physicalDevice types.PhysicalDevice, layerName string) (map[string]*core1_0.ExtensionProperties, common.VkResult, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "EnumerateDeviceExtensionPropertiesForLayer", layerName)
+	ret := m.ctrl.Call(m, "EnumerateDeviceExtensionPropertiesForLayer", physicalDevice, layerName)
 	ret0, _ := ret[0].(map[string]*core1_0.ExtensionProperties)
 	ret1, _ := ret[1].(common.VkResult)
 	ret2, _ := ret[2].(error)
@@ -3278,15 +1474,15 @@ func (m *MockPhysicalDevice) EnumerateDeviceExtensionPropertiesForLayer(layerNam
 }
 
 // EnumerateDeviceExtensionPropertiesForLayer indicates an expected call of EnumerateDeviceExtensionPropertiesForLayer.
-func (mr *MockPhysicalDeviceMockRecorder) EnumerateDeviceExtensionPropertiesForLayer(layerName any) *gomock.Call {
+func (mr *MockVulkanMockRecorder) EnumerateDeviceExtensionPropertiesForLayer(physicalDevice, layerName any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "EnumerateDeviceExtensionPropertiesForLayer", reflect.TypeOf((*MockPhysicalDevice)(nil).EnumerateDeviceExtensionPropertiesForLayer), layerName)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "EnumerateDeviceExtensionPropertiesForLayer", reflect.TypeOf((*MockVulkan)(nil).EnumerateDeviceExtensionPropertiesForLayer), physicalDevice, layerName)
 }
 
 // EnumerateDeviceLayerProperties mocks base method.
-func (m *MockPhysicalDevice) EnumerateDeviceLayerProperties() (map[string]*core1_0.LayerProperties, common.VkResult, error) {
+func (m *MockVulkan) EnumerateDeviceLayerProperties(physicalDevice types.PhysicalDevice) (map[string]*core1_0.LayerProperties, common.VkResult, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "EnumerateDeviceLayerProperties")
+	ret := m.ctrl.Call(m, "EnumerateDeviceLayerProperties", physicalDevice)
 	ret0, _ := ret[0].(map[string]*core1_0.LayerProperties)
 	ret1, _ := ret[1].(common.VkResult)
 	ret2, _ := ret[2].(error)
@@ -3294,1344 +1490,892 @@ func (m *MockPhysicalDevice) EnumerateDeviceLayerProperties() (map[string]*core1
 }
 
 // EnumerateDeviceLayerProperties indicates an expected call of EnumerateDeviceLayerProperties.
-func (mr *MockPhysicalDeviceMockRecorder) EnumerateDeviceLayerProperties() *gomock.Call {
+func (mr *MockVulkanMockRecorder) EnumerateDeviceLayerProperties(physicalDevice any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "EnumerateDeviceLayerProperties", reflect.TypeOf((*MockPhysicalDevice)(nil).EnumerateDeviceLayerProperties))
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "EnumerateDeviceLayerProperties", reflect.TypeOf((*MockVulkan)(nil).EnumerateDeviceLayerProperties), physicalDevice)
 }
 
-// ExternalBufferProperties mocks base method.
-func (m *MockPhysicalDevice) ExternalBufferProperties(o core1_1.PhysicalDeviceExternalBufferInfo, outData *core1_1.ExternalBufferProperties) error {
+// EnumeratePhysicalDeviceGroups mocks base method.
+func (m *MockVulkan) EnumeratePhysicalDeviceGroups(instance types.Instance, outDataFactory func() *core1_1.PhysicalDeviceGroupProperties) ([]*core1_1.PhysicalDeviceGroupProperties, common.VkResult, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "ExternalBufferProperties", o, outData)
+	ret := m.ctrl.Call(m, "EnumeratePhysicalDeviceGroups", instance, outDataFactory)
+	ret0, _ := ret[0].([]*core1_1.PhysicalDeviceGroupProperties)
+	ret1, _ := ret[1].(common.VkResult)
+	ret2, _ := ret[2].(error)
+	return ret0, ret1, ret2
+}
+
+// EnumeratePhysicalDeviceGroups indicates an expected call of EnumeratePhysicalDeviceGroups.
+func (mr *MockVulkanMockRecorder) EnumeratePhysicalDeviceGroups(instance, outDataFactory any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "EnumeratePhysicalDeviceGroups", reflect.TypeOf((*MockVulkan)(nil).EnumeratePhysicalDeviceGroups), instance, outDataFactory)
+}
+
+// EnumeratePhysicalDevices mocks base method.
+func (m *MockVulkan) EnumeratePhysicalDevices(instance types.Instance) ([]types.PhysicalDevice, common.VkResult, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "EnumeratePhysicalDevices", instance)
+	ret0, _ := ret[0].([]types.PhysicalDevice)
+	ret1, _ := ret[1].(common.VkResult)
+	ret2, _ := ret[2].(error)
+	return ret0, ret1, ret2
+}
+
+// EnumeratePhysicalDevices indicates an expected call of EnumeratePhysicalDevices.
+func (mr *MockVulkanMockRecorder) EnumeratePhysicalDevices(instance any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "EnumeratePhysicalDevices", reflect.TypeOf((*MockVulkan)(nil).EnumeratePhysicalDevices), instance)
+}
+
+// FlushMappedMemoryRanges mocks base method.
+func (m *MockVulkan) FlushMappedMemoryRanges(ranges ...core1_0.MappedMemoryRange) (common.VkResult, error) {
+	m.ctrl.T.Helper()
+	varargs := []any{}
+	for _, a := range ranges {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "FlushMappedMemoryRanges", varargs...)
+	ret0, _ := ret[0].(common.VkResult)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// FlushMappedMemoryRanges indicates an expected call of FlushMappedMemoryRanges.
+func (mr *MockVulkanMockRecorder) FlushMappedMemoryRanges(ranges ...any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FlushMappedMemoryRanges", reflect.TypeOf((*MockVulkan)(nil).FlushMappedMemoryRanges), ranges...)
+}
+
+// FreeCommandBuffers mocks base method.
+func (m *MockVulkan) FreeCommandBuffers(commandBuffers ...types.CommandBuffer) {
+	m.ctrl.T.Helper()
+	varargs := []any{}
+	for _, a := range commandBuffers {
+		varargs = append(varargs, a)
+	}
+	m.ctrl.Call(m, "FreeCommandBuffers", varargs...)
+}
+
+// FreeCommandBuffers indicates an expected call of FreeCommandBuffers.
+func (mr *MockVulkanMockRecorder) FreeCommandBuffers(commandBuffers ...any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FreeCommandBuffers", reflect.TypeOf((*MockVulkan)(nil).FreeCommandBuffers), commandBuffers...)
+}
+
+// FreeDescriptorSets mocks base method.
+func (m *MockVulkan) FreeDescriptorSets(sets ...types.DescriptorSet) (common.VkResult, error) {
+	m.ctrl.T.Helper()
+	varargs := []any{}
+	for _, a := range sets {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "FreeDescriptorSets", varargs...)
+	ret0, _ := ret[0].(common.VkResult)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// FreeDescriptorSets indicates an expected call of FreeDescriptorSets.
+func (mr *MockVulkanMockRecorder) FreeDescriptorSets(sets ...any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FreeDescriptorSets", reflect.TypeOf((*MockVulkan)(nil).FreeDescriptorSets), sets...)
+}
+
+// FreeMemory mocks base method.
+func (m *MockVulkan) FreeMemory(memory types.DeviceMemory, callbacks *driver.AllocationCallbacks) {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "FreeMemory", memory, callbacks)
+}
+
+// FreeMemory indicates an expected call of FreeMemory.
+func (mr *MockVulkanMockRecorder) FreeMemory(memory, callbacks any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FreeMemory", reflect.TypeOf((*MockVulkan)(nil).FreeMemory), memory, callbacks)
+}
+
+// GetBufferMemoryRequirements mocks base method.
+func (m *MockVulkan) GetBufferMemoryRequirements(buffer types.Buffer) *core1_0.MemoryRequirements {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetBufferMemoryRequirements", buffer)
+	ret0, _ := ret[0].(*core1_0.MemoryRequirements)
+	return ret0
+}
+
+// GetBufferMemoryRequirements indicates an expected call of GetBufferMemoryRequirements.
+func (mr *MockVulkanMockRecorder) GetBufferMemoryRequirements(buffer any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetBufferMemoryRequirements", reflect.TypeOf((*MockVulkan)(nil).GetBufferMemoryRequirements), buffer)
+}
+
+// GetBufferMemoryRequirements2 mocks base method.
+func (m *MockVulkan) GetBufferMemoryRequirements2(device types.Device, o core1_1.BufferMemoryRequirementsInfo2, out *core1_1.MemoryRequirements2) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetBufferMemoryRequirements2", device, o, out)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
-// ExternalBufferProperties indicates an expected call of ExternalBufferProperties.
-func (mr *MockPhysicalDeviceMockRecorder) ExternalBufferProperties(o, outData any) *gomock.Call {
+// GetBufferMemoryRequirements2 indicates an expected call of GetBufferMemoryRequirements2.
+func (mr *MockVulkanMockRecorder) GetBufferMemoryRequirements2(device, o, out any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ExternalBufferProperties", reflect.TypeOf((*MockPhysicalDevice)(nil).ExternalBufferProperties), o, outData)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetBufferMemoryRequirements2", reflect.TypeOf((*MockVulkan)(nil).GetBufferMemoryRequirements2), device, o, out)
 }
 
-// ExternalFenceProperties mocks base method.
-func (m *MockPhysicalDevice) ExternalFenceProperties(o core1_1.PhysicalDeviceExternalFenceInfo, outData *core1_1.ExternalFenceProperties) error {
+// GetDescriptorSetLayoutSupport mocks base method.
+func (m *MockVulkan) GetDescriptorSetLayoutSupport(device types.Device, o core1_0.DescriptorSetLayoutCreateInfo, outData *core1_1.DescriptorSetLayoutSupport) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "ExternalFenceProperties", o, outData)
+	ret := m.ctrl.Call(m, "GetDescriptorSetLayoutSupport", device, o, outData)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
-// ExternalFenceProperties indicates an expected call of ExternalFenceProperties.
-func (mr *MockPhysicalDeviceMockRecorder) ExternalFenceProperties(o, outData any) *gomock.Call {
+// GetDescriptorSetLayoutSupport indicates an expected call of GetDescriptorSetLayoutSupport.
+func (mr *MockVulkanMockRecorder) GetDescriptorSetLayoutSupport(device, o, outData any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ExternalFenceProperties", reflect.TypeOf((*MockPhysicalDevice)(nil).ExternalFenceProperties), o, outData)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetDescriptorSetLayoutSupport", reflect.TypeOf((*MockVulkan)(nil).GetDescriptorSetLayoutSupport), device, o, outData)
 }
 
-// ExternalSemaphoreProperties mocks base method.
-func (m *MockPhysicalDevice) ExternalSemaphoreProperties(o core1_1.PhysicalDeviceExternalSemaphoreInfo, outData *core1_1.ExternalSemaphoreProperties) error {
+// GetDeviceGroupPeerMemoryFeatures mocks base method.
+func (m *MockVulkan) GetDeviceGroupPeerMemoryFeatures(device types.Device, heapIndex, localDeviceIndex, remoteDeviceIndex int) core1_1.PeerMemoryFeatureFlags {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "ExternalSemaphoreProperties", o, outData)
+	ret := m.ctrl.Call(m, "GetDeviceGroupPeerMemoryFeatures", device, heapIndex, localDeviceIndex, remoteDeviceIndex)
+	ret0, _ := ret[0].(core1_1.PeerMemoryFeatureFlags)
+	return ret0
+}
+
+// GetDeviceGroupPeerMemoryFeatures indicates an expected call of GetDeviceGroupPeerMemoryFeatures.
+func (mr *MockVulkanMockRecorder) GetDeviceGroupPeerMemoryFeatures(device, heapIndex, localDeviceIndex, remoteDeviceIndex any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetDeviceGroupPeerMemoryFeatures", reflect.TypeOf((*MockVulkan)(nil).GetDeviceGroupPeerMemoryFeatures), device, heapIndex, localDeviceIndex, remoteDeviceIndex)
+}
+
+// GetDeviceMemoryCommitment mocks base method.
+func (m *MockVulkan) GetDeviceMemoryCommitment(memory types.DeviceMemory) int {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetDeviceMemoryCommitment", memory)
+	ret0, _ := ret[0].(int)
+	return ret0
+}
+
+// GetDeviceMemoryCommitment indicates an expected call of GetDeviceMemoryCommitment.
+func (mr *MockVulkanMockRecorder) GetDeviceMemoryCommitment(memory any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetDeviceMemoryCommitment", reflect.TypeOf((*MockVulkan)(nil).GetDeviceMemoryCommitment), memory)
+}
+
+// GetDeviceQueue2 mocks base method.
+func (m *MockVulkan) GetDeviceQueue2(device types.Device, o core1_1.DeviceQueueInfo2) (types.Queue, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetDeviceQueue2", device, o)
+	ret0, _ := ret[0].(types.Queue)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetDeviceQueue2 indicates an expected call of GetDeviceQueue2.
+func (mr *MockVulkanMockRecorder) GetDeviceQueue2(device, o any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetDeviceQueue2", reflect.TypeOf((*MockVulkan)(nil).GetDeviceQueue2), device, o)
+}
+
+// GetEventStatus mocks base method.
+func (m *MockVulkan) GetEventStatus(event types.Event) (common.VkResult, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetEventStatus", event)
+	ret0, _ := ret[0].(common.VkResult)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetEventStatus indicates an expected call of GetEventStatus.
+func (mr *MockVulkanMockRecorder) GetEventStatus(event any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetEventStatus", reflect.TypeOf((*MockVulkan)(nil).GetEventStatus), event)
+}
+
+// GetImageMemoryRequirements mocks base method.
+func (m *MockVulkan) GetImageMemoryRequirements(image types.Image) *core1_0.MemoryRequirements {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetImageMemoryRequirements", image)
+	ret0, _ := ret[0].(*core1_0.MemoryRequirements)
+	return ret0
+}
+
+// GetImageMemoryRequirements indicates an expected call of GetImageMemoryRequirements.
+func (mr *MockVulkanMockRecorder) GetImageMemoryRequirements(image any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetImageMemoryRequirements", reflect.TypeOf((*MockVulkan)(nil).GetImageMemoryRequirements), image)
+}
+
+// GetImageMemoryRequirements2 mocks base method.
+func (m *MockVulkan) GetImageMemoryRequirements2(device types.Device, o core1_1.ImageMemoryRequirementsInfo2, out *core1_1.MemoryRequirements2) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetImageMemoryRequirements2", device, o, out)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
-// ExternalSemaphoreProperties indicates an expected call of ExternalSemaphoreProperties.
-func (mr *MockPhysicalDeviceMockRecorder) ExternalSemaphoreProperties(o, outData any) *gomock.Call {
+// GetImageMemoryRequirements2 indicates an expected call of GetImageMemoryRequirements2.
+func (mr *MockVulkanMockRecorder) GetImageMemoryRequirements2(device, o, out any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ExternalSemaphoreProperties", reflect.TypeOf((*MockPhysicalDevice)(nil).ExternalSemaphoreProperties), o, outData)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetImageMemoryRequirements2", reflect.TypeOf((*MockVulkan)(nil).GetImageMemoryRequirements2), device, o, out)
 }
 
-// Features mocks base method.
-func (m *MockPhysicalDevice) Features() *core1_0.PhysicalDeviceFeatures {
+// GetImageSparseMemoryRequirements mocks base method.
+func (m *MockVulkan) GetImageSparseMemoryRequirements(image types.Image) []core1_0.SparseImageMemoryRequirements {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Features")
+	ret := m.ctrl.Call(m, "GetImageSparseMemoryRequirements", image)
+	ret0, _ := ret[0].([]core1_0.SparseImageMemoryRequirements)
+	return ret0
+}
+
+// GetImageSparseMemoryRequirements indicates an expected call of GetImageSparseMemoryRequirements.
+func (mr *MockVulkanMockRecorder) GetImageSparseMemoryRequirements(image any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetImageSparseMemoryRequirements", reflect.TypeOf((*MockVulkan)(nil).GetImageSparseMemoryRequirements), image)
+}
+
+// GetImageSparseMemoryRequirements2 mocks base method.
+func (m *MockVulkan) GetImageSparseMemoryRequirements2(device types.Device, o core1_1.ImageSparseMemoryRequirementsInfo2, outDataFactory func() *core1_1.SparseImageMemoryRequirements2) ([]*core1_1.SparseImageMemoryRequirements2, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetImageSparseMemoryRequirements2", device, o, outDataFactory)
+	ret0, _ := ret[0].([]*core1_1.SparseImageMemoryRequirements2)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetImageSparseMemoryRequirements2 indicates an expected call of GetImageSparseMemoryRequirements2.
+func (mr *MockVulkanMockRecorder) GetImageSparseMemoryRequirements2(device, o, outDataFactory any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetImageSparseMemoryRequirements2", reflect.TypeOf((*MockVulkan)(nil).GetImageSparseMemoryRequirements2), device, o, outDataFactory)
+}
+
+// GetImageSubresourceLayout mocks base method.
+func (m *MockVulkan) GetImageSubresourceLayout(image types.Image, subresource *core1_0.ImageSubresource) *core1_0.SubresourceLayout {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetImageSubresourceLayout", image, subresource)
+	ret0, _ := ret[0].(*core1_0.SubresourceLayout)
+	return ret0
+}
+
+// GetImageSubresourceLayout indicates an expected call of GetImageSubresourceLayout.
+func (mr *MockVulkanMockRecorder) GetImageSubresourceLayout(image, subresource any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetImageSubresourceLayout", reflect.TypeOf((*MockVulkan)(nil).GetImageSubresourceLayout), image, subresource)
+}
+
+// GetPhysicalDeviceExternalBufferProperties mocks base method.
+func (m *MockVulkan) GetPhysicalDeviceExternalBufferProperties(physicalDevice types.PhysicalDevice, o core1_1.PhysicalDeviceExternalBufferInfo, outData *core1_1.ExternalBufferProperties) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetPhysicalDeviceExternalBufferProperties", physicalDevice, o, outData)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// GetPhysicalDeviceExternalBufferProperties indicates an expected call of GetPhysicalDeviceExternalBufferProperties.
+func (mr *MockVulkanMockRecorder) GetPhysicalDeviceExternalBufferProperties(physicalDevice, o, outData any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetPhysicalDeviceExternalBufferProperties", reflect.TypeOf((*MockVulkan)(nil).GetPhysicalDeviceExternalBufferProperties), physicalDevice, o, outData)
+}
+
+// GetPhysicalDeviceExternalFenceProperties mocks base method.
+func (m *MockVulkan) GetPhysicalDeviceExternalFenceProperties(physicalDevice types.PhysicalDevice, o core1_1.PhysicalDeviceExternalFenceInfo, outData *core1_1.ExternalFenceProperties) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetPhysicalDeviceExternalFenceProperties", physicalDevice, o, outData)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// GetPhysicalDeviceExternalFenceProperties indicates an expected call of GetPhysicalDeviceExternalFenceProperties.
+func (mr *MockVulkanMockRecorder) GetPhysicalDeviceExternalFenceProperties(physicalDevice, o, outData any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetPhysicalDeviceExternalFenceProperties", reflect.TypeOf((*MockVulkan)(nil).GetPhysicalDeviceExternalFenceProperties), physicalDevice, o, outData)
+}
+
+// GetPhysicalDeviceExternalSemaphoreProperties mocks base method.
+func (m *MockVulkan) GetPhysicalDeviceExternalSemaphoreProperties(physicalDevice types.PhysicalDevice, o core1_1.PhysicalDeviceExternalSemaphoreInfo, outData *core1_1.ExternalSemaphoreProperties) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetPhysicalDeviceExternalSemaphoreProperties", physicalDevice, o, outData)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// GetPhysicalDeviceExternalSemaphoreProperties indicates an expected call of GetPhysicalDeviceExternalSemaphoreProperties.
+func (mr *MockVulkanMockRecorder) GetPhysicalDeviceExternalSemaphoreProperties(physicalDevice, o, outData any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetPhysicalDeviceExternalSemaphoreProperties", reflect.TypeOf((*MockVulkan)(nil).GetPhysicalDeviceExternalSemaphoreProperties), physicalDevice, o, outData)
+}
+
+// GetPhysicalDeviceFeatures mocks base method.
+func (m *MockVulkan) GetPhysicalDeviceFeatures(physicalDevice types.PhysicalDevice) *core1_0.PhysicalDeviceFeatures {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetPhysicalDeviceFeatures", physicalDevice)
 	ret0, _ := ret[0].(*core1_0.PhysicalDeviceFeatures)
 	return ret0
 }
 
-// Features indicates an expected call of Features.
-func (mr *MockPhysicalDeviceMockRecorder) Features() *gomock.Call {
+// GetPhysicalDeviceFeatures indicates an expected call of GetPhysicalDeviceFeatures.
+func (mr *MockVulkanMockRecorder) GetPhysicalDeviceFeatures(physicalDevice any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Features", reflect.TypeOf((*MockPhysicalDevice)(nil).Features))
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetPhysicalDeviceFeatures", reflect.TypeOf((*MockVulkan)(nil).GetPhysicalDeviceFeatures), physicalDevice)
 }
 
-// Features2 mocks base method.
-func (m *MockPhysicalDevice) Features2(out *core1_1.PhysicalDeviceFeatures2) error {
+// GetPhysicalDeviceFeatures2 mocks base method.
+func (m *MockVulkan) GetPhysicalDeviceFeatures2(physicalDevice types.PhysicalDevice, out *core1_1.PhysicalDeviceFeatures2) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Features2", out)
+	ret := m.ctrl.Call(m, "GetPhysicalDeviceFeatures2", physicalDevice, out)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
-// Features2 indicates an expected call of Features2.
-func (mr *MockPhysicalDeviceMockRecorder) Features2(out any) *gomock.Call {
+// GetPhysicalDeviceFeatures2 indicates an expected call of GetPhysicalDeviceFeatures2.
+func (mr *MockVulkanMockRecorder) GetPhysicalDeviceFeatures2(physicalDevice, out any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Features2", reflect.TypeOf((*MockPhysicalDevice)(nil).Features2), out)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetPhysicalDeviceFeatures2", reflect.TypeOf((*MockVulkan)(nil).GetPhysicalDeviceFeatures2), physicalDevice, out)
 }
 
-// FormatProperties mocks base method.
-func (m *MockPhysicalDevice) FormatProperties(format core1_0.Format) *core1_0.FormatProperties {
+// GetPhysicalDeviceFormatProperties mocks base method.
+func (m *MockVulkan) GetPhysicalDeviceFormatProperties(physicalDevice types.PhysicalDevice, format core1_0.Format) *core1_0.FormatProperties {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "FormatProperties", format)
+	ret := m.ctrl.Call(m, "GetPhysicalDeviceFormatProperties", physicalDevice, format)
 	ret0, _ := ret[0].(*core1_0.FormatProperties)
 	return ret0
 }
 
-// FormatProperties indicates an expected call of FormatProperties.
-func (mr *MockPhysicalDeviceMockRecorder) FormatProperties(format any) *gomock.Call {
+// GetPhysicalDeviceFormatProperties indicates an expected call of GetPhysicalDeviceFormatProperties.
+func (mr *MockVulkanMockRecorder) GetPhysicalDeviceFormatProperties(physicalDevice, format any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FormatProperties", reflect.TypeOf((*MockPhysicalDevice)(nil).FormatProperties), format)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetPhysicalDeviceFormatProperties", reflect.TypeOf((*MockVulkan)(nil).GetPhysicalDeviceFormatProperties), physicalDevice, format)
 }
 
-// FormatProperties2 mocks base method.
-func (m *MockPhysicalDevice) FormatProperties2(format core1_0.Format, out *core1_1.FormatProperties2) error {
+// GetPhysicalDeviceFormatProperties2 mocks base method.
+func (m *MockVulkan) GetPhysicalDeviceFormatProperties2(physicalDevice types.PhysicalDevice, format core1_0.Format, out *core1_1.FormatProperties2) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "FormatProperties2", format, out)
+	ret := m.ctrl.Call(m, "GetPhysicalDeviceFormatProperties2", physicalDevice, format, out)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
-// FormatProperties2 indicates an expected call of FormatProperties2.
-func (mr *MockPhysicalDeviceMockRecorder) FormatProperties2(format, out any) *gomock.Call {
+// GetPhysicalDeviceFormatProperties2 indicates an expected call of GetPhysicalDeviceFormatProperties2.
+func (mr *MockVulkanMockRecorder) GetPhysicalDeviceFormatProperties2(physicalDevice, format, out any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FormatProperties2", reflect.TypeOf((*MockPhysicalDevice)(nil).FormatProperties2), format, out)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetPhysicalDeviceFormatProperties2", reflect.TypeOf((*MockVulkan)(nil).GetPhysicalDeviceFormatProperties2), physicalDevice, format, out)
 }
 
-// Handle mocks base method.
-func (m *MockPhysicalDevice) Handle() driver.VkPhysicalDevice {
+// GetPhysicalDeviceImageFormatProperties mocks base method.
+func (m *MockVulkan) GetPhysicalDeviceImageFormatProperties(physicalDevice types.PhysicalDevice, format core1_0.Format, imageType core1_0.ImageType, tiling core1_0.ImageTiling, usages core1_0.ImageUsageFlags, flags core1_0.ImageCreateFlags) (*core1_0.ImageFormatProperties, common.VkResult, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Handle")
-	ret0, _ := ret[0].(driver.VkPhysicalDevice)
-	return ret0
-}
-
-// Handle indicates an expected call of Handle.
-func (mr *MockPhysicalDeviceMockRecorder) Handle() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Handle", reflect.TypeOf((*MockPhysicalDevice)(nil).Handle))
-}
-
-// ImageFormatProperties mocks base method.
-func (m *MockPhysicalDevice) ImageFormatProperties(format core1_0.Format, imageType core1_0.ImageType, tiling core1_0.ImageTiling, usages core1_0.ImageUsageFlags, flags core1_0.ImageCreateFlags) (*core1_0.ImageFormatProperties, common.VkResult, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "ImageFormatProperties", format, imageType, tiling, usages, flags)
+	ret := m.ctrl.Call(m, "GetPhysicalDeviceImageFormatProperties", physicalDevice, format, imageType, tiling, usages, flags)
 	ret0, _ := ret[0].(*core1_0.ImageFormatProperties)
 	ret1, _ := ret[1].(common.VkResult)
 	ret2, _ := ret[2].(error)
 	return ret0, ret1, ret2
 }
 
-// ImageFormatProperties indicates an expected call of ImageFormatProperties.
-func (mr *MockPhysicalDeviceMockRecorder) ImageFormatProperties(format, imageType, tiling, usages, flags any) *gomock.Call {
+// GetPhysicalDeviceImageFormatProperties indicates an expected call of GetPhysicalDeviceImageFormatProperties.
+func (mr *MockVulkanMockRecorder) GetPhysicalDeviceImageFormatProperties(physicalDevice, format, imageType, tiling, usages, flags any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ImageFormatProperties", reflect.TypeOf((*MockPhysicalDevice)(nil).ImageFormatProperties), format, imageType, tiling, usages, flags)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetPhysicalDeviceImageFormatProperties", reflect.TypeOf((*MockVulkan)(nil).GetPhysicalDeviceImageFormatProperties), physicalDevice, format, imageType, tiling, usages, flags)
 }
 
-// ImageFormatProperties2 mocks base method.
-func (m *MockPhysicalDevice) ImageFormatProperties2(o core1_1.PhysicalDeviceImageFormatInfo2, out *core1_1.ImageFormatProperties2) (common.VkResult, error) {
+// GetPhysicalDeviceImageFormatProperties2 mocks base method.
+func (m *MockVulkan) GetPhysicalDeviceImageFormatProperties2(physicalDevice types.PhysicalDevice, o core1_1.PhysicalDeviceImageFormatInfo2, out *core1_1.ImageFormatProperties2) (common.VkResult, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "ImageFormatProperties2", o, out)
+	ret := m.ctrl.Call(m, "GetPhysicalDeviceImageFormatProperties2", physicalDevice, o, out)
 	ret0, _ := ret[0].(common.VkResult)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// ImageFormatProperties2 indicates an expected call of ImageFormatProperties2.
-func (mr *MockPhysicalDeviceMockRecorder) ImageFormatProperties2(o, out any) *gomock.Call {
+// GetPhysicalDeviceImageFormatProperties2 indicates an expected call of GetPhysicalDeviceImageFormatProperties2.
+func (mr *MockVulkanMockRecorder) GetPhysicalDeviceImageFormatProperties2(physicalDevice, o, out any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ImageFormatProperties2", reflect.TypeOf((*MockPhysicalDevice)(nil).ImageFormatProperties2), o, out)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetPhysicalDeviceImageFormatProperties2", reflect.TypeOf((*MockVulkan)(nil).GetPhysicalDeviceImageFormatProperties2), physicalDevice, o, out)
 }
 
-// InstanceAPIVersion mocks base method.
-func (m *MockPhysicalDevice) InstanceAPIVersion() common.APIVersion {
+// GetPhysicalDeviceMemoryProperties mocks base method.
+func (m *MockVulkan) GetPhysicalDeviceMemoryProperties(physicalDevice types.PhysicalDevice) *core1_0.PhysicalDeviceMemoryProperties {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "InstanceAPIVersion")
-	ret0, _ := ret[0].(common.APIVersion)
-	return ret0
-}
-
-// InstanceAPIVersion indicates an expected call of InstanceAPIVersion.
-func (mr *MockPhysicalDeviceMockRecorder) InstanceAPIVersion() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "InstanceAPIVersion", reflect.TypeOf((*MockPhysicalDevice)(nil).InstanceAPIVersion))
-}
-
-// MemoryProperties mocks base method.
-func (m *MockPhysicalDevice) MemoryProperties() *core1_0.PhysicalDeviceMemoryProperties {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "MemoryProperties")
+	ret := m.ctrl.Call(m, "GetPhysicalDeviceMemoryProperties", physicalDevice)
 	ret0, _ := ret[0].(*core1_0.PhysicalDeviceMemoryProperties)
 	return ret0
 }
 
-// MemoryProperties indicates an expected call of MemoryProperties.
-func (mr *MockPhysicalDeviceMockRecorder) MemoryProperties() *gomock.Call {
+// GetPhysicalDeviceMemoryProperties indicates an expected call of GetPhysicalDeviceMemoryProperties.
+func (mr *MockVulkanMockRecorder) GetPhysicalDeviceMemoryProperties(physicalDevice any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "MemoryProperties", reflect.TypeOf((*MockPhysicalDevice)(nil).MemoryProperties))
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetPhysicalDeviceMemoryProperties", reflect.TypeOf((*MockVulkan)(nil).GetPhysicalDeviceMemoryProperties), physicalDevice)
 }
 
-// MemoryProperties2 mocks base method.
-func (m *MockPhysicalDevice) MemoryProperties2(out *core1_1.PhysicalDeviceMemoryProperties2) error {
+// GetPhysicalDeviceMemoryProperties2 mocks base method.
+func (m *MockVulkan) GetPhysicalDeviceMemoryProperties2(physicalDevice types.PhysicalDevice, out *core1_1.PhysicalDeviceMemoryProperties2) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "MemoryProperties2", out)
+	ret := m.ctrl.Call(m, "GetPhysicalDeviceMemoryProperties2", physicalDevice, out)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
-// MemoryProperties2 indicates an expected call of MemoryProperties2.
-func (mr *MockPhysicalDeviceMockRecorder) MemoryProperties2(out any) *gomock.Call {
+// GetPhysicalDeviceMemoryProperties2 indicates an expected call of GetPhysicalDeviceMemoryProperties2.
+func (mr *MockVulkanMockRecorder) GetPhysicalDeviceMemoryProperties2(physicalDevice, out any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "MemoryProperties2", reflect.TypeOf((*MockPhysicalDevice)(nil).MemoryProperties2), out)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetPhysicalDeviceMemoryProperties2", reflect.TypeOf((*MockVulkan)(nil).GetPhysicalDeviceMemoryProperties2), physicalDevice, out)
 }
 
-// Properties mocks base method.
-func (m *MockPhysicalDevice) Properties() (*core1_0.PhysicalDeviceProperties, error) {
+// GetPhysicalDeviceProperties mocks base method.
+func (m *MockVulkan) GetPhysicalDeviceProperties(physicalDevice types.PhysicalDevice) (*core1_0.PhysicalDeviceProperties, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Properties")
+	ret := m.ctrl.Call(m, "GetPhysicalDeviceProperties", physicalDevice)
 	ret0, _ := ret[0].(*core1_0.PhysicalDeviceProperties)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// Properties indicates an expected call of Properties.
-func (mr *MockPhysicalDeviceMockRecorder) Properties() *gomock.Call {
+// GetPhysicalDeviceProperties indicates an expected call of GetPhysicalDeviceProperties.
+func (mr *MockVulkanMockRecorder) GetPhysicalDeviceProperties(physicalDevice any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Properties", reflect.TypeOf((*MockPhysicalDevice)(nil).Properties))
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetPhysicalDeviceProperties", reflect.TypeOf((*MockVulkan)(nil).GetPhysicalDeviceProperties), physicalDevice)
 }
 
-// Properties2 mocks base method.
-func (m *MockPhysicalDevice) Properties2(out *core1_1.PhysicalDeviceProperties2) error {
+// GetPhysicalDeviceProperties2 mocks base method.
+func (m *MockVulkan) GetPhysicalDeviceProperties2(physicalDevice types.PhysicalDevice, out *core1_1.PhysicalDeviceProperties2) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Properties2", out)
+	ret := m.ctrl.Call(m, "GetPhysicalDeviceProperties2", physicalDevice, out)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
-// Properties2 indicates an expected call of Properties2.
-func (mr *MockPhysicalDeviceMockRecorder) Properties2(out any) *gomock.Call {
+// GetPhysicalDeviceProperties2 indicates an expected call of GetPhysicalDeviceProperties2.
+func (mr *MockVulkanMockRecorder) GetPhysicalDeviceProperties2(physicalDevice, out any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Properties2", reflect.TypeOf((*MockPhysicalDevice)(nil).Properties2), out)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetPhysicalDeviceProperties2", reflect.TypeOf((*MockVulkan)(nil).GetPhysicalDeviceProperties2), physicalDevice, out)
 }
 
-// QueueFamilyProperties mocks base method.
-func (m *MockPhysicalDevice) QueueFamilyProperties() []*core1_0.QueueFamilyProperties {
+// GetPhysicalDeviceQueueFamilyProperties mocks base method.
+func (m *MockVulkan) GetPhysicalDeviceQueueFamilyProperties(physicalDevice types.PhysicalDevice) []*core1_0.QueueFamilyProperties {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "QueueFamilyProperties")
+	ret := m.ctrl.Call(m, "GetPhysicalDeviceQueueFamilyProperties", physicalDevice)
 	ret0, _ := ret[0].([]*core1_0.QueueFamilyProperties)
 	return ret0
 }
 
-// QueueFamilyProperties indicates an expected call of QueueFamilyProperties.
-func (mr *MockPhysicalDeviceMockRecorder) QueueFamilyProperties() *gomock.Call {
+// GetPhysicalDeviceQueueFamilyProperties indicates an expected call of GetPhysicalDeviceQueueFamilyProperties.
+func (mr *MockVulkanMockRecorder) GetPhysicalDeviceQueueFamilyProperties(physicalDevice any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "QueueFamilyProperties", reflect.TypeOf((*MockPhysicalDevice)(nil).QueueFamilyProperties))
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetPhysicalDeviceQueueFamilyProperties", reflect.TypeOf((*MockVulkan)(nil).GetPhysicalDeviceQueueFamilyProperties), physicalDevice)
 }
 
-// QueueFamilyProperties2 mocks base method.
-func (m *MockPhysicalDevice) QueueFamilyProperties2(outDataFactory func() *core1_1.QueueFamilyProperties2) ([]*core1_1.QueueFamilyProperties2, error) {
+// GetPhysicalDeviceQueueFamilyProperties2 mocks base method.
+func (m *MockVulkan) GetPhysicalDeviceQueueFamilyProperties2(physicalDevice types.PhysicalDevice, outDataFactory func() *core1_1.QueueFamilyProperties2) ([]*core1_1.QueueFamilyProperties2, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "QueueFamilyProperties2", outDataFactory)
+	ret := m.ctrl.Call(m, "GetPhysicalDeviceQueueFamilyProperties2", physicalDevice, outDataFactory)
 	ret0, _ := ret[0].([]*core1_1.QueueFamilyProperties2)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// QueueFamilyProperties2 indicates an expected call of QueueFamilyProperties2.
-func (mr *MockPhysicalDeviceMockRecorder) QueueFamilyProperties2(outDataFactory any) *gomock.Call {
+// GetPhysicalDeviceQueueFamilyProperties2 indicates an expected call of GetPhysicalDeviceQueueFamilyProperties2.
+func (mr *MockVulkanMockRecorder) GetPhysicalDeviceQueueFamilyProperties2(physicalDevice, outDataFactory any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "QueueFamilyProperties2", reflect.TypeOf((*MockPhysicalDevice)(nil).QueueFamilyProperties2), outDataFactory)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetPhysicalDeviceQueueFamilyProperties2", reflect.TypeOf((*MockVulkan)(nil).GetPhysicalDeviceQueueFamilyProperties2), physicalDevice, outDataFactory)
 }
 
-// SparseImageFormatProperties mocks base method.
-func (m *MockPhysicalDevice) SparseImageFormatProperties(format core1_0.Format, imageType core1_0.ImageType, samples core1_0.SampleCountFlags, usages core1_0.ImageUsageFlags, tiling core1_0.ImageTiling) []core1_0.SparseImageFormatProperties {
+// GetPhysicalDeviceSparseImageFormatProperties mocks base method.
+func (m *MockVulkan) GetPhysicalDeviceSparseImageFormatProperties(physicalDevice types.PhysicalDevice, format core1_0.Format, imageType core1_0.ImageType, samples core1_0.SampleCountFlags, usages core1_0.ImageUsageFlags, tiling core1_0.ImageTiling) []core1_0.SparseImageFormatProperties {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SparseImageFormatProperties", format, imageType, samples, usages, tiling)
+	ret := m.ctrl.Call(m, "GetPhysicalDeviceSparseImageFormatProperties", physicalDevice, format, imageType, samples, usages, tiling)
 	ret0, _ := ret[0].([]core1_0.SparseImageFormatProperties)
 	return ret0
 }
 
-// SparseImageFormatProperties indicates an expected call of SparseImageFormatProperties.
-func (mr *MockPhysicalDeviceMockRecorder) SparseImageFormatProperties(format, imageType, samples, usages, tiling any) *gomock.Call {
+// GetPhysicalDeviceSparseImageFormatProperties indicates an expected call of GetPhysicalDeviceSparseImageFormatProperties.
+func (mr *MockVulkanMockRecorder) GetPhysicalDeviceSparseImageFormatProperties(physicalDevice, format, imageType, samples, usages, tiling any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SparseImageFormatProperties", reflect.TypeOf((*MockPhysicalDevice)(nil).SparseImageFormatProperties), format, imageType, samples, usages, tiling)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetPhysicalDeviceSparseImageFormatProperties", reflect.TypeOf((*MockVulkan)(nil).GetPhysicalDeviceSparseImageFormatProperties), physicalDevice, format, imageType, samples, usages, tiling)
 }
 
-// SparseImageFormatProperties2 mocks base method.
-func (m *MockPhysicalDevice) SparseImageFormatProperties2(o core1_1.PhysicalDeviceSparseImageFormatInfo2, outDataFactory func() *core1_1.SparseImageFormatProperties2) ([]*core1_1.SparseImageFormatProperties2, error) {
+// GetPhysicalDeviceSparseImageFormatProperties2 mocks base method.
+func (m *MockVulkan) GetPhysicalDeviceSparseImageFormatProperties2(physicalDevice types.PhysicalDevice, o core1_1.PhysicalDeviceSparseImageFormatInfo2, outDataFactory func() *core1_1.SparseImageFormatProperties2) ([]*core1_1.SparseImageFormatProperties2, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SparseImageFormatProperties2", o, outDataFactory)
+	ret := m.ctrl.Call(m, "GetPhysicalDeviceSparseImageFormatProperties2", physicalDevice, o, outDataFactory)
 	ret0, _ := ret[0].([]*core1_1.SparseImageFormatProperties2)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// SparseImageFormatProperties2 indicates an expected call of SparseImageFormatProperties2.
-func (mr *MockPhysicalDeviceMockRecorder) SparseImageFormatProperties2(o, outDataFactory any) *gomock.Call {
+// GetPhysicalDeviceSparseImageFormatProperties2 indicates an expected call of GetPhysicalDeviceSparseImageFormatProperties2.
+func (mr *MockVulkanMockRecorder) GetPhysicalDeviceSparseImageFormatProperties2(physicalDevice, o, outDataFactory any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SparseImageFormatProperties2", reflect.TypeOf((*MockPhysicalDevice)(nil).SparseImageFormatProperties2), o, outDataFactory)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetPhysicalDeviceSparseImageFormatProperties2", reflect.TypeOf((*MockVulkan)(nil).GetPhysicalDeviceSparseImageFormatProperties2), physicalDevice, o, outDataFactory)
 }
 
-// MockPipeline is a mock of Pipeline interface.
-type MockPipeline struct {
-	ctrl     *gomock.Controller
-	recorder *MockPipelineMockRecorder
-	isgomock struct{}
-}
-
-// MockPipelineMockRecorder is the mock recorder for MockPipeline.
-type MockPipelineMockRecorder struct {
-	mock *MockPipeline
-}
-
-// NewMockPipeline creates a new mock instance.
-func NewMockPipeline(ctrl *gomock.Controller) *MockPipeline {
-	mock := &MockPipeline{ctrl: ctrl}
-	mock.recorder = &MockPipelineMockRecorder{mock}
-	return mock
-}
-
-// EXPECT returns an object that allows the caller to indicate expected use.
-func (m *MockPipeline) EXPECT() *MockPipelineMockRecorder {
-	return m.recorder
-}
-
-// APIVersion mocks base method.
-func (m *MockPipeline) APIVersion() common.APIVersion {
+// GetPipelineCacheData mocks base method.
+func (m *MockVulkan) GetPipelineCacheData(cache types.PipelineCache) ([]byte, common.VkResult, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "APIVersion")
-	ret0, _ := ret[0].(common.APIVersion)
-	return ret0
-}
-
-// APIVersion indicates an expected call of APIVersion.
-func (mr *MockPipelineMockRecorder) APIVersion() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "APIVersion", reflect.TypeOf((*MockPipeline)(nil).APIVersion))
-}
-
-// Destroy mocks base method.
-func (m *MockPipeline) Destroy(callbacks *driver.AllocationCallbacks) {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "Destroy", callbacks)
-}
-
-// Destroy indicates an expected call of Destroy.
-func (mr *MockPipelineMockRecorder) Destroy(callbacks any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Destroy", reflect.TypeOf((*MockPipeline)(nil).Destroy), callbacks)
-}
-
-// DeviceHandle mocks base method.
-func (m *MockPipeline) DeviceHandle() driver.VkDevice {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "DeviceHandle")
-	ret0, _ := ret[0].(driver.VkDevice)
-	return ret0
-}
-
-// DeviceHandle indicates an expected call of DeviceHandle.
-func (mr *MockPipelineMockRecorder) DeviceHandle() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeviceHandle", reflect.TypeOf((*MockPipeline)(nil).DeviceHandle))
-}
-
-// Driver mocks base method.
-func (m *MockPipeline) Driver() driver.Driver {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Driver")
-	ret0, _ := ret[0].(driver.Driver)
-	return ret0
-}
-
-// Driver indicates an expected call of Driver.
-func (mr *MockPipelineMockRecorder) Driver() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Driver", reflect.TypeOf((*MockPipeline)(nil).Driver))
-}
-
-// Handle mocks base method.
-func (m *MockPipeline) Handle() driver.VkPipeline {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Handle")
-	ret0, _ := ret[0].(driver.VkPipeline)
-	return ret0
-}
-
-// Handle indicates an expected call of Handle.
-func (mr *MockPipelineMockRecorder) Handle() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Handle", reflect.TypeOf((*MockPipeline)(nil).Handle))
-}
-
-// MockPipelineCache is a mock of PipelineCache interface.
-type MockPipelineCache struct {
-	ctrl     *gomock.Controller
-	recorder *MockPipelineCacheMockRecorder
-	isgomock struct{}
-}
-
-// MockPipelineCacheMockRecorder is the mock recorder for MockPipelineCache.
-type MockPipelineCacheMockRecorder struct {
-	mock *MockPipelineCache
-}
-
-// NewMockPipelineCache creates a new mock instance.
-func NewMockPipelineCache(ctrl *gomock.Controller) *MockPipelineCache {
-	mock := &MockPipelineCache{ctrl: ctrl}
-	mock.recorder = &MockPipelineCacheMockRecorder{mock}
-	return mock
-}
-
-// EXPECT returns an object that allows the caller to indicate expected use.
-func (m *MockPipelineCache) EXPECT() *MockPipelineCacheMockRecorder {
-	return m.recorder
-}
-
-// APIVersion mocks base method.
-func (m *MockPipelineCache) APIVersion() common.APIVersion {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "APIVersion")
-	ret0, _ := ret[0].(common.APIVersion)
-	return ret0
-}
-
-// APIVersion indicates an expected call of APIVersion.
-func (mr *MockPipelineCacheMockRecorder) APIVersion() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "APIVersion", reflect.TypeOf((*MockPipelineCache)(nil).APIVersion))
-}
-
-// CacheData mocks base method.
-func (m *MockPipelineCache) CacheData() ([]byte, common.VkResult, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CacheData")
+	ret := m.ctrl.Call(m, "GetPipelineCacheData", cache)
 	ret0, _ := ret[0].([]byte)
 	ret1, _ := ret[1].(common.VkResult)
 	ret2, _ := ret[2].(error)
 	return ret0, ret1, ret2
 }
 
-// CacheData indicates an expected call of CacheData.
-func (mr *MockPipelineCacheMockRecorder) CacheData() *gomock.Call {
+// GetPipelineCacheData indicates an expected call of GetPipelineCacheData.
+func (mr *MockVulkanMockRecorder) GetPipelineCacheData(cache any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CacheData", reflect.TypeOf((*MockPipelineCache)(nil).CacheData))
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetPipelineCacheData", reflect.TypeOf((*MockVulkan)(nil).GetPipelineCacheData), cache)
 }
 
-// Destroy mocks base method.
-func (m *MockPipelineCache) Destroy(callbacks *driver.AllocationCallbacks) {
+// GetQueryPoolResults mocks base method.
+func (m *MockVulkan) GetQueryPoolResults(queryPool types.QueryPool, firstQuery, queryCount int, results []byte, resultStride int, flags core1_0.QueryResultFlags) (common.VkResult, error) {
 	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "Destroy", callbacks)
+	ret := m.ctrl.Call(m, "GetQueryPoolResults", queryPool, firstQuery, queryCount, results, resultStride, flags)
+	ret0, _ := ret[0].(common.VkResult)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
 }
 
-// Destroy indicates an expected call of Destroy.
-func (mr *MockPipelineCacheMockRecorder) Destroy(callbacks any) *gomock.Call {
+// GetQueryPoolResults indicates an expected call of GetQueryPoolResults.
+func (mr *MockVulkanMockRecorder) GetQueryPoolResults(queryPool, firstQuery, queryCount, results, resultStride, flags any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Destroy", reflect.TypeOf((*MockPipelineCache)(nil).Destroy), callbacks)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetQueryPoolResults", reflect.TypeOf((*MockVulkan)(nil).GetQueryPoolResults), queryPool, firstQuery, queryCount, results, resultStride, flags)
 }
 
-// DeviceHandle mocks base method.
-func (m *MockPipelineCache) DeviceHandle() driver.VkDevice {
+// GetQueue mocks base method.
+func (m *MockVulkan) GetQueue(device types.Device, queueFamilyIndex, queueIndex int) types.Queue {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "DeviceHandle")
-	ret0, _ := ret[0].(driver.VkDevice)
+	ret := m.ctrl.Call(m, "GetQueue", device, queueFamilyIndex, queueIndex)
+	ret0, _ := ret[0].(types.Queue)
 	return ret0
 }
 
-// DeviceHandle indicates an expected call of DeviceHandle.
-func (mr *MockPipelineCacheMockRecorder) DeviceHandle() *gomock.Call {
+// GetQueue indicates an expected call of GetQueue.
+func (mr *MockVulkanMockRecorder) GetQueue(device, queueFamilyIndex, queueIndex any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeviceHandle", reflect.TypeOf((*MockPipelineCache)(nil).DeviceHandle))
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetQueue", reflect.TypeOf((*MockVulkan)(nil).GetQueue), device, queueFamilyIndex, queueIndex)
 }
 
-// Driver mocks base method.
-func (m *MockPipelineCache) Driver() driver.Driver {
+// GetRenderAreaGranularity mocks base method.
+func (m *MockVulkan) GetRenderAreaGranularity(renderPass types.RenderPass) core1_0.Extent2D {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Driver")
-	ret0, _ := ret[0].(driver.Driver)
+	ret := m.ctrl.Call(m, "GetRenderAreaGranularity", renderPass)
+	ret0, _ := ret[0].(core1_0.Extent2D)
 	return ret0
 }
 
-// Driver indicates an expected call of Driver.
-func (mr *MockPipelineCacheMockRecorder) Driver() *gomock.Call {
+// GetRenderAreaGranularity indicates an expected call of GetRenderAreaGranularity.
+func (mr *MockVulkanMockRecorder) GetRenderAreaGranularity(renderPass any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Driver", reflect.TypeOf((*MockPipelineCache)(nil).Driver))
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetRenderAreaGranularity", reflect.TypeOf((*MockVulkan)(nil).GetRenderAreaGranularity), renderPass)
 }
 
-// Handle mocks base method.
-func (m *MockPipelineCache) Handle() driver.VkPipelineCache {
+// InvalidateMappedMemoryRanges mocks base method.
+func (m *MockVulkan) InvalidateMappedMemoryRanges(ranges ...core1_0.MappedMemoryRange) (common.VkResult, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Handle")
-	ret0, _ := ret[0].(driver.VkPipelineCache)
-	return ret0
+	varargs := []any{}
+	for _, a := range ranges {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "InvalidateMappedMemoryRanges", varargs...)
+	ret0, _ := ret[0].(common.VkResult)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
 }
 
-// Handle indicates an expected call of Handle.
-func (mr *MockPipelineCacheMockRecorder) Handle() *gomock.Call {
+// InvalidateMappedMemoryRanges indicates an expected call of InvalidateMappedMemoryRanges.
+func (mr *MockVulkanMockRecorder) InvalidateMappedMemoryRanges(ranges ...any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Handle", reflect.TypeOf((*MockPipelineCache)(nil).Handle))
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "InvalidateMappedMemoryRanges", reflect.TypeOf((*MockVulkan)(nil).InvalidateMappedMemoryRanges), ranges...)
+}
+
+// MapMemory mocks base method.
+func (m *MockVulkan) MapMemory(memory types.DeviceMemory, offset, size int, flags core1_0.MemoryMapFlags) (unsafe.Pointer, common.VkResult, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "MapMemory", memory, offset, size, flags)
+	ret0, _ := ret[0].(unsafe.Pointer)
+	ret1, _ := ret[1].(common.VkResult)
+	ret2, _ := ret[2].(error)
+	return ret0, ret1, ret2
+}
+
+// MapMemory indicates an expected call of MapMemory.
+func (mr *MockVulkanMockRecorder) MapMemory(memory, offset, size, flags any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "MapMemory", reflect.TypeOf((*MockVulkan)(nil).MapMemory), memory, offset, size, flags)
 }
 
 // MergePipelineCaches mocks base method.
-func (m *MockPipelineCache) MergePipelineCaches(srcCaches []core1_0.PipelineCache) (common.VkResult, error) {
+func (m *MockVulkan) MergePipelineCaches(dstCache types.PipelineCache, srcCaches ...types.PipelineCache) (common.VkResult, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "MergePipelineCaches", srcCaches)
+	varargs := []any{dstCache}
+	for _, a := range srcCaches {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "MergePipelineCaches", varargs...)
 	ret0, _ := ret[0].(common.VkResult)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // MergePipelineCaches indicates an expected call of MergePipelineCaches.
-func (mr *MockPipelineCacheMockRecorder) MergePipelineCaches(srcCaches any) *gomock.Call {
+func (mr *MockVulkanMockRecorder) MergePipelineCaches(dstCache any, srcCaches ...any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "MergePipelineCaches", reflect.TypeOf((*MockPipelineCache)(nil).MergePipelineCaches), srcCaches)
+	varargs := append([]any{dstCache}, srcCaches...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "MergePipelineCaches", reflect.TypeOf((*MockVulkan)(nil).MergePipelineCaches), varargs...)
 }
 
-// MockPipelineLayout is a mock of PipelineLayout interface.
-type MockPipelineLayout struct {
-	ctrl     *gomock.Controller
-	recorder *MockPipelineLayoutMockRecorder
-	isgomock struct{}
-}
-
-// MockPipelineLayoutMockRecorder is the mock recorder for MockPipelineLayout.
-type MockPipelineLayoutMockRecorder struct {
-	mock *MockPipelineLayout
-}
-
-// NewMockPipelineLayout creates a new mock instance.
-func NewMockPipelineLayout(ctrl *gomock.Controller) *MockPipelineLayout {
-	mock := &MockPipelineLayout{ctrl: ctrl}
-	mock.recorder = &MockPipelineLayoutMockRecorder{mock}
-	return mock
-}
-
-// EXPECT returns an object that allows the caller to indicate expected use.
-func (m *MockPipelineLayout) EXPECT() *MockPipelineLayoutMockRecorder {
-	return m.recorder
-}
-
-// APIVersion mocks base method.
-func (m *MockPipelineLayout) APIVersion() common.APIVersion {
+// QueueBindSparse mocks base method.
+func (m *MockVulkan) QueueBindSparse(queue types.Queue, fence types.Fence, bindInfos ...core1_0.BindSparseInfo) (common.VkResult, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "APIVersion")
-	ret0, _ := ret[0].(common.APIVersion)
-	return ret0
-}
-
-// APIVersion indicates an expected call of APIVersion.
-func (mr *MockPipelineLayoutMockRecorder) APIVersion() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "APIVersion", reflect.TypeOf((*MockPipelineLayout)(nil).APIVersion))
-}
-
-// Destroy mocks base method.
-func (m *MockPipelineLayout) Destroy(callbacks *driver.AllocationCallbacks) {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "Destroy", callbacks)
-}
-
-// Destroy indicates an expected call of Destroy.
-func (mr *MockPipelineLayoutMockRecorder) Destroy(callbacks any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Destroy", reflect.TypeOf((*MockPipelineLayout)(nil).Destroy), callbacks)
-}
-
-// DeviceHandle mocks base method.
-func (m *MockPipelineLayout) DeviceHandle() driver.VkDevice {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "DeviceHandle")
-	ret0, _ := ret[0].(driver.VkDevice)
-	return ret0
-}
-
-// DeviceHandle indicates an expected call of DeviceHandle.
-func (mr *MockPipelineLayoutMockRecorder) DeviceHandle() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeviceHandle", reflect.TypeOf((*MockPipelineLayout)(nil).DeviceHandle))
-}
-
-// Driver mocks base method.
-func (m *MockPipelineLayout) Driver() driver.Driver {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Driver")
-	ret0, _ := ret[0].(driver.Driver)
-	return ret0
-}
-
-// Driver indicates an expected call of Driver.
-func (mr *MockPipelineLayoutMockRecorder) Driver() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Driver", reflect.TypeOf((*MockPipelineLayout)(nil).Driver))
-}
-
-// Handle mocks base method.
-func (m *MockPipelineLayout) Handle() driver.VkPipelineLayout {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Handle")
-	ret0, _ := ret[0].(driver.VkPipelineLayout)
-	return ret0
-}
-
-// Handle indicates an expected call of Handle.
-func (mr *MockPipelineLayoutMockRecorder) Handle() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Handle", reflect.TypeOf((*MockPipelineLayout)(nil).Handle))
-}
-
-// MockQueryPool is a mock of QueryPool interface.
-type MockQueryPool struct {
-	ctrl     *gomock.Controller
-	recorder *MockQueryPoolMockRecorder
-	isgomock struct{}
-}
-
-// MockQueryPoolMockRecorder is the mock recorder for MockQueryPool.
-type MockQueryPoolMockRecorder struct {
-	mock *MockQueryPool
-}
-
-// NewMockQueryPool creates a new mock instance.
-func NewMockQueryPool(ctrl *gomock.Controller) *MockQueryPool {
-	mock := &MockQueryPool{ctrl: ctrl}
-	mock.recorder = &MockQueryPoolMockRecorder{mock}
-	return mock
-}
-
-// EXPECT returns an object that allows the caller to indicate expected use.
-func (m *MockQueryPool) EXPECT() *MockQueryPoolMockRecorder {
-	return m.recorder
-}
-
-// APIVersion mocks base method.
-func (m *MockQueryPool) APIVersion() common.APIVersion {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "APIVersion")
-	ret0, _ := ret[0].(common.APIVersion)
-	return ret0
-}
-
-// APIVersion indicates an expected call of APIVersion.
-func (mr *MockQueryPoolMockRecorder) APIVersion() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "APIVersion", reflect.TypeOf((*MockQueryPool)(nil).APIVersion))
-}
-
-// Destroy mocks base method.
-func (m *MockQueryPool) Destroy(callbacks *driver.AllocationCallbacks) {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "Destroy", callbacks)
-}
-
-// Destroy indicates an expected call of Destroy.
-func (mr *MockQueryPoolMockRecorder) Destroy(callbacks any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Destroy", reflect.TypeOf((*MockQueryPool)(nil).Destroy), callbacks)
-}
-
-// DeviceHandle mocks base method.
-func (m *MockQueryPool) DeviceHandle() driver.VkDevice {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "DeviceHandle")
-	ret0, _ := ret[0].(driver.VkDevice)
-	return ret0
-}
-
-// DeviceHandle indicates an expected call of DeviceHandle.
-func (mr *MockQueryPoolMockRecorder) DeviceHandle() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeviceHandle", reflect.TypeOf((*MockQueryPool)(nil).DeviceHandle))
-}
-
-// Driver mocks base method.
-func (m *MockQueryPool) Driver() driver.Driver {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Driver")
-	ret0, _ := ret[0].(driver.Driver)
-	return ret0
-}
-
-// Driver indicates an expected call of Driver.
-func (mr *MockQueryPoolMockRecorder) Driver() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Driver", reflect.TypeOf((*MockQueryPool)(nil).Driver))
-}
-
-// Handle mocks base method.
-func (m *MockQueryPool) Handle() driver.VkQueryPool {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Handle")
-	ret0, _ := ret[0].(driver.VkQueryPool)
-	return ret0
-}
-
-// Handle indicates an expected call of Handle.
-func (mr *MockQueryPoolMockRecorder) Handle() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Handle", reflect.TypeOf((*MockQueryPool)(nil).Handle))
-}
-
-// PopulateResults mocks base method.
-func (m *MockQueryPool) PopulateResults(firstQuery, queryCount int, results []byte, resultStride int, flags core1_0.QueryResultFlags) (common.VkResult, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "PopulateResults", firstQuery, queryCount, results, resultStride, flags)
+	varargs := []any{queue, fence}
+	for _, a := range bindInfos {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "QueueBindSparse", varargs...)
 	ret0, _ := ret[0].(common.VkResult)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// PopulateResults indicates an expected call of PopulateResults.
-func (mr *MockQueryPoolMockRecorder) PopulateResults(firstQuery, queryCount, results, resultStride, flags any) *gomock.Call {
+// QueueBindSparse indicates an expected call of QueueBindSparse.
+func (mr *MockVulkanMockRecorder) QueueBindSparse(queue, fence any, bindInfos ...any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "PopulateResults", reflect.TypeOf((*MockQueryPool)(nil).PopulateResults), firstQuery, queryCount, results, resultStride, flags)
+	varargs := append([]any{queue, fence}, bindInfos...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "QueueBindSparse", reflect.TypeOf((*MockVulkan)(nil).QueueBindSparse), varargs...)
 }
 
-// MockQueue is a mock of Queue interface.
-type MockQueue struct {
-	ctrl     *gomock.Controller
-	recorder *MockQueueMockRecorder
-	isgomock struct{}
-}
-
-// MockQueueMockRecorder is the mock recorder for MockQueue.
-type MockQueueMockRecorder struct {
-	mock *MockQueue
-}
-
-// NewMockQueue creates a new mock instance.
-func NewMockQueue(ctrl *gomock.Controller) *MockQueue {
-	mock := &MockQueue{ctrl: ctrl}
-	mock.recorder = &MockQueueMockRecorder{mock}
-	return mock
-}
-
-// EXPECT returns an object that allows the caller to indicate expected use.
-func (m *MockQueue) EXPECT() *MockQueueMockRecorder {
-	return m.recorder
-}
-
-// APIVersion mocks base method.
-func (m *MockQueue) APIVersion() common.APIVersion {
+// QueueSubmit mocks base method.
+func (m *MockVulkan) QueueSubmit(queue types.Queue, fence types.Fence, o ...core1_0.SubmitInfo) (common.VkResult, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "APIVersion")
-	ret0, _ := ret[0].(common.APIVersion)
-	return ret0
-}
-
-// APIVersion indicates an expected call of APIVersion.
-func (mr *MockQueueMockRecorder) APIVersion() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "APIVersion", reflect.TypeOf((*MockQueue)(nil).APIVersion))
-}
-
-// BindSparse mocks base method.
-func (m *MockQueue) BindSparse(fence core1_0.Fence, bindInfos []core1_0.BindSparseInfo) (common.VkResult, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "BindSparse", fence, bindInfos)
+	varargs := []any{queue, fence}
+	for _, a := range o {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "QueueSubmit", varargs...)
 	ret0, _ := ret[0].(common.VkResult)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// BindSparse indicates an expected call of BindSparse.
-func (mr *MockQueueMockRecorder) BindSparse(fence, bindInfos any) *gomock.Call {
+// QueueSubmit indicates an expected call of QueueSubmit.
+func (mr *MockVulkanMockRecorder) QueueSubmit(queue, fence any, o ...any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "BindSparse", reflect.TypeOf((*MockQueue)(nil).BindSparse), fence, bindInfos)
+	varargs := append([]any{queue, fence}, o...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "QueueSubmit", reflect.TypeOf((*MockVulkan)(nil).QueueSubmit), varargs...)
 }
 
-// DeviceHandle mocks base method.
-func (m *MockQueue) DeviceHandle() driver.VkDevice {
+// QueueWaitIdle mocks base method.
+func (m *MockVulkan) QueueWaitIdle(queue types.Queue) (common.VkResult, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "DeviceHandle")
-	ret0, _ := ret[0].(driver.VkDevice)
-	return ret0
-}
-
-// DeviceHandle indicates an expected call of DeviceHandle.
-func (mr *MockQueueMockRecorder) DeviceHandle() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeviceHandle", reflect.TypeOf((*MockQueue)(nil).DeviceHandle))
-}
-
-// Driver mocks base method.
-func (m *MockQueue) Driver() driver.Driver {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Driver")
-	ret0, _ := ret[0].(driver.Driver)
-	return ret0
-}
-
-// Driver indicates an expected call of Driver.
-func (mr *MockQueueMockRecorder) Driver() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Driver", reflect.TypeOf((*MockQueue)(nil).Driver))
-}
-
-// Handle mocks base method.
-func (m *MockQueue) Handle() driver.VkQueue {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Handle")
-	ret0, _ := ret[0].(driver.VkQueue)
-	return ret0
-}
-
-// Handle indicates an expected call of Handle.
-func (mr *MockQueueMockRecorder) Handle() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Handle", reflect.TypeOf((*MockQueue)(nil).Handle))
-}
-
-// Submit mocks base method.
-func (m *MockQueue) Submit(fence core1_0.Fence, o []core1_0.SubmitInfo) (common.VkResult, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Submit", fence, o)
+	ret := m.ctrl.Call(m, "QueueWaitIdle", queue)
 	ret0, _ := ret[0].(common.VkResult)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// Submit indicates an expected call of Submit.
-func (mr *MockQueueMockRecorder) Submit(fence, o any) *gomock.Call {
+// QueueWaitIdle indicates an expected call of QueueWaitIdle.
+func (mr *MockVulkanMockRecorder) QueueWaitIdle(queue any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Submit", reflect.TypeOf((*MockQueue)(nil).Submit), fence, o)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "QueueWaitIdle", reflect.TypeOf((*MockVulkan)(nil).QueueWaitIdle), queue)
 }
 
-// WaitIdle mocks base method.
-func (m *MockQueue) WaitIdle() (common.VkResult, error) {
+// ResetCommandBuffer mocks base method.
+func (m *MockVulkan) ResetCommandBuffer(commandBuffer types.CommandBuffer, flags core1_0.CommandBufferResetFlags) (common.VkResult, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "WaitIdle")
+	ret := m.ctrl.Call(m, "ResetCommandBuffer", commandBuffer, flags)
 	ret0, _ := ret[0].(common.VkResult)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// WaitIdle indicates an expected call of WaitIdle.
-func (mr *MockQueueMockRecorder) WaitIdle() *gomock.Call {
+// ResetCommandBuffer indicates an expected call of ResetCommandBuffer.
+func (mr *MockVulkanMockRecorder) ResetCommandBuffer(commandBuffer, flags any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "WaitIdle", reflect.TypeOf((*MockQueue)(nil).WaitIdle))
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ResetCommandBuffer", reflect.TypeOf((*MockVulkan)(nil).ResetCommandBuffer), commandBuffer, flags)
 }
 
-// MockRenderPass is a mock of RenderPass interface.
-type MockRenderPass struct {
-	ctrl     *gomock.Controller
-	recorder *MockRenderPassMockRecorder
-	isgomock struct{}
-}
-
-// MockRenderPassMockRecorder is the mock recorder for MockRenderPass.
-type MockRenderPassMockRecorder struct {
-	mock *MockRenderPass
-}
-
-// NewMockRenderPass creates a new mock instance.
-func NewMockRenderPass(ctrl *gomock.Controller) *MockRenderPass {
-	mock := &MockRenderPass{ctrl: ctrl}
-	mock.recorder = &MockRenderPassMockRecorder{mock}
-	return mock
-}
-
-// EXPECT returns an object that allows the caller to indicate expected use.
-func (m *MockRenderPass) EXPECT() *MockRenderPassMockRecorder {
-	return m.recorder
-}
-
-// APIVersion mocks base method.
-func (m *MockRenderPass) APIVersion() common.APIVersion {
+// ResetCommandPool mocks base method.
+func (m *MockVulkan) ResetCommandPool(commandPool types.CommandPool, flags core1_0.CommandPoolResetFlags) (common.VkResult, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "APIVersion")
-	ret0, _ := ret[0].(common.APIVersion)
+	ret := m.ctrl.Call(m, "ResetCommandPool", commandPool, flags)
+	ret0, _ := ret[0].(common.VkResult)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ResetCommandPool indicates an expected call of ResetCommandPool.
+func (mr *MockVulkanMockRecorder) ResetCommandPool(commandPool, flags any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ResetCommandPool", reflect.TypeOf((*MockVulkan)(nil).ResetCommandPool), commandPool, flags)
+}
+
+// ResetDescriptorPool mocks base method.
+func (m *MockVulkan) ResetDescriptorPool(descriptorPool types.DescriptorPool, flags core1_0.DescriptorPoolResetFlags) (common.VkResult, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ResetDescriptorPool", descriptorPool, flags)
+	ret0, _ := ret[0].(common.VkResult)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ResetDescriptorPool indicates an expected call of ResetDescriptorPool.
+func (mr *MockVulkanMockRecorder) ResetDescriptorPool(descriptorPool, flags any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ResetDescriptorPool", reflect.TypeOf((*MockVulkan)(nil).ResetDescriptorPool), descriptorPool, flags)
+}
+
+// ResetEvent mocks base method.
+func (m *MockVulkan) ResetEvent(event types.Event) (common.VkResult, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ResetEvent", event)
+	ret0, _ := ret[0].(common.VkResult)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ResetEvent indicates an expected call of ResetEvent.
+func (mr *MockVulkanMockRecorder) ResetEvent(event any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ResetEvent", reflect.TypeOf((*MockVulkan)(nil).ResetEvent), event)
+}
+
+// ResetFences mocks base method.
+func (m *MockVulkan) ResetFences(fences ...types.Fence) (common.VkResult, error) {
+	m.ctrl.T.Helper()
+	varargs := []any{}
+	for _, a := range fences {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "ResetFences", varargs...)
+	ret0, _ := ret[0].(common.VkResult)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ResetFences indicates an expected call of ResetFences.
+func (mr *MockVulkanMockRecorder) ResetFences(fences ...any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ResetFences", reflect.TypeOf((*MockVulkan)(nil).ResetFences), fences...)
+}
+
+// SetEvent mocks base method.
+func (m *MockVulkan) SetEvent(event types.Event) (common.VkResult, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "SetEvent", event)
+	ret0, _ := ret[0].(common.VkResult)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// SetEvent indicates an expected call of SetEvent.
+func (mr *MockVulkanMockRecorder) SetEvent(event any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetEvent", reflect.TypeOf((*MockVulkan)(nil).SetEvent), event)
+}
+
+// Status mocks base method.
+func (m *MockVulkan) Status(fence types.Fence) (common.VkResult, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Status", fence)
+	ret0, _ := ret[0].(common.VkResult)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// Status indicates an expected call of Status.
+func (mr *MockVulkanMockRecorder) Status(fence any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Status", reflect.TypeOf((*MockVulkan)(nil).Status), fence)
+}
+
+// TrimCommandPool mocks base method.
+func (m *MockVulkan) TrimCommandPool(commandPool types.CommandPool, flags core1_1.CommandPoolTrimFlags) {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "TrimCommandPool", commandPool, flags)
+}
+
+// TrimCommandPool indicates an expected call of TrimCommandPool.
+func (mr *MockVulkanMockRecorder) TrimCommandPool(commandPool, flags any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "TrimCommandPool", reflect.TypeOf((*MockVulkan)(nil).TrimCommandPool), commandPool, flags)
+}
+
+// UnmapMemory mocks base method.
+func (m *MockVulkan) UnmapMemory(memory types.DeviceMemory) {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "UnmapMemory", memory)
+}
+
+// UnmapMemory indicates an expected call of UnmapMemory.
+func (mr *MockVulkanMockRecorder) UnmapMemory(memory any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UnmapMemory", reflect.TypeOf((*MockVulkan)(nil).UnmapMemory), memory)
+}
+
+// UpdateDescriptorSetWithTemplateFromBuffer mocks base method.
+func (m *MockVulkan) UpdateDescriptorSetWithTemplateFromBuffer(template types.DescriptorUpdateTemplate, descriptorSet types.DescriptorSet, data core1_0.DescriptorBufferInfo) {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "UpdateDescriptorSetWithTemplateFromBuffer", template, descriptorSet, data)
+}
+
+// UpdateDescriptorSetWithTemplateFromBuffer indicates an expected call of UpdateDescriptorSetWithTemplateFromBuffer.
+func (mr *MockVulkanMockRecorder) UpdateDescriptorSetWithTemplateFromBuffer(template, descriptorSet, data any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateDescriptorSetWithTemplateFromBuffer", reflect.TypeOf((*MockVulkan)(nil).UpdateDescriptorSetWithTemplateFromBuffer), template, descriptorSet, data)
+}
+
+// UpdateDescriptorSetWithTemplateFromImage mocks base method.
+func (m *MockVulkan) UpdateDescriptorSetWithTemplateFromImage(template types.DescriptorUpdateTemplate, descriptorSet types.DescriptorSet, data core1_0.DescriptorImageInfo) {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "UpdateDescriptorSetWithTemplateFromImage", template, descriptorSet, data)
+}
+
+// UpdateDescriptorSetWithTemplateFromImage indicates an expected call of UpdateDescriptorSetWithTemplateFromImage.
+func (mr *MockVulkanMockRecorder) UpdateDescriptorSetWithTemplateFromImage(template, descriptorSet, data any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateDescriptorSetWithTemplateFromImage", reflect.TypeOf((*MockVulkan)(nil).UpdateDescriptorSetWithTemplateFromImage), template, descriptorSet, data)
+}
+
+// UpdateDescriptorSetWithTemplateFromObjectHandle mocks base method.
+func (m *MockVulkan) UpdateDescriptorSetWithTemplateFromObjectHandle(template types.DescriptorUpdateTemplate, descriptorSet types.DescriptorSet, data driver.VulkanHandle) {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "UpdateDescriptorSetWithTemplateFromObjectHandle", template, descriptorSet, data)
+}
+
+// UpdateDescriptorSetWithTemplateFromObjectHandle indicates an expected call of UpdateDescriptorSetWithTemplateFromObjectHandle.
+func (mr *MockVulkanMockRecorder) UpdateDescriptorSetWithTemplateFromObjectHandle(template, descriptorSet, data any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateDescriptorSetWithTemplateFromObjectHandle", reflect.TypeOf((*MockVulkan)(nil).UpdateDescriptorSetWithTemplateFromObjectHandle), template, descriptorSet, data)
+}
+
+// UpdateDescriptorSets mocks base method.
+func (m *MockVulkan) UpdateDescriptorSets(device types.Device, writes []core1_0.WriteDescriptorSet, copies []core1_0.CopyDescriptorSet) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "UpdateDescriptorSets", device, writes, copies)
+	ret0, _ := ret[0].(error)
 	return ret0
 }
 
-// APIVersion indicates an expected call of APIVersion.
-func (mr *MockRenderPassMockRecorder) APIVersion() *gomock.Call {
+// UpdateDescriptorSets indicates an expected call of UpdateDescriptorSets.
+func (mr *MockVulkanMockRecorder) UpdateDescriptorSets(device, writes, copies any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "APIVersion", reflect.TypeOf((*MockRenderPass)(nil).APIVersion))
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateDescriptorSets", reflect.TypeOf((*MockVulkan)(nil).UpdateDescriptorSets), device, writes, copies)
 }
 
-// Destroy mocks base method.
-func (m *MockRenderPass) Destroy(callbacks *driver.AllocationCallbacks) {
+// WaitForFences mocks base method.
+func (m *MockVulkan) WaitForFences(waitForAll bool, timeout time.Duration, fences ...types.Fence) (common.VkResult, error) {
 	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "Destroy", callbacks)
+	varargs := []any{waitForAll, timeout}
+	for _, a := range fences {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "WaitForFences", varargs...)
+	ret0, _ := ret[0].(common.VkResult)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
 }
 
-// Destroy indicates an expected call of Destroy.
-func (mr *MockRenderPassMockRecorder) Destroy(callbacks any) *gomock.Call {
+// WaitForFences indicates an expected call of WaitForFences.
+func (mr *MockVulkanMockRecorder) WaitForFences(waitForAll, timeout any, fences ...any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Destroy", reflect.TypeOf((*MockRenderPass)(nil).Destroy), callbacks)
-}
-
-// DeviceHandle mocks base method.
-func (m *MockRenderPass) DeviceHandle() driver.VkDevice {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "DeviceHandle")
-	ret0, _ := ret[0].(driver.VkDevice)
-	return ret0
-}
-
-// DeviceHandle indicates an expected call of DeviceHandle.
-func (mr *MockRenderPassMockRecorder) DeviceHandle() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeviceHandle", reflect.TypeOf((*MockRenderPass)(nil).DeviceHandle))
-}
-
-// Driver mocks base method.
-func (m *MockRenderPass) Driver() driver.Driver {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Driver")
-	ret0, _ := ret[0].(driver.Driver)
-	return ret0
-}
-
-// Driver indicates an expected call of Driver.
-func (mr *MockRenderPassMockRecorder) Driver() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Driver", reflect.TypeOf((*MockRenderPass)(nil).Driver))
-}
-
-// Handle mocks base method.
-func (m *MockRenderPass) Handle() driver.VkRenderPass {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Handle")
-	ret0, _ := ret[0].(driver.VkRenderPass)
-	return ret0
-}
-
-// Handle indicates an expected call of Handle.
-func (mr *MockRenderPassMockRecorder) Handle() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Handle", reflect.TypeOf((*MockRenderPass)(nil).Handle))
-}
-
-// RenderAreaGranularity mocks base method.
-func (m *MockRenderPass) RenderAreaGranularity() core1_0.Extent2D {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "RenderAreaGranularity")
-	ret0, _ := ret[0].(core1_0.Extent2D)
-	return ret0
-}
-
-// RenderAreaGranularity indicates an expected call of RenderAreaGranularity.
-func (mr *MockRenderPassMockRecorder) RenderAreaGranularity() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RenderAreaGranularity", reflect.TypeOf((*MockRenderPass)(nil).RenderAreaGranularity))
-}
-
-// MockSampler is a mock of Sampler interface.
-type MockSampler struct {
-	ctrl     *gomock.Controller
-	recorder *MockSamplerMockRecorder
-	isgomock struct{}
-}
-
-// MockSamplerMockRecorder is the mock recorder for MockSampler.
-type MockSamplerMockRecorder struct {
-	mock *MockSampler
-}
-
-// NewMockSampler creates a new mock instance.
-func NewMockSampler(ctrl *gomock.Controller) *MockSampler {
-	mock := &MockSampler{ctrl: ctrl}
-	mock.recorder = &MockSamplerMockRecorder{mock}
-	return mock
-}
-
-// EXPECT returns an object that allows the caller to indicate expected use.
-func (m *MockSampler) EXPECT() *MockSamplerMockRecorder {
-	return m.recorder
-}
-
-// APIVersion mocks base method.
-func (m *MockSampler) APIVersion() common.APIVersion {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "APIVersion")
-	ret0, _ := ret[0].(common.APIVersion)
-	return ret0
-}
-
-// APIVersion indicates an expected call of APIVersion.
-func (mr *MockSamplerMockRecorder) APIVersion() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "APIVersion", reflect.TypeOf((*MockSampler)(nil).APIVersion))
-}
-
-// Destroy mocks base method.
-func (m *MockSampler) Destroy(callbacks *driver.AllocationCallbacks) {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "Destroy", callbacks)
-}
-
-// Destroy indicates an expected call of Destroy.
-func (mr *MockSamplerMockRecorder) Destroy(callbacks any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Destroy", reflect.TypeOf((*MockSampler)(nil).Destroy), callbacks)
-}
-
-// DeviceHandle mocks base method.
-func (m *MockSampler) DeviceHandle() driver.VkDevice {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "DeviceHandle")
-	ret0, _ := ret[0].(driver.VkDevice)
-	return ret0
-}
-
-// DeviceHandle indicates an expected call of DeviceHandle.
-func (mr *MockSamplerMockRecorder) DeviceHandle() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeviceHandle", reflect.TypeOf((*MockSampler)(nil).DeviceHandle))
-}
-
-// Driver mocks base method.
-func (m *MockSampler) Driver() driver.Driver {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Driver")
-	ret0, _ := ret[0].(driver.Driver)
-	return ret0
-}
-
-// Driver indicates an expected call of Driver.
-func (mr *MockSamplerMockRecorder) Driver() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Driver", reflect.TypeOf((*MockSampler)(nil).Driver))
-}
-
-// Handle mocks base method.
-func (m *MockSampler) Handle() driver.VkSampler {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Handle")
-	ret0, _ := ret[0].(driver.VkSampler)
-	return ret0
-}
-
-// Handle indicates an expected call of Handle.
-func (mr *MockSamplerMockRecorder) Handle() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Handle", reflect.TypeOf((*MockSampler)(nil).Handle))
-}
-
-// MockSamplerYcbcrConversion is a mock of SamplerYcbcrConversion interface.
-type MockSamplerYcbcrConversion struct {
-	ctrl     *gomock.Controller
-	recorder *MockSamplerYcbcrConversionMockRecorder
-	isgomock struct{}
-}
-
-// MockSamplerYcbcrConversionMockRecorder is the mock recorder for MockSamplerYcbcrConversion.
-type MockSamplerYcbcrConversionMockRecorder struct {
-	mock *MockSamplerYcbcrConversion
-}
-
-// NewMockSamplerYcbcrConversion creates a new mock instance.
-func NewMockSamplerYcbcrConversion(ctrl *gomock.Controller) *MockSamplerYcbcrConversion {
-	mock := &MockSamplerYcbcrConversion{ctrl: ctrl}
-	mock.recorder = &MockSamplerYcbcrConversionMockRecorder{mock}
-	return mock
-}
-
-// EXPECT returns an object that allows the caller to indicate expected use.
-func (m *MockSamplerYcbcrConversion) EXPECT() *MockSamplerYcbcrConversionMockRecorder {
-	return m.recorder
-}
-
-// APIVersion mocks base method.
-func (m *MockSamplerYcbcrConversion) APIVersion() common.APIVersion {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "APIVersion")
-	ret0, _ := ret[0].(common.APIVersion)
-	return ret0
-}
-
-// APIVersion indicates an expected call of APIVersion.
-func (mr *MockSamplerYcbcrConversionMockRecorder) APIVersion() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "APIVersion", reflect.TypeOf((*MockSamplerYcbcrConversion)(nil).APIVersion))
-}
-
-// Destroy mocks base method.
-func (m *MockSamplerYcbcrConversion) Destroy(allocator *driver.AllocationCallbacks) {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "Destroy", allocator)
-}
-
-// Destroy indicates an expected call of Destroy.
-func (mr *MockSamplerYcbcrConversionMockRecorder) Destroy(allocator any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Destroy", reflect.TypeOf((*MockSamplerYcbcrConversion)(nil).Destroy), allocator)
-}
-
-// DeviceHandle mocks base method.
-func (m *MockSamplerYcbcrConversion) DeviceHandle() driver.VkDevice {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "DeviceHandle")
-	ret0, _ := ret[0].(driver.VkDevice)
-	return ret0
-}
-
-// DeviceHandle indicates an expected call of DeviceHandle.
-func (mr *MockSamplerYcbcrConversionMockRecorder) DeviceHandle() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeviceHandle", reflect.TypeOf((*MockSamplerYcbcrConversion)(nil).DeviceHandle))
-}
-
-// Driver mocks base method.
-func (m *MockSamplerYcbcrConversion) Driver() driver.Driver {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Driver")
-	ret0, _ := ret[0].(driver.Driver)
-	return ret0
-}
-
-// Driver indicates an expected call of Driver.
-func (mr *MockSamplerYcbcrConversionMockRecorder) Driver() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Driver", reflect.TypeOf((*MockSamplerYcbcrConversion)(nil).Driver))
-}
-
-// Handle mocks base method.
-func (m *MockSamplerYcbcrConversion) Handle() driver.VkSamplerYcbcrConversion {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Handle")
-	ret0, _ := ret[0].(driver.VkSamplerYcbcrConversion)
-	return ret0
-}
-
-// Handle indicates an expected call of Handle.
-func (mr *MockSamplerYcbcrConversionMockRecorder) Handle() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Handle", reflect.TypeOf((*MockSamplerYcbcrConversion)(nil).Handle))
-}
-
-// MockSemaphore is a mock of Semaphore interface.
-type MockSemaphore struct {
-	ctrl     *gomock.Controller
-	recorder *MockSemaphoreMockRecorder
-	isgomock struct{}
-}
-
-// MockSemaphoreMockRecorder is the mock recorder for MockSemaphore.
-type MockSemaphoreMockRecorder struct {
-	mock *MockSemaphore
-}
-
-// NewMockSemaphore creates a new mock instance.
-func NewMockSemaphore(ctrl *gomock.Controller) *MockSemaphore {
-	mock := &MockSemaphore{ctrl: ctrl}
-	mock.recorder = &MockSemaphoreMockRecorder{mock}
-	return mock
-}
-
-// EXPECT returns an object that allows the caller to indicate expected use.
-func (m *MockSemaphore) EXPECT() *MockSemaphoreMockRecorder {
-	return m.recorder
-}
-
-// APIVersion mocks base method.
-func (m *MockSemaphore) APIVersion() common.APIVersion {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "APIVersion")
-	ret0, _ := ret[0].(common.APIVersion)
-	return ret0
-}
-
-// APIVersion indicates an expected call of APIVersion.
-func (mr *MockSemaphoreMockRecorder) APIVersion() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "APIVersion", reflect.TypeOf((*MockSemaphore)(nil).APIVersion))
-}
-
-// Destroy mocks base method.
-func (m *MockSemaphore) Destroy(callbacks *driver.AllocationCallbacks) {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "Destroy", callbacks)
-}
-
-// Destroy indicates an expected call of Destroy.
-func (mr *MockSemaphoreMockRecorder) Destroy(callbacks any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Destroy", reflect.TypeOf((*MockSemaphore)(nil).Destroy), callbacks)
-}
-
-// DeviceHandle mocks base method.
-func (m *MockSemaphore) DeviceHandle() driver.VkDevice {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "DeviceHandle")
-	ret0, _ := ret[0].(driver.VkDevice)
-	return ret0
-}
-
-// DeviceHandle indicates an expected call of DeviceHandle.
-func (mr *MockSemaphoreMockRecorder) DeviceHandle() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeviceHandle", reflect.TypeOf((*MockSemaphore)(nil).DeviceHandle))
-}
-
-// Driver mocks base method.
-func (m *MockSemaphore) Driver() driver.Driver {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Driver")
-	ret0, _ := ret[0].(driver.Driver)
-	return ret0
-}
-
-// Driver indicates an expected call of Driver.
-func (mr *MockSemaphoreMockRecorder) Driver() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Driver", reflect.TypeOf((*MockSemaphore)(nil).Driver))
-}
-
-// Handle mocks base method.
-func (m *MockSemaphore) Handle() driver.VkSemaphore {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Handle")
-	ret0, _ := ret[0].(driver.VkSemaphore)
-	return ret0
-}
-
-// Handle indicates an expected call of Handle.
-func (mr *MockSemaphoreMockRecorder) Handle() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Handle", reflect.TypeOf((*MockSemaphore)(nil).Handle))
-}
-
-// MockShaderModule is a mock of ShaderModule interface.
-type MockShaderModule struct {
-	ctrl     *gomock.Controller
-	recorder *MockShaderModuleMockRecorder
-	isgomock struct{}
-}
-
-// MockShaderModuleMockRecorder is the mock recorder for MockShaderModule.
-type MockShaderModuleMockRecorder struct {
-	mock *MockShaderModule
-}
-
-// NewMockShaderModule creates a new mock instance.
-func NewMockShaderModule(ctrl *gomock.Controller) *MockShaderModule {
-	mock := &MockShaderModule{ctrl: ctrl}
-	mock.recorder = &MockShaderModuleMockRecorder{mock}
-	return mock
-}
-
-// EXPECT returns an object that allows the caller to indicate expected use.
-func (m *MockShaderModule) EXPECT() *MockShaderModuleMockRecorder {
-	return m.recorder
-}
-
-// APIVersion mocks base method.
-func (m *MockShaderModule) APIVersion() common.APIVersion {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "APIVersion")
-	ret0, _ := ret[0].(common.APIVersion)
-	return ret0
-}
-
-// APIVersion indicates an expected call of APIVersion.
-func (mr *MockShaderModuleMockRecorder) APIVersion() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "APIVersion", reflect.TypeOf((*MockShaderModule)(nil).APIVersion))
-}
-
-// Destroy mocks base method.
-func (m *MockShaderModule) Destroy(callbacks *driver.AllocationCallbacks) {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "Destroy", callbacks)
-}
-
-// Destroy indicates an expected call of Destroy.
-func (mr *MockShaderModuleMockRecorder) Destroy(callbacks any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Destroy", reflect.TypeOf((*MockShaderModule)(nil).Destroy), callbacks)
-}
-
-// DeviceHandle mocks base method.
-func (m *MockShaderModule) DeviceHandle() driver.VkDevice {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "DeviceHandle")
-	ret0, _ := ret[0].(driver.VkDevice)
-	return ret0
-}
-
-// DeviceHandle indicates an expected call of DeviceHandle.
-func (mr *MockShaderModuleMockRecorder) DeviceHandle() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeviceHandle", reflect.TypeOf((*MockShaderModule)(nil).DeviceHandle))
-}
-
-// Driver mocks base method.
-func (m *MockShaderModule) Driver() driver.Driver {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Driver")
-	ret0, _ := ret[0].(driver.Driver)
-	return ret0
-}
-
-// Driver indicates an expected call of Driver.
-func (mr *MockShaderModuleMockRecorder) Driver() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Driver", reflect.TypeOf((*MockShaderModule)(nil).Driver))
-}
-
-// Handle mocks base method.
-func (m *MockShaderModule) Handle() driver.VkShaderModule {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Handle")
-	ret0, _ := ret[0].(driver.VkShaderModule)
-	return ret0
-}
-
-// Handle indicates an expected call of Handle.
-func (mr *MockShaderModuleMockRecorder) Handle() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Handle", reflect.TypeOf((*MockShaderModule)(nil).Handle))
-}
-
-// MockDeviceObjectBuilder is a mock of DeviceObjectBuilder interface.
-type MockDeviceObjectBuilder struct {
-	ctrl     *gomock.Controller
-	recorder *MockDeviceObjectBuilderMockRecorder
-	isgomock struct{}
-}
-
-// MockDeviceObjectBuilderMockRecorder is the mock recorder for MockDeviceObjectBuilder.
-type MockDeviceObjectBuilderMockRecorder struct {
-	mock *MockDeviceObjectBuilder
-}
-
-// NewMockDeviceObjectBuilder creates a new mock instance.
-func NewMockDeviceObjectBuilder(ctrl *gomock.Controller) *MockDeviceObjectBuilder {
-	mock := &MockDeviceObjectBuilder{ctrl: ctrl}
-	mock.recorder = &MockDeviceObjectBuilderMockRecorder{mock}
-	return mock
-}
-
-// EXPECT returns an object that allows the caller to indicate expected use.
-func (m *MockDeviceObjectBuilder) EXPECT() *MockDeviceObjectBuilderMockRecorder {
-	return m.recorder
-}
-
-// CreateDescriptorUpdateTemplate mocks base method.
-func (m *MockDeviceObjectBuilder) CreateDescriptorUpdateTemplate(coreDriver driver.Driver, device driver.VkDevice, handle driver.VkDescriptorUpdateTemplate, version common.APIVersion) core1_1.DescriptorUpdateTemplate {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreateDescriptorUpdateTemplate", coreDriver, device, handle, version)
-	ret0, _ := ret[0].(core1_1.DescriptorUpdateTemplate)
-	return ret0
-}
-
-// CreateDescriptorUpdateTemplate indicates an expected call of CreateDescriptorUpdateTemplate.
-func (mr *MockDeviceObjectBuilderMockRecorder) CreateDescriptorUpdateTemplate(coreDriver, device, handle, version any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateDescriptorUpdateTemplate", reflect.TypeOf((*MockDeviceObjectBuilder)(nil).CreateDescriptorUpdateTemplate), coreDriver, device, handle, version)
-}
-
-// CreateSamplerYcbcrConversion mocks base method.
-func (m *MockDeviceObjectBuilder) CreateSamplerYcbcrConversion(coreDriver driver.Driver, device driver.VkDevice, handle driver.VkSamplerYcbcrConversion, version common.APIVersion) core1_1.SamplerYcbcrConversion {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreateSamplerYcbcrConversion", coreDriver, device, handle, version)
-	ret0, _ := ret[0].(core1_1.SamplerYcbcrConversion)
-	return ret0
-}
-
-// CreateSamplerYcbcrConversion indicates an expected call of CreateSamplerYcbcrConversion.
-func (mr *MockDeviceObjectBuilderMockRecorder) CreateSamplerYcbcrConversion(coreDriver, device, handle, version any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateSamplerYcbcrConversion", reflect.TypeOf((*MockDeviceObjectBuilder)(nil).CreateSamplerYcbcrConversion), coreDriver, device, handle, version)
+	varargs := append([]any{waitForAll, timeout}, fences...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "WaitForFences", reflect.TypeOf((*MockVulkan)(nil).WaitForFences), varargs...)
 }

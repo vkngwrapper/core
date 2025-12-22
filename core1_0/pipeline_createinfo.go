@@ -11,6 +11,7 @@ import (
 	"github.com/CannibalVox/cgoparam"
 	"github.com/pkg/errors"
 	"github.com/vkngwrapper/core/v3/common"
+	"github.com/vkngwrapper/core/v3/types"
 )
 
 const (
@@ -66,14 +67,14 @@ type GraphicsPipelineCreateInfo struct {
 
 	// Layout is the description of binding locations used by both the Pipeline and DescriptorSet
 	// objects used with the Pipeline
-	Layout PipelineLayout
+	Layout types.PipelineLayout
 	// RenderPass is a RenderPass object describing the environment in which the Pipeline will be used
-	RenderPass RenderPass
+	RenderPass types.RenderPass
 
 	// Subpass is the index of the subpass in the RenderPass where this Pipeline will be used
 	Subpass int
 	// BasePipeline is a Pipeline object to derive from
-	BasePipeline Pipeline
+	BasePipeline types.Pipeline
 	// BasePipelineIndex is an index into the createInfos parameter to use as a Pipeline to derive from
 	BasePipelineIndex int
 
@@ -107,15 +108,15 @@ func (o GraphicsPipelineCreateInfo) PopulateCPointer(allocator *cgoparam.Allocat
 	createInfo.basePipelineHandle = (C.VkPipeline)(nil)
 	createInfo.basePipelineIndex = C.int32_t(o.BasePipelineIndex)
 
-	if o.Layout != nil {
+	if o.Layout.Handle() != 0 {
 		createInfo.layout = (C.VkPipelineLayout)(unsafe.Pointer(o.Layout.Handle()))
 	}
 
-	if o.RenderPass != nil {
+	if o.RenderPass.Handle() != 0 {
 		createInfo.renderPass = (C.VkRenderPass)(unsafe.Pointer(o.RenderPass.Handle()))
 	}
 
-	if o.BasePipeline != nil {
+	if o.BasePipeline.Handle() != 0 {
 		createInfo.basePipelineHandle = (C.VkPipeline)(unsafe.Pointer(o.BasePipeline.Handle()))
 	}
 
@@ -221,10 +222,10 @@ type ComputePipelineCreateInfo struct {
 	Stage PipelineShaderStageCreateInfo
 	// Layout is the description of binding locations used by both the Pipeline and DescriptorSet
 	// objects used with the Pipeline
-	Layout PipelineLayout
+	Layout types.PipelineLayout
 
 	// BasePipeline is a Pipeline to derive from
-	BasePipeline Pipeline
+	BasePipeline types.Pipeline
 	// BasePipelineIndex is an index into the createInfos parameters to use as a Pipeline to derive from
 	BasePipelineIndex int
 
@@ -232,8 +233,8 @@ type ComputePipelineCreateInfo struct {
 }
 
 func (o ComputePipelineCreateInfo) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
-	if o.Layout == nil {
-		return nil, errors.New("core1_0.ComputePipelineCreateInfo.Layout cannot be nil")
+	if o.Layout.Handle() == 0 {
+		return nil, errors.New("core1_0.ComputePipelineCreateInfo.Layout cannot be left unset")
 	}
 	if preallocatedPointer == unsafe.Pointer(nil) {
 		preallocatedPointer = allocator.Malloc(C.sizeof_struct_VkComputePipelineCreateInfo)
@@ -250,7 +251,7 @@ func (o ComputePipelineCreateInfo) PopulateCPointer(allocator *cgoparam.Allocato
 		return nil, err
 	}
 
-	if o.BasePipeline != nil {
+	if o.BasePipeline.Handle() != 0 {
 		createInfo.basePipelineHandle = C.VkPipeline(unsafe.Pointer(o.BasePipeline.Handle()))
 	}
 

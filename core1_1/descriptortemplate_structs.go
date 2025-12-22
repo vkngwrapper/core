@@ -11,6 +11,7 @@ import (
 	"github.com/CannibalVox/cgoparam"
 	"github.com/vkngwrapper/core/v3/common"
 	"github.com/vkngwrapper/core/v3/core1_0"
+	"github.com/vkngwrapper/core/v3/types"
 )
 
 // DescriptorUpdateTemplateType indicates the valid usage of the DescriptorUpdateTemplate
@@ -110,12 +111,12 @@ type DescriptorUpdateTemplateCreateInfo struct {
 	TemplateType DescriptorUpdateTemplateType
 
 	// DescriptorSetLayout is the DescriptorSetLayout used to build the DescriptorUpdateTemplate
-	DescriptorSetLayout core1_0.DescriptorSetLayout
+	DescriptorSetLayout types.DescriptorSetLayout
 
 	// PipelineBindPoint indicates the type of the Pipeline that will use the descriptors
 	PipelineBindPoint core1_0.PipelineBindPoint
 	// PipelineLayout is a PipelineLayout object used to program the bindings
-	PipelineLayout core1_0.PipelineLayout
+	PipelineLayout types.PipelineLayout
 	// Set is the set number of the DescriptorSet in the PipelineLayout that will be updated
 	Set int
 
@@ -145,11 +146,11 @@ func (o DescriptorUpdateTemplateCreateInfo) PopulateCPointer(allocator *cgoparam
 	createInfo.descriptorSetLayout = nil
 	createInfo.pipelineLayout = nil
 
-	if o.DescriptorSetLayout != nil {
+	if o.DescriptorSetLayout.Handle() != 0 {
 		createInfo.descriptorSetLayout = C.VkDescriptorSetLayout(unsafe.Pointer(o.DescriptorSetLayout.Handle()))
 	}
 
-	if o.PipelineLayout != nil {
+	if o.PipelineLayout.Handle() != 0 {
 		createInfo.pipelineLayout = C.VkPipelineLayout(unsafe.Pointer(o.PipelineLayout.Handle()))
 	}
 

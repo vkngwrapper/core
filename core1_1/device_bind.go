@@ -12,6 +12,7 @@ import (
 	"github.com/pkg/errors"
 	"github.com/vkngwrapper/core/v3/common"
 	"github.com/vkngwrapper/core/v3/core1_0"
+	"github.com/vkngwrapper/core/v3/types"
 )
 
 // BindBufferMemoryInfo specifies how to bind a Buffer to DeviceMemory
@@ -19,9 +20,9 @@ import (
 // https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkBindBufferMemoryInfo.html
 type BindBufferMemoryInfo struct {
 	// Buffer is the Buffer to be attached to memory
-	Buffer core1_0.Buffer
+	Buffer types.Buffer
 	// Memory describes the DeviceMemory object to attach
-	Memory core1_0.DeviceMemory
+	Memory types.DeviceMemory
 	// MemoryOffset is the start offset of the region of memory which is to be bound to the Buffer
 	MemoryOffset int
 
@@ -29,11 +30,11 @@ type BindBufferMemoryInfo struct {
 }
 
 func (o BindBufferMemoryInfo) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
-	if o.Buffer == nil {
-		return nil, errors.Errorf("core1_1.BindBufferMemoryInfo.Buffer cannot be nil")
+	if o.Buffer.Handle() == 0 {
+		return nil, errors.Errorf("core1_1.BindBufferMemoryInfo.Buffer cannot be left unset")
 	}
-	if o.Memory == nil {
-		return nil, errors.Errorf("core1_1.BindBufferMemoryInfo.Memory cannot be nil")
+	if o.Memory.Handle() == 0 {
+		return nil, errors.Errorf("core1_1.BindBufferMemoryInfo.Memory cannot be left unset")
 	}
 	if preallocatedPointer == nil {
 		preallocatedPointer = allocator.Malloc(int(unsafe.Sizeof(C.VkBindBufferMemoryInfo{})))
@@ -54,9 +55,9 @@ func (o BindBufferMemoryInfo) PopulateCPointer(allocator *cgoparam.Allocator, pr
 // BindImageMemoryInfo specifies how to bind an Image to DeviceMemory
 type BindImageMemoryInfo struct {
 	// Image is the image to be attached to DeviceMemory
-	Image core1_0.Image
+	Image types.Image
 	// Memory describes the DeviceMemory to attach
-	Memory core1_0.DeviceMemory
+	Memory types.DeviceMemory
 	// MemoryOffset is the start offset of the region of DeviceMemory to be bound to the Image
 	MemoryOffset uint64
 
@@ -64,11 +65,11 @@ type BindImageMemoryInfo struct {
 }
 
 func (o BindImageMemoryInfo) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
-	if o.Image == nil {
-		return nil, errors.Errorf("core1_1.BindImageMemoryInfo.Image cannot be nil")
+	if o.Image.Handle() == 0 {
+		return nil, errors.Errorf("core1_1.BindImageMemoryInfo.Image cannot be left unset")
 	}
-	if o.Memory == nil {
-		return nil, errors.Errorf("core1_1.BindImageMemoryInfo.Memory cannot be nil")
+	if o.Memory.Handle() == 0 {
+		return nil, errors.Errorf("core1_1.BindImageMemoryInfo.Memory cannot be left unset")
 	}
 	if preallocatedPointer == nil {
 		preallocatedPointer = allocator.Malloc(int(unsafe.Sizeof(C.VkBindImageMemoryInfo{})))

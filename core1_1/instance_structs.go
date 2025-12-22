@@ -13,6 +13,7 @@ import (
 	"github.com/vkngwrapper/core/v3/common"
 	"github.com/vkngwrapper/core/v3/core1_0"
 	"github.com/vkngwrapper/core/v3/driver"
+	"github.com/vkngwrapper/core/v3/types"
 )
 
 // PhysicalDeviceGroupProperties specifies PhysicalDevice group properties
@@ -21,7 +22,7 @@ import (
 type PhysicalDeviceGroupProperties struct {
 	// PhysicalDevices is a slice of PhysicalDevice objects that represent all PhysicalDevice
 	// objects in the group
-	PhysicalDevices []core1_0.PhysicalDevice
+	PhysicalDevices []types.PhysicalDevice
 	// SubsetAllocation specifies whether logical Device objects created from the group support
 	// allocating DeviceMemory on a subset of Device objects, via MemoryAllocateFlagsInfo
 	SubsetAllocation bool
@@ -60,13 +61,9 @@ func (o *PhysicalDeviceGroupProperties) PopulateOutData(cPointer unsafe.Pointer,
 	if !ok {
 		return nil, errors.New("outdata population requires an instance version passed to populate helpers")
 	}
-	builder, ok := common.OfType[core1_0.InstanceObjectBuilder](helpers)
-	if !ok {
-		return nil, errors.New("outdata population requires an instance object builder passed to populate helpers")
-	}
 
 	count := int(createInfo.physicalDeviceCount)
-	o.PhysicalDevices = make([]core1_0.PhysicalDevice, count)
+	o.PhysicalDevices = make([]types.PhysicalDevice, count)
 
 	propertiesUnsafe := arena.Malloc(C.sizeof_struct_VkPhysicalDeviceProperties)
 

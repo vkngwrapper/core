@@ -10,6 +10,7 @@
 package mocks
 
 import (
+	types "go/types"
 	reflect "reflect"
 
 	common "github.com/vkngwrapper/core/v3/common"
@@ -105,10 +106,10 @@ func (mr *MockLoaderMockRecorder) AvailableLayers() *gomock.Call {
 }
 
 // CreateInstance mocks base method.
-func (m *MockLoader) CreateInstance(allocationCallbacks *driver.AllocationCallbacks, options core1_0.InstanceCreateInfo) (core1_0.Instance, common.VkResult, error) {
+func (m *MockLoader) CreateInstance(allocationCallbacks *driver.AllocationCallbacks, options core1_0.InstanceCreateInfo) (types.Instance, common.VkResult, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateInstance", allocationCallbacks, options)
-	ret0, _ := ret[0].(core1_0.Instance)
+	ret0, _ := ret[0].(types.Instance)
 	ret1, _ := ret[1].(common.VkResult)
 	ret2, _ := ret[2].(error)
 	return ret0, ret1, ret2

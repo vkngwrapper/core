@@ -11,6 +11,7 @@ import (
 	"github.com/CannibalVox/cgoparam"
 	"github.com/pkg/errors"
 	"github.com/vkngwrapper/core/v3/common"
+	"github.com/vkngwrapper/core/v3/types"
 )
 
 // FramebufferCreateInfo specifies parameters of a newly-created Framebuffer
@@ -19,7 +20,7 @@ import (
 type FramebufferCreateInfo struct {
 	// Attachments is a slice ImageView objects, each of which will be used as the corresponding
 	// attachment in a RenderPass instance
-	Attachments []ImageView
+	Attachments []types.ImageView
 	// Flags is a bitmask of FramebufferCreateFlags
 	Flags FramebufferCreateFlags
 
@@ -31,7 +32,7 @@ type FramebufferCreateInfo struct {
 	Layers uint32
 
 	// RenderPass is a RenderPass defining what render passes the Framebuffer will be compatible with
-	RenderPass RenderPass
+	RenderPass types.RenderPass
 
 	common.NextOptions
 }
@@ -45,7 +46,7 @@ func (o FramebufferCreateInfo) PopulateCPointer(allocator *cgoparam.Allocator, p
 	createInfo.flags = C.VkFramebufferCreateFlags(o.Flags)
 	createInfo.pNext = next
 
-	if o.RenderPass != nil {
+	if o.RenderPass.Handle() != 0 {
 		createInfo.renderPass = (C.VkRenderPass)(unsafe.Pointer(o.RenderPass.Handle()))
 	}
 
@@ -56,8 +57,8 @@ func (o FramebufferCreateInfo) PopulateCPointer(allocator *cgoparam.Allocator, p
 		attachmentsSlice := ([]C.VkImageView)(unsafe.Slice(attachmentsPtr, attachmentCount))
 
 		for i := 0; i < attachmentCount; i++ {
-			if o.Attachments[i] == nil {
-				return nil, errors.Errorf("core1_0.FrameBufferCreateInfo.Attachments cannot contain nil elements, but element %d is nil", i)
+			if o.Attachments[i].Handle() == 0 {
+				return nil, errors.Errorf("core1_0.FrameBufferCreateInfo.Attachments cannot contain nil elements, but element %d is unset", i)
 			}
 			attachmentsSlice[i] = C.VkImageView(unsafe.Pointer(o.Attachments[i].Handle()))
 		}

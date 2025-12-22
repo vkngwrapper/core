@@ -9,44 +9,20 @@ import (
 	"unsafe"
 
 	"github.com/CannibalVox/cgoparam"
+	"github.com/pkg/errors"
 	"github.com/vkngwrapper/core/v3/common"
 	"github.com/vkngwrapper/core/v3/core1_0"
 	"github.com/vkngwrapper/core/v3/driver"
+	"github.com/vkngwrapper/core/v3/types"
 )
 
-////
+func (v *Vulkan) MapMemory(deviceMemory types.DeviceMemory, offset int, size int, flags core1_0.MemoryMapFlags) (unsafe.Pointer, common.VkResult, error) {
+	if deviceMemory.Handle() == 0 {
+		return nil, core1_0.VKErrorUnknown, errors.New("deviceMemory was uninitialized")
+	}
 
-// VulkanDeviceMemory is an implementation of the DeviceMemory interface that actually communicates with Vulkan. This
-// is the default implementation. See the interface for more documentation.
-type VulkanDeviceMemory struct {
-	DeviceDriver       driver.Driver
-	Device             driver.VkDevice
-	DeviceMemoryHandle driver.VkDeviceMemory
-
-	MaximumAPIVersion common.APIVersion
-
-	Size int
-}
-
-func (m *VulkanDeviceMemory) Handle() driver.VkDeviceMemory {
-	return m.DeviceMemoryHandle
-}
-
-func (m *VulkanDeviceMemory) DeviceHandle() driver.VkDevice {
-	return m.Device
-}
-
-func (m *VulkanDeviceMemory) Driver() driver.Driver {
-	return m.DeviceDriver
-}
-
-func (m *VulkanDeviceMemory) APIVersion() common.APIVersion {
-	return m.MaximumAPIVersion
-}
-
-func (m *VulkanDeviceMemory) Map(offset int, size int, flags core1_0.MemoryMapFlags) (unsafe.Pointer, common.VkResult, error) {
 	var data unsafe.Pointer
-	res, err := m.DeviceDriver.VkMapMemory(m.Device, m.DeviceMemoryHandle, driver.VkDeviceSize(offset), driver.VkDeviceSize(size), driver.VkMemoryMapFlags(flags), &data)
+	res, err := v.Driver.VkMapMemory(deviceMemory.DeviceHandle(), deviceMemory.Handle(), driver.VkDeviceSize(offset), driver.VkDeviceSize(size), driver.VkMemoryMapFlags(flags), &data)
 	if err != nil {
 		return nil, res, err
 	}
@@ -54,49 +30,32 @@ func (m *VulkanDeviceMemory) Map(offset int, size int, flags core1_0.MemoryMapFl
 	return data, res, nil
 }
 
-func (m *VulkanDeviceMemory) Unmap() {
-	m.DeviceDriver.VkUnmapMemory(m.Device, m.DeviceMemoryHandle)
+func (v *Vulkan) UnmapMemory(deviceMemory types.DeviceMemory) {
+	if deviceMemory.Handle() == 0 {
+		panic("deviceMemory was uninitialized")
+	}
+	v.Driver.VkUnmapMemory(deviceMemory.DeviceHandle(), deviceMemory.Handle())
 }
 
-func (m *VulkanDeviceMemory) Free(allocationCallbacks *driver.AllocationCallbacks) {
-	m.Driver().VkFreeMemory(m.Device, m.DeviceMemoryHandle, allocationCallbacks.Handle())
+func (v *Vulkan) FreeMemory(deviceMemory types.DeviceMemory, allocationCallbacks *driver.AllocationCallbacks) {
+	if deviceMemory.Handle() == 0 {
+		panic("deviceMemory was uninitialized")
+	}
+
+	v.Driver.VkFreeMemory(deviceMemory.DeviceHandle(), deviceMemory.Handle(), allocationCallbacks.Handle())
 }
 
-func (m *VulkanDeviceMemory) Commitment() int {
+func (v *Vulkan) GetDeviceMemoryCommitment(deviceMemory types.DeviceMemory) int {
+	if deviceMemory.Handle() == 0 {
+		panic("deviceMemory was uninitialized")
+	}
+
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
 	committedMemoryPtr := (*driver.VkDeviceSize)(arena.Malloc(8))
 
-	m.DeviceDriver.VkGetDeviceMemoryCommitment(m.Device, m.DeviceMemoryHandle, committedMemoryPtr)
+	v.Driver.VkGetDeviceMemoryCommitment(deviceMemory.DeviceHandle(), deviceMemory.Handle(), committedMemoryPtr)
 
 	return int(*committedMemoryPtr)
-}
-
-func (m *VulkanDeviceMemory) FlushAll() (common.VkResult, error) {
-	arena := cgoparam.GetAlloc()
-	defer cgoparam.ReturnAlloc(arena)
-
-	mappedRange := (*C.VkMappedMemoryRange)(arena.Malloc(C.sizeof_struct_VkMappedMemoryRange))
-	mappedRange.sType = C.VK_STRUCTURE_TYPE_MAPPED_MEMORY_RANGE
-	mappedRange.pNext = nil
-	mappedRange.memory = C.VkDeviceMemory(unsafe.Pointer(m.DeviceMemoryHandle))
-	mappedRange.offset = 0
-	mappedRange.size = C.VkDeviceSize(m.Size)
-
-	return m.DeviceDriver.VkFlushMappedMemoryRanges(m.Device, driver.Uint32(1), (*driver.VkMappedMemoryRange)(unsafe.Pointer(mappedRange)))
-}
-
-func (m *VulkanDeviceMemory) InvalidateAll() (common.VkResult, error) {
-	arena := cgoparam.GetAlloc()
-	defer cgoparam.ReturnAlloc(arena)
-
-	mappedRange := (*C.VkMappedMemoryRange)(arena.Malloc(C.sizeof_struct_VkMappedMemoryRange))
-	mappedRange.sType = C.VK_STRUCTURE_TYPE_MAPPED_MEMORY_RANGE
-	mappedRange.pNext = nil
-	mappedRange.memory = C.VkDeviceMemory(unsafe.Pointer(m.DeviceMemoryHandle))
-	mappedRange.offset = 0
-	mappedRange.size = C.VkDeviceSize(m.Size)
-
-	return m.DeviceDriver.VkInvalidateMappedMemoryRanges(m.Device, driver.Uint32(1), (*driver.VkMappedMemoryRange)(unsafe.Pointer(mappedRange)))
 }

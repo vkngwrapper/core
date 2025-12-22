@@ -6,15 +6,20 @@ package impl1_0
 */
 import "C"
 import (
+	"fmt"
 	"unsafe"
 
 	"github.com/CannibalVox/cgoparam"
 	"github.com/vkngwrapper/core/v3/common"
 	"github.com/vkngwrapper/core/v3/core1_0"
 	"github.com/vkngwrapper/core/v3/driver"
+	"github.com/vkngwrapper/core/v3/types"
 )
 
-func (q *VulkanQueue) Submit(fence core1_0.Fence, o []core1_0.SubmitInfo) (common.VkResult, error) {
+func (v *Vulkan) Submit(queue types.Queue, fence types.Fence, o []core1_0.SubmitInfo) (common.VkResult, error) {
+	if queue.Handle() == 0 {
+		return core1_0.VKErrorUnknown, fmt.Errorf("queue is uninitialized")
+	}
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
@@ -25,9 +30,9 @@ func (q *VulkanQueue) Submit(fence core1_0.Fence, o []core1_0.SubmitInfo) (commo
 	}
 
 	var fenceHandle driver.VkFence
-	if fence != nil {
+	if fence.Handle() != 0 {
 		fenceHandle = fence.Handle()
 	}
 
-	return q.Driver().VkQueueSubmit(q.Handle(), driver.Uint32(submitCount), (*driver.VkSubmitInfo)(unsafe.Pointer(createInfoPtrUnsafe)), fenceHandle)
+	return v.Driver.VkQueueSubmit(queue.Handle(), driver.Uint32(submitCount), (*driver.VkSubmitInfo)(unsafe.Pointer(createInfoPtrUnsafe)), fenceHandle)
 }

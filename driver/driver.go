@@ -245,13 +245,6 @@ func (l *vulkanDriver) Destroy() {
 	C.free(unsafe.Pointer(l.funcPtrs))
 }
 
-func (l *vulkanDriver) CreateInstanceDriver(instance VkInstance) (Driver, error) {
-	instanceFuncPtrs := (*C.DriverFuncPtrs)(C.malloc(C.sizeof_struct_DriverFuncPtrs))
-	C.instanceFuncPtrs_populate((C.VkInstance)(unsafe.Pointer(instance)), l.funcPtrs, instanceFuncPtrs)
-
-	return createVulkanDriver(instanceFuncPtrs, instance, VkDevice(NullHandle))
-}
-
 func (l *vulkanDriver) CreateDeviceDriver(device VkDevice) (Driver, error) {
 	if l.instance == VkInstance(NullHandle) {
 		return nil, errors.New("attempted to call instance driver function on a basic driver")

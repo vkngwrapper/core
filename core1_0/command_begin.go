@@ -10,6 +10,7 @@ import (
 
 	"github.com/CannibalVox/cgoparam"
 	"github.com/vkngwrapper/core/v3/common"
+	"github.com/vkngwrapper/core/v3/types"
 )
 
 const (
@@ -118,10 +119,10 @@ type CommandBufferInheritanceInfo struct {
 	// Framebuffer refers to the Framebuffer object that the CommandBuffer will be rendering to
 	// if it is executed within a RenderPass instance. It can be nil if the Framebuffer is not
 	// known.
-	Framebuffer Framebuffer
+	Framebuffer types.Framebuffer
 	// RenderPass is a RenderPass object defining which render passes the CommandBuffer will be
 	// compatible with and can be executed within
-	RenderPass RenderPass
+	RenderPass types.RenderPass
 	// Subpass is the index of hte subpass within the RenderPass instance that the CommandBuffer
 	// will be executed within
 	Subpass int
@@ -151,11 +152,11 @@ func (o CommandBufferInheritanceInfo) PopulateCPointer(allocator *cgoparam.Alloc
 	createInfo.renderPass = nil
 	createInfo.framebuffer = nil
 
-	if o.Framebuffer != nil {
+	if o.Framebuffer.Handle() != 0 {
 		createInfo.framebuffer = (C.VkFramebuffer)(unsafe.Pointer(o.Framebuffer.Handle()))
 	}
 
-	if o.RenderPass != nil {
+	if o.RenderPass.Handle() != 0 {
 		createInfo.renderPass = (C.VkRenderPass)(unsafe.Pointer(o.RenderPass.Handle()))
 	}
 

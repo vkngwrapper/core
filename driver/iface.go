@@ -10,7 +10,6 @@ import (
 
 type Driver interface {
 	Destroy()
-	CreateInstanceDriver(instance VkInstance) (Driver, error)
 	CreateDeviceDriver(device VkDevice) (Driver, error)
 	LoadProcAddr(name *Char) unsafe.Pointer
 	LoadInstanceProcAddr(name *Char) unsafe.Pointer

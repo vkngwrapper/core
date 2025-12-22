@@ -11,15 +11,19 @@ import (
 	"github.com/CannibalVox/cgoparam"
 	"github.com/vkngwrapper/core/v3/core1_0"
 	"github.com/vkngwrapper/core/v3/driver"
+	"github.com/vkngwrapper/core/v3/types"
 )
 
-func (i *VulkanImage) SparseMemoryRequirements() []core1_0.SparseImageMemoryRequirements {
+func (v *Vulkan) GetImageSparseMemoryRequirements(image types.Image) []core1_0.SparseImageMemoryRequirements {
+	if image.Handle() == 0 {
+		panic("image was uninitialized")
+	}
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
 	requirementsCount := (*C.uint32_t)(arena.Malloc(4))
 
-	i.DeviceDriver.VkGetImageSparseMemoryRequirements(i.Device, i.ImageHandle, (*driver.Uint32)(requirementsCount), nil)
+	v.Driver.VkGetImageSparseMemoryRequirements(image.DeviceHandle(), image.Handle(), (*driver.Uint32)(requirementsCount), nil)
 
 	if *requirementsCount == 0 {
 		return nil
@@ -27,7 +31,7 @@ func (i *VulkanImage) SparseMemoryRequirements() []core1_0.SparseImageMemoryRequ
 
 	requirementsPtr := (*C.VkSparseImageMemoryRequirements)(arena.Malloc(int(*requirementsCount) * C.sizeof_struct_VkSparseImageMemoryRequirements))
 
-	i.DeviceDriver.VkGetImageSparseMemoryRequirements(i.Device, i.ImageHandle, (*driver.Uint32)(unsafe.Pointer(requirementsCount)), (*driver.VkSparseImageMemoryRequirements)(unsafe.Pointer(requirementsPtr)))
+	v.Driver.VkGetImageSparseMemoryRequirements(image.DeviceHandle(), image.Handle(), (*driver.Uint32)(unsafe.Pointer(requirementsCount)), (*driver.VkSparseImageMemoryRequirements)(unsafe.Pointer(requirementsPtr)))
 
 	requirementsSlice := ([]C.VkSparseImageMemoryRequirements)(unsafe.Slice(requirementsPtr, int(*requirementsCount)))
 

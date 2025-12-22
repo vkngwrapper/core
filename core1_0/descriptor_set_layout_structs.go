@@ -11,6 +11,7 @@ import (
 	"github.com/CannibalVox/cgoparam"
 	"github.com/pkg/errors"
 	"github.com/vkngwrapper/core/v3/common"
+	"github.com/vkngwrapper/core/v3/types"
 )
 
 const (
@@ -90,7 +91,7 @@ type DescriptorSetLayoutBinding struct {
 
 	// ImmutableSamplers is a slice of Sampler objects that will be copied into the set layout
 	// and used for the corresponding binding.
-	ImmutableSamplers []Sampler
+	ImmutableSamplers []types.Sampler
 }
 
 // DescriptorSetLayoutCreateInfo specifies parameters of a newly-created DescriptorSetLayout
@@ -139,8 +140,8 @@ func (o DescriptorSetLayoutCreateInfo) PopulateCPointer(allocator *cgoparam.Allo
 				immutableSamplerSlice := ([]C.VkSampler)(unsafe.Slice(immutableSamplerPtr, samplerCount))
 
 				for samplerIndex := 0; samplerIndex < samplerCount; samplerIndex++ {
-					if o.Bindings[i].ImmutableSamplers[samplerIndex] == nil {
-						return nil, errors.Errorf("Bindings[%d].ImmutableSamplers element %d is nil", i, samplerIndex)
+					if o.Bindings[i].ImmutableSamplers[samplerIndex].Handle() == 0 {
+						return nil, errors.Errorf("Bindings[%d].ImmutableSamplers element %d is unset", i, samplerIndex)
 					}
 					immutableSamplerSlice[samplerIndex] = C.VkSampler(unsafe.Pointer(o.Bindings[i].ImmutableSamplers[samplerIndex].Handle()))
 				}

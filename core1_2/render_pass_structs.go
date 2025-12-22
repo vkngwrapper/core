@@ -12,6 +12,7 @@ import (
 	"github.com/pkg/errors"
 	"github.com/vkngwrapper/core/v3/common"
 	"github.com/vkngwrapper/core/v3/core1_0"
+	"github.com/vkngwrapper/core/v3/types"
 )
 
 // SubpassBeginInfo specifies subpass begin information
@@ -445,7 +446,7 @@ func (o AttachmentReferenceStencilLayout) PopulateCPointer(allocator *cgoparam.A
 type RenderPassAttachmentBeginInfo struct {
 	// Attachments is a slice of ImageView objects, each of which will be used as the corresponding
 	// attachment in the RenderPass instance
-	Attachments []core1_0.ImageView
+	Attachments []types.ImageView
 
 	common.NextOptions
 }
@@ -467,9 +468,9 @@ func (o RenderPassAttachmentBeginInfo) PopulateCPointer(allocator *cgoparam.Allo
 		info.pAttachments = (*C.VkImageView)(allocator.Malloc(count * int(unsafe.Sizeof([1]C.VkImageView{}))))
 		attachmentSlice := unsafe.Slice(info.pAttachments, count)
 		for i := 0; i < count; i++ {
-			if o.Attachments[i] == nil {
-				return nil, errors.Errorf("core1_2.RenderPassAttachmentBeginInfo.Attachments cannot have nil "+
-					"elements, but element %d is nil", i)
+			if o.Attachments[i].Handle() == 0 {
+				return nil, errors.Errorf("core1_2.RenderPassAttachmentBeginInfo.Attachments cannot be unset "+
+					"elements, but element %d is unset", i)
 			}
 			attachmentSlice[i] = C.VkImageView(unsafe.Pointer(o.Attachments[i].Handle()))
 		}

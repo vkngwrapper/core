@@ -10,6 +10,7 @@ import (
 
 	"github.com/CannibalVox/cgoparam"
 	"github.com/vkngwrapper/core/v3/common"
+	"github.com/vkngwrapper/core/v3/types"
 )
 
 const (
@@ -36,10 +37,10 @@ func init() {
 // https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkRenderPassBeginInfo.html
 type RenderPassBeginInfo struct {
 	// RenderPass is the RenderPass to begin an instance of
-	RenderPass RenderPass
+	RenderPass types.RenderPass
 	// Framebuffer is the Framebuffer containing the attachments that are used with the
 	// RenderPass
-	Framebuffer Framebuffer
+	Framebuffer types.Framebuffer
 
 	// RenderArea is the render area that is affected by this RenderPass instance
 	RenderArea Rect2D
@@ -62,11 +63,11 @@ func (o RenderPassBeginInfo) PopulateCPointer(allocator *cgoparam.Allocator, pre
 	createInfo.renderPass = nil
 	createInfo.framebuffer = nil
 
-	if o.RenderPass != nil {
+	if o.RenderPass.Handle() != 0 {
 		createInfo.renderPass = (C.VkRenderPass)(unsafe.Pointer(o.RenderPass.Handle()))
 	}
 
-	if o.Framebuffer != nil {
+	if o.Framebuffer.Handle() != 0 {
 		createInfo.framebuffer = (C.VkFramebuffer)(unsafe.Pointer(o.Framebuffer.Handle()))
 	}
 

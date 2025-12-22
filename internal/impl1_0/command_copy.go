@@ -9,17 +9,22 @@ import (
 	"unsafe"
 
 	"github.com/CannibalVox/cgoparam"
+	"github.com/pkg/errors"
 	"github.com/vkngwrapper/core/v3/common"
 	"github.com/vkngwrapper/core/v3/core1_0"
 	"github.com/vkngwrapper/core/v3/driver"
+	"github.com/vkngwrapper/core/v3/types"
 )
 
-func (c *VulkanCommandBuffer) CmdCopyBuffer(srcBuffer core1_0.Buffer, dstBuffer core1_0.Buffer, copyRegions []core1_0.BufferCopy) error {
-	if srcBuffer == nil {
-		panic("srcBuffer cannot be nil")
+func (v *Vulkan) CmdCopyBuffer(commandBuffer types.CommandBuffer, srcBuffer types.Buffer, dstBuffer types.Buffer, copyRegions ...core1_0.BufferCopy) error {
+	if commandBuffer.Handle() == 0 {
+		return errors.New("commandBuffer cannot be uninitialized")
 	}
-	if dstBuffer == nil {
-		panic("dstBuffer cannot be nil")
+	if srcBuffer.Handle() == 0 {
+		return errors.New("srcBuffer cannot be uninitialized")
+	}
+	if dstBuffer.Handle() == 0 {
+		return errors.New("dstBuffer cannot be uninitialized")
 	}
 
 	allocator := cgoparam.GetAlloc()
@@ -30,16 +35,19 @@ func (c *VulkanCommandBuffer) CmdCopyBuffer(srcBuffer core1_0.Buffer, dstBuffer 
 		return err
 	}
 
-	c.DeviceDriver.VkCmdCopyBuffer(c.CommandBufferHandle, srcBuffer.Handle(), dstBuffer.Handle(), driver.Uint32(len(copyRegions)), (*driver.VkBufferCopy)(unsafe.Pointer(copyRegionPtr)))
+	v.Driver.VkCmdCopyBuffer(commandBuffer.Handle(), srcBuffer.Handle(), dstBuffer.Handle(), driver.Uint32(len(copyRegions)), (*driver.VkBufferCopy)(unsafe.Pointer(copyRegionPtr)))
 	return nil
 }
 
-func (c *VulkanCommandBuffer) CmdCopyImage(srcImage core1_0.Image, srcImageLayout core1_0.ImageLayout, dstImage core1_0.Image, dstImageLayout core1_0.ImageLayout, regions []core1_0.ImageCopy) error {
-	if srcImage == nil {
-		panic("srcImage cannot be nil")
+func (v *Vulkan) CmdCopyImage(commandBuffer types.CommandBuffer, srcImage types.Image, srcImageLayout core1_0.ImageLayout, dstImage types.Image, dstImageLayout core1_0.ImageLayout, regions ...core1_0.ImageCopy) error {
+	if commandBuffer.Handle() == 0 {
+		return errors.New("commandBuffer cannot be uninitialized")
 	}
-	if dstImage == nil {
-		panic("dstImage cannot be nil")
+	if srcImage.Handle() == 0 {
+		return errors.New("srcImage cannot be uninitialized")
+	}
+	if dstImage.Handle() == 0 {
+		return errors.New("dstImage cannot be uninitialized")
 	}
 	allocator := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(allocator)
@@ -50,6 +58,6 @@ func (c *VulkanCommandBuffer) CmdCopyImage(srcImage core1_0.Image, srcImageLayou
 		return err
 	}
 
-	c.DeviceDriver.VkCmdCopyImage(c.CommandBufferHandle, srcImage.Handle(), driver.VkImageLayout(srcImageLayout), dstImage.Handle(), driver.VkImageLayout(dstImageLayout), driver.Uint32(copyRegionCount), (*driver.VkImageCopy)(unsafe.Pointer(copyRegionUnsafe)))
+	v.Driver.VkCmdCopyImage(commandBuffer.Handle(), srcImage.Handle(), driver.VkImageLayout(srcImageLayout), dstImage.Handle(), driver.VkImageLayout(dstImageLayout), driver.Uint32(copyRegionCount), (*driver.VkImageCopy)(unsafe.Pointer(copyRegionUnsafe)))
 	return nil
 }

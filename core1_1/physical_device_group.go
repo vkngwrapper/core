@@ -11,7 +11,7 @@ import (
 	"github.com/CannibalVox/cgoparam"
 	"github.com/pkg/errors"
 	"github.com/vkngwrapper/core/v3/common"
-	"github.com/vkngwrapper/core/v3/core1_0"
+	"github.com/vkngwrapper/core/v3/types"
 )
 
 // MemoryAllocateFlags specifies flags for a DeviceMemory allocation
@@ -50,7 +50,7 @@ func init() {
 // https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkDeviceGroupDeviceCreateInfo.html
 type DeviceGroupDeviceCreateInfo struct {
 	// PhysicalDevices is a slice of PhysicalDevice objects belonging to the same Device group
-	PhysicalDevices []core1_0.PhysicalDevice
+	PhysicalDevices []types.PhysicalDevice
 
 	common.NextOptions
 }
@@ -74,9 +74,9 @@ func (o DeviceGroupDeviceCreateInfo) PopulateCPointer(allocator *cgoparam.Alloca
 	physicalDevicesSlice := ([]C.VkPhysicalDevice)(unsafe.Slice(physicalDevicesPtr, count))
 
 	for i := 0; i < count; i++ {
-		if o.PhysicalDevices[i] == nil {
-			return nil, errors.Errorf("core1_1.DeviceGroupDeviceCreateInfo.PhysicalDevices cannot contain nil "+
-				"elements, but elements %d is nil", i)
+		if o.PhysicalDevices[i].Handle() == 0 {
+			return nil, errors.Errorf("core1_1.DeviceGroupDeviceCreateInfo.PhysicalDevices cannot contain unset elements "+
+				"elements, but elements %d is unset", i)
 		}
 		physicalDevicesSlice[i] = C.VkPhysicalDevice(unsafe.Pointer(o.PhysicalDevices[i].Handle()))
 	}

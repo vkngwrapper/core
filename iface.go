@@ -9,7 +9,6 @@ import (
 	"unsafe"
 
 	"github.com/vkngwrapper/core/v3/common"
-	"github.com/vkngwrapper/core/v3/core1_0"
 	"github.com/vkngwrapper/core/v3/driver"
 )
 
@@ -22,33 +21,6 @@ type Loader interface {
 	Driver() driver.Driver
 	// APIVersion is the maximum Vulkan API version supported by this Loader.
 	APIVersion() common.APIVersion
-
-	// AvailableExtensions returns all of the instance extensions available on this Loader,
-	// in the form of a map of extension name to ExtensionProperties
-	//
-	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/vkEnumerateInstanceExtensionProperties.html
-	AvailableExtensions() (map[string]*core1_0.ExtensionProperties, common.VkResult, error)
-	// AvailableExtensionsForLayer returns all of the layer extensions available on this Loader
-	// for the requested layer, in the form of a map of extension name to ExtensionProperties
-	//
-	// layerName - a string naming the layer to retrieve extensions from
-	//
-	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/vkEnumerateInstanceExtensionProperties.html
-	AvailableExtensionsForLayer(layerName string) (map[string]*core1_0.ExtensionProperties, common.VkResult, error)
-	// AvailableLayers returns all of the layers available on this Loader, in the form of a
-	// map of layer name to LayerProperties
-	//
-	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/vkEnumerateInstanceLayerProperties.html
-	AvailableLayers() (map[string]*core1_0.LayerProperties, common.VkResult, error)
-
-	// CreateInstance creates a new Vulkan Instance
-	//
-	// allocationCallbacks - controls host memory allocation
-	//
-	// options - Controls creation of the Instance
-	//
-	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/vkCreateInstance.html
-	CreateInstance(allocationCallbacks *driver.AllocationCallbacks, options core1_0.InstanceCreateInfo) (core1_0.Instance, common.VkResult, error)
 }
 
 // CreateLoaderFromProcAddr generates a Loader from a ProcAddr provided by another library,

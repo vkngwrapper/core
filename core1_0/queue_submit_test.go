@@ -13,6 +13,7 @@ import (
 	"github.com/vkngwrapper/core/v3/internal/impl1_0"
 	"github.com/vkngwrapper/core/v3/mocks"
 	"github.com/vkngwrapper/core/v3/mocks/mocks1_0"
+	"github.com/vkngwrapper/core/v3/types"
 	"go.uber.org/mock/gomock"
 )
 
@@ -77,10 +78,10 @@ func TestSubmitToQueue_SignalSuccess(t *testing.T) {
 
 	_, err := queue.Submit(fence, []core1_0.SubmitInfo{
 		{
-			CommandBuffers:   []core1_0.CommandBuffer{buffer},
-			WaitSemaphores:   []core1_0.Semaphore{waitSemaphore1, waitSemaphore2},
+			CommandBuffers:   []types.CommandBuffer{buffer},
+			WaitSemaphores:   []types.Semaphore{waitSemaphore1, waitSemaphore2},
 			WaitDstStageMask: []core1_0.PipelineStageFlags{core1_0.PipelineStageVertexShader, core1_0.PipelineStageFragmentShader},
-			SignalSemaphores: []core1_0.Semaphore{signalSemaphore1, signalSemaphore2, signalSemaphore3},
+			SignalSemaphores: []types.Semaphore{signalSemaphore1, signalSemaphore2, signalSemaphore3},
 		},
 	})
 	require.NoError(t, err)
@@ -125,10 +126,10 @@ func TestSubmitToQueue_NoSignalSuccess(t *testing.T) {
 
 	_, err := queue.Submit(nil, []core1_0.SubmitInfo{
 		{
-			CommandBuffers:   []core1_0.CommandBuffer{buffer},
-			WaitSemaphores:   []core1_0.Semaphore{},
+			CommandBuffers:   []types.CommandBuffer{buffer},
+			WaitSemaphores:   []types.Semaphore{},
 			WaitDstStageMask: []core1_0.PipelineStageFlags{},
-			SignalSemaphores: []core1_0.Semaphore{},
+			SignalSemaphores: []types.Semaphore{},
 		},
 	})
 	require.NoError(t, err)
@@ -151,10 +152,10 @@ func TestSubmitToQueue_MismatchWaitSemaphores(t *testing.T) {
 
 	_, err := queue.Submit(nil, []core1_0.SubmitInfo{
 		{
-			CommandBuffers:   []core1_0.CommandBuffer{buffer},
-			WaitSemaphores:   []core1_0.Semaphore{waitSemaphore1, waitSemaphore2},
+			CommandBuffers:   []types.CommandBuffer{buffer},
+			WaitSemaphores:   []types.Semaphore{waitSemaphore1, waitSemaphore2},
 			WaitDstStageMask: []core1_0.PipelineStageFlags{core1_0.PipelineStageFragmentShader},
-			SignalSemaphores: []core1_0.Semaphore{},
+			SignalSemaphores: []types.Semaphore{},
 		},
 	})
 	require.EqualError(t, err, "attempted to submit with 2 wait semaphores but 1 dst stages- these should match")
