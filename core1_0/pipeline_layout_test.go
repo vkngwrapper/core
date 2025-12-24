@@ -8,8 +8,8 @@ import (
 	"github.com/stretchr/testify/require"
 	"github.com/vkngwrapper/core/v3/common"
 	"github.com/vkngwrapper/core/v3/core1_0"
-	"github.com/vkngwrapper/core/v3/driver"
-	mock_driver "github.com/vkngwrapper/core/v3/driver/mocks"
+	"github.com/vkngwrapper/core/v3/loader"
+	mock_driver "github.com/vkngwrapper/core/v3/loader/mocks"
 	"github.com/vkngwrapper/core/v3/mocks"
 	"github.com/vkngwrapper/core/v3/types"
 	"go.uber.org/mock/gomock"
@@ -19,14 +19,14 @@ func TestVulkanLoader1_0_CreatePipelineLayout(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_0)
+	mockDriver := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_0)
 	device := mocks.NewDummyDevice(common.Vulkan1_0, []string{})
 	descriptorSetLayout1 := mocks.NewDummyDescriptorSetLayout(device)
 	descriptorSetLayout2 := mocks.NewDummyDescriptorSetLayout(device)
 	layoutHandle := mocks.NewFakePipelineLayout()
 
 	mockDriver.EXPECT().VkCreatePipelineLayout(device.Handle(), gomock.Not(nil), nil, gomock.Not(nil)).DoAndReturn(
-		func(device driver.VkDevice, pCreateInfo *driver.VkPipelineLayoutCreateInfo, pAllocator *driver.VkAllocationCallbacks, pPipelineLayout *driver.VkPipelineLayout) (common.VkResult, error) {
+		func(device loader.VkDevice, pCreateInfo *loader.VkPipelineLayoutCreateInfo, pAllocator *loader.VkAllocationCallbacks, pPipelineLayout *loader.VkPipelineLayout) (common.VkResult, error) {
 			*pPipelineLayout = layoutHandle
 
 			val := reflect.ValueOf(*pCreateInfo)
@@ -37,14 +37,14 @@ func TestVulkanLoader1_0_CreatePipelineLayout(t *testing.T) {
 			require.Equal(t, uint64(2), val.FieldByName("setLayoutCount").Uint())
 			require.Equal(t, uint64(3), val.FieldByName("pushConstantRangeCount").Uint())
 
-			setLayoutsPtr := (*driver.VkDescriptorSetLayout)(unsafe.Pointer(val.FieldByName("pSetLayouts").Elem().UnsafeAddr()))
-			setLayoutsSlice := ([]driver.VkDescriptorSetLayout)(unsafe.Slice(setLayoutsPtr, 2))
+			setLayoutsPtr := (*loader.VkDescriptorSetLayout)(unsafe.Pointer(val.FieldByName("pSetLayouts").Elem().UnsafeAddr()))
+			setLayoutsSlice := ([]loader.VkDescriptorSetLayout)(unsafe.Slice(setLayoutsPtr, 2))
 
 			require.Equal(t, descriptorSetLayout1.Handle(), setLayoutsSlice[0])
 			require.Equal(t, descriptorSetLayout2.Handle(), setLayoutsSlice[1])
 
-			pushConstantsPtr := (*driver.VkPushConstantRange)(unsafe.Pointer(val.FieldByName("pPushConstantRanges").Elem().UnsafeAddr()))
-			pushConstantsSlice := reflect.ValueOf(([]driver.VkPushConstantRange)(unsafe.Slice(pushConstantsPtr, 3)))
+			pushConstantsPtr := (*loader.VkPushConstantRange)(unsafe.Pointer(val.FieldByName("pPushConstantRanges").Elem().UnsafeAddr()))
+			pushConstantsSlice := reflect.ValueOf(([]loader.VkPushConstantRange)(unsafe.Slice(pushConstantsPtr, 3)))
 
 			pushConstant := pushConstantsSlice.Index(0)
 			require.Equal(t, uint64(0x00000010), pushConstant.FieldByName("stageFlags").Uint()) // VK_SHADER_STAGE_FRAGMENT_BIT

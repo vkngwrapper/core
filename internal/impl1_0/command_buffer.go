@@ -13,11 +13,11 @@ import (
 	"github.com/pkg/errors"
 	"github.com/vkngwrapper/core/v3/common"
 	"github.com/vkngwrapper/core/v3/core1_0"
-	"github.com/vkngwrapper/core/v3/driver"
+	"github.com/vkngwrapper/core/v3/loader"
 	"github.com/vkngwrapper/core/v3/types"
 )
 
-func (v *Vulkan) BeginCommandBuffer(commandBuffer types.CommandBuffer, o core1_0.CommandBufferBeginInfo) (common.VkResult, error) {
+func (v *DeviceVulkanDriver) BeginCommandBuffer(commandBuffer types.CommandBuffer, o core1_0.CommandBufferBeginInfo) (common.VkResult, error) {
 	if commandBuffer.Handle() == 0 {
 		return core1_0.VKErrorUnknown, errors.New("commandBuffer cannot be uninitialized")
 	}
@@ -30,18 +30,18 @@ func (v *Vulkan) BeginCommandBuffer(commandBuffer types.CommandBuffer, o core1_0
 		return core1_0.VKErrorUnknown, err
 	}
 
-	return v.Driver.VkBeginCommandBuffer(commandBuffer.Handle(), (*driver.VkCommandBufferBeginInfo)(createInfo))
+	return v.LoaderObj.VkBeginCommandBuffer(commandBuffer.Handle(), (*loader.VkCommandBufferBeginInfo)(createInfo))
 }
 
-func (v *Vulkan) EndCommandBuffer(commandBuffer types.CommandBuffer) (common.VkResult, error) {
+func (v *DeviceVulkanDriver) EndCommandBuffer(commandBuffer types.CommandBuffer) (common.VkResult, error) {
 	if commandBuffer.Handle() == 0 {
 		panic("commandBuffer cannot be uninitialized")
 	}
 
-	return v.Driver.VkEndCommandBuffer(commandBuffer.Handle())
+	return v.LoaderObj.VkEndCommandBuffer(commandBuffer.Handle())
 }
 
-func (v *Vulkan) CmdBeginRenderPass(commandBuffer types.CommandBuffer, contents core1_0.SubpassContents, o core1_0.RenderPassBeginInfo) error {
+func (v *DeviceVulkanDriver) CmdBeginRenderPass(commandBuffer types.CommandBuffer, contents core1_0.SubpassContents, o core1_0.RenderPassBeginInfo) error {
 	if commandBuffer.Handle() == 0 {
 		return errors.New("commandBuffer cannot be uninitialized")
 	}
@@ -53,19 +53,19 @@ func (v *Vulkan) CmdBeginRenderPass(commandBuffer types.CommandBuffer, contents 
 		return err
 	}
 
-	v.Driver.VkCmdBeginRenderPass(commandBuffer.Handle(), (*driver.VkRenderPassBeginInfo)(createInfo), driver.VkSubpassContents(contents))
+	v.LoaderObj.VkCmdBeginRenderPass(commandBuffer.Handle(), (*loader.VkRenderPassBeginInfo)(createInfo), loader.VkSubpassContents(contents))
 	return nil
 }
 
-func (v *Vulkan) CmdEndRenderPass(commandBuffer types.CommandBuffer) {
+func (v *DeviceVulkanDriver) CmdEndRenderPass(commandBuffer types.CommandBuffer) {
 	if commandBuffer.Handle() == 0 {
 		panic("commandBuffer cannot be uninitialized")
 	}
 
-	v.Driver.VkCmdEndRenderPass(commandBuffer.Handle())
+	v.LoaderObj.VkCmdEndRenderPass(commandBuffer.Handle())
 }
 
-func (v *Vulkan) CmdBindPipeline(commandBuffer types.CommandBuffer, bindPoint core1_0.PipelineBindPoint, pipeline types.Pipeline) {
+func (v *DeviceVulkanDriver) CmdBindPipeline(commandBuffer types.CommandBuffer, bindPoint core1_0.PipelineBindPoint, pipeline types.Pipeline) {
 	if commandBuffer.Handle() == 0 {
 		panic("commandBuffer cannot be uninitialized")
 	}
@@ -74,26 +74,26 @@ func (v *Vulkan) CmdBindPipeline(commandBuffer types.CommandBuffer, bindPoint co
 		panic("pipeline cannot be uninitialized")
 	}
 
-	v.Driver.VkCmdBindPipeline(commandBuffer.Handle(), driver.VkPipelineBindPoint(bindPoint), pipeline.Handle())
+	v.LoaderObj.VkCmdBindPipeline(commandBuffer.Handle(), loader.VkPipelineBindPoint(bindPoint), pipeline.Handle())
 }
 
-func (v *Vulkan) CmdDraw(commandBuffer types.CommandBuffer, vertexCount, instanceCount int, firstVertex, firstInstance uint32) {
+func (v *DeviceVulkanDriver) CmdDraw(commandBuffer types.CommandBuffer, vertexCount, instanceCount int, firstVertex, firstInstance uint32) {
 	if commandBuffer.Handle() == 0 {
 		panic("commandBuffer cannot be uninitialized")
 	}
 
-	v.Driver.VkCmdDraw(commandBuffer.Handle(), driver.Uint32(vertexCount), driver.Uint32(instanceCount), driver.Uint32(firstVertex), driver.Uint32(firstInstance))
+	v.LoaderObj.VkCmdDraw(commandBuffer.Handle(), loader.Uint32(vertexCount), loader.Uint32(instanceCount), loader.Uint32(firstVertex), loader.Uint32(firstInstance))
 }
 
-func (v *Vulkan) CmdDrawIndexed(commandBuffer types.CommandBuffer, indexCount, instanceCount int, firstIndex uint32, vertexOffset int, firstInstance uint32) {
+func (v *DeviceVulkanDriver) CmdDrawIndexed(commandBuffer types.CommandBuffer, indexCount, instanceCount int, firstIndex uint32, vertexOffset int, firstInstance uint32) {
 	if commandBuffer.Handle() == 0 {
 		panic("commandBuffer cannot be uninitialized")
 	}
 
-	v.Driver.VkCmdDrawIndexed(commandBuffer.Handle(), driver.Uint32(indexCount), driver.Uint32(instanceCount), driver.Uint32(firstIndex), driver.Int32(vertexOffset), driver.Uint32(firstInstance))
+	v.LoaderObj.VkCmdDrawIndexed(commandBuffer.Handle(), loader.Uint32(indexCount), loader.Uint32(instanceCount), loader.Uint32(firstIndex), loader.Int32(vertexOffset), loader.Uint32(firstInstance))
 }
 
-func (v *Vulkan) CmdBindVertexBuffers(commandBuffer types.CommandBuffer, firstBinding int, buffers []types.Buffer, bufferOffsets []int) {
+func (v *DeviceVulkanDriver) CmdBindVertexBuffers(commandBuffer types.CommandBuffer, firstBinding int, buffers []types.Buffer, bufferOffsets []int) {
 	if commandBuffer.Handle() == 0 {
 		panic("commandBuffer cannot be uninitialized")
 	}
@@ -106,32 +106,32 @@ func (v *Vulkan) CmdBindVertexBuffers(commandBuffer types.CommandBuffer, firstBi
 	bufferArrayUnsafe := allocator.Malloc(bufferCount * int(unsafe.Sizeof([1]C.VkBuffer{})))
 	offsetArrayUnsafe := allocator.Malloc(bufferCount * int(unsafe.Sizeof(C.VkDeviceSize(0))))
 
-	bufferArrayPtr := (*driver.VkBuffer)(bufferArrayUnsafe)
-	offsetArrayPtr := (*driver.VkDeviceSize)(offsetArrayUnsafe)
+	bufferArrayPtr := (*loader.VkBuffer)(bufferArrayUnsafe)
+	offsetArrayPtr := (*loader.VkDeviceSize)(offsetArrayUnsafe)
 
-	bufferArraySlice := ([]driver.VkBuffer)(unsafe.Slice(bufferArrayPtr, bufferCount))
-	offsetArraySlice := ([]driver.VkDeviceSize)(unsafe.Slice(offsetArrayPtr, bufferCount))
+	bufferArraySlice := ([]loader.VkBuffer)(unsafe.Slice(bufferArrayPtr, bufferCount))
+	offsetArraySlice := ([]loader.VkDeviceSize)(unsafe.Slice(offsetArrayPtr, bufferCount))
 
 	for i := 0; i < bufferCount; i++ {
 		if buffers[i].Handle() == 0 {
 			panic(fmt.Sprintf("element %d of buffers slice is uninitialized", i))
 		}
 		bufferArraySlice[i] = buffers[i].Handle()
-		offsetArraySlice[i] = driver.VkDeviceSize(bufferOffsets[i])
+		offsetArraySlice[i] = loader.VkDeviceSize(bufferOffsets[i])
 	}
 
-	v.Driver.VkCmdBindVertexBuffers(commandBuffer.Handle(), driver.Uint32(firstBinding), driver.Uint32(bufferCount), bufferArrayPtr, offsetArrayPtr)
+	v.LoaderObj.VkCmdBindVertexBuffers(commandBuffer.Handle(), loader.Uint32(firstBinding), loader.Uint32(bufferCount), bufferArrayPtr, offsetArrayPtr)
 }
 
-func (v *Vulkan) CmdBindIndexBuffer(commandBuffer types.CommandBuffer, buffer types.Buffer, offset int, indexType core1_0.IndexType) {
+func (v *DeviceVulkanDriver) CmdBindIndexBuffer(commandBuffer types.CommandBuffer, buffer types.Buffer, offset int, indexType core1_0.IndexType) {
 	if commandBuffer.Handle() == 0 {
 		panic("commandBuffer cannot be uninitialized")
 	}
 
-	v.Driver.VkCmdBindIndexBuffer(commandBuffer.Handle(), buffer.Handle(), driver.VkDeviceSize(offset), driver.VkIndexType(indexType))
+	v.LoaderObj.VkCmdBindIndexBuffer(commandBuffer.Handle(), buffer.Handle(), loader.VkDeviceSize(offset), loader.VkIndexType(indexType))
 }
 
-func (v *Vulkan) CmdBindDescriptorSets(commandBuffer types.CommandBuffer, bindPoint core1_0.PipelineBindPoint, layout types.PipelineLayout, firstSet int, sets []types.DescriptorSet, dynamicOffsets []int) {
+func (v *DeviceVulkanDriver) CmdBindDescriptorSets(commandBuffer types.CommandBuffer, bindPoint core1_0.PipelineBindPoint, layout types.PipelineLayout, firstSet int, sets []types.DescriptorSet, dynamicOffsets []int) {
 	if commandBuffer.Handle() == 0 {
 		panic("commandBuffer cannot be uninitialized")
 	}
@@ -170,17 +170,17 @@ func (v *Vulkan) CmdBindDescriptorSets(commandBuffer types.CommandBuffer, bindPo
 		}
 	}
 
-	v.Driver.VkCmdBindDescriptorSets(commandBuffer.Handle(),
-		driver.VkPipelineBindPoint(bindPoint),
+	v.LoaderObj.VkCmdBindDescriptorSets(commandBuffer.Handle(),
+		loader.VkPipelineBindPoint(bindPoint),
 		layout.Handle(),
-		driver.Uint32(firstSet),
-		driver.Uint32(setCount),
-		(*driver.VkDescriptorSet)(setPtr),
-		driver.Uint32(dynamicOffsetCount),
-		(*driver.Uint32)(dynamicOffsetPtr))
+		loader.Uint32(firstSet),
+		loader.Uint32(setCount),
+		(*loader.VkDescriptorSet)(setPtr),
+		loader.Uint32(dynamicOffsetCount),
+		(*loader.Uint32)(dynamicOffsetPtr))
 }
 
-func (v *Vulkan) CmdPipelineBarrier(commandBuffer types.CommandBuffer, srcStageMask, dstStageMask core1_0.PipelineStageFlags, dependencies core1_0.DependencyFlags, memoryBarriers []core1_0.MemoryBarrier, bufferMemoryBarriers []core1_0.BufferMemoryBarrier, imageMemoryBarriers []core1_0.ImageMemoryBarrier) error {
+func (v *DeviceVulkanDriver) CmdPipelineBarrier(commandBuffer types.CommandBuffer, srcStageMask, dstStageMask core1_0.PipelineStageFlags, dependencies core1_0.DependencyFlags, memoryBarriers []core1_0.MemoryBarrier, bufferMemoryBarriers []core1_0.BufferMemoryBarrier, imageMemoryBarriers []core1_0.ImageMemoryBarrier) error {
 	if commandBuffer.Handle() == 0 {
 		panic("commandBuffer cannot be uninitialized")
 	}
@@ -218,11 +218,11 @@ func (v *Vulkan) CmdPipelineBarrier(commandBuffer types.CommandBuffer, srcStageM
 		}
 	}
 
-	v.Driver.VkCmdPipelineBarrier(commandBuffer.Handle(), driver.VkPipelineStageFlags(srcStageMask), driver.VkPipelineStageFlags(dstStageMask), driver.VkDependencyFlags(dependencies), driver.Uint32(barrierCount), (*driver.VkMemoryBarrier)(unsafe.Pointer(barrierPtr)), driver.Uint32(bufferBarrierCount), (*driver.VkBufferMemoryBarrier)(unsafe.Pointer(bufferBarrierPtr)), driver.Uint32(imageBarrierCount), (*driver.VkImageMemoryBarrier)(unsafe.Pointer(imageBarrierPtr)))
+	v.LoaderObj.VkCmdPipelineBarrier(commandBuffer.Handle(), loader.VkPipelineStageFlags(srcStageMask), loader.VkPipelineStageFlags(dstStageMask), loader.VkDependencyFlags(dependencies), loader.Uint32(barrierCount), (*loader.VkMemoryBarrier)(unsafe.Pointer(barrierPtr)), loader.Uint32(bufferBarrierCount), (*loader.VkBufferMemoryBarrier)(unsafe.Pointer(bufferBarrierPtr)), loader.Uint32(imageBarrierCount), (*loader.VkImageMemoryBarrier)(unsafe.Pointer(imageBarrierPtr)))
 	return nil
 }
 
-func (v *Vulkan) CmdCopyBufferToImage(commandBuffer types.CommandBuffer, buffer types.Buffer, image types.Image, layout core1_0.ImageLayout, regions ...core1_0.BufferImageCopy) error {
+func (v *DeviceVulkanDriver) CmdCopyBufferToImage(commandBuffer types.CommandBuffer, buffer types.Buffer, image types.Image, layout core1_0.ImageLayout, regions ...core1_0.BufferImageCopy) error {
 	if commandBuffer.Handle() == 0 {
 		panic("commandBuffer cannot be uninitialized")
 	}
@@ -247,11 +247,11 @@ func (v *Vulkan) CmdCopyBufferToImage(commandBuffer types.CommandBuffer, buffer 
 		}
 	}
 
-	v.Driver.VkCmdCopyBufferToImage(commandBuffer.Handle(), buffer.Handle(), image.Handle(), driver.VkImageLayout(layout), driver.Uint32(regionCount), (*driver.VkBufferImageCopy)(unsafe.Pointer(regionPtr)))
+	v.LoaderObj.VkCmdCopyBufferToImage(commandBuffer.Handle(), buffer.Handle(), image.Handle(), loader.VkImageLayout(layout), loader.Uint32(regionCount), (*loader.VkBufferImageCopy)(unsafe.Pointer(regionPtr)))
 	return nil
 }
 
-func (v *Vulkan) CmdBlitImage(commandBuffer types.CommandBuffer, sourceImage types.Image, sourceImageLayout core1_0.ImageLayout, destinationImage types.Image, destinationImageLayout core1_0.ImageLayout, regions []core1_0.ImageBlit, filter core1_0.Filter) error {
+func (v *DeviceVulkanDriver) CmdBlitImage(commandBuffer types.CommandBuffer, sourceImage types.Image, sourceImageLayout core1_0.ImageLayout, destinationImage types.Image, destinationImageLayout core1_0.ImageLayout, regions []core1_0.ImageBlit, filter core1_0.Filter) error {
 	if commandBuffer.Handle() == 0 {
 		panic("commandBuffer cannot be uninitialized")
 	}
@@ -274,19 +274,19 @@ func (v *Vulkan) CmdBlitImage(commandBuffer types.CommandBuffer, sourceImage typ
 		return err
 	}
 
-	v.Driver.VkCmdBlitImage(
+	v.LoaderObj.VkCmdBlitImage(
 		commandBuffer.Handle(),
 		sourceImage.Handle(),
-		driver.VkImageLayout(sourceImageLayout),
+		loader.VkImageLayout(sourceImageLayout),
 		destinationImage.Handle(),
-		driver.VkImageLayout(destinationImageLayout),
-		driver.Uint32(regionCount),
-		(*driver.VkImageBlit)(unsafe.Pointer(regionPtr)),
-		driver.VkFilter(filter))
+		loader.VkImageLayout(destinationImageLayout),
+		loader.Uint32(regionCount),
+		(*loader.VkImageBlit)(unsafe.Pointer(regionPtr)),
+		loader.VkFilter(filter))
 	return nil
 }
 
-func (v *Vulkan) CmdPushConstants(commandBuffer types.CommandBuffer, layout types.PipelineLayout, stageFlags core1_0.ShaderStageFlags, offset int, valueBytes []byte) {
+func (v *DeviceVulkanDriver) CmdPushConstants(commandBuffer types.CommandBuffer, layout types.PipelineLayout, stageFlags core1_0.ShaderStageFlags, offset int, valueBytes []byte) {
 	if commandBuffer.Handle() == 0 {
 		panic("commandBuffer cannot be uninitialized")
 	}
@@ -300,10 +300,10 @@ func (v *Vulkan) CmdPushConstants(commandBuffer types.CommandBuffer, layout type
 
 	valueBytesPtr := alloc.CBytes(valueBytes)
 
-	v.Driver.VkCmdPushConstants(commandBuffer.Handle(), layout.Handle(), driver.VkShaderStageFlags(stageFlags), driver.Uint32(offset), driver.Uint32(len(valueBytes)), valueBytesPtr)
+	v.LoaderObj.VkCmdPushConstants(commandBuffer.Handle(), layout.Handle(), loader.VkShaderStageFlags(stageFlags), loader.Uint32(offset), loader.Uint32(len(valueBytes)), valueBytesPtr)
 }
 
-func (v *Vulkan) CmdSetViewport(commandBuffer types.CommandBuffer, viewports ...core1_0.Viewport) {
+func (v *DeviceVulkanDriver) CmdSetViewport(commandBuffer types.CommandBuffer, viewports ...core1_0.Viewport) {
 	if commandBuffer.Handle() == 0 {
 		panic("commandBuffer cannot be uninitialized")
 	}
@@ -329,10 +329,10 @@ func (v *Vulkan) CmdSetViewport(commandBuffer types.CommandBuffer, viewports ...
 		}
 	}
 
-	v.Driver.VkCmdSetViewport(commandBuffer.Handle(), driver.Uint32(0), driver.Uint32(viewportCount), (*driver.VkViewport)(unsafe.Pointer(viewportPtr)))
+	v.LoaderObj.VkCmdSetViewport(commandBuffer.Handle(), loader.Uint32(0), loader.Uint32(viewportCount), (*loader.VkViewport)(unsafe.Pointer(viewportPtr)))
 }
 
-func (v *Vulkan) CmdSetScissor(commandBuffer types.CommandBuffer, scissors ...core1_0.Rect2D) {
+func (v *DeviceVulkanDriver) CmdSetScissor(commandBuffer types.CommandBuffer, scissors ...core1_0.Rect2D) {
 	if commandBuffer.Handle() == 0 {
 		panic("commandBuffer cannot be uninitialized")
 	}
@@ -356,18 +356,18 @@ func (v *Vulkan) CmdSetScissor(commandBuffer types.CommandBuffer, scissors ...co
 		}
 	}
 
-	v.Driver.VkCmdSetScissor(commandBuffer.Handle(), driver.Uint32(0), driver.Uint32(scissorCount), (*driver.VkRect2D)(unsafe.Pointer(scissorPtr)))
+	v.LoaderObj.VkCmdSetScissor(commandBuffer.Handle(), loader.Uint32(0), loader.Uint32(scissorCount), (*loader.VkRect2D)(unsafe.Pointer(scissorPtr)))
 }
 
-func (v *Vulkan) CmdNextSubpass(commandBuffer types.CommandBuffer, contents core1_0.SubpassContents) {
+func (v *DeviceVulkanDriver) CmdNextSubpass(commandBuffer types.CommandBuffer, contents core1_0.SubpassContents) {
 	if commandBuffer.Handle() == 0 {
 		panic("commandBuffer cannot be uninitialized")
 	}
 
-	v.Driver.VkCmdNextSubpass(commandBuffer.Handle(), driver.VkSubpassContents(contents))
+	v.LoaderObj.VkCmdNextSubpass(commandBuffer.Handle(), loader.VkSubpassContents(contents))
 }
 
-func (v *Vulkan) CmdWaitEvents(commandBuffer types.CommandBuffer, events []types.Event, srcStageMask core1_0.PipelineStageFlags, dstStageMask core1_0.PipelineStageFlags, memoryBarriers []core1_0.MemoryBarrier, bufferMemoryBarriers []core1_0.BufferMemoryBarrier, imageMemoryBarriers []core1_0.ImageMemoryBarrier) error {
+func (v *DeviceVulkanDriver) CmdWaitEvents(commandBuffer types.CommandBuffer, events []types.Event, srcStageMask core1_0.PipelineStageFlags, dstStageMask core1_0.PipelineStageFlags, memoryBarriers []core1_0.MemoryBarrier, bufferMemoryBarriers []core1_0.BufferMemoryBarrier, imageMemoryBarriers []core1_0.ImageMemoryBarrier) error {
 	if commandBuffer.Handle() == 0 {
 		panic("commandBuffer cannot be uninitialized")
 	}
@@ -419,11 +419,11 @@ func (v *Vulkan) CmdWaitEvents(commandBuffer types.CommandBuffer, events []types
 		}
 	}
 
-	v.Driver.VkCmdWaitEvents(commandBuffer.Handle(), driver.Uint32(eventCount), (*driver.VkEvent)(unsafe.Pointer(eventPtr)), driver.VkPipelineStageFlags(srcStageMask), driver.VkPipelineStageFlags(dstStageMask), driver.Uint32(barrierCount), (*driver.VkMemoryBarrier)(unsafe.Pointer(barrierPtr)), driver.Uint32(bufferBarrierCount), (*driver.VkBufferMemoryBarrier)(unsafe.Pointer(bufferBarrierPtr)), driver.Uint32(imageBarrierCount), (*driver.VkImageMemoryBarrier)(unsafe.Pointer(imageBarrierPtr)))
+	v.LoaderObj.VkCmdWaitEvents(commandBuffer.Handle(), loader.Uint32(eventCount), (*loader.VkEvent)(unsafe.Pointer(eventPtr)), loader.VkPipelineStageFlags(srcStageMask), loader.VkPipelineStageFlags(dstStageMask), loader.Uint32(barrierCount), (*loader.VkMemoryBarrier)(unsafe.Pointer(barrierPtr)), loader.Uint32(bufferBarrierCount), (*loader.VkBufferMemoryBarrier)(unsafe.Pointer(bufferBarrierPtr)), loader.Uint32(imageBarrierCount), (*loader.VkImageMemoryBarrier)(unsafe.Pointer(imageBarrierPtr)))
 	return nil
 }
 
-func (v *Vulkan) CmdSetEvent(commandBuffer types.CommandBuffer, event types.Event, stageMask core1_0.PipelineStageFlags) {
+func (v *DeviceVulkanDriver) CmdSetEvent(commandBuffer types.CommandBuffer, event types.Event, stageMask core1_0.PipelineStageFlags) {
 	if commandBuffer.Handle() == 0 {
 		panic("commandBuffer cannot be uninitialized")
 	}
@@ -432,10 +432,10 @@ func (v *Vulkan) CmdSetEvent(commandBuffer types.CommandBuffer, event types.Even
 		panic("event cannot be uninitialized")
 	}
 
-	v.Driver.VkCmdSetEvent(commandBuffer.Handle(), event.Handle(), driver.VkPipelineStageFlags(stageMask))
+	v.LoaderObj.VkCmdSetEvent(commandBuffer.Handle(), event.Handle(), loader.VkPipelineStageFlags(stageMask))
 }
 
-func (v *Vulkan) CmdClearColorImage(commandBuffer types.CommandBuffer, image types.Image, imageLayout core1_0.ImageLayout, color core1_0.ClearColorValue, ranges ...core1_0.ImageSubresourceRange) {
+func (v *DeviceVulkanDriver) CmdClearColorImage(commandBuffer types.CommandBuffer, image types.Image, imageLayout core1_0.ImageLayout, color core1_0.ClearColorValue, ranges ...core1_0.ImageSubresourceRange) {
 	if commandBuffer.Handle() == 0 {
 		panic("commandBuffer cannot be uninitialized")
 	}
@@ -469,10 +469,10 @@ func (v *Vulkan) CmdClearColorImage(commandBuffer types.CommandBuffer, image typ
 		color.PopulateColorUnion(pColor)
 	}
 
-	v.Driver.VkCmdClearColorImage(commandBuffer.Handle(), image.Handle(), driver.VkImageLayout(imageLayout), (*driver.VkClearColorValue)(pColor), driver.Uint32(rangeCount), (*driver.VkImageSubresourceRange)(unsafe.Pointer(pRanges)))
+	v.LoaderObj.VkCmdClearColorImage(commandBuffer.Handle(), image.Handle(), loader.VkImageLayout(imageLayout), (*loader.VkClearColorValue)(pColor), loader.Uint32(rangeCount), (*loader.VkImageSubresourceRange)(unsafe.Pointer(pRanges)))
 }
 
-func (v *Vulkan) CmdResetQueryPool(commandBuffer types.CommandBuffer, queryPool types.QueryPool, startQuery, queryCount int) {
+func (v *DeviceVulkanDriver) CmdResetQueryPool(commandBuffer types.CommandBuffer, queryPool types.QueryPool, startQuery, queryCount int) {
 	if commandBuffer.Handle() == 0 {
 		panic("commandBuffer cannot be uninitialized")
 	}
@@ -481,10 +481,10 @@ func (v *Vulkan) CmdResetQueryPool(commandBuffer types.CommandBuffer, queryPool 
 		panic("queryPool cannot be uninitialized")
 	}
 
-	v.Driver.VkCmdResetQueryPool(commandBuffer.Handle(), queryPool.Handle(), driver.Uint32(startQuery), driver.Uint32(queryCount))
+	v.LoaderObj.VkCmdResetQueryPool(commandBuffer.Handle(), queryPool.Handle(), loader.Uint32(startQuery), loader.Uint32(queryCount))
 }
 
-func (v *Vulkan) CmdBeginQuery(commandBuffer types.CommandBuffer, queryPool types.QueryPool, query int, flags core1_0.QueryControlFlags) {
+func (v *DeviceVulkanDriver) CmdBeginQuery(commandBuffer types.CommandBuffer, queryPool types.QueryPool, query int, flags core1_0.QueryControlFlags) {
 	if commandBuffer.Handle() == 0 {
 		panic("commandBuffer cannot be uninitialized")
 	}
@@ -493,10 +493,10 @@ func (v *Vulkan) CmdBeginQuery(commandBuffer types.CommandBuffer, queryPool type
 		panic("queryPool cannot be uninitialized")
 	}
 
-	v.Driver.VkCmdBeginQuery(commandBuffer.Handle(), queryPool.Handle(), driver.Uint32(query), driver.VkQueryControlFlags(flags))
+	v.LoaderObj.VkCmdBeginQuery(commandBuffer.Handle(), queryPool.Handle(), loader.Uint32(query), loader.VkQueryControlFlags(flags))
 }
 
-func (v *Vulkan) CmdEndQuery(commandBuffer types.CommandBuffer, queryPool types.QueryPool, query int) {
+func (v *DeviceVulkanDriver) CmdEndQuery(commandBuffer types.CommandBuffer, queryPool types.QueryPool, query int) {
 	if commandBuffer.Handle() == 0 {
 		panic("commandBuffer cannot be uninitialized")
 	}
@@ -505,10 +505,10 @@ func (v *Vulkan) CmdEndQuery(commandBuffer types.CommandBuffer, queryPool types.
 		panic("queryPool cannot be uninitialized")
 	}
 
-	v.Driver.VkCmdEndQuery(commandBuffer.Handle(), queryPool.Handle(), driver.Uint32(query))
+	v.LoaderObj.VkCmdEndQuery(commandBuffer.Handle(), queryPool.Handle(), loader.Uint32(query))
 }
 
-func (v *Vulkan) CmdCopyQueryPoolResults(commandBuffer types.CommandBuffer, queryPool types.QueryPool, firstQuery, queryCount int, dstBuffer types.Buffer, dstOffset, stride int, flags core1_0.QueryResultFlags) {
+func (v *DeviceVulkanDriver) CmdCopyQueryPoolResults(commandBuffer types.CommandBuffer, queryPool types.QueryPool, firstQuery, queryCount int, dstBuffer types.Buffer, dstOffset, stride int, flags core1_0.QueryResultFlags) {
 	if commandBuffer.Handle() == 0 {
 		panic("commandBuffer cannot be uninitialized")
 	}
@@ -519,10 +519,10 @@ func (v *Vulkan) CmdCopyQueryPoolResults(commandBuffer types.CommandBuffer, quer
 	if dstBuffer.Handle() == 0 {
 		panic("dstBuffer cannot be uninitialized")
 	}
-	v.Driver.VkCmdCopyQueryPoolResults(commandBuffer.Handle(), queryPool.Handle(), driver.Uint32(firstQuery), driver.Uint32(queryCount), dstBuffer.Handle(), driver.VkDeviceSize(dstOffset), driver.VkDeviceSize(stride), driver.VkQueryResultFlags(flags))
+	v.LoaderObj.VkCmdCopyQueryPoolResults(commandBuffer.Handle(), queryPool.Handle(), loader.Uint32(firstQuery), loader.Uint32(queryCount), dstBuffer.Handle(), loader.VkDeviceSize(dstOffset), loader.VkDeviceSize(stride), loader.VkQueryResultFlags(flags))
 }
 
-func (v *Vulkan) CmdExecuteCommands(commandBuffer types.CommandBuffer, commandBuffers ...types.CommandBuffer) {
+func (v *DeviceVulkanDriver) CmdExecuteCommands(commandBuffer types.CommandBuffer, commandBuffers ...types.CommandBuffer) {
 	if commandBuffer.Handle() == 0 {
 		panic("commandBuffer cannot be uninitialized")
 	}
@@ -541,10 +541,10 @@ func (v *Vulkan) CmdExecuteCommands(commandBuffer types.CommandBuffer, commandBu
 		commandBufferSlice[i] = C.VkCommandBuffer(unsafe.Pointer(commandBuffers[i].Handle()))
 	}
 
-	v.Driver.VkCmdExecuteCommands(commandBuffer.Handle(), driver.Uint32(bufferCount), (*driver.VkCommandBuffer)(unsafe.Pointer(commandBufferPtr)))
+	v.LoaderObj.VkCmdExecuteCommands(commandBuffer.Handle(), loader.Uint32(bufferCount), (*loader.VkCommandBuffer)(unsafe.Pointer(commandBufferPtr)))
 }
 
-func (v *Vulkan) CmdClearAttachments(commandBuffer types.CommandBuffer, attachments []core1_0.ClearAttachment, rects []core1_0.ClearRect) error {
+func (v *DeviceVulkanDriver) CmdClearAttachments(commandBuffer types.CommandBuffer, attachments []core1_0.ClearAttachment, rects []core1_0.ClearRect) error {
 	if commandBuffer.Handle() == 0 {
 		panic("commandBuffer cannot be uninitialized")
 	}
@@ -564,11 +564,11 @@ func (v *Vulkan) CmdClearAttachments(commandBuffer types.CommandBuffer, attachme
 		return err
 	}
 
-	v.Driver.VkCmdClearAttachments(commandBuffer.Handle(), driver.Uint32(attachmentCount), (*driver.VkClearAttachment)(unsafe.Pointer(attachmentsPtr)), driver.Uint32(rectsCount), (*driver.VkClearRect)(unsafe.Pointer(rectsPtr)))
+	v.LoaderObj.VkCmdClearAttachments(commandBuffer.Handle(), loader.Uint32(attachmentCount), (*loader.VkClearAttachment)(unsafe.Pointer(attachmentsPtr)), loader.Uint32(rectsCount), (*loader.VkClearRect)(unsafe.Pointer(rectsPtr)))
 	return nil
 }
 
-func (v *Vulkan) CmdClearDepthStencilImage(commandBuffer types.CommandBuffer, image types.Image, imageLayout core1_0.ImageLayout, depthStencil *core1_0.ClearValueDepthStencil, ranges ...core1_0.ImageSubresourceRange) {
+func (v *DeviceVulkanDriver) CmdClearDepthStencilImage(commandBuffer types.CommandBuffer, image types.Image, imageLayout core1_0.ImageLayout, depthStencil *core1_0.ClearValueDepthStencil, ranges ...core1_0.ImageSubresourceRange) {
 	if commandBuffer.Handle() == 0 {
 		panic("commandBuffer cannot be uninitialized")
 	}
@@ -595,10 +595,10 @@ func (v *Vulkan) CmdClearDepthStencilImage(commandBuffer types.CommandBuffer, im
 	depthStencilPtr.depth = C.float(depthStencil.Depth)
 	depthStencilPtr.stencil = C.uint32_t(depthStencil.Stencil)
 
-	v.Driver.VkCmdClearDepthStencilImage(commandBuffer.Handle(), image.Handle(), driver.VkImageLayout(imageLayout), (*driver.VkClearDepthStencilValue)(unsafe.Pointer(depthStencilPtr)), driver.Uint32(rangeCount), (*driver.VkImageSubresourceRange)(unsafe.Pointer(rangePtr)))
+	v.LoaderObj.VkCmdClearDepthStencilImage(commandBuffer.Handle(), image.Handle(), loader.VkImageLayout(imageLayout), (*loader.VkClearDepthStencilValue)(unsafe.Pointer(depthStencilPtr)), loader.Uint32(rangeCount), (*loader.VkImageSubresourceRange)(unsafe.Pointer(rangePtr)))
 }
 
-func (v *Vulkan) CmdCopyImageToBuffer(commandBuffer types.CommandBuffer, srcImage types.Image, srcImageLayout core1_0.ImageLayout, dstBuffer types.Buffer, regions ...core1_0.BufferImageCopy) error {
+func (v *DeviceVulkanDriver) CmdCopyImageToBuffer(commandBuffer types.CommandBuffer, srcImage types.Image, srcImageLayout core1_0.ImageLayout, dstBuffer types.Buffer, regions ...core1_0.BufferImageCopy) error {
 	if commandBuffer.Handle() == 0 {
 		panic("commandBuffer cannot be uninitialized")
 	}
@@ -618,30 +618,19 @@ func (v *Vulkan) CmdCopyImageToBuffer(commandBuffer types.CommandBuffer, srcImag
 		return err
 	}
 
-	v.Driver.VkCmdCopyImageToBuffer(commandBuffer.Handle(), srcImage.Handle(), driver.VkImageLayout(srcImageLayout), dstBuffer.Handle(), driver.Uint32(regionCount), (*driver.VkBufferImageCopy)(unsafe.Pointer(regionPtr)))
+	v.LoaderObj.VkCmdCopyImageToBuffer(commandBuffer.Handle(), srcImage.Handle(), loader.VkImageLayout(srcImageLayout), dstBuffer.Handle(), loader.Uint32(regionCount), (*loader.VkBufferImageCopy)(unsafe.Pointer(regionPtr)))
 	return nil
 }
 
-func (v *Vulkan) CmdDispatch(commandBuffer types.CommandBuffer, groupCountX, groupCountY, groupCountZ int) {
+func (v *DeviceVulkanDriver) CmdDispatch(commandBuffer types.CommandBuffer, groupCountX, groupCountY, groupCountZ int) {
 	if commandBuffer.Handle() == 0 {
 		panic("commandBuffer cannot be uninitialized")
 	}
 
-	v.Driver.VkCmdDispatch(commandBuffer.Handle(), driver.Uint32(groupCountX), driver.Uint32(groupCountY), driver.Uint32(groupCountZ))
+	v.LoaderObj.VkCmdDispatch(commandBuffer.Handle(), loader.Uint32(groupCountX), loader.Uint32(groupCountY), loader.Uint32(groupCountZ))
 }
 
-func (v *Vulkan) CmdDispatchIndirect(commandBuffer types.CommandBuffer, buffer types.Buffer, offset int) {
-	if commandBuffer.Handle() == 0 {
-		panic("commandBuffer cannot be uninitialized")
-	}
-
-	if buffer.Handle() == 0 {
-		panic("buffer cannot be uninitialized")
-	}
-	v.Driver.VkCmdDispatchIndirect(commandBuffer.Handle(), buffer.Handle(), driver.VkDeviceSize(offset))
-}
-
-func (v *Vulkan) CmdDrawIndexedIndirect(commandBuffer types.CommandBuffer, buffer types.Buffer, offset int, drawCount, stride int) {
+func (v *DeviceVulkanDriver) CmdDispatchIndirect(commandBuffer types.CommandBuffer, buffer types.Buffer, offset int) {
 	if commandBuffer.Handle() == 0 {
 		panic("commandBuffer cannot be uninitialized")
 	}
@@ -649,10 +638,10 @@ func (v *Vulkan) CmdDrawIndexedIndirect(commandBuffer types.CommandBuffer, buffe
 	if buffer.Handle() == 0 {
 		panic("buffer cannot be uninitialized")
 	}
-	v.Driver.VkCmdDrawIndexedIndirect(commandBuffer.Handle(), buffer.Handle(), driver.VkDeviceSize(offset), driver.Uint32(drawCount), driver.Uint32(stride))
+	v.LoaderObj.VkCmdDispatchIndirect(commandBuffer.Handle(), buffer.Handle(), loader.VkDeviceSize(offset))
 }
 
-func (v *Vulkan) CmdDrawIndirect(commandBuffer types.CommandBuffer, buffer types.Buffer, offset int, drawCount, stride int) {
+func (v *DeviceVulkanDriver) CmdDrawIndexedIndirect(commandBuffer types.CommandBuffer, buffer types.Buffer, offset int, drawCount, stride int) {
 	if commandBuffer.Handle() == 0 {
 		panic("commandBuffer cannot be uninitialized")
 	}
@@ -660,10 +649,21 @@ func (v *Vulkan) CmdDrawIndirect(commandBuffer types.CommandBuffer, buffer types
 	if buffer.Handle() == 0 {
 		panic("buffer cannot be uninitialized")
 	}
-	v.Driver.VkCmdDrawIndirect(commandBuffer.Handle(), buffer.Handle(), driver.VkDeviceSize(offset), driver.Uint32(drawCount), driver.Uint32(stride))
+	v.LoaderObj.VkCmdDrawIndexedIndirect(commandBuffer.Handle(), buffer.Handle(), loader.VkDeviceSize(offset), loader.Uint32(drawCount), loader.Uint32(stride))
 }
 
-func (v *Vulkan) CmdFillBuffer(commandBuffer types.CommandBuffer, dstBuffer types.Buffer, dstOffset int, size int, data uint32) {
+func (v *DeviceVulkanDriver) CmdDrawIndirect(commandBuffer types.CommandBuffer, buffer types.Buffer, offset int, drawCount, stride int) {
+	if commandBuffer.Handle() == 0 {
+		panic("commandBuffer cannot be uninitialized")
+	}
+
+	if buffer.Handle() == 0 {
+		panic("buffer cannot be uninitialized")
+	}
+	v.LoaderObj.VkCmdDrawIndirect(commandBuffer.Handle(), buffer.Handle(), loader.VkDeviceSize(offset), loader.Uint32(drawCount), loader.Uint32(stride))
+}
+
+func (v *DeviceVulkanDriver) CmdFillBuffer(commandBuffer types.CommandBuffer, dstBuffer types.Buffer, dstOffset int, size int, data uint32) {
 	if commandBuffer.Handle() == 0 {
 		panic("commandBuffer cannot be uninitialized")
 	}
@@ -671,10 +671,10 @@ func (v *Vulkan) CmdFillBuffer(commandBuffer types.CommandBuffer, dstBuffer type
 	if dstBuffer.Handle() == 0 {
 		panic("dstBuffer cannot be uninitialized")
 	}
-	v.Driver.VkCmdFillBuffer(commandBuffer.Handle(), dstBuffer.Handle(), driver.VkDeviceSize(dstOffset), driver.VkDeviceSize(size), driver.Uint32(data))
+	v.LoaderObj.VkCmdFillBuffer(commandBuffer.Handle(), dstBuffer.Handle(), loader.VkDeviceSize(dstOffset), loader.VkDeviceSize(size), loader.Uint32(data))
 }
 
-func (v *Vulkan) CmdResetEvent(commandBuffer types.CommandBuffer, event types.Event, stageMask core1_0.PipelineStageFlags) {
+func (v *DeviceVulkanDriver) CmdResetEvent(commandBuffer types.CommandBuffer, event types.Event, stageMask core1_0.PipelineStageFlags) {
 	if commandBuffer.Handle() == 0 {
 		panic("commandBuffer cannot be uninitialized")
 	}
@@ -682,10 +682,10 @@ func (v *Vulkan) CmdResetEvent(commandBuffer types.CommandBuffer, event types.Ev
 	if event.Handle() == 0 {
 		panic("event cannot be uninitialized")
 	}
-	v.Driver.VkCmdResetEvent(commandBuffer.Handle(), event.Handle(), driver.VkPipelineStageFlags(stageMask))
+	v.LoaderObj.VkCmdResetEvent(commandBuffer.Handle(), event.Handle(), loader.VkPipelineStageFlags(stageMask))
 }
 
-func (v *Vulkan) CmdResolveImage(commandBuffer types.CommandBuffer, srcImage types.Image, srcImageLayout core1_0.ImageLayout, dstImage types.Image, dstImageLayout core1_0.ImageLayout, regions ...core1_0.ImageResolve) error {
+func (v *DeviceVulkanDriver) CmdResolveImage(commandBuffer types.CommandBuffer, srcImage types.Image, srcImageLayout core1_0.ImageLayout, dstImage types.Image, dstImageLayout core1_0.ImageLayout, regions ...core1_0.ImageResolve) error {
 	if commandBuffer.Handle() == 0 {
 		panic("commandBuffer cannot be uninitialized")
 	}
@@ -705,11 +705,11 @@ func (v *Vulkan) CmdResolveImage(commandBuffer types.CommandBuffer, srcImage typ
 		return err
 	}
 
-	v.Driver.VkCmdResolveImage(commandBuffer.Handle(), srcImage.Handle(), driver.VkImageLayout(srcImageLayout), dstImage.Handle(), driver.VkImageLayout(dstImageLayout), driver.Uint32(regionCount), (*driver.VkImageResolve)(unsafe.Pointer(regionsPtr)))
+	v.LoaderObj.VkCmdResolveImage(commandBuffer.Handle(), srcImage.Handle(), loader.VkImageLayout(srcImageLayout), dstImage.Handle(), loader.VkImageLayout(dstImageLayout), loader.Uint32(regionCount), (*loader.VkImageResolve)(unsafe.Pointer(regionsPtr)))
 	return nil
 }
 
-func (v *Vulkan) CmdSetBlendConstants(commandBuffer types.CommandBuffer, blendConstants [4]float32) {
+func (v *DeviceVulkanDriver) CmdSetBlendConstants(commandBuffer types.CommandBuffer, blendConstants [4]float32) {
 	if commandBuffer.Handle() == 0 {
 		panic("commandBuffer cannot be uninitialized")
 	}
@@ -724,58 +724,58 @@ func (v *Vulkan) CmdSetBlendConstants(commandBuffer types.CommandBuffer, blendCo
 		constsSlice[i] = C.float(blendConstants[i])
 	}
 
-	v.Driver.VkCmdSetBlendConstants(commandBuffer.Handle(), (*driver.Float)(constsPtr))
+	v.LoaderObj.VkCmdSetBlendConstants(commandBuffer.Handle(), (*loader.Float)(constsPtr))
 }
 
-func (v *Vulkan) CmdSetDepthBias(commandBuffer types.CommandBuffer, depthBiasConstantFactor, depthBiasClamp, depthBiasSlopeFactor float32) {
+func (v *DeviceVulkanDriver) CmdSetDepthBias(commandBuffer types.CommandBuffer, depthBiasConstantFactor, depthBiasClamp, depthBiasSlopeFactor float32) {
 	if commandBuffer.Handle() == 0 {
 		panic("commandBuffer cannot be uninitialized")
 	}
 
-	v.Driver.VkCmdSetDepthBias(commandBuffer.Handle(), driver.Float(depthBiasConstantFactor), driver.Float(depthBiasClamp), driver.Float(depthBiasSlopeFactor))
+	v.LoaderObj.VkCmdSetDepthBias(commandBuffer.Handle(), loader.Float(depthBiasConstantFactor), loader.Float(depthBiasClamp), loader.Float(depthBiasSlopeFactor))
 }
 
-func (v *Vulkan) CmdSetDepthBounds(commandBuffer types.CommandBuffer, min, max float32) {
+func (v *DeviceVulkanDriver) CmdSetDepthBounds(commandBuffer types.CommandBuffer, min, max float32) {
 	if commandBuffer.Handle() == 0 {
 		panic("commandBuffer cannot be uninitialized")
 	}
 
-	v.Driver.VkCmdSetDepthBounds(commandBuffer.Handle(), driver.Float(min), driver.Float(max))
+	v.LoaderObj.VkCmdSetDepthBounds(commandBuffer.Handle(), loader.Float(min), loader.Float(max))
 }
 
-func (v *Vulkan) CmdSetLineWidth(commandBuffer types.CommandBuffer, lineWidth float32) {
+func (v *DeviceVulkanDriver) CmdSetLineWidth(commandBuffer types.CommandBuffer, lineWidth float32) {
 	if commandBuffer.Handle() == 0 {
 		panic("commandBuffer cannot be uninitialized")
 	}
 
-	v.Driver.VkCmdSetLineWidth(commandBuffer.Handle(), driver.Float(lineWidth))
+	v.LoaderObj.VkCmdSetLineWidth(commandBuffer.Handle(), loader.Float(lineWidth))
 }
 
-func (v *Vulkan) CmdSetStencilCompareMask(commandBuffer types.CommandBuffer, faceMask core1_0.StencilFaceFlags, compareMask uint32) {
+func (v *DeviceVulkanDriver) CmdSetStencilCompareMask(commandBuffer types.CommandBuffer, faceMask core1_0.StencilFaceFlags, compareMask uint32) {
 	if commandBuffer.Handle() == 0 {
 		panic("commandBuffer cannot be uninitialized")
 	}
 
-	v.Driver.VkCmdSetStencilCompareMask(commandBuffer.Handle(), driver.VkStencilFaceFlags(faceMask), driver.Uint32(compareMask))
+	v.LoaderObj.VkCmdSetStencilCompareMask(commandBuffer.Handle(), loader.VkStencilFaceFlags(faceMask), loader.Uint32(compareMask))
 }
 
-func (v *Vulkan) CmdSetStencilReference(commandBuffer types.CommandBuffer, faceMask core1_0.StencilFaceFlags, reference uint32) {
+func (v *DeviceVulkanDriver) CmdSetStencilReference(commandBuffer types.CommandBuffer, faceMask core1_0.StencilFaceFlags, reference uint32) {
 	if commandBuffer.Handle() == 0 {
 		panic("commandBuffer cannot be uninitialized")
 	}
 
-	v.Driver.VkCmdSetStencilReference(commandBuffer.Handle(), driver.VkStencilFaceFlags(faceMask), driver.Uint32(reference))
+	v.LoaderObj.VkCmdSetStencilReference(commandBuffer.Handle(), loader.VkStencilFaceFlags(faceMask), loader.Uint32(reference))
 }
 
-func (v *Vulkan) CmdSetStencilWriteMask(commandBuffer types.CommandBuffer, faceMask core1_0.StencilFaceFlags, writeMask uint32) {
+func (v *DeviceVulkanDriver) CmdSetStencilWriteMask(commandBuffer types.CommandBuffer, faceMask core1_0.StencilFaceFlags, writeMask uint32) {
 	if commandBuffer.Handle() == 0 {
 		panic("commandBuffer cannot be uninitialized")
 	}
 
-	v.Driver.VkCmdSetStencilWriteMask(commandBuffer.Handle(), driver.VkStencilFaceFlags(faceMask), driver.Uint32(writeMask))
+	v.LoaderObj.VkCmdSetStencilWriteMask(commandBuffer.Handle(), loader.VkStencilFaceFlags(faceMask), loader.Uint32(writeMask))
 }
 
-func (v *Vulkan) CmdUpdateBuffer(commandBuffer types.CommandBuffer, dstBuffer types.Buffer, dstOffset int, dataSize int, data []byte) {
+func (v *DeviceVulkanDriver) CmdUpdateBuffer(commandBuffer types.CommandBuffer, dstBuffer types.Buffer, dstOffset int, dataSize int, data []byte) {
 	if commandBuffer.Handle() == 0 {
 		panic("commandBuffer cannot be uninitialized")
 	}
@@ -791,10 +791,10 @@ func (v *Vulkan) CmdUpdateBuffer(commandBuffer types.CommandBuffer, dstBuffer ty
 	dataSlice := ([]byte)(unsafe.Slice((*byte)(dataPtr), size))
 	copy(dataSlice, data)
 
-	v.Driver.VkCmdUpdateBuffer(commandBuffer.Handle(), dstBuffer.Handle(), driver.VkDeviceSize(dstOffset), driver.VkDeviceSize(dataSize), dataPtr)
+	v.LoaderObj.VkCmdUpdateBuffer(commandBuffer.Handle(), dstBuffer.Handle(), loader.VkDeviceSize(dstOffset), loader.VkDeviceSize(dataSize), dataPtr)
 }
 
-func (v *Vulkan) CmdWriteTimestamp(commandBuffer types.CommandBuffer, pipelineStage core1_0.PipelineStageFlags, queryPool types.QueryPool, query int) {
+func (v *DeviceVulkanDriver) CmdWriteTimestamp(commandBuffer types.CommandBuffer, pipelineStage core1_0.PipelineStageFlags, queryPool types.QueryPool, query int) {
 	if commandBuffer.Handle() == 0 {
 		panic("commandBuffer cannot be uninitialized")
 	}
@@ -803,13 +803,13 @@ func (v *Vulkan) CmdWriteTimestamp(commandBuffer types.CommandBuffer, pipelineSt
 		panic("queryPool cannot be uninitialized")
 	}
 
-	v.Driver.VkCmdWriteTimestamp(commandBuffer.Handle(), driver.VkPipelineStageFlags(pipelineStage), queryPool.Handle(), driver.Uint32(query))
+	v.LoaderObj.VkCmdWriteTimestamp(commandBuffer.Handle(), loader.VkPipelineStageFlags(pipelineStage), queryPool.Handle(), loader.Uint32(query))
 }
 
-func (v *Vulkan) ResetCommandBuffer(commandBuffer types.CommandBuffer, flags core1_0.CommandBufferResetFlags) (common.VkResult, error) {
+func (v *DeviceVulkanDriver) ResetCommandBuffer(commandBuffer types.CommandBuffer, flags core1_0.CommandBufferResetFlags) (common.VkResult, error) {
 	if commandBuffer.Handle() == 0 {
 		return core1_0.VKErrorUnknown, errors.New("commandBuffer cannot be uninitialized")
 	}
 
-	return v.Driver.VkResetCommandBuffer(commandBuffer.Handle(), driver.VkCommandBufferResetFlags(flags))
+	return v.LoaderObj.VkResetCommandBuffer(commandBuffer.Handle(), loader.VkCommandBufferResetFlags(flags))
 }

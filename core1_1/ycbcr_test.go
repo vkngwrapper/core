@@ -9,9 +9,9 @@ import (
 	"github.com/vkngwrapper/core/v3/common"
 	"github.com/vkngwrapper/core/v3/core1_0"
 	"github.com/vkngwrapper/core/v3/core1_1"
-	"github.com/vkngwrapper/core/v3/driver"
-	mock_driver "github.com/vkngwrapper/core/v3/driver/mocks"
 	"github.com/vkngwrapper/core/v3/internal/impl1_1"
+	"github.com/vkngwrapper/core/v3/loader"
+	mock_driver "github.com/vkngwrapper/core/v3/loader/mocks"
 	"github.com/vkngwrapper/core/v3/mocks"
 	"github.com/vkngwrapper/core/v3/mocks/mocks1_1"
 	"go.uber.org/mock/gomock"
@@ -21,7 +21,7 @@ func TestImagePlaneMemoryRequirementsOptions(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	coreDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_1)
+	coreDriver := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_1)
 	builder := &impl1_1.InstanceObjectBuilderImpl{}
 	device := builder.CreateDeviceObject(coreDriver, mocks.NewFakeDeviceHandle(), common.Vulkan1_1, []string{}).(core1_1.Device)
 
@@ -31,15 +31,15 @@ func TestImagePlaneMemoryRequirementsOptions(t *testing.T) {
 		device.Handle(),
 		gomock.Not(gomock.Nil()),
 		gomock.Not(gomock.Nil()),
-	).DoAndReturn(func(device driver.VkDevice,
-		pInfo *driver.VkImageMemoryRequirementsInfo2,
-		pMemoryRequirements *driver.VkMemoryRequirements2,
+	).DoAndReturn(func(device loader.VkDevice,
+		pInfo *loader.VkImageMemoryRequirementsInfo2,
+		pMemoryRequirements *loader.VkMemoryRequirements2,
 	) {
 		val := reflect.ValueOf(pInfo).Elem()
 		require.Equal(t, uint64(1000146001), val.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_IMAGE_MEMORY_REQUIREMENTS_INFO_2
-		require.Equal(t, image.Handle(), driver.VkImage(val.FieldByName("image").UnsafePointer()))
+		require.Equal(t, image.Handle(), loader.VkImage(val.FieldByName("image").UnsafePointer()))
 
-		next := (*driver.VkImagePlaneMemoryRequirementsInfo)(val.FieldByName("pNext").UnsafePointer())
+		next := (*loader.VkImagePlaneMemoryRequirementsInfo)(val.FieldByName("pNext").UnsafePointer())
 		val = reflect.ValueOf(next).Elem()
 		require.Equal(t, uint64(1000156003), val.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_IMAGE_PLANE_MEMORY_REQUIREMENTS_INFO
 		require.True(t, val.FieldByName("pNext").IsNil())
@@ -79,7 +79,7 @@ func TestSamplerYcbcrConversionOptions(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	coreDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_0)
+	coreDriver := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_0)
 	builder := &impl1_1.InstanceObjectBuilderImpl{}
 	device := builder.CreateDeviceObject(coreDriver, mocks.NewFakeDeviceHandle(), common.Vulkan1_1, []string{}).(core1_1.Device)
 
@@ -92,23 +92,23 @@ func TestSamplerYcbcrConversionOptions(t *testing.T) {
 		gomock.Not(gomock.Nil()),
 		gomock.Nil(),
 		gomock.Not(gomock.Nil()),
-	).DoAndReturn(func(device driver.VkDevice,
-		pCreateInfo *driver.VkImageViewCreateInfo,
-		pAllocator *driver.VkAllocationCallbacks,
-		pView *driver.VkImageView,
+	).DoAndReturn(func(device loader.VkDevice,
+		pCreateInfo *loader.VkImageViewCreateInfo,
+		pAllocator *loader.VkAllocationCallbacks,
+		pView *loader.VkImageView,
 	) (common.VkResult, error) {
 		*pView = mockImageView.Handle()
 
 		val := reflect.ValueOf(pCreateInfo).Elem()
 		require.Equal(t, uint64(15), val.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO
-		require.Equal(t, image.Handle(), driver.VkImage(val.FieldByName("image").UnsafePointer()))
+		require.Equal(t, image.Handle(), loader.VkImage(val.FieldByName("image").UnsafePointer()))
 		require.Equal(t, uint64(1000156028), val.FieldByName("format").Uint()) // VK_FORMAT_B16G16R16G16_422_UNORM
 
-		next := (*driver.VkSamplerYcbcrConversionInfo)(val.FieldByName("pNext").UnsafePointer())
+		next := (*loader.VkSamplerYcbcrConversionInfo)(val.FieldByName("pNext").UnsafePointer())
 		val = reflect.ValueOf(next).Elem()
 		require.Equal(t, uint64(1000156001), val.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_INFO
 		require.True(t, val.FieldByName("pNext").IsNil())
-		require.Equal(t, ycbcr.Handle(), driver.VkSamplerYcbcrConversion(val.FieldByName("conversion").UnsafePointer()))
+		require.Equal(t, ycbcr.Handle(), loader.VkSamplerYcbcrConversion(val.FieldByName("conversion").UnsafePointer()))
 
 		return core1_0.VKSuccess, nil
 	})
@@ -133,7 +133,7 @@ func TestSamplerYcbcrImageFormatOutData(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	coreDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_1)
+	coreDriver := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_1)
 	instance := impl1_1.CreateInstanceObject(coreDriver, mocks.NewFakeInstanceHandle(), common.Vulkan1_1, []string{})
 	builder := &impl1_1.InstanceObjectBuilderImpl{}
 	physicalDevice := builder.CreatePhysicalDeviceObject(coreDriver, instance.Handle(), mocks.NewFakePhysicalDeviceHandle(), common.Vulkan1_1, common.Vulkan1_1).(core1_1.PhysicalDevice)
@@ -143,9 +143,9 @@ func TestSamplerYcbcrImageFormatOutData(t *testing.T) {
 		gomock.Not(gomock.Nil()),
 		gomock.Not(gomock.Nil()),
 	).DoAndReturn(
-		func(physicalDevice driver.VkPhysicalDevice,
-			pImageFormatInfo *driver.VkPhysicalDeviceImageFormatInfo2,
-			pImageFormatProperties *driver.VkImageFormatProperties2,
+		func(physicalDevice loader.VkPhysicalDevice,
+			pImageFormatInfo *loader.VkPhysicalDeviceImageFormatInfo2,
+			pImageFormatProperties *loader.VkImageFormatProperties2,
 		) (common.VkResult, error) {
 			val := reflect.ValueOf(pImageFormatInfo).Elem()
 			require.Equal(t, uint64(1000059004), val.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_FORMAT_INFO_2
@@ -154,7 +154,7 @@ func TestSamplerYcbcrImageFormatOutData(t *testing.T) {
 			val = reflect.ValueOf(pImageFormatProperties).Elem()
 			require.Equal(t, uint64(1000059003), val.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_IMAGE_FORMAT_PROPERTIES_2
 
-			next := (*driver.VkSamplerYcbcrConversionImageFormatProperties)(val.FieldByName("pNext").UnsafePointer())
+			next := (*loader.VkSamplerYcbcrConversionImageFormatProperties)(val.FieldByName("pNext").UnsafePointer())
 			val = reflect.ValueOf(next).Elem()
 			require.Equal(t, uint64(1000156005), val.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_IMAGE_FORMAT_PROPERTIES
 			require.True(t, val.FieldByName("pNext").IsNil())

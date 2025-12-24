@@ -10,9 +10,9 @@ import (
 	"github.com/vkngwrapper/core/v3/core1_0"
 	"github.com/vkngwrapper/core/v3/core1_1"
 	"github.com/vkngwrapper/core/v3/core1_2"
-	"github.com/vkngwrapper/core/v3/driver"
-	mock_driver "github.com/vkngwrapper/core/v3/driver/mocks"
 	"github.com/vkngwrapper/core/v3/internal/impl1_2"
+	"github.com/vkngwrapper/core/v3/loader"
+	mock_driver "github.com/vkngwrapper/core/v3/loader/mocks"
 	"github.com/vkngwrapper/core/v3/mocks"
 	"github.com/vkngwrapper/core/v3/mocks/mocks1_2"
 	"go.uber.org/mock/gomock"
@@ -22,7 +22,7 @@ func TestPhysicalDevice8BitStorageFeaturesOptions(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	coreDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_2)
+	coreDriver := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_2)
 	coreDriver.EXPECT().CreateDeviceDriver(gomock.Any()).Return(coreDriver, nil)
 
 	instance := mocks1_2.EasyMockInstance(ctrl, coreDriver)
@@ -36,17 +36,17 @@ func TestPhysicalDevice8BitStorageFeaturesOptions(t *testing.T) {
 		gomock.Nil(),
 		gomock.Not(gomock.Nil()),
 	).DoAndReturn(
-		func(physicalDevice driver.VkPhysicalDevice,
-			pCreateInfo *driver.VkDeviceCreateInfo,
-			pAllocator *driver.VkAllocationCallbacks,
-			pDevice *driver.VkDevice) (common.VkResult, error) {
+		func(physicalDevice loader.VkPhysicalDevice,
+			pCreateInfo *loader.VkDeviceCreateInfo,
+			pAllocator *loader.VkAllocationCallbacks,
+			pDevice *loader.VkDevice) (common.VkResult, error) {
 
 			*pDevice = mockDevice.Handle()
 
 			val := reflect.ValueOf(pCreateInfo).Elem()
 			require.Equal(t, uint64(3), val.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO
 
-			next := (*driver.VkPhysicalDevice8BitStorageFeatures)(val.FieldByName("pNext").UnsafePointer())
+			next := (*loader.VkPhysicalDevice8BitStorageFeatures)(val.FieldByName("pNext").UnsafePointer())
 			val = reflect.ValueOf(next).Elem()
 
 			require.Equal(t, uint64(1000177000), val.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_8BIT_STORAGE_FEATURES
@@ -80,7 +80,7 @@ func TestPhysicalDevice8BitStorageFeaturesOutData(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	coreDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_2)
+	coreDriver := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_2)
 	instance := mocks1_2.EasyMockInstance(ctrl, coreDriver)
 	builder := impl1_2.InstanceObjectBuilderImpl{}
 	physicalDevice := builder.CreatePhysicalDeviceObject(coreDriver, instance.Handle(), mocks.NewFakePhysicalDeviceHandle(), common.Vulkan1_2, common.Vulkan1_2).(core1_2.PhysicalDevice)
@@ -88,19 +88,19 @@ func TestPhysicalDevice8BitStorageFeaturesOutData(t *testing.T) {
 	coreDriver.EXPECT().VkGetPhysicalDeviceFeatures2(
 		physicalDevice.Handle(),
 		gomock.Not(gomock.Nil()),
-	).DoAndReturn(func(physicalDevice driver.VkPhysicalDevice,
-		pFeatures *driver.VkPhysicalDeviceFeatures2) {
+	).DoAndReturn(func(physicalDevice loader.VkPhysicalDevice,
+		pFeatures *loader.VkPhysicalDeviceFeatures2) {
 
 		val := reflect.ValueOf(pFeatures).Elem()
 		require.Equal(t, uint64(1000059000), val.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2
 
-		next := (*driver.VkPhysicalDevice8BitStorageFeatures)(val.FieldByName("pNext").UnsafePointer())
+		next := (*loader.VkPhysicalDevice8BitStorageFeatures)(val.FieldByName("pNext").UnsafePointer())
 		val = reflect.ValueOf(next).Elem()
 		require.Equal(t, uint64(1000177000), val.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_8BIT_STORAGE_FEATURES
 		require.True(t, val.FieldByName("pNext").IsNil())
-		*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("storageBuffer8BitAccess").UnsafeAddr())) = driver.VkBool32(1)
-		*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("uniformAndStorageBuffer8BitAccess").UnsafeAddr())) = driver.VkBool32(0)
-		*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("storagePushConstant8").UnsafeAddr())) = driver.VkBool32(1)
+		*(*loader.VkBool32)(unsafe.Pointer(val.FieldByName("storageBuffer8BitAccess").UnsafeAddr())) = loader.VkBool32(1)
+		*(*loader.VkBool32)(unsafe.Pointer(val.FieldByName("uniformAndStorageBuffer8BitAccess").UnsafeAddr())) = loader.VkBool32(0)
+		*(*loader.VkBool32)(unsafe.Pointer(val.FieldByName("storagePushConstant8").UnsafeAddr())) = loader.VkBool32(1)
 	})
 
 	var outData core1_2.PhysicalDevice8BitStorageFeatures
@@ -120,7 +120,7 @@ func TestPhysicalDeviceBufferAddressFeaturesOptions(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	coreDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_2)
+	coreDriver := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_2)
 	coreDriver.EXPECT().CreateDeviceDriver(gomock.Any()).Return(coreDriver, nil)
 	instance := mocks1_2.EasyMockInstance(ctrl, coreDriver)
 	builder := impl1_2.InstanceObjectBuilderImpl{}
@@ -133,17 +133,17 @@ func TestPhysicalDeviceBufferAddressFeaturesOptions(t *testing.T) {
 		gomock.Not(gomock.Nil()),
 		gomock.Nil(),
 		gomock.Not(gomock.Nil()),
-	).DoAndReturn(func(physicalDevice driver.VkPhysicalDevice,
-		pCreateInfo *driver.VkDeviceCreateInfo,
-		pAllocator *driver.VkAllocationCallbacks,
-		pDevice *driver.VkDevice) (common.VkResult, error) {
+	).DoAndReturn(func(physicalDevice loader.VkPhysicalDevice,
+		pCreateInfo *loader.VkDeviceCreateInfo,
+		pAllocator *loader.VkAllocationCallbacks,
+		pDevice *loader.VkDevice) (common.VkResult, error) {
 
 		*pDevice = mockDevice.Handle()
 		val := reflect.ValueOf(pCreateInfo).Elem()
 
 		require.Equal(t, uint64(3), val.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO
 
-		next := (*driver.VkPhysicalDeviceBufferDeviceAddressFeatures)(val.FieldByName("pNext").UnsafePointer())
+		next := (*loader.VkPhysicalDeviceBufferDeviceAddressFeatures)(val.FieldByName("pNext").UnsafePointer())
 		val = reflect.ValueOf(next).Elem()
 
 		require.Equal(t, uint64(1000257000), val.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_BUFFER_DEVICE_ADDRESS_FEATURES
@@ -177,7 +177,7 @@ func TestPhysicalDeviceBufferAddressFeaturesOutData(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	coreDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_2)
+	coreDriver := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_2)
 	instance := mocks1_2.EasyMockInstance(ctrl, coreDriver)
 	builder := impl1_2.InstanceObjectBuilderImpl{}
 	physicalDevice := builder.CreatePhysicalDeviceObject(coreDriver, instance.Handle(), mocks.NewFakePhysicalDeviceHandle(), common.Vulkan1_2, common.Vulkan1_2).(core1_2.PhysicalDevice)
@@ -185,20 +185,20 @@ func TestPhysicalDeviceBufferAddressFeaturesOutData(t *testing.T) {
 	coreDriver.EXPECT().VkGetPhysicalDeviceFeatures2(
 		physicalDevice.Handle(),
 		gomock.Not(gomock.Nil()),
-	).DoAndReturn(func(physicalDevice driver.VkPhysicalDevice,
-		pFeatures *driver.VkPhysicalDeviceFeatures2) {
+	).DoAndReturn(func(physicalDevice loader.VkPhysicalDevice,
+		pFeatures *loader.VkPhysicalDeviceFeatures2) {
 
 		val := reflect.ValueOf(pFeatures).Elem()
 		require.Equal(t, uint64(1000059000), val.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2
 
-		next := (*driver.VkPhysicalDeviceBufferDeviceAddressFeatures)(val.FieldByName("pNext").UnsafePointer())
+		next := (*loader.VkPhysicalDeviceBufferDeviceAddressFeatures)(val.FieldByName("pNext").UnsafePointer())
 		val = reflect.ValueOf(next).Elem()
 
 		require.Equal(t, uint64(1000257000), val.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_BUFFER_DEVICE_ADDRESS_FEATURES
 		require.True(t, val.FieldByName("pNext").IsNil())
-		*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("bufferDeviceAddress").UnsafeAddr())) = driver.VkBool32(0)
-		*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("bufferDeviceAddressCaptureReplay").UnsafeAddr())) = driver.VkBool32(1)
-		*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("bufferDeviceAddressMultiDevice").UnsafeAddr())) = driver.VkBool32(0)
+		*(*loader.VkBool32)(unsafe.Pointer(val.FieldByName("bufferDeviceAddress").UnsafeAddr())) = loader.VkBool32(0)
+		*(*loader.VkBool32)(unsafe.Pointer(val.FieldByName("bufferDeviceAddressCaptureReplay").UnsafeAddr())) = loader.VkBool32(1)
+		*(*loader.VkBool32)(unsafe.Pointer(val.FieldByName("bufferDeviceAddressMultiDevice").UnsafeAddr())) = loader.VkBool32(0)
 	})
 
 	var outData core1_2.PhysicalDeviceBufferDeviceAddressFeatures
@@ -216,7 +216,7 @@ func TestPhysicalDeviceDescriptorIndexingFeaturesOptions(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	coreDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_2)
+	coreDriver := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_2)
 	coreDriver.EXPECT().CreateDeviceDriver(gomock.Any()).Return(coreDriver, nil)
 
 	instance := mocks1_2.EasyMockInstance(ctrl, coreDriver)
@@ -230,17 +230,17 @@ func TestPhysicalDeviceDescriptorIndexingFeaturesOptions(t *testing.T) {
 		gomock.Nil(),
 		gomock.Not(gomock.Nil()),
 	).DoAndReturn(
-		func(physicalDevice driver.VkPhysicalDevice,
-			pCreateInfo *driver.VkDeviceCreateInfo,
-			pAllocator *driver.VkAllocationCallbacks,
-			pDevice *driver.VkDevice) (common.VkResult, error) {
+		func(physicalDevice loader.VkPhysicalDevice,
+			pCreateInfo *loader.VkDeviceCreateInfo,
+			pAllocator *loader.VkAllocationCallbacks,
+			pDevice *loader.VkDevice) (common.VkResult, error) {
 
 			*pDevice = mockDevice.Handle()
 
 			val := reflect.ValueOf(pCreateInfo).Elem()
 			require.Equal(t, uint64(3), val.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO
 
-			next := (*driver.VkPhysicalDeviceDescriptorIndexingFeatures)(val.FieldByName("pNext").UnsafePointer())
+			next := (*loader.VkPhysicalDeviceDescriptorIndexingFeatures)(val.FieldByName("pNext").UnsafePointer())
 			val = reflect.ValueOf(next).Elem()
 
 			require.Equal(t, uint64(1000161001), val.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_FEATURES_EXT
@@ -308,7 +308,7 @@ func TestPhysicalDeviceDescriptorIndexingFeaturesOutData(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	coreDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_2)
+	coreDriver := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_2)
 	instance := mocks1_2.EasyMockInstance(ctrl, coreDriver)
 	builder := impl1_2.InstanceObjectBuilderImpl{}
 	physicalDevice := builder.CreatePhysicalDeviceObject(coreDriver, instance.Handle(), mocks.NewFakePhysicalDeviceHandle(), common.Vulkan1_2, common.Vulkan1_2).(core1_2.PhysicalDevice)
@@ -316,36 +316,36 @@ func TestPhysicalDeviceDescriptorIndexingFeaturesOutData(t *testing.T) {
 	coreDriver.EXPECT().VkGetPhysicalDeviceFeatures2(
 		physicalDevice.Handle(),
 		gomock.Not(gomock.Nil()),
-	).DoAndReturn(func(physicalDevice driver.VkPhysicalDevice,
-		pFeatures *driver.VkPhysicalDeviceFeatures2) {
+	).DoAndReturn(func(physicalDevice loader.VkPhysicalDevice,
+		pFeatures *loader.VkPhysicalDeviceFeatures2) {
 
 		val := reflect.ValueOf(pFeatures).Elem()
 		require.Equal(t, uint64(1000059000), val.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2
 
-		next := (*driver.VkPhysicalDeviceDescriptorIndexingFeatures)(val.FieldByName("pNext").UnsafePointer())
+		next := (*loader.VkPhysicalDeviceDescriptorIndexingFeatures)(val.FieldByName("pNext").UnsafePointer())
 		val = reflect.ValueOf(next).Elem()
 		require.Equal(t, uint64(1000161001), val.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_FEATURES
 		require.True(t, val.FieldByName("pNext").IsNil())
-		*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("shaderInputAttachmentArrayDynamicIndexing").UnsafeAddr())) = driver.VkBool32(1)
-		*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("shaderUniformTexelBufferArrayDynamicIndexing").UnsafeAddr())) = driver.VkBool32(0)
-		*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("shaderStorageTexelBufferArrayDynamicIndexing").UnsafeAddr())) = driver.VkBool32(1)
-		*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("shaderUniformBufferArrayNonUniformIndexing").UnsafeAddr())) = driver.VkBool32(0)
-		*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("shaderSampledImageArrayNonUniformIndexing").UnsafeAddr())) = driver.VkBool32(1)
-		*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("shaderStorageBufferArrayNonUniformIndexing").UnsafeAddr())) = driver.VkBool32(0)
-		*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("shaderStorageImageArrayNonUniformIndexing").UnsafeAddr())) = driver.VkBool32(1)
-		*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("shaderInputAttachmentArrayNonUniformIndexing").UnsafeAddr())) = driver.VkBool32(0)
-		*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("shaderUniformTexelBufferArrayNonUniformIndexing").UnsafeAddr())) = driver.VkBool32(1)
-		*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("shaderStorageTexelBufferArrayNonUniformIndexing").UnsafeAddr())) = driver.VkBool32(0)
-		*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("descriptorBindingUniformBufferUpdateAfterBind").UnsafeAddr())) = driver.VkBool32(1)
-		*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("descriptorBindingSampledImageUpdateAfterBind").UnsafeAddr())) = driver.VkBool32(0)
-		*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("descriptorBindingStorageImageUpdateAfterBind").UnsafeAddr())) = driver.VkBool32(1)
-		*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("descriptorBindingStorageBufferUpdateAfterBind").UnsafeAddr())) = driver.VkBool32(0)
-		*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("descriptorBindingUniformTexelBufferUpdateAfterBind").UnsafeAddr())) = driver.VkBool32(1)
-		*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("descriptorBindingStorageTexelBufferUpdateAfterBind").UnsafeAddr())) = driver.VkBool32(0)
-		*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("descriptorBindingUpdateUnusedWhilePending").UnsafeAddr())) = driver.VkBool32(1)
-		*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("descriptorBindingPartiallyBound").UnsafeAddr())) = driver.VkBool32(0)
-		*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("descriptorBindingVariableDescriptorCount").UnsafeAddr())) = driver.VkBool32(1)
-		*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("runtimeDescriptorArray").UnsafeAddr())) = driver.VkBool32(0)
+		*(*loader.VkBool32)(unsafe.Pointer(val.FieldByName("shaderInputAttachmentArrayDynamicIndexing").UnsafeAddr())) = loader.VkBool32(1)
+		*(*loader.VkBool32)(unsafe.Pointer(val.FieldByName("shaderUniformTexelBufferArrayDynamicIndexing").UnsafeAddr())) = loader.VkBool32(0)
+		*(*loader.VkBool32)(unsafe.Pointer(val.FieldByName("shaderStorageTexelBufferArrayDynamicIndexing").UnsafeAddr())) = loader.VkBool32(1)
+		*(*loader.VkBool32)(unsafe.Pointer(val.FieldByName("shaderUniformBufferArrayNonUniformIndexing").UnsafeAddr())) = loader.VkBool32(0)
+		*(*loader.VkBool32)(unsafe.Pointer(val.FieldByName("shaderSampledImageArrayNonUniformIndexing").UnsafeAddr())) = loader.VkBool32(1)
+		*(*loader.VkBool32)(unsafe.Pointer(val.FieldByName("shaderStorageBufferArrayNonUniformIndexing").UnsafeAddr())) = loader.VkBool32(0)
+		*(*loader.VkBool32)(unsafe.Pointer(val.FieldByName("shaderStorageImageArrayNonUniformIndexing").UnsafeAddr())) = loader.VkBool32(1)
+		*(*loader.VkBool32)(unsafe.Pointer(val.FieldByName("shaderInputAttachmentArrayNonUniformIndexing").UnsafeAddr())) = loader.VkBool32(0)
+		*(*loader.VkBool32)(unsafe.Pointer(val.FieldByName("shaderUniformTexelBufferArrayNonUniformIndexing").UnsafeAddr())) = loader.VkBool32(1)
+		*(*loader.VkBool32)(unsafe.Pointer(val.FieldByName("shaderStorageTexelBufferArrayNonUniformIndexing").UnsafeAddr())) = loader.VkBool32(0)
+		*(*loader.VkBool32)(unsafe.Pointer(val.FieldByName("descriptorBindingUniformBufferUpdateAfterBind").UnsafeAddr())) = loader.VkBool32(1)
+		*(*loader.VkBool32)(unsafe.Pointer(val.FieldByName("descriptorBindingSampledImageUpdateAfterBind").UnsafeAddr())) = loader.VkBool32(0)
+		*(*loader.VkBool32)(unsafe.Pointer(val.FieldByName("descriptorBindingStorageImageUpdateAfterBind").UnsafeAddr())) = loader.VkBool32(1)
+		*(*loader.VkBool32)(unsafe.Pointer(val.FieldByName("descriptorBindingStorageBufferUpdateAfterBind").UnsafeAddr())) = loader.VkBool32(0)
+		*(*loader.VkBool32)(unsafe.Pointer(val.FieldByName("descriptorBindingUniformTexelBufferUpdateAfterBind").UnsafeAddr())) = loader.VkBool32(1)
+		*(*loader.VkBool32)(unsafe.Pointer(val.FieldByName("descriptorBindingStorageTexelBufferUpdateAfterBind").UnsafeAddr())) = loader.VkBool32(0)
+		*(*loader.VkBool32)(unsafe.Pointer(val.FieldByName("descriptorBindingUpdateUnusedWhilePending").UnsafeAddr())) = loader.VkBool32(1)
+		*(*loader.VkBool32)(unsafe.Pointer(val.FieldByName("descriptorBindingPartiallyBound").UnsafeAddr())) = loader.VkBool32(0)
+		*(*loader.VkBool32)(unsafe.Pointer(val.FieldByName("descriptorBindingVariableDescriptorCount").UnsafeAddr())) = loader.VkBool32(1)
+		*(*loader.VkBool32)(unsafe.Pointer(val.FieldByName("runtimeDescriptorArray").UnsafeAddr())) = loader.VkBool32(0)
 	})
 
 	var outData core1_2.PhysicalDeviceDescriptorIndexingFeatures
@@ -382,7 +382,7 @@ func TestPhysicalDeviceHostQueryResetFeaturesOptions(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	coreDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_2)
+	coreDriver := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_2)
 	coreDriver.EXPECT().CreateDeviceDriver(gomock.Any()).Return(coreDriver, nil)
 	instance := mocks1_2.EasyMockInstance(ctrl, coreDriver)
 	builder := impl1_2.InstanceObjectBuilderImpl{}
@@ -394,16 +394,16 @@ func TestPhysicalDeviceHostQueryResetFeaturesOptions(t *testing.T) {
 		gomock.Not(gomock.Nil()),
 		gomock.Nil(),
 		gomock.Not(gomock.Nil()),
-	).DoAndReturn(func(physicalDevice driver.VkPhysicalDevice,
-		pCreateInfo *driver.VkDeviceCreateInfo,
-		pAllocator *driver.VkAllocationCallbacks,
-		pDevice *driver.VkDevice) (common.VkResult, error) {
+	).DoAndReturn(func(physicalDevice loader.VkPhysicalDevice,
+		pCreateInfo *loader.VkDeviceCreateInfo,
+		pAllocator *loader.VkAllocationCallbacks,
+		pDevice *loader.VkDevice) (common.VkResult, error) {
 		*pDevice = mockDevice.Handle()
 
 		val := reflect.ValueOf(pCreateInfo).Elem()
 		require.Equal(t, uint64(3), val.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO
 
-		next := (*driver.VkPhysicalDeviceHostQueryResetFeatures)(val.FieldByName("pNext").UnsafePointer())
+		next := (*loader.VkPhysicalDeviceHostQueryResetFeatures)(val.FieldByName("pNext").UnsafePointer())
 		val = reflect.ValueOf(next).Elem()
 
 		require.Equal(t, uint64(1000261000), val.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_HOST_QUERY_RESET_FEATURES
@@ -435,7 +435,7 @@ func TestPhysicalDeviceHostQueryResetFeaturesOutData(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	coreDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_2)
+	coreDriver := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_2)
 	instance := mocks1_2.EasyMockInstance(ctrl, coreDriver)
 	builder := impl1_2.InstanceObjectBuilderImpl{}
 	physicalDevice := builder.CreatePhysicalDeviceObject(coreDriver, instance.Handle(), mocks.NewFakePhysicalDeviceHandle(), common.Vulkan1_2, common.Vulkan1_2).(core1_2.PhysicalDevice)
@@ -443,18 +443,18 @@ func TestPhysicalDeviceHostQueryResetFeaturesOutData(t *testing.T) {
 	coreDriver.EXPECT().VkGetPhysicalDeviceFeatures2(
 		physicalDevice.Handle(),
 		gomock.Not(gomock.Nil()),
-	).DoAndReturn(func(physicalDevice driver.VkPhysicalDevice,
-		pFeatures *driver.VkPhysicalDeviceFeatures2) {
+	).DoAndReturn(func(physicalDevice loader.VkPhysicalDevice,
+		pFeatures *loader.VkPhysicalDeviceFeatures2) {
 
 		val := reflect.ValueOf(pFeatures).Elem()
 		require.Equal(t, uint64(1000059000), val.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2
 
-		next := (*driver.VkPhysicalDeviceHostQueryResetFeatures)(val.FieldByName("pNext").UnsafePointer())
+		next := (*loader.VkPhysicalDeviceHostQueryResetFeatures)(val.FieldByName("pNext").UnsafePointer())
 		val = reflect.ValueOf(next).Elem()
 
 		require.Equal(t, uint64(1000261000), val.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_HOST_QUERY_RESET_FEATURES_EXT
 		require.True(t, val.FieldByName("pNext").IsNil())
-		*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("hostQueryReset").UnsafeAddr())) = driver.VkBool32(1)
+		*(*loader.VkBool32)(unsafe.Pointer(val.FieldByName("hostQueryReset").UnsafeAddr())) = loader.VkBool32(1)
 	})
 
 	var outData core1_2.PhysicalDeviceHostQueryResetFeatures
@@ -473,7 +473,7 @@ func TestPhysicalDeviceImagelessFramebufferFeaturesOptions(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	coreDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_2)
+	coreDriver := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_2)
 	coreDriver.EXPECT().CreateDeviceDriver(gomock.Any()).Return(coreDriver, nil)
 	instance := mocks1_2.EasyMockInstance(ctrl, coreDriver)
 	builder := impl1_2.InstanceObjectBuilderImpl{}
@@ -485,16 +485,16 @@ func TestPhysicalDeviceImagelessFramebufferFeaturesOptions(t *testing.T) {
 		gomock.Not(gomock.Nil()),
 		gomock.Nil(),
 		gomock.Not(gomock.Nil()),
-	).DoAndReturn(func(physicalDevice driver.VkPhysicalDevice,
-		pCreateInfo *driver.VkDeviceCreateInfo,
-		pAllocator *driver.VkAllocationCallbacks,
-		pDevice *driver.VkDevice) (common.VkResult, error) {
+	).DoAndReturn(func(physicalDevice loader.VkPhysicalDevice,
+		pCreateInfo *loader.VkDeviceCreateInfo,
+		pAllocator *loader.VkAllocationCallbacks,
+		pDevice *loader.VkDevice) (common.VkResult, error) {
 		*pDevice = mockDevice.Handle()
 
 		val := reflect.ValueOf(pCreateInfo).Elem()
 		require.Equal(t, uint64(3), val.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO
 
-		next := (*driver.VkPhysicalDeviceImagelessFramebufferFeatures)(val.FieldByName("pNext").UnsafePointer())
+		next := (*loader.VkPhysicalDeviceImagelessFramebufferFeatures)(val.FieldByName("pNext").UnsafePointer())
 		val = reflect.ValueOf(next).Elem()
 
 		require.Equal(t, uint64(1000108000), val.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGELESS_FRAMEBUFFER_FEATURES
@@ -526,7 +526,7 @@ func TestPhysicalDeviceImagelessFramebufferFeaturesOutData(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	coreDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_2)
+	coreDriver := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_2)
 	instance := mocks1_2.EasyMockInstance(ctrl, coreDriver)
 	builder := impl1_2.InstanceObjectBuilderImpl{}
 	physicalDevice := builder.CreatePhysicalDeviceObject(coreDriver, instance.Handle(), mocks.NewFakePhysicalDeviceHandle(), common.Vulkan1_2, common.Vulkan1_2).(core1_2.PhysicalDevice)
@@ -534,18 +534,18 @@ func TestPhysicalDeviceImagelessFramebufferFeaturesOutData(t *testing.T) {
 	coreDriver.EXPECT().VkGetPhysicalDeviceFeatures2(
 		physicalDevice.Handle(),
 		gomock.Not(gomock.Nil()),
-	).DoAndReturn(func(physicalDevice driver.VkPhysicalDevice,
-		pFeatures *driver.VkPhysicalDeviceFeatures2) {
+	).DoAndReturn(func(physicalDevice loader.VkPhysicalDevice,
+		pFeatures *loader.VkPhysicalDeviceFeatures2) {
 
 		val := reflect.ValueOf(pFeatures).Elem()
 		require.Equal(t, uint64(1000059000), val.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2
 
-		next := (*driver.VkPhysicalDeviceImagelessFramebufferFeatures)(val.FieldByName("pNext").UnsafePointer())
+		next := (*loader.VkPhysicalDeviceImagelessFramebufferFeatures)(val.FieldByName("pNext").UnsafePointer())
 		val = reflect.ValueOf(next).Elem()
 
 		require.Equal(t, uint64(1000108000), val.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGELESS_FRAMEBUFFER_FEATURES
 		require.True(t, val.FieldByName("pNext").IsNil())
-		*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("imagelessFramebuffer").UnsafeAddr())) = driver.VkBool32(1)
+		*(*loader.VkBool32)(unsafe.Pointer(val.FieldByName("imagelessFramebuffer").UnsafeAddr())) = loader.VkBool32(1)
 	})
 
 	var outData core1_2.PhysicalDeviceImagelessFramebufferFeatures
@@ -564,7 +564,7 @@ func TestPhysicalDeviceScalarBlockLayoutFeaturesOptions(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	coreDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_2)
+	coreDriver := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_2)
 	coreDriver.EXPECT().CreateDeviceDriver(gomock.Any()).Return(coreDriver, nil)
 	instance := mocks1_2.EasyMockInstance(ctrl, coreDriver)
 	builder := impl1_2.InstanceObjectBuilderImpl{}
@@ -576,16 +576,16 @@ func TestPhysicalDeviceScalarBlockLayoutFeaturesOptions(t *testing.T) {
 		gomock.Not(gomock.Nil()),
 		gomock.Nil(),
 		gomock.Not(gomock.Nil()),
-	).DoAndReturn(func(physicalDevice driver.VkPhysicalDevice,
-		pCreateInfo *driver.VkDeviceCreateInfo,
-		pAllocator *driver.VkAllocationCallbacks,
-		pDevice *driver.VkDevice) (common.VkResult, error) {
+	).DoAndReturn(func(physicalDevice loader.VkPhysicalDevice,
+		pCreateInfo *loader.VkDeviceCreateInfo,
+		pAllocator *loader.VkAllocationCallbacks,
+		pDevice *loader.VkDevice) (common.VkResult, error) {
 		*pDevice = mockDevice.Handle()
 
 		val := reflect.ValueOf(pCreateInfo).Elem()
 		require.Equal(t, uint64(3), val.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO
 
-		next := (*driver.VkPhysicalDeviceScalarBlockLayoutFeatures)(val.FieldByName("pNext").UnsafePointer())
+		next := (*loader.VkPhysicalDeviceScalarBlockLayoutFeatures)(val.FieldByName("pNext").UnsafePointer())
 		val = reflect.ValueOf(next).Elem()
 
 		require.Equal(t, uint64(1000221000), val.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SCALAR_BLOCK_LAYOUT_FEATURES
@@ -617,7 +617,7 @@ func TestPhysicalDeviceScalarBlockLayoutFeaturesOutData(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	coreDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_2)
+	coreDriver := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_2)
 	instance := mocks1_2.EasyMockInstance(ctrl, coreDriver)
 	builder := impl1_2.InstanceObjectBuilderImpl{}
 	physicalDevice := builder.CreatePhysicalDeviceObject(coreDriver, instance.Handle(), mocks.NewFakePhysicalDeviceHandle(), common.Vulkan1_2, common.Vulkan1_2).(core1_2.PhysicalDevice)
@@ -625,18 +625,18 @@ func TestPhysicalDeviceScalarBlockLayoutFeaturesOutData(t *testing.T) {
 	coreDriver.EXPECT().VkGetPhysicalDeviceFeatures2(
 		physicalDevice.Handle(),
 		gomock.Not(gomock.Nil()),
-	).DoAndReturn(func(physicalDevice driver.VkPhysicalDevice,
-		pFeatures *driver.VkPhysicalDeviceFeatures2) {
+	).DoAndReturn(func(physicalDevice loader.VkPhysicalDevice,
+		pFeatures *loader.VkPhysicalDeviceFeatures2) {
 
 		val := reflect.ValueOf(pFeatures).Elem()
 		require.Equal(t, uint64(1000059000), val.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2
 
-		next := (*driver.VkPhysicalDeviceScalarBlockLayoutFeatures)(val.FieldByName("pNext").UnsafePointer())
+		next := (*loader.VkPhysicalDeviceScalarBlockLayoutFeatures)(val.FieldByName("pNext").UnsafePointer())
 		val = reflect.ValueOf(next).Elem()
 
 		require.Equal(t, uint64(1000221000), val.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SCALAR_BLOCK_LAYOUT_FEATURES_EXT
 		require.True(t, val.FieldByName("pNext").IsNil())
-		*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("scalarBlockLayout").UnsafeAddr())) = driver.VkBool32(1)
+		*(*loader.VkBool32)(unsafe.Pointer(val.FieldByName("scalarBlockLayout").UnsafeAddr())) = loader.VkBool32(1)
 	})
 
 	var outData core1_2.PhysicalDeviceScalarBlockLayoutFeatures
@@ -655,7 +655,7 @@ func TestPhysicalDeviceSeparateDepthStencilLayoutsFeaturesOptions(t *testing.T) 
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	coreDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_2)
+	coreDriver := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_2)
 	coreDriver.EXPECT().CreateDeviceDriver(gomock.Any()).Return(coreDriver, nil)
 	instance := mocks1_2.EasyMockInstance(ctrl, coreDriver)
 	builder := impl1_2.InstanceObjectBuilderImpl{}
@@ -667,16 +667,16 @@ func TestPhysicalDeviceSeparateDepthStencilLayoutsFeaturesOptions(t *testing.T) 
 		gomock.Not(gomock.Nil()),
 		gomock.Nil(),
 		gomock.Not(gomock.Nil()),
-	).DoAndReturn(func(physicalDevice driver.VkPhysicalDevice,
-		pCreateInfo *driver.VkDeviceCreateInfo,
-		pAllocator *driver.VkAllocationCallbacks,
-		pDevice *driver.VkDevice) (common.VkResult, error) {
+	).DoAndReturn(func(physicalDevice loader.VkPhysicalDevice,
+		pCreateInfo *loader.VkDeviceCreateInfo,
+		pAllocator *loader.VkAllocationCallbacks,
+		pDevice *loader.VkDevice) (common.VkResult, error) {
 		*pDevice = mockDevice.Handle()
 
 		val := reflect.ValueOf(pCreateInfo).Elem()
 		require.Equal(t, uint64(3), val.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO
 
-		next := (*driver.VkPhysicalDeviceSeparateDepthStencilLayoutsFeatures)(val.FieldByName("pNext").UnsafePointer())
+		next := (*loader.VkPhysicalDeviceSeparateDepthStencilLayoutsFeatures)(val.FieldByName("pNext").UnsafePointer())
 		val = reflect.ValueOf(next).Elem()
 
 		require.Equal(t, uint64(1000241000), val.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SEPARATE_DEPTH_STENCIL_LAYOUTS_FEATURES
@@ -708,7 +708,7 @@ func TestPhysicalDeviceSeparateDepthStencilLayoutsFeaturesOutData(t *testing.T) 
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	coreDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_2)
+	coreDriver := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_2)
 	instance := mocks1_2.EasyMockInstance(ctrl, coreDriver)
 	builder := impl1_2.InstanceObjectBuilderImpl{}
 	physicalDevice := builder.CreatePhysicalDeviceObject(coreDriver, instance.Handle(), mocks.NewFakePhysicalDeviceHandle(), common.Vulkan1_2, common.Vulkan1_2).(core1_2.PhysicalDevice)
@@ -716,18 +716,18 @@ func TestPhysicalDeviceSeparateDepthStencilLayoutsFeaturesOutData(t *testing.T) 
 	coreDriver.EXPECT().VkGetPhysicalDeviceFeatures2(
 		physicalDevice.Handle(),
 		gomock.Not(gomock.Nil()),
-	).DoAndReturn(func(physicalDevice driver.VkPhysicalDevice,
-		pFeatures *driver.VkPhysicalDeviceFeatures2) {
+	).DoAndReturn(func(physicalDevice loader.VkPhysicalDevice,
+		pFeatures *loader.VkPhysicalDeviceFeatures2) {
 
 		val := reflect.ValueOf(pFeatures).Elem()
 		require.Equal(t, uint64(1000059000), val.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2
 
-		next := (*driver.VkPhysicalDeviceSeparateDepthStencilLayoutsFeatures)(val.FieldByName("pNext").UnsafePointer())
+		next := (*loader.VkPhysicalDeviceSeparateDepthStencilLayoutsFeatures)(val.FieldByName("pNext").UnsafePointer())
 		val = reflect.ValueOf(next).Elem()
 
 		require.Equal(t, uint64(1000241000), val.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SEPARATE_DEPTH_STENCIL_LAYOUTS_FEATURES
 		require.True(t, val.FieldByName("pNext").IsNil())
-		*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("separateDepthStencilLayouts").UnsafeAddr())) = driver.VkBool32(1)
+		*(*loader.VkBool32)(unsafe.Pointer(val.FieldByName("separateDepthStencilLayouts").UnsafeAddr())) = loader.VkBool32(1)
 	})
 
 	var outData core1_2.PhysicalDeviceSeparateDepthStencilLayoutsFeatures
@@ -746,7 +746,7 @@ func TestPhysicalDeviceShaderAtomicInt64FeaturesOptions(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	coreDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_2)
+	coreDriver := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_2)
 	coreDriver.EXPECT().CreateDeviceDriver(gomock.Any()).Return(coreDriver, nil)
 	instance := mocks1_2.EasyMockInstance(ctrl, coreDriver)
 	builder := impl1_2.InstanceObjectBuilderImpl{}
@@ -758,16 +758,16 @@ func TestPhysicalDeviceShaderAtomicInt64FeaturesOptions(t *testing.T) {
 		gomock.Not(gomock.Nil()),
 		gomock.Nil(),
 		gomock.Not(gomock.Nil()),
-	).DoAndReturn(func(physicalDevice driver.VkPhysicalDevice,
-		pCreateInfo *driver.VkDeviceCreateInfo,
-		pAllocator *driver.VkAllocationCallbacks,
-		pDevice *driver.VkDevice) (common.VkResult, error) {
+	).DoAndReturn(func(physicalDevice loader.VkPhysicalDevice,
+		pCreateInfo *loader.VkDeviceCreateInfo,
+		pAllocator *loader.VkAllocationCallbacks,
+		pDevice *loader.VkDevice) (common.VkResult, error) {
 		*pDevice = mockDevice.Handle()
 
 		val := reflect.ValueOf(pCreateInfo).Elem()
 		require.Equal(t, uint64(3), val.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO
 
-		next := (*driver.VkPhysicalDeviceShaderAtomicInt64Features)(val.FieldByName("pNext").UnsafePointer())
+		next := (*loader.VkPhysicalDeviceShaderAtomicInt64Features)(val.FieldByName("pNext").UnsafePointer())
 		val = reflect.ValueOf(next).Elem()
 
 		require.Equal(t, uint64(1000180000), val.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_ATOMIC_INT64_FEATURES
@@ -801,7 +801,7 @@ func TestPhysicalDeviceShaderAtomicInt64FeaturesOutData(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	coreDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_2)
+	coreDriver := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_2)
 	instance := mocks1_2.EasyMockInstance(ctrl, coreDriver)
 	builder := impl1_2.InstanceObjectBuilderImpl{}
 	physicalDevice := builder.CreatePhysicalDeviceObject(coreDriver, instance.Handle(), mocks.NewFakePhysicalDeviceHandle(), common.Vulkan1_2, common.Vulkan1_2).(core1_2.PhysicalDevice)
@@ -809,19 +809,19 @@ func TestPhysicalDeviceShaderAtomicInt64FeaturesOutData(t *testing.T) {
 	coreDriver.EXPECT().VkGetPhysicalDeviceFeatures2(
 		physicalDevice.Handle(),
 		gomock.Not(gomock.Nil()),
-	).DoAndReturn(func(physicalDevice driver.VkPhysicalDevice,
-		pFeatures *driver.VkPhysicalDeviceFeatures2) {
+	).DoAndReturn(func(physicalDevice loader.VkPhysicalDevice,
+		pFeatures *loader.VkPhysicalDeviceFeatures2) {
 
 		val := reflect.ValueOf(pFeatures).Elem()
 		require.Equal(t, uint64(1000059000), val.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2
 
-		next := (*driver.VkPhysicalDeviceShaderAtomicInt64Features)(val.FieldByName("pNext").UnsafePointer())
+		next := (*loader.VkPhysicalDeviceShaderAtomicInt64Features)(val.FieldByName("pNext").UnsafePointer())
 		val = reflect.ValueOf(next).Elem()
 
 		require.Equal(t, uint64(1000180000), val.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_ATOMIC_INT64_FEATURES
 		require.True(t, val.FieldByName("pNext").IsNil())
-		*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("shaderBufferInt64Atomics").UnsafeAddr())) = driver.VkBool32(1)
-		*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("shaderSharedInt64Atomics").UnsafeAddr())) = driver.VkBool32(1)
+		*(*loader.VkBool32)(unsafe.Pointer(val.FieldByName("shaderBufferInt64Atomics").UnsafeAddr())) = loader.VkBool32(1)
+		*(*loader.VkBool32)(unsafe.Pointer(val.FieldByName("shaderSharedInt64Atomics").UnsafeAddr())) = loader.VkBool32(1)
 	})
 
 	var outData core1_2.PhysicalDeviceShaderAtomicInt64Features
@@ -841,7 +841,7 @@ func TestPhysicalDeviceShaderFloat16Int8FeaturesOptions(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	coreDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_2)
+	coreDriver := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_2)
 	coreDriver.EXPECT().CreateDeviceDriver(gomock.Any()).Return(coreDriver, nil)
 	instance := mocks1_2.EasyMockInstance(ctrl, coreDriver)
 	builder := impl1_2.InstanceObjectBuilderImpl{}
@@ -853,16 +853,16 @@ func TestPhysicalDeviceShaderFloat16Int8FeaturesOptions(t *testing.T) {
 		gomock.Not(gomock.Nil()),
 		gomock.Nil(),
 		gomock.Not(gomock.Nil()),
-	).DoAndReturn(func(physicalDevice driver.VkPhysicalDevice,
-		pCreateInfo *driver.VkDeviceCreateInfo,
-		pAllocator *driver.VkAllocationCallbacks,
-		pDevice *driver.VkDevice) (common.VkResult, error) {
+	).DoAndReturn(func(physicalDevice loader.VkPhysicalDevice,
+		pCreateInfo *loader.VkDeviceCreateInfo,
+		pAllocator *loader.VkAllocationCallbacks,
+		pDevice *loader.VkDevice) (common.VkResult, error) {
 		*pDevice = mockDevice.Handle()
 
 		val := reflect.ValueOf(pCreateInfo).Elem()
 		require.Equal(t, uint64(3), val.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO
 
-		next := (*driver.VkPhysicalDeviceShaderFloat16Int8Features)(val.FieldByName("pNext").UnsafePointer())
+		next := (*loader.VkPhysicalDeviceShaderFloat16Int8Features)(val.FieldByName("pNext").UnsafePointer())
 		val = reflect.ValueOf(next).Elem()
 
 		require.Equal(t, uint64(1000082000), val.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_FLOAT16_INT8_FEATURES
@@ -896,7 +896,7 @@ func TestPhysicalDeviceShaderFloat16Int8FeaturesOutData(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	coreDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_2)
+	coreDriver := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_2)
 	instance := mocks1_2.EasyMockInstance(ctrl, coreDriver)
 	builder := impl1_2.InstanceObjectBuilderImpl{}
 	physicalDevice := builder.CreatePhysicalDeviceObject(coreDriver, instance.Handle(), mocks.NewFakePhysicalDeviceHandle(), common.Vulkan1_2, common.Vulkan1_2).(core1_2.PhysicalDevice)
@@ -904,19 +904,19 @@ func TestPhysicalDeviceShaderFloat16Int8FeaturesOutData(t *testing.T) {
 	coreDriver.EXPECT().VkGetPhysicalDeviceFeatures2(
 		physicalDevice.Handle(),
 		gomock.Not(gomock.Nil()),
-	).DoAndReturn(func(physicalDevice driver.VkPhysicalDevice,
-		pFeatures *driver.VkPhysicalDeviceFeatures2) {
+	).DoAndReturn(func(physicalDevice loader.VkPhysicalDevice,
+		pFeatures *loader.VkPhysicalDeviceFeatures2) {
 
 		val := reflect.ValueOf(pFeatures).Elem()
 		require.Equal(t, uint64(1000059000), val.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2_KHR
 
-		next := (*driver.VkPhysicalDeviceShaderFloat16Int8Features)(val.FieldByName("pNext").UnsafePointer())
+		next := (*loader.VkPhysicalDeviceShaderFloat16Int8Features)(val.FieldByName("pNext").UnsafePointer())
 		val = reflect.ValueOf(next).Elem()
 
 		require.Equal(t, uint64(1000082000), val.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_FLOAT16_INT8_FEATURES_KHR
 		require.True(t, val.FieldByName("pNext").IsNil())
-		*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("shaderInt8").UnsafeAddr())) = driver.VkBool32(1)
-		*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("shaderFloat16").UnsafeAddr())) = driver.VkBool32(1)
+		*(*loader.VkBool32)(unsafe.Pointer(val.FieldByName("shaderInt8").UnsafeAddr())) = loader.VkBool32(1)
+		*(*loader.VkBool32)(unsafe.Pointer(val.FieldByName("shaderFloat16").UnsafeAddr())) = loader.VkBool32(1)
 	})
 
 	var outData core1_2.PhysicalDeviceShaderFloat16Int8Features
@@ -936,7 +936,7 @@ func TestPhysicalDeviceShaderSubgroupExtendedTypesFeaturesOptions(t *testing.T) 
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	coreDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_2)
+	coreDriver := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_2)
 	coreDriver.EXPECT().CreateDeviceDriver(gomock.Any()).Return(coreDriver, nil)
 	instance := mocks1_2.EasyMockInstance(ctrl, coreDriver)
 	builder := impl1_2.InstanceObjectBuilderImpl{}
@@ -948,16 +948,16 @@ func TestPhysicalDeviceShaderSubgroupExtendedTypesFeaturesOptions(t *testing.T) 
 		gomock.Not(gomock.Nil()),
 		gomock.Nil(),
 		gomock.Not(gomock.Nil()),
-	).DoAndReturn(func(physicalDevice driver.VkPhysicalDevice,
-		pCreateInfo *driver.VkDeviceCreateInfo,
-		pAllocator *driver.VkAllocationCallbacks,
-		pDevice *driver.VkDevice) (common.VkResult, error) {
+	).DoAndReturn(func(physicalDevice loader.VkPhysicalDevice,
+		pCreateInfo *loader.VkDeviceCreateInfo,
+		pAllocator *loader.VkAllocationCallbacks,
+		pDevice *loader.VkDevice) (common.VkResult, error) {
 		*pDevice = mockDevice.Handle()
 
 		val := reflect.ValueOf(pCreateInfo).Elem()
 		require.Equal(t, uint64(3), val.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO
 
-		next := (*driver.VkPhysicalDeviceShaderSubgroupExtendedTypesFeatures)(val.FieldByName("pNext").UnsafePointer())
+		next := (*loader.VkPhysicalDeviceShaderSubgroupExtendedTypesFeatures)(val.FieldByName("pNext").UnsafePointer())
 		val = reflect.ValueOf(next).Elem()
 
 		require.Equal(t, uint64(1000175000), val.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_SUBGROUP_EXTENDED_TYPES_FEATURES
@@ -989,7 +989,7 @@ func TestPhysicalDeviceShaderSubgroupExtendedTypesFeaturesOutData(t *testing.T) 
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	coreDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_2)
+	coreDriver := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_2)
 	instance := mocks1_2.EasyMockInstance(ctrl, coreDriver)
 	builder := impl1_2.InstanceObjectBuilderImpl{}
 	physicalDevice := builder.CreatePhysicalDeviceObject(coreDriver, instance.Handle(), mocks.NewFakePhysicalDeviceHandle(), common.Vulkan1_2, common.Vulkan1_2).(core1_2.PhysicalDevice)
@@ -997,18 +997,18 @@ func TestPhysicalDeviceShaderSubgroupExtendedTypesFeaturesOutData(t *testing.T) 
 	coreDriver.EXPECT().VkGetPhysicalDeviceFeatures2(
 		physicalDevice.Handle(),
 		gomock.Not(gomock.Nil()),
-	).DoAndReturn(func(physicalDevice driver.VkPhysicalDevice,
-		pFeatures *driver.VkPhysicalDeviceFeatures2) {
+	).DoAndReturn(func(physicalDevice loader.VkPhysicalDevice,
+		pFeatures *loader.VkPhysicalDeviceFeatures2) {
 
 		val := reflect.ValueOf(pFeatures).Elem()
 		require.Equal(t, uint64(1000059000), val.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2
 
-		next := (*driver.VkPhysicalDeviceShaderSubgroupExtendedTypesFeatures)(val.FieldByName("pNext").UnsafePointer())
+		next := (*loader.VkPhysicalDeviceShaderSubgroupExtendedTypesFeatures)(val.FieldByName("pNext").UnsafePointer())
 		val = reflect.ValueOf(next).Elem()
 
 		require.Equal(t, uint64(1000175000), val.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_SUBGROUP_EXTENDED_TYPES_FEATURES
 		require.True(t, val.FieldByName("pNext").IsNil())
-		*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("shaderSubgroupExtendedTypes").UnsafeAddr())) = driver.VkBool32(1)
+		*(*loader.VkBool32)(unsafe.Pointer(val.FieldByName("shaderSubgroupExtendedTypes").UnsafeAddr())) = loader.VkBool32(1)
 	})
 
 	var outData core1_2.PhysicalDeviceShaderSubgroupExtendedTypesFeatures
@@ -1027,7 +1027,7 @@ func TestPhysicalDeviceTimelineSemaphoreFeaturesOptions(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	coreDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_2)
+	coreDriver := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_2)
 	coreDriver.EXPECT().CreateDeviceDriver(gomock.Any()).Return(coreDriver, nil)
 	instance := mocks1_2.EasyMockInstance(ctrl, coreDriver)
 	builder := impl1_2.InstanceObjectBuilderImpl{}
@@ -1039,16 +1039,16 @@ func TestPhysicalDeviceTimelineSemaphoreFeaturesOptions(t *testing.T) {
 		gomock.Not(gomock.Nil()),
 		gomock.Nil(),
 		gomock.Not(gomock.Nil()),
-	).DoAndReturn(func(physicalDevice driver.VkPhysicalDevice,
-		pCreateInfo *driver.VkDeviceCreateInfo,
-		pAllocator *driver.VkAllocationCallbacks,
-		pDevice *driver.VkDevice) (common.VkResult, error) {
+	).DoAndReturn(func(physicalDevice loader.VkPhysicalDevice,
+		pCreateInfo *loader.VkDeviceCreateInfo,
+		pAllocator *loader.VkAllocationCallbacks,
+		pDevice *loader.VkDevice) (common.VkResult, error) {
 		*pDevice = mockDevice.Handle()
 
 		val := reflect.ValueOf(pCreateInfo).Elem()
 		require.Equal(t, uint64(3), val.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO
 
-		next := (*driver.VkPhysicalDeviceTimelineSemaphoreFeatures)(val.FieldByName("pNext").UnsafePointer())
+		next := (*loader.VkPhysicalDeviceTimelineSemaphoreFeatures)(val.FieldByName("pNext").UnsafePointer())
 		val = reflect.ValueOf(next).Elem()
 
 		require.Equal(t, uint64(1000207000), val.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_TIMELINE_SEMAPHORE_FEATURES
@@ -1080,7 +1080,7 @@ func TestPhysicalDeviceTimelineSemaphoreFeaturesOutData(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	coreDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_2)
+	coreDriver := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_2)
 	instance := mocks1_2.EasyMockInstance(ctrl, coreDriver)
 	builder := impl1_2.InstanceObjectBuilderImpl{}
 	physicalDevice := builder.CreatePhysicalDeviceObject(coreDriver, instance.Handle(), mocks.NewFakePhysicalDeviceHandle(), common.Vulkan1_2, common.Vulkan1_2).(core1_2.PhysicalDevice)
@@ -1088,18 +1088,18 @@ func TestPhysicalDeviceTimelineSemaphoreFeaturesOutData(t *testing.T) {
 	coreDriver.EXPECT().VkGetPhysicalDeviceFeatures2(
 		physicalDevice.Handle(),
 		gomock.Not(gomock.Nil()),
-	).DoAndReturn(func(physicalDevice driver.VkPhysicalDevice,
-		pFeatures *driver.VkPhysicalDeviceFeatures2) {
+	).DoAndReturn(func(physicalDevice loader.VkPhysicalDevice,
+		pFeatures *loader.VkPhysicalDeviceFeatures2) {
 
 		val := reflect.ValueOf(pFeatures).Elem()
 		require.Equal(t, uint64(1000059000), val.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2
 
-		next := (*driver.VkPhysicalDeviceTimelineSemaphoreFeatures)(val.FieldByName("pNext").UnsafePointer())
+		next := (*loader.VkPhysicalDeviceTimelineSemaphoreFeatures)(val.FieldByName("pNext").UnsafePointer())
 		val = reflect.ValueOf(next).Elem()
 
 		require.Equal(t, uint64(1000207000), val.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_TIMELINE_SEMAPHORE_FEATURES
 		require.True(t, val.FieldByName("pNext").IsNil())
-		*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("timelineSemaphore").UnsafeAddr())) = driver.VkBool32(1)
+		*(*loader.VkBool32)(unsafe.Pointer(val.FieldByName("timelineSemaphore").UnsafeAddr())) = loader.VkBool32(1)
 	})
 
 	var outData core1_2.PhysicalDeviceTimelineSemaphoreFeatures
@@ -1118,7 +1118,7 @@ func TestPhysicalDeviceUniformBufferStandardLayoutFeaturesOptions(t *testing.T) 
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	coreDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_2)
+	coreDriver := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_2)
 	coreDriver.EXPECT().CreateDeviceDriver(gomock.Any()).Return(coreDriver, nil)
 	instance := mocks1_2.EasyMockInstance(ctrl, coreDriver)
 	builder := impl1_2.InstanceObjectBuilderImpl{}
@@ -1130,16 +1130,16 @@ func TestPhysicalDeviceUniformBufferStandardLayoutFeaturesOptions(t *testing.T) 
 		gomock.Not(gomock.Nil()),
 		gomock.Nil(),
 		gomock.Not(gomock.Nil()),
-	).DoAndReturn(func(physicalDevice driver.VkPhysicalDevice,
-		pCreateInfo *driver.VkDeviceCreateInfo,
-		pAllocator *driver.VkAllocationCallbacks,
-		pDevice *driver.VkDevice) (common.VkResult, error) {
+	).DoAndReturn(func(physicalDevice loader.VkPhysicalDevice,
+		pCreateInfo *loader.VkDeviceCreateInfo,
+		pAllocator *loader.VkAllocationCallbacks,
+		pDevice *loader.VkDevice) (common.VkResult, error) {
 		*pDevice = mockDevice.Handle()
 
 		val := reflect.ValueOf(pCreateInfo).Elem()
 		require.Equal(t, uint64(3), val.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO
 
-		next := (*driver.VkPhysicalDeviceUniformBufferStandardLayoutFeatures)(val.FieldByName("pNext").UnsafePointer())
+		next := (*loader.VkPhysicalDeviceUniformBufferStandardLayoutFeatures)(val.FieldByName("pNext").UnsafePointer())
 		val = reflect.ValueOf(next).Elem()
 
 		require.Equal(t, uint64(1000253000), val.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_UNIFORM_BUFFER_STANDARD_LAYOUT_FEATURES
@@ -1171,7 +1171,7 @@ func TestPhysicalDeviceUniformBufferStandardLayoutFeaturesOutData(t *testing.T) 
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	coreDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_2)
+	coreDriver := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_2)
 	instance := mocks1_2.EasyMockInstance(ctrl, coreDriver)
 	builder := impl1_2.InstanceObjectBuilderImpl{}
 	physicalDevice := builder.CreatePhysicalDeviceObject(coreDriver, instance.Handle(), mocks.NewFakePhysicalDeviceHandle(), common.Vulkan1_2, common.Vulkan1_2).(core1_2.PhysicalDevice)
@@ -1179,18 +1179,18 @@ func TestPhysicalDeviceUniformBufferStandardLayoutFeaturesOutData(t *testing.T) 
 	coreDriver.EXPECT().VkGetPhysicalDeviceFeatures2(
 		physicalDevice.Handle(),
 		gomock.Not(gomock.Nil()),
-	).DoAndReturn(func(physicalDevice driver.VkPhysicalDevice,
-		pFeatures *driver.VkPhysicalDeviceFeatures2) {
+	).DoAndReturn(func(physicalDevice loader.VkPhysicalDevice,
+		pFeatures *loader.VkPhysicalDeviceFeatures2) {
 
 		val := reflect.ValueOf(pFeatures).Elem()
 		require.Equal(t, uint64(1000059000), val.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2
 
-		next := (*driver.VkPhysicalDeviceUniformBufferStandardLayoutFeatures)(val.FieldByName("pNext").UnsafePointer())
+		next := (*loader.VkPhysicalDeviceUniformBufferStandardLayoutFeatures)(val.FieldByName("pNext").UnsafePointer())
 		val = reflect.ValueOf(next).Elem()
 
 		require.Equal(t, uint64(1000253000), val.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_UNIFORM_BUFFER_STANDARD_LAYOUT_FEATURES
 		require.True(t, val.FieldByName("pNext").IsNil())
-		*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("uniformBufferStandardLayout").UnsafeAddr())) = driver.VkBool32(1)
+		*(*loader.VkBool32)(unsafe.Pointer(val.FieldByName("uniformBufferStandardLayout").UnsafeAddr())) = loader.VkBool32(1)
 	})
 
 	var outData core1_2.PhysicalDeviceUniformBufferStandardLayoutFeatures
@@ -1209,7 +1209,7 @@ func TestPhysicalDeviceVulkanMemoryModelFeaturesOptions(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	coreDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_2)
+	coreDriver := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_2)
 	coreDriver.EXPECT().CreateDeviceDriver(gomock.Any()).Return(coreDriver, nil)
 	instance := mocks1_2.EasyMockInstance(ctrl, coreDriver)
 	builder := impl1_2.InstanceObjectBuilderImpl{}
@@ -1222,17 +1222,17 @@ func TestPhysicalDeviceVulkanMemoryModelFeaturesOptions(t *testing.T) {
 		gomock.Nil(),
 		gomock.Not(gomock.Nil()),
 	).DoAndReturn(
-		func(physicalDevice driver.VkPhysicalDevice,
-			pCreateInfo *driver.VkDeviceCreateInfo,
-			pAllocator *driver.VkAllocationCallbacks,
-			pDevice *driver.VkDevice) (common.VkResult, error) {
+		func(physicalDevice loader.VkPhysicalDevice,
+			pCreateInfo *loader.VkDeviceCreateInfo,
+			pAllocator *loader.VkAllocationCallbacks,
+			pDevice *loader.VkDevice) (common.VkResult, error) {
 
 			*pDevice = mockDevice.Handle()
 
 			val := reflect.ValueOf(pCreateInfo).Elem()
 			require.Equal(t, uint64(3), val.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO
 
-			featuresPtr := (*driver.VkPhysicalDeviceVulkanMemoryModelFeatures)(val.FieldByName("pNext").UnsafePointer())
+			featuresPtr := (*loader.VkPhysicalDeviceVulkanMemoryModelFeatures)(val.FieldByName("pNext").UnsafePointer())
 			val = reflect.ValueOf(featuresPtr).Elem()
 
 			require.Equal(t, uint64(1000211000), val.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_MEMORY_MODEL_FEATURES
@@ -1266,7 +1266,7 @@ func TestPhysicalDeviceVulkanMemoryModelFeaturesOutData(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	coreDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_2)
+	coreDriver := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_2)
 	instance := mocks1_2.EasyMockInstance(ctrl, coreDriver)
 	builder := impl1_2.InstanceObjectBuilderImpl{}
 	physicalDevice := builder.CreatePhysicalDeviceObject(coreDriver, instance.Handle(), mocks.NewFakePhysicalDeviceHandle(), common.Vulkan1_2, common.Vulkan1_2).(core1_2.PhysicalDevice)
@@ -1276,22 +1276,22 @@ func TestPhysicalDeviceVulkanMemoryModelFeaturesOutData(t *testing.T) {
 		gomock.Not(gomock.Nil()),
 	).DoAndReturn(
 		func(
-			physicalDevice driver.VkPhysicalDevice,
-			pFeatures *driver.VkPhysicalDeviceFeatures2,
+			physicalDevice loader.VkPhysicalDevice,
+			pFeatures *loader.VkPhysicalDeviceFeatures2,
 		) {
 			val := reflect.ValueOf(pFeatures).Elem()
 
 			require.Equal(t, uint64(1000059000), val.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2_KHR
 
-			outData := (*driver.VkPhysicalDeviceVulkanMemoryModelFeatures)(val.FieldByName("pNext").UnsafePointer())
+			outData := (*loader.VkPhysicalDeviceVulkanMemoryModelFeatures)(val.FieldByName("pNext").UnsafePointer())
 			val = reflect.ValueOf(outData).Elem()
 
 			require.Equal(t, uint64(1000211000), val.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_MEMORY_MODEL_FEATURES_KHR
 			require.True(t, val.FieldByName("pNext").IsNil())
 
-			*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("vulkanMemoryModel").UnsafeAddr())) = driver.VkBool32(1)
-			*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("vulkanMemoryModelDeviceScope").UnsafeAddr())) = driver.VkBool32(0)
-			*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("vulkanMemoryModelAvailabilityVisibilityChains").UnsafeAddr())) = driver.VkBool32(1)
+			*(*loader.VkBool32)(unsafe.Pointer(val.FieldByName("vulkanMemoryModel").UnsafeAddr())) = loader.VkBool32(1)
+			*(*loader.VkBool32)(unsafe.Pointer(val.FieldByName("vulkanMemoryModelDeviceScope").UnsafeAddr())) = loader.VkBool32(0)
+			*(*loader.VkBool32)(unsafe.Pointer(val.FieldByName("vulkanMemoryModelAvailabilityVisibilityChains").UnsafeAddr())) = loader.VkBool32(1)
 		})
 
 	var outData core1_2.PhysicalDeviceVulkanMemoryModelFeatures
@@ -1310,7 +1310,7 @@ func TestPhysicalDeviceVulkan11FeaturesOptions(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	coreDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_2)
+	coreDriver := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_2)
 	coreDriver.EXPECT().CreateDeviceDriver(gomock.Any()).Return(coreDriver, nil)
 	instance := mocks1_2.EasyMockInstance(ctrl, coreDriver)
 	builder := impl1_2.InstanceObjectBuilderImpl{}
@@ -1323,17 +1323,17 @@ func TestPhysicalDeviceVulkan11FeaturesOptions(t *testing.T) {
 		gomock.Nil(),
 		gomock.Not(gomock.Nil()),
 	).DoAndReturn(
-		func(physicalDevice driver.VkPhysicalDevice,
-			pCreateInfo *driver.VkDeviceCreateInfo,
-			pAllocator *driver.VkAllocationCallbacks,
-			pDevice *driver.VkDevice) (common.VkResult, error) {
+		func(physicalDevice loader.VkPhysicalDevice,
+			pCreateInfo *loader.VkDeviceCreateInfo,
+			pAllocator *loader.VkAllocationCallbacks,
+			pDevice *loader.VkDevice) (common.VkResult, error) {
 
 			*pDevice = mockDevice.Handle()
 
 			val := reflect.ValueOf(pCreateInfo).Elem()
 			require.Equal(t, uint64(3), val.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO
 
-			featuresPtr := (*driver.VkPhysicalDeviceVulkan11Features)(val.FieldByName("pNext").UnsafePointer())
+			featuresPtr := (*loader.VkPhysicalDeviceVulkan11Features)(val.FieldByName("pNext").UnsafePointer())
 			val = reflect.ValueOf(featuresPtr).Elem()
 
 			require.Equal(t, uint64(49), val.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_1_FEATURES
@@ -1379,7 +1379,7 @@ func TestPhysicalDeviceVulkan11FeaturesOutData(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	coreDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_2)
+	coreDriver := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_2)
 	instance := mocks1_2.EasyMockInstance(ctrl, coreDriver)
 	builder := impl1_2.InstanceObjectBuilderImpl{}
 	physicalDevice := builder.CreatePhysicalDeviceObject(coreDriver, instance.Handle(), mocks.NewFakePhysicalDeviceHandle(), common.Vulkan1_2, common.Vulkan1_2).(core1_2.PhysicalDevice)
@@ -1389,31 +1389,31 @@ func TestPhysicalDeviceVulkan11FeaturesOutData(t *testing.T) {
 		gomock.Not(gomock.Nil()),
 	).DoAndReturn(
 		func(
-			physicalDevice driver.VkPhysicalDevice,
-			pFeatures *driver.VkPhysicalDeviceFeatures2,
+			physicalDevice loader.VkPhysicalDevice,
+			pFeatures *loader.VkPhysicalDeviceFeatures2,
 		) {
 			val := reflect.ValueOf(pFeatures).Elem()
 
 			require.Equal(t, uint64(1000059000), val.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2_KHR
 
-			outData := (*driver.VkPhysicalDeviceVulkan11Features)(val.FieldByName("pNext").UnsafePointer())
+			outData := (*loader.VkPhysicalDeviceVulkan11Features)(val.FieldByName("pNext").UnsafePointer())
 			val = reflect.ValueOf(outData).Elem()
 
 			require.Equal(t, uint64(49), val.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_1_FEATURES
 			require.True(t, val.FieldByName("pNext").IsNil())
 
-			*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("storageBuffer16BitAccess").UnsafeAddr())) = driver.VkBool32(1)
-			*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("uniformAndStorageBuffer16BitAccess").UnsafeAddr())) = driver.VkBool32(0)
-			*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("storagePushConstant16").UnsafeAddr())) = driver.VkBool32(1)
-			*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("storageInputOutput16").UnsafeAddr())) = driver.VkBool32(0)
-			*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("multiview").UnsafeAddr())) = driver.VkBool32(1)
-			*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("multiviewGeometryShader").UnsafeAddr())) = driver.VkBool32(0)
-			*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("multiviewTessellationShader").UnsafeAddr())) = driver.VkBool32(1)
-			*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("variablePointersStorageBuffer").UnsafeAddr())) = driver.VkBool32(0)
-			*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("variablePointers").UnsafeAddr())) = driver.VkBool32(1)
-			*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("protectedMemory").UnsafeAddr())) = driver.VkBool32(0)
-			*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("samplerYcbcrConversion").UnsafeAddr())) = driver.VkBool32(1)
-			*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("shaderDrawParameters").UnsafeAddr())) = driver.VkBool32(0)
+			*(*loader.VkBool32)(unsafe.Pointer(val.FieldByName("storageBuffer16BitAccess").UnsafeAddr())) = loader.VkBool32(1)
+			*(*loader.VkBool32)(unsafe.Pointer(val.FieldByName("uniformAndStorageBuffer16BitAccess").UnsafeAddr())) = loader.VkBool32(0)
+			*(*loader.VkBool32)(unsafe.Pointer(val.FieldByName("storagePushConstant16").UnsafeAddr())) = loader.VkBool32(1)
+			*(*loader.VkBool32)(unsafe.Pointer(val.FieldByName("storageInputOutput16").UnsafeAddr())) = loader.VkBool32(0)
+			*(*loader.VkBool32)(unsafe.Pointer(val.FieldByName("multiview").UnsafeAddr())) = loader.VkBool32(1)
+			*(*loader.VkBool32)(unsafe.Pointer(val.FieldByName("multiviewGeometryShader").UnsafeAddr())) = loader.VkBool32(0)
+			*(*loader.VkBool32)(unsafe.Pointer(val.FieldByName("multiviewTessellationShader").UnsafeAddr())) = loader.VkBool32(1)
+			*(*loader.VkBool32)(unsafe.Pointer(val.FieldByName("variablePointersStorageBuffer").UnsafeAddr())) = loader.VkBool32(0)
+			*(*loader.VkBool32)(unsafe.Pointer(val.FieldByName("variablePointers").UnsafeAddr())) = loader.VkBool32(1)
+			*(*loader.VkBool32)(unsafe.Pointer(val.FieldByName("protectedMemory").UnsafeAddr())) = loader.VkBool32(0)
+			*(*loader.VkBool32)(unsafe.Pointer(val.FieldByName("samplerYcbcrConversion").UnsafeAddr())) = loader.VkBool32(1)
+			*(*loader.VkBool32)(unsafe.Pointer(val.FieldByName("shaderDrawParameters").UnsafeAddr())) = loader.VkBool32(0)
 		})
 
 	var outData core1_2.PhysicalDeviceVulkan11Features
@@ -1441,7 +1441,7 @@ func TestPhysicalDeviceVulkan12FeaturesOptions(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	coreDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_2)
+	coreDriver := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_2)
 	coreDriver.EXPECT().CreateDeviceDriver(gomock.Any()).Return(coreDriver, nil)
 	instance := mocks1_2.EasyMockInstance(ctrl, coreDriver)
 	builder := impl1_2.InstanceObjectBuilderImpl{}
@@ -1454,17 +1454,17 @@ func TestPhysicalDeviceVulkan12FeaturesOptions(t *testing.T) {
 		gomock.Nil(),
 		gomock.Not(gomock.Nil()),
 	).DoAndReturn(
-		func(physicalDevice driver.VkPhysicalDevice,
-			pCreateInfo *driver.VkDeviceCreateInfo,
-			pAllocator *driver.VkAllocationCallbacks,
-			pDevice *driver.VkDevice) (common.VkResult, error) {
+		func(physicalDevice loader.VkPhysicalDevice,
+			pCreateInfo *loader.VkDeviceCreateInfo,
+			pAllocator *loader.VkAllocationCallbacks,
+			pDevice *loader.VkDevice) (common.VkResult, error) {
 
 			*pDevice = mockDevice.Handle()
 
 			val := reflect.ValueOf(pCreateInfo).Elem()
 			require.Equal(t, uint64(3), val.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO
 
-			featuresPtr := (*driver.VkPhysicalDeviceVulkan12Features)(val.FieldByName("pNext").UnsafePointer())
+			featuresPtr := (*loader.VkPhysicalDeviceVulkan12Features)(val.FieldByName("pNext").UnsafePointer())
 			val = reflect.ValueOf(featuresPtr).Elem()
 
 			require.Equal(t, uint64(51), val.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_2_FEATURES
@@ -1563,7 +1563,7 @@ func TestPhysicalDeviceVulkan12FeaturesOutData(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	coreDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_2)
+	coreDriver := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_2)
 	instance := mocks1_2.EasyMockInstance(ctrl, coreDriver)
 	builder := impl1_2.InstanceObjectBuilderImpl{}
 	physicalDevice := builder.CreatePhysicalDeviceObject(coreDriver, instance.Handle(), mocks.NewFakePhysicalDeviceHandle(), common.Vulkan1_2, common.Vulkan1_2).(core1_2.PhysicalDevice)
@@ -1573,66 +1573,66 @@ func TestPhysicalDeviceVulkan12FeaturesOutData(t *testing.T) {
 		gomock.Not(gomock.Nil()),
 	).DoAndReturn(
 		func(
-			physicalDevice driver.VkPhysicalDevice,
-			pFeatures *driver.VkPhysicalDeviceFeatures2,
+			physicalDevice loader.VkPhysicalDevice,
+			pFeatures *loader.VkPhysicalDeviceFeatures2,
 		) {
 			val := reflect.ValueOf(pFeatures).Elem()
 
 			require.Equal(t, uint64(1000059000), val.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2_KHR
 
-			outData := (*driver.VkPhysicalDeviceVulkan12Features)(val.FieldByName("pNext").UnsafePointer())
+			outData := (*loader.VkPhysicalDeviceVulkan12Features)(val.FieldByName("pNext").UnsafePointer())
 			val = reflect.ValueOf(outData).Elem()
 
 			require.Equal(t, uint64(51), val.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_2_FEATURES
 			require.True(t, val.FieldByName("pNext").IsNil())
 
-			*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("samplerMirrorClampToEdge").UnsafeAddr())) = driver.VkBool32(1)
-			*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("drawIndirectCount").UnsafeAddr())) = driver.VkBool32(0)
-			*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("storageBuffer8BitAccess").UnsafeAddr())) = driver.VkBool32(1)
-			*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("uniformAndStorageBuffer8BitAccess").UnsafeAddr())) = driver.VkBool32(0)
-			*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("storagePushConstant8").UnsafeAddr())) = driver.VkBool32(1)
-			*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("shaderBufferInt64Atomics").UnsafeAddr())) = driver.VkBool32(0)
-			*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("shaderSharedInt64Atomics").UnsafeAddr())) = driver.VkBool32(1)
-			*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("shaderFloat16").UnsafeAddr())) = driver.VkBool32(0)
-			*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("shaderInt8").UnsafeAddr())) = driver.VkBool32(1)
-			*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("descriptorIndexing").UnsafeAddr())) = driver.VkBool32(0)
-			*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("shaderInputAttachmentArrayDynamicIndexing").UnsafeAddr())) = driver.VkBool32(1)
-			*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("shaderUniformTexelBufferArrayDynamicIndexing").UnsafeAddr())) = driver.VkBool32(0)
-			*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("shaderStorageTexelBufferArrayDynamicIndexing").UnsafeAddr())) = driver.VkBool32(1)
-			*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("shaderUniformBufferArrayNonUniformIndexing").UnsafeAddr())) = driver.VkBool32(0)
-			*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("shaderSampledImageArrayNonUniformIndexing").UnsafeAddr())) = driver.VkBool32(1)
-			*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("shaderStorageBufferArrayNonUniformIndexing").UnsafeAddr())) = driver.VkBool32(0)
-			*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("shaderStorageImageArrayNonUniformIndexing").UnsafeAddr())) = driver.VkBool32(1)
-			*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("shaderInputAttachmentArrayNonUniformIndexing").UnsafeAddr())) = driver.VkBool32(0)
-			*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("shaderUniformTexelBufferArrayNonUniformIndexing").UnsafeAddr())) = driver.VkBool32(1)
-			*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("shaderStorageTexelBufferArrayNonUniformIndexing").UnsafeAddr())) = driver.VkBool32(0)
-			*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("descriptorBindingUniformBufferUpdateAfterBind").UnsafeAddr())) = driver.VkBool32(1)
-			*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("descriptorBindingSampledImageUpdateAfterBind").UnsafeAddr())) = driver.VkBool32(0)
-			*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("descriptorBindingStorageImageUpdateAfterBind").UnsafeAddr())) = driver.VkBool32(1)
-			*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("descriptorBindingStorageBufferUpdateAfterBind").UnsafeAddr())) = driver.VkBool32(0)
-			*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("descriptorBindingUniformTexelBufferUpdateAfterBind").UnsafeAddr())) = driver.VkBool32(1)
-			*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("descriptorBindingStorageTexelBufferUpdateAfterBind").UnsafeAddr())) = driver.VkBool32(0)
-			*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("descriptorBindingUpdateUnusedWhilePending").UnsafeAddr())) = driver.VkBool32(1)
-			*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("descriptorBindingPartiallyBound").UnsafeAddr())) = driver.VkBool32(0)
-			*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("descriptorBindingVariableDescriptorCount").UnsafeAddr())) = driver.VkBool32(1)
-			*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("runtimeDescriptorArray").UnsafeAddr())) = driver.VkBool32(0)
-			*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("samplerFilterMinmax").UnsafeAddr())) = driver.VkBool32(1)
-			*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("scalarBlockLayout").UnsafeAddr())) = driver.VkBool32(0)
-			*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("imagelessFramebuffer").UnsafeAddr())) = driver.VkBool32(1)
-			*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("uniformBufferStandardLayout").UnsafeAddr())) = driver.VkBool32(0)
-			*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("shaderSubgroupExtendedTypes").UnsafeAddr())) = driver.VkBool32(1)
-			*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("separateDepthStencilLayouts").UnsafeAddr())) = driver.VkBool32(0)
-			*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("hostQueryReset").UnsafeAddr())) = driver.VkBool32(1)
-			*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("timelineSemaphore").UnsafeAddr())) = driver.VkBool32(0)
-			*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("bufferDeviceAddress").UnsafeAddr())) = driver.VkBool32(1)
-			*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("bufferDeviceAddressCaptureReplay").UnsafeAddr())) = driver.VkBool32(0)
-			*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("bufferDeviceAddressMultiDevice").UnsafeAddr())) = driver.VkBool32(1)
-			*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("vulkanMemoryModel").UnsafeAddr())) = driver.VkBool32(0)
-			*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("vulkanMemoryModelDeviceScope").UnsafeAddr())) = driver.VkBool32(1)
-			*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("vulkanMemoryModelAvailabilityVisibilityChains").UnsafeAddr())) = driver.VkBool32(0)
-			*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("shaderOutputViewportIndex").UnsafeAddr())) = driver.VkBool32(1)
-			*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("shaderOutputLayer").UnsafeAddr())) = driver.VkBool32(0)
-			*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("subgroupBroadcastDynamicId").UnsafeAddr())) = driver.VkBool32(1)
+			*(*loader.VkBool32)(unsafe.Pointer(val.FieldByName("samplerMirrorClampToEdge").UnsafeAddr())) = loader.VkBool32(1)
+			*(*loader.VkBool32)(unsafe.Pointer(val.FieldByName("drawIndirectCount").UnsafeAddr())) = loader.VkBool32(0)
+			*(*loader.VkBool32)(unsafe.Pointer(val.FieldByName("storageBuffer8BitAccess").UnsafeAddr())) = loader.VkBool32(1)
+			*(*loader.VkBool32)(unsafe.Pointer(val.FieldByName("uniformAndStorageBuffer8BitAccess").UnsafeAddr())) = loader.VkBool32(0)
+			*(*loader.VkBool32)(unsafe.Pointer(val.FieldByName("storagePushConstant8").UnsafeAddr())) = loader.VkBool32(1)
+			*(*loader.VkBool32)(unsafe.Pointer(val.FieldByName("shaderBufferInt64Atomics").UnsafeAddr())) = loader.VkBool32(0)
+			*(*loader.VkBool32)(unsafe.Pointer(val.FieldByName("shaderSharedInt64Atomics").UnsafeAddr())) = loader.VkBool32(1)
+			*(*loader.VkBool32)(unsafe.Pointer(val.FieldByName("shaderFloat16").UnsafeAddr())) = loader.VkBool32(0)
+			*(*loader.VkBool32)(unsafe.Pointer(val.FieldByName("shaderInt8").UnsafeAddr())) = loader.VkBool32(1)
+			*(*loader.VkBool32)(unsafe.Pointer(val.FieldByName("descriptorIndexing").UnsafeAddr())) = loader.VkBool32(0)
+			*(*loader.VkBool32)(unsafe.Pointer(val.FieldByName("shaderInputAttachmentArrayDynamicIndexing").UnsafeAddr())) = loader.VkBool32(1)
+			*(*loader.VkBool32)(unsafe.Pointer(val.FieldByName("shaderUniformTexelBufferArrayDynamicIndexing").UnsafeAddr())) = loader.VkBool32(0)
+			*(*loader.VkBool32)(unsafe.Pointer(val.FieldByName("shaderStorageTexelBufferArrayDynamicIndexing").UnsafeAddr())) = loader.VkBool32(1)
+			*(*loader.VkBool32)(unsafe.Pointer(val.FieldByName("shaderUniformBufferArrayNonUniformIndexing").UnsafeAddr())) = loader.VkBool32(0)
+			*(*loader.VkBool32)(unsafe.Pointer(val.FieldByName("shaderSampledImageArrayNonUniformIndexing").UnsafeAddr())) = loader.VkBool32(1)
+			*(*loader.VkBool32)(unsafe.Pointer(val.FieldByName("shaderStorageBufferArrayNonUniformIndexing").UnsafeAddr())) = loader.VkBool32(0)
+			*(*loader.VkBool32)(unsafe.Pointer(val.FieldByName("shaderStorageImageArrayNonUniformIndexing").UnsafeAddr())) = loader.VkBool32(1)
+			*(*loader.VkBool32)(unsafe.Pointer(val.FieldByName("shaderInputAttachmentArrayNonUniformIndexing").UnsafeAddr())) = loader.VkBool32(0)
+			*(*loader.VkBool32)(unsafe.Pointer(val.FieldByName("shaderUniformTexelBufferArrayNonUniformIndexing").UnsafeAddr())) = loader.VkBool32(1)
+			*(*loader.VkBool32)(unsafe.Pointer(val.FieldByName("shaderStorageTexelBufferArrayNonUniformIndexing").UnsafeAddr())) = loader.VkBool32(0)
+			*(*loader.VkBool32)(unsafe.Pointer(val.FieldByName("descriptorBindingUniformBufferUpdateAfterBind").UnsafeAddr())) = loader.VkBool32(1)
+			*(*loader.VkBool32)(unsafe.Pointer(val.FieldByName("descriptorBindingSampledImageUpdateAfterBind").UnsafeAddr())) = loader.VkBool32(0)
+			*(*loader.VkBool32)(unsafe.Pointer(val.FieldByName("descriptorBindingStorageImageUpdateAfterBind").UnsafeAddr())) = loader.VkBool32(1)
+			*(*loader.VkBool32)(unsafe.Pointer(val.FieldByName("descriptorBindingStorageBufferUpdateAfterBind").UnsafeAddr())) = loader.VkBool32(0)
+			*(*loader.VkBool32)(unsafe.Pointer(val.FieldByName("descriptorBindingUniformTexelBufferUpdateAfterBind").UnsafeAddr())) = loader.VkBool32(1)
+			*(*loader.VkBool32)(unsafe.Pointer(val.FieldByName("descriptorBindingStorageTexelBufferUpdateAfterBind").UnsafeAddr())) = loader.VkBool32(0)
+			*(*loader.VkBool32)(unsafe.Pointer(val.FieldByName("descriptorBindingUpdateUnusedWhilePending").UnsafeAddr())) = loader.VkBool32(1)
+			*(*loader.VkBool32)(unsafe.Pointer(val.FieldByName("descriptorBindingPartiallyBound").UnsafeAddr())) = loader.VkBool32(0)
+			*(*loader.VkBool32)(unsafe.Pointer(val.FieldByName("descriptorBindingVariableDescriptorCount").UnsafeAddr())) = loader.VkBool32(1)
+			*(*loader.VkBool32)(unsafe.Pointer(val.FieldByName("runtimeDescriptorArray").UnsafeAddr())) = loader.VkBool32(0)
+			*(*loader.VkBool32)(unsafe.Pointer(val.FieldByName("samplerFilterMinmax").UnsafeAddr())) = loader.VkBool32(1)
+			*(*loader.VkBool32)(unsafe.Pointer(val.FieldByName("scalarBlockLayout").UnsafeAddr())) = loader.VkBool32(0)
+			*(*loader.VkBool32)(unsafe.Pointer(val.FieldByName("imagelessFramebuffer").UnsafeAddr())) = loader.VkBool32(1)
+			*(*loader.VkBool32)(unsafe.Pointer(val.FieldByName("uniformBufferStandardLayout").UnsafeAddr())) = loader.VkBool32(0)
+			*(*loader.VkBool32)(unsafe.Pointer(val.FieldByName("shaderSubgroupExtendedTypes").UnsafeAddr())) = loader.VkBool32(1)
+			*(*loader.VkBool32)(unsafe.Pointer(val.FieldByName("separateDepthStencilLayouts").UnsafeAddr())) = loader.VkBool32(0)
+			*(*loader.VkBool32)(unsafe.Pointer(val.FieldByName("hostQueryReset").UnsafeAddr())) = loader.VkBool32(1)
+			*(*loader.VkBool32)(unsafe.Pointer(val.FieldByName("timelineSemaphore").UnsafeAddr())) = loader.VkBool32(0)
+			*(*loader.VkBool32)(unsafe.Pointer(val.FieldByName("bufferDeviceAddress").UnsafeAddr())) = loader.VkBool32(1)
+			*(*loader.VkBool32)(unsafe.Pointer(val.FieldByName("bufferDeviceAddressCaptureReplay").UnsafeAddr())) = loader.VkBool32(0)
+			*(*loader.VkBool32)(unsafe.Pointer(val.FieldByName("bufferDeviceAddressMultiDevice").UnsafeAddr())) = loader.VkBool32(1)
+			*(*loader.VkBool32)(unsafe.Pointer(val.FieldByName("vulkanMemoryModel").UnsafeAddr())) = loader.VkBool32(0)
+			*(*loader.VkBool32)(unsafe.Pointer(val.FieldByName("vulkanMemoryModelDeviceScope").UnsafeAddr())) = loader.VkBool32(1)
+			*(*loader.VkBool32)(unsafe.Pointer(val.FieldByName("vulkanMemoryModelAvailabilityVisibilityChains").UnsafeAddr())) = loader.VkBool32(0)
+			*(*loader.VkBool32)(unsafe.Pointer(val.FieldByName("shaderOutputViewportIndex").UnsafeAddr())) = loader.VkBool32(1)
+			*(*loader.VkBool32)(unsafe.Pointer(val.FieldByName("shaderOutputLayer").UnsafeAddr())) = loader.VkBool32(0)
+			*(*loader.VkBool32)(unsafe.Pointer(val.FieldByName("subgroupBroadcastDynamicId").UnsafeAddr())) = loader.VkBool32(1)
 		})
 
 	var outData core1_2.PhysicalDeviceVulkan12Features

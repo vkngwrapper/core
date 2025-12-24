@@ -8,9 +8,9 @@ import (
 	"github.com/stretchr/testify/require"
 	"github.com/vkngwrapper/core/v3/common"
 	"github.com/vkngwrapper/core/v3/core1_0"
-	"github.com/vkngwrapper/core/v3/driver"
-	mock_driver "github.com/vkngwrapper/core/v3/driver/mocks"
 	"github.com/vkngwrapper/core/v3/internal/impl1_0"
+	"github.com/vkngwrapper/core/v3/loader"
+	mock_driver "github.com/vkngwrapper/core/v3/loader/mocks"
 	"github.com/vkngwrapper/core/v3/mocks"
 	"github.com/vkngwrapper/core/v3/mocks/mocks1_0"
 	"go.uber.org/mock/gomock"
@@ -20,7 +20,7 @@ func TestVulkanLoader1_0_CreateFrameBuffer(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_0)
+	mockDriver := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_0)
 	builder := &impl1_0.InstanceObjectBuilderImpl{}
 	device := builder.CreateDeviceObject(mockDriver, mocks.NewFakeDeviceHandle(), common.Vulkan1_0, []string{})
 	renderPass := mocks1_0.EasyMockRenderPass(ctrl)
@@ -29,7 +29,7 @@ func TestVulkanLoader1_0_CreateFrameBuffer(t *testing.T) {
 	framebufferHandle := mocks.NewFakeFramebufferHandle()
 
 	mockDriver.EXPECT().VkCreateFramebuffer(device.Handle(), gomock.Not(nil), nil, gomock.Not(nil)).DoAndReturn(
-		func(device driver.VkDevice, pCreateInfo *driver.VkFramebufferCreateInfo, pAllocator *driver.VkAllocationCallbacks, pFramebuffer *driver.VkFramebuffer) (common.VkResult, error) {
+		func(device loader.VkDevice, pCreateInfo *loader.VkFramebufferCreateInfo, pAllocator *loader.VkAllocationCallbacks, pFramebuffer *loader.VkFramebuffer) (common.VkResult, error) {
 			val := reflect.ValueOf(*pCreateInfo)
 
 			require.Equal(t, uint64(37), val.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO
@@ -40,10 +40,10 @@ func TestVulkanLoader1_0_CreateFrameBuffer(t *testing.T) {
 			require.Equal(t, uint64(7), val.FieldByName("layers").Uint())
 			require.Equal(t, uint64(2), val.FieldByName("attachmentCount").Uint())
 
-			require.Equal(t, renderPass.Handle(), (driver.VkRenderPass)(unsafe.Pointer(val.FieldByName("renderPass").Elem().UnsafeAddr())))
+			require.Equal(t, renderPass.Handle(), (loader.VkRenderPass)(unsafe.Pointer(val.FieldByName("renderPass").Elem().UnsafeAddr())))
 
-			attachmentPtr := (*driver.VkImageView)(unsafe.Pointer(val.FieldByName("pAttachments").Elem().UnsafeAddr()))
-			attachmentSlice := ([]driver.VkImageView)(unsafe.Slice(attachmentPtr, 2))
+			attachmentPtr := (*loader.VkImageView)(unsafe.Pointer(val.FieldByName("pAttachments").Elem().UnsafeAddr()))
+			attachmentSlice := ([]loader.VkImageView)(unsafe.Slice(attachmentPtr, 2))
 			require.Equal(t, imageView1.Handle(), attachmentSlice[0])
 			require.Equal(t, imageView2.Handle(), attachmentSlice[1])
 

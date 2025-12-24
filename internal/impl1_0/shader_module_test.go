@@ -8,9 +8,9 @@ import (
 	"github.com/stretchr/testify/require"
 	"github.com/vkngwrapper/core/v3/common"
 	"github.com/vkngwrapper/core/v3/core1_0"
-	"github.com/vkngwrapper/core/v3/driver"
-	mock_driver "github.com/vkngwrapper/core/v3/driver/mocks"
 	"github.com/vkngwrapper/core/v3/internal/impl1_0"
+	"github.com/vkngwrapper/core/v3/loader"
+	mock_driver "github.com/vkngwrapper/core/v3/loader/mocks"
 	"github.com/vkngwrapper/core/v3/mocks"
 	"go.uber.org/mock/gomock"
 )
@@ -19,13 +19,13 @@ func TestVulkanLoader1_0_CreateShaderModule(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_0)
+	mockDriver := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_0)
 	builder := &impl1_0.InstanceObjectBuilderImpl{}
 	device := builder.CreateDeviceObject(mockDriver, mocks.NewFakeDeviceHandle(), common.Vulkan1_0, []string{})
 	handle := mocks.NewFakeShaderModule()
 
 	mockDriver.EXPECT().VkCreateShaderModule(device.Handle(), gomock.Not(nil), nil, gomock.Not(nil)).DoAndReturn(
-		func(device driver.VkDevice, pCreateInfo *driver.VkShaderModuleCreateInfo, pAllocator *driver.VkAllocationCallbacks, pShaderModule *driver.VkShaderModule) (common.VkResult, error) {
+		func(device loader.VkDevice, pCreateInfo *loader.VkShaderModuleCreateInfo, pAllocator *loader.VkAllocationCallbacks, pShaderModule *loader.VkShaderModule) (common.VkResult, error) {
 			*pShaderModule = handle
 			val := reflect.ValueOf(*pCreateInfo)
 
@@ -34,10 +34,10 @@ func TestVulkanLoader1_0_CreateShaderModule(t *testing.T) {
 			require.Equal(t, uint64(0), val.FieldByName("flags").Uint())
 			require.Equal(t, uint64(32), val.FieldByName("codeSize").Uint())
 
-			codePtr := (*driver.Uint32)(unsafe.Pointer(val.FieldByName("pCode").Elem().UnsafeAddr()))
-			codeSlice := ([]driver.Uint32)(unsafe.Slice(codePtr, 8))
+			codePtr := (*loader.Uint32)(unsafe.Pointer(val.FieldByName("pCode").Elem().UnsafeAddr()))
+			codeSlice := ([]loader.Uint32)(unsafe.Slice(codePtr, 8))
 
-			require.Equal(t, []driver.Uint32{1, 1, 2, 3, 5, 8, 13, 21}, codeSlice)
+			require.Equal(t, []loader.Uint32{1, 1, 2, 3, 5, 8, 13, 21}, codeSlice)
 
 			return core1_0.VKSuccess, nil
 		})

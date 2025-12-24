@@ -9,9 +9,9 @@ import (
 	"github.com/vkngwrapper/core/v3"
 	"github.com/vkngwrapper/core/v3/common"
 	"github.com/vkngwrapper/core/v3/core1_0"
-	"github.com/vkngwrapper/core/v3/driver"
-	mock_driver "github.com/vkngwrapper/core/v3/driver/mocks"
 	"github.com/vkngwrapper/core/v3/internal/impl1_0"
+	"github.com/vkngwrapper/core/v3/loader"
+	mock_driver "github.com/vkngwrapper/core/v3/loader/mocks"
 	"github.com/vkngwrapper/core/v3/mocks"
 	"go.uber.org/mock/gomock"
 )
@@ -20,7 +20,7 @@ func TestVulkanLoader1_0_CreateInstance(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_0)
+	mockDriver := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_0)
 	loader, err := core.CreateLoaderFromDriver(mockDriver)
 	require.NoError(t, err)
 
@@ -28,7 +28,7 @@ func TestVulkanLoader1_0_CreateInstance(t *testing.T) {
 
 	mockDriver.EXPECT().CreateInstanceDriver(gomock.Any()).Return(mockDriver, nil)
 	mockDriver.EXPECT().VkCreateInstance(gomock.Not(nil), nil, gomock.Not(nil)).DoAndReturn(
-		func(pCreateInfo *driver.VkInstanceCreateInfo, pAllocator *driver.VkAllocationCallbacks, pInstance *driver.VkInstance) (common.VkResult, error) {
+		func(pCreateInfo *loader.VkInstanceCreateInfo, pAllocator *loader.VkAllocationCallbacks, pInstance *loader.VkInstance) (common.VkResult, error) {
 			*pInstance = instanceHandle
 
 			val := reflect.ValueOf(pCreateInfo).Elem()
@@ -38,28 +38,28 @@ func TestVulkanLoader1_0_CreateInstance(t *testing.T) {
 			require.Equal(t, uint64(1), val.FieldByName("enabledExtensionCount").Uint())
 			require.Equal(t, uint64(2), val.FieldByName("enabledLayerCount").Uint())
 
-			layerNames := ([]*driver.Char)(unsafe.Slice((**driver.Char)(unsafe.Pointer(val.FieldByName("ppEnabledLayerNames").Elem().UnsafeAddr())), 2))
-			layerNameSlice := ([]driver.Char)(unsafe.Slice(layerNames[0], 256))
+			layerNames := ([]*loader.Char)(unsafe.Slice((**loader.Char)(unsafe.Pointer(val.FieldByName("ppEnabledLayerNames").Elem().UnsafeAddr())), 2))
+			layerNameSlice := ([]loader.Char)(unsafe.Slice(layerNames[0], 256))
 			layerNameBytes := []byte("layer a")
 			for idx, b := range layerNameBytes {
-				require.Equal(t, driver.Char(b), layerNameSlice[idx], "mismatch at idx %d of %s", idx, string(layerNameBytes))
+				require.Equal(t, loader.Char(b), layerNameSlice[idx], "mismatch at idx %d of %s", idx, string(layerNameBytes))
 			}
-			require.Equal(t, driver.Char(0), layerNameSlice[len(layerNameBytes)])
+			require.Equal(t, loader.Char(0), layerNameSlice[len(layerNameBytes)])
 
-			layerNameSlice = ([]driver.Char)(unsafe.Slice(layerNames[1], 256))
+			layerNameSlice = ([]loader.Char)(unsafe.Slice(layerNames[1], 256))
 			layerNameBytes = []byte("layer 2")
 			for idx, b := range layerNameBytes {
-				require.Equal(t, driver.Char(b), layerNameSlice[idx])
+				require.Equal(t, loader.Char(b), layerNameSlice[idx])
 			}
-			require.Equal(t, driver.Char(0), layerNameSlice[len(layerNameBytes)])
+			require.Equal(t, loader.Char(0), layerNameSlice[len(layerNameBytes)])
 
-			extensionNames := ([]*driver.Char)(unsafe.Slice((**driver.Char)(unsafe.Pointer(val.FieldByName("ppEnabledExtensionNames").Elem().UnsafeAddr())), 1))
-			extensionNameSlice := ([]driver.Char)(unsafe.Slice(extensionNames[0], 256))
+			extensionNames := ([]*loader.Char)(unsafe.Slice((**loader.Char)(unsafe.Pointer(val.FieldByName("ppEnabledExtensionNames").Elem().UnsafeAddr())), 1))
+			extensionNameSlice := ([]loader.Char)(unsafe.Slice(extensionNames[0], 256))
 			extensionNameBytes := []byte("extension")
 			for idx, b := range extensionNameBytes {
-				require.Equal(t, driver.Char(b), extensionNameSlice[idx])
+				require.Equal(t, loader.Char(b), extensionNameSlice[idx])
 			}
-			require.Equal(t, driver.Char(0), extensionNameSlice[len(extensionNameBytes)])
+			require.Equal(t, loader.Char(0), extensionNameSlice[len(extensionNameBytes)])
 
 			require.False(t, val.FieldByName("pApplicationInfo").IsNil())
 			appInfo := val.FieldByName("pApplicationInfo").Elem()
@@ -69,22 +69,22 @@ func TestVulkanLoader1_0_CreateInstance(t *testing.T) {
 			require.Equal(t, uint64(common.CreateVersion(3, 4, 5)), appInfo.FieldByName("engineVersion").Uint())
 			require.Equal(t, uint64(1<<22), appInfo.FieldByName("apiVersion").Uint()) // VK_API_VERSION_1_0
 
-			applicationNamePtr := (*driver.Char)(unsafe.Pointer(appInfo.FieldByName("pApplicationName").Elem().UnsafeAddr()))
-			engineNamePtr := (*driver.Char)(unsafe.Pointer(appInfo.FieldByName("pEngineName").Elem().UnsafeAddr()))
+			applicationNamePtr := (*loader.Char)(unsafe.Pointer(appInfo.FieldByName("pApplicationName").Elem().UnsafeAddr()))
+			engineNamePtr := (*loader.Char)(unsafe.Pointer(appInfo.FieldByName("pEngineName").Elem().UnsafeAddr()))
 
-			applicationNameSlice := ([]driver.Char)(unsafe.Slice(applicationNamePtr, 256))
+			applicationNameSlice := ([]loader.Char)(unsafe.Slice(applicationNamePtr, 256))
 			applicationNameBytes := []byte("test app")
 			for idx, b := range applicationNameBytes {
-				require.Equal(t, driver.Char(b), applicationNameSlice[idx])
+				require.Equal(t, loader.Char(b), applicationNameSlice[idx])
 			}
-			require.Equal(t, driver.Char(0), applicationNameSlice[len(applicationNameBytes)])
+			require.Equal(t, loader.Char(0), applicationNameSlice[len(applicationNameBytes)])
 
-			engineNameSlice := ([]driver.Char)(unsafe.Slice(engineNamePtr, 256))
+			engineNameSlice := ([]loader.Char)(unsafe.Slice(engineNamePtr, 256))
 			engineNameBytes := []byte("test engine")
 			for idx, b := range engineNameBytes {
-				require.Equal(t, driver.Char(b), engineNameSlice[idx])
+				require.Equal(t, loader.Char(b), engineNameSlice[idx])
 			}
-			require.Equal(t, driver.Char(0), engineNameSlice[len(engineNameBytes)])
+			require.Equal(t, loader.Char(0), engineNameSlice[len(engineNameBytes)])
 
 			return core1_0.VKSuccess, nil
 		})
@@ -107,37 +107,37 @@ func TestVulkanInstance_PhysicalDevices(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_2)
+	mockDriver := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_2)
 
 	instance := impl1_0.CreateInstanceObject(mockDriver, mocks.NewFakeInstanceHandle(), common.Vulkan1_2, []string{})
 	device1 := mocks.NewFakePhysicalDeviceHandle()
 	device2 := mocks.NewFakePhysicalDeviceHandle()
 
 	mockDriver.EXPECT().VkEnumeratePhysicalDevices(instance.Handle(), gomock.Not(nil), nil).DoAndReturn(
-		func(instance driver.VkInstance, pPhysicalDeviceCount *driver.Uint32, pPhysicalDevices *driver.VkPhysicalDevice) (common.VkResult, error) {
+		func(instance loader.VkInstance, pPhysicalDeviceCount *loader.Uint32, pPhysicalDevices *loader.VkPhysicalDevice) (common.VkResult, error) {
 			*pPhysicalDeviceCount = 2
 
 			return core1_0.VKSuccess, nil
 		})
 	mockDriver.EXPECT().VkEnumeratePhysicalDevices(instance.Handle(), gomock.Not(nil), gomock.Not(nil)).DoAndReturn(
-		func(instance driver.VkInstance, pPhysicalDeviceCount *driver.Uint32, pPhysicalDevices *driver.VkPhysicalDevice) (common.VkResult, error) {
+		func(instance loader.VkInstance, pPhysicalDeviceCount *loader.Uint32, pPhysicalDevices *loader.VkPhysicalDevice) (common.VkResult, error) {
 			*pPhysicalDeviceCount = 2
 
-			deviceSlice := ([]driver.VkPhysicalDevice)(unsafe.Slice(pPhysicalDevices, 2))
+			deviceSlice := ([]loader.VkPhysicalDevice)(unsafe.Slice(pPhysicalDevices, 2))
 			deviceSlice[0] = device1
 			deviceSlice[1] = device2
 
 			return core1_0.VKSuccess, nil
 		})
 	mockDriver.EXPECT().VkGetPhysicalDeviceProperties(device1, gomock.Not(nil)).DoAndReturn(
-		func(physicalDevice driver.VkPhysicalDevice, pProperties *driver.VkPhysicalDeviceProperties) {
+		func(physicalDevice loader.VkPhysicalDevice, pProperties *loader.VkPhysicalDeviceProperties) {
 			val := reflect.ValueOf(pProperties).Elem()
 
 			*(*uint32)(unsafe.Pointer(val.FieldByName("apiVersion").UnsafeAddr())) = uint32(1 << 22)
 		})
 
 	mockDriver.EXPECT().VkGetPhysicalDeviceProperties(device2, gomock.Not(nil)).DoAndReturn(
-		func(physicalDevice driver.VkPhysicalDevice, pProperties *driver.VkPhysicalDeviceProperties) {
+		func(physicalDevice loader.VkPhysicalDevice, pProperties *loader.VkPhysicalDeviceProperties) {
 			val := reflect.ValueOf(pProperties).Elem()
 
 			*(*uint32)(unsafe.Pointer(val.FieldByName("apiVersion").UnsafeAddr())) = uint32(1<<22 | 2<<12)

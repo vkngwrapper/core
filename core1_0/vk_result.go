@@ -66,7 +66,7 @@ const (
 	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkResult.html
 	VKErrorFeatureNotPresent common.VkResult = C.VK_ERROR_FEATURE_NOT_PRESENT
 	// VKErrorIncompatibleDriver indicates the requested version of Vulkan is not supported
-	// by the driver or is otherwise incompatible for implementation-specific reasons
+	// by the loader or is otherwise incompatible for implementation-specific reasons
 	//
 	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkResult.html
 	VKErrorIncompatibleDriver common.VkResult = C.VK_ERROR_INCOMPATIBLE_DRIVER
@@ -105,7 +105,7 @@ func init() {
 	VKErrorLayerNotPresent.Register("layer not present")
 	VKErrorExtensionNotPresent.Register("extension not present")
 	VKErrorFeatureNotPresent.Register("feature not present")
-	VKErrorIncompatibleDriver.Register("incompatible driver")
+	VKErrorIncompatibleDriver.Register("incompatible loader")
 	VKErrorTooManyObjects.Register("too many objects")
 	VKErrorFormatNotSupported.Register("format not supported")
 	VKErrorFragmentedPool.Register("fragmented pool")

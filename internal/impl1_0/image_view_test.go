@@ -8,9 +8,9 @@ import (
 	"github.com/stretchr/testify/require"
 	"github.com/vkngwrapper/core/v3/common"
 	"github.com/vkngwrapper/core/v3/core1_0"
-	"github.com/vkngwrapper/core/v3/driver"
-	mock_driver "github.com/vkngwrapper/core/v3/driver/mocks"
 	"github.com/vkngwrapper/core/v3/internal/impl1_0"
+	"github.com/vkngwrapper/core/v3/loader"
+	mock_driver "github.com/vkngwrapper/core/v3/loader/mocks"
 	"github.com/vkngwrapper/core/v3/mocks"
 	"github.com/vkngwrapper/core/v3/mocks/mocks1_0"
 	"go.uber.org/mock/gomock"
@@ -20,19 +20,19 @@ func TestVulkanLoader1_0_CreateImageView(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_0)
+	mockDriver := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_0)
 	builder := &impl1_0.InstanceObjectBuilderImpl{}
 	device := builder.CreateDeviceObject(mockDriver, mocks.NewFakeDeviceHandle(), common.Vulkan1_0, []string{})
 	imageViewHandle := mocks.NewFakeImageViewHandle()
 	image := mocks1_0.EasyMockImage(ctrl)
 
 	mockDriver.EXPECT().VkCreateImageView(device.Handle(), gomock.Not(nil), nil, gomock.Not(nil)).DoAndReturn(
-		func(device driver.VkDevice, pCreateInfo *driver.VkImageViewCreateInfo, pAllocator *driver.VkAllocationCallbacks, pImageView *driver.VkImageView) (common.VkResult, error) {
+		func(device loader.VkDevice, pCreateInfo *loader.VkImageViewCreateInfo, pAllocator *loader.VkAllocationCallbacks, pImageView *loader.VkImageView) (common.VkResult, error) {
 			val := reflect.ValueOf(*pCreateInfo)
 			require.Equal(t, uint64(15), val.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO
 			require.True(t, val.FieldByName("pNext").IsNil())
 			require.Equal(t, uint64(0), val.FieldByName("flags").Uint())
-			require.Equal(t, image.Handle(), (driver.VkImage)(unsafe.Pointer(val.FieldByName("image").Elem().UnsafeAddr())))
+			require.Equal(t, image.Handle(), (loader.VkImage)(unsafe.Pointer(val.FieldByName("image").Elem().UnsafeAddr())))
 			require.Equal(t, uint64(1), val.FieldByName("viewType").Uint()) // VK_IMAGE_VIEW_TYPE_2D
 			require.Equal(t, uint64(67), val.FieldByName("format").Uint())  // VK_FORMAT_A2B10G10R10_SSCALED_PACK32
 

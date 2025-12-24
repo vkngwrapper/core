@@ -12,19 +12,19 @@ import (
 	"github.com/pkg/errors"
 	"github.com/vkngwrapper/core/v3/common"
 	"github.com/vkngwrapper/core/v3/core1_0"
-	"github.com/vkngwrapper/core/v3/driver"
+	"github.com/vkngwrapper/core/v3/loader"
 	"github.com/vkngwrapper/core/v3/types"
 )
 
-func (v *Vulkan) DestroyImage(image types.Image, callbacks *driver.AllocationCallbacks) {
+func (v *DeviceVulkanDriver) DestroyImage(image types.Image, callbacks *loader.AllocationCallbacks) {
 	if image.Handle() == 0 {
 		panic("image was uninitialized")
 	}
 
-	v.Driver.VkDestroyImage(image.DeviceHandle(), image.Handle(), callbacks.Handle())
+	v.LoaderObj.VkDestroyImage(image.DeviceHandle(), image.Handle(), callbacks.Handle())
 }
 
-func (v *Vulkan) GetImageMemoryRequirements(image types.Image) *core1_0.MemoryRequirements {
+func (v *DeviceVulkanDriver) GetImageMemoryRequirements(image types.Image) *core1_0.MemoryRequirements {
 	if image.Handle() == 0 {
 		panic("image was uninitialized")
 	}
@@ -34,7 +34,7 @@ func (v *Vulkan) GetImageMemoryRequirements(image types.Image) *core1_0.MemoryRe
 
 	memRequirementsUnsafe := arena.Malloc(C.sizeof_struct_VkMemoryRequirements)
 
-	v.Driver.VkGetImageMemoryRequirements(image.DeviceHandle(), image.Handle(), (*driver.VkMemoryRequirements)(memRequirementsUnsafe))
+	v.LoaderObj.VkGetImageMemoryRequirements(image.DeviceHandle(), image.Handle(), (*loader.VkMemoryRequirements)(memRequirementsUnsafe))
 
 	memRequirements := (*C.VkMemoryRequirements)(memRequirementsUnsafe)
 
@@ -45,7 +45,7 @@ func (v *Vulkan) GetImageMemoryRequirements(image types.Image) *core1_0.MemoryRe
 	}
 }
 
-func (v *Vulkan) BindImageMemory(image types.Image, memory types.DeviceMemory, offset int) (common.VkResult, error) {
+func (v *DeviceVulkanDriver) BindImageMemory(image types.Image, memory types.DeviceMemory, offset int) (common.VkResult, error) {
 	if image.Handle() == 0 {
 		return core1_0.VKErrorUnknown, errors.New("received uninitialized Image")
 	}
@@ -56,10 +56,10 @@ func (v *Vulkan) BindImageMemory(image types.Image, memory types.DeviceMemory, o
 		return core1_0.VKErrorUnknown, errors.New("received negative offset")
 	}
 
-	return v.Driver.VkBindImageMemory(image.DeviceHandle(), image.Handle(), memory.Handle(), driver.VkDeviceSize(offset))
+	return v.LoaderObj.VkBindImageMemory(image.DeviceHandle(), image.Handle(), memory.Handle(), loader.VkDeviceSize(offset))
 }
 
-func (v *Vulkan) GetImageSubresourceLayout(image types.Image, subresource *core1_0.ImageSubresource) *core1_0.SubresourceLayout {
+func (v *DeviceVulkanDriver) GetImageSubresourceLayout(image types.Image, subresource *core1_0.ImageSubresource) *core1_0.SubresourceLayout {
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
@@ -70,7 +70,7 @@ func (v *Vulkan) GetImageSubresourceLayout(image types.Image, subresource *core1
 	subresourcePtr.mipLevel = C.uint32_t(subresource.MipLevel)
 	subresourcePtr.arrayLayer = C.uint32_t(subresource.ArrayLayer)
 
-	v.Driver.VkGetImageSubresourceLayout(image.DeviceHandle(), image.Handle(), (*driver.VkImageSubresource)(unsafe.Pointer(subresourcePtr)), (*driver.VkSubresourceLayout)(subresourceLayoutUnsafe))
+	v.LoaderObj.VkGetImageSubresourceLayout(image.DeviceHandle(), image.Handle(), (*loader.VkImageSubresource)(unsafe.Pointer(subresourcePtr)), (*loader.VkSubresourceLayout)(subresourceLayoutUnsafe))
 
 	subresourceLayout := (*C.VkSubresourceLayout)(subresourceLayoutUnsafe)
 	return &core1_0.SubresourceLayout{

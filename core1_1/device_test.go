@@ -9,9 +9,9 @@ import (
 	"github.com/vkngwrapper/core/v3/common"
 	"github.com/vkngwrapper/core/v3/core1_0"
 	"github.com/vkngwrapper/core/v3/core1_1"
-	"github.com/vkngwrapper/core/v3/driver"
-	mock_driver "github.com/vkngwrapper/core/v3/driver/mocks"
 	"github.com/vkngwrapper/core/v3/internal/impl1_1"
+	"github.com/vkngwrapper/core/v3/loader"
+	mock_driver "github.com/vkngwrapper/core/v3/loader/mocks"
 	"github.com/vkngwrapper/core/v3/mocks"
 	"github.com/vkngwrapper/core/v3/mocks/mocks1_1"
 	"go.uber.org/mock/gomock"
@@ -21,7 +21,7 @@ func TestBindBufferMemoryDeviceGroupOptions(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	coreDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_1)
+	coreDriver := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_1)
 	builder := &impl1_1.InstanceObjectBuilderImpl{}
 	device := builder.CreateDeviceObject(coreDriver, mocks.NewFakeDeviceHandle(), common.Vulkan1_1, []string{}).(core1_1.Device)
 
@@ -30,28 +30,28 @@ func TestBindBufferMemoryDeviceGroupOptions(t *testing.T) {
 
 	coreDriver.EXPECT().VkBindBufferMemory2(
 		device.Handle(),
-		driver.Uint32(1),
+		loader.Uint32(1),
 		gomock.Not(gomock.Nil()),
 	).DoAndReturn(func(
-		device driver.VkDevice,
-		infoCount driver.Uint32,
-		pInfo *driver.VkBindBufferMemoryInfo,
+		device loader.VkDevice,
+		infoCount loader.Uint32,
+		pInfo *loader.VkBindBufferMemoryInfo,
 	) (common.VkResult, error) {
 		val := reflect.ValueOf(pInfo).Elem()
 
 		require.Equal(t, uint64(1000157000), val.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_BIND_BUFFER_MEMORY_INFO
-		require.Equal(t, buffer.Handle(), (driver.VkBuffer)(val.FieldByName("buffer").UnsafePointer()))
-		require.Equal(t, memory.Handle(), (driver.VkDeviceMemory)(val.FieldByName("memory").UnsafePointer()))
+		require.Equal(t, buffer.Handle(), (loader.VkBuffer)(val.FieldByName("buffer").UnsafePointer()))
+		require.Equal(t, memory.Handle(), (loader.VkDeviceMemory)(val.FieldByName("memory").UnsafePointer()))
 		require.Equal(t, uint64(1), val.FieldByName("memoryOffset").Uint())
 
-		next := (*driver.VkBindBufferMemoryDeviceGroupInfo)(val.FieldByName("pNext").UnsafePointer())
+		next := (*loader.VkBindBufferMemoryDeviceGroupInfo)(val.FieldByName("pNext").UnsafePointer())
 		val = reflect.ValueOf(next).Elem()
 		require.Equal(t, uint64(1000060013), val.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_BIND_BUFFER_MEMORY_DEVICE_GROUP_INFO
 		require.True(t, val.FieldByName("pNext").IsNil())
 		require.Equal(t, uint64(3), val.FieldByName("deviceIndexCount").Uint())
 
-		indices := (*driver.Uint32)(val.FieldByName("pDeviceIndices").UnsafePointer())
-		indexSlice := ([]driver.Uint32)(unsafe.Slice(indices, 3))
+		indices := (*loader.Uint32)(val.FieldByName("pDeviceIndices").UnsafePointer())
+		indexSlice := ([]loader.Uint32)(unsafe.Slice(indices, 3))
 		val = reflect.ValueOf(indexSlice)
 
 		require.Equal(t, uint64(1), val.Index(0).Uint())
@@ -81,7 +81,7 @@ func TestBindImageMemoryDeviceGroupOptions(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	coreDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_1)
+	coreDriver := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_1)
 	builder := &impl1_1.InstanceObjectBuilderImpl{}
 	device := builder.CreateDeviceObject(coreDriver, mocks.NewFakeDeviceHandle(), common.Vulkan1_1, []string{}).(core1_1.Device)
 
@@ -90,28 +90,28 @@ func TestBindImageMemoryDeviceGroupOptions(t *testing.T) {
 
 	coreDriver.EXPECT().VkBindImageMemory2(
 		device.Handle(),
-		driver.Uint32(1),
+		loader.Uint32(1),
 		gomock.Not(gomock.Nil()),
 	).DoAndReturn(func(
-		device driver.VkDevice,
-		infoCount driver.Uint32,
-		pInfo *driver.VkBindImageMemoryInfo,
+		device loader.VkDevice,
+		infoCount loader.Uint32,
+		pInfo *loader.VkBindImageMemoryInfo,
 	) (common.VkResult, error) {
 		val := reflect.ValueOf(pInfo).Elem()
 
 		require.Equal(t, uint64(1000157001), val.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_BIND_IMAGE_MEMORY_INFO
-		require.Equal(t, image.Handle(), (driver.VkImage)(val.FieldByName("image").UnsafePointer()))
-		require.Equal(t, memory.Handle(), (driver.VkDeviceMemory)(val.FieldByName("memory").UnsafePointer()))
+		require.Equal(t, image.Handle(), (loader.VkImage)(val.FieldByName("image").UnsafePointer()))
+		require.Equal(t, memory.Handle(), (loader.VkDeviceMemory)(val.FieldByName("memory").UnsafePointer()))
 		require.Equal(t, uint64(1), val.FieldByName("memoryOffset").Uint())
 
-		next := (*driver.VkBindImageMemoryDeviceGroupInfo)(val.FieldByName("pNext").UnsafePointer())
+		next := (*loader.VkBindImageMemoryDeviceGroupInfo)(val.FieldByName("pNext").UnsafePointer())
 		val = reflect.ValueOf(next).Elem()
 		require.Equal(t, uint64(1000060014), val.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_BIND_IMAGE_MEMORY_DEVICE_GROUP_INFO
 		require.True(t, val.FieldByName("pNext").IsNil())
 		require.Equal(t, uint64(3), val.FieldByName("deviceIndexCount").Uint())
 
-		indices := (*driver.Uint32)(val.FieldByName("pDeviceIndices").UnsafePointer())
-		indexSlice := ([]driver.Uint32)(unsafe.Slice(indices, 3))
+		indices := (*loader.Uint32)(val.FieldByName("pDeviceIndices").UnsafePointer())
+		indexSlice := ([]loader.Uint32)(unsafe.Slice(indices, 3))
 		indexVal := reflect.ValueOf(indexSlice)
 
 		require.Equal(t, uint64(1), indexVal.Index(0).Uint())
@@ -120,8 +120,8 @@ func TestBindImageMemoryDeviceGroupOptions(t *testing.T) {
 
 		require.Equal(t, uint64(2), val.FieldByName("splitInstanceBindRegionCount").Uint())
 
-		regions := (*driver.VkRect2D)(val.FieldByName("pSplitInstanceBindRegions").UnsafePointer())
-		regionSlice := ([]driver.VkRect2D)(unsafe.Slice(regions, 2))
+		regions := (*loader.VkRect2D)(val.FieldByName("pSplitInstanceBindRegions").UnsafePointer())
+		regionSlice := ([]loader.VkRect2D)(unsafe.Slice(regions, 2))
 		regionVal := reflect.ValueOf(regionSlice)
 
 		oneRegion := regionVal.Index(0)
@@ -169,7 +169,7 @@ func TestBindImagePlaneMemoryOptions(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	coreDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_1)
+	coreDriver := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_1)
 	builder := &impl1_1.InstanceObjectBuilderImpl{}
 	device := builder.CreateDeviceObject(coreDriver, mocks.NewFakeDeviceHandle(), common.Vulkan1_1, []string{}).(core1_1.Device)
 
@@ -178,19 +178,19 @@ func TestBindImagePlaneMemoryOptions(t *testing.T) {
 
 	coreDriver.EXPECT().VkBindImageMemory2(
 		device.Handle(),
-		driver.Uint32(1),
+		loader.Uint32(1),
 		gomock.Not(gomock.Nil()),
-	).DoAndReturn(func(device driver.VkDevice,
-		bindInfoCount driver.Uint32,
-		pBindInfos *driver.VkBindImageMemoryInfo,
+	).DoAndReturn(func(device loader.VkDevice,
+		bindInfoCount loader.Uint32,
+		pBindInfos *loader.VkBindImageMemoryInfo,
 	) (common.VkResult, error) {
 		val := reflect.ValueOf(pBindInfos).Elem()
 
 		require.Equal(t, uint64(1000157001), val.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_BIND_IMAGE_MEMORY_INFO
-		require.Equal(t, image.Handle(), driver.VkImage(val.FieldByName("image").UnsafePointer()))
-		require.Equal(t, memory.Handle(), driver.VkDeviceMemory(val.FieldByName("memory").UnsafePointer()))
+		require.Equal(t, image.Handle(), loader.VkImage(val.FieldByName("image").UnsafePointer()))
+		require.Equal(t, memory.Handle(), loader.VkDeviceMemory(val.FieldByName("memory").UnsafePointer()))
 
-		next := (*driver.VkBindImagePlaneMemoryInfo)(val.FieldByName("pNext").UnsafePointer())
+		next := (*loader.VkBindImagePlaneMemoryInfo)(val.FieldByName("pNext").UnsafePointer())
 		val = reflect.ValueOf(next).Elem()
 
 		require.Equal(t, uint64(1000156002), val.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_BIND_IMAGE_PLANE_MEMORY_INFO
@@ -219,7 +219,7 @@ func TestDeviceGroupBindSparseOptions(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	coreDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_1)
+	coreDriver := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_1)
 	builder := &impl1_1.InstanceObjectBuilderImpl{}
 	device := builder.CreateDeviceObject(coreDriver, mocks.NewFakeDeviceHandle(), common.Vulkan1_1, []string{}).(core1_1.Device)
 
@@ -234,28 +234,28 @@ func TestDeviceGroupBindSparseOptions(t *testing.T) {
 
 	coreDriver.EXPECT().VkQueueBindSparse(
 		queue.Handle(),
-		driver.Uint32(1),
+		loader.Uint32(1),
 		gomock.Not(gomock.Nil()),
 		fence.Handle(),
 	).DoAndReturn(func(
-		queue driver.VkQueue,
-		optionCount driver.Uint32,
-		pSparseOptions *driver.VkBindSparseInfo,
-		fence driver.VkFence,
+		queue loader.VkQueue,
+		optionCount loader.Uint32,
+		pSparseOptions *loader.VkBindSparseInfo,
+		fence loader.VkFence,
 	) (common.VkResult, error) {
 		val := reflect.ValueOf(pSparseOptions).Elem()
 
 		require.Equal(t, uint64(7), val.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_BIND_SPARSE_INFO
 		require.Equal(t, uint64(1), val.FieldByName("waitSemaphoreCount").Uint())
-		require.Equal(t, semaphore1.Handle(), driver.VkSemaphore(val.FieldByName("pWaitSemaphores").Elem().UnsafePointer()))
+		require.Equal(t, semaphore1.Handle(), loader.VkSemaphore(val.FieldByName("pWaitSemaphores").Elem().UnsafePointer()))
 		require.Equal(t, uint64(2), val.FieldByName("signalSemaphoreCount").Uint())
 
-		semaphores := (*driver.VkSemaphore)(val.FieldByName("pSignalSemaphores").UnsafePointer())
-		semaphoreSlice := ([]driver.VkSemaphore)(unsafe.Slice(semaphores, 2))
+		semaphores := (*loader.VkSemaphore)(val.FieldByName("pSignalSemaphores").UnsafePointer())
+		semaphoreSlice := ([]loader.VkSemaphore)(unsafe.Slice(semaphores, 2))
 		require.Equal(t, semaphore2.Handle(), semaphoreSlice[0])
 		require.Equal(t, semaphore3.Handle(), semaphoreSlice[1])
 
-		next := (*driver.VkDeviceGroupBindSparseInfo)(val.FieldByName("pNext").UnsafePointer())
+		next := (*loader.VkDeviceGroupBindSparseInfo)(val.FieldByName("pNext").UnsafePointer())
 		val = reflect.ValueOf(next).Elem()
 
 		require.Equal(t, uint64(1000060006), val.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_DEVICE_GROUP_BIND_SPARSE_INFO

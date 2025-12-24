@@ -12,7 +12,7 @@ import (
 	"github.com/pkg/errors"
 	"github.com/vkngwrapper/core/v3/common"
 	"github.com/vkngwrapper/core/v3/core1_0"
-	"github.com/vkngwrapper/core/v3/driver"
+	"github.com/vkngwrapper/core/v3/loader"
 	"github.com/vkngwrapper/core/v3/types"
 )
 
@@ -49,13 +49,9 @@ func (o *PhysicalDeviceGroupProperties) PopulateOutData(cPointer unsafe.Pointer,
 	createInfo := (*C.VkPhysicalDeviceGroupProperties)(cPointer)
 	o.SubsetAllocation = createInfo.subsetAllocation != C.VkBool32(0)
 
-	instanceHandle, ok := common.OfType[driver.VkInstance](helpers)
+	instanceDriver, ok := common.OfType[loader.Loader](helpers)
 	if !ok {
-		return nil, errors.New("outdata population requires an instance handle passed to populate helpers")
-	}
-	instanceDriver, ok := common.OfType[driver.Driver](helpers)
-	if !ok {
-		return nil, errors.New("outdata population requires an instance driver passed to populate helpers")
+		return nil, errors.New("outdata population requires an instance loader passed to populate helpers")
 	}
 	instanceVersion, ok := common.OfType[common.APIVersion](helpers)
 	if !ok {
@@ -68,8 +64,8 @@ func (o *PhysicalDeviceGroupProperties) PopulateOutData(cPointer unsafe.Pointer,
 	propertiesUnsafe := arena.Malloc(C.sizeof_struct_VkPhysicalDeviceProperties)
 
 	for i := 0; i < count; i++ {
-		handle := driver.VkPhysicalDevice(unsafe.Pointer(createInfo.physicalDevices[i]))
-		instanceDriver.VkGetPhysicalDeviceProperties(handle, (*driver.VkPhysicalDeviceProperties)(propertiesUnsafe))
+		handle := loader.VkPhysicalDevice(unsafe.Pointer(createInfo.physicalDevices[i]))
+		instanceDriver.VkGetPhysicalDeviceProperties(handle, (*loader.VkPhysicalDeviceProperties)(propertiesUnsafe))
 
 		var properties core1_0.PhysicalDeviceProperties
 		err = (&properties).PopulateFromCPointer(propertiesUnsafe)
@@ -79,7 +75,7 @@ func (o *PhysicalDeviceGroupProperties) PopulateOutData(cPointer unsafe.Pointer,
 
 		deviceVersion := instanceVersion.Min(properties.APIVersion)
 
-		o.PhysicalDevices[i] = builder.CreatePhysicalDeviceObject(instanceDriver, instanceHandle, handle, instanceVersion, deviceVersion)
+		o.PhysicalDevices[i] = types.InternalPhysicalDevice(handle, instanceVersion, deviceVersion)
 	}
 
 	return createInfo.pNext, nil

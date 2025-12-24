@@ -12,26 +12,26 @@ import (
 	"github.com/CannibalVox/cgoparam"
 	"github.com/vkngwrapper/core/v3/common"
 	"github.com/vkngwrapper/core/v3/core1_0"
-	"github.com/vkngwrapper/core/v3/driver"
+	"github.com/vkngwrapper/core/v3/loader"
 	"github.com/vkngwrapper/core/v3/types"
 )
 
-func (v *Vulkan) QueueWaitIdle(queue types.Queue) (common.VkResult, error) {
+func (v *DeviceVulkanDriver) QueueWaitIdle(queue types.Queue) (common.VkResult, error) {
 	if queue.Handle() == 0 {
 		return core1_0.VKErrorUnknown, fmt.Errorf("queue is uninitialized")
 	}
-	return v.Driver.VkQueueWaitIdle(queue.Handle())
+	return v.LoaderObj.VkQueueWaitIdle(queue.Handle())
 }
 
-func (v *Vulkan) QueueBindSparse(queue types.Queue, fence types.Fence, bindInfos []core1_0.BindSparseInfo) (common.VkResult, error) {
+func (v *DeviceVulkanDriver) QueueBindSparse(queue types.Queue, fence *types.Fence, bindInfos ...core1_0.BindSparseInfo) (common.VkResult, error) {
 	if queue.Handle() == 0 {
 		return core1_0.VKErrorUnknown, fmt.Errorf("queue is uninitialized")
 	}
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
-	var fenceHandle driver.VkFence
-	if fence.Handle() != 0 {
+	var fenceHandle loader.VkFence
+	if fence != nil {
 		fenceHandle = fence.Handle()
 	}
 
@@ -41,5 +41,5 @@ func (v *Vulkan) QueueBindSparse(queue types.Queue, fence types.Fence, bindInfos
 		return core1_0.VKErrorUnknown, err
 	}
 
-	return v.Driver.VkQueueBindSparse(queue.Handle(), driver.Uint32(bindInfoCount), (*driver.VkBindSparseInfo)(unsafe.Pointer(bindInfoPtr)), fenceHandle)
+	return v.LoaderObj.VkQueueBindSparse(queue.Handle(), loader.Uint32(bindInfoCount), (*loader.VkBindSparseInfo)(unsafe.Pointer(bindInfoPtr)), fenceHandle)
 }

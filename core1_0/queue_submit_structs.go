@@ -11,7 +11,7 @@ import (
 	"github.com/CannibalVox/cgoparam"
 	"github.com/pkg/errors"
 	"github.com/vkngwrapper/core/v3/common"
-	"github.com/vkngwrapper/core/v3/driver"
+	"github.com/vkngwrapper/core/v3/loader"
 	"github.com/vkngwrapper/core/v3/types"
 )
 
@@ -210,7 +210,7 @@ func (o SubmitInfo) PopulateCPointer(allocator *cgoparam.Allocator, preallocated
 	createInfo.pCommandBuffers = nil
 	if commandBufferCount > 0 {
 		commandBufferPtrUnsafe := allocator.Malloc(commandBufferCount * int(unsafe.Sizeof([1]C.VkCommandBuffer{})))
-		commandBufferSlice := ([]driver.VkCommandBuffer)(unsafe.Slice((*driver.VkCommandBuffer)(commandBufferPtrUnsafe), commandBufferCount))
+		commandBufferSlice := ([]loader.VkCommandBuffer)(unsafe.Slice((*loader.VkCommandBuffer)(commandBufferPtrUnsafe), commandBufferCount))
 
 		for i := 0; i < commandBufferCount; i++ {
 			if o.CommandBuffers[i].Handle() == 0 {

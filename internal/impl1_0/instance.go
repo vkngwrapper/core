@@ -12,18 +12,18 @@ import (
 	"github.com/CannibalVox/cgoparam"
 	"github.com/vkngwrapper/core/v3/common"
 	"github.com/vkngwrapper/core/v3/core1_0"
-	"github.com/vkngwrapper/core/v3/driver"
+	"github.com/vkngwrapper/core/v3/loader"
 	"github.com/vkngwrapper/core/v3/types"
 )
 
-func (v *Vulkan) DestroyInstance(instance types.Instance, callbacks *driver.AllocationCallbacks) {
+func (v *InstanceVulkanDriver) DestroyInstance(instance types.Instance, callbacks *loader.AllocationCallbacks) {
 	if instance.Handle() == 0 {
 		panic("instance was uninitialized")
 	}
-	v.Driver.VkDestroyInstance(instance.Handle(), callbacks.Handle())
+	v.LoaderObj.VkDestroyInstance(instance.Handle(), callbacks.Handle())
 }
 
-func (v *Vulkan) EnumeratePhysicalDevices(instance types.Instance) ([]types.PhysicalDevice, common.VkResult, error) {
+func (v *InstanceVulkanDriver) EnumeratePhysicalDevices(instance types.Instance) ([]types.PhysicalDevice, common.VkResult, error) {
 	if instance.Handle() == 0 {
 		return nil, core1_0.VKErrorUnknown, fmt.Errorf("instance was uninitialized")
 	}
@@ -31,9 +31,9 @@ func (v *Vulkan) EnumeratePhysicalDevices(instance types.Instance) ([]types.Phys
 	allocator := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(allocator)
 
-	count := (*driver.Uint32)(allocator.Malloc(int(unsafe.Sizeof(driver.Uint32(0)))))
+	count := (*loader.Uint32)(allocator.Malloc(int(unsafe.Sizeof(loader.Uint32(0)))))
 
-	res, err := v.Driver.VkEnumeratePhysicalDevices(instance.Handle(), count, nil)
+	res, err := v.LoaderObj.VkEnumeratePhysicalDevices(instance.Handle(), count, nil)
 	if err != nil {
 		return nil, res, err
 	}
@@ -42,10 +42,10 @@ func (v *Vulkan) EnumeratePhysicalDevices(instance types.Instance) ([]types.Phys
 		return nil, res, nil
 	}
 
-	allocatedHandles := allocator.Malloc(int(uintptr(*count) * unsafe.Sizeof([1]driver.VkPhysicalDevice{})))
+	allocatedHandles := allocator.Malloc(int(uintptr(*count) * unsafe.Sizeof([1]loader.VkPhysicalDevice{})))
 
-	deviceHandles := ([]driver.VkPhysicalDevice)(unsafe.Slice((*driver.VkPhysicalDevice)(allocatedHandles), int(*count)))
-	res, err = v.Driver.VkEnumeratePhysicalDevices(instance.Handle(), count, (*driver.VkPhysicalDevice)(allocatedHandles))
+	deviceHandles := ([]loader.VkPhysicalDevice)(unsafe.Slice((*loader.VkPhysicalDevice)(allocatedHandles), int(*count)))
+	res, err = v.LoaderObj.VkEnumeratePhysicalDevices(instance.Handle(), count, (*loader.VkPhysicalDevice)(allocatedHandles))
 	if err != nil {
 		return nil, res, err
 	}
@@ -55,7 +55,7 @@ func (v *Vulkan) EnumeratePhysicalDevices(instance types.Instance) ([]types.Phys
 	for ind := uint32(0); ind < goCount; ind++ {
 		propertiesUnsafe := allocator.Malloc(int(unsafe.Sizeof([1]C.VkPhysicalDeviceProperties{})))
 
-		v.Driver.VkGetPhysicalDeviceProperties(deviceHandles[ind], (*driver.VkPhysicalDeviceProperties)(propertiesUnsafe))
+		v.LoaderObj.VkGetPhysicalDeviceProperties(deviceHandles[ind], (*loader.VkPhysicalDeviceProperties)(propertiesUnsafe))
 
 		var properties core1_0.PhysicalDeviceProperties
 		err = (&properties).PopulateFromCPointer(propertiesUnsafe)

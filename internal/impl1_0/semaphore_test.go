@@ -7,9 +7,9 @@ import (
 	"github.com/stretchr/testify/require"
 	"github.com/vkngwrapper/core/v3/common"
 	"github.com/vkngwrapper/core/v3/core1_0"
-	"github.com/vkngwrapper/core/v3/driver"
-	mock_driver "github.com/vkngwrapper/core/v3/driver/mocks"
 	"github.com/vkngwrapper/core/v3/internal/impl1_0"
+	"github.com/vkngwrapper/core/v3/loader"
+	mock_driver "github.com/vkngwrapper/core/v3/loader/mocks"
 	"github.com/vkngwrapper/core/v3/mocks"
 	"go.uber.org/mock/gomock"
 )
@@ -18,13 +18,13 @@ func TestVulkanLoader1_0_CreateSemaphore(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_0)
+	mockDriver := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_0)
 	builder := &impl1_0.InstanceObjectBuilderImpl{}
 	device := builder.CreateDeviceObject(mockDriver, mocks.NewFakeDeviceHandle(), common.Vulkan1_0, []string{})
 	semaphoreHandle := mocks.NewFakeSemaphore()
 
 	mockDriver.EXPECT().VkCreateSemaphore(device.Handle(), gomock.Not(nil), nil, gomock.Not(nil)).DoAndReturn(
-		func(device driver.VkDevice, pCreateInfo *driver.VkSemaphoreCreateInfo, pAllocator *driver.VkAllocationCallbacks, pSemaphore *driver.VkSemaphore) (common.VkResult, error) {
+		func(device loader.VkDevice, pCreateInfo *loader.VkSemaphoreCreateInfo, pAllocator *loader.VkAllocationCallbacks, pSemaphore *loader.VkSemaphore) (common.VkResult, error) {
 			*pSemaphore = semaphoreHandle
 			val := reflect.ValueOf(*pCreateInfo)
 

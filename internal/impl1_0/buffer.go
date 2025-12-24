@@ -10,11 +10,11 @@ import (
 	"github.com/pkg/errors"
 	"github.com/vkngwrapper/core/v3/common"
 	"github.com/vkngwrapper/core/v3/core1_0"
-	"github.com/vkngwrapper/core/v3/driver"
+	"github.com/vkngwrapper/core/v3/loader"
 	"github.com/vkngwrapper/core/v3/types"
 )
 
-func (v *Vulkan) DestroyBuffer(buffer types.Buffer, allocationCallbacks *driver.AllocationCallbacks) {
+func (v *DeviceVulkanDriver) DestroyBuffer(buffer types.Buffer, allocationCallbacks *loader.AllocationCallbacks) {
 	if buffer.Handle() == 0 {
 		panic("buffer cannot be uninitialized")
 	}
@@ -22,10 +22,10 @@ func (v *Vulkan) DestroyBuffer(buffer types.Buffer, allocationCallbacks *driver.
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
-	v.Driver.VkDestroyBuffer(buffer.DeviceHandle(), buffer.Handle(), allocationCallbacks.Handle())
+	v.LoaderObj.VkDestroyBuffer(buffer.DeviceHandle(), buffer.Handle(), allocationCallbacks.Handle())
 }
 
-func (v *Vulkan) GetBufferMemoryRequirements(buffer types.Buffer) *core1_0.MemoryRequirements {
+func (v *DeviceVulkanDriver) GetBufferMemoryRequirements(buffer types.Buffer) *core1_0.MemoryRequirements {
 	if buffer.Handle() == 0 {
 		panic("buffer cannot be uninitialized")
 	}
@@ -35,7 +35,7 @@ func (v *Vulkan) GetBufferMemoryRequirements(buffer types.Buffer) *core1_0.Memor
 
 	requirementsUnsafe := allocator.Malloc(C.sizeof_struct_VkMemoryRequirements)
 
-	v.Driver.VkGetBufferMemoryRequirements(buffer.DeviceHandle(), buffer.Handle(), (*driver.VkMemoryRequirements)(requirementsUnsafe))
+	v.LoaderObj.VkGetBufferMemoryRequirements(buffer.DeviceHandle(), buffer.Handle(), (*loader.VkMemoryRequirements)(requirementsUnsafe))
 
 	requirements := (*C.VkMemoryRequirements)(requirementsUnsafe)
 
@@ -46,7 +46,7 @@ func (v *Vulkan) GetBufferMemoryRequirements(buffer types.Buffer) *core1_0.Memor
 	}
 }
 
-func (v *Vulkan) BindBufferMemory(buffer types.Buffer, memory types.DeviceMemory, offset int) (common.VkResult, error) {
+func (v *DeviceVulkanDriver) BindBufferMemory(buffer types.Buffer, memory types.DeviceMemory, offset int) (common.VkResult, error) {
 	if buffer.Handle() == 0 {
 		return core1_0.VKErrorUnknown, errors.New("received uninitialized Buffer")
 	}
@@ -55,5 +55,5 @@ func (v *Vulkan) BindBufferMemory(buffer types.Buffer, memory types.DeviceMemory
 		return core1_0.VKErrorUnknown, errors.New("received uninitialized DeviceMemory")
 	}
 
-	return v.Driver.VkBindBufferMemory(buffer.DeviceHandle(), buffer.Handle(), memory.Handle(), driver.VkDeviceSize(offset))
+	return v.LoaderObj.VkBindBufferMemory(buffer.DeviceHandle(), buffer.Handle(), memory.Handle(), loader.VkDeviceSize(offset))
 }

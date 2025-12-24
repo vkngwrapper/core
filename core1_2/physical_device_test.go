@@ -11,9 +11,9 @@ import (
 	"github.com/vkngwrapper/core/v3/core1_0"
 	"github.com/vkngwrapper/core/v3/core1_1"
 	"github.com/vkngwrapper/core/v3/core1_2"
-	"github.com/vkngwrapper/core/v3/driver"
-	mock_driver "github.com/vkngwrapper/core/v3/driver/mocks"
 	"github.com/vkngwrapper/core/v3/internal/impl1_2"
+	"github.com/vkngwrapper/core/v3/loader"
+	mock_driver "github.com/vkngwrapper/core/v3/loader/mocks"
 	"github.com/vkngwrapper/core/v3/mocks"
 	"github.com/vkngwrapper/core/v3/mocks/mocks1_2"
 	"go.uber.org/mock/gomock"
@@ -23,7 +23,7 @@ func TestPhysicalDeviceDriverOutData(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	coreDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_2)
+	coreDriver := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_2)
 	instance := mocks1_2.EasyMockInstance(ctrl, coreDriver)
 
 	builder := &impl1_2.InstanceObjectBuilderImpl{}
@@ -33,13 +33,13 @@ func TestPhysicalDeviceDriverOutData(t *testing.T) {
 		physicalDevice.Handle(),
 		gomock.Not(gomock.Nil()),
 	).DoAndReturn(
-		func(physicalDevice driver.VkPhysicalDevice,
-			pProperties *driver.VkPhysicalDeviceProperties2) {
+		func(physicalDevice loader.VkPhysicalDevice,
+			pProperties *loader.VkPhysicalDeviceProperties2) {
 
 			val := reflect.ValueOf(pProperties).Elem()
 			require.Equal(t, uint64(1000059001), val.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PROPERTIES_2
 
-			next := (*driver.VkPhysicalDeviceDriverProperties)(val.FieldByName("pNext").UnsafePointer())
+			next := (*loader.VkPhysicalDeviceDriverProperties)(val.FieldByName("pNext").UnsafePointer())
 			val = reflect.ValueOf(next).Elem()
 
 			require.Equal(t, uint64(1000196000), val.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DRIVER_PROPERTIES
@@ -51,19 +51,19 @@ func TestPhysicalDeviceDriverOutData(t *testing.T) {
 			*(*uint8)(unsafe.Pointer(val.FieldByName("conformanceVersion").FieldByName("subminor").UnsafeAddr())) = uint8(5)
 			*(*uint8)(unsafe.Pointer(val.FieldByName("conformanceVersion").FieldByName("patch").UnsafeAddr())) = uint8(7)
 
-			driverNamePtr := (*driver.Char)(unsafe.Pointer(val.FieldByName("driverName").UnsafeAddr()))
-			driverNameSlice := ([]driver.Char)(unsafe.Slice(driverNamePtr, 256))
-			driverName := "Some Driver"
+			driverNamePtr := (*loader.Char)(unsafe.Pointer(val.FieldByName("driverName").UnsafeAddr()))
+			driverNameSlice := ([]loader.Char)(unsafe.Slice(driverNamePtr, 256))
+			driverName := "Some loader"
 			for i, r := range []byte(driverName) {
-				driverNameSlice[i] = driver.Char(r)
+				driverNameSlice[i] = loader.Char(r)
 			}
 			driverNameSlice[len(driverName)] = 0
 
-			driverInfoPtr := (*driver.Char)(unsafe.Pointer(val.FieldByName("driverInfo").UnsafeAddr()))
-			driverInfoSlice := ([]driver.Char)(unsafe.Slice(driverInfoPtr, 256))
+			driverInfoPtr := (*loader.Char)(unsafe.Pointer(val.FieldByName("driverInfo").UnsafeAddr()))
+			driverInfoSlice := ([]loader.Char)(unsafe.Slice(driverInfoPtr, 256))
 			driverInfo := "Whooo Info"
 			for i, r := range []byte(driverInfo) {
-				driverInfoSlice[i] = driver.Char(r)
+				driverInfoSlice[i] = loader.Char(r)
 			}
 			driverInfoSlice[len(driverInfo)] = 0
 		})
@@ -76,7 +76,7 @@ func TestPhysicalDeviceDriverOutData(t *testing.T) {
 	require.NoError(t, err)
 	require.Equal(t, core1_2.PhysicalDeviceDriverProperties{
 		DriverID:           core1_2.DriverIDGoogleSwiftshader,
-		DriverName:         "Some Driver",
+		DriverName:         "Some loader",
 		DriverInfo:         "Whooo Info",
 		ConformanceVersion: core1_2.ConformanceVersion{Major: 1, Minor: 3, Subminor: 5, Patch: 7},
 	}, driverOutData)
@@ -86,7 +86,7 @@ func TestPhysicalDeviceDepthStencilResolveOutData(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	coreDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_2)
+	coreDriver := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_2)
 	instance := mocks1_2.EasyMockInstance(ctrl, coreDriver)
 	builder := &impl1_2.InstanceObjectBuilderImpl{}
 	physicalDevice := builder.CreatePhysicalDeviceObject(coreDriver, instance.Handle(), mocks.NewFakePhysicalDeviceHandle(), common.Vulkan1_2, common.Vulkan1_2).(core1_2.PhysicalDevice)
@@ -94,23 +94,23 @@ func TestPhysicalDeviceDepthStencilResolveOutData(t *testing.T) {
 	coreDriver.EXPECT().VkGetPhysicalDeviceProperties2(
 		physicalDevice.Handle(),
 		gomock.Not(gomock.Nil()),
-	).DoAndReturn(func(physicalDevice driver.VkPhysicalDevice,
-		pProperties *driver.VkPhysicalDeviceProperties2) {
+	).DoAndReturn(func(physicalDevice loader.VkPhysicalDevice,
+		pProperties *loader.VkPhysicalDeviceProperties2) {
 
 		val := reflect.ValueOf(pProperties).Elem()
 		require.Equal(t, uint64(1000059001), val.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PROPERTIES_2
 
-		next := (*driver.VkPhysicalDeviceDepthStencilResolveProperties)(val.FieldByName("pNext").UnsafePointer())
+		next := (*loader.VkPhysicalDeviceDepthStencilResolveProperties)(val.FieldByName("pNext").UnsafePointer())
 		val = reflect.ValueOf(next).Elem()
 
 		require.Equal(t, uint64(1000199000), val.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DEPTH_STENCIL_RESOLVE_PROPERTIES
 		require.True(t, val.FieldByName("pNext").IsNil())
-		depthResolveModePtr := (*driver.VkResolveModeFlags)(unsafe.Pointer(val.FieldByName("supportedDepthResolveModes").UnsafeAddr()))
-		*depthResolveModePtr = driver.VkResolveModeFlags(2) // VK_RESOLVE_MODE_AVERAGE_BIT
-		stencilResolveModePtr := (*driver.VkResolveModeFlags)(unsafe.Pointer(val.FieldByName("supportedStencilResolveModes").UnsafeAddr()))
-		*stencilResolveModePtr = driver.VkResolveModeFlags(8)
-		*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("independentResolveNone").UnsafeAddr())) = driver.VkBool32(0)
-		*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("independentResolve").UnsafeAddr())) = driver.VkBool32(1)
+		depthResolveModePtr := (*loader.VkResolveModeFlags)(unsafe.Pointer(val.FieldByName("supportedDepthResolveModes").UnsafeAddr()))
+		*depthResolveModePtr = loader.VkResolveModeFlags(2) // VK_RESOLVE_MODE_AVERAGE_BIT
+		stencilResolveModePtr := (*loader.VkResolveModeFlags)(unsafe.Pointer(val.FieldByName("supportedStencilResolveModes").UnsafeAddr()))
+		*stencilResolveModePtr = loader.VkResolveModeFlags(8)
+		*(*loader.VkBool32)(unsafe.Pointer(val.FieldByName("independentResolveNone").UnsafeAddr())) = loader.VkBool32(0)
+		*(*loader.VkBool32)(unsafe.Pointer(val.FieldByName("independentResolve").UnsafeAddr())) = loader.VkBool32(1)
 	})
 
 	var outData core1_2.PhysicalDeviceDepthStencilResolveProperties
@@ -131,7 +131,7 @@ func TestPhysicalDeviceDescriptorIndexingOutData(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	coreDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_2)
+	coreDriver := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_2)
 	instance := mocks1_2.EasyMockInstance(ctrl, coreDriver)
 	builder := &impl1_2.InstanceObjectBuilderImpl{}
 	physicalDevice := builder.CreatePhysicalDeviceObject(coreDriver, instance.Handle(), mocks.NewFakePhysicalDeviceHandle(), common.Vulkan1_2, common.Vulkan1_2).(core1_2.PhysicalDevice)
@@ -139,41 +139,41 @@ func TestPhysicalDeviceDescriptorIndexingOutData(t *testing.T) {
 	coreDriver.EXPECT().VkGetPhysicalDeviceProperties2(
 		physicalDevice.Handle(),
 		gomock.Not(gomock.Nil()),
-	).DoAndReturn(func(physicalDevice driver.VkPhysicalDevice,
-		pProperties *driver.VkPhysicalDeviceProperties2) {
+	).DoAndReturn(func(physicalDevice loader.VkPhysicalDevice,
+		pProperties *loader.VkPhysicalDeviceProperties2) {
 
 		val := reflect.ValueOf(pProperties).Elem()
 		require.Equal(t, uint64(1000059001), val.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PROPERTIES_2
-		next := (*driver.VkPhysicalDeviceDescriptorIndexingProperties)(val.FieldByName("pNext").UnsafePointer())
+		next := (*loader.VkPhysicalDeviceDescriptorIndexingProperties)(val.FieldByName("pNext").UnsafePointer())
 
 		val = reflect.ValueOf(next).Elem()
 		require.Equal(t, uint64(1000161002), val.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_PROPERTIES_EXT
 		require.True(t, val.FieldByName("pNext").IsNil())
-		*(*driver.Uint32)(unsafe.Pointer(val.FieldByName("maxUpdateAfterBindDescriptorsInAllPools").UnsafeAddr())) = driver.Uint32(1)
+		*(*loader.Uint32)(unsafe.Pointer(val.FieldByName("maxUpdateAfterBindDescriptorsInAllPools").UnsafeAddr())) = loader.Uint32(1)
 
-		*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("shaderUniformBufferArrayNonUniformIndexingNative").UnsafeAddr())) = driver.VkBool32(1)
-		*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("shaderSampledImageArrayNonUniformIndexingNative").UnsafeAddr())) = driver.VkBool32(0)
-		*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("shaderStorageBufferArrayNonUniformIndexingNative").UnsafeAddr())) = driver.VkBool32(1)
-		*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("shaderStorageImageArrayNonUniformIndexingNative").UnsafeAddr())) = driver.VkBool32(0)
-		*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("shaderInputAttachmentArrayNonUniformIndexingNative").UnsafeAddr())) = driver.VkBool32(1)
-		*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("robustBufferAccessUpdateAfterBind").UnsafeAddr())) = driver.VkBool32(0)
-		*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("quadDivergentImplicitLod").UnsafeAddr())) = driver.VkBool32(1)
+		*(*loader.VkBool32)(unsafe.Pointer(val.FieldByName("shaderUniformBufferArrayNonUniformIndexingNative").UnsafeAddr())) = loader.VkBool32(1)
+		*(*loader.VkBool32)(unsafe.Pointer(val.FieldByName("shaderSampledImageArrayNonUniformIndexingNative").UnsafeAddr())) = loader.VkBool32(0)
+		*(*loader.VkBool32)(unsafe.Pointer(val.FieldByName("shaderStorageBufferArrayNonUniformIndexingNative").UnsafeAddr())) = loader.VkBool32(1)
+		*(*loader.VkBool32)(unsafe.Pointer(val.FieldByName("shaderStorageImageArrayNonUniformIndexingNative").UnsafeAddr())) = loader.VkBool32(0)
+		*(*loader.VkBool32)(unsafe.Pointer(val.FieldByName("shaderInputAttachmentArrayNonUniformIndexingNative").UnsafeAddr())) = loader.VkBool32(1)
+		*(*loader.VkBool32)(unsafe.Pointer(val.FieldByName("robustBufferAccessUpdateAfterBind").UnsafeAddr())) = loader.VkBool32(0)
+		*(*loader.VkBool32)(unsafe.Pointer(val.FieldByName("quadDivergentImplicitLod").UnsafeAddr())) = loader.VkBool32(1)
 
-		*(*driver.Uint32)(unsafe.Pointer(val.FieldByName("maxPerStageDescriptorUpdateAfterBindSamplers").UnsafeAddr())) = driver.Uint32(3)
-		*(*driver.Uint32)(unsafe.Pointer(val.FieldByName("maxPerStageDescriptorUpdateAfterBindUniformBuffers").UnsafeAddr())) = driver.Uint32(5)
-		*(*driver.Uint32)(unsafe.Pointer(val.FieldByName("maxPerStageDescriptorUpdateAfterBindStorageBuffers").UnsafeAddr())) = driver.Uint32(7)
-		*(*driver.Uint32)(unsafe.Pointer(val.FieldByName("maxPerStageDescriptorUpdateAfterBindSampledImages").UnsafeAddr())) = driver.Uint32(11)
-		*(*driver.Uint32)(unsafe.Pointer(val.FieldByName("maxPerStageDescriptorUpdateAfterBindStorageImages").UnsafeAddr())) = driver.Uint32(13)
-		*(*driver.Uint32)(unsafe.Pointer(val.FieldByName("maxPerStageDescriptorUpdateAfterBindInputAttachments").UnsafeAddr())) = driver.Uint32(17)
-		*(*driver.Uint32)(unsafe.Pointer(val.FieldByName("maxPerStageUpdateAfterBindResources").UnsafeAddr())) = driver.Uint32(19)
-		*(*driver.Uint32)(unsafe.Pointer(val.FieldByName("maxDescriptorSetUpdateAfterBindSamplers").UnsafeAddr())) = driver.Uint32(23)
-		*(*driver.Uint32)(unsafe.Pointer(val.FieldByName("maxDescriptorSetUpdateAfterBindUniformBuffers").UnsafeAddr())) = driver.Uint32(29)
-		*(*driver.Uint32)(unsafe.Pointer(val.FieldByName("maxDescriptorSetUpdateAfterBindUniformBuffersDynamic").UnsafeAddr())) = driver.Uint32(31)
-		*(*driver.Uint32)(unsafe.Pointer(val.FieldByName("maxDescriptorSetUpdateAfterBindStorageBuffers").UnsafeAddr())) = driver.Uint32(37)
-		*(*driver.Uint32)(unsafe.Pointer(val.FieldByName("maxDescriptorSetUpdateAfterBindStorageBuffersDynamic").UnsafeAddr())) = driver.Uint32(41)
-		*(*driver.Uint32)(unsafe.Pointer(val.FieldByName("maxDescriptorSetUpdateAfterBindSampledImages").UnsafeAddr())) = driver.Uint32(43)
-		*(*driver.Uint32)(unsafe.Pointer(val.FieldByName("maxDescriptorSetUpdateAfterBindStorageImages").UnsafeAddr())) = driver.Uint32(47)
-		*(*driver.Uint32)(unsafe.Pointer(val.FieldByName("maxDescriptorSetUpdateAfterBindInputAttachments").UnsafeAddr())) = driver.Uint32(51)
+		*(*loader.Uint32)(unsafe.Pointer(val.FieldByName("maxPerStageDescriptorUpdateAfterBindSamplers").UnsafeAddr())) = loader.Uint32(3)
+		*(*loader.Uint32)(unsafe.Pointer(val.FieldByName("maxPerStageDescriptorUpdateAfterBindUniformBuffers").UnsafeAddr())) = loader.Uint32(5)
+		*(*loader.Uint32)(unsafe.Pointer(val.FieldByName("maxPerStageDescriptorUpdateAfterBindStorageBuffers").UnsafeAddr())) = loader.Uint32(7)
+		*(*loader.Uint32)(unsafe.Pointer(val.FieldByName("maxPerStageDescriptorUpdateAfterBindSampledImages").UnsafeAddr())) = loader.Uint32(11)
+		*(*loader.Uint32)(unsafe.Pointer(val.FieldByName("maxPerStageDescriptorUpdateAfterBindStorageImages").UnsafeAddr())) = loader.Uint32(13)
+		*(*loader.Uint32)(unsafe.Pointer(val.FieldByName("maxPerStageDescriptorUpdateAfterBindInputAttachments").UnsafeAddr())) = loader.Uint32(17)
+		*(*loader.Uint32)(unsafe.Pointer(val.FieldByName("maxPerStageUpdateAfterBindResources").UnsafeAddr())) = loader.Uint32(19)
+		*(*loader.Uint32)(unsafe.Pointer(val.FieldByName("maxDescriptorSetUpdateAfterBindSamplers").UnsafeAddr())) = loader.Uint32(23)
+		*(*loader.Uint32)(unsafe.Pointer(val.FieldByName("maxDescriptorSetUpdateAfterBindUniformBuffers").UnsafeAddr())) = loader.Uint32(29)
+		*(*loader.Uint32)(unsafe.Pointer(val.FieldByName("maxDescriptorSetUpdateAfterBindUniformBuffersDynamic").UnsafeAddr())) = loader.Uint32(31)
+		*(*loader.Uint32)(unsafe.Pointer(val.FieldByName("maxDescriptorSetUpdateAfterBindStorageBuffers").UnsafeAddr())) = loader.Uint32(37)
+		*(*loader.Uint32)(unsafe.Pointer(val.FieldByName("maxDescriptorSetUpdateAfterBindStorageBuffersDynamic").UnsafeAddr())) = loader.Uint32(41)
+		*(*loader.Uint32)(unsafe.Pointer(val.FieldByName("maxDescriptorSetUpdateAfterBindSampledImages").UnsafeAddr())) = loader.Uint32(43)
+		*(*loader.Uint32)(unsafe.Pointer(val.FieldByName("maxDescriptorSetUpdateAfterBindStorageImages").UnsafeAddr())) = loader.Uint32(47)
+		*(*loader.Uint32)(unsafe.Pointer(val.FieldByName("maxDescriptorSetUpdateAfterBindInputAttachments").UnsafeAddr())) = loader.Uint32(51)
 	})
 
 	var outData core1_2.PhysicalDeviceDescriptorIndexingProperties
@@ -217,7 +217,7 @@ func TestPhysicalDeviceFloatControlsOutData(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	coreDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_2)
+	coreDriver := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_2)
 	instance := mocks1_2.EasyMockInstance(ctrl, coreDriver)
 	builder := &impl1_2.InstanceObjectBuilderImpl{}
 	physicalDevice := builder.CreatePhysicalDeviceObject(coreDriver, instance.Handle(), mocks.NewFakePhysicalDeviceHandle(), common.Vulkan1_2, common.Vulkan1_2).(core1_2.PhysicalDevice)
@@ -225,36 +225,36 @@ func TestPhysicalDeviceFloatControlsOutData(t *testing.T) {
 	coreDriver.EXPECT().VkGetPhysicalDeviceProperties2(
 		physicalDevice.Handle(),
 		gomock.Not(gomock.Nil()),
-	).DoAndReturn(func(physicalDevice driver.VkPhysicalDevice,
-		pProperties *driver.VkPhysicalDeviceProperties2) {
+	).DoAndReturn(func(physicalDevice loader.VkPhysicalDevice,
+		pProperties *loader.VkPhysicalDeviceProperties2) {
 
 		val := reflect.ValueOf(pProperties).Elem()
 		require.Equal(t, uint64(1000059001), val.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PROPERTIES_2
 
-		next := (*driver.VkPhysicalDeviceFloatControlsProperties)(val.FieldByName("pNext").UnsafePointer())
+		next := (*loader.VkPhysicalDeviceFloatControlsProperties)(val.FieldByName("pNext").UnsafePointer())
 		val = reflect.ValueOf(next).Elem()
 		require.Equal(t, uint64(1000197000), val.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FLOAT_CONTROLS_PROPERTIES
 		require.True(t, val.FieldByName("pNext").IsNil())
-		denormBehavior := (*driver.VkShaderFloatControlsIndependence)(unsafe.Pointer(val.FieldByName("denormBehaviorIndependence").UnsafeAddr()))
-		*denormBehavior = driver.VkShaderFloatControlsIndependence(0) // VK_SHADER_FLOAT_CONTROLS_INDEPENDENCE_32_BIT_ONLY
-		roundingMode := (*driver.VkShaderFloatControlsIndependence)(unsafe.Pointer(val.FieldByName("roundingModeIndependence").UnsafeAddr()))
-		*roundingMode = driver.VkShaderFloatControlsIndependence(1) // VK_SHADER_FLOAT_CONTROLS_INDEPENDENCE_ALL
+		denormBehavior := (*loader.VkShaderFloatControlsIndependence)(unsafe.Pointer(val.FieldByName("denormBehaviorIndependence").UnsafeAddr()))
+		*denormBehavior = loader.VkShaderFloatControlsIndependence(0) // VK_SHADER_FLOAT_CONTROLS_INDEPENDENCE_32_BIT_ONLY
+		roundingMode := (*loader.VkShaderFloatControlsIndependence)(unsafe.Pointer(val.FieldByName("roundingModeIndependence").UnsafeAddr()))
+		*roundingMode = loader.VkShaderFloatControlsIndependence(1) // VK_SHADER_FLOAT_CONTROLS_INDEPENDENCE_ALL
 
-		*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("shaderSignedZeroInfNanPreserveFloat16").UnsafeAddr())) = driver.VkBool32(1)
-		*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("shaderSignedZeroInfNanPreserveFloat32").UnsafeAddr())) = driver.VkBool32(0)
-		*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("shaderSignedZeroInfNanPreserveFloat64").UnsafeAddr())) = driver.VkBool32(1)
-		*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("shaderDenormPreserveFloat16").UnsafeAddr())) = driver.VkBool32(0)
-		*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("shaderDenormPreserveFloat32").UnsafeAddr())) = driver.VkBool32(1)
-		*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("shaderDenormPreserveFloat64").UnsafeAddr())) = driver.VkBool32(0)
-		*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("shaderDenormFlushToZeroFloat16").UnsafeAddr())) = driver.VkBool32(1)
-		*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("shaderDenormFlushToZeroFloat32").UnsafeAddr())) = driver.VkBool32(0)
-		*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("shaderDenormFlushToZeroFloat64").UnsafeAddr())) = driver.VkBool32(1)
-		*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("shaderRoundingModeRTEFloat16").UnsafeAddr())) = driver.VkBool32(0)
-		*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("shaderRoundingModeRTEFloat32").UnsafeAddr())) = driver.VkBool32(1)
-		*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("shaderRoundingModeRTEFloat64").UnsafeAddr())) = driver.VkBool32(0)
-		*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("shaderRoundingModeRTZFloat16").UnsafeAddr())) = driver.VkBool32(1)
-		*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("shaderRoundingModeRTZFloat32").UnsafeAddr())) = driver.VkBool32(0)
-		*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("shaderRoundingModeRTZFloat64").UnsafeAddr())) = driver.VkBool32(1)
+		*(*loader.VkBool32)(unsafe.Pointer(val.FieldByName("shaderSignedZeroInfNanPreserveFloat16").UnsafeAddr())) = loader.VkBool32(1)
+		*(*loader.VkBool32)(unsafe.Pointer(val.FieldByName("shaderSignedZeroInfNanPreserveFloat32").UnsafeAddr())) = loader.VkBool32(0)
+		*(*loader.VkBool32)(unsafe.Pointer(val.FieldByName("shaderSignedZeroInfNanPreserveFloat64").UnsafeAddr())) = loader.VkBool32(1)
+		*(*loader.VkBool32)(unsafe.Pointer(val.FieldByName("shaderDenormPreserveFloat16").UnsafeAddr())) = loader.VkBool32(0)
+		*(*loader.VkBool32)(unsafe.Pointer(val.FieldByName("shaderDenormPreserveFloat32").UnsafeAddr())) = loader.VkBool32(1)
+		*(*loader.VkBool32)(unsafe.Pointer(val.FieldByName("shaderDenormPreserveFloat64").UnsafeAddr())) = loader.VkBool32(0)
+		*(*loader.VkBool32)(unsafe.Pointer(val.FieldByName("shaderDenormFlushToZeroFloat16").UnsafeAddr())) = loader.VkBool32(1)
+		*(*loader.VkBool32)(unsafe.Pointer(val.FieldByName("shaderDenormFlushToZeroFloat32").UnsafeAddr())) = loader.VkBool32(0)
+		*(*loader.VkBool32)(unsafe.Pointer(val.FieldByName("shaderDenormFlushToZeroFloat64").UnsafeAddr())) = loader.VkBool32(1)
+		*(*loader.VkBool32)(unsafe.Pointer(val.FieldByName("shaderRoundingModeRTEFloat16").UnsafeAddr())) = loader.VkBool32(0)
+		*(*loader.VkBool32)(unsafe.Pointer(val.FieldByName("shaderRoundingModeRTEFloat32").UnsafeAddr())) = loader.VkBool32(1)
+		*(*loader.VkBool32)(unsafe.Pointer(val.FieldByName("shaderRoundingModeRTEFloat64").UnsafeAddr())) = loader.VkBool32(0)
+		*(*loader.VkBool32)(unsafe.Pointer(val.FieldByName("shaderRoundingModeRTZFloat16").UnsafeAddr())) = loader.VkBool32(1)
+		*(*loader.VkBool32)(unsafe.Pointer(val.FieldByName("shaderRoundingModeRTZFloat32").UnsafeAddr())) = loader.VkBool32(0)
+		*(*loader.VkBool32)(unsafe.Pointer(val.FieldByName("shaderRoundingModeRTZFloat64").UnsafeAddr())) = loader.VkBool32(1)
 	})
 
 	var outData core1_2.PhysicalDeviceFloatControlsProperties
@@ -289,7 +289,7 @@ func TestPhysicalDeviceSamplerFilterMinmaxOutData(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	coreDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_2)
+	coreDriver := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_2)
 	instance := mocks1_2.EasyMockInstance(ctrl, coreDriver)
 	builder := &impl1_2.InstanceObjectBuilderImpl{}
 	physicalDevice := builder.CreatePhysicalDeviceObject(coreDriver, instance.Handle(), mocks.NewFakePhysicalDeviceHandle(), common.Vulkan1_2, common.Vulkan1_2).(core1_2.PhysicalDevice)
@@ -297,18 +297,18 @@ func TestPhysicalDeviceSamplerFilterMinmaxOutData(t *testing.T) {
 	coreDriver.EXPECT().VkGetPhysicalDeviceProperties2(
 		physicalDevice.Handle(),
 		gomock.Not(gomock.Nil()),
-	).DoAndReturn(func(physicalDevice driver.VkPhysicalDevice,
-		pProperties *driver.VkPhysicalDeviceProperties2) {
+	).DoAndReturn(func(physicalDevice loader.VkPhysicalDevice,
+		pProperties *loader.VkPhysicalDeviceProperties2) {
 		val := reflect.ValueOf(pProperties).Elem()
 		require.Equal(t, uint64(1000059001), val.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PROPERTIES_2
 
-		next := (*driver.VkPhysicalDeviceSamplerFilterMinmaxProperties)(val.FieldByName("pNext").UnsafePointer())
+		next := (*loader.VkPhysicalDeviceSamplerFilterMinmaxProperties)(val.FieldByName("pNext").UnsafePointer())
 		val = reflect.ValueOf(next).Elem()
 
 		require.Equal(t, uint64(1000130000), val.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SAMPLER_FILTER_MINMAX_PROPERTIES
 		require.True(t, val.FieldByName("pNext").IsNil())
-		*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("filterMinmaxSingleComponentFormats").UnsafeAddr())) = driver.VkBool32(1)
-		*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("filterMinmaxImageComponentMapping").UnsafeAddr())) = driver.VkBool32(1)
+		*(*loader.VkBool32)(unsafe.Pointer(val.FieldByName("filterMinmaxSingleComponentFormats").UnsafeAddr())) = loader.VkBool32(1)
+		*(*loader.VkBool32)(unsafe.Pointer(val.FieldByName("filterMinmaxImageComponentMapping").UnsafeAddr())) = loader.VkBool32(1)
 	})
 
 	var outData core1_2.PhysicalDeviceSamplerFilterMinmaxProperties
@@ -327,7 +327,7 @@ func TestPhysicalDeviceTimelineSemaphoreOutData(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	coreDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_2)
+	coreDriver := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_2)
 	instance := mocks1_2.EasyMockInstance(ctrl, coreDriver)
 	builder := &impl1_2.InstanceObjectBuilderImpl{}
 	physicalDevice := builder.CreatePhysicalDeviceObject(coreDriver, instance.Handle(), mocks.NewFakePhysicalDeviceHandle(), common.Vulkan1_2, common.Vulkan1_2).(core1_2.PhysicalDevice)
@@ -335,16 +335,16 @@ func TestPhysicalDeviceTimelineSemaphoreOutData(t *testing.T) {
 	coreDriver.EXPECT().VkGetPhysicalDeviceProperties2(
 		physicalDevice.Handle(),
 		gomock.Not(gomock.Nil()),
-	).DoAndReturn(func(physicalDevice driver.VkPhysicalDevice, pProperties *driver.VkPhysicalDeviceProperties2) {
+	).DoAndReturn(func(physicalDevice loader.VkPhysicalDevice, pProperties *loader.VkPhysicalDeviceProperties2) {
 		val := reflect.ValueOf(pProperties).Elem()
 		require.Equal(t, uint64(1000059001), val.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PROPERTIES_2
 
-		next := (*driver.VkPhysicalDeviceTimelineSemaphoreProperties)(val.FieldByName("pNext").UnsafePointer())
+		next := (*loader.VkPhysicalDeviceTimelineSemaphoreProperties)(val.FieldByName("pNext").UnsafePointer())
 		val = reflect.ValueOf(next).Elem()
 
 		require.Equal(t, uint64(1000207001), val.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_TIMELINE_SEMAPHORE_PROPERTIES
 		require.True(t, val.FieldByName("pNext").IsNil())
-		*(*driver.Uint64)(unsafe.Pointer(val.FieldByName("maxTimelineSemaphoreValueDifference").UnsafeAddr())) = driver.Uint64(3)
+		*(*loader.Uint64)(unsafe.Pointer(val.FieldByName("maxTimelineSemaphoreValueDifference").UnsafeAddr())) = loader.Uint64(3)
 	})
 
 	var outData core1_2.PhysicalDeviceTimelineSemaphoreProperties
@@ -362,7 +362,7 @@ func TestPhysicalDeviceVulkan11OutData(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	coreDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_2)
+	coreDriver := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_2)
 	instance := mocks1_2.EasyMockInstance(ctrl, coreDriver)
 	builder := &impl1_2.InstanceObjectBuilderImpl{}
 	physicalDevice := builder.CreatePhysicalDeviceObject(coreDriver, instance.Handle(), mocks.NewFakePhysicalDeviceHandle(), common.Vulkan1_2, common.Vulkan1_2).(core1_2.PhysicalDevice)
@@ -376,11 +376,11 @@ func TestPhysicalDeviceVulkan11OutData(t *testing.T) {
 	coreDriver.EXPECT().VkGetPhysicalDeviceProperties2(
 		physicalDevice.Handle(),
 		gomock.Not(gomock.Nil()),
-	).DoAndReturn(func(physicalDevice driver.VkPhysicalDevice, pProperties *driver.VkPhysicalDeviceProperties2) {
+	).DoAndReturn(func(physicalDevice loader.VkPhysicalDevice, pProperties *loader.VkPhysicalDeviceProperties2) {
 		val := reflect.ValueOf(pProperties).Elem()
 		require.Equal(t, uint64(1000059001), val.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PROPERTIES_2
 
-		next := (*driver.VkPhysicalDeviceVulkan11Properties)(val.FieldByName("pNext").UnsafePointer())
+		next := (*loader.VkPhysicalDeviceVulkan11Properties)(val.FieldByName("pNext").UnsafePointer())
 		val = reflect.ValueOf(next).Elem()
 
 		require.Equal(t, uint64(50), val.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_1_PROPERTIES
@@ -400,18 +400,18 @@ func TestPhysicalDeviceVulkan11OutData(t *testing.T) {
 		*(*byte)(unsafe.Pointer(val.FieldByName("deviceLUID").Index(6).UnsafeAddr())) = byte(0xad)
 		*(*byte)(unsafe.Pointer(val.FieldByName("deviceLUID").Index(7).UnsafeAddr())) = byte(0xde)
 
-		*(*driver.Uint32)(unsafe.Pointer(val.FieldByName("deviceNodeMask").UnsafeAddr())) = driver.Uint32(3)
-		*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("deviceLUIDValid").UnsafeAddr())) = driver.VkBool32(1)
-		*(*driver.Uint32)(unsafe.Pointer(val.FieldByName("subgroupSize").UnsafeAddr())) = driver.Uint32(5)
-		*(*driver.VkShaderStageFlags)(unsafe.Pointer(val.FieldByName("subgroupSupportedStages").UnsafeAddr())) = driver.VkShaderStageFlags(8)
-		*(*driver.VkSubgroupFeatureFlags)(unsafe.Pointer(val.FieldByName("subgroupSupportedOperations").UnsafeAddr())) = driver.VkSubgroupFeatureFlags(4)
-		*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("subgroupQuadOperationsInAllStages").UnsafeAddr())) = driver.VkBool32(0)
-		*(*driver.VkPointClippingBehavior)(unsafe.Pointer(val.FieldByName("pointClippingBehavior").UnsafeAddr())) = driver.VkPointClippingBehavior(1)
-		*(*driver.Uint32)(unsafe.Pointer(val.FieldByName("maxMultiviewViewCount").UnsafeAddr())) = driver.Uint32(7)
-		*(*driver.Uint32)(unsafe.Pointer(val.FieldByName("maxMultiviewInstanceIndex").UnsafeAddr())) = driver.Uint32(11)
-		*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("protectedNoFault").UnsafeAddr())) = driver.VkBool32(1)
-		*(*driver.Uint32)(unsafe.Pointer(val.FieldByName("maxPerSetDescriptors").UnsafeAddr())) = driver.Uint32(13)
-		*(*driver.VkDeviceSize)(unsafe.Pointer(val.FieldByName("maxMemoryAllocationSize").UnsafeAddr())) = driver.VkDeviceSize(17)
+		*(*loader.Uint32)(unsafe.Pointer(val.FieldByName("deviceNodeMask").UnsafeAddr())) = loader.Uint32(3)
+		*(*loader.VkBool32)(unsafe.Pointer(val.FieldByName("deviceLUIDValid").UnsafeAddr())) = loader.VkBool32(1)
+		*(*loader.Uint32)(unsafe.Pointer(val.FieldByName("subgroupSize").UnsafeAddr())) = loader.Uint32(5)
+		*(*loader.VkShaderStageFlags)(unsafe.Pointer(val.FieldByName("subgroupSupportedStages").UnsafeAddr())) = loader.VkShaderStageFlags(8)
+		*(*loader.VkSubgroupFeatureFlags)(unsafe.Pointer(val.FieldByName("subgroupSupportedOperations").UnsafeAddr())) = loader.VkSubgroupFeatureFlags(4)
+		*(*loader.VkBool32)(unsafe.Pointer(val.FieldByName("subgroupQuadOperationsInAllStages").UnsafeAddr())) = loader.VkBool32(0)
+		*(*loader.VkPointClippingBehavior)(unsafe.Pointer(val.FieldByName("pointClippingBehavior").UnsafeAddr())) = loader.VkPointClippingBehavior(1)
+		*(*loader.Uint32)(unsafe.Pointer(val.FieldByName("maxMultiviewViewCount").UnsafeAddr())) = loader.Uint32(7)
+		*(*loader.Uint32)(unsafe.Pointer(val.FieldByName("maxMultiviewInstanceIndex").UnsafeAddr())) = loader.Uint32(11)
+		*(*loader.VkBool32)(unsafe.Pointer(val.FieldByName("protectedNoFault").UnsafeAddr())) = loader.VkBool32(1)
+		*(*loader.Uint32)(unsafe.Pointer(val.FieldByName("maxPerSetDescriptors").UnsafeAddr())) = loader.Uint32(13)
+		*(*loader.VkDeviceSize)(unsafe.Pointer(val.FieldByName("maxMemoryAllocationSize").UnsafeAddr())) = loader.VkDeviceSize(17)
 	})
 
 	var outData core1_2.PhysicalDeviceVulkan11Properties
@@ -443,7 +443,7 @@ func TestPhysicalDeviceVulkan12OutData(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	coreDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_2)
+	coreDriver := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_2)
 	instance := mocks1_2.EasyMockInstance(ctrl, coreDriver)
 	builder := &impl1_2.InstanceObjectBuilderImpl{}
 	physicalDevice := builder.CreatePhysicalDeviceObject(coreDriver, instance.Handle(), mocks.NewFakePhysicalDeviceHandle(), common.Vulkan1_2, common.Vulkan1_2).(core1_2.PhysicalDevice)
@@ -451,11 +451,11 @@ func TestPhysicalDeviceVulkan12OutData(t *testing.T) {
 	coreDriver.EXPECT().VkGetPhysicalDeviceProperties2(
 		physicalDevice.Handle(),
 		gomock.Not(gomock.Nil()),
-	).DoAndReturn(func(physicalDevice driver.VkPhysicalDevice, pProperties *driver.VkPhysicalDeviceProperties2) {
+	).DoAndReturn(func(physicalDevice loader.VkPhysicalDevice, pProperties *loader.VkPhysicalDeviceProperties2) {
 		val := reflect.ValueOf(pProperties).Elem()
 		require.Equal(t, uint64(1000059001), val.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PROPERTIES_2
 
-		next := (*driver.VkPhysicalDeviceVulkan12Properties)(val.FieldByName("pNext").UnsafePointer())
+		next := (*loader.VkPhysicalDeviceVulkan12Properties)(val.FieldByName("pNext").UnsafePointer())
 		val = reflect.ValueOf(next).Elem()
 
 		require.Equal(t, uint64(52), val.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_2_PROPERTIES
@@ -466,70 +466,70 @@ func TestPhysicalDeviceVulkan12OutData(t *testing.T) {
 		*(*uint8)(unsafe.Pointer(val.FieldByName("conformanceVersion").FieldByName("subminor").UnsafeAddr())) = uint8(5)
 		*(*uint8)(unsafe.Pointer(val.FieldByName("conformanceVersion").FieldByName("patch").UnsafeAddr())) = uint8(7)
 
-		driverNamePtr := (*driver.Char)(unsafe.Pointer(val.FieldByName("driverName").UnsafeAddr()))
-		driverNameSlice := ([]driver.Char)(unsafe.Slice(driverNamePtr, 256))
-		driverName := "Some Driver"
+		driverNamePtr := (*loader.Char)(unsafe.Pointer(val.FieldByName("driverName").UnsafeAddr()))
+		driverNameSlice := ([]loader.Char)(unsafe.Slice(driverNamePtr, 256))
+		driverName := "Some loader"
 		for i, r := range []byte(driverName) {
-			driverNameSlice[i] = driver.Char(r)
+			driverNameSlice[i] = loader.Char(r)
 		}
 		driverNameSlice[len(driverName)] = 0
 
-		driverInfoPtr := (*driver.Char)(unsafe.Pointer(val.FieldByName("driverInfo").UnsafeAddr()))
-		driverInfoSlice := ([]driver.Char)(unsafe.Slice(driverInfoPtr, 256))
+		driverInfoPtr := (*loader.Char)(unsafe.Pointer(val.FieldByName("driverInfo").UnsafeAddr()))
+		driverInfoSlice := ([]loader.Char)(unsafe.Slice(driverInfoPtr, 256))
 		driverInfo := "Whooo Info"
 		for i, r := range []byte(driverInfo) {
-			driverInfoSlice[i] = driver.Char(r)
+			driverInfoSlice[i] = loader.Char(r)
 		}
 		driverInfoSlice[len(driverInfo)] = 0
 
-		*(*driver.VkShaderFloatControlsIndependence)(unsafe.Pointer(val.FieldByName("denormBehaviorIndependence").UnsafeAddr())) = driver.VkShaderFloatControlsIndependence(1)
-		*(*driver.VkShaderFloatControlsIndependence)(unsafe.Pointer(val.FieldByName("roundingModeIndependence").UnsafeAddr())) = driver.VkShaderFloatControlsIndependence(2)
-		*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("shaderSignedZeroInfNanPreserveFloat16").UnsafeAddr())) = driver.VkBool32(1)
-		*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("shaderSignedZeroInfNanPreserveFloat32").UnsafeAddr())) = driver.VkBool32(0)
-		*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("shaderSignedZeroInfNanPreserveFloat64").UnsafeAddr())) = driver.VkBool32(1)
-		*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("shaderDenormPreserveFloat16").UnsafeAddr())) = driver.VkBool32(0)
-		*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("shaderDenormPreserveFloat32").UnsafeAddr())) = driver.VkBool32(1)
-		*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("shaderDenormPreserveFloat64").UnsafeAddr())) = driver.VkBool32(0)
-		*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("shaderDenormFlushToZeroFloat16").UnsafeAddr())) = driver.VkBool32(1)
-		*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("shaderDenormFlushToZeroFloat32").UnsafeAddr())) = driver.VkBool32(0)
-		*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("shaderDenormFlushToZeroFloat64").UnsafeAddr())) = driver.VkBool32(1)
-		*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("shaderRoundingModeRTEFloat16").UnsafeAddr())) = driver.VkBool32(0)
-		*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("shaderRoundingModeRTEFloat32").UnsafeAddr())) = driver.VkBool32(1)
-		*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("shaderRoundingModeRTEFloat64").UnsafeAddr())) = driver.VkBool32(0)
-		*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("shaderRoundingModeRTZFloat16").UnsafeAddr())) = driver.VkBool32(1)
-		*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("shaderRoundingModeRTZFloat32").UnsafeAddr())) = driver.VkBool32(0)
-		*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("shaderRoundingModeRTZFloat64").UnsafeAddr())) = driver.VkBool32(1)
-		*(*driver.Uint32)(unsafe.Pointer(val.FieldByName("maxUpdateAfterBindDescriptorsInAllPools").UnsafeAddr())) = driver.Uint32(3)
-		*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("shaderUniformBufferArrayNonUniformIndexingNative").UnsafeAddr())) = driver.VkBool32(0)
-		*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("shaderSampledImageArrayNonUniformIndexingNative").UnsafeAddr())) = driver.VkBool32(1)
-		*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("shaderStorageBufferArrayNonUniformIndexingNative").UnsafeAddr())) = driver.VkBool32(0)
-		*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("shaderStorageImageArrayNonUniformIndexingNative").UnsafeAddr())) = driver.VkBool32(1)
-		*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("shaderInputAttachmentArrayNonUniformIndexingNative").UnsafeAddr())) = driver.VkBool32(0)
-		*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("robustBufferAccessUpdateAfterBind").UnsafeAddr())) = driver.VkBool32(1)
-		*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("quadDivergentImplicitLod").UnsafeAddr())) = driver.VkBool32(0)
-		*(*driver.Uint32)(unsafe.Pointer(val.FieldByName("maxPerStageDescriptorUpdateAfterBindSamplers").UnsafeAddr())) = driver.Uint32(5)
-		*(*driver.Uint32)(unsafe.Pointer(val.FieldByName("maxPerStageDescriptorUpdateAfterBindUniformBuffers").UnsafeAddr())) = driver.Uint32(7)
-		*(*driver.Uint32)(unsafe.Pointer(val.FieldByName("maxPerStageDescriptorUpdateAfterBindStorageBuffers").UnsafeAddr())) = driver.Uint32(11)
-		*(*driver.Uint32)(unsafe.Pointer(val.FieldByName("maxPerStageDescriptorUpdateAfterBindSampledImages").UnsafeAddr())) = driver.Uint32(13)
-		*(*driver.Uint32)(unsafe.Pointer(val.FieldByName("maxPerStageDescriptorUpdateAfterBindStorageImages").UnsafeAddr())) = driver.Uint32(17)
-		*(*driver.Uint32)(unsafe.Pointer(val.FieldByName("maxPerStageDescriptorUpdateAfterBindInputAttachments").UnsafeAddr())) = driver.Uint32(19)
-		*(*driver.Uint32)(unsafe.Pointer(val.FieldByName("maxPerStageUpdateAfterBindResources").UnsafeAddr())) = driver.Uint32(23)
-		*(*driver.Uint32)(unsafe.Pointer(val.FieldByName("maxDescriptorSetUpdateAfterBindSamplers").UnsafeAddr())) = driver.Uint32(29)
-		*(*driver.Uint32)(unsafe.Pointer(val.FieldByName("maxDescriptorSetUpdateAfterBindUniformBuffers").UnsafeAddr())) = driver.Uint32(31)
-		*(*driver.Uint32)(unsafe.Pointer(val.FieldByName("maxDescriptorSetUpdateAfterBindUniformBuffersDynamic").UnsafeAddr())) = driver.Uint32(37)
-		*(*driver.Uint32)(unsafe.Pointer(val.FieldByName("maxDescriptorSetUpdateAfterBindStorageBuffers").UnsafeAddr())) = driver.Uint32(41)
-		*(*driver.Uint32)(unsafe.Pointer(val.FieldByName("maxDescriptorSetUpdateAfterBindStorageBuffersDynamic").UnsafeAddr())) = driver.Uint32(43)
-		*(*driver.Uint32)(unsafe.Pointer(val.FieldByName("maxDescriptorSetUpdateAfterBindSampledImages").UnsafeAddr())) = driver.Uint32(47)
-		*(*driver.Uint32)(unsafe.Pointer(val.FieldByName("maxDescriptorSetUpdateAfterBindStorageImages").UnsafeAddr())) = driver.Uint32(53)
-		*(*driver.Uint32)(unsafe.Pointer(val.FieldByName("maxDescriptorSetUpdateAfterBindInputAttachments").UnsafeAddr())) = driver.Uint32(59)
-		*(*driver.VkResolveModeFlags)(unsafe.Pointer(val.FieldByName("supportedDepthResolveModes").UnsafeAddr())) = driver.VkResolveModeFlags(4)
-		*(*driver.VkResolveModeFlags)(unsafe.Pointer(val.FieldByName("supportedStencilResolveModes").UnsafeAddr())) = driver.VkResolveModeFlags(8)
-		*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("independentResolveNone").UnsafeAddr())) = driver.VkBool32(1)
-		*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("independentResolve").UnsafeAddr())) = driver.VkBool32(0)
-		*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("filterMinmaxSingleComponentFormats").UnsafeAddr())) = driver.VkBool32(1)
-		*(*driver.VkBool32)(unsafe.Pointer(val.FieldByName("filterMinmaxImageComponentMapping").UnsafeAddr())) = driver.VkBool32(0)
-		*(*driver.Uint64)(unsafe.Pointer(val.FieldByName("maxTimelineSemaphoreValueDifference").UnsafeAddr())) = driver.Uint64(61)
-		*(*driver.Uint32)(unsafe.Pointer(val.FieldByName("framebufferIntegerColorSampleCounts").UnsafeAddr())) = driver.Uint32(16)
+		*(*loader.VkShaderFloatControlsIndependence)(unsafe.Pointer(val.FieldByName("denormBehaviorIndependence").UnsafeAddr())) = loader.VkShaderFloatControlsIndependence(1)
+		*(*loader.VkShaderFloatControlsIndependence)(unsafe.Pointer(val.FieldByName("roundingModeIndependence").UnsafeAddr())) = loader.VkShaderFloatControlsIndependence(2)
+		*(*loader.VkBool32)(unsafe.Pointer(val.FieldByName("shaderSignedZeroInfNanPreserveFloat16").UnsafeAddr())) = loader.VkBool32(1)
+		*(*loader.VkBool32)(unsafe.Pointer(val.FieldByName("shaderSignedZeroInfNanPreserveFloat32").UnsafeAddr())) = loader.VkBool32(0)
+		*(*loader.VkBool32)(unsafe.Pointer(val.FieldByName("shaderSignedZeroInfNanPreserveFloat64").UnsafeAddr())) = loader.VkBool32(1)
+		*(*loader.VkBool32)(unsafe.Pointer(val.FieldByName("shaderDenormPreserveFloat16").UnsafeAddr())) = loader.VkBool32(0)
+		*(*loader.VkBool32)(unsafe.Pointer(val.FieldByName("shaderDenormPreserveFloat32").UnsafeAddr())) = loader.VkBool32(1)
+		*(*loader.VkBool32)(unsafe.Pointer(val.FieldByName("shaderDenormPreserveFloat64").UnsafeAddr())) = loader.VkBool32(0)
+		*(*loader.VkBool32)(unsafe.Pointer(val.FieldByName("shaderDenormFlushToZeroFloat16").UnsafeAddr())) = loader.VkBool32(1)
+		*(*loader.VkBool32)(unsafe.Pointer(val.FieldByName("shaderDenormFlushToZeroFloat32").UnsafeAddr())) = loader.VkBool32(0)
+		*(*loader.VkBool32)(unsafe.Pointer(val.FieldByName("shaderDenormFlushToZeroFloat64").UnsafeAddr())) = loader.VkBool32(1)
+		*(*loader.VkBool32)(unsafe.Pointer(val.FieldByName("shaderRoundingModeRTEFloat16").UnsafeAddr())) = loader.VkBool32(0)
+		*(*loader.VkBool32)(unsafe.Pointer(val.FieldByName("shaderRoundingModeRTEFloat32").UnsafeAddr())) = loader.VkBool32(1)
+		*(*loader.VkBool32)(unsafe.Pointer(val.FieldByName("shaderRoundingModeRTEFloat64").UnsafeAddr())) = loader.VkBool32(0)
+		*(*loader.VkBool32)(unsafe.Pointer(val.FieldByName("shaderRoundingModeRTZFloat16").UnsafeAddr())) = loader.VkBool32(1)
+		*(*loader.VkBool32)(unsafe.Pointer(val.FieldByName("shaderRoundingModeRTZFloat32").UnsafeAddr())) = loader.VkBool32(0)
+		*(*loader.VkBool32)(unsafe.Pointer(val.FieldByName("shaderRoundingModeRTZFloat64").UnsafeAddr())) = loader.VkBool32(1)
+		*(*loader.Uint32)(unsafe.Pointer(val.FieldByName("maxUpdateAfterBindDescriptorsInAllPools").UnsafeAddr())) = loader.Uint32(3)
+		*(*loader.VkBool32)(unsafe.Pointer(val.FieldByName("shaderUniformBufferArrayNonUniformIndexingNative").UnsafeAddr())) = loader.VkBool32(0)
+		*(*loader.VkBool32)(unsafe.Pointer(val.FieldByName("shaderSampledImageArrayNonUniformIndexingNative").UnsafeAddr())) = loader.VkBool32(1)
+		*(*loader.VkBool32)(unsafe.Pointer(val.FieldByName("shaderStorageBufferArrayNonUniformIndexingNative").UnsafeAddr())) = loader.VkBool32(0)
+		*(*loader.VkBool32)(unsafe.Pointer(val.FieldByName("shaderStorageImageArrayNonUniformIndexingNative").UnsafeAddr())) = loader.VkBool32(1)
+		*(*loader.VkBool32)(unsafe.Pointer(val.FieldByName("shaderInputAttachmentArrayNonUniformIndexingNative").UnsafeAddr())) = loader.VkBool32(0)
+		*(*loader.VkBool32)(unsafe.Pointer(val.FieldByName("robustBufferAccessUpdateAfterBind").UnsafeAddr())) = loader.VkBool32(1)
+		*(*loader.VkBool32)(unsafe.Pointer(val.FieldByName("quadDivergentImplicitLod").UnsafeAddr())) = loader.VkBool32(0)
+		*(*loader.Uint32)(unsafe.Pointer(val.FieldByName("maxPerStageDescriptorUpdateAfterBindSamplers").UnsafeAddr())) = loader.Uint32(5)
+		*(*loader.Uint32)(unsafe.Pointer(val.FieldByName("maxPerStageDescriptorUpdateAfterBindUniformBuffers").UnsafeAddr())) = loader.Uint32(7)
+		*(*loader.Uint32)(unsafe.Pointer(val.FieldByName("maxPerStageDescriptorUpdateAfterBindStorageBuffers").UnsafeAddr())) = loader.Uint32(11)
+		*(*loader.Uint32)(unsafe.Pointer(val.FieldByName("maxPerStageDescriptorUpdateAfterBindSampledImages").UnsafeAddr())) = loader.Uint32(13)
+		*(*loader.Uint32)(unsafe.Pointer(val.FieldByName("maxPerStageDescriptorUpdateAfterBindStorageImages").UnsafeAddr())) = loader.Uint32(17)
+		*(*loader.Uint32)(unsafe.Pointer(val.FieldByName("maxPerStageDescriptorUpdateAfterBindInputAttachments").UnsafeAddr())) = loader.Uint32(19)
+		*(*loader.Uint32)(unsafe.Pointer(val.FieldByName("maxPerStageUpdateAfterBindResources").UnsafeAddr())) = loader.Uint32(23)
+		*(*loader.Uint32)(unsafe.Pointer(val.FieldByName("maxDescriptorSetUpdateAfterBindSamplers").UnsafeAddr())) = loader.Uint32(29)
+		*(*loader.Uint32)(unsafe.Pointer(val.FieldByName("maxDescriptorSetUpdateAfterBindUniformBuffers").UnsafeAddr())) = loader.Uint32(31)
+		*(*loader.Uint32)(unsafe.Pointer(val.FieldByName("maxDescriptorSetUpdateAfterBindUniformBuffersDynamic").UnsafeAddr())) = loader.Uint32(37)
+		*(*loader.Uint32)(unsafe.Pointer(val.FieldByName("maxDescriptorSetUpdateAfterBindStorageBuffers").UnsafeAddr())) = loader.Uint32(41)
+		*(*loader.Uint32)(unsafe.Pointer(val.FieldByName("maxDescriptorSetUpdateAfterBindStorageBuffersDynamic").UnsafeAddr())) = loader.Uint32(43)
+		*(*loader.Uint32)(unsafe.Pointer(val.FieldByName("maxDescriptorSetUpdateAfterBindSampledImages").UnsafeAddr())) = loader.Uint32(47)
+		*(*loader.Uint32)(unsafe.Pointer(val.FieldByName("maxDescriptorSetUpdateAfterBindStorageImages").UnsafeAddr())) = loader.Uint32(53)
+		*(*loader.Uint32)(unsafe.Pointer(val.FieldByName("maxDescriptorSetUpdateAfterBindInputAttachments").UnsafeAddr())) = loader.Uint32(59)
+		*(*loader.VkResolveModeFlags)(unsafe.Pointer(val.FieldByName("supportedDepthResolveModes").UnsafeAddr())) = loader.VkResolveModeFlags(4)
+		*(*loader.VkResolveModeFlags)(unsafe.Pointer(val.FieldByName("supportedStencilResolveModes").UnsafeAddr())) = loader.VkResolveModeFlags(8)
+		*(*loader.VkBool32)(unsafe.Pointer(val.FieldByName("independentResolveNone").UnsafeAddr())) = loader.VkBool32(1)
+		*(*loader.VkBool32)(unsafe.Pointer(val.FieldByName("independentResolve").UnsafeAddr())) = loader.VkBool32(0)
+		*(*loader.VkBool32)(unsafe.Pointer(val.FieldByName("filterMinmaxSingleComponentFormats").UnsafeAddr())) = loader.VkBool32(1)
+		*(*loader.VkBool32)(unsafe.Pointer(val.FieldByName("filterMinmaxImageComponentMapping").UnsafeAddr())) = loader.VkBool32(0)
+		*(*loader.Uint64)(unsafe.Pointer(val.FieldByName("maxTimelineSemaphoreValueDifference").UnsafeAddr())) = loader.Uint64(61)
+		*(*loader.Uint32)(unsafe.Pointer(val.FieldByName("framebufferIntegerColorSampleCounts").UnsafeAddr())) = loader.Uint32(16)
 	})
 
 	var outData core1_2.PhysicalDeviceVulkan12Properties
@@ -540,7 +540,7 @@ func TestPhysicalDeviceVulkan12OutData(t *testing.T) {
 	require.NoError(t, err)
 	require.Equal(t, core1_2.PhysicalDeviceVulkan12Properties{
 		DriverID:   core1_2.DriverIDGoogleSwiftshader,
-		DriverName: "Some Driver",
+		DriverName: "Some loader",
 		DriverInfo: "Whooo Info",
 		ConformanceVersion: core1_2.ConformanceVersion{
 			Major:    1,

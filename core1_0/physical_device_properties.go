@@ -139,7 +139,7 @@ type PhysicalDeviceProperties struct {
 
 	// APIVersion is the version of Vulkan supported by this PhysicalDevice
 	APIVersion common.APIVersion
-	// DriverVersion is the vendor-specified version of the driver
+	// DriverVersion is the vendor-specified version of the loader
 	DriverVersion common.Version
 	// VendorID is a unique identifier for the vendor of the PhysicalDevice
 	VendorID uint32

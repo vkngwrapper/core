@@ -6,22 +6,22 @@ import (
 	"github.com/vkngwrapper/core/v3/common"
 	"github.com/vkngwrapper/core/v3/core1_0"
 	"github.com/vkngwrapper/core/v3/core1_1"
-	"github.com/vkngwrapper/core/v3/driver"
+	"github.com/vkngwrapper/core/v3/loader"
 	"github.com/vkngwrapper/core/v3/types"
 )
 
 //go:generate mockgen -source ./iface.go -destination ../mocks/mocks1_2/mocks.go -package mocks1_2
 
-// CommandBuffer is an object used to record commands which can be subsequently submitted to
-// a device queue for execution.
-//
-// This interface includes all commands included in Vulkan 1.2.
-//
-// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/VkCommandBuffer.html
-type Vulkan interface {
-	core1_1.Vulkan
+type CoreInstanceDriver interface {
+	core1_1.CoreInstanceDriver
+}
+
+type DeviceDriver interface {
+	core1_1.DeviceDriver
 
 	// CmdBeginRenderPass2 begins a new RenderPass
+	//
+	// commandBuffer - the CommandBuffer to record to
 	//
 	// renderPassBegin - Specifies the RenderPass to begin an instance of, and the Framebuffer the instance
 	// uses
@@ -32,11 +32,15 @@ type Vulkan interface {
 	CmdBeginRenderPass2(commandBuffer types.CommandBuffer, renderPassBegin core1_0.RenderPassBeginInfo, subpassBegin SubpassBeginInfo) error
 	// CmdEndRenderPass2 ends the current RenderPass
 	//
+	// commandBuffer - the CommandBuffer to record to
+	//
 	// subpassEnd - Contains information about how the previous subpass will be ended
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkCmdEndRenderPass2.html
 	CmdEndRenderPass2(commandBuffer types.CommandBuffer, subpassEnd SubpassEndInfo) error
 	// CmdNextSubpass2 transitions to the next subpass of a RenderPass
+	//
+	// commandBuffer - the CommandBuffer to record to
 	//
 	// subpassBegin - Contains information about the subpass which is about to begin rendering.
 	//
@@ -45,6 +49,8 @@ type Vulkan interface {
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkCmdNextSubpass2.html
 	CmdNextSubpass2(commandBuffer types.CommandBuffer, subpassBegin SubpassBeginInfo, subpassEnd SubpassEndInfo) error
 	// CmdDrawIndexedIndirectCount draws with indirect parameters, indexed vertices, and draw count
+	//
+	// commandBuffer - the CommandBuffer to record to
 	//
 	// buffer - The Buffer containing draw parameters
 	//
@@ -61,6 +67,8 @@ type Vulkan interface {
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkCmdDrawIndexedIndirectCount.html
 	CmdDrawIndexedIndirectCount(commandBuffer types.CommandBuffer, buffer types.Buffer, offset uint64, countBuffer types.Buffer, countBufferOffset uint64, maxDrawCount, stride int)
 	// CmdDrawIndirectCount draws primitives with indirect parameters and draw count
+	//
+	// commandBuffer - the CommandBuffer to record to
 	//
 	// buffer - The Buffer containing draw parameters
 	//
@@ -79,38 +87,40 @@ type Vulkan interface {
 
 	// CreateRenderPass2 creates a new RenderPass object
 	//
+	// device - The Device used to create the RenderPass
+	//
 	// allocator - Controls host memory allocation behavior
 	//
 	// options - Describes the parameters of the RenderPass
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkCreateRenderPass2.html
-	CreateRenderPass2(device types.Device, allocator *driver.AllocationCallbacks, options RenderPassCreateInfo2) (types.RenderPass, common.VkResult, error)
+	CreateRenderPass2(device types.Device, allocator *loader.AllocationCallbacks, options RenderPassCreateInfo2) (types.RenderPass, common.VkResult, error)
 
 	// GetBufferDeviceAddress queries an address of a Buffer
 	//
 	// o - Specifies the Buffer to retrieve an address for
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkGetBufferDeviceAddress.html
-	GetBufferDeviceAddress(device types.Device, o BufferDeviceAddressInfo) (uint64, error)
+	GetBufferDeviceAddress(o BufferDeviceAddressInfo) (uint64, error)
 	// GetBufferOpaqueCaptureAddress queries an opaque capture address of a Buffer
 	//
 	// o - Specifies the Buffer to retrieve an address for
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkGetBufferOpaqueCaptureAddress.html
-	GetBufferOpaqueCaptureAddress(device types.Device, o BufferDeviceAddressInfo) (uint64, error)
+	GetBufferOpaqueCaptureAddress(o BufferDeviceAddressInfo) (uint64, error)
 	// GetDeviceMemoryOpaqueCaptureAddress queries an opaque capture address of a DeviceMemory object
 	//
 	// o - Specifies the DeviceMemory object to retrieve an address for
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkGetDeviceMemoryOpaqueCaptureAddress.html
-	GetDeviceMemoryOpaqueCaptureAddress(device types.Device, o DeviceMemoryOpaqueCaptureAddressInfo) (uint64, error)
+	GetDeviceMemoryOpaqueCaptureAddress(o DeviceMemoryOpaqueCaptureAddressInfo) (uint64, error)
 
 	// SignalSemaphore signals a timeline Semaphore on the host
 	//
 	// o - Contains information about the signal operation
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkSignalSemaphore.html
-	SignalSemaphore(device types.Device, o SemaphoreSignalInfo) (common.VkResult, error)
+	SignalSemaphore(o SemaphoreSignalInfo) (common.VkResult, error)
 	// WaitSemaphores waits for timeline Semaphore objects on the host
 	//
 	// timeout - How long to wait before returning VKTimeout. May be common.NoTimeout to wait indefinitely.
@@ -120,9 +130,11 @@ type Vulkan interface {
 	// o - Contains information about the wait condition
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkWaitSemaphores.html
-	WaitSemaphores(device types.Device, timeout time.Duration, o SemaphoreWaitInfo) (common.VkResult, error)
+	WaitSemaphores(timeout time.Duration, o SemaphoreWaitInfo) (common.VkResult, error)
 
-	// Reset resets queries in this QueryPool
+	// ResetQueryPool resets queries in this QueryPool
+	//
+	// queryPool - The QueryPool to reset
 	//
 	// firstQuery - The initial query index to reset
 	//
@@ -131,8 +143,15 @@ type Vulkan interface {
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkResetQueryPool.html
 	ResetQueryPool(queryPool types.QueryPool, firstQuery, queryCount int)
 
-	// CounterValue queries the current state of this timeline Semaphore
+	// GetSemaphoreCounterValue queries the current state of a timeline Semaphore
+	//
+	// semaphore - The timeline Semaphore to query
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkGetSemaphoreCounterValue.html
 	GetSemaphoreCounterValue(semaphore types.Semaphore) (uint64, common.VkResult, error)
+}
+
+type CoreDeviceDriver interface {
+	CoreInstanceDriver
+	DeviceDriver
 }

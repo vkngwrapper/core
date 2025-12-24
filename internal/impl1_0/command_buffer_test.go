@@ -10,44 +10,44 @@ import (
 	"github.com/stretchr/testify/require"
 	"github.com/vkngwrapper/core/v3/common"
 	"github.com/vkngwrapper/core/v3/core1_0"
-	"github.com/vkngwrapper/core/v3/driver"
-	mock_driver "github.com/vkngwrapper/core/v3/driver/mocks"
-	"github.com/vkngwrapper/core/v3/internal/impl1_0"
+	"github.com/vkngwrapper/core/v3/loader"
+	mock_loader "github.com/vkngwrapper/core/v3/loader/mocks"
 	"github.com/vkngwrapper/core/v3/mocks"
 	"github.com/vkngwrapper/core/v3/mocks/mocks1_0"
+	"github.com/vkngwrapper/core/v3/types"
 	"go.uber.org/mock/gomock"
 )
 
-func setup(t *testing.T, ctrl *gomock.Controller) (*mock_driver.MockDriver, core1_0.CommandBuffer) {
-	mockDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_0)
-	mockDevice := mocks1_0.EasyMockDevice(ctrl, mockDriver)
+func setup(t *testing.T, ctrl *gomock.Controller) (*mock_loader.MockLoader, core1_0.DeviceDriver, types.Device, types.CommandBuffer) {
+	mockLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_0)
+	device := mocks.NewDummyDevice(common.Vulkan1_0, []string{})
+	pool := mocks.NewDummyCommandPool(device)
+	buffer := mocks.NewDummyCommandBuffer(pool, device)
+	driver := mocks1_0.InternalDeviceDriver(mockLoader)
 
-	builder := &impl1_0.DeviceObjectBuilderImpl{}
-	buffer := builder.CreateCommandBufferObject(mockDriver, mocks.NewFakeCommandPoolHandle(), mockDevice.Handle(), mocks.NewFakeCommandBufferHandle(), common.Vulkan1_0)
-
-	return mockDriver, buffer
+	return mockLoader, driver, device, buffer
 }
 
-func setupWithRenderPass(t *testing.T, ctrl *gomock.Controller) (*mock_driver.MockDriver, core1_0.CommandBuffer, core1_0.RenderPass, core1_0.Framebuffer) {
-	mockDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_0)
-	mockDevice := mocks1_0.EasyMockDevice(ctrl, mockDriver)
+func setupWithRenderPass(t *testing.T, ctrl *gomock.Controller) (*mock_loader.MockLoader, core1_0.DeviceDriver, types.Device, types.CommandBuffer, types.RenderPass, types.Framebuffer) {
+	mockLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_0)
+	device := mocks.NewDummyDevice(common.Vulkan1_0, []string{})
+	pool := mocks.NewDummyCommandPool(device)
+	buffer := mocks.NewDummyCommandBuffer(pool, device)
+	renderPass := mocks.NewDummyRenderPass(device)
+	framebuffer := mocks.NewDummyFramebuffer(device)
+	driver := mocks1_0.InternalDeviceDriver(mockLoader)
 
-	builder := &impl1_0.DeviceObjectBuilderImpl{}
-	buffer := builder.CreateCommandBufferObject(mockDriver, mocks.NewFakeCommandPoolHandle(), mockDevice.Handle(), mocks.NewFakeCommandBufferHandle(), common.Vulkan1_0)
-	renderPass := builder.CreateRenderPassObject(mockDriver, mockDevice.Handle(), mocks.NewFakeRenderPassHandle(), common.Vulkan1_0)
-	framebuffer := builder.CreateFramebufferObject(mockDriver, mockDevice.Handle(), mocks.NewFakeFramebufferHandle(), common.Vulkan1_0)
-
-	return mockDriver, buffer, renderPass, framebuffer
+	return mockLoader, driver, device, buffer, renderPass, framebuffer
 }
 
 func TestCommandBuffer_Begin_NoInheritance(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockDriver, buffer := setup(t, ctrl)
+	mockLoader, driver, _, buffer := setup(t, ctrl)
 
-	mockDriver.EXPECT().VkBeginCommandBuffer(buffer.Handle(), gomock.Any()).DoAndReturn(
-		func(commandBuffer driver.VkCommandBuffer, pBeginInfo *driver.VkCommandBufferBeginInfo) (common.VkResult, error) {
+	mockLoader.EXPECT().VkBeginCommandBuffer(buffer.Handle(), gomock.Any()).DoAndReturn(
+		func(commandBuffer loader.VkCommandBuffer, pBeginInfo *loader.VkCommandBufferBeginInfo) (common.VkResult, error) {
 			v := reflect.ValueOf(*pBeginInfo)
 			require.Equal(t, uint64(42), v.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO
 			require.True(t, v.FieldByName("pNext").IsNil())
@@ -57,7 +57,7 @@ func TestCommandBuffer_Begin_NoInheritance(t *testing.T) {
 			return core1_0.VKSuccess, nil
 		})
 
-	_, err := buffer.Begin(core1_0.CommandBufferBeginInfo{
+	_, err := driver.BeginCommandBuffer(buffer, core1_0.CommandBufferBeginInfo{
 		Flags: core1_0.CommandBufferUsageSimultaneousUse,
 	})
 	require.NoError(t, err)
@@ -67,10 +67,10 @@ func TestCommandBuffer_Begin_WithInheritance(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockDriver, buffer, renderPass, framebuffer := setupWithRenderPass(t, ctrl)
+	mockLoader, driver, _, buffer, renderPass, framebuffer := setupWithRenderPass(t, ctrl)
 
-	mockDriver.EXPECT().VkBeginCommandBuffer(buffer.Handle(), gomock.Any()).DoAndReturn(
-		func(commandBuffer driver.VkCommandBuffer, pBeginInfo *driver.VkCommandBufferBeginInfo) (common.VkResult, error) {
+	mockLoader.EXPECT().VkBeginCommandBuffer(buffer.Handle(), gomock.Any()).DoAndReturn(
+		func(commandBuffer loader.VkCommandBuffer, pBeginInfo *loader.VkCommandBufferBeginInfo) (common.VkResult, error) {
 			v := reflect.ValueOf(*pBeginInfo)
 			require.Equal(t, uint64(42), v.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO
 			require.True(t, v.FieldByName("pNext").IsNil())
@@ -80,8 +80,8 @@ func TestCommandBuffer_Begin_WithInheritance(t *testing.T) {
 			inheritance := v.FieldByName("pInheritanceInfo").Elem()
 			require.Equal(t, inheritance.FieldByName("sType").Uint(), uint64(41)) // VK_STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_INFO
 			require.True(t, inheritance.FieldByName("pNext").IsNil())
-			require.Equal(t, renderPass.Handle(), (driver.VkRenderPass)(unsafe.Pointer(inheritance.FieldByName("renderPass").Elem().UnsafeAddr())))
-			require.Equal(t, framebuffer.Handle(), (driver.VkFramebuffer)(unsafe.Pointer(inheritance.FieldByName("framebuffer").Elem().UnsafeAddr())))
+			require.Equal(t, renderPass.Handle(), (loader.VkRenderPass)(unsafe.Pointer(inheritance.FieldByName("renderPass").Elem().UnsafeAddr())))
+			require.Equal(t, framebuffer.Handle(), (loader.VkFramebuffer)(unsafe.Pointer(inheritance.FieldByName("framebuffer").Elem().UnsafeAddr())))
 			require.Equal(t, uint64(3), inheritance.FieldByName("subpass").Uint())
 			require.Equal(t, uint64(1), inheritance.FieldByName("occlusionQueryEnable").Uint())
 			require.Equal(t, uint64(1), inheritance.FieldByName("queryFlags").Uint())          // VK_QUERY_CONTROL_PRECISE_BIT
@@ -90,7 +90,7 @@ func TestCommandBuffer_Begin_WithInheritance(t *testing.T) {
 			return core1_0.VKSuccess, nil
 		})
 
-	_, err := buffer.Begin(core1_0.CommandBufferBeginInfo{
+	_, err := driver.BeginCommandBuffer(buffer, core1_0.CommandBufferBeginInfo{
 		Flags: core1_0.CommandBufferUsageSimultaneousUse,
 		InheritanceInfo: &core1_0.CommandBufferInheritanceInfo{
 			Framebuffer:          framebuffer,
@@ -108,11 +108,11 @@ func TestCommandBuffer_End(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockDriver, buffer := setup(t, ctrl)
+	mockLoader, driver, _, buffer := setup(t, ctrl)
 
-	mockDriver.EXPECT().VkEndCommandBuffer(buffer.Handle()).Return(core1_0.VKSuccess, nil)
+	mockLoader.EXPECT().VkEndCommandBuffer(buffer.Handle()).Return(core1_0.VKSuccess, nil)
 
-	_, err := buffer.End()
+	_, err := driver.EndCommandBuffer(buffer)
 	require.NoError(t, err)
 }
 
@@ -120,15 +120,15 @@ func TestCommandBuffer_BeginRenderPass(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockDriver, buffer, renderPass, framebuffer := setupWithRenderPass(t, ctrl)
+	mockLoader, driver, _, buffer, renderPass, framebuffer := setupWithRenderPass(t, ctrl)
 
-	mockDriver.EXPECT().VkCmdBeginRenderPass(buffer.Handle(), gomock.Any(), driver.VkSubpassContents(1) /*VK_SUBPASS_CONTENTS_SECONDARY_COMMAND_BUFFERS*/).DoAndReturn(
-		func(commandBuffer driver.VkCommandBuffer, pRenderPassBegin *driver.VkRenderPassBeginInfo, contents driver.VkSubpassContents) {
+	mockLoader.EXPECT().VkCmdBeginRenderPass(buffer.Handle(), gomock.Any(), loader.VkSubpassContents(1) /*VK_SUBPASS_CONTENTS_SECONDARY_COMMAND_BUFFERS*/).DoAndReturn(
+		func(commandBuffer loader.VkCommandBuffer, pRenderPassBegin *loader.VkRenderPassBeginInfo, contents loader.VkSubpassContents) {
 			v := reflect.ValueOf(*pRenderPassBegin)
 			require.Equal(t, uint64(43), v.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO
 			require.True(t, v.FieldByName("pNext").IsNil())
-			require.Equal(t, renderPass.Handle(), (driver.VkRenderPass)(unsafe.Pointer(v.FieldByName("renderPass").Elem().UnsafeAddr())))
-			require.Equal(t, framebuffer.Handle(), (driver.VkFramebuffer)(unsafe.Pointer(v.FieldByName("framebuffer").Elem().UnsafeAddr())))
+			require.Equal(t, renderPass.Handle(), (loader.VkRenderPass)(unsafe.Pointer(v.FieldByName("renderPass").Elem().UnsafeAddr())))
+			require.Equal(t, framebuffer.Handle(), (loader.VkFramebuffer)(unsafe.Pointer(v.FieldByName("framebuffer").Elem().UnsafeAddr())))
 			require.Equal(t, int64(1), v.FieldByName("renderArea").FieldByName("offset").FieldByName("x").Int())
 			require.Equal(t, int64(2), v.FieldByName("renderArea").FieldByName("offset").FieldByName("y").Int())
 			require.Equal(t, uint64(30), v.FieldByName("renderArea").FieldByName("extent").FieldByName("width").Uint())
@@ -141,7 +141,7 @@ func TestCommandBuffer_BeginRenderPass(t *testing.T) {
 			require.ElementsMatch(t, []float32{5, 6, 7, 8}, clearValueSlice)
 		})
 
-	err := buffer.CmdBeginRenderPass(core1_0.SubpassContentsSecondaryCommandBuffers, core1_0.RenderPassBeginInfo{
+	err := driver.CmdBeginRenderPass(buffer, core1_0.SubpassContentsSecondaryCommandBuffers, core1_0.RenderPassBeginInfo{
 		RenderPass:  renderPass,
 		Framebuffer: framebuffer,
 		RenderArea: core1_0.Rect2D{
@@ -157,120 +157,110 @@ func TestCommandBuffer_EndRenderPass(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockDriver, buffer := setup(t, ctrl)
+	mockLoader, driver, _, buffer := setup(t, ctrl)
 
-	mockDriver.EXPECT().VkCmdEndRenderPass(buffer.Handle())
+	mockLoader.EXPECT().VkCmdEndRenderPass(buffer.Handle())
 
-	buffer.CmdEndRenderPass()
+	driver.CmdEndRenderPass(buffer)
 }
 
 func TestCommandBuffer_CmdBindGraphicsPipeline(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_0)
-	mockDevice := mocks1_0.EasyMockDevice(ctrl, mockDriver)
+	mockLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_0)
+	driver := mocks1_0.InternalDeviceDriver(mockLoader)
+	device := mocks.NewDummyDevice(common.Vulkan1_0, []string{})
+	pool := mocks.NewDummyCommandPool(device)
+	buffer := mocks.NewDummyCommandBuffer(pool, device)
+	pipeline := mocks.NewDummyPipeline(device)
 
-	builder := impl1_0.DeviceObjectBuilderImpl{}
-	buffer := builder.CreateCommandBufferObject(mockDriver, mocks.NewFakeCommandPoolHandle(), mockDevice.Handle(), mocks.NewFakeCommandBufferHandle(), common.Vulkan1_0)
-	pipeline := builder.CreatePipelineObject(mockDriver, mockDevice.Handle(), mocks.NewFakePipeline(), common.Vulkan1_0)
+	mockLoader.EXPECT().VkCmdBindPipeline(buffer.Handle(), loader.VkPipelineBindPoint(0), pipeline.Handle())
 
-	mockDriver.EXPECT().VkCmdBindPipeline(buffer.Handle(), driver.VkPipelineBindPoint(0), pipeline.Handle())
-
-	buffer.CmdBindPipeline(core1_0.PipelineBindPointGraphics, pipeline)
+	driver.CmdBindPipeline(buffer, core1_0.PipelineBindPointGraphics, pipeline)
 }
 
 func TestCommandBuffer_CmdDraw(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockDriver, buffer := setup(t, ctrl)
+	mockLoader, driver, _, buffer := setup(t, ctrl)
 
-	mockDriver.EXPECT().VkCmdDraw(buffer.Handle(), driver.Uint32(6), driver.Uint32(1), driver.Uint32(2), driver.Uint32(3))
+	mockLoader.EXPECT().VkCmdDraw(buffer.Handle(), loader.Uint32(6), loader.Uint32(1), loader.Uint32(2), loader.Uint32(3))
 
-	buffer.CmdDraw(6, 1, 2, 3)
+	driver.CmdDraw(buffer, 6, 1, 2, 3)
 }
 
 func TestCommandBuffer_CmdDrawIndexed(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockDriver, buffer := setup(t, ctrl)
+	mockLoader, driver, _, buffer := setup(t, ctrl)
 
-	mockDriver.EXPECT().VkCmdDrawIndexed(buffer.Handle(), driver.Uint32(1), driver.Uint32(2), driver.Uint32(3), driver.Int32(4), driver.Uint32(5))
+	mockLoader.EXPECT().VkCmdDrawIndexed(buffer.Handle(), loader.Uint32(1), loader.Uint32(2), loader.Uint32(3), loader.Int32(4), loader.Uint32(5))
 
-	buffer.CmdDrawIndexed(1, 2, 3, 4, 5)
+	driver.CmdDrawIndexed(buffer, 1, 2, 3, 4, 5)
 }
 
 func TestVulkanCommandBuffer_CmdBindVertexBuffers(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockDriver, buffer := setup(t, ctrl)
-
+	mockLoader, driver, device, buffer := setup(t, ctrl)
+	vertexBuffer := mocks.NewDummyBuffer(device)
 	bufferHandle := mocks.NewFakeBufferHandle()
-	vertexBuffer := mocks1_0.NewMockBuffer(ctrl)
-	vertexBuffer.EXPECT().Handle().Return(bufferHandle)
 
-	mockDriver.EXPECT().VkCmdBindVertexBuffers(buffer.Handle(), driver.Uint32(0), driver.Uint32(1), gomock.Not(nil), gomock.Not(nil)).DoAndReturn(
-		func(commandBuffer driver.VkCommandBuffer, firstBinding driver.Uint32, bindingCount driver.Uint32, pBuffers *driver.VkBuffer, pOffsets *driver.VkDeviceSize) {
-			singleBuffer := ([]driver.VkBuffer)(unsafe.Slice(pBuffers, 1))
-			singleOffset := ([]driver.VkDeviceSize)(unsafe.Slice(pOffsets, 1))
+	mockLoader.EXPECT().VkCmdBindVertexBuffers(buffer.Handle(), loader.Uint32(0), loader.Uint32(1), gomock.Not(nil), gomock.Not(nil)).DoAndReturn(
+		func(commandBuffer loader.VkCommandBuffer, firstBinding loader.Uint32, bindingCount loader.Uint32, pBuffers *loader.VkBuffer, pOffsets *loader.VkDeviceSize) {
+			singleBuffer := ([]loader.VkBuffer)(unsafe.Slice(pBuffers, 1))
+			singleOffset := ([]loader.VkDeviceSize)(unsafe.Slice(pOffsets, 1))
 
 			require.Equal(t, bufferHandle, singleBuffer[0])
-			require.ElementsMatch(t, []driver.VkDeviceSize{2}, singleOffset)
+			require.ElementsMatch(t, []loader.VkDeviceSize{2}, singleOffset)
 		})
 
-	buffer.CmdBindVertexBuffers(0, []core1_0.Buffer{vertexBuffer}, []int{2})
+	driver.CmdBindVertexBuffers(buffer, 0, []types.Buffer{vertexBuffer}, []int{2})
 }
 
 func TestVulkanCommandBuffer_CmdBindIndexBuffer(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockDriver, buffer := setup(t, ctrl)
+	mockLoader, driver, device, buffer := setup(t, ctrl)
+	indexBuffer := mocks.NewDummyBuffer(device)
 
-	bufferHandle := mocks.NewFakeBufferHandle()
-	indexBuffer := mocks1_0.NewMockBuffer(ctrl)
-	indexBuffer.EXPECT().Handle().Return(bufferHandle)
+	mockLoader.EXPECT().VkCmdBindIndexBuffer(buffer.Handle(), indexBuffer.Handle(), loader.VkDeviceSize(2), loader.VkIndexType(1) /* VK_INDEX_TYPE_UINT32*/)
 
-	mockDriver.EXPECT().VkCmdBindIndexBuffer(buffer.Handle(), bufferHandle, driver.VkDeviceSize(2), driver.VkIndexType(1) /* VK_INDEX_TYPE_UINT32*/)
-
-	buffer.CmdBindIndexBuffer(indexBuffer, 2, core1_0.IndexTypeUInt32)
+	driver.CmdBindIndexBuffer(buffer, indexBuffer, 2, core1_0.IndexTypeUInt32)
 }
 
 func TestVulkanCommandBuffer_CmdBindDescriptorSets(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockDriver, buffer := setup(t, ctrl)
+	mockLoader, driver, device, buffer := setup(t, ctrl)
+	pipelineLayout := mocks.NewDummyPipelineLayout(device)
+	descriptorPool := mocks.NewDummyDescriptorPool(device)
+	descriptorSet := mocks.NewDummyDescriptorSet(descriptorPool, device)
 
-	pipelineLayoutHandle := mocks.NewFakePipelineLayout()
-	pipelineLayout := mocks1_0.NewMockPipelineLayout(ctrl)
-	pipelineLayout.EXPECT().Handle().Return(pipelineLayoutHandle)
-
-	descriptorSetHandle := mocks.NewFakeDescriptorSet()
-	descriptorSet := mocks1_0.NewMockDescriptorSet(ctrl)
-	descriptorSet.EXPECT().Handle().Return(descriptorSetHandle)
-
-	mockDriver.EXPECT().VkCmdBindDescriptorSets(
+	mockLoader.EXPECT().VkCmdBindDescriptorSets(
 		buffer.Handle(),
-		driver.VkPipelineBindPoint(1), /* VK_PIPELINE_BIND_POINT_RAY_TRACING_KHR */
-		pipelineLayoutHandle,
-		driver.Uint32(3),
-		driver.Uint32(1),
+		loader.VkPipelineBindPoint(1), /* VK_PIPELINE_BIND_POINT_RAY_TRACING_KHR */
+		pipelineLayout.Handle(),
+		loader.Uint32(3),
+		loader.Uint32(1),
 		gomock.Not(nil),
-		driver.Uint32(3),
+		loader.Uint32(3),
 		gomock.Not(nil)).DoAndReturn(
-		func(commandBuffer driver.VkCommandBuffer, bind driver.VkPipelineBindPoint, pipelineLayout driver.VkPipelineLayout, firstSet, descriptorSetCount driver.Uint32, pDescriptorSets *driver.VkDescriptorSet, dynamicOffsetCount driver.Uint32, pDynamicOffsets *driver.Uint32) {
-			descriptorSetSlice := ([]driver.VkDescriptorSet)(unsafe.Slice(pDescriptorSets, 1))
-			dynamicOffsetSlice := ([]driver.Uint32)(unsafe.Slice(pDynamicOffsets, 3))
+		func(commandBuffer loader.VkCommandBuffer, bind loader.VkPipelineBindPoint, pipelineLayout loader.VkPipelineLayout, firstSet, descriptorSetCount loader.Uint32, pDescriptorSets *loader.VkDescriptorSet, dynamicOffsetCount loader.Uint32, pDynamicOffsets *loader.Uint32) {
+			descriptorSetSlice := ([]loader.VkDescriptorSet)(unsafe.Slice(pDescriptorSets, 1))
+			dynamicOffsetSlice := ([]loader.Uint32)(unsafe.Slice(pDynamicOffsets, 3))
 
-			require.Equal(t, descriptorSetHandle, descriptorSetSlice[0])
-			require.ElementsMatch(t, []driver.Uint32{4, 5, 6}, dynamicOffsetSlice)
+			require.Equal(t, descriptorSet.Handle(), descriptorSetSlice[0])
+			require.ElementsMatch(t, []loader.Uint32{4, 5, 6}, dynamicOffsetSlice)
 		})
 
-	buffer.CmdBindDescriptorSets(core1_0.PipelineBindPointCompute, pipelineLayout, 3, []core1_0.DescriptorSet{
+	driver.CmdBindDescriptorSets(buffer, core1_0.PipelineBindPointCompute, pipelineLayout, 3, []types.DescriptorSet{
 		descriptorSet,
 	}, []int{4, 5, 6})
 }
@@ -279,13 +269,13 @@ func TestVulkanCommandBuffer_CmdCopyBuffer(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockDriver, buffer := setup(t, ctrl)
-	src := mocks1_0.EasyMockBuffer(ctrl)
-	dest := mocks1_0.EasyMockBuffer(ctrl)
+	mockLoader, driver, device, buffer := setup(t, ctrl)
+	src := mocks.NewDummyBuffer(device)
+	dest := mocks.NewDummyBuffer(device)
 
-	mockDriver.EXPECT().VkCmdCopyBuffer(buffer.Handle(), src.Handle(), dest.Handle(), driver.Uint32(2), gomock.Not(nil)).DoAndReturn(
-		func(buffer driver.VkCommandBuffer, src driver.VkBuffer, dest driver.VkBuffer, regionCount driver.Uint32, pRegions *driver.VkBufferCopy) {
-			regionSlice := ([]driver.VkBufferCopy)(unsafe.Slice(pRegions, 2))
+	mockLoader.EXPECT().VkCmdCopyBuffer(buffer.Handle(), src.Handle(), dest.Handle(), loader.Uint32(2), gomock.Not(nil)).DoAndReturn(
+		func(buffer loader.VkCommandBuffer, src loader.VkBuffer, dest loader.VkBuffer, regionCount loader.Uint32, pRegions *loader.VkBufferCopy) {
+			regionSlice := ([]loader.VkBufferCopy)(unsafe.Slice(pRegions, 2))
 
 			regionVal := reflect.ValueOf(regionSlice[0])
 			require.Equal(t, uint64(3), regionVal.FieldByName("srcOffset").Uint())
@@ -298,18 +288,18 @@ func TestVulkanCommandBuffer_CmdCopyBuffer(t *testing.T) {
 			require.Equal(t, uint64(17), regionVal.FieldByName("size").Uint())
 		})
 
-	err := buffer.CmdCopyBuffer(src, dest, []core1_0.BufferCopy{
-		{
+	err := driver.CmdCopyBuffer(buffer, src, dest,
+		core1_0.BufferCopy{
 			SrcOffset: 3,
 			DstOffset: 5,
 			Size:      7,
 		},
-		{
+		core1_0.BufferCopy{
 			SrcOffset: 11,
 			DstOffset: 13,
 			Size:      17,
 		},
-	})
+	)
 	require.NoError(t, err)
 }
 
@@ -317,25 +307,25 @@ func TestVulkanCommandBuffer_CmdPipelineBarrier(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockDriver, buffer := setup(t, ctrl)
-	mockBuffer := mocks1_0.EasyMockBuffer(ctrl)
-	mockImage := mocks1_0.EasyMockImage(ctrl)
+	mockLoader, driver, device, buffer := setup(t, ctrl)
+	mockBuffer := mocks.NewDummyBuffer(device)
+	mockImage := mocks.NewDummyImage(device)
 
-	mockDriver.EXPECT().VkCmdPipelineBarrier(buffer.Handle(),
-		driver.VkPipelineStageFlags(0x00010000), // VK_PIPELINE_STAGE_ALL_COMMANDS_BIT
-		driver.VkPipelineStageFlags(0x00000100), // VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT
-		driver.VkDependencyFlags(1),             // VK_DEPENDENCY_BY_REGION_BIT
-		driver.Uint32(2),
+	mockLoader.EXPECT().VkCmdPipelineBarrier(buffer.Handle(),
+		loader.VkPipelineStageFlags(0x00010000), // VK_PIPELINE_STAGE_ALL_COMMANDS_BIT
+		loader.VkPipelineStageFlags(0x00000100), // VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT
+		loader.VkDependencyFlags(1),             // VK_DEPENDENCY_BY_REGION_BIT
+		loader.Uint32(2),
 		gomock.Not(nil),
-		driver.Uint32(1),
+		loader.Uint32(1),
 		gomock.Not(nil),
-		driver.Uint32(1),
+		loader.Uint32(1),
 		gomock.Not(nil),
 	).DoAndReturn(
-		func(commandBuffer driver.VkCommandBuffer, srcStage, dstStage driver.VkPipelineStageFlags, dependencies driver.VkDependencyFlags, memoryBarrierCount driver.Uint32, pMemoryBarriers *driver.VkMemoryBarrier, bufferMemoryBarrierCount driver.Uint32, pBufferMemoryBarriers *driver.VkBufferMemoryBarrier, imageMemoryBarrierCount driver.Uint32, pImageMemoryBarriers *driver.VkImageMemoryBarrier) {
-			memoryBarrierSlice := reflect.ValueOf(([]driver.VkMemoryBarrier)(unsafe.Slice(pMemoryBarriers, 2)))
-			bufferMemoryBarrierSlice := reflect.ValueOf(([]driver.VkBufferMemoryBarrier)(unsafe.Slice(pBufferMemoryBarriers, 1)))
-			imageMemoryBarrierSlice := reflect.ValueOf(([]driver.VkImageMemoryBarrier)(unsafe.Slice(pImageMemoryBarriers, 1)))
+		func(commandBuffer loader.VkCommandBuffer, srcStage, dstStage loader.VkPipelineStageFlags, dependencies loader.VkDependencyFlags, memoryBarrierCount loader.Uint32, pMemoryBarriers *loader.VkMemoryBarrier, bufferMemoryBarrierCount loader.Uint32, pBufferMemoryBarriers *loader.VkBufferMemoryBarrier, imageMemoryBarrierCount loader.Uint32, pImageMemoryBarriers *loader.VkImageMemoryBarrier) {
+			memoryBarrierSlice := reflect.ValueOf(([]loader.VkMemoryBarrier)(unsafe.Slice(pMemoryBarriers, 2)))
+			bufferMemoryBarrierSlice := reflect.ValueOf(([]loader.VkBufferMemoryBarrier)(unsafe.Slice(pBufferMemoryBarriers, 1)))
+			imageMemoryBarrierSlice := reflect.ValueOf(([]loader.VkImageMemoryBarrier)(unsafe.Slice(pImageMemoryBarriers, 1)))
 
 			memoryBarrier := memoryBarrierSlice.Index(0)
 			require.Equal(t, uint64(46), memoryBarrier.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_MEMORY_BARRIER
@@ -357,7 +347,7 @@ func TestVulkanCommandBuffer_CmdPipelineBarrier(t *testing.T) {
 			require.Equal(t, uint64(1), bufferMemoryBarrier.FieldByName("srcQueueFamilyIndex").Uint())
 			require.Equal(t, uint64(3), bufferMemoryBarrier.FieldByName("dstQueueFamilyIndex").Uint())
 
-			actualBuffer := (driver.VkBuffer)(unsafe.Pointer(bufferMemoryBarrier.FieldByName("buffer").Elem().UnsafeAddr()))
+			actualBuffer := (loader.VkBuffer)(unsafe.Pointer(bufferMemoryBarrier.FieldByName("buffer").Elem().UnsafeAddr()))
 			require.Equal(t, mockBuffer.Handle(), actualBuffer)
 
 			require.Equal(t, uint64(5), bufferMemoryBarrier.FieldByName("offset").Uint())
@@ -373,7 +363,7 @@ func TestVulkanCommandBuffer_CmdPipelineBarrier(t *testing.T) {
 			require.Equal(t, uint64(11), imageMemoryBarrier.FieldByName("srcQueueFamilyIndex").Uint())
 			require.Equal(t, uint64(13), imageMemoryBarrier.FieldByName("dstQueueFamilyIndex").Uint())
 
-			actualImage := (driver.VkImage)(unsafe.Pointer(imageMemoryBarrier.FieldByName("image").Elem().UnsafeAddr()))
+			actualImage := (loader.VkImage)(unsafe.Pointer(imageMemoryBarrier.FieldByName("image").Elem().UnsafeAddr()))
 			require.Equal(t, mockImage.Handle(), actualImage)
 
 			subresource := imageMemoryBarrier.FieldByName("subresourceRange")
@@ -384,7 +374,8 @@ func TestVulkanCommandBuffer_CmdPipelineBarrier(t *testing.T) {
 			require.Equal(t, uint64(29), subresource.FieldByName("layerCount").Uint())
 		})
 
-	err := buffer.CmdPipelineBarrier(
+	err := driver.CmdPipelineBarrier(
+		buffer,
 		core1_0.PipelineStageAllCommands,
 		core1_0.PipelineStageEarlyFragmentTests,
 		core1_0.DependencyByRegion,
@@ -434,19 +425,19 @@ func TestVulkanCommandBuffer_CmdCopyBufferToImage(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockDriver, buffer := setup(t, ctrl)
-	mockBuffer := mocks1_0.EasyMockBuffer(ctrl)
-	mockImage := mocks1_0.EasyMockImage(ctrl)
+	mockLoader, driver, device, buffer := setup(t, ctrl)
+	mockBuffer := mocks.NewDummyBuffer(device)
+	mockImage := mocks.NewDummyImage(device)
 
-	mockDriver.EXPECT().VkCmdCopyBufferToImage(buffer.Handle(),
+	mockLoader.EXPECT().VkCmdCopyBufferToImage(buffer.Handle(),
 		mockBuffer.Handle(),
 		mockImage.Handle(),
-		driver.VkImageLayout(8), // VK_IMAGE_LAYOUT_PREINITIALIZED
-		driver.Uint32(2),
+		loader.VkImageLayout(8), // VK_IMAGE_LAYOUT_PREINITIALIZED
+		loader.Uint32(2),
 		gomock.Not(nil),
 	).DoAndReturn(
-		func(commandBuffer driver.VkCommandBuffer, srcBuffer driver.VkBuffer, dstImage driver.VkImage, dstImageLayout driver.VkImageLayout, regionCount driver.Uint32, pRegions *driver.VkBufferImageCopy) {
-			regionSlice := reflect.ValueOf(([]driver.VkBufferImageCopy)(unsafe.Slice(pRegions, 2)))
+		func(commandBuffer loader.VkCommandBuffer, srcBuffer loader.VkBuffer, dstImage loader.VkImage, dstImageLayout loader.VkImageLayout, regionCount loader.Uint32, pRegions *loader.VkBufferImageCopy) {
+			regionSlice := reflect.ValueOf(([]loader.VkBufferImageCopy)(unsafe.Slice(pRegions, 2)))
 
 			region := regionSlice.Index(0)
 			require.Equal(t, uint64(1), region.FieldByName("bufferOffset").Uint())
@@ -491,8 +482,8 @@ func TestVulkanCommandBuffer_CmdCopyBufferToImage(t *testing.T) {
 			require.Equal(t, uint64(89), extent.FieldByName("depth").Uint())
 		})
 
-	err := buffer.CmdCopyBufferToImage(mockBuffer, mockImage, core1_0.ImageLayoutPreInitialized, []core1_0.BufferImageCopy{
-		{
+	err := driver.CmdCopyBufferToImage(buffer, mockBuffer, mockImage, core1_0.ImageLayoutPreInitialized,
+		core1_0.BufferImageCopy{
 			BufferOffset:      1,
 			BufferRowLength:   3,
 			BufferImageHeight: 5,
@@ -513,7 +504,7 @@ func TestVulkanCommandBuffer_CmdCopyBufferToImage(t *testing.T) {
 				Depth:  37,
 			},
 		},
-		{
+		core1_0.BufferImageCopy{
 			BufferOffset:      41,
 			BufferRowLength:   43,
 			BufferImageHeight: 47,
@@ -534,7 +525,7 @@ func TestVulkanCommandBuffer_CmdCopyBufferToImage(t *testing.T) {
 				Depth:  89,
 			},
 		},
-	})
+	)
 	require.NoError(t, err)
 }
 
@@ -542,28 +533,28 @@ func TestVulkanCommandBuffer_CmdBlitImage(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockDriver, buffer := setup(t, ctrl)
-	sourceImage := mocks1_0.EasyMockImage(ctrl)
-	destImage := mocks1_0.EasyMockImage(ctrl)
+	mockLoader, driver, device, buffer := setup(t, ctrl)
+	sourceImage := mocks.NewDummyImage(device)
+	destImage := mocks.NewDummyImage(device)
 
-	mockDriver.EXPECT().VkCmdBlitImage(buffer.Handle(),
+	mockLoader.EXPECT().VkCmdBlitImage(buffer.Handle(),
 		sourceImage.Handle(),
-		driver.VkImageLayout(6), // VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL
+		loader.VkImageLayout(6), // VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL
 		destImage.Handle(),
-		driver.VkImageLayout(2), // VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL
-		driver.Uint32(1),
+		loader.VkImageLayout(2), // VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL
+		loader.Uint32(1),
 		gomock.Not(nil),
-		driver.VkFilter(1), // VK_FILTER_LINEAR
-	).DoAndReturn(func(commandBuffer driver.VkCommandBuffer,
-		sourceImage driver.VkImage,
-		sourceImageLayout driver.VkImageLayout,
-		destImage driver.VkImage,
-		destImageLayout driver.VkImageLayout,
-		regionCount driver.Uint32,
-		pRegions *driver.VkImageBlit,
-		filter driver.VkFilter) {
+		loader.VkFilter(1), // VK_FILTER_LINEAR
+	).DoAndReturn(func(commandBuffer loader.VkCommandBuffer,
+		sourceImage loader.VkImage,
+		sourceImageLayout loader.VkImageLayout,
+		destImage loader.VkImage,
+		destImageLayout loader.VkImageLayout,
+		regionCount loader.Uint32,
+		pRegions *loader.VkImageBlit,
+		filter loader.VkFilter) {
 
-		regionSlice := reflect.ValueOf(([]driver.VkImageBlit)(unsafe.Slice(pRegions, 1)))
+		regionSlice := reflect.ValueOf(([]loader.VkImageBlit)(unsafe.Slice(pRegions, 1)))
 		region := regionSlice.Index(0)
 
 		srcSubresource := region.FieldByName("srcSubresource")
@@ -601,7 +592,7 @@ func TestVulkanCommandBuffer_CmdBlitImage(t *testing.T) {
 		require.Equal(t, int64(61), offset.FieldByName("z").Int())
 	})
 
-	err := buffer.CmdBlitImage(sourceImage,
+	err := driver.CmdBlitImage(buffer, sourceImage,
 		core1_0.ImageLayoutTransferSrcOptimal,
 		destImage,
 		core1_0.ImageLayoutColorAttachmentOptimal,
@@ -654,21 +645,21 @@ func TestVulkanCommandBuffer_CmdPushConstants(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockDriver, buffer := setup(t, ctrl)
-	pipelineLayout := mocks1_0.EasyMockPipelineLayout(ctrl)
+	mockLoader, driver, device, buffer := setup(t, ctrl)
+	pipelineLayout := mocks.NewDummyPipelineLayout(device)
 
-	mockDriver.EXPECT().VkCmdPushConstants(buffer.Handle(),
+	mockLoader.EXPECT().VkCmdPushConstants(buffer.Handle(),
 		pipelineLayout.Handle(),
-		driver.VkShaderStageFlags(8), // VK_SHADER_STAGE_GEOMETRY_BIT
-		driver.Uint32(1),
-		driver.Uint32(4),
+		loader.VkShaderStageFlags(8), // VK_SHADER_STAGE_GEOMETRY_BIT
+		loader.Uint32(1),
+		loader.Uint32(4),
 		gomock.Not(nil),
 	).DoAndReturn(
-		func(commandBuffer driver.VkCommandBuffer,
-			pipelineLayout driver.VkPipelineLayout,
-			shaderStages driver.VkShaderStageFlags,
-			offset driver.Uint32,
-			size driver.Uint32,
+		func(commandBuffer loader.VkCommandBuffer,
+			pipelineLayout loader.VkPipelineLayout,
+			shaderStages loader.VkShaderStageFlags,
+			offset loader.Uint32,
+			size loader.Uint32,
 			valuePtr unsafe.Pointer) {
 
 			bytesPtr := (*byte)(valuePtr)
@@ -685,7 +676,7 @@ func TestVulkanCommandBuffer_CmdPushConstants(t *testing.T) {
 	err := binary.Write(writer, common.ByteOrder, uint32(5))
 	require.NoError(t, err)
 
-	buffer.CmdPushConstants(pipelineLayout, core1_0.StageGeometry, 1, writer.Bytes())
+	driver.CmdPushConstants(buffer, pipelineLayout, core1_0.StageGeometry, 1, writer.Bytes())
 	require.NoError(t, err)
 }
 
@@ -693,16 +684,16 @@ func TestVulkanCommandBuffer_CmdSetViewport(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockDriver, buffer := setup(t, ctrl)
+	mockLoader, driver, _, buffer := setup(t, ctrl)
 
-	mockDriver.EXPECT().VkCmdSetViewport(buffer.Handle(), driver.Uint32(0), driver.Uint32(2), gomock.Not(nil)).DoAndReturn(
+	mockLoader.EXPECT().VkCmdSetViewport(buffer.Handle(), loader.Uint32(0), loader.Uint32(2), gomock.Not(nil)).DoAndReturn(
 		func(
-			commandBuffer driver.VkCommandBuffer,
-			firstViewport driver.Uint32,
-			viewportCount driver.Uint32,
-			pViewports *driver.VkViewport) {
+			commandBuffer loader.VkCommandBuffer,
+			firstViewport loader.Uint32,
+			viewportCount loader.Uint32,
+			pViewports *loader.VkViewport) {
 
-			viewportSlice := ([]driver.VkViewport)(unsafe.Slice(pViewports, 2))
+			viewportSlice := ([]loader.VkViewport)(unsafe.Slice(pViewports, 2))
 			val := reflect.ValueOf(viewportSlice)
 
 			viewport := val.Index(0)
@@ -722,8 +713,8 @@ func TestVulkanCommandBuffer_CmdSetViewport(t *testing.T) {
 			require.InDelta(t, 41, viewport.FieldByName("maxDepth").Float(), 0.0001)
 		})
 
-	buffer.CmdSetViewport([]core1_0.Viewport{
-		{
+	driver.CmdSetViewport(buffer,
+		core1_0.Viewport{
 			X:        3,
 			Y:        5,
 			Width:    7,
@@ -731,7 +722,7 @@ func TestVulkanCommandBuffer_CmdSetViewport(t *testing.T) {
 			MinDepth: 13,
 			MaxDepth: 17,
 		},
-		{
+		core1_0.Viewport{
 			X:        19,
 			Y:        23,
 			Width:    29,
@@ -739,23 +730,23 @@ func TestVulkanCommandBuffer_CmdSetViewport(t *testing.T) {
 			MinDepth: 37,
 			MaxDepth: 41,
 		},
-	})
+	)
 }
 
 func TestVulkanCommandBuffer_CmdSetScissor(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockDriver, buffer := setup(t, ctrl)
+	mockLoader, driver, _, buffer := setup(t, ctrl)
 
-	mockDriver.EXPECT().VkCmdSetScissor(buffer.Handle(), driver.Uint32(0), driver.Uint32(2), gomock.Not(nil)).DoAndReturn(
+	mockLoader.EXPECT().VkCmdSetScissor(buffer.Handle(), loader.Uint32(0), loader.Uint32(2), gomock.Not(nil)).DoAndReturn(
 		func(
-			commandBuffer driver.VkCommandBuffer,
-			firstScissor driver.Uint32,
-			scissorCount driver.Uint32,
-			pScissors *driver.VkRect2D) {
+			commandBuffer loader.VkCommandBuffer,
+			firstScissor loader.Uint32,
+			scissorCount loader.Uint32,
+			pScissors *loader.VkRect2D) {
 
-			scissorSlice := ([]driver.VkRect2D)(unsafe.Slice(pScissors, 2))
+			scissorSlice := ([]loader.VkRect2D)(unsafe.Slice(pScissors, 2))
 			val := reflect.ValueOf(scissorSlice)
 
 			scissor := val.Index(0)
@@ -775,36 +766,36 @@ func TestVulkanCommandBuffer_CmdSetScissor(t *testing.T) {
 			require.Equal(t, uint64(23), extent.FieldByName("height").Uint())
 		})
 
-	buffer.CmdSetScissor([]core1_0.Rect2D{
-		{
+	driver.CmdSetScissor(buffer,
+		core1_0.Rect2D{
 			Offset: core1_0.Offset2D{3, 5},
 			Extent: core1_0.Extent2D{7, 11},
 		},
-		{
+		core1_0.Rect2D{
 			Offset: core1_0.Offset2D{13, 17},
 			Extent: core1_0.Extent2D{19, 23},
 		},
-	})
+	)
 }
 
 func TestVulkanCommandBuffer_CmdCopyImage(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockDriver, buffer := setup(t, ctrl)
-	srcImage := mocks1_0.EasyMockImage(ctrl)
-	dstImage := mocks1_0.EasyMockImage(ctrl)
+	mockLoader, driver, device, buffer := setup(t, ctrl)
+	srcImage := mocks.NewDummyImage(device)
+	dstImage := mocks.NewDummyImage(device)
 
-	mockDriver.EXPECT().VkCmdCopyImage(buffer.Handle(),
+	mockLoader.EXPECT().VkCmdCopyImage(buffer.Handle(),
 		srcImage.Handle(),
-		driver.VkImageLayout(7), // VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL
+		loader.VkImageLayout(7), // VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL
 		dstImage.Handle(),
-		driver.VkImageLayout(5), // VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL
-		driver.Uint32(2),
+		loader.VkImageLayout(5), // VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL
+		loader.Uint32(2),
 		gomock.Not(nil),
 	).DoAndReturn(
-		func(commandBuffer driver.VkCommandBuffer, srcImage driver.VkImage, srcImageLayout driver.VkImageLayout, dstImage driver.VkImage, dstImageLayout driver.VkImageLayout, regionCount driver.Uint32, pRegions *driver.VkImageCopy) {
-			regionSlice := ([]driver.VkImageCopy)(unsafe.Slice(pRegions, 2))
+		func(commandBuffer loader.VkCommandBuffer, srcImage loader.VkImage, srcImageLayout loader.VkImageLayout, dstImage loader.VkImage, dstImageLayout loader.VkImageLayout, regionCount loader.Uint32, pRegions *loader.VkImageCopy) {
+			regionSlice := ([]loader.VkImageCopy)(unsafe.Slice(pRegions, 2))
 			val := reflect.ValueOf(regionSlice)
 
 			region := val.Index(0)
@@ -866,8 +857,8 @@ func TestVulkanCommandBuffer_CmdCopyImage(t *testing.T) {
 			require.Equal(t, uint64(113), extent.FieldByName("depth").Uint())
 		})
 
-	err := buffer.CmdCopyImage(srcImage, core1_0.ImageLayoutTransferDstOptimal, dstImage, core1_0.ImageLayoutShaderReadOnlyOptimal, []core1_0.ImageCopy{
-		{
+	err := driver.CmdCopyImage(buffer, srcImage, core1_0.ImageLayoutTransferDstOptimal, dstImage, core1_0.ImageLayoutShaderReadOnlyOptimal,
+		core1_0.ImageCopy{
 			SrcSubresource: core1_0.ImageSubresourceLayers{
 				AspectMask:     core1_0.ImageAspectMetadata,
 				MipLevel:       1,
@@ -884,7 +875,7 @@ func TestVulkanCommandBuffer_CmdCopyImage(t *testing.T) {
 			DstOffset: core1_0.Offset3D{29, 31, 37},
 			Extent:    core1_0.Extent3D{41, 43, 47},
 		},
-		{
+		core1_0.ImageCopy{
 			SrcSubresource: core1_0.ImageSubresourceLayers{
 				AspectMask:     core1_0.ImageAspectColor,
 				MipLevel:       53,
@@ -901,7 +892,7 @@ func TestVulkanCommandBuffer_CmdCopyImage(t *testing.T) {
 			DstOffset: core1_0.Offset3D{97, 101, 103},
 			Extent:    core1_0.Extent3D{107, 109, 113},
 		},
-	})
+	)
 	require.NoError(t, err)
 }
 
@@ -909,42 +900,42 @@ func TestVulkanCommandBuffer_CmdNextSubpass(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockDriver, buffer := setup(t, ctrl)
+	mockLoader, driver, _, buffer := setup(t, ctrl)
 
-	mockDriver.EXPECT().VkCmdNextSubpass(buffer.Handle(),
-		driver.VkSubpassContents(1), /* VK_SUBPASS_CONTENTS_SECONDARY_COMMAND_BUFFERS */
+	mockLoader.EXPECT().VkCmdNextSubpass(buffer.Handle(),
+		loader.VkSubpassContents(1), /* VK_SUBPASS_CONTENTS_SECONDARY_COMMAND_BUFFERS */
 	)
 
-	buffer.CmdNextSubpass(core1_0.SubpassContentsSecondaryCommandBuffers)
+	driver.CmdNextSubpass(buffer, core1_0.SubpassContentsSecondaryCommandBuffers)
 }
 
 func TestVulkanCommandBuffer_CmdWaitEvents(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockDriver, buffer := setup(t, ctrl)
-	mockBuffer := mocks1_0.EasyMockBuffer(ctrl)
-	mockImage := mocks1_0.EasyMockImage(ctrl)
-	event1 := mocks1_0.EasyMockEvent(ctrl)
-	event2 := mocks1_0.EasyMockEvent(ctrl)
+	mockLoader, driver, device, buffer := setup(t, ctrl)
+	mockBuffer := mocks.NewDummyBuffer(device)
+	mockImage := mocks.NewDummyImage(device)
+	event1 := mocks.NewDummyEvent(device)
+	event2 := mocks.NewDummyEvent(device)
 
-	mockDriver.EXPECT().VkCmdWaitEvents(buffer.Handle(),
-		driver.Uint32(2),
+	mockLoader.EXPECT().VkCmdWaitEvents(buffer.Handle(),
+		loader.Uint32(2),
 		gomock.Not(nil),
-		driver.VkPipelineStageFlags(0x00010000), // VK_PIPELINE_STAGE_ALL_COMMANDS_BIT
-		driver.VkPipelineStageFlags(0x00000010), // VK_PIPELINE_STAGE_TESSELLATION_CONTROL_SHADER_BIT
-		driver.Uint32(2),
+		loader.VkPipelineStageFlags(0x00010000), // VK_PIPELINE_STAGE_ALL_COMMANDS_BIT
+		loader.VkPipelineStageFlags(0x00000010), // VK_PIPELINE_STAGE_TESSELLATION_CONTROL_SHADER_BIT
+		loader.Uint32(2),
 		gomock.Not(nil),
-		driver.Uint32(1),
+		loader.Uint32(1),
 		gomock.Not(nil),
-		driver.Uint32(1),
+		loader.Uint32(1),
 		gomock.Not(nil),
 	).DoAndReturn(
-		func(commandBuffer driver.VkCommandBuffer, eventCount driver.Uint32, pEvents *driver.VkEvent, srcStage, dstStage driver.VkPipelineStageFlags, memoryBarrierCount driver.Uint32, pMemoryBarriers *driver.VkMemoryBarrier, bufferMemoryBarrierCount driver.Uint32, pBufferMemoryBarriers *driver.VkBufferMemoryBarrier, imageMemoryBarrierCount driver.Uint32, pImageMemoryBarriers *driver.VkImageMemoryBarrier) {
-			eventSlice := ([]driver.VkEvent)(unsafe.Slice(pEvents, 2))
-			memoryBarrierSlice := reflect.ValueOf(([]driver.VkMemoryBarrier)(unsafe.Slice(pMemoryBarriers, 2)))
-			bufferMemoryBarrierSlice := reflect.ValueOf(([]driver.VkBufferMemoryBarrier)(unsafe.Slice(pBufferMemoryBarriers, 1)))
-			imageMemoryBarrierSlice := reflect.ValueOf(([]driver.VkImageMemoryBarrier)(unsafe.Slice(pImageMemoryBarriers, 1)))
+		func(commandBuffer loader.VkCommandBuffer, eventCount loader.Uint32, pEvents *loader.VkEvent, srcStage, dstStage loader.VkPipelineStageFlags, memoryBarrierCount loader.Uint32, pMemoryBarriers *loader.VkMemoryBarrier, bufferMemoryBarrierCount loader.Uint32, pBufferMemoryBarriers *loader.VkBufferMemoryBarrier, imageMemoryBarrierCount loader.Uint32, pImageMemoryBarriers *loader.VkImageMemoryBarrier) {
+			eventSlice := ([]loader.VkEvent)(unsafe.Slice(pEvents, 2))
+			memoryBarrierSlice := reflect.ValueOf(([]loader.VkMemoryBarrier)(unsafe.Slice(pMemoryBarriers, 2)))
+			bufferMemoryBarrierSlice := reflect.ValueOf(([]loader.VkBufferMemoryBarrier)(unsafe.Slice(pBufferMemoryBarriers, 1)))
+			imageMemoryBarrierSlice := reflect.ValueOf(([]loader.VkImageMemoryBarrier)(unsafe.Slice(pImageMemoryBarriers, 1)))
 
 			require.Equal(t, event1.Handle(), eventSlice[0])
 			require.Equal(t, event2.Handle(), eventSlice[1])
@@ -969,7 +960,7 @@ func TestVulkanCommandBuffer_CmdWaitEvents(t *testing.T) {
 			require.Equal(t, uint64(1), bufferMemoryBarrier.FieldByName("srcQueueFamilyIndex").Uint())
 			require.Equal(t, uint64(3), bufferMemoryBarrier.FieldByName("dstQueueFamilyIndex").Uint())
 
-			actualBuffer := (driver.VkBuffer)(unsafe.Pointer(bufferMemoryBarrier.FieldByName("buffer").Elem().UnsafeAddr()))
+			actualBuffer := (loader.VkBuffer)(unsafe.Pointer(bufferMemoryBarrier.FieldByName("buffer").Elem().UnsafeAddr()))
 			require.Equal(t, mockBuffer.Handle(), actualBuffer)
 
 			require.Equal(t, uint64(5), bufferMemoryBarrier.FieldByName("offset").Uint())
@@ -985,7 +976,7 @@ func TestVulkanCommandBuffer_CmdWaitEvents(t *testing.T) {
 			require.Equal(t, uint64(11), imageMemoryBarrier.FieldByName("srcQueueFamilyIndex").Uint())
 			require.Equal(t, uint64(13), imageMemoryBarrier.FieldByName("dstQueueFamilyIndex").Uint())
 
-			actualImage := (driver.VkImage)(unsafe.Pointer(imageMemoryBarrier.FieldByName("image").Elem().UnsafeAddr()))
+			actualImage := (loader.VkImage)(unsafe.Pointer(imageMemoryBarrier.FieldByName("image").Elem().UnsafeAddr()))
 			require.Equal(t, mockImage.Handle(), actualImage)
 
 			subresource := imageMemoryBarrier.FieldByName("subresourceRange")
@@ -996,8 +987,9 @@ func TestVulkanCommandBuffer_CmdWaitEvents(t *testing.T) {
 			require.Equal(t, uint64(29), subresource.FieldByName("layerCount").Uint())
 		})
 
-	err := buffer.CmdWaitEvents(
-		[]core1_0.Event{event1, event2},
+	err := driver.CmdWaitEvents(
+		buffer,
+		[]types.Event{event1, event2},
 		core1_0.PipelineStageAllCommands,
 		core1_0.PipelineStageTessellationControlShader,
 		[]core1_0.MemoryBarrier{
@@ -1046,36 +1038,36 @@ func TestVulkanCommandBuffer_CmdSetEvent(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockDriver, buffer := setup(t, ctrl)
-	event := mocks1_0.EasyMockEvent(ctrl)
+	mockLoader, driver, device, buffer := setup(t, ctrl)
+	event := mocks.NewDummyEvent(device)
 
-	mockDriver.EXPECT().VkCmdSetEvent(buffer.Handle(), event.Handle(), driver.VkPipelineStageFlags(0x80) /*VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT*/)
+	mockLoader.EXPECT().VkCmdSetEvent(buffer.Handle(), event.Handle(), loader.VkPipelineStageFlags(0x80) /*VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT*/)
 
-	buffer.CmdSetEvent(event, core1_0.PipelineStageFragmentShader)
+	driver.CmdSetEvent(buffer, event, core1_0.PipelineStageFragmentShader)
 }
 
 func TestVulkanCommandBuffer_CmdClearColorImage(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockDriver, buffer := setup(t, ctrl)
-	image := mocks1_0.EasyMockImage(ctrl)
+	mockLoader, driver, device, buffer := setup(t, ctrl)
+	image := mocks.NewDummyImage(device)
 
-	mockDriver.EXPECT().VkCmdClearColorImage(buffer.Handle(),
+	mockLoader.EXPECT().VkCmdClearColorImage(buffer.Handle(),
 		image.Handle(),
-		driver.VkImageLayout(3), // VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL
+		loader.VkImageLayout(3), // VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL
 		gomock.Not(nil),
-		driver.Uint32(2),
+		loader.Uint32(2),
 		gomock.Not(nil),
 	).DoAndReturn(
-		func(buffer driver.VkCommandBuffer, image driver.VkImage, imageLayout driver.VkImageLayout, pColor *driver.VkClearColorValue, rangeCount driver.Uint32, pRanges *driver.VkImageSubresourceRange) {
+		func(buffer loader.VkCommandBuffer, image loader.VkImage, imageLayout loader.VkImageLayout, pColor *loader.VkClearColorValue, rangeCount loader.Uint32, pRanges *loader.VkImageSubresourceRange) {
 			colorFloat := unsafe.Slice((*float32)(unsafe.Pointer(pColor)), 4)
 			require.InDelta(t, 0.2, colorFloat[0], 0.0001)
 			require.InDelta(t, 0.3, colorFloat[1], 0.0001)
 			require.InDelta(t, 0.4, colorFloat[2], 0.0001)
 			require.InDelta(t, 0.5, colorFloat[3], 0.0001)
 
-			rangeSlice := reflect.ValueOf(([]driver.VkImageSubresourceRange)(unsafe.Slice(pRanges, 2)))
+			rangeSlice := reflect.ValueOf(([]loader.VkImageSubresourceRange)(unsafe.Slice(pRanges, 2)))
 			r := rangeSlice.Index(0)
 
 			require.Equal(t, uint64(8), r.FieldByName("aspectMask").Uint()) // VK_IMAGE_ASPECT_METADATA_BIT
@@ -1092,33 +1084,33 @@ func TestVulkanCommandBuffer_CmdClearColorImage(t *testing.T) {
 			require.Equal(t, uint64(19), r.FieldByName("layerCount").Uint())
 		})
 
-	buffer.CmdClearColorImage(image, core1_0.ImageLayoutDepthStencilAttachmentOptimal, &core1_0.ClearValueFloat{0.2, 0.3, 0.4, 0.5}, []core1_0.ImageSubresourceRange{
-		{
+	driver.CmdClearColorImage(buffer, image, core1_0.ImageLayoutDepthStencilAttachmentOptimal, &core1_0.ClearValueFloat{0.2, 0.3, 0.4, 0.5},
+		core1_0.ImageSubresourceRange{
 			AspectMask:     core1_0.ImageAspectMetadata,
 			BaseMipLevel:   1,
 			LevelCount:     3,
 			BaseArrayLayer: 5,
 			LayerCount:     7,
 		},
-		{
+		core1_0.ImageSubresourceRange{
 			AspectMask:     core1_0.ImageAspectDepth,
 			BaseMipLevel:   11,
 			LevelCount:     13,
 			BaseArrayLayer: 17,
 			LayerCount:     19,
 		},
-	})
+	)
 }
 
 func TestVulkanCommandBuffer_Reset(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockDriver, buffer := setup(t, ctrl)
+	mockLoader, driver, _, buffer := setup(t, ctrl)
 
-	mockDriver.EXPECT().VkResetCommandBuffer(buffer.Handle(), driver.VkCommandBufferResetFlags(1)).Return(core1_0.VKSuccess, nil)
+	mockLoader.EXPECT().VkResetCommandBuffer(buffer.Handle(), loader.VkCommandBufferResetFlags(1)).Return(core1_0.VKSuccess, nil)
 
-	_, err := buffer.Reset(core1_0.CommandBufferResetReleaseResources)
+	_, err := driver.ResetCommandBuffer(buffer, core1_0.CommandBufferResetReleaseResources)
 	require.NoError(t, err)
 }
 
@@ -1126,97 +1118,90 @@ func TestVulkanCommandBuffer_CmdResetQueryPool(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockDriver, buffer := setup(t, ctrl)
-	queryPool := mocks1_0.EasyMockQueryPool(ctrl)
+	mockLoader, driver, device, buffer := setup(t, ctrl)
+	queryPool := mocks.NewDummyQueryPool(device)
 
-	mockDriver.EXPECT().VkCmdResetQueryPool(buffer.Handle(), queryPool.Handle(), driver.Uint32(1), driver.Uint32(3))
+	mockLoader.EXPECT().VkCmdResetQueryPool(buffer.Handle(), queryPool.Handle(), loader.Uint32(1), loader.Uint32(3))
 
-	buffer.CmdResetQueryPool(queryPool, 1, 3)
+	driver.CmdResetQueryPool(buffer, queryPool, 1, 3)
 }
 
 func TestVulkanCommandBuffer_CmdBeginQuery(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockDriver, buffer := setup(t, ctrl)
-	queryPool := mocks1_0.EasyMockQueryPool(ctrl)
+	mockLoader, driver, device, buffer := setup(t, ctrl)
+	queryPool := mocks.NewDummyQueryPool(device)
 
-	mockDriver.EXPECT().VkCmdBeginQuery(
+	mockLoader.EXPECT().VkCmdBeginQuery(
 		buffer.Handle(),
 		queryPool.Handle(),
-		driver.Uint32(5),
-		driver.VkQueryControlFlags(1), // VK_QUERY_CONTROL_PRECISE_BIT
+		loader.Uint32(5),
+		loader.VkQueryControlFlags(1), // VK_QUERY_CONTROL_PRECISE_BIT
 	)
 
-	buffer.CmdBeginQuery(queryPool, 5, core1_0.QueryControlPrecise)
+	driver.CmdBeginQuery(buffer, queryPool, 5, core1_0.QueryControlPrecise)
 }
 
 func TestVulkanCommandBuffer_CmdEndQuery(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockDriver, buffer := setup(t, ctrl)
-	queryPool := mocks1_0.EasyMockQueryPool(ctrl)
+	mockLoader, driver, device, buffer := setup(t, ctrl)
+	queryPool := mocks.NewDummyQueryPool(device)
 
-	mockDriver.EXPECT().VkCmdEndQuery(
+	mockLoader.EXPECT().VkCmdEndQuery(
 		buffer.Handle(),
 		queryPool.Handle(),
-		driver.Uint32(5),
+		loader.Uint32(5),
 	)
 
-	buffer.CmdEndQuery(queryPool, 5)
+	driver.CmdEndQuery(buffer, queryPool, 5)
 }
 
 func TestVulkanCommandBuffer_CmdCopyQueryPoolResults(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockDriver, buffer := setup(t, ctrl)
-	queryPool := mocks1_0.EasyMockQueryPool(ctrl)
-	dstBuffer := mocks1_0.EasyMockBuffer(ctrl)
+	mockLoader, driver, device, buffer := setup(t, ctrl)
+	queryPool := mocks.NewDummyQueryPool(device)
+	dstBuffer := mocks.NewDummyBuffer(device)
 
-	mockDriver.EXPECT().VkCmdCopyQueryPoolResults(
+	mockLoader.EXPECT().VkCmdCopyQueryPoolResults(
 		buffer.Handle(),
 		queryPool.Handle(),
-		driver.Uint32(1),
-		driver.Uint32(3),
+		loader.Uint32(1),
+		loader.Uint32(3),
 		dstBuffer.Handle(),
-		driver.VkDeviceSize(5),
-		driver.VkDeviceSize(7),
-		driver.VkQueryResultFlags(8), // VK_QUERY_RESULT_PARTIAL_BIT
+		loader.VkDeviceSize(5),
+		loader.VkDeviceSize(7),
+		loader.VkQueryResultFlags(8), // VK_QUERY_RESULT_PARTIAL_BIT
 	)
 
-	buffer.CmdCopyQueryPoolResults(queryPool, 1, 3, dstBuffer, 5, 7, core1_0.QueryResultPartial)
+	driver.CmdCopyQueryPoolResults(buffer, queryPool, 1, 3, dstBuffer, 5, 7, core1_0.QueryResultPartial)
 }
 
 func TestVulkanCommandBuffer_CmdExecuteCommands(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockDriver, buffer := setup(t, ctrl)
+	mockLoader, driver, device, buffer := setup(t, ctrl)
+	pool := mocks.NewDummyCommandPool(device)
 
-	cmd1 := mocks1_0.EasyMockCommandBuffer(ctrl)
-	cmd1.EXPECT().DrawsRecorded().Return(1)
-	cmd1.EXPECT().DispatchesRecorded().Return(3)
+	cmd1 := mocks.NewDummyCommandBuffer(pool, device)
+	cmd2 := mocks.NewDummyCommandBuffer(pool, device)
+	cmd3 := mocks.NewDummyCommandBuffer(pool, device)
 
-	cmd2 := mocks1_0.EasyMockCommandBuffer(ctrl)
-	cmd2.EXPECT().DrawsRecorded().Return(5)
-	cmd2.EXPECT().DispatchesRecorded().Return(7)
-
-	cmd3 := mocks1_0.EasyMockCommandBuffer(ctrl)
-	cmd3.EXPECT().DrawsRecorded().Return(11)
-	cmd3.EXPECT().DispatchesRecorded().Return(13)
-
-	commandBuffers := []core1_0.CommandBuffer{
+	commandBuffers := []types.CommandBuffer{
 		cmd1, cmd2, cmd3,
 	}
 
-	mockDriver.EXPECT().VkCmdExecuteCommands(
+	mockLoader.EXPECT().VkCmdExecuteCommands(
 		buffer.Handle(),
-		driver.Uint32(3),
+		loader.Uint32(3),
 		gomock.Not(nil)).DoAndReturn(
-		func(commandBuffer driver.VkCommandBuffer, secondaryCount driver.Uint32, pSecondaryBuffers *driver.VkCommandBuffer) (common.VkResult, error) {
-			secondaryBufferSlice := ([]driver.VkCommandBuffer)(unsafe.Slice(pSecondaryBuffers, 3))
+		func(commandBuffer loader.VkCommandBuffer, secondaryCount loader.Uint32, pSecondaryBuffers *loader.VkCommandBuffer) (common.VkResult, error) {
+			secondaryBufferSlice := ([]loader.VkCommandBuffer)(unsafe.Slice(pSecondaryBuffers, 3))
 			require.Equal(t, commandBuffers[0].Handle(), secondaryBufferSlice[0])
 			require.Equal(t, commandBuffers[1].Handle(), secondaryBufferSlice[1])
 			require.Equal(t, commandBuffers[2].Handle(), secondaryBufferSlice[2])
@@ -1224,27 +1209,25 @@ func TestVulkanCommandBuffer_CmdExecuteCommands(t *testing.T) {
 			return core1_0.VKSuccess, nil
 		})
 
-	buffer.CmdExecuteCommands(commandBuffers)
-	require.Equal(t, 17, buffer.DrawsRecorded())
-	require.Equal(t, 23, buffer.DispatchesRecorded())
+	driver.CmdExecuteCommands(buffer, commandBuffers...)
 }
 
 func TestVulkanCommandBuffer_CmdClearAttachments(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockDriver, buffer := setup(t, ctrl)
+	mockLoader, driver, _, buffer := setup(t, ctrl)
 
-	mockDriver.EXPECT().VkCmdClearAttachments(
+	mockLoader.EXPECT().VkCmdClearAttachments(
 		buffer.Handle(),
-		driver.Uint32(1),
+		loader.Uint32(1),
 		gomock.Not(nil),
-		driver.Uint32(2),
+		loader.Uint32(2),
 		gomock.Not(nil),
 	).DoAndReturn(
-		func(commandBuffer driver.VkCommandBuffer, attachmentCount driver.Uint32, pAttachments *driver.VkClearAttachment, rectCount driver.Uint32, pRects *driver.VkClearRect) {
-			attachmentSlice := ([]driver.VkClearAttachment)(unsafe.Slice(pAttachments, 1))
-			rectSlice := ([]driver.VkClearRect)(unsafe.Slice(pRects, 2))
+		func(commandBuffer loader.VkCommandBuffer, attachmentCount loader.Uint32, pAttachments *loader.VkClearAttachment, rectCount loader.Uint32, pRects *loader.VkClearRect) {
+			attachmentSlice := ([]loader.VkClearAttachment)(unsafe.Slice(pAttachments, 1))
+			rectSlice := ([]loader.VkClearRect)(unsafe.Slice(pRects, 2))
 
 			val := reflect.ValueOf(attachmentSlice).Index(0)
 			require.Equal(t, uint64(1), val.FieldByName("aspectMask").Uint()) // VK_IMAGE_ASPECT_COLOR_BIT
@@ -1273,7 +1256,7 @@ func TestVulkanCommandBuffer_CmdClearAttachments(t *testing.T) {
 			require.Equal(t, uint64(61), val.FieldByName("rect").FieldByName("extent").FieldByName("height").Uint())
 		})
 
-	buffer.CmdClearAttachments([]core1_0.ClearAttachment{
+	err := driver.CmdClearAttachments(buffer, []core1_0.ClearAttachment{
 		{
 			AspectMask:      core1_0.ImageAspectColor,
 			ColorAttachment: 3,
@@ -1297,27 +1280,28 @@ func TestVulkanCommandBuffer_CmdClearAttachments(t *testing.T) {
 			},
 		},
 	})
+	require.NoError(t, err)
 }
 
 func TestVulkanCommandBuffer_CmdClearDepthStencilImage(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockDriver, buffer := setup(t, ctrl)
-	image := mocks1_0.EasyMockImage(ctrl)
+	mockLoader, driver, device, buffer := setup(t, ctrl)
+	image := mocks.NewDummyImage(device)
 
-	mockDriver.EXPECT().VkCmdClearDepthStencilImage(buffer.Handle(), image.Handle(),
-		driver.VkImageLayout(5), // VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL
+	mockLoader.EXPECT().VkCmdClearDepthStencilImage(buffer.Handle(), image.Handle(),
+		loader.VkImageLayout(5), // VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL
 		gomock.Not(nil),
-		driver.Uint32(2),
+		loader.Uint32(2),
 		gomock.Not(nil),
-	).DoAndReturn(func(commandBuffer driver.VkCommandBuffer, image driver.VkImage, imageLayout driver.VkImageLayout, pDepthStencil *driver.VkClearDepthStencilValue, rangeCount driver.Uint32, pRanges *driver.VkImageSubresourceRange) {
+	).DoAndReturn(func(commandBuffer loader.VkCommandBuffer, image loader.VkImage, imageLayout loader.VkImageLayout, pDepthStencil *loader.VkClearDepthStencilValue, rangeCount loader.Uint32, pRanges *loader.VkImageSubresourceRange) {
 		depthStencil := reflect.ValueOf(pDepthStencil).Elem()
 
 		require.InDelta(t, 0.5, depthStencil.FieldByName("depth").Float(), 0.00001)
 		require.Equal(t, uint64(3), depthStencil.FieldByName("stencil").Uint())
 
-		rangeSlice := reflect.ValueOf(([]driver.VkImageSubresourceRange)(unsafe.Slice(pRanges, 2)))
+		rangeSlice := reflect.ValueOf(([]loader.VkImageSubresourceRange)(unsafe.Slice(pRanges, 2)))
 
 		val := rangeSlice.Index(0)
 		require.Equal(t, uint64(1), val.FieldByName("aspectMask").Uint()) // VK_IMAGE_ASPECT_COLOR_BIT
@@ -1334,43 +1318,44 @@ func TestVulkanCommandBuffer_CmdClearDepthStencilImage(t *testing.T) {
 		require.Equal(t, uint64(29), val.FieldByName("layerCount").Uint())
 	})
 
-	buffer.CmdClearDepthStencilImage(image, core1_0.ImageLayoutShaderReadOnlyOptimal, &core1_0.ClearValueDepthStencil{
-		Depth:   0.5,
-		Stencil: 3,
-	}, []core1_0.ImageSubresourceRange{
-		{
+	driver.CmdClearDepthStencilImage(buffer, image, core1_0.ImageLayoutShaderReadOnlyOptimal,
+		&core1_0.ClearValueDepthStencil{
+			Depth:   0.5,
+			Stencil: 3,
+		},
+		core1_0.ImageSubresourceRange{
 			AspectMask:     core1_0.ImageAspectColor,
 			BaseMipLevel:   5,
 			LevelCount:     7,
 			BaseArrayLayer: 11,
 			LayerCount:     13,
 		},
-		{
+		core1_0.ImageSubresourceRange{
 			AspectMask:     core1_0.ImageAspectDepth,
 			BaseMipLevel:   17,
 			LevelCount:     19,
 			BaseArrayLayer: 23,
 			LayerCount:     29,
 		},
-	})
+	)
 }
 
 func TestVulkanCommandBuffer_CmdCopyImageToBuffer(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockDriver, buffer := setup(t, ctrl)
-	image := mocks1_0.EasyMockImage(ctrl)
-	dstBuffer := mocks1_0.EasyMockBuffer(ctrl)
+	mockLoader, driver, device, buffer := setup(t, ctrl)
+	image := mocks.NewDummyImage(device)
+	dstBuffer := mocks.NewDummyBuffer(device)
 
-	mockDriver.EXPECT().VkCmdCopyImageToBuffer(buffer.Handle(), image.Handle(),
-		driver.VkImageLayout(1), // VK_IMAGE_LAYOUT_GENERAL
+	mockLoader.EXPECT().VkCmdCopyImageToBuffer(buffer.Handle(), image.Handle(),
+		loader.VkImageLayout(1), // VK_IMAGE_LAYOUT_GENERAL
 		dstBuffer.Handle(),
-		driver.Uint32(1),
+		loader.Uint32(1),
 		gomock.Not(nil),
 	).DoAndReturn(
-		func(commandBuffer driver.VkCommandBuffer, srcImage driver.VkImage, srcImageLayout driver.VkImageLayout, dstBuffer driver.VkBuffer, regionCount driver.Uint32, pRegions *driver.VkBufferImageCopy) {
-			regionSlice := ([]driver.VkBufferImageCopy)(unsafe.Slice(pRegions, 1))
+		func(commandBuffer loader.VkCommandBuffer, srcImage loader.VkImage, srcImageLayout loader.VkImageLayout, dstBuffer loader.VkBuffer, regionCount loader.Uint32, pRegions *loader.VkBufferImageCopy) {
+			regionSlice := ([]loader.VkBufferImageCopy)(unsafe.Slice(pRegions, 1))
 			val := reflect.ValueOf(regionSlice)
 			val = val.Index(0)
 
@@ -1389,8 +1374,8 @@ func TestVulkanCommandBuffer_CmdCopyImageToBuffer(t *testing.T) {
 			require.Equal(t, uint64(37), val.FieldByName("imageExtent").FieldByName("depth").Uint())
 		})
 
-	err := buffer.CmdCopyImageToBuffer(image, core1_0.ImageLayoutGeneral, dstBuffer, []core1_0.BufferImageCopy{
-		{
+	err := driver.CmdCopyImageToBuffer(buffer, image, core1_0.ImageLayoutGeneral, dstBuffer,
+		core1_0.BufferImageCopy{
 			BufferOffset:      1,
 			BufferRowLength:   3,
 			BufferImageHeight: 5,
@@ -1403,7 +1388,7 @@ func TestVulkanCommandBuffer_CmdCopyImageToBuffer(t *testing.T) {
 			ImageOffset: core1_0.Offset3D{17, 19, 23},
 			ImageExtent: core1_0.Extent3D{29, 31, 37},
 		},
-	})
+	)
 	require.NoError(t, err)
 }
 
@@ -1411,95 +1396,95 @@ func TestVulkanCommandBuffer_CmdDispatch(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockDriver, buffer := setup(t, ctrl)
+	mockLoader, driver, _, buffer := setup(t, ctrl)
 
-	mockDriver.EXPECT().VkCmdDispatch(buffer.Handle(), driver.Uint32(1), driver.Uint32(3), driver.Uint32(5))
+	mockLoader.EXPECT().VkCmdDispatch(buffer.Handle(), loader.Uint32(1), loader.Uint32(3), loader.Uint32(5))
 
-	buffer.CmdDispatch(1, 3, 5)
+	driver.CmdDispatch(buffer, 1, 3, 5)
 }
 
 func TestVulkanCommandBuffer_CmdDispatchIndirect(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockDriver, buffer := setup(t, ctrl)
-	indirectBuffer := mocks1_0.EasyMockBuffer(ctrl)
+	mockLoader, driver, device, buffer := setup(t, ctrl)
+	indirectBuffer := mocks.NewDummyBuffer(device)
 
-	mockDriver.EXPECT().VkCmdDispatchIndirect(buffer.Handle(), indirectBuffer.Handle(), driver.VkDeviceSize(3))
+	mockLoader.EXPECT().VkCmdDispatchIndirect(buffer.Handle(), indirectBuffer.Handle(), loader.VkDeviceSize(3))
 
-	buffer.CmdDispatchIndirect(indirectBuffer, 3)
+	driver.CmdDispatchIndirect(buffer, indirectBuffer, 3)
 }
 
 func TestVulkanCommandBuffer_CmdDrawIndexedIndirect(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockDriver, buffer := setup(t, ctrl)
-	indirectBuffer := mocks1_0.EasyMockBuffer(ctrl)
+	mockLoader, driver, device, buffer := setup(t, ctrl)
+	indirectBuffer := mocks.NewDummyBuffer(device)
 
-	mockDriver.EXPECT().VkCmdDrawIndexedIndirect(buffer.Handle(), indirectBuffer.Handle(), driver.VkDeviceSize(3), driver.Uint32(5), driver.Uint32(7))
+	mockLoader.EXPECT().VkCmdDrawIndexedIndirect(buffer.Handle(), indirectBuffer.Handle(), loader.VkDeviceSize(3), loader.Uint32(5), loader.Uint32(7))
 
-	buffer.CmdDrawIndexedIndirect(indirectBuffer, 3, 5, 7)
+	driver.CmdDrawIndexedIndirect(buffer, indirectBuffer, 3, 5, 7)
 }
 
 func TestVulkanCommandBuffer_CmdDrawIndirect(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockDriver, buffer := setup(t, ctrl)
-	indirectBuffer := mocks1_0.EasyMockBuffer(ctrl)
+	mockLoader, driver, device, buffer := setup(t, ctrl)
+	indirectBuffer := mocks.NewDummyBuffer(device)
 
-	mockDriver.EXPECT().VkCmdDrawIndirect(buffer.Handle(), indirectBuffer.Handle(), driver.VkDeviceSize(3), driver.Uint32(5), driver.Uint32(7))
+	mockLoader.EXPECT().VkCmdDrawIndirect(buffer.Handle(), indirectBuffer.Handle(), loader.VkDeviceSize(3), loader.Uint32(5), loader.Uint32(7))
 
-	buffer.CmdDrawIndirect(indirectBuffer, 3, 5, 7)
+	driver.CmdDrawIndirect(buffer, indirectBuffer, 3, 5, 7)
 }
 
 func TestVulkanCommandBuffer_CmdFillBuffer(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockDriver, buffer := setup(t, ctrl)
-	fillBuffer := mocks1_0.EasyMockBuffer(ctrl)
+	mockLoader, driver, device, buffer := setup(t, ctrl)
+	fillBuffer := mocks.NewDummyBuffer(device)
 
-	mockDriver.EXPECT().VkCmdFillBuffer(buffer.Handle(), fillBuffer.Handle(), driver.VkDeviceSize(1), driver.VkDeviceSize(3), driver.Uint32(5))
+	mockLoader.EXPECT().VkCmdFillBuffer(buffer.Handle(), fillBuffer.Handle(), loader.VkDeviceSize(1), loader.VkDeviceSize(3), loader.Uint32(5))
 
-	buffer.CmdFillBuffer(fillBuffer, 1, 3, 5)
+	driver.CmdFillBuffer(buffer, fillBuffer, 1, 3, 5)
 }
 
 func TestVulkanCommandBuffer_CmdResetEvent(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockDriver, buffer := setup(t, ctrl)
-	event := mocks1_0.EasyMockEvent(ctrl)
+	mockLoader, driver, device, buffer := setup(t, ctrl)
+	event := mocks.NewDummyEvent(device)
 
-	mockDriver.EXPECT().VkCmdResetEvent(
+	mockLoader.EXPECT().VkCmdResetEvent(
 		buffer.Handle(), event.Handle(),
-		driver.VkPipelineStageFlags(0x00004000), // VK_PIPELINE_STAGE_HOST_BIT
+		loader.VkPipelineStageFlags(0x00004000), // VK_PIPELINE_STAGE_HOST_BIT
 	)
 
-	buffer.CmdResetEvent(event, core1_0.PipelineStageHost)
+	driver.CmdResetEvent(buffer, event, core1_0.PipelineStageHost)
 }
 
 func TestVulkanCommandBuffer_CmdResolveImage(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockDriver, buffer := setup(t, ctrl)
-	srcImage := mocks1_0.EasyMockImage(ctrl)
-	dstImage := mocks1_0.EasyMockImage(ctrl)
+	mockLoader, driver, device, buffer := setup(t, ctrl)
+	srcImage := mocks.NewDummyImage(device)
+	dstImage := mocks.NewDummyImage(device)
 
-	mockDriver.EXPECT().VkCmdResolveImage(
+	mockLoader.EXPECT().VkCmdResolveImage(
 		buffer.Handle(),
 		srcImage.Handle(),
-		driver.VkImageLayout(5), // VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL
+		loader.VkImageLayout(5), // VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL
 		dstImage.Handle(),
-		driver.VkImageLayout(2), // VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL
-		driver.Uint32(2),
+		loader.VkImageLayout(2), // VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL
+		loader.Uint32(2),
 		gomock.Not(nil),
 	).DoAndReturn(
-		func(commandBuffer driver.VkCommandBuffer, srcImage driver.VkImage, srcImageLayout driver.VkImageLayout, dstImage driver.VkImage, dstImageLayout driver.VkImageLayout, resolveCount driver.Uint32, pResolves *driver.VkImageResolve) {
-			resolveSlice := ([]driver.VkImageResolve)(unsafe.Slice(pResolves, 2))
+		func(commandBuffer loader.VkCommandBuffer, srcImage loader.VkImage, srcImageLayout loader.VkImageLayout, dstImage loader.VkImage, dstImageLayout loader.VkImageLayout, resolveCount loader.Uint32, pResolves *loader.VkImageResolve) {
+			resolveSlice := ([]loader.VkImageResolve)(unsafe.Slice(pResolves, 2))
 			sliceVal := reflect.ValueOf(resolveSlice)
 
 			val := sliceVal.Index(0)
@@ -1549,56 +1534,56 @@ func TestVulkanCommandBuffer_CmdResolveImage(t *testing.T) {
 			require.Equal(t, uint64(113), val.FieldByName("extent").FieldByName("depth").Uint())
 		})
 
-	buffer.CmdResolveImage(srcImage,
+	err := driver.CmdResolveImage(buffer, srcImage,
 		core1_0.ImageLayoutShaderReadOnlyOptimal,
 		dstImage,
 		core1_0.ImageLayoutColorAttachmentOptimal,
-		[]core1_0.ImageResolve{
-			{
-				SrcSubresource: core1_0.ImageSubresourceLayers{
-					AspectMask:     core1_0.ImageAspectColor,
-					MipLevel:       1,
-					BaseArrayLayer: 3,
-					LayerCount:     5,
-				},
-				SrcOffset: core1_0.Offset3D{7, 11, 13},
-				DstSubresource: core1_0.ImageSubresourceLayers{
-					AspectMask:     core1_0.ImageAspectDepth,
-					MipLevel:       17,
-					BaseArrayLayer: 19,
-					LayerCount:     23,
-				},
-				DstOffset: core1_0.Offset3D{29, 31, 37},
-				Extent:    core1_0.Extent3D{41, 43, 47},
+		core1_0.ImageResolve{
+			SrcSubresource: core1_0.ImageSubresourceLayers{
+				AspectMask:     core1_0.ImageAspectColor,
+				MipLevel:       1,
+				BaseArrayLayer: 3,
+				LayerCount:     5,
 			},
-			{
-				SrcSubresource: core1_0.ImageSubresourceLayers{
-					AspectMask:     core1_0.ImageAspectMetadata,
-					MipLevel:       53,
-					BaseArrayLayer: 59,
-					LayerCount:     61,
-				},
-				SrcOffset: core1_0.Offset3D{67, 71, 73},
-				DstSubresource: core1_0.ImageSubresourceLayers{
-					AspectMask:     core1_0.ImageAspectStencil,
-					MipLevel:       79,
-					BaseArrayLayer: 83,
-					LayerCount:     89,
-				},
-				DstOffset: core1_0.Offset3D{97, 101, 103},
-				Extent:    core1_0.Extent3D{107, 109, 113},
+			SrcOffset: core1_0.Offset3D{7, 11, 13},
+			DstSubresource: core1_0.ImageSubresourceLayers{
+				AspectMask:     core1_0.ImageAspectDepth,
+				MipLevel:       17,
+				BaseArrayLayer: 19,
+				LayerCount:     23,
 			},
-		})
+			DstOffset: core1_0.Offset3D{29, 31, 37},
+			Extent:    core1_0.Extent3D{41, 43, 47},
+		},
+		core1_0.ImageResolve{
+			SrcSubresource: core1_0.ImageSubresourceLayers{
+				AspectMask:     core1_0.ImageAspectMetadata,
+				MipLevel:       53,
+				BaseArrayLayer: 59,
+				LayerCount:     61,
+			},
+			SrcOffset: core1_0.Offset3D{67, 71, 73},
+			DstSubresource: core1_0.ImageSubresourceLayers{
+				AspectMask:     core1_0.ImageAspectStencil,
+				MipLevel:       79,
+				BaseArrayLayer: 83,
+				LayerCount:     89,
+			},
+			DstOffset: core1_0.Offset3D{97, 101, 103},
+			Extent:    core1_0.Extent3D{107, 109, 113},
+		},
+	)
+	require.NoError(t, err)
 }
 
 func TestVulkanCommandBuffer_CmdSetBlendConstants(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockDriver, buffer := setup(t, ctrl)
+	mockLoader, driver, _, buffer := setup(t, ctrl)
 
-	mockDriver.EXPECT().VkCmdSetBlendConstants(buffer.Handle(), gomock.Not(nil)).DoAndReturn(
-		func(commandBuffer driver.VkCommandBuffer, blendConstants *driver.Float) {
+	mockLoader.EXPECT().VkCmdSetBlendConstants(buffer.Handle(), gomock.Not(nil)).DoAndReturn(
+		func(commandBuffer loader.VkCommandBuffer, blendConstants *loader.Float) {
 			blendConsts := unsafe.Slice(blendConstants, 4)
 			require.InDelta(t, 1, float32(blendConsts[0]), 0.0001)
 			require.InDelta(t, 3, float32(blendConsts[1]), 0.0001)
@@ -1606,125 +1591,125 @@ func TestVulkanCommandBuffer_CmdSetBlendConstants(t *testing.T) {
 			require.InDelta(t, 7, float32(blendConsts[3]), 0.0001)
 		})
 
-	buffer.CmdSetBlendConstants([4]float32{1, 3, 5, 7})
+	driver.CmdSetBlendConstants(buffer, [4]float32{1, 3, 5, 7})
 }
 
 func TestVulkanCommandBuffer_CmdSetDepthBias(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockDriver, buffer := setup(t, ctrl)
+	mockLoader, driver, _, buffer := setup(t, ctrl)
 
-	mockDriver.EXPECT().VkCmdSetDepthBias(buffer.Handle(), gomock.Any(), gomock.Any(), gomock.Any()).DoAndReturn(
-		func(commandBuffer driver.VkCommandBuffer, depthBiasConstantFactor driver.Float, depthBiasClamp driver.Float, depthBiasSlopeFactor driver.Float) {
+	mockLoader.EXPECT().VkCmdSetDepthBias(buffer.Handle(), gomock.Any(), gomock.Any(), gomock.Any()).DoAndReturn(
+		func(commandBuffer loader.VkCommandBuffer, depthBiasConstantFactor loader.Float, depthBiasClamp loader.Float, depthBiasSlopeFactor loader.Float) {
 			require.InDelta(t, 1, float32(depthBiasConstantFactor), 0.0001)
 			require.InDelta(t, 3, float32(depthBiasClamp), 0.0001)
 			require.InDelta(t, 5, float32(depthBiasSlopeFactor), 0.0001)
 		})
 
-	buffer.CmdSetDepthBias(1, 3, 5)
+	driver.CmdSetDepthBias(buffer, 1, 3, 5)
 }
 
 func TestVulkanCommandBuffer_CmdSetDepthBounds(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockDriver, buffer := setup(t, ctrl)
+	mockLoader, driver, _, buffer := setup(t, ctrl)
 
-	mockDriver.EXPECT().VkCmdSetDepthBounds(buffer.Handle(), gomock.Any(), gomock.Any()).DoAndReturn(
-		func(commandBuffer driver.VkCommandBuffer, minDepthBounds driver.Float, maxDepthBounds driver.Float) {
+	mockLoader.EXPECT().VkCmdSetDepthBounds(buffer.Handle(), gomock.Any(), gomock.Any()).DoAndReturn(
+		func(commandBuffer loader.VkCommandBuffer, minDepthBounds loader.Float, maxDepthBounds loader.Float) {
 			require.InDelta(t, 1, float32(minDepthBounds), 0.0001)
 			require.InDelta(t, 3, float32(maxDepthBounds), 0.0001)
 		})
 
-	buffer.CmdSetDepthBounds(1, 3)
+	driver.CmdSetDepthBounds(buffer, 1, 3)
 }
 
 func TestVulkanCommandBuffer_CmdSetLineWidth(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockDriver, buffer := setup(t, ctrl)
+	mockLoader, driver, _, buffer := setup(t, ctrl)
 
-	mockDriver.EXPECT().VkCmdSetLineWidth(buffer.Handle(), gomock.Any()).DoAndReturn(
-		func(commandBuffer driver.VkCommandBuffer, lineWidth driver.Float) {
+	mockLoader.EXPECT().VkCmdSetLineWidth(buffer.Handle(), gomock.Any()).DoAndReturn(
+		func(commandBuffer loader.VkCommandBuffer, lineWidth loader.Float) {
 			require.InDelta(t, 3, float32(lineWidth), 0.0001)
 		})
 
-	buffer.CmdSetLineWidth(3)
+	driver.CmdSetLineWidth(buffer, 3)
 }
 
 func TestVulkanCommandBuffer_CmdSetStencilCompareMask(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockDriver, buffer := setup(t, ctrl)
+	mockLoader, driver, _, buffer := setup(t, ctrl)
 
-	mockDriver.EXPECT().VkCmdSetStencilCompareMask(buffer.Handle(),
-		driver.VkStencilFaceFlags(1), // VK_STENCIL_FACE_FRONT_BIT
-		driver.Uint32(3),
+	mockLoader.EXPECT().VkCmdSetStencilCompareMask(buffer.Handle(),
+		loader.VkStencilFaceFlags(1), // VK_STENCIL_FACE_FRONT_BIT
+		loader.Uint32(3),
 	)
 
-	buffer.CmdSetStencilCompareMask(core1_0.StencilFaceFront, 3)
+	driver.CmdSetStencilCompareMask(buffer, core1_0.StencilFaceFront, 3)
 }
 
 func TestVulkanCommandBuffer_CmdSetStencilReference(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockDriver, buffer := setup(t, ctrl)
+	mockLoader, driver, _, buffer := setup(t, ctrl)
 
-	mockDriver.EXPECT().VkCmdSetStencilReference(buffer.Handle(),
-		driver.VkStencilFaceFlags(1), // VK_STENCIL_FACE_FRONT_BIT
-		driver.Uint32(3),
+	mockLoader.EXPECT().VkCmdSetStencilReference(buffer.Handle(),
+		loader.VkStencilFaceFlags(1), // VK_STENCIL_FACE_FRONT_BIT
+		loader.Uint32(3),
 	)
 
-	buffer.CmdSetStencilReference(core1_0.StencilFaceFront, 3)
+	driver.CmdSetStencilReference(buffer, core1_0.StencilFaceFront, 3)
 }
 
 func TestVulkanCommandBuffer_CmdSetStencilWriteMask(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockDriver, buffer := setup(t, ctrl)
+	mockLoader, driver, _, buffer := setup(t, ctrl)
 
-	mockDriver.EXPECT().VkCmdSetStencilWriteMask(buffer.Handle(),
-		driver.VkStencilFaceFlags(1), // VK_STENCIL_FACE_FRONT_BIT
-		driver.Uint32(3),
+	mockLoader.EXPECT().VkCmdSetStencilWriteMask(buffer.Handle(),
+		loader.VkStencilFaceFlags(1), // VK_STENCIL_FACE_FRONT_BIT
+		loader.Uint32(3),
 	)
 
-	buffer.CmdSetStencilWriteMask(core1_0.StencilFaceFront, 3)
+	driver.CmdSetStencilWriteMask(buffer, core1_0.StencilFaceFront, 3)
 }
 
 func TestVulkanCommandBuffer_CmdUpdateBuffer(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockDriver, buffer := setup(t, ctrl)
-	dstBuffer := mocks1_0.EasyMockBuffer(ctrl)
+	mockLoader, driver, device, buffer := setup(t, ctrl)
+	dstBuffer := mocks.NewDummyBuffer(device)
 
-	mockDriver.EXPECT().VkCmdUpdateBuffer(buffer.Handle(), dstBuffer.Handle(), driver.VkDeviceSize(1), driver.VkDeviceSize(3), gomock.Not(nil)).DoAndReturn(
-		func(commandBuffer driver.VkCommandBuffer, dstBuffer driver.VkBuffer, dstOffset driver.VkDeviceSize, dataSize driver.VkDeviceSize, pData unsafe.Pointer) {
+	mockLoader.EXPECT().VkCmdUpdateBuffer(buffer.Handle(), dstBuffer.Handle(), loader.VkDeviceSize(1), loader.VkDeviceSize(3), gomock.Not(nil)).DoAndReturn(
+		func(commandBuffer loader.VkCommandBuffer, dstBuffer loader.VkBuffer, dstOffset loader.VkDeviceSize, dataSize loader.VkDeviceSize, pData unsafe.Pointer) {
 			dataPtr := (*byte)(pData)
 			dataSlice := unsafe.Slice(dataPtr, 4)
 			require.Equal(t, []byte{5, 7, 11, 13}, dataSlice)
 		})
 
-	buffer.CmdUpdateBuffer(dstBuffer, 1, 3, []byte{5, 7, 11, 13})
+	driver.CmdUpdateBuffer(buffer, dstBuffer, 1, 3, []byte{5, 7, 11, 13})
 }
 
 func TestVulkanCommandBuffer_CmdWriteTimestamp(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockDriver, buffer := setup(t, ctrl)
-	queryPool := mocks1_0.EasyMockQueryPool(ctrl)
+	mockLoader, driver, device, buffer := setup(t, ctrl)
+	queryPool := mocks.NewDummyQueryPool(device)
 
-	mockDriver.EXPECT().VkCmdWriteTimestamp(buffer.Handle(),
-		driver.VkPipelineStageFlags(0x800), // VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT
+	mockLoader.EXPECT().VkCmdWriteTimestamp(buffer.Handle(),
+		loader.VkPipelineStageFlags(0x800), // VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT
 		queryPool.Handle(),
-		driver.Uint32(3),
+		loader.Uint32(3),
 	)
 
-	buffer.CmdWriteTimestamp(core1_0.PipelineStageComputeShader, queryPool, 3)
+	driver.CmdWriteTimestamp(buffer, core1_0.PipelineStageComputeShader, queryPool, 3)
 }

@@ -5,9 +5,9 @@ import (
 
 	"github.com/vkngwrapper/core/v3/common"
 	"github.com/vkngwrapper/core/v3/core1_2"
-	"github.com/vkngwrapper/core/v3/driver"
-	mock_driver "github.com/vkngwrapper/core/v3/driver/mocks"
 	"github.com/vkngwrapper/core/v3/internal/impl1_2"
+	"github.com/vkngwrapper/core/v3/loader"
+	mock_driver "github.com/vkngwrapper/core/v3/loader/mocks"
 	"github.com/vkngwrapper/core/v3/mocks"
 	"github.com/vkngwrapper/core/v3/mocks/mocks1_2"
 	"go.uber.org/mock/gomock"
@@ -17,7 +17,7 @@ func TestVulkanQueryPool_ResetQueryPool(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	coreDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_2)
+	coreDriver := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_2)
 	device := mocks1_2.EasyMockDevice(ctrl, coreDriver)
 	builder := impl1_2.DeviceObjectBuilderImpl{}
 	queryPool := builder.CreateQueryPoolObject(coreDriver, device.Handle(), mocks.NewFakeQueryPool(), common.Vulkan1_2).(core1_2.QueryPool)
@@ -25,8 +25,8 @@ func TestVulkanQueryPool_ResetQueryPool(t *testing.T) {
 	coreDriver.EXPECT().VkResetQueryPool(
 		device.Handle(),
 		queryPool.Handle(),
-		driver.Uint32(1),
-		driver.Uint32(3),
+		loader.Uint32(1),
+		loader.Uint32(3),
 	)
 
 	queryPool.Reset(1, 3)

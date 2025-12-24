@@ -10,9 +10,9 @@ import (
 	"github.com/stretchr/testify/require"
 	"github.com/vkngwrapper/core/v3/common"
 	"github.com/vkngwrapper/core/v3/core1_0"
-	"github.com/vkngwrapper/core/v3/driver"
-	mock_driver "github.com/vkngwrapper/core/v3/driver/mocks"
 	"github.com/vkngwrapper/core/v3/internal/impl1_0"
+	"github.com/vkngwrapper/core/v3/loader"
+	mock_driver "github.com/vkngwrapper/core/v3/loader/mocks"
 	"github.com/vkngwrapper/core/v3/mocks"
 	"github.com/vkngwrapper/core/v3/mocks/mocks1_0"
 	"go.uber.org/mock/gomock"
@@ -22,13 +22,13 @@ func TestVulkanLoader1_0_CreateQueryPool(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_0)
+	mockDriver := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_0)
 	builder := &impl1_0.InstanceObjectBuilderImpl{}
 	device := builder.CreateDeviceObject(mockDriver, mocks.NewFakeDeviceHandle(), common.Vulkan1_0, []string{})
 	poolHandle := mocks.NewFakeQueryPool()
 
 	mockDriver.EXPECT().VkCreateQueryPool(device.Handle(), gomock.Not(nil), nil, gomock.Not(nil)).DoAndReturn(
-		func(device driver.VkDevice, pCreateInfo *driver.VkQueryPoolCreateInfo, pAllocator *driver.VkAllocationCallbacks, pQueryPool *driver.VkQueryPool) (common.VkResult, error) {
+		func(device loader.VkDevice, pCreateInfo *loader.VkQueryPoolCreateInfo, pAllocator *loader.VkAllocationCallbacks, pQueryPool *loader.VkQueryPool) (common.VkResult, error) {
 			val := reflect.ValueOf(*pCreateInfo)
 			require.Equal(t, uint64(11), val.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_QUERY_POOL_CREATE_INFO
 			require.True(t, val.FieldByName("pNext").IsNil())
@@ -55,7 +55,7 @@ func TestVulkanQueryPool_PopulateResults(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_0)
+	mockDriver := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_0)
 	device := mocks1_0.EasyMockDevice(ctrl, mockDriver)
 
 	builder := &impl1_0.DeviceObjectBuilderImpl{}
@@ -64,20 +64,20 @@ func TestVulkanQueryPool_PopulateResults(t *testing.T) {
 	mockDriver.EXPECT().VkGetQueryPoolResults(
 		device.Handle(),
 		queryPool.Handle(),
-		driver.Uint32(1),
-		driver.Uint32(3),
-		driver.Size(40),
+		loader.Uint32(1),
+		loader.Uint32(3),
+		loader.Size(40),
 		gomock.Not(nil),
-		driver.VkDeviceSize(8),
-		driver.VkQueryResultFlags(8), // VK_QUERY_RESULT_PARTIAL_BIT
+		loader.VkDeviceSize(8),
+		loader.VkQueryResultFlags(8), // VK_QUERY_RESULT_PARTIAL_BIT
 	).DoAndReturn(
-		func(device driver.VkDevice,
-			queryPool driver.VkQueryPool,
-			firstQuery, queryCount driver.Uint32,
-			dataSize driver.Size,
+		func(device loader.VkDevice,
+			queryPool loader.VkQueryPool,
+			firstQuery, queryCount loader.Uint32,
+			dataSize loader.Size,
 			pData unsafe.Pointer,
-			stride driver.VkDeviceSize,
-			flags driver.VkQueryResultFlags) (common.VkResult, error) {
+			stride loader.VkDeviceSize,
+			flags loader.VkQueryResultFlags) (common.VkResult, error) {
 
 			data := ([]uint64)(unsafe.Slice((*uint64)(pData), 5))
 			data[0] = 1

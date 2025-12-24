@@ -1,53 +1,54 @@
 package impl1_2
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/CannibalVox/cgoparam"
 	"github.com/vkngwrapper/core/v3/common"
 	"github.com/vkngwrapper/core/v3/core1_0"
 	"github.com/vkngwrapper/core/v3/core1_2"
-	"github.com/vkngwrapper/core/v3/driver"
-	"github.com/vkngwrapper/core/v3/internal/impl1_1"
+	"github.com/vkngwrapper/core/v3/loader"
+	"github.com/vkngwrapper/core/v3/types"
 )
 
-// VulkanDevice is an implementation of the Device interface that actually communicates with Vulkan. This
-// is the default implementation. See the interface for more documentation.
-type VulkanDevice struct {
-	impl1_1.VulkanDevice
-}
-
-func (d *VulkanDevice) CreateRenderPass2(allocator *driver.AllocationCallbacks, options core1_2.RenderPassCreateInfo2) (core1_0.RenderPass, common.VkResult, error) {
+func (v *DeviceVulkanDriver) CreateRenderPass2(device types.Device, allocator *loader.AllocationCallbacks, options core1_2.RenderPassCreateInfo2) (types.RenderPass, common.VkResult, error) {
+	if device.Handle() == 0 {
+		return types.RenderPass{}, core1_0.VKErrorUnknown, fmt.Errorf("device cannot be uninitialized")
+	}
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
 	infoPtr, err := common.AllocOptions(arena, options)
 	if err != nil {
-		return nil, core1_0.VKErrorUnknown, err
+		return types.RenderPass{}, core1_0.VKErrorUnknown, err
 	}
 
-	var renderPassHandle driver.VkRenderPass
-	res, err := d.Driver().VkCreateRenderPass2(
-		d.Handle(),
-		(*driver.VkRenderPassCreateInfo2)(infoPtr),
+	var renderPassHandle loader.VkRenderPass
+	res, err := v.LoaderObj.VkCreateRenderPass2(
+		device.Handle(),
+		(*loader.VkRenderPassCreateInfo2)(infoPtr),
 		allocator.Handle(),
 		&renderPassHandle,
 	)
 	if err != nil {
-		return nil, res, err
+		return types.RenderPass{}, res, err
 	}
 
-	renderPass := d.VulkanDevice.VulkanDevice.DeviceObjectBuilder.CreateRenderPassObject(
-		d.Driver(),
-		d.Handle(),
+	renderPass := types.InternalRenderPass(
+		device.Handle(),
 		renderPassHandle,
-		d.APIVersion(),
+		device.APIVersion(),
 	)
 
 	return renderPass, res, nil
 }
 
-func (d *VulkanDevice) GetBufferDeviceAddress(o core1_2.BufferDeviceAddressInfo) (uint64, error) {
+func (v *DeviceVulkanDriver) GetBufferDeviceAddress(o core1_2.BufferDeviceAddressInfo) (uint64, error) {
+	if o.Buffer.Handle() == 0 {
+		return 0, fmt.Errorf("o.Buffer cannot be uninitialized")
+	}
+
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
@@ -56,14 +57,18 @@ func (d *VulkanDevice) GetBufferDeviceAddress(o core1_2.BufferDeviceAddressInfo)
 		return 0, err
 	}
 
-	address := d.Driver().VkGetBufferDeviceAddress(
-		d.Handle(),
-		(*driver.VkBufferDeviceAddressInfo)(info),
+	address := v.LoaderObj.VkGetBufferDeviceAddress(
+		o.Buffer.DeviceHandle(),
+		(*loader.VkBufferDeviceAddressInfo)(info),
 	)
 	return uint64(address), nil
 }
 
-func (d *VulkanDevice) GetBufferOpaqueCaptureAddress(o core1_2.BufferDeviceAddressInfo) (uint64, error) {
+func (v *DeviceVulkanDriver) GetBufferOpaqueCaptureAddress(o core1_2.BufferDeviceAddressInfo) (uint64, error) {
+	if o.Buffer.Handle() == 0 {
+		return 0, fmt.Errorf("o.Buffer cannot be uninitialized")
+	}
+
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
@@ -72,14 +77,18 @@ func (d *VulkanDevice) GetBufferOpaqueCaptureAddress(o core1_2.BufferDeviceAddre
 		return 0, err
 	}
 
-	address := d.Driver().VkGetBufferOpaqueCaptureAddress(
-		d.Handle(),
-		(*driver.VkBufferDeviceAddressInfo)(info),
+	address := v.LoaderObj.VkGetBufferOpaqueCaptureAddress(
+		o.Buffer.DeviceHandle(),
+		(*loader.VkBufferDeviceAddressInfo)(info),
 	)
 	return uint64(address), nil
 }
 
-func (d *VulkanDevice) GetDeviceMemoryOpaqueCaptureAddress(o core1_2.DeviceMemoryOpaqueCaptureAddressInfo) (uint64, error) {
+func (v *DeviceVulkanDriver) GetDeviceMemoryOpaqueCaptureAddress(o core1_2.DeviceMemoryOpaqueCaptureAddressInfo) (uint64, error) {
+	if o.Memory.Handle() == 0 {
+		return 0, fmt.Errorf("o.Memory cannot be uninitialized")
+	}
+
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
@@ -88,14 +97,18 @@ func (d *VulkanDevice) GetDeviceMemoryOpaqueCaptureAddress(o core1_2.DeviceMemor
 		return 0, err
 	}
 
-	address := d.Driver().VkGetDeviceMemoryOpaqueCaptureAddress(
-		d.Handle(),
-		(*driver.VkDeviceMemoryOpaqueCaptureAddressInfo)(info),
+	address := v.LoaderObj.VkGetDeviceMemoryOpaqueCaptureAddress(
+		o.Memory.DeviceHandle(),
+		(*loader.VkDeviceMemoryOpaqueCaptureAddressInfo)(info),
 	)
 	return uint64(address), nil
 }
 
-func (d *VulkanDevice) SignalSemaphore(o core1_2.SemaphoreSignalInfo) (common.VkResult, error) {
+func (v *DeviceVulkanDriver) SignalSemaphore(o core1_2.SemaphoreSignalInfo) (common.VkResult, error) {
+	if o.Semaphore.Handle() == 0 {
+		return core1_0.VKErrorUnknown, fmt.Errorf("o.Semaphore cannot be uninitialized")
+	}
+
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
@@ -104,13 +117,26 @@ func (d *VulkanDevice) SignalSemaphore(o core1_2.SemaphoreSignalInfo) (common.Vk
 		return core1_0.VKErrorUnknown, err
 	}
 
-	return d.Driver().VkSignalSemaphore(
-		d.Handle(),
-		(*driver.VkSemaphoreSignalInfo)(signalPtr),
+	return v.LoaderObj.VkSignalSemaphore(
+		o.Semaphore.DeviceHandle(),
+		(*loader.VkSemaphoreSignalInfo)(signalPtr),
 	)
 }
 
-func (d *VulkanDevice) WaitSemaphores(timeout time.Duration, o core1_2.SemaphoreWaitInfo) (common.VkResult, error) {
+func (v *DeviceVulkanDriver) WaitSemaphores(timeout time.Duration, o core1_2.SemaphoreWaitInfo) (common.VkResult, error) {
+	if len(o.Semaphores) == 0 {
+		return core1_0.VKSuccess, nil
+	}
+
+	for i, semaphore := range o.Semaphores {
+		if semaphore.Handle() == 0 {
+			return core1_0.VKErrorUnknown, fmt.Errorf("semaphore values cannot be uninitialized but semaphore %d is uninitialized", i)
+		}
+		if semaphore.DeviceHandle() != o.Semaphores[0].DeviceHandle() {
+			return core1_0.VKErrorUnknown, fmt.Errorf("all Semaphore values must be owned by the same Device, but Semaphore %d is owned by a different Device from Semaphore 0", i)
+		}
+	}
+
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
@@ -119,9 +145,9 @@ func (d *VulkanDevice) WaitSemaphores(timeout time.Duration, o core1_2.Semaphore
 		return core1_0.VKErrorUnknown, err
 	}
 
-	return d.Driver().VkWaitSemaphores(
-		d.Handle(),
-		(*driver.VkSemaphoreWaitInfo)(waitPtr),
-		driver.Uint64(common.TimeoutNanoseconds(timeout)),
+	return v.LoaderObj.VkWaitSemaphores(
+		o.Semaphores[0].DeviceHandle(),
+		(*loader.VkSemaphoreWaitInfo)(waitPtr),
+		loader.Uint64(common.TimeoutNanoseconds(timeout)),
 	)
 }

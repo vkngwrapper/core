@@ -6,30 +6,25 @@ package impl1_1
 */
 import "C"
 import (
+	"fmt"
 	"unsafe"
 
 	"github.com/CannibalVox/cgoparam"
 	"github.com/vkngwrapper/core/v3/common"
 	"github.com/vkngwrapper/core/v3/core1_0"
 	"github.com/vkngwrapper/core/v3/core1_1"
-	"github.com/vkngwrapper/core/v3/driver"
-	"github.com/vkngwrapper/core/v3/internal/impl1_0"
+	"github.com/vkngwrapper/core/v3/loader"
+	"github.com/vkngwrapper/core/v3/types"
 )
 
-// VulkanInstance is an implementation of the Instance interface that actually communicates with Vulkan. This
-// is the default implementation. See the interface for more documentation.
-type VulkanInstance struct {
-	impl1_0.VulkanInstance
-}
-
-func (i *VulkanInstance) attemptEnumeratePhysicalDeviceGroups(outDataFactory func() *core1_1.PhysicalDeviceGroupProperties) ([]*core1_1.PhysicalDeviceGroupProperties, common.VkResult, error) {
+func (v *InstanceVulkanDriver) attemptEnumeratePhysicalDeviceGroups(instance types.Instance, outDataFactory func() *core1_1.PhysicalDeviceGroupProperties) ([]*core1_1.PhysicalDeviceGroupProperties, common.VkResult, error) {
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
-	countPtr := (*driver.Uint32)(arena.Malloc(int(unsafe.Sizeof(C.uint32_t(0)))))
+	countPtr := (*loader.Uint32)(arena.Malloc(int(unsafe.Sizeof(C.uint32_t(0)))))
 
-	res, err := i.Driver().VkEnumeratePhysicalDeviceGroups(
-		i.Handle(),
+	res, err := v.LoaderObj.VkEnumeratePhysicalDeviceGroups(
+		instance.Handle(),
 		countPtr,
 		nil,
 	)
@@ -56,17 +51,17 @@ func (i *VulkanInstance) attemptEnumeratePhysicalDeviceGroups(outDataFactory fun
 		return nil, core1_0.VKErrorUnknown, err
 	}
 
-	res, err = i.Driver().VkEnumeratePhysicalDeviceGroups(
-		i.Handle(),
+	res, err = v.LoaderObj.VkEnumeratePhysicalDeviceGroups(
+		instance.Handle(),
 		countPtr,
-		(*driver.VkPhysicalDeviceGroupProperties)(unsafe.Pointer(outData)),
+		(*loader.VkPhysicalDeviceGroupProperties)(unsafe.Pointer(outData)),
 	)
 	if err != nil {
 		return nil, res, err
 	}
 
 	err = common.PopulateOutDataSlice[C.VkPhysicalDeviceGroupProperties, *core1_1.PhysicalDeviceGroupProperties](outDataSlice, unsafe.Pointer(outData),
-		i.Driver(), i.Handle(), i.APIVersion(), i.InstanceObjectBuilder)
+		v.LoaderObj, instance.APIVersion())
 	if err != nil {
 		return nil, core1_0.VKErrorUnknown, err
 	}
@@ -74,13 +69,17 @@ func (i *VulkanInstance) attemptEnumeratePhysicalDeviceGroups(outDataFactory fun
 	return outDataSlice, res, nil
 }
 
-func (i *VulkanInstance) EnumeratePhysicalDeviceGroups(outDataFactory func() *core1_1.PhysicalDeviceGroupProperties) ([]*core1_1.PhysicalDeviceGroupProperties, common.VkResult, error) {
+func (v *InstanceVulkanDriver) EnumeratePhysicalDeviceGroups(instance types.Instance, outDataFactory func() *core1_1.PhysicalDeviceGroupProperties) ([]*core1_1.PhysicalDeviceGroupProperties, common.VkResult, error) {
 	var outData []*core1_1.PhysicalDeviceGroupProperties
 	var result common.VkResult
 	var err error
 
+	if instance.Handle() == 0 {
+		return nil, core1_0.VKErrorUnknown, fmt.Errorf("instance cannot be uninitialized")
+	}
+
 	for doWhile := true; doWhile; doWhile = (result == core1_0.VKIncomplete) {
-		outData, result, err = i.attemptEnumeratePhysicalDeviceGroups(outDataFactory)
+		outData, result, err = v.attemptEnumeratePhysicalDeviceGroups(instance, outDataFactory)
 	}
 	return outData, result, err
 }

@@ -80,7 +80,7 @@ const (
 	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkImageLayout.html
 	ImageLayoutTransferDstOptimal ImageLayout = C.VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL
 	// ImageLayoutPreInitialized specifies that an Image object's memory is in a defined layout
-	// and can be populated by data, but that it has not yet been initialized by the driver
+	// and can be populated by data, but that it has not yet been initialized by the loader
 	//
 	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkImageLayout.html
 	ImageLayoutPreInitialized ImageLayout = C.VK_IMAGE_LAYOUT_PREINITIALIZED

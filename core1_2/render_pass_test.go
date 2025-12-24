@@ -9,9 +9,9 @@ import (
 	"github.com/vkngwrapper/core/v3/common"
 	"github.com/vkngwrapper/core/v3/core1_0"
 	"github.com/vkngwrapper/core/v3/core1_2"
-	"github.com/vkngwrapper/core/v3/driver"
-	mock_driver "github.com/vkngwrapper/core/v3/driver/mocks"
 	"github.com/vkngwrapper/core/v3/internal/impl1_2"
+	"github.com/vkngwrapper/core/v3/loader"
+	mock_driver "github.com/vkngwrapper/core/v3/loader/mocks"
 	"github.com/vkngwrapper/core/v3/mocks"
 	"github.com/vkngwrapper/core/v3/mocks/mocks1_2"
 	"go.uber.org/mock/gomock"
@@ -21,7 +21,7 @@ func TestAttachmentDescriptionStencilLayoutOptions(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	coreDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_2)
+	coreDriver := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_2)
 	builder := &impl1_2.InstanceObjectBuilderImpl{}
 	device := builder.CreateDeviceObject(coreDriver, mocks.NewFakeDeviceHandle(), common.Vulkan1_2, []string{}).(core1_2.Device)
 	mockRenderPass := mocks1_2.EasyMockRenderPass(ctrl)
@@ -31,10 +31,10 @@ func TestAttachmentDescriptionStencilLayoutOptions(t *testing.T) {
 		gomock.Not(gomock.Nil()),
 		gomock.Nil(),
 		gomock.Not(gomock.Nil()),
-	).DoAndReturn(func(device driver.VkDevice,
-		pCreateInfo *driver.VkRenderPassCreateInfo2,
-		pAllocator *driver.VkAllocationCallbacks,
-		pRenderPass *driver.VkRenderPass) (common.VkResult, error) {
+	).DoAndReturn(func(device loader.VkDevice,
+		pCreateInfo *loader.VkRenderPassCreateInfo2,
+		pAllocator *loader.VkAllocationCallbacks,
+		pRenderPass *loader.VkRenderPass) (common.VkResult, error) {
 
 		*pRenderPass = mockRenderPass.Handle()
 
@@ -47,7 +47,7 @@ func TestAttachmentDescriptionStencilLayoutOptions(t *testing.T) {
 
 		attachment := val.FieldByName("pAttachments").Elem()
 		require.Equal(t, uint64(1000109000), attachment.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_ATTACHMENT_DESCRIPTION_2
-		attachmentNext := (*driver.VkAttachmentDescriptionStencilLayout)(attachment.FieldByName("pNext").UnsafePointer())
+		attachmentNext := (*loader.VkAttachmentDescriptionStencilLayout)(attachment.FieldByName("pNext").UnsafePointer())
 
 		attachmentLayout := reflect.ValueOf(attachmentNext).Elem()
 		require.Equal(t, uint64(1000241002), attachmentLayout.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_ATTACHMENT_DESCRIPTION_STENCIL_LAYOUT
@@ -63,7 +63,7 @@ func TestAttachmentDescriptionStencilLayoutOptions(t *testing.T) {
 		inputAttachment := subpass.FieldByName("pInputAttachments").Elem()
 		require.Equal(t, uint64(1000109001), inputAttachment.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_ATTACHMENT_REFERENCE_2
 
-		inputAttachmentNext := (*driver.VkAttachmentReferenceStencilLayout)(inputAttachment.FieldByName("pNext").UnsafePointer())
+		inputAttachmentNext := (*loader.VkAttachmentReferenceStencilLayout)(inputAttachment.FieldByName("pNext").UnsafePointer())
 		stencilRef := reflect.ValueOf(inputAttachmentNext).Elem()
 		require.Equal(t, uint64(1000241001), stencilRef.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_ATTACHMENT_REFERENCE_STENCIL_LAYOUT
 		require.True(t, stencilRef.FieldByName("pNext").IsNil())
@@ -105,7 +105,7 @@ func TestRenderPassAttachmentBeginInfo(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	coreDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_2)
+	coreDriver := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_2)
 	device := mocks1_2.EasyMockDevice(ctrl, coreDriver)
 	commandPool := mocks1_2.EasyMockCommandPool(ctrl, device)
 	builder := &impl1_2.DeviceObjectBuilderImpl{}
@@ -117,15 +117,15 @@ func TestRenderPassAttachmentBeginInfo(t *testing.T) {
 	coreDriver.EXPECT().VkCmdBeginRenderPass(
 		commandBuffer.Handle(),
 		gomock.Not(gomock.Nil()),
-		driver.VkSubpassContents(0), // VK_SUBPASS_CONTENTS_INLINE
-	).DoAndReturn(func(commandBuffer driver.VkCommandBuffer,
-		pRenderPassBegin *driver.VkRenderPassBeginInfo,
-		contents driver.VkSubpassContents) {
+		loader.VkSubpassContents(0), // VK_SUBPASS_CONTENTS_INLINE
+	).DoAndReturn(func(commandBuffer loader.VkCommandBuffer,
+		pRenderPassBegin *loader.VkRenderPassBeginInfo,
+		contents loader.VkSubpassContents) {
 
 		val := reflect.ValueOf(pRenderPassBegin).Elem()
 		require.Equal(t, uint64(43), val.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO
 
-		next := (*driver.VkRenderPassAttachmentBeginInfo)(val.FieldByName("pNext").UnsafePointer())
+		next := (*loader.VkRenderPassAttachmentBeginInfo)(val.FieldByName("pNext").UnsafePointer())
 		val = reflect.ValueOf(next).Elem()
 
 		require.Equal(t, uint64(1000108003), val.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_RENDER_PASS_ATTACHMENT_BEGIN_INFO
@@ -133,10 +133,10 @@ func TestRenderPassAttachmentBeginInfo(t *testing.T) {
 		require.Equal(t, uint64(2), val.FieldByName("attachmentCount").Uint())
 
 		firstImageView := val.FieldByName("pAttachments").UnsafePointer()
-		require.Equal(t, imageView1.Handle(), *(*driver.VkImageView)(firstImageView))
+		require.Equal(t, imageView1.Handle(), *(*loader.VkImageView)(firstImageView))
 
 		secondImageView := unsafe.Add(firstImageView, unsafe.Sizeof(uintptr(0)))
-		require.Equal(t, imageView2.Handle(), *(*driver.VkImageView)(secondImageView))
+		require.Equal(t, imageView2.Handle(), *(*loader.VkImageView)(secondImageView))
 	})
 
 	err := commandBuffer.CmdBeginRenderPass(core1_0.SubpassContentsInline, core1_0.RenderPassBeginInfo{
@@ -151,7 +151,7 @@ func TestSubpassDescriptionDepthStencilResolveOptions(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	coreDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_2)
+	coreDriver := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_2)
 	builder := &impl1_2.InstanceObjectBuilderImpl{}
 	device := builder.CreateDeviceObject(coreDriver, mocks.NewFakeDeviceHandle(), common.Vulkan1_2, []string{}).(core1_2.Device)
 	mockRenderPass := mocks1_2.EasyMockRenderPass(ctrl)
@@ -161,10 +161,10 @@ func TestSubpassDescriptionDepthStencilResolveOptions(t *testing.T) {
 		gomock.Not(gomock.Nil()),
 		gomock.Nil(),
 		gomock.Not(gomock.Nil()),
-	).DoAndReturn(func(device driver.VkDevice,
-		pCreateInfo *driver.VkRenderPassCreateInfo2,
-		pAllocator *driver.VkAllocationCallbacks,
-		pRenderPass *driver.VkRenderPass) (common.VkResult, error) {
+	).DoAndReturn(func(device loader.VkDevice,
+		pCreateInfo *loader.VkRenderPassCreateInfo2,
+		pAllocator *loader.VkAllocationCallbacks,
+		pRenderPass *loader.VkRenderPass) (common.VkResult, error) {
 
 		*pRenderPass = mockRenderPass.Handle()
 
@@ -176,7 +176,7 @@ func TestSubpassDescriptionDepthStencilResolveOptions(t *testing.T) {
 		subpass := val.FieldByName("pSubpasses").Elem()
 		require.Equal(t, uint64(1000109002), subpass.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_SUBPASS_DESCRIPTION_2
 
-		next := (*driver.VkSubpassDescriptionDepthStencilResolve)(subpass.FieldByName("pNext").UnsafePointer())
+		next := (*loader.VkSubpassDescriptionDepthStencilResolve)(subpass.FieldByName("pNext").UnsafePointer())
 		val = reflect.ValueOf(next).Elem()
 
 		require.Equal(t, uint64(1000199001), val.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_SUBPASS_DESCRIPTION_DEPTH_STENCIL_RESOLVE

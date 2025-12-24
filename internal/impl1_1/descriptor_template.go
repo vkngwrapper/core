@@ -9,44 +9,21 @@ import (
 	"unsafe"
 
 	"github.com/CannibalVox/cgoparam"
-	"github.com/vkngwrapper/core/v3/common"
 	"github.com/vkngwrapper/core/v3/core1_0"
-	"github.com/vkngwrapper/core/v3/driver"
+	"github.com/vkngwrapper/core/v3/loader"
+	"github.com/vkngwrapper/core/v3/types"
 )
 
-// VulkanDescriptorUpdateTemplate is an implementation of the DescriptorUpdateTemplate interface that actually communicates with Vulkan. This
-// is the default implementation. See the interface for more documentation.
-type VulkanDescriptorUpdateTemplate struct {
-	DeviceDriver             driver.Driver
-	Device                   driver.VkDevice
-	DescriptorTemplateHandle driver.VkDescriptorUpdateTemplate
-
-	MaximumAPIVersion common.APIVersion
+func (v *DeviceVulkanDriver) DestroyDescriptorUpdateTemplate(template types.DescriptorUpdateTemplate, allocator *loader.AllocationCallbacks) {
+	v.LoaderObj.VkDestroyDescriptorUpdateTemplate(template.DeviceHandle(), template.Handle(), allocator.Handle())
 }
 
-func (t *VulkanDescriptorUpdateTemplate) Handle() driver.VkDescriptorUpdateTemplate {
-	return t.DescriptorTemplateHandle
-}
-
-func (t *VulkanDescriptorUpdateTemplate) DeviceHandle() driver.VkDevice {
-	return t.Device
-}
-
-func (t *VulkanDescriptorUpdateTemplate) Driver() driver.Driver {
-	return t.DeviceDriver
-}
-
-func (t *VulkanDescriptorUpdateTemplate) APIVersion() common.APIVersion {
-	return t.MaximumAPIVersion
-}
-
-func (t *VulkanDescriptorUpdateTemplate) Destroy(allocator *driver.AllocationCallbacks) {
-	t.DeviceDriver.VkDestroyDescriptorUpdateTemplate(t.Device, t.DescriptorTemplateHandle, allocator.Handle())
-}
-
-func (t *VulkanDescriptorUpdateTemplate) UpdateDescriptorSetFromImage(descriptorSet core1_0.DescriptorSet, data core1_0.DescriptorImageInfo) {
-	if descriptorSet == nil {
-		panic("descriptorSet cannot be nil")
+func (v *DeviceVulkanDriver) UpdateDescriptorSetWithTemplateFromImage(descriptorSet types.DescriptorSet, template types.DescriptorUpdateTemplate, data core1_0.DescriptorImageInfo) {
+	if descriptorSet.Handle() == 0 {
+		panic("descriptorSet cannot be uninitialized")
+	}
+	if template.Handle() == 0 {
+		panic("template cannot be uninitialized")
 	}
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
@@ -57,25 +34,28 @@ func (t *VulkanDescriptorUpdateTemplate) UpdateDescriptorSetFromImage(descriptor
 	info.imageView = nil
 	info.imageLayout = C.VkImageLayout(data.ImageLayout)
 
-	if data.Sampler != nil {
+	if data.Sampler.Handle() != 0 {
 		info.sampler = C.VkSampler(unsafe.Pointer(data.Sampler.Handle()))
 	}
 
-	if data.ImageView != nil {
+	if data.ImageView.Handle() != 0 {
 		info.imageView = C.VkImageView(unsafe.Pointer(data.ImageView.Handle()))
 	}
 
-	t.DeviceDriver.VkUpdateDescriptorSetWithTemplate(
-		t.Device,
+	v.LoaderObj.VkUpdateDescriptorSetWithTemplate(
+		descriptorSet.DeviceHandle(),
 		descriptorSet.Handle(),
-		t.DescriptorTemplateHandle,
+		template.Handle(),
 		infoUnsafe,
 	)
 }
 
-func (t *VulkanDescriptorUpdateTemplate) UpdateDescriptorSetFromBuffer(descriptorSet core1_0.DescriptorSet, data core1_0.DescriptorBufferInfo) {
-	if descriptorSet == nil {
-		panic("descriptorSet cannot be nil")
+func (v *DeviceVulkanDriver) UpdateDescriptorSetWithTemplateFromBuffer(descriptorSet types.DescriptorSet, template types.DescriptorUpdateTemplate, data core1_0.DescriptorBufferInfo) {
+	if descriptorSet.Handle() == 0 {
+		panic("descriptorSet cannot be uninitialized")
+	}
+	if template.Handle() == 0 {
+		panic("template cannot be uninitialized")
 	}
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
@@ -86,27 +66,30 @@ func (t *VulkanDescriptorUpdateTemplate) UpdateDescriptorSetFromBuffer(descripto
 	info.offset = C.VkDeviceSize(data.Offset)
 	info._range = C.VkDeviceSize(data.Range)
 
-	if data.Buffer != nil {
+	if data.Buffer.Handle() != 0 {
 		info.buffer = C.VkBuffer(unsafe.Pointer(data.Buffer.Handle()))
 	}
 
-	t.DeviceDriver.VkUpdateDescriptorSetWithTemplate(
-		t.Device,
+	v.LoaderObj.VkUpdateDescriptorSetWithTemplate(
+		descriptorSet.DeviceHandle(),
 		descriptorSet.Handle(),
-		t.DescriptorTemplateHandle,
+		template.Handle(),
 		infoUnsafe,
 	)
 }
 
-func (t *VulkanDescriptorUpdateTemplate) UpdateDescriptorSetFromObjectHandle(descriptorSet core1_0.DescriptorSet, data driver.VulkanHandle) {
-	if descriptorSet == nil {
-		panic("descriptorSet cannot be nil")
+func (v *DeviceVulkanDriver) UpdateDescriptorSetWithTemplateFromObjectHandle(descriptorSet types.DescriptorSet, template types.DescriptorUpdateTemplate, data loader.VulkanHandle) {
+	if descriptorSet.Handle() == 0 {
+		panic("descriptorSet cannot be uninitialized")
+	}
+	if template.Handle() == 0 {
+		panic("template cannot be uninitialized")
 	}
 
-	t.DeviceDriver.VkUpdateDescriptorSetWithTemplate(
-		t.Device,
+	v.LoaderObj.VkUpdateDescriptorSetWithTemplate(
+		descriptorSet.DeviceHandle(),
 		descriptorSet.Handle(),
-		t.DescriptorTemplateHandle,
+		template.Handle(),
 		unsafe.Pointer(data),
 	)
 }

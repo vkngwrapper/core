@@ -9,9 +9,9 @@ import (
 	"github.com/vkngwrapper/core/v3/common"
 	"github.com/vkngwrapper/core/v3/core1_0"
 	"github.com/vkngwrapper/core/v3/core1_2"
-	"github.com/vkngwrapper/core/v3/driver"
-	mock_driver "github.com/vkngwrapper/core/v3/driver/mocks"
 	"github.com/vkngwrapper/core/v3/internal/impl1_2"
+	"github.com/vkngwrapper/core/v3/loader"
+	mock_driver "github.com/vkngwrapper/core/v3/loader/mocks"
 	"github.com/vkngwrapper/core/v3/mocks"
 	"github.com/vkngwrapper/core/v3/mocks/mocks1_2"
 	"go.uber.org/mock/gomock"
@@ -21,7 +21,7 @@ func TestSemaphoreTypeCreateOptions(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	coreDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_2)
+	coreDriver := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_2)
 
 	builder := &impl1_2.InstanceObjectBuilderImpl{}
 	device := builder.CreateDeviceObject(coreDriver, mocks.NewFakeDeviceHandle(), common.Vulkan1_2, []string{})
@@ -32,17 +32,17 @@ func TestSemaphoreTypeCreateOptions(t *testing.T) {
 		gomock.Not(gomock.Nil()),
 		gomock.Nil(),
 		gomock.Not(gomock.Nil()),
-	).DoAndReturn(func(device driver.VkDevice,
-		pCreateInfo *driver.VkSemaphoreCreateInfo,
-		pAllocator *driver.VkAllocationCallbacks,
-		pSemaphore *driver.VkSemaphore) (common.VkResult, error) {
+	).DoAndReturn(func(device loader.VkDevice,
+		pCreateInfo *loader.VkSemaphoreCreateInfo,
+		pAllocator *loader.VkAllocationCallbacks,
+		pSemaphore *loader.VkSemaphore) (common.VkResult, error) {
 
 		*pSemaphore = mockSemaphore.Handle()
 
 		val := reflect.ValueOf(pCreateInfo).Elem()
 		require.Equal(t, uint64(9), val.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO
 
-		next := (*driver.VkSemaphoreTypeCreateInfo)(val.FieldByName("pNext").UnsafePointer())
+		next := (*loader.VkSemaphoreTypeCreateInfo)(val.FieldByName("pNext").UnsafePointer())
 		val = reflect.ValueOf(next).Elem()
 
 		require.Equal(t, uint64(1000207002), val.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_SEMAPHORE_TYPE_CREATE_INFO
@@ -69,7 +69,7 @@ func TestTimelineSemaphoreSubmitOptions(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	coreDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_2)
+	coreDriver := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_2)
 	device := mocks1_2.EasyMockDevice(ctrl, coreDriver)
 	builder := &impl1_2.DeviceObjectBuilderImpl{}
 	queue := builder.CreateQueueObject(coreDriver, device.Handle(), mocks.NewFakeQueue(), common.Vulkan1_2)
@@ -77,31 +77,31 @@ func TestTimelineSemaphoreSubmitOptions(t *testing.T) {
 
 	coreDriver.EXPECT().VkQueueSubmit(
 		queue.Handle(),
-		driver.Uint32(1),
+		loader.Uint32(1),
 		gomock.Not(gomock.Nil()),
 		fence.Handle(),
-	).DoAndReturn(func(queue driver.VkQueue,
-		submitCount driver.Uint32,
-		pSubmits *driver.VkSubmitInfo,
-		fence driver.VkFence) (common.VkResult, error) {
+	).DoAndReturn(func(queue loader.VkQueue,
+		submitCount loader.Uint32,
+		pSubmits *loader.VkSubmitInfo,
+		fence loader.VkFence) (common.VkResult, error) {
 
 		val := reflect.ValueOf(pSubmits).Elem()
 		require.Equal(t, uint64(4), val.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_SUBMIT_INFO
 
-		next := (*driver.VkTimelineSemaphoreSubmitInfo)(val.FieldByName("pNext").UnsafePointer())
+		next := (*loader.VkTimelineSemaphoreSubmitInfo)(val.FieldByName("pNext").UnsafePointer())
 		val = reflect.ValueOf(next).Elem()
 		require.Equal(t, uint64(1000207003), val.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_TIMELINE_SEMAPHORE_SUBMIT_INFO
 		require.True(t, val.FieldByName("pNext").IsNil())
 		require.Equal(t, uint64(2), val.FieldByName("waitSemaphoreValueCount").Uint())
 		require.Equal(t, uint64(3), val.FieldByName("signalSemaphoreValueCount").Uint())
 
-		waitPtr := (*driver.Uint64)(val.FieldByName("pWaitSemaphoreValues").UnsafePointer())
+		waitPtr := (*loader.Uint64)(val.FieldByName("pWaitSemaphoreValues").UnsafePointer())
 		waitSlice := unsafe.Slice(waitPtr, 2)
-		require.Equal(t, []driver.Uint64{3, 5}, waitSlice)
+		require.Equal(t, []loader.Uint64{3, 5}, waitSlice)
 
-		signalPtr := (*driver.Uint64)(val.FieldByName("pSignalSemaphoreValues").UnsafePointer())
+		signalPtr := (*loader.Uint64)(val.FieldByName("pSignalSemaphoreValues").UnsafePointer())
 		signalSlice := unsafe.Slice(signalPtr, 3)
-		require.Equal(t, []driver.Uint64{7, 11, 13}, signalSlice)
+		require.Equal(t, []loader.Uint64{7, 11, 13}, signalSlice)
 
 		return core1_0.VKSuccess, nil
 	})

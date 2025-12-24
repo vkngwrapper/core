@@ -10,9 +10,9 @@ import (
 	"github.com/vkngwrapper/core/v3/common"
 	"github.com/vkngwrapper/core/v3/core1_0"
 	"github.com/vkngwrapper/core/v3/core1_2"
-	"github.com/vkngwrapper/core/v3/driver"
-	mock_driver "github.com/vkngwrapper/core/v3/driver/mocks"
 	"github.com/vkngwrapper/core/v3/internal/impl1_2"
+	"github.com/vkngwrapper/core/v3/loader"
+	mock_driver "github.com/vkngwrapper/core/v3/loader/mocks"
 	"github.com/vkngwrapper/core/v3/mocks"
 	"github.com/vkngwrapper/core/v3/mocks/mocks1_2"
 	"go.uber.org/mock/gomock"
@@ -22,7 +22,7 @@ func TestDevice_CreateRenderPass(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	coreDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_2)
+	coreDriver := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_2)
 	builder := &impl1_2.InstanceObjectBuilderImpl{}
 	device := builder.CreateDeviceObject(coreDriver, mocks.NewFakeDeviceHandle(), common.Vulkan1_2, []string{}).(core1_2.Device)
 	mockRenderPass := mocks1_2.EasyMockRenderPass(ctrl)
@@ -32,10 +32,10 @@ func TestDevice_CreateRenderPass(t *testing.T) {
 		gomock.Not(gomock.Nil()),
 		gomock.Nil(),
 		gomock.Not(gomock.Nil()),
-	).DoAndReturn(func(device driver.VkDevice,
-		pCreateInfo *driver.VkRenderPassCreateInfo2,
-		pAllocator *driver.VkAllocationCallbacks,
-		pRenderPass *driver.VkRenderPass) (common.VkResult, error) {
+	).DoAndReturn(func(device loader.VkDevice,
+		pCreateInfo *loader.VkRenderPassCreateInfo2,
+		pAllocator *loader.VkAllocationCallbacks,
+		pRenderPass *loader.VkRenderPass) (common.VkResult, error) {
 
 		*pRenderPass = mockRenderPass.Handle()
 
@@ -49,7 +49,7 @@ func TestDevice_CreateRenderPass(t *testing.T) {
 		require.Equal(t, uint64(2), val.FieldByName("dependencyCount").Uint())
 		require.Equal(t, uint64(3), val.FieldByName("correlatedViewMaskCount").Uint())
 
-		attachmentsPtr := (*driver.VkAttachmentDescription2)(val.FieldByName("pAttachments").UnsafePointer())
+		attachmentsPtr := (*loader.VkAttachmentDescription2)(val.FieldByName("pAttachments").UnsafePointer())
 		attachmentsSlice := unsafe.Slice(attachmentsPtr, 1)
 		attachment := reflect.ValueOf(attachmentsSlice).Index(0)
 
@@ -69,7 +69,7 @@ func TestDevice_CreateRenderPass(t *testing.T) {
 		viewMaskSlice := ([]uint32)(unsafe.Slice(viewMasks, 3))
 		require.Equal(t, []uint32{29, 31, 37}, viewMaskSlice)
 
-		subpassPtr := (*driver.VkSubpassDescription2)(val.FieldByName("pSubpasses").UnsafePointer())
+		subpassPtr := (*loader.VkSubpassDescription2)(val.FieldByName("pSubpasses").UnsafePointer())
 		subpassSlice := unsafe.Slice(subpassPtr, 1)
 		subpass := reflect.ValueOf(subpassSlice).Index(0)
 
@@ -86,8 +86,8 @@ func TestDevice_CreateRenderPass(t *testing.T) {
 		preserveAttachmentSlice := ([]uint32)(unsafe.Slice(preserveAttachments, 2))
 		require.Equal(t, []uint32{59, 61}, preserveAttachmentSlice)
 
-		inputAttachmentPtr := (*driver.VkAttachmentReference2)(subpass.FieldByName("pInputAttachments").UnsafePointer())
-		inputAttachmentSlice := ([]driver.VkAttachmentReference2)(unsafe.Slice(inputAttachmentPtr, 2))
+		inputAttachmentPtr := (*loader.VkAttachmentReference2)(subpass.FieldByName("pInputAttachments").UnsafePointer())
+		inputAttachmentSlice := ([]loader.VkAttachmentReference2)(unsafe.Slice(inputAttachmentPtr, 2))
 		inputAttachment := reflect.ValueOf(inputAttachmentSlice)
 		require.Equal(t, uint64(1000109001), inputAttachment.Index(0).FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_ATTACHMENT_REFERENCE_2
 		require.True(t, inputAttachment.Index(0).FieldByName("pNext").IsNil())
@@ -122,8 +122,8 @@ func TestDevice_CreateRenderPass(t *testing.T) {
 		require.Equal(t, uint64(7), depthAttachment.FieldByName("layout").Uint())     // VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL
 		require.Equal(t, uint64(1), depthAttachment.FieldByName("aspectMask").Uint()) // VK_IMAGE_ASPECT_COLOR_BIT
 
-		dependenciesPtr := (*driver.VkSubpassDependency2)(val.FieldByName("pDependencies").UnsafePointer())
-		dependenciesSlice := ([]driver.VkSubpassDependency2)(unsafe.Slice(dependenciesPtr, 2))
+		dependenciesPtr := (*loader.VkSubpassDependency2)(val.FieldByName("pDependencies").UnsafePointer())
+		dependenciesSlice := ([]loader.VkSubpassDependency2)(unsafe.Slice(dependenciesPtr, 2))
 		val = reflect.ValueOf(dependenciesSlice)
 		require.Equal(t, uint64(1000109003), val.Index(0).FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_SUBPASS_DEPENDENCY_2
 		require.True(t, val.Index(0).FieldByName("pNext").IsNil())
@@ -238,7 +238,7 @@ func TestDevice_GetBufferDeviceAddress(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	coreDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_2)
+	coreDriver := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_2)
 	builder := &impl1_2.InstanceObjectBuilderImpl{}
 	device := builder.CreateDeviceObject(coreDriver, mocks.NewFakeDeviceHandle(), common.Vulkan1_2, []string{}).(core1_2.Device)
 	buffer := mocks1_2.EasyMockBuffer(ctrl)
@@ -246,12 +246,12 @@ func TestDevice_GetBufferDeviceAddress(t *testing.T) {
 	coreDriver.EXPECT().VkGetBufferDeviceAddress(
 		device.Handle(),
 		gomock.Not(gomock.Nil()),
-	).DoAndReturn(func(device driver.VkDevice, pInfo *driver.VkBufferDeviceAddressInfo) driver.VkDeviceAddress {
+	).DoAndReturn(func(device loader.VkDevice, pInfo *loader.VkBufferDeviceAddressInfo) loader.VkDeviceAddress {
 		val := reflect.ValueOf(pInfo).Elem()
 
 		require.Equal(t, uint64(1000244001), val.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_BUFFER_DEVICE_ADDRESS_INFO
 		require.True(t, val.FieldByName("pNext").IsNil())
-		require.Equal(t, buffer.Handle(), driver.VkBuffer(val.FieldByName("buffer").UnsafePointer()))
+		require.Equal(t, buffer.Handle(), loader.VkBuffer(val.FieldByName("buffer").UnsafePointer()))
 
 		return 5
 	})
@@ -268,7 +268,7 @@ func TestDevice_GetBufferOpaqueCaptureAddress(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	coreDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_2)
+	coreDriver := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_2)
 	builder := &impl1_2.InstanceObjectBuilderImpl{}
 	device := builder.CreateDeviceObject(coreDriver, mocks.NewFakeDeviceHandle(), common.Vulkan1_2, []string{}).(core1_2.Device)
 	buffer := mocks1_2.EasyMockBuffer(ctrl)
@@ -276,12 +276,12 @@ func TestDevice_GetBufferOpaqueCaptureAddress(t *testing.T) {
 	coreDriver.EXPECT().VkGetBufferOpaqueCaptureAddress(
 		device.Handle(),
 		gomock.Not(gomock.Nil()),
-	).DoAndReturn(func(device driver.VkDevice, pInfo *driver.VkBufferDeviceAddressInfo) driver.Uint64 {
+	).DoAndReturn(func(device loader.VkDevice, pInfo *loader.VkBufferDeviceAddressInfo) loader.Uint64 {
 		val := reflect.ValueOf(pInfo).Elem()
 
 		require.Equal(t, uint64(1000244001), val.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_BUFFER_DEVICE_ADDRESS_INFO
 		require.True(t, val.FieldByName("pNext").IsNil())
-		require.Equal(t, buffer.Handle(), driver.VkBuffer(val.FieldByName("buffer").UnsafePointer()))
+		require.Equal(t, buffer.Handle(), loader.VkBuffer(val.FieldByName("buffer").UnsafePointer()))
 
 		return 7
 	})
@@ -298,7 +298,7 @@ func TestDevice_GetDeviceMemoryOpaqueCaptureAddress(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	coreDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_2)
+	coreDriver := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_2)
 	builder := &impl1_2.InstanceObjectBuilderImpl{}
 	device := builder.CreateDeviceObject(coreDriver, mocks.NewFakeDeviceHandle(), common.Vulkan1_2, []string{}).(core1_2.Device)
 	deviceMemory := mocks1_2.EasyMockDeviceMemory(ctrl)
@@ -306,12 +306,12 @@ func TestDevice_GetDeviceMemoryOpaqueCaptureAddress(t *testing.T) {
 	coreDriver.EXPECT().VkGetDeviceMemoryOpaqueCaptureAddress(
 		device.Handle(),
 		gomock.Not(gomock.Nil()),
-	).DoAndReturn(func(device driver.VkDevice, pInfo *driver.VkDeviceMemoryOpaqueCaptureAddressInfo) driver.Uint64 {
+	).DoAndReturn(func(device loader.VkDevice, pInfo *loader.VkDeviceMemoryOpaqueCaptureAddressInfo) loader.Uint64 {
 		val := reflect.ValueOf(pInfo).Elem()
 
 		require.Equal(t, uint64(1000257004), val.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_DEVICE_MEMORY_OPAQUE_CAPTURE_ADDRESS_INFO
 		require.True(t, val.FieldByName("pNext").IsNil())
-		require.Equal(t, deviceMemory.Handle(), driver.VkDeviceMemory(val.FieldByName("memory").UnsafePointer()))
+		require.Equal(t, deviceMemory.Handle(), loader.VkDeviceMemory(val.FieldByName("memory").UnsafePointer()))
 
 		return 11
 	})
@@ -328,7 +328,7 @@ func TestVulkanDevice_SignalSemaphore(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	coreDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_2)
+	coreDriver := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_2)
 	builder := &impl1_2.InstanceObjectBuilderImpl{}
 	device := builder.CreateDeviceObject(coreDriver, mocks.NewFakeDeviceHandle(), common.Vulkan1_2, []string{}).(core1_2.Device)
 	semaphore := mocks1_2.EasyMockSemaphore(ctrl)
@@ -336,13 +336,13 @@ func TestVulkanDevice_SignalSemaphore(t *testing.T) {
 	coreDriver.EXPECT().VkSignalSemaphore(
 		device.Handle(),
 		gomock.Not(gomock.Nil()),
-	).DoAndReturn(func(device driver.VkDevice,
-		pSignalInfo *driver.VkSemaphoreSignalInfo) (common.VkResult, error) {
+	).DoAndReturn(func(device loader.VkDevice,
+		pSignalInfo *loader.VkSemaphoreSignalInfo) (common.VkResult, error) {
 
 		val := reflect.ValueOf(pSignalInfo).Elem()
 		require.Equal(t, uint64(1000207005), val.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_SEMAPHORE_SIGNAL_INFO
 		require.True(t, val.FieldByName("pNext").IsNil())
-		require.Equal(t, semaphore.Handle(), driver.VkSemaphore(val.FieldByName("semaphore").UnsafePointer()))
+		require.Equal(t, semaphore.Handle(), loader.VkSemaphore(val.FieldByName("semaphore").UnsafePointer()))
 		require.Equal(t, uint64(13), val.FieldByName("value").Uint())
 
 		return core1_0.VKSuccess, nil
@@ -360,7 +360,7 @@ func TestVulkanDevice_WaitSemaphores(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	coreDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_2)
+	coreDriver := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_2)
 	builder := &impl1_2.InstanceObjectBuilderImpl{}
 	device := builder.CreateDeviceObject(coreDriver, mocks.NewFakeDeviceHandle(), common.Vulkan1_2, []string{}).(core1_2.Device)
 
@@ -370,10 +370,10 @@ func TestVulkanDevice_WaitSemaphores(t *testing.T) {
 	coreDriver.EXPECT().VkWaitSemaphores(
 		device.Handle(),
 		gomock.Not(gomock.Nil()),
-		driver.Uint64(60000000000),
-	).DoAndReturn(func(device driver.VkDevice,
-		pWaitInfo *driver.VkSemaphoreWaitInfo,
-		timeout driver.Uint64) (common.VkResult, error) {
+		loader.Uint64(60000000000),
+	).DoAndReturn(func(device loader.VkDevice,
+		pWaitInfo *loader.VkSemaphoreWaitInfo,
+		timeout loader.Uint64) (common.VkResult, error) {
 
 		val := reflect.ValueOf(pWaitInfo).Elem()
 		require.Equal(t, uint64(1000207004), val.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_SEMAPHORE_WAIT_INFO
@@ -381,13 +381,13 @@ func TestVulkanDevice_WaitSemaphores(t *testing.T) {
 		require.Equal(t, uint64(1), val.FieldByName("flags").Uint()) // VK_SEMAPHORE_WAIT_ANY_BIT
 		require.Equal(t, uint64(2), val.FieldByName("semaphoreCount").Uint())
 
-		semaphorePtr := (*driver.VkSemaphore)(val.FieldByName("pSemaphores").UnsafePointer())
+		semaphorePtr := (*loader.VkSemaphore)(val.FieldByName("pSemaphores").UnsafePointer())
 		semaphoreSlice := unsafe.Slice(semaphorePtr, 2)
-		require.Equal(t, []driver.VkSemaphore{semaphore1.Handle(), semaphore2.Handle()}, semaphoreSlice)
+		require.Equal(t, []loader.VkSemaphore{semaphore1.Handle(), semaphore2.Handle()}, semaphoreSlice)
 
-		valuesPtr := (*driver.Uint64)(val.FieldByName("pValues").UnsafePointer())
+		valuesPtr := (*loader.Uint64)(val.FieldByName("pValues").UnsafePointer())
 		valuesSlice := unsafe.Slice(valuesPtr, 2)
-		require.Equal(t, []driver.Uint64{13, 19}, valuesSlice)
+		require.Equal(t, []loader.Uint64{13, 19}, valuesSlice)
 
 		return core1_0.VKSuccess, nil
 	})

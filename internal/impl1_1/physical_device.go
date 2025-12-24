@@ -6,23 +6,21 @@ package impl1_1
 */
 import "C"
 import (
+	"fmt"
 	"unsafe"
 
 	"github.com/CannibalVox/cgoparam"
 	"github.com/vkngwrapper/core/v3/common"
 	"github.com/vkngwrapper/core/v3/core1_0"
 	"github.com/vkngwrapper/core/v3/core1_1"
-	"github.com/vkngwrapper/core/v3/driver"
-	"github.com/vkngwrapper/core/v3/internal/impl1_0"
+	"github.com/vkngwrapper/core/v3/loader"
+	"github.com/vkngwrapper/core/v3/types"
 )
 
-// VulkanPhysicalDevice is an implementation of the PhysicalDevice interface that actually communicates with Vulkan. This
-// is the default implementation. See the interface for more documentation.
-type VulkanPhysicalDevice struct {
-	impl1_0.VulkanPhysicalDevice
-}
-
-func (p *VulkanPhysicalDevice) ExternalFenceProperties(o core1_1.PhysicalDeviceExternalFenceInfo, outData *core1_1.ExternalFenceProperties) error {
+func (v *InstanceVulkanDriver) GetPhysicalDeviceExternalFenceProperties(physicalDevice types.PhysicalDevice, o core1_1.PhysicalDeviceExternalFenceInfo, outData *core1_1.ExternalFenceProperties) error {
+	if physicalDevice.Handle() == 0 {
+		return fmt.Errorf("physicalDevice cannot be uninitialized")
+	}
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
@@ -36,16 +34,19 @@ func (p *VulkanPhysicalDevice) ExternalFenceProperties(o core1_1.PhysicalDeviceE
 		return err
 	}
 
-	p.InstanceDriver.VkGetPhysicalDeviceExternalFenceProperties(
-		p.PhysicalDeviceHandle,
-		(*driver.VkPhysicalDeviceExternalFenceInfo)(infoPtr),
-		(*driver.VkExternalFenceProperties)(outDataPtr),
+	v.LoaderObj.VkGetPhysicalDeviceExternalFenceProperties(
+		physicalDevice.Handle(),
+		(*loader.VkPhysicalDeviceExternalFenceInfo)(infoPtr),
+		(*loader.VkExternalFenceProperties)(outDataPtr),
 	)
 
 	return common.PopulateOutData(outData, outDataPtr)
 }
 
-func (p *VulkanPhysicalDevice) ExternalBufferProperties(o core1_1.PhysicalDeviceExternalBufferInfo, outData *core1_1.ExternalBufferProperties) error {
+func (v *InstanceVulkanDriver) GetPhysicalDeviceExternalBufferProperties(physicalDevice types.PhysicalDevice, o core1_1.PhysicalDeviceExternalBufferInfo, outData *core1_1.ExternalBufferProperties) error {
+	if physicalDevice.Handle() == 0 {
+		return fmt.Errorf("physicalDevice cannot be uninitialized")
+	}
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
@@ -59,14 +60,17 @@ func (p *VulkanPhysicalDevice) ExternalBufferProperties(o core1_1.PhysicalDevice
 		return err
 	}
 
-	p.InstanceDriver.VkGetPhysicalDeviceExternalBufferProperties(p.PhysicalDeviceHandle,
-		(*driver.VkPhysicalDeviceExternalBufferInfo)(optionsPtr),
-		(*driver.VkExternalBufferProperties)(outDataPtr))
+	v.LoaderObj.VkGetPhysicalDeviceExternalBufferProperties(physicalDevice.Handle(),
+		(*loader.VkPhysicalDeviceExternalBufferInfo)(optionsPtr),
+		(*loader.VkExternalBufferProperties)(outDataPtr))
 
 	return common.PopulateOutData(outData, outDataPtr)
 }
 
-func (p *VulkanPhysicalDevice) ExternalSemaphoreProperties(o core1_1.PhysicalDeviceExternalSemaphoreInfo, outData *core1_1.ExternalSemaphoreProperties) error {
+func (v *InstanceVulkanDriver) GetPhysicalDeviceExternalSemaphoreProperties(physicalDevice types.PhysicalDevice, o core1_1.PhysicalDeviceExternalSemaphoreInfo, outData *core1_1.ExternalSemaphoreProperties) error {
+	if physicalDevice.Handle() == 0 {
+		return fmt.Errorf("physicalDevice cannot be uninitialized")
+	}
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
@@ -80,16 +84,19 @@ func (p *VulkanPhysicalDevice) ExternalSemaphoreProperties(o core1_1.PhysicalDev
 		return err
 	}
 
-	p.InstanceDriver.VkGetPhysicalDeviceExternalSemaphoreProperties(
-		p.PhysicalDeviceHandle,
-		(*driver.VkPhysicalDeviceExternalSemaphoreInfo)(infoPtr),
-		(*driver.VkExternalSemaphoreProperties)(outDataPtr),
+	v.LoaderObj.VkGetPhysicalDeviceExternalSemaphoreProperties(
+		physicalDevice.Handle(),
+		(*loader.VkPhysicalDeviceExternalSemaphoreInfo)(infoPtr),
+		(*loader.VkExternalSemaphoreProperties)(outDataPtr),
 	)
 
 	return common.PopulateOutData(outData, outDataPtr)
 }
 
-func (p *VulkanPhysicalDevice) Features2(out *core1_1.PhysicalDeviceFeatures2) error {
+func (v *InstanceVulkanDriver) GetPhysicalDeviceFeatures2(physicalDevice types.PhysicalDevice, out *core1_1.PhysicalDeviceFeatures2) error {
+	if physicalDevice.Handle() == 0 {
+		return fmt.Errorf("physicalDevice cannot be uninitialized")
+	}
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
@@ -98,12 +105,15 @@ func (p *VulkanPhysicalDevice) Features2(out *core1_1.PhysicalDeviceFeatures2) e
 		return err
 	}
 
-	p.InstanceDriver.VkGetPhysicalDeviceFeatures2(p.PhysicalDeviceHandle, (*driver.VkPhysicalDeviceFeatures2)(outData))
+	v.LoaderObj.VkGetPhysicalDeviceFeatures2(physicalDevice.Handle(), (*loader.VkPhysicalDeviceFeatures2)(outData))
 
 	return common.PopulateOutData(out, outData)
 }
 
-func (p *VulkanPhysicalDevice) FormatProperties2(format core1_0.Format, out *core1_1.FormatProperties2) error {
+func (v *InstanceVulkanDriver) GetPhysicalDeviceFormatProperties2(physicalDevice types.PhysicalDevice, format core1_0.Format, out *core1_1.FormatProperties2) error {
+	if physicalDevice.Handle() == 0 {
+		return fmt.Errorf("physicalDevice cannot be uninitialized")
+	}
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
@@ -112,12 +122,15 @@ func (p *VulkanPhysicalDevice) FormatProperties2(format core1_0.Format, out *cor
 		return err
 	}
 
-	p.InstanceDriver.VkGetPhysicalDeviceFormatProperties2(p.PhysicalDeviceHandle, driver.VkFormat(format), (*driver.VkFormatProperties2)(outData))
+	v.LoaderObj.VkGetPhysicalDeviceFormatProperties2(physicalDevice.Handle(), loader.VkFormat(format), (*loader.VkFormatProperties2)(outData))
 
 	return common.PopulateOutData(out, outData)
 }
 
-func (p *VulkanPhysicalDevice) ImageFormatProperties2(o core1_1.PhysicalDeviceImageFormatInfo2, out *core1_1.ImageFormatProperties2) (common.VkResult, error) {
+func (v *InstanceVulkanDriver) GetPhysicalDeviceImageFormatProperties2(physicalDevice types.PhysicalDevice, o core1_1.PhysicalDeviceImageFormatInfo2, out *core1_1.ImageFormatProperties2) (common.VkResult, error) {
+	if physicalDevice.Handle() == 0 {
+		return core1_0.VKErrorUnknown, fmt.Errorf("physicalDevice cannot be uninitialized")
+	}
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
@@ -131,9 +144,9 @@ func (p *VulkanPhysicalDevice) ImageFormatProperties2(o core1_1.PhysicalDeviceIm
 		return core1_0.VKErrorUnknown, err
 	}
 
-	res, err := p.InstanceDriver.VkGetPhysicalDeviceImageFormatProperties2(p.PhysicalDeviceHandle,
-		(*driver.VkPhysicalDeviceImageFormatInfo2)(optionData),
-		(*driver.VkImageFormatProperties2)(outData),
+	res, err := v.LoaderObj.VkGetPhysicalDeviceImageFormatProperties2(physicalDevice.Handle(),
+		(*loader.VkPhysicalDeviceImageFormatInfo2)(optionData),
+		(*loader.VkImageFormatProperties2)(outData),
 	)
 	if err != nil {
 		return res, err
@@ -147,7 +160,10 @@ func (p *VulkanPhysicalDevice) ImageFormatProperties2(o core1_1.PhysicalDeviceIm
 	return res, nil
 }
 
-func (p *VulkanPhysicalDevice) MemoryProperties2(out *core1_1.PhysicalDeviceMemoryProperties2) error {
+func (v *InstanceVulkanDriver) GetPhysicalDeviceMemoryProperties2(physicalDevice types.PhysicalDevice, out *core1_1.PhysicalDeviceMemoryProperties2) error {
+	if physicalDevice.Handle() == 0 {
+		return fmt.Errorf("physicalDevice cannot be uninitialized")
+	}
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
@@ -156,12 +172,15 @@ func (p *VulkanPhysicalDevice) MemoryProperties2(out *core1_1.PhysicalDeviceMemo
 		return err
 	}
 
-	p.InstanceDriver.VkGetPhysicalDeviceMemoryProperties2(p.PhysicalDeviceHandle, (*driver.VkPhysicalDeviceMemoryProperties2)(outData))
+	v.LoaderObj.VkGetPhysicalDeviceMemoryProperties2(physicalDevice.Handle(), (*loader.VkPhysicalDeviceMemoryProperties2)(outData))
 
 	return common.PopulateOutData(out, outData)
 }
 
-func (p *VulkanPhysicalDevice) Properties2(out *core1_1.PhysicalDeviceProperties2) error {
+func (v *InstanceVulkanDriver) GetPhysicalDeviceProperties2(physicalDevice types.PhysicalDevice, out *core1_1.PhysicalDeviceProperties2) error {
+	if physicalDevice.Handle() == 0 {
+		return fmt.Errorf("physicalDevice cannot be uninitialized")
+	}
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
@@ -170,19 +189,22 @@ func (p *VulkanPhysicalDevice) Properties2(out *core1_1.PhysicalDeviceProperties
 		return err
 	}
 
-	p.InstanceDriver.VkGetPhysicalDeviceProperties2(p.PhysicalDeviceHandle,
-		(*driver.VkPhysicalDeviceProperties2)(outData))
+	v.LoaderObj.VkGetPhysicalDeviceProperties2(physicalDevice.Handle(),
+		(*loader.VkPhysicalDeviceProperties2)(outData))
 
 	return common.PopulateOutData(out, outData)
 }
 
-func (p *VulkanPhysicalDevice) QueueFamilyProperties2(outDataFactory func() *core1_1.QueueFamilyProperties2) ([]*core1_1.QueueFamilyProperties2, error) {
+func (v *InstanceVulkanDriver) GetPhysicalDeviceQueueFamilyProperties2(physicalDevice types.PhysicalDevice, outDataFactory func() *core1_1.QueueFamilyProperties2) ([]*core1_1.QueueFamilyProperties2, error) {
+	if physicalDevice.Handle() == 0 {
+		return nil, fmt.Errorf("physicalDevice cannot be uninitialized")
+	}
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
-	outDataCountPtr := (*driver.Uint32)(arena.Malloc(int(unsafe.Sizeof(C.uint32_t(0)))))
+	outDataCountPtr := (*loader.Uint32)(arena.Malloc(int(unsafe.Sizeof(C.uint32_t(0)))))
 
-	p.InstanceDriver.VkGetPhysicalDeviceQueueFamilyProperties2(p.PhysicalDeviceHandle, outDataCountPtr, nil)
+	v.LoaderObj.VkGetPhysicalDeviceQueueFamilyProperties2(physicalDevice.Handle(), outDataCountPtr, nil)
 
 	outDataCount := int(*outDataCountPtr)
 	if outDataCount == 0 {
@@ -203,23 +225,26 @@ func (p *VulkanPhysicalDevice) QueueFamilyProperties2(outDataFactory func() *cor
 		return nil, err
 	}
 
-	p.InstanceDriver.VkGetPhysicalDeviceQueueFamilyProperties2(p.PhysicalDeviceHandle, outDataCountPtr, (*driver.VkQueueFamilyProperties2)(unsafe.Pointer(outData)))
+	v.LoaderObj.VkGetPhysicalDeviceQueueFamilyProperties2(physicalDevice.Handle(), outDataCountPtr, (*loader.VkQueueFamilyProperties2)(unsafe.Pointer(outData)))
 
 	err = common.PopulateOutDataSlice[C.VkQueueFamilyProperties2, *core1_1.QueueFamilyProperties2](out, unsafe.Pointer(outData))
 	return out, err
 }
 
-func (p *VulkanPhysicalDevice) SparseImageFormatProperties2(o core1_1.PhysicalDeviceSparseImageFormatInfo2, outDataFactory func() *core1_1.SparseImageFormatProperties2) ([]*core1_1.SparseImageFormatProperties2, error) {
+func (v *InstanceVulkanDriver) GetPhysicalDeviceSparseImageFormatProperties2(physicalDevice types.PhysicalDevice, o core1_1.PhysicalDeviceSparseImageFormatInfo2, outDataFactory func() *core1_1.SparseImageFormatProperties2) ([]*core1_1.SparseImageFormatProperties2, error) {
+	if physicalDevice.Handle() == 0 {
+		return nil, fmt.Errorf("physicalDevice cannot be uninitialized")
+	}
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
-	outDataCountPtr := (*driver.Uint32)(arena.Malloc(int(unsafe.Sizeof(C.uint32_t(0)))))
+	outDataCountPtr := (*loader.Uint32)(arena.Malloc(int(unsafe.Sizeof(C.uint32_t(0)))))
 	optionData, err := common.AllocOptions(arena, o)
 	if err != nil {
 		return nil, err
 	}
 
-	p.InstanceDriver.VkGetPhysicalDeviceSparseImageFormatProperties2(p.PhysicalDeviceHandle, (*driver.VkPhysicalDeviceSparseImageFormatInfo2)(optionData), outDataCountPtr, nil)
+	v.LoaderObj.VkGetPhysicalDeviceSparseImageFormatProperties2(physicalDevice.Handle(), (*loader.VkPhysicalDeviceSparseImageFormatInfo2)(optionData), outDataCountPtr, nil)
 
 	outDataCount := int(*outDataCountPtr)
 	if outDataCount == 0 {
@@ -240,10 +265,10 @@ func (p *VulkanPhysicalDevice) SparseImageFormatProperties2(o core1_1.PhysicalDe
 		return nil, err
 	}
 
-	p.InstanceDriver.VkGetPhysicalDeviceSparseImageFormatProperties2(p.PhysicalDeviceHandle,
-		(*driver.VkPhysicalDeviceSparseImageFormatInfo2)(optionData),
+	v.LoaderObj.VkGetPhysicalDeviceSparseImageFormatProperties2(physicalDevice.Handle(),
+		(*loader.VkPhysicalDeviceSparseImageFormatInfo2)(optionData),
 		outDataCountPtr,
-		(*driver.VkSparseImageFormatProperties2)(unsafe.Pointer(outData)),
+		(*loader.VkSparseImageFormatProperties2)(unsafe.Pointer(outData)),
 	)
 
 	err = common.PopulateOutDataSlice[C.VkSparseImageFormatProperties2, *core1_1.SparseImageFormatProperties2](out, unsafe.Pointer(outData))

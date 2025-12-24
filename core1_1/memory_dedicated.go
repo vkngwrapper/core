@@ -11,7 +11,7 @@ import (
 	"github.com/CannibalVox/cgoparam"
 	"github.com/pkg/errors"
 	"github.com/vkngwrapper/core/v3/common"
-	"github.com/vkngwrapper/core/v3/driver"
+	"github.com/vkngwrapper/core/v3/loader"
 	"github.com/vkngwrapper/core/v3/types"
 )
 
@@ -84,8 +84,8 @@ func (o *MemoryDedicatedRequirements) PopulateHeader(allocator *cgoparam.Allocat
 
 func (o *MemoryDedicatedRequirements) PopulateOutData(cDataPointer unsafe.Pointer, helpers ...any) (next unsafe.Pointer, err error) {
 	outData := (*C.VkMemoryDedicatedRequirements)(cDataPointer)
-	o.RequiresDedicatedAllocation = driver.VkBool32(outData.requiresDedicatedAllocation) != driver.VkBool32(0)
-	o.PrefersDedicatedAllocation = driver.VkBool32(outData.prefersDedicatedAllocation) != driver.VkBool32(0)
+	o.RequiresDedicatedAllocation = loader.VkBool32(outData.requiresDedicatedAllocation) != loader.VkBool32(0)
+	o.PrefersDedicatedAllocation = loader.VkBool32(outData.prefersDedicatedAllocation) != loader.VkBool32(0)
 
 	return outData.pNext, nil
 }

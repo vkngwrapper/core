@@ -10,9 +10,9 @@ import (
 	"github.com/vkngwrapper/core/v3/core1_0"
 	"github.com/vkngwrapper/core/v3/core1_1"
 	"github.com/vkngwrapper/core/v3/core1_2"
-	"github.com/vkngwrapper/core/v3/driver"
-	mock_driver "github.com/vkngwrapper/core/v3/driver/mocks"
 	"github.com/vkngwrapper/core/v3/internal/impl1_2"
+	"github.com/vkngwrapper/core/v3/loader"
+	mock_driver "github.com/vkngwrapper/core/v3/loader/mocks"
 	"github.com/vkngwrapper/core/v3/mocks"
 	"github.com/vkngwrapper/core/v3/mocks/mocks1_2"
 	"go.uber.org/mock/gomock"
@@ -22,7 +22,7 @@ func TestDescriptorSetVariableDescriptorCountAllocateOptions(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	coreDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_2)
+	coreDriver := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_2)
 
 	builder := &impl1_2.InstanceObjectBuilderImpl{}
 	device := builder.CreateDeviceObject(coreDriver, mocks.NewFakeDeviceHandle(), common.Vulkan1_2, []string{})
@@ -41,9 +41,9 @@ func TestDescriptorSetVariableDescriptorCountAllocateOptions(t *testing.T) {
 		device.Handle(),
 		gomock.Not(gomock.Nil()),
 		gomock.Not(gomock.Nil()),
-	).DoAndReturn(func(device driver.VkDevice,
-		pAllocateInfo *driver.VkDescriptorSetAllocateInfo,
-		pDescriptorSets *driver.VkDescriptorSet) (common.VkResult, error) {
+	).DoAndReturn(func(device loader.VkDevice,
+		pAllocateInfo *loader.VkDescriptorSetAllocateInfo,
+		pDescriptorSets *loader.VkDescriptorSet) (common.VkResult, error) {
 
 		sets := unsafe.Slice(pDescriptorSets, 4)
 		sets[0] = mockDescriptorSet1.Handle()
@@ -54,17 +54,17 @@ func TestDescriptorSetVariableDescriptorCountAllocateOptions(t *testing.T) {
 		val := reflect.ValueOf(pAllocateInfo).Elem()
 		require.Equal(t, uint64(34), val.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO
 
-		next := (*driver.VkDescriptorSetVariableDescriptorCountAllocateInfo)(val.FieldByName("pNext").UnsafePointer())
+		next := (*loader.VkDescriptorSetVariableDescriptorCountAllocateInfo)(val.FieldByName("pNext").UnsafePointer())
 		val = reflect.ValueOf(next).Elem()
 
 		require.Equal(t, uint64(1000161003), val.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_DESCRIPTOR_SET_VARIABLE_DESCRIPTOR_COUNT_ALLOCATE_INFO
 		require.True(t, val.FieldByName("pNext").IsNil())
 		require.Equal(t, uint64(4), val.FieldByName("descriptorSetCount").Uint())
 
-		countsPtr := (*driver.Uint32)(val.FieldByName("pDescriptorCounts").UnsafePointer())
+		countsPtr := (*loader.Uint32)(val.FieldByName("pDescriptorCounts").UnsafePointer())
 		countSlice := unsafe.Slice(countsPtr, 4)
 
-		require.Equal(t, []driver.Uint32{1, 3, 5, 7}, countSlice)
+		require.Equal(t, []loader.Uint32{1, 3, 5, 7}, countSlice)
 
 		return core1_0.VKSuccess, nil
 	})
@@ -85,12 +85,12 @@ func TestDescriptorSetVariableDescriptorCountAllocateOptions(t *testing.T) {
 	})
 	require.NoError(t, err)
 	require.Len(t, sets, 4)
-	require.Equal(t, []driver.VkDescriptorSet{
+	require.Equal(t, []loader.VkDescriptorSet{
 		mockDescriptorSet1.Handle(),
 		mockDescriptorSet2.Handle(),
 		mockDescriptorSet3.Handle(),
 		mockDescriptorSet4.Handle(),
-	}, []driver.VkDescriptorSet{
+	}, []loader.VkDescriptorSet{
 		sets[0].Handle(),
 		sets[1].Handle(),
 		sets[2].Handle(),
@@ -102,7 +102,7 @@ func TestDescriptorSetLayoutBindingFlagsCreateOptions(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	coreDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_2)
+	coreDriver := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_2)
 	builder := &impl1_2.InstanceObjectBuilderImpl{}
 	device := builder.CreateDeviceObject(coreDriver, mocks.NewFakeDeviceHandle(), common.Vulkan1_0, []string{})
 	mockDescriptorSetLayout := mocks1_2.EasyMockDescriptorSetLayout(ctrl)
@@ -112,22 +112,22 @@ func TestDescriptorSetLayoutBindingFlagsCreateOptions(t *testing.T) {
 		gomock.Not(gomock.Nil()),
 		gomock.Nil(),
 		gomock.Not(gomock.Nil()),
-	).DoAndReturn(func(device driver.VkDevice, pCreateInfo *driver.VkDescriptorSetLayoutCreateInfo, pAllocator *driver.VkAllocationCallbacks, pSetLayout *driver.VkDescriptorSetLayout) (common.VkResult, error) {
+	).DoAndReturn(func(device loader.VkDevice, pCreateInfo *loader.VkDescriptorSetLayoutCreateInfo, pAllocator *loader.VkAllocationCallbacks, pSetLayout *loader.VkDescriptorSetLayout) (common.VkResult, error) {
 		*pSetLayout = mockDescriptorSetLayout.Handle()
 		val := reflect.ValueOf(pCreateInfo).Elem()
 
 		require.Equal(t, uint64(32), val.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO
 
-		next := (*driver.VkDescriptorSetLayoutBindingFlagsCreateInfo)(val.FieldByName("pNext").UnsafePointer())
+		next := (*loader.VkDescriptorSetLayoutBindingFlagsCreateInfo)(val.FieldByName("pNext").UnsafePointer())
 		val = reflect.ValueOf(next).Elem()
 
 		require.Equal(t, uint64(1000161000), val.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_BINDING_FLAGS_CREATE_INFO
 		require.True(t, val.FieldByName("pNext").IsNil())
 		require.Equal(t, uint64(2), val.FieldByName("bindingCount").Uint())
-		flagsPtr := (*driver.VkDescriptorBindingFlags)(val.FieldByName("pBindingFlags").UnsafePointer())
+		flagsPtr := (*loader.VkDescriptorBindingFlags)(val.FieldByName("pBindingFlags").UnsafePointer())
 		flagSlice := unsafe.Slice(flagsPtr, 2)
 
-		require.Equal(t, []driver.VkDescriptorBindingFlags{8, 1}, flagSlice)
+		require.Equal(t, []loader.VkDescriptorBindingFlags{8, 1}, flagSlice)
 
 		return core1_0.VKSuccess, nil
 	})
@@ -152,7 +152,7 @@ func TestDescriptorSetVariableDescriptorCountLayoutSupportOutData(t *testing.T) 
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	coreDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_2)
+	coreDriver := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_2)
 	builder := &impl1_2.InstanceObjectBuilderImpl{}
 	device := builder.CreateDeviceObject(coreDriver, mocks.NewFakeDeviceHandle(), common.Vulkan1_2, []string{}).(core1_2.Device)
 
@@ -160,18 +160,18 @@ func TestDescriptorSetVariableDescriptorCountLayoutSupportOutData(t *testing.T) 
 		device.Handle(),
 		gomock.Not(gomock.Nil()),
 		gomock.Not(gomock.Nil()),
-	).DoAndReturn(func(device driver.VkDevice,
-		pCreateInfo *driver.VkDescriptorSetLayoutCreateInfo,
-		pSupport *driver.VkDescriptorSetLayoutSupport) {
+	).DoAndReturn(func(device loader.VkDevice,
+		pCreateInfo *loader.VkDescriptorSetLayoutCreateInfo,
+		pSupport *loader.VkDescriptorSetLayoutSupport) {
 		val := reflect.ValueOf(pSupport).Elem()
 
 		require.Equal(t, uint64(1000168001), val.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_SUPPORT
-		next := (*driver.VkDescriptorSetVariableDescriptorCountLayoutSupport)(val.FieldByName("pNext").UnsafePointer())
+		next := (*loader.VkDescriptorSetVariableDescriptorCountLayoutSupport)(val.FieldByName("pNext").UnsafePointer())
 		val = reflect.ValueOf(next).Elem()
 
 		require.Equal(t, uint64(1000161004), val.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_DESCRIPTOR_SET_VARIABLE_DESCRIPTOR_COUNT_LAYOUT_SUPPORT
 		require.True(t, val.FieldByName("pNext").IsNil())
-		*(*driver.Uint32)(unsafe.Pointer(val.FieldByName("maxVariableDescriptorCount").UnsafeAddr())) = driver.Uint32(7)
+		*(*loader.Uint32)(unsafe.Pointer(val.FieldByName("maxVariableDescriptorCount").UnsafeAddr())) = loader.Uint32(7)
 	})
 
 	var outData core1_2.DescriptorSetVariableDescriptorCountLayoutSupport

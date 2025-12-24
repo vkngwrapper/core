@@ -9,9 +9,9 @@ import (
 	"github.com/vkngwrapper/core/v3/common"
 	"github.com/vkngwrapper/core/v3/core1_0"
 	"github.com/vkngwrapper/core/v3/core1_1"
-	"github.com/vkngwrapper/core/v3/driver"
-	mock_driver "github.com/vkngwrapper/core/v3/driver/mocks"
 	"github.com/vkngwrapper/core/v3/internal/impl1_1"
+	"github.com/vkngwrapper/core/v3/loader"
+	mock_driver "github.com/vkngwrapper/core/v3/loader/mocks"
 	"github.com/vkngwrapper/core/v3/mocks"
 	"github.com/vkngwrapper/core/v3/mocks/mocks1_1"
 	"go.uber.org/mock/gomock"
@@ -21,27 +21,27 @@ func TestInputAttachmentAspectOptions(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	coreDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_1)
+	coreDriver := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_1)
 	builder := &impl1_1.InstanceObjectBuilderImpl{}
 	device := builder.CreateDeviceObject(coreDriver, mocks.NewFakeDeviceHandle(), common.Vulkan1_1, []string{}).(core1_1.Device)
 
 	expectedRenderPass := mocks1_1.EasyMockRenderPass(ctrl)
 
 	coreDriver.EXPECT().VkCreateRenderPass(device.Handle(), gomock.Not(gomock.Nil()), gomock.Nil(), gomock.Not(gomock.Nil())).
-		DoAndReturn(func(device driver.VkDevice, pCreateInfo *driver.VkRenderPassCreateInfo, pAllocator *driver.VkAllocationCallbacks, pRenderPass *driver.VkRenderPass) (common.VkResult, error) {
+		DoAndReturn(func(device loader.VkDevice, pCreateInfo *loader.VkRenderPassCreateInfo, pAllocator *loader.VkAllocationCallbacks, pRenderPass *loader.VkRenderPass) (common.VkResult, error) {
 			*pRenderPass = expectedRenderPass.Handle()
 
 			val := reflect.ValueOf(pCreateInfo).Elem()
 			require.Equal(t, uint64(38), val.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO
 
-			aspectOptions := (*driver.VkRenderPassInputAttachmentAspectCreateInfo)(val.FieldByName("pNext").UnsafePointer())
+			aspectOptions := (*loader.VkRenderPassInputAttachmentAspectCreateInfo)(val.FieldByName("pNext").UnsafePointer())
 			aspectVal := reflect.ValueOf(aspectOptions).Elem()
 			require.Equal(t, uint64(1000117001), aspectVal.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_RENDER_PASS_INPUT_ATTACHMENT_ASPECT_CREATE_INFO
 			require.True(t, aspectVal.FieldByName("pNext").IsNil())
 			require.Equal(t, uint64(2), aspectVal.FieldByName("aspectReferenceCount").Uint())
 
-			refsPtr := (*driver.VkInputAttachmentAspectReference)(aspectVal.FieldByName("pAspectReferences").UnsafePointer())
-			refsSlice := ([]driver.VkInputAttachmentAspectReference)(unsafe.Slice(refsPtr, 2))
+			refsPtr := (*loader.VkInputAttachmentAspectReference)(aspectVal.FieldByName("pAspectReferences").UnsafePointer())
+			refsSlice := ([]loader.VkInputAttachmentAspectReference)(unsafe.Slice(refsPtr, 2))
 			refsVal := reflect.ValueOf(refsSlice)
 			ref := refsVal.Index(0)
 			require.Equal(t, uint64(1), ref.FieldByName("subpass").Uint())
@@ -81,7 +81,7 @@ func TestDeviceGroupRenderPassBeginOptions(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	coreDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_0)
+	coreDriver := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_0)
 	device := mocks1_1.EasyMockDevice(ctrl, coreDriver)
 	commandPool := mocks1_1.EasyMockCommandPool(ctrl, device)
 
@@ -93,18 +93,18 @@ func TestDeviceGroupRenderPassBeginOptions(t *testing.T) {
 	coreDriver.EXPECT().VkCmdBeginRenderPass(
 		commandBuffer.Handle(),
 		gomock.Not(gomock.Nil()),
-		driver.VkSubpassContents(1), // VK_SUBPASS_CONTENTS_SECONDARY_COMMAND_BUFFERS
+		loader.VkSubpassContents(1), // VK_SUBPASS_CONTENTS_SECONDARY_COMMAND_BUFFERS
 	).DoAndReturn(func(
-		commandBuffer driver.VkCommandBuffer,
-		pRenderPassBegin *driver.VkRenderPassBeginInfo,
-		contents driver.VkSubpassContents,
+		commandBuffer loader.VkCommandBuffer,
+		pRenderPassBegin *loader.VkRenderPassBeginInfo,
+		contents loader.VkSubpassContents,
 	) {
 		val := reflect.ValueOf(pRenderPassBegin).Elem()
 		require.Equal(t, uint64(43), val.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO
-		require.Equal(t, renderPass.Handle(), (driver.VkRenderPass)(val.FieldByName("renderPass").UnsafePointer()))
-		require.Equal(t, framebuffer.Handle(), (driver.VkFramebuffer)(val.FieldByName("framebuffer").UnsafePointer()))
+		require.Equal(t, renderPass.Handle(), (loader.VkRenderPass)(val.FieldByName("renderPass").UnsafePointer()))
+		require.Equal(t, framebuffer.Handle(), (loader.VkFramebuffer)(val.FieldByName("framebuffer").UnsafePointer()))
 
-		next := (*driver.VkDeviceGroupRenderPassBeginInfo)(val.FieldByName("pNext").UnsafePointer())
+		next := (*loader.VkDeviceGroupRenderPassBeginInfo)(val.FieldByName("pNext").UnsafePointer())
 		val = reflect.ValueOf(next).Elem()
 
 		require.Equal(t, uint64(1000060003), val.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_DEVICE_GROUP_RENDER_PASS_BEGIN_INFO
@@ -112,8 +112,8 @@ func TestDeviceGroupRenderPassBeginOptions(t *testing.T) {
 		require.Equal(t, uint64(7), val.FieldByName("deviceMask").Uint())
 		require.Equal(t, uint64(2), val.FieldByName("deviceRenderAreaCount").Uint())
 
-		areas := (*driver.VkRect2D)(val.FieldByName("pDeviceRenderAreas").UnsafePointer())
-		areaSlice := ([]driver.VkRect2D)(unsafe.Slice(areas, 2))
+		areas := (*loader.VkRect2D)(val.FieldByName("pDeviceRenderAreas").UnsafePointer())
+		areaSlice := ([]loader.VkRect2D)(unsafe.Slice(areas, 2))
 		val = reflect.ValueOf(areaSlice)
 
 		oneArea := val.Index(0)
@@ -158,7 +158,7 @@ func TestRenderPassMultiviewOptions(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	coreDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_1)
+	coreDriver := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_1)
 	builder := &impl1_1.InstanceObjectBuilderImpl{}
 	device := builder.CreateDeviceObject(coreDriver, mocks.NewFakeDeviceHandle(), common.Vulkan1_1, []string{}).(core1_1.Device)
 
@@ -169,17 +169,17 @@ func TestRenderPassMultiviewOptions(t *testing.T) {
 		gomock.Not(gomock.Nil()),
 		gomock.Nil(),
 		gomock.Not(gomock.Nil()),
-	).DoAndReturn(func(device driver.VkDevice,
-		pCreateInfo *driver.VkRenderPassCreateInfo,
-		pAllocator *driver.VkAllocationCallbacks,
-		pRenderPass *driver.VkRenderPass) (common.VkResult, error) {
+	).DoAndReturn(func(device loader.VkDevice,
+		pCreateInfo *loader.VkRenderPassCreateInfo,
+		pAllocator *loader.VkAllocationCallbacks,
+		pRenderPass *loader.VkRenderPass) (common.VkResult, error) {
 
 		*pRenderPass = mockRenderPass.Handle()
 
 		val := reflect.ValueOf(pCreateInfo).Elem()
 		require.Equal(t, uint64(38), val.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO
 
-		next := (*driver.VkRenderPassMultiviewCreateInfo)(val.FieldByName("pNext").UnsafePointer())
+		next := (*loader.VkRenderPassMultiviewCreateInfo)(val.FieldByName("pNext").UnsafePointer())
 		val = reflect.ValueOf(next).Elem()
 
 		require.Equal(t, uint64(1000053000), val.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_RENDER_PASS_MULTIVIEW_CREATE_INFO
@@ -188,17 +188,17 @@ func TestRenderPassMultiviewOptions(t *testing.T) {
 		require.Equal(t, uint64(2), val.FieldByName("dependencyCount").Uint())
 		require.Equal(t, uint64(1), val.FieldByName("correlationMaskCount").Uint())
 
-		masks := (*driver.Uint32)(val.FieldByName("pViewMasks").UnsafePointer())
-		maskSlice := ([]driver.Uint32)(unsafe.Slice(masks, 3))
-		require.Equal(t, []driver.Uint32{1, 2, 7}, maskSlice)
+		masks := (*loader.Uint32)(val.FieldByName("pViewMasks").UnsafePointer())
+		maskSlice := ([]loader.Uint32)(unsafe.Slice(masks, 3))
+		require.Equal(t, []loader.Uint32{1, 2, 7}, maskSlice)
 
-		offsets := (*driver.Int32)(val.FieldByName("pViewOffsets").UnsafePointer())
-		offsetSlice := ([]driver.Int32)(unsafe.Slice(offsets, 2))
-		require.Equal(t, []driver.Int32{11, 13}, offsetSlice)
+		offsets := (*loader.Int32)(val.FieldByName("pViewOffsets").UnsafePointer())
+		offsetSlice := ([]loader.Int32)(unsafe.Slice(offsets, 2))
+		require.Equal(t, []loader.Int32{11, 13}, offsetSlice)
 
-		correlationMasks := (*driver.Uint32)(val.FieldByName("pCorrelationMasks").UnsafePointer())
-		correlationSlice := ([]driver.Uint32)(unsafe.Slice(correlationMasks, 1))
-		require.Equal(t, []driver.Uint32{17}, correlationSlice)
+		correlationMasks := (*loader.Uint32)(val.FieldByName("pCorrelationMasks").UnsafePointer())
+		correlationSlice := ([]loader.Uint32)(unsafe.Slice(correlationMasks, 1))
+		require.Equal(t, []loader.Uint32{17}, correlationSlice)
 
 		return core1_0.VKSuccess, nil
 	})
