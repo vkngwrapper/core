@@ -1,22 +1,22 @@
 package impl1_2
 
 import (
+	"fmt"
+
+	"github.com/vkngwrapper/core/v3"
 	"github.com/vkngwrapper/core/v3/common"
-	"github.com/vkngwrapper/core/v3/driver"
-	"github.com/vkngwrapper/core/v3/internal/impl1_1"
+	"github.com/vkngwrapper/core/v3/core1_0"
+	"github.com/vkngwrapper/core/v3/loader"
 )
 
-// VulkanSemaphore is an implementation of the Semaphore interface that actually communicates with Vulkan. This
-// is the default implementation. See the interface for more documentation.
-type VulkanSemaphore struct {
-	impl1_1.VulkanSemaphore
-}
-
-func (s *VulkanSemaphore) CounterValue() (uint64, common.VkResult, error) {
-	var value driver.Uint64
-	res, err := s.Driver().VkGetSemaphoreCounterValue(
-		s.DeviceHandle(),
-		s.Handle(),
+func (v *DeviceVulkanDriver) GetSemaphoreCounterValue(semaphore core.Semaphore) (uint64, common.VkResult, error) {
+	if semaphore.Handle() == 0 {
+		return 0, core1_0.VKErrorUnknown, fmt.Errorf("semaphore cannot be uninitialized")
+	}
+	var value loader.Uint64
+	res, err := v.LoaderObj.VkGetSemaphoreCounterValue(
+		semaphore.DeviceHandle(),
+		semaphore.Handle(),
 		&value,
 	)
 	if err != nil {

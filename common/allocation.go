@@ -42,7 +42,7 @@ var internalAllocationTypeToString = map[InternalAllocationType]string{
 }
 
 // AllocationFunction is an application-defined memory allocation function. It can be registered with
-// Vulkan via driver.CreateAllocationCallbacks in order to allow users to override the default Vulkan
+// Vulkan via loader.CreateAllocationCallbacks in order to allow users to override the default Vulkan
 // host memory allocation behavior. Beware: this should provide unsafe.Pointers to **C** memory, not go
 // memory!
 //
@@ -50,7 +50,7 @@ var internalAllocationTypeToString = map[InternalAllocationType]string{
 type AllocationFunction func(userData any, size int, alignment int, allocationScope SystemAllocationScope) unsafe.Pointer
 
 // ReallocationFunction is an application-defined memory reallocation function. It can be registered with
-// Vulkan via driver.CreateAllocationCallbacks in order to allow users to override the default Vulkan
+// Vulkan via loader.CreateAllocationCallbacks in order to allow users to override the default Vulkan
 // host memory reallocation behavior. `original` is a pointer to the memory being reallocated, and
 // may be nil. When `original` is nil, ReallocationFunction must act equivalently to the AllocationFunction
 // in the same AllocationCallbacks object.
@@ -60,28 +60,28 @@ type AllocationFunction func(userData any, size int, alignment int, allocationSc
 type ReallocationFunction func(userData any, original unsafe.Pointer, size int, alignment int, allocationScope SystemAllocationScope) unsafe.Pointer
 
 // FreeFunction is an application-defined memory free function. It can be registered with Vulkan via
-// driver.CreateAllocationCallbacks in order to allow users to override the default Vulkan host memory
+// loader.CreateAllocationCallbacks in order to allow users to override the default Vulkan host memory
 // free behavior.
 //
 // https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/PFN_vkFreeFunction.html
 type FreeFunction func(userData any, memory unsafe.Pointer)
 
 // InternalAllocationNotification is an application-defined function to received allocation notifications.
-// It is purely an informational callback. It can be registered with Vulkan via driver.CreateAllocationCallbacks
+// It is purely an informational callback. It can be registered with Vulkan via loader.CreateAllocationCallbacks
 // in order to allow users to receive notifications when the Vulkan host makes memory allocations.
 //
 // https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/PFN_vkInternalAllocationNotification.html
 type InternalAllocationNotification func(userData any, size int, allocationType InternalAllocationType, allocationScope SystemAllocationScope)
 
 // InternalFreeNotification is an application-defined function to receive free notifications. It is
-// purely an informational callback. It can be registered with Vulkan via driver.CreateAllocationCallbacks
+// purely an informational callback. It can be registered with Vulkan via loader.CreateAllocationCallbacks
 // in order to allow users to receive notifications when the Vulkan host frees memory.
 //
 // https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/PFN_vkInternalFreeNotification.html
 type InternalFreeNotification func(userData any, size int, allocationType InternalAllocationType, allocationScope SystemAllocationScope)
 
 // AllocationCallbackOptions defines a set of callbacks and a piece of userdata that can be baked
-// into a driver.AllocationCallbacks with driver.CreateAllocationCallbacks. driver.AllocationCallbacks
+// into a loader.AllocationCallbacks with loader.CreateAllocationCallbacks. loader.AllocationCallbacks
 // objects are immutable, so it may be valuable to hold onto your AllocationCallbackOptions object
 // in order to allow changes over time, if that is necessary.
 //

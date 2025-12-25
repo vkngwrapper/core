@@ -9,6 +9,7 @@ import (
 	"unsafe"
 
 	"github.com/CannibalVox/cgoparam"
+	"github.com/vkngwrapper/core/v3"
 	"github.com/vkngwrapper/core/v3/common"
 )
 
@@ -49,7 +50,7 @@ type PipelineLayoutCreateInfo struct {
 	Flags PipelineLayoutCreateFlags
 
 	// SetLayouts is a slice of DescriptorSetLayout objects
-	SetLayouts []DescriptorSetLayout
+	SetLayouts []core.DescriptorSetLayout
 	// PushConstantRanges is a slice of PushConstantRange structures defining a set of push constant
 	// ranges for use in a single PipelineLayout
 	PushConstantRanges []PushConstantRange
@@ -80,7 +81,7 @@ func (o PipelineLayoutCreateInfo) PopulateCPointer(allocator *cgoparam.Allocator
 		for i := 0; i < setLayoutCount; i++ {
 			setLayoutSlice[i] = nil
 
-			if o.SetLayouts[i] != nil {
+			if o.SetLayouts[i].Handle() != 0 {
 				setLayoutSlice[i] = (C.VkDescriptorSetLayout)(unsafe.Pointer(o.SetLayouts[i].Handle()))
 			}
 		}

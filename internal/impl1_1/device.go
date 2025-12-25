@@ -6,25 +6,31 @@ package impl1_1
 */
 import "C"
 import (
+	"fmt"
 	"unsafe"
 
 	"github.com/CannibalVox/cgoparam"
+	"github.com/vkngwrapper/core/v3"
 	"github.com/vkngwrapper/core/v3/common"
 	"github.com/vkngwrapper/core/v3/core1_0"
 	"github.com/vkngwrapper/core/v3/core1_1"
-	"github.com/vkngwrapper/core/v3/driver"
-	"github.com/vkngwrapper/core/v3/internal/impl1_0"
+	"github.com/vkngwrapper/core/v3/loader"
 )
 
-// VulkanDevice is an implementation of the Device interface that actually communicates with Vulkan. This
-// is the default implementation. See the interface for more documentation.
-type VulkanDevice struct {
-	impl1_0.VulkanDevice
+func (v *DeviceVulkanDriver) BindBufferMemory2(o ...core1_1.BindBufferMemoryInfo) (common.VkResult, error) {
+	if len(o) == 0 {
+		return core1_0.VKSuccess, nil
+	}
 
-	DeviceObjectBuilder core1_1.DeviceObjectBuilder
-}
+	for i, info := range o {
+		if info.Buffer.Handle() == 0 {
+			return core1_0.VKErrorUnknown, fmt.Errorf("buffers in the list of info objects cannot be uninitialized, but buffer %d is uninitialized", i)
+		}
+		if info.Buffer.DeviceHandle() != o[0].Buffer.DeviceHandle() {
+			return core1_0.VKErrorUnknown, fmt.Errorf("buffers in the list of info objects must belong to the same Device, but Buffer %d belongs to a different device from Buffer 0", i)
+		}
+	}
 
-func (d *VulkanDevice) BindBufferMemory2(o []core1_1.BindBufferMemoryInfo) (common.VkResult, error) {
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
@@ -33,13 +39,26 @@ func (d *VulkanDevice) BindBufferMemory2(o []core1_1.BindBufferMemoryInfo) (comm
 		return core1_0.VKErrorUnknown, err
 	}
 
-	return d.Driver().VkBindBufferMemory2(d.Handle(),
-		driver.Uint32(len(o)),
-		(*driver.VkBindBufferMemoryInfo)(unsafe.Pointer(optionPtr)),
+	return v.LoaderObj.VkBindBufferMemory2(o[0].Buffer.DeviceHandle(),
+		loader.Uint32(len(o)),
+		(*loader.VkBindBufferMemoryInfo)(unsafe.Pointer(optionPtr)),
 	)
 }
 
-func (d *VulkanDevice) BindImageMemory2(o []core1_1.BindImageMemoryInfo) (common.VkResult, error) {
+func (v *DeviceVulkanDriver) BindImageMemory2(o ...core1_1.BindImageMemoryInfo) (common.VkResult, error) {
+	if len(o) == 0 {
+		return core1_0.VKSuccess, nil
+	}
+
+	for i, info := range o {
+		if info.Image.Handle() == 0 {
+			return core1_0.VKErrorUnknown, fmt.Errorf("images in the list of info objects cannot be uninitialized but Image %d is uninitialized", i)
+		}
+		if info.Image.DeviceHandle() != o[0].Image.DeviceHandle() {
+			return core1_0.VKErrorUnknown, fmt.Errorf("images in the list of info objects must belong to the same Device, but Image %d belongs to a different device from Image 0", i)
+		}
+	}
+
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
@@ -48,14 +67,18 @@ func (d *VulkanDevice) BindImageMemory2(o []core1_1.BindImageMemoryInfo) (common
 		return core1_0.VKErrorUnknown, err
 	}
 
-	return d.Driver().VkBindImageMemory2(
-		d.Handle(),
-		driver.Uint32(len(o)),
-		(*driver.VkBindImageMemoryInfo)(unsafe.Pointer(optionPtr)),
+	return v.LoaderObj.VkBindImageMemory2(
+		o[0].Image.DeviceHandle(),
+		loader.Uint32(len(o)),
+		(*loader.VkBindImageMemoryInfo)(unsafe.Pointer(optionPtr)),
 	)
 }
 
-func (d *VulkanDevice) BufferMemoryRequirements2(o core1_1.BufferMemoryRequirementsInfo2, out *core1_1.MemoryRequirements2) error {
+func (v *DeviceVulkanDriver) GetBufferMemoryRequirements2(o core1_1.BufferMemoryRequirementsInfo2, out *core1_1.MemoryRequirements2) error {
+	if o.Buffer.Handle() == 0 {
+		return fmt.Errorf("o.Buffer cannot be uninitialized")
+	}
+
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
@@ -69,15 +92,19 @@ func (d *VulkanDevice) BufferMemoryRequirements2(o core1_1.BufferMemoryRequireme
 		return err
 	}
 
-	d.Driver().VkGetBufferMemoryRequirements2(d.Handle(),
-		(*driver.VkBufferMemoryRequirementsInfo2)(optionPtr),
-		(*driver.VkMemoryRequirements2)(outDataPtr),
+	v.LoaderObj.VkGetBufferMemoryRequirements2(o.Buffer.DeviceHandle(),
+		(*loader.VkBufferMemoryRequirementsInfo2)(optionPtr),
+		(*loader.VkMemoryRequirements2)(outDataPtr),
 	)
 
 	return common.PopulateOutData(out, outDataPtr)
 }
 
-func (d *VulkanDevice) ImageMemoryRequirements2(o core1_1.ImageMemoryRequirementsInfo2, out *core1_1.MemoryRequirements2) error {
+func (v *DeviceVulkanDriver) GetImageMemoryRequirements2(o core1_1.ImageMemoryRequirementsInfo2, out *core1_1.MemoryRequirements2) error {
+	if o.Image.Handle() == 0 {
+		return fmt.Errorf("o.Image cannot be uninitialized")
+	}
+
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
@@ -91,15 +118,19 @@ func (d *VulkanDevice) ImageMemoryRequirements2(o core1_1.ImageMemoryRequirement
 		return err
 	}
 
-	d.Driver().VkGetImageMemoryRequirements2(d.Handle(),
-		(*driver.VkImageMemoryRequirementsInfo2)(optionPtr),
-		(*driver.VkMemoryRequirements2)(outDataPtr),
+	v.LoaderObj.VkGetImageMemoryRequirements2(o.Image.DeviceHandle(),
+		(*loader.VkImageMemoryRequirementsInfo2)(optionPtr),
+		(*loader.VkMemoryRequirements2)(outDataPtr),
 	)
 
 	return common.PopulateOutData(out, outDataPtr)
 }
 
-func (d *VulkanDevice) ImageSparseMemoryRequirements2(o core1_1.ImageSparseMemoryRequirementsInfo2, outDataFactory func() *core1_1.SparseImageMemoryRequirements2) ([]*core1_1.SparseImageMemoryRequirements2, error) {
+func (v *DeviceVulkanDriver) GetImageSparseMemoryRequirements2(o core1_1.ImageSparseMemoryRequirementsInfo2, outDataFactory func() *core1_1.SparseImageMemoryRequirements2) ([]*core1_1.SparseImageMemoryRequirements2, error) {
+	if o.Image.Handle() == 0 {
+		return nil, fmt.Errorf("o.Image cannot be uninitialized")
+	}
+
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
@@ -108,10 +139,10 @@ func (d *VulkanDevice) ImageSparseMemoryRequirements2(o core1_1.ImageSparseMemor
 		return nil, err
 	}
 
-	requirementCountPtr := (*driver.Uint32)(arena.Malloc(int(unsafe.Sizeof(C.uint32_t(0)))))
+	requirementCountPtr := (*loader.Uint32)(arena.Malloc(int(unsafe.Sizeof(C.uint32_t(0)))))
 
-	d.Driver().VkGetImageSparseMemoryRequirements2(d.Handle(),
-		(*driver.VkImageSparseMemoryRequirementsInfo2)(optionPtr),
+	v.LoaderObj.VkGetImageSparseMemoryRequirements2(o.Image.DeviceHandle(),
+		(*loader.VkImageSparseMemoryRequirementsInfo2)(optionPtr),
 		requirementCountPtr,
 		nil,
 	)
@@ -137,10 +168,10 @@ func (d *VulkanDevice) ImageSparseMemoryRequirements2(o core1_1.ImageSparseMemor
 
 	castOutDataPtr := (*C.VkSparseImageMemoryRequirements2)(outDataPtr)
 
-	d.Driver().VkGetImageSparseMemoryRequirements2(d.Handle(),
-		(*driver.VkImageSparseMemoryRequirementsInfo2)(optionPtr),
+	v.LoaderObj.VkGetImageSparseMemoryRequirements2(o.Image.DeviceHandle(),
+		(*loader.VkImageSparseMemoryRequirementsInfo2)(optionPtr),
 		requirementCountPtr,
-		(*driver.VkSparseImageMemoryRequirements2)(unsafe.Pointer(castOutDataPtr)),
+		(*loader.VkSparseImageMemoryRequirements2)(unsafe.Pointer(castOutDataPtr)),
 	)
 
 	err = common.PopulateOutDataSlice[C.VkSparseImageMemoryRequirements2, *core1_1.SparseImageMemoryRequirements2](outDataSlice, unsafe.Pointer(outDataPtr))
@@ -151,7 +182,10 @@ func (d *VulkanDevice) ImageSparseMemoryRequirements2(o core1_1.ImageSparseMemor
 	return outDataSlice, nil
 }
 
-func (d *VulkanDevice) DescriptorSetLayoutSupport(o core1_0.DescriptorSetLayoutCreateInfo, outData *core1_1.DescriptorSetLayoutSupport) error {
+func (v *DeviceVulkanDriver) GetDescriptorSetLayoutSupport(device core.Device, o core1_0.DescriptorSetLayoutCreateInfo, outData *core1_1.DescriptorSetLayoutSupport) error {
+	if device.Handle() == 0 {
+		return fmt.Errorf("device cannot be uninitialized")
+	}
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
@@ -165,90 +199,105 @@ func (d *VulkanDevice) DescriptorSetLayoutSupport(o core1_0.DescriptorSetLayoutC
 		return err
 	}
 
-	d.Driver().VkGetDescriptorSetLayoutSupport(d.Handle(),
-		(*driver.VkDescriptorSetLayoutCreateInfo)(optionsPtr),
-		(*driver.VkDescriptorSetLayoutSupport)(outDataPtr))
+	v.LoaderObj.VkGetDescriptorSetLayoutSupport(device.Handle(),
+		(*loader.VkDescriptorSetLayoutCreateInfo)(optionsPtr),
+		(*loader.VkDescriptorSetLayoutSupport)(outDataPtr))
 
 	return common.PopulateOutData(outData, outDataPtr)
 }
 
-func (d *VulkanDevice) DeviceGroupPeerMemoryFeatures(heapIndex, localDeviceIndex, remoteDeviceIndex int) core1_1.PeerMemoryFeatureFlags {
+func (v *DeviceVulkanDriver) GetDeviceGroupPeerMemoryFeatures(device core.Device, heapIndex, localDeviceIndex, remoteDeviceIndex int) core1_1.PeerMemoryFeatureFlags {
+	if device.Handle() == 0 {
+		panic("device cannot be uninitialized")
+	}
+
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
-	featuresPtr := (*driver.VkPeerMemoryFeatureFlags)(arena.Malloc(int(unsafe.Sizeof(C.VkPeerMemoryFeatureFlags(0)))))
+	featuresPtr := (*loader.VkPeerMemoryFeatureFlags)(arena.Malloc(int(unsafe.Sizeof(C.VkPeerMemoryFeatureFlags(0)))))
 
-	d.Driver().VkGetDeviceGroupPeerMemoryFeatures(
-		d.Handle(),
-		driver.Uint32(heapIndex),
-		driver.Uint32(localDeviceIndex),
-		driver.Uint32(remoteDeviceIndex),
+	v.LoaderObj.VkGetDeviceGroupPeerMemoryFeatures(
+		device.Handle(),
+		loader.Uint32(heapIndex),
+		loader.Uint32(localDeviceIndex),
+		loader.Uint32(remoteDeviceIndex),
 		featuresPtr,
 	)
 
 	return core1_1.PeerMemoryFeatureFlags(*featuresPtr)
 }
 
-func (d *VulkanDevice) CreateDescriptorUpdateTemplate(o core1_1.DescriptorUpdateTemplateCreateInfo, allocator *driver.AllocationCallbacks) (core1_1.DescriptorUpdateTemplate, common.VkResult, error) {
+func (v *DeviceVulkanDriver) CreateDescriptorUpdateTemplate(device core.Device, o core1_1.DescriptorUpdateTemplateCreateInfo, allocator *loader.AllocationCallbacks) (core.DescriptorUpdateTemplate, common.VkResult, error) {
+	if device.Handle() == 0 {
+		return core.DescriptorUpdateTemplate{}, core1_0.VKErrorUnknown, fmt.Errorf("device cannot be uninitialized")
+	}
+
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
 	createInfoPtr, err := common.AllocOptions(arena, o)
 	if err != nil {
-		return nil, core1_0.VKErrorUnknown, err
+		return core.DescriptorUpdateTemplate{}, core1_0.VKErrorUnknown, err
 	}
 
-	var templateHandle driver.VkDescriptorUpdateTemplate
-	res, err := d.Driver().VkCreateDescriptorUpdateTemplate(d.Handle(),
-		(*driver.VkDescriptorUpdateTemplateCreateInfo)(createInfoPtr),
+	var templateHandle loader.VkDescriptorUpdateTemplate
+	res, err := v.LoaderObj.VkCreateDescriptorUpdateTemplate(device.Handle(),
+		(*loader.VkDescriptorUpdateTemplateCreateInfo)(createInfoPtr),
 		allocator.Handle(),
 		&templateHandle,
 	)
 	if err != nil {
-		return nil, res, err
+		return core.DescriptorUpdateTemplate{}, res, err
 	}
 
-	return d.DeviceObjectBuilder.CreateDescriptorUpdateTemplate(d.Driver(), d.Handle(), templateHandle, d.APIVersion()), res, nil
+	return core.InternalDescriptorUpdateTemplate(device.Handle(), templateHandle, device.APIVersion()), res, nil
 }
 
-func (d *VulkanDevice) CreateSamplerYcbcrConversion(o core1_1.SamplerYcbcrConversionCreateInfo, allocator *driver.AllocationCallbacks) (core1_1.SamplerYcbcrConversion, common.VkResult, error) {
+func (v *DeviceVulkanDriver) CreateSamplerYcbcrConversion(device core.Device, o core1_1.SamplerYcbcrConversionCreateInfo, allocator *loader.AllocationCallbacks) (core.SamplerYcbcrConversion, common.VkResult, error) {
+	if device.Handle() == 0 {
+		return core.SamplerYcbcrConversion{}, core1_0.VKErrorUnknown, fmt.Errorf("device cannot be uninitialized")
+	}
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
 	optionPtr, err := common.AllocOptions(arena, o)
 	if err != nil {
-		return nil, core1_0.VKErrorUnknown, err
+		return core.SamplerYcbcrConversion{}, core1_0.VKErrorUnknown, err
 	}
 
-	var ycbcrHandle driver.VkSamplerYcbcrConversion
-	res, err := d.Driver().VkCreateSamplerYcbcrConversion(
-		d.Handle(),
-		(*driver.VkSamplerYcbcrConversionCreateInfo)(optionPtr),
+	var ycbcrHandle loader.VkSamplerYcbcrConversion
+	res, err := v.LoaderObj.VkCreateSamplerYcbcrConversion(
+		device.Handle(),
+		(*loader.VkSamplerYcbcrConversionCreateInfo)(optionPtr),
 		allocator.Handle(),
 		&ycbcrHandle,
 	)
 	if err != nil {
-		return nil, res, err
+		return core.SamplerYcbcrConversion{}, res, err
 	}
 
-	return d.DeviceObjectBuilder.CreateSamplerYcbcrConversion(d.Driver(), d.Handle(), ycbcrHandle, d.APIVersion()), res, nil
+	return core.InternalSamplerYcbcrConversion(device.Handle(), ycbcrHandle, device.APIVersion()), res, nil
 }
 
-func (d *VulkanDevice) GetQueue2(o core1_1.DeviceQueueInfo2) (core1_0.Queue, error) {
+func (v *DeviceVulkanDriver) GetDeviceQueue2(device core.Device, o core1_1.DeviceQueueInfo2) (core.Queue, error) {
+	if device.Handle() == 0 {
+		return core.Queue{}, fmt.Errorf("device cannot be uninitialized")
+	}
+
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
 	optionPtr, err := common.AllocOptions(arena, o)
 	if err != nil {
-		return nil, err
+		return core.Queue{}, err
 	}
 
-	var queue driver.VkQueue
-	d.Driver().VkGetDeviceQueue2(
-		d.Handle(),
-		(*driver.VkDeviceQueueInfo2)(optionPtr),
+	var queue loader.VkQueue
+	v.LoaderObj.VkGetDeviceQueue2(
+		device.Handle(),
+		(*loader.VkDeviceQueueInfo2)(optionPtr),
 		&queue,
 	)
 
-	return d.VulkanDevice.DeviceObjectBuilder.CreateQueueObject(d.Driver(), d.Handle(), queue, d.APIVersion()), nil
+	return core.InternalQueue(device.Handle(), queue, device.APIVersion()), nil
 }

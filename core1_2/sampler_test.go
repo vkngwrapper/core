@@ -8,9 +8,8 @@ import (
 	"github.com/vkngwrapper/core/v3/common"
 	"github.com/vkngwrapper/core/v3/core1_0"
 	"github.com/vkngwrapper/core/v3/core1_2"
-	"github.com/vkngwrapper/core/v3/driver"
-	mock_driver "github.com/vkngwrapper/core/v3/driver/mocks"
-	"github.com/vkngwrapper/core/v3/internal/impl1_2"
+	"github.com/vkngwrapper/core/v3/loader"
+	mock_loader "github.com/vkngwrapper/core/v3/loader/mocks"
 	"github.com/vkngwrapper/core/v3/mocks"
 	"github.com/vkngwrapper/core/v3/mocks/mocks1_2"
 	"go.uber.org/mock/gomock"
@@ -20,26 +19,26 @@ func TestSamplerReductionModeCreateOptions(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	coreDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_2)
-	builder := &impl1_2.InstanceObjectBuilderImpl{}
-	device := builder.CreateDeviceObject(coreDriver, mocks.NewFakeDeviceHandle(), common.Vulkan1_2, []string{})
-	mockSampler := mocks1_2.EasyMockSampler(ctrl)
+	coreLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_2)
+	driver := mocks1_2.InternalDeviceDriver(coreLoader)
+	device := mocks.NewDummyDevice(common.Vulkan1_2, []string{})
+	mockSampler := mocks.NewDummySampler(device)
 
-	coreDriver.EXPECT().VkCreateSampler(
+	coreLoader.EXPECT().VkCreateSampler(
 		device.Handle(),
 		gomock.Not(gomock.Nil()),
 		gomock.Nil(),
 		gomock.Not(gomock.Nil()),
-	).DoAndReturn(func(device driver.VkDevice,
-		pCreateInfo *driver.VkSamplerCreateInfo,
-		pAllocator *driver.VkAllocationCallbacks,
-		pSampler *driver.VkSampler) (common.VkResult, error) {
+	).DoAndReturn(func(device loader.VkDevice,
+		pCreateInfo *loader.VkSamplerCreateInfo,
+		pAllocator *loader.VkAllocationCallbacks,
+		pSampler *loader.VkSampler) (common.VkResult, error) {
 		*pSampler = mockSampler.Handle()
 
 		val := reflect.ValueOf(pCreateInfo).Elem()
 		require.Equal(t, uint64(31), val.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO
 
-		next := (*driver.VkSamplerReductionModeCreateInfo)(val.FieldByName("pNext").UnsafePointer())
+		next := (*loader.VkSamplerReductionModeCreateInfo)(val.FieldByName("pNext").UnsafePointer())
 		val = reflect.ValueOf(next).Elem()
 
 		require.Equal(t, uint64(1000130001), val.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_SAMPLER_REDUCTION_MODE_CREATE_INFO
@@ -49,7 +48,8 @@ func TestSamplerReductionModeCreateOptions(t *testing.T) {
 		return core1_0.VKSuccess, nil
 	})
 
-	sampler, _, err := device.CreateSampler(
+	sampler, _, err := driver.CreateSampler(
+		device,
 		nil,
 		core1_0.SamplerCreateInfo{
 			NextOptions: common.NextOptions{core1_2.SamplerReductionModeCreateInfo{

@@ -6,12 +6,12 @@ import (
 	"unsafe"
 
 	"github.com/stretchr/testify/require"
+	"github.com/vkngwrapper/core/v3"
 	"github.com/vkngwrapper/core/v3/common"
 	"github.com/vkngwrapper/core/v3/core1_0"
 	"github.com/vkngwrapper/core/v3/core1_1"
-	"github.com/vkngwrapper/core/v3/driver"
-	mock_driver "github.com/vkngwrapper/core/v3/driver/mocks"
-	"github.com/vkngwrapper/core/v3/internal/impl1_1"
+	"github.com/vkngwrapper/core/v3/loader"
+	mock_loader "github.com/vkngwrapper/core/v3/loader/mocks"
 	"github.com/vkngwrapper/core/v3/mocks"
 	"github.com/vkngwrapper/core/v3/mocks/mocks1_1"
 	"go.uber.org/mock/gomock"
@@ -21,25 +21,26 @@ func TestDeviceGroupSubmitOptions(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	coreDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_1)
+	coreLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_1)
 
-	device := mocks1_1.EasyMockDevice(ctrl, coreDriver)
-	fence := mocks1_1.EasyMockFence(ctrl)
-	commandBuffer := mocks1_1.EasyMockCommandBuffer(ctrl)
+	device := mocks.NewDummyDevice(common.Vulkan1_1, []string{})
+	driver := mocks1_1.InternalDeviceDriver(coreLoader)
+	fence := mocks.NewDummyFence(device)
+	pool := mocks.NewDummyCommandPool(device)
+	commandBuffer := mocks.NewDummyCommandBuffer(pool, device)
 
-	semaphore1 := mocks1_1.EasyMockSemaphore(ctrl)
-	semaphore2 := mocks1_1.EasyMockSemaphore(ctrl)
-	semaphore3 := mocks1_1.EasyMockSemaphore(ctrl)
+	semaphore1 := mocks.NewDummySemaphore(device)
+	semaphore2 := mocks.NewDummySemaphore(device)
+	semaphore3 := mocks.NewDummySemaphore(device)
 
-	builder := &impl1_1.DeviceObjectBuilderImpl{}
-	queue := builder.CreateQueueObject(coreDriver, device.Handle(), mocks.NewFakeQueue(), common.Vulkan1_1)
+	queue := mocks.NewDummyQueue(device)
 
-	coreDriver.EXPECT().VkQueueSubmit(
+	coreLoader.EXPECT().VkQueueSubmit(
 		queue.Handle(),
-		driver.Uint32(1),
+		loader.Uint32(1),
 		gomock.Not(gomock.Nil()),
 		fence.Handle(),
-	).DoAndReturn(func(queue driver.VkQueue, submitCount driver.Uint32, pSubmits *driver.VkSubmitInfo, fence driver.VkFence) (common.VkResult, error) {
+	).DoAndReturn(func(queue loader.VkQueue, submitCount loader.Uint32, pSubmits *loader.VkSubmitInfo, fence loader.VkFence) (common.VkResult, error) {
 		val := reflect.ValueOf(pSubmits).Elem()
 
 		require.Equal(t, uint64(4), val.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_SUBMIT_INFO
@@ -47,16 +48,16 @@ func TestDeviceGroupSubmitOptions(t *testing.T) {
 		require.Equal(t, uint64(1), val.FieldByName("commandBufferCount").Uint())
 		require.Equal(t, uint64(2), val.FieldByName("signalSemaphoreCount").Uint())
 
-		require.Equal(t, semaphore1.Handle(), driver.VkSemaphore(val.FieldByName("pWaitSemaphores").Elem().UnsafePointer()))
+		require.Equal(t, semaphore1.Handle(), loader.VkSemaphore(val.FieldByName("pWaitSemaphores").Elem().UnsafePointer()))
 		require.Equal(t, uint64(0x00002000), val.FieldByName("pWaitDstStageMask").Elem().Uint()) // VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT
-		require.Equal(t, commandBuffer.Handle(), driver.VkCommandBuffer(val.FieldByName("pCommandBuffers").Elem().UnsafePointer()))
+		require.Equal(t, commandBuffer.Handle(), loader.VkCommandBuffer(val.FieldByName("pCommandBuffers").Elem().UnsafePointer()))
 
-		semaphores := (*driver.VkSemaphore)(val.FieldByName("pSignalSemaphores").UnsafePointer())
-		semaphoreSlice := ([]driver.VkSemaphore)(unsafe.Slice(semaphores, 2))
+		semaphores := (*loader.VkSemaphore)(val.FieldByName("pSignalSemaphores").UnsafePointer())
+		semaphoreSlice := ([]loader.VkSemaphore)(unsafe.Slice(semaphores, 2))
 		require.Equal(t, semaphore2.Handle(), semaphoreSlice[0])
 		require.Equal(t, semaphore3.Handle(), semaphoreSlice[1])
 
-		next := (*driver.VkDeviceGroupSubmitInfo)(val.FieldByName("pNext").UnsafePointer())
+		next := (*loader.VkDeviceGroupSubmitInfo)(val.FieldByName("pNext").UnsafePointer())
 		val = reflect.ValueOf(next).Elem()
 
 		require.Equal(t, uint64(1000060005), val.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_DEVICE_GROUP_SUBMIT_INFO
@@ -68,18 +69,18 @@ func TestDeviceGroupSubmitOptions(t *testing.T) {
 		require.Equal(t, uint64(1), val.FieldByName("pWaitSemaphoreDeviceIndices").Elem().Uint())
 		require.Equal(t, uint64(2), val.FieldByName("pCommandBufferDeviceMasks").Elem().Uint())
 
-		indices := (*driver.Uint32)(val.FieldByName("pSignalSemaphoreDeviceIndices").UnsafePointer())
-		indexSlice := ([]driver.Uint32)(unsafe.Slice(indices, 2))
-		require.Equal(t, []driver.Uint32{3, 5}, indexSlice)
+		indices := (*loader.Uint32)(val.FieldByName("pSignalSemaphoreDeviceIndices").UnsafePointer())
+		indexSlice := ([]loader.Uint32)(unsafe.Slice(indices, 2))
+		require.Equal(t, []loader.Uint32{3, 5}, indexSlice)
 
 		return core1_0.VKSuccess, nil
 	})
 
-	_, err := queue.Submit(fence, []core1_0.SubmitInfo{
-		{
-			CommandBuffers:   []core1_0.CommandBuffer{commandBuffer},
-			WaitSemaphores:   []core1_0.Semaphore{semaphore1},
-			SignalSemaphores: []core1_0.Semaphore{semaphore2, semaphore3},
+	_, err := driver.QueueSubmit(queue, &fence,
+		core1_0.SubmitInfo{
+			CommandBuffers:   []core.CommandBuffer{commandBuffer},
+			WaitSemaphores:   []core.Semaphore{semaphore1},
+			SignalSemaphores: []core.Semaphore{semaphore2, semaphore3},
 			WaitDstStageMask: []core1_0.PipelineStageFlags{core1_0.PipelineStageBottomOfPipe},
 
 			NextOptions: common.NextOptions{
@@ -90,7 +91,7 @@ func TestDeviceGroupSubmitOptions(t *testing.T) {
 				},
 			},
 		},
-	})
+	)
 	require.NoError(t, err)
 }
 
@@ -98,25 +99,25 @@ func TestProtectedMemorySubmitOptions(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	coreDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_1)
+	coreLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_1)
+	driver := mocks1_1.InternalDeviceDriver(coreLoader)
+	device := mocks.NewDummyDevice(common.Vulkan1_1, []string{})
+	fence := mocks.NewDummyFence(device)
+	pool := mocks.NewDummyCommandPool(device)
+	commandBuffer := mocks.NewDummyCommandBuffer(pool, device)
 
-	device := mocks1_1.EasyMockDevice(ctrl, coreDriver)
-	fence := mocks1_1.EasyMockFence(ctrl)
-	commandBuffer := mocks1_1.EasyMockCommandBuffer(ctrl)
+	semaphore1 := mocks.NewDummySemaphore(device)
+	semaphore2 := mocks.NewDummySemaphore(device)
+	semaphore3 := mocks.NewDummySemaphore(device)
 
-	semaphore1 := mocks1_1.EasyMockSemaphore(ctrl)
-	semaphore2 := mocks1_1.EasyMockSemaphore(ctrl)
-	semaphore3 := mocks1_1.EasyMockSemaphore(ctrl)
+	queue := mocks.NewDummyQueue(device)
 
-	builder := &impl1_1.DeviceObjectBuilderImpl{}
-	queue := builder.CreateQueueObject(coreDriver, device.Handle(), mocks.NewFakeQueue(), common.Vulkan1_1)
-
-	coreDriver.EXPECT().VkQueueSubmit(
+	coreLoader.EXPECT().VkQueueSubmit(
 		queue.Handle(),
-		driver.Uint32(1),
+		loader.Uint32(1),
 		gomock.Not(gomock.Nil()),
 		fence.Handle(),
-	).DoAndReturn(func(queue driver.VkQueue, submitCount driver.Uint32, pSubmits *driver.VkSubmitInfo, fence driver.VkFence) (common.VkResult, error) {
+	).DoAndReturn(func(queue loader.VkQueue, submitCount loader.Uint32, pSubmits *loader.VkSubmitInfo, fence loader.VkFence) (common.VkResult, error) {
 		val := reflect.ValueOf(pSubmits).Elem()
 
 		require.Equal(t, uint64(4), val.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_SUBMIT_INFO
@@ -124,16 +125,16 @@ func TestProtectedMemorySubmitOptions(t *testing.T) {
 		require.Equal(t, uint64(1), val.FieldByName("commandBufferCount").Uint())
 		require.Equal(t, uint64(2), val.FieldByName("signalSemaphoreCount").Uint())
 
-		require.Equal(t, semaphore1.Handle(), driver.VkSemaphore(val.FieldByName("pWaitSemaphores").Elem().UnsafePointer()))
+		require.Equal(t, semaphore1.Handle(), loader.VkSemaphore(val.FieldByName("pWaitSemaphores").Elem().UnsafePointer()))
 		require.Equal(t, uint64(0x00002000), val.FieldByName("pWaitDstStageMask").Elem().Uint()) // VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT
-		require.Equal(t, commandBuffer.Handle(), driver.VkCommandBuffer(val.FieldByName("pCommandBuffers").Elem().UnsafePointer()))
+		require.Equal(t, commandBuffer.Handle(), loader.VkCommandBuffer(val.FieldByName("pCommandBuffers").Elem().UnsafePointer()))
 
-		semaphores := (*driver.VkSemaphore)(val.FieldByName("pSignalSemaphores").UnsafePointer())
-		semaphoreSlice := ([]driver.VkSemaphore)(unsafe.Slice(semaphores, 2))
+		semaphores := (*loader.VkSemaphore)(val.FieldByName("pSignalSemaphores").UnsafePointer())
+		semaphoreSlice := ([]loader.VkSemaphore)(unsafe.Slice(semaphores, 2))
 		require.Equal(t, semaphore2.Handle(), semaphoreSlice[0])
 		require.Equal(t, semaphore3.Handle(), semaphoreSlice[1])
 
-		next := (*driver.VkProtectedSubmitInfo)(val.FieldByName("pNext").UnsafePointer())
+		next := (*loader.VkProtectedSubmitInfo)(val.FieldByName("pNext").UnsafePointer())
 		val = reflect.ValueOf(next).Elem()
 
 		require.Equal(t, uint64(1000145000), val.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_PROTECTED_SUBMIT_INFO
@@ -143,11 +144,11 @@ func TestProtectedMemorySubmitOptions(t *testing.T) {
 		return core1_0.VKSuccess, nil
 	})
 
-	_, err := queue.Submit(fence, []core1_0.SubmitInfo{
-		{
-			CommandBuffers:   []core1_0.CommandBuffer{commandBuffer},
-			WaitSemaphores:   []core1_0.Semaphore{semaphore1},
-			SignalSemaphores: []core1_0.Semaphore{semaphore2, semaphore3},
+	_, err := driver.QueueSubmit(queue, &fence,
+		core1_0.SubmitInfo{
+			CommandBuffers:   []core.CommandBuffer{commandBuffer},
+			WaitSemaphores:   []core.Semaphore{semaphore1},
+			SignalSemaphores: []core.Semaphore{semaphore2, semaphore3},
 			WaitDstStageMask: []core1_0.PipelineStageFlags{core1_0.PipelineStageBottomOfPipe},
 
 			NextOptions: common.NextOptions{
@@ -156,6 +157,6 @@ func TestProtectedMemorySubmitOptions(t *testing.T) {
 				},
 			},
 		},
-	})
+	)
 	require.NoError(t, err)
 }

@@ -10,56 +10,38 @@ import (
 	"unsafe"
 
 	"github.com/CannibalVox/cgoparam"
+	"github.com/vkngwrapper/core/v3"
 	"github.com/vkngwrapper/core/v3/common"
 	"github.com/vkngwrapper/core/v3/core1_0"
-	"github.com/vkngwrapper/core/v3/driver"
+	"github.com/vkngwrapper/core/v3/loader"
 )
 
-// VulkanPipelineCache is an implementation of the PipelineCache interface that actually communicates with Vulkan. This
-// is the default implementation. See the interface for more documentation.
-type VulkanPipelineCache struct {
-	DeviceDriver        driver.Driver
-	Device              driver.VkDevice
-	PipelineCacheHandle driver.VkPipelineCache
-
-	MaximumAPIVersion common.APIVersion
+func (v *DeviceVulkanDriver) DestroyPipelineCache(pipelineCache core.PipelineCache, callbacks *loader.AllocationCallbacks) {
+	if pipelineCache.Handle() == 0 {
+		panic("pipelineCache was uninitialized")
+	}
+	v.LoaderObj.VkDestroyPipelineCache(pipelineCache.DeviceHandle(), pipelineCache.Handle(), callbacks.Handle())
 }
 
-func (c *VulkanPipelineCache) Handle() driver.VkPipelineCache {
-	return c.PipelineCacheHandle
-}
+func (v *DeviceVulkanDriver) GetPipelineCacheData(pipelineCache core.PipelineCache) ([]byte, common.VkResult, error) {
+	if pipelineCache.Handle() == 0 {
+		return nil, core1_0.VKErrorUnknown, fmt.Errorf("pipelineCache was uninitialized")
+	}
 
-func (c *VulkanPipelineCache) DeviceHandle() driver.VkDevice {
-	return c.Device
-}
-
-func (c *VulkanPipelineCache) Driver() driver.Driver {
-	return c.DeviceDriver
-}
-
-func (c *VulkanPipelineCache) APIVersion() common.APIVersion {
-	return c.MaximumAPIVersion
-}
-
-func (c *VulkanPipelineCache) Destroy(callbacks *driver.AllocationCallbacks) {
-	c.DeviceDriver.VkDestroyPipelineCache(c.Device, c.PipelineCacheHandle, callbacks.Handle())
-}
-
-func (c *VulkanPipelineCache) CacheData() ([]byte, common.VkResult, error) {
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
 	cacheSizePtr := arena.Malloc(int(unsafe.Sizeof(C.size_t(0))))
-	cacheSize := (*driver.Size)(cacheSizePtr)
+	cacheSize := (*loader.Size)(cacheSizePtr)
 
-	res, err := c.DeviceDriver.VkGetPipelineCacheData(c.Device, c.PipelineCacheHandle, cacheSize, nil)
+	res, err := v.LoaderObj.VkGetPipelineCacheData(pipelineCache.DeviceHandle(), pipelineCache.Handle(), cacheSize, nil)
 	if err != nil {
 		return nil, res, err
 	}
 
 	cacheDataPtr := arena.Malloc(int(*cacheSize))
 
-	res, err = c.DeviceDriver.VkGetPipelineCacheData(c.Device, c.PipelineCacheHandle, cacheSize, cacheDataPtr)
+	res, err = v.LoaderObj.VkGetPipelineCacheData(pipelineCache.DeviceHandle(), pipelineCache.Handle(), cacheSize, cacheDataPtr)
 	if err != nil {
 		return nil, res, err
 	}
@@ -71,20 +53,24 @@ func (c *VulkanPipelineCache) CacheData() ([]byte, common.VkResult, error) {
 	return outData, res, nil
 }
 
-func (c *VulkanPipelineCache) MergePipelineCaches(srcCaches []core1_0.PipelineCache) (common.VkResult, error) {
+func (v *DeviceVulkanDriver) MergePipelineCaches(dstCaches core.PipelineCache, srcCaches ...core.PipelineCache) (common.VkResult, error) {
+	if dstCaches.Handle() == 0 {
+		panic("dstCaches was uninitialized")
+	}
+
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
 	srcCount := len(srcCaches)
-	srcPtr := (*driver.VkPipelineCache)(arena.Malloc(srcCount * int(unsafe.Sizeof([1]driver.VkPipelineCache{}))))
-	srcSlice := ([]driver.VkPipelineCache)(unsafe.Slice(srcPtr, srcCount))
+	srcPtr := (*loader.VkPipelineCache)(arena.Malloc(srcCount * int(unsafe.Sizeof([1]loader.VkPipelineCache{}))))
+	srcSlice := ([]loader.VkPipelineCache)(unsafe.Slice(srcPtr, srcCount))
 
 	for i := 0; i < srcCount; i++ {
-		if srcCaches[i] == nil {
-			panic(fmt.Sprintf("elements of srcCaches cannot be nil- element %d is nil", i))
+		if srcCaches[i].Handle() == 0 {
+			panic(fmt.Sprintf("elements of srcCaches cannot be uninitialized- element %d is uninitialized", i))
 		}
 		srcSlice[i] = srcCaches[i].Handle()
 	}
 
-	return c.DeviceDriver.VkMergePipelineCaches(c.Device, c.PipelineCacheHandle, driver.Uint32(srcCount), srcPtr)
+	return v.LoaderObj.VkMergePipelineCaches(dstCaches.DeviceHandle(), dstCaches.Handle(), loader.Uint32(srcCount), srcPtr)
 }

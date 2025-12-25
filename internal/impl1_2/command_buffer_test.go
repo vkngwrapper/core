@@ -9,9 +9,8 @@ import (
 	"github.com/vkngwrapper/core/v3/common"
 	"github.com/vkngwrapper/core/v3/core1_0"
 	"github.com/vkngwrapper/core/v3/core1_2"
-	"github.com/vkngwrapper/core/v3/driver"
-	mock_driver "github.com/vkngwrapper/core/v3/driver/mocks"
-	"github.com/vkngwrapper/core/v3/internal/impl1_2"
+	"github.com/vkngwrapper/core/v3/loader"
+	mock_loader "github.com/vkngwrapper/core/v3/loader/mocks"
 	"github.com/vkngwrapper/core/v3/mocks"
 	"github.com/vkngwrapper/core/v3/mocks/mocks1_2"
 	"go.uber.org/mock/gomock"
@@ -21,35 +20,35 @@ func TestCommandBuffer_CmdBeginRenderPass2(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	coreDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_2)
-	device := mocks1_2.EasyMockDevice(ctrl, coreDriver)
-	commandPool := mocks1_2.EasyMockCommandPool(ctrl, device)
-	builder := impl1_2.DeviceObjectBuilderImpl{}
-	commandBuffer := builder.CreateCommandBufferObject(coreDriver, commandPool.Handle(), device.Handle(), mocks.NewFakeCommandBufferHandle(), common.Vulkan1_2).(core1_2.CommandBuffer)
-	renderPass := mocks1_2.EasyMockRenderPass(ctrl)
-	framebuffer := mocks1_2.EasyMockFramebuffer(ctrl)
+	coreLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_2)
+	driver := mocks1_2.InternalDeviceDriver(coreLoader)
+	device := mocks.NewDummyDevice(common.Vulkan1_2, []string{})
+	commandPool := mocks.NewDummyCommandPool(device)
+	commandBuffer := mocks.NewDummyCommandBuffer(commandPool, device)
+	renderPass := mocks.NewDummyRenderPass(device)
+	framebuffer := mocks.NewDummyFramebuffer(device)
 
-	coreDriver.EXPECT().VkCmdBeginRenderPass2(
+	coreLoader.EXPECT().VkCmdBeginRenderPass2(
 		commandBuffer.Handle(),
 		gomock.Not(gomock.Nil()),
 		gomock.Not(gomock.Nil()),
-	).DoAndReturn(func(commandBuffer driver.VkCommandBuffer,
-		pRenderPassBegin *driver.VkRenderPassBeginInfo,
-		pSubpassBeginInfo *driver.VkSubpassBeginInfo) {
+	).DoAndReturn(func(commandBuffer loader.VkCommandBuffer,
+		pRenderPassBegin *loader.VkRenderPassBeginInfo,
+		pSubpassBeginInfo *loader.VkSubpassBeginInfo) {
 
 		val := reflect.ValueOf(pRenderPassBegin).Elem()
 		require.Equal(t, uint64(43), val.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO
 		require.True(t, val.FieldByName("pNext").IsNil())
-		require.Equal(t, renderPass.Handle(), driver.VkRenderPass(val.FieldByName("renderPass").UnsafePointer()))
-		require.Equal(t, framebuffer.Handle(), driver.VkFramebuffer(val.FieldByName("framebuffer").UnsafePointer()))
+		require.Equal(t, renderPass.Handle(), loader.VkRenderPass(val.FieldByName("renderPass").UnsafePointer()))
+		require.Equal(t, framebuffer.Handle(), loader.VkFramebuffer(val.FieldByName("framebuffer").UnsafePointer()))
 		require.Equal(t, int64(1), val.FieldByName("renderArea").FieldByName("offset").FieldByName("x").Int())
 		require.Equal(t, int64(3), val.FieldByName("renderArea").FieldByName("offset").FieldByName("y").Int())
 		require.Equal(t, uint64(5), val.FieldByName("renderArea").FieldByName("extent").FieldByName("width").Uint())
 		require.Equal(t, uint64(7), val.FieldByName("renderArea").FieldByName("extent").FieldByName("height").Uint())
 		require.Equal(t, uint64(1), val.FieldByName("clearValueCount").Uint())
 
-		values := (*driver.Float)(unsafe.Pointer(val.FieldByName("pClearValues").Elem().UnsafeAddr()))
-		valueSlice := ([]driver.Float)(unsafe.Slice(values, 4))
+		values := (*loader.Float)(unsafe.Pointer(val.FieldByName("pClearValues").Elem().UnsafeAddr()))
+		valueSlice := ([]loader.Float)(unsafe.Slice(values, 4))
 		val = reflect.ValueOf(valueSlice)
 		require.InDelta(t, 1.0, val.Index(0).Float(), 0.0001)
 		require.InDelta(t, 3.0, val.Index(1).Float(), 0.0001)
@@ -62,7 +61,8 @@ func TestCommandBuffer_CmdBeginRenderPass2(t *testing.T) {
 		require.Equal(t, uint64(1), val.FieldByName("contents").Uint()) // VK_SUBPASS_CONTENTS_SECONDARY_COMMAND_BUFFERS
 	})
 
-	err := commandBuffer.CmdBeginRenderPass2(
+	err := driver.CmdBeginRenderPass2(
+		commandBuffer,
 		core1_0.RenderPassBeginInfo{
 			RenderPass:  renderPass,
 			Framebuffer: framebuffer,
@@ -79,17 +79,17 @@ func TestCommandBuffer_CmdEndRenderPass2(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	coreDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_2)
-	device := mocks1_2.EasyMockDevice(ctrl, coreDriver)
-	commandPool := mocks1_2.EasyMockCommandPool(ctrl, device)
-	builder := impl1_2.DeviceObjectBuilderImpl{}
-	commandBuffer := builder.CreateCommandBufferObject(coreDriver, commandPool.Handle(), device.Handle(), mocks.NewFakeCommandBufferHandle(), common.Vulkan1_2).(core1_2.CommandBuffer)
+	coreLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_2)
+	driver := mocks1_2.InternalDeviceDriver(coreLoader)
+	device := mocks.NewDummyDevice(common.Vulkan1_2, []string{})
+	commandPool := mocks.NewDummyCommandPool(device)
+	commandBuffer := mocks.NewDummyCommandBuffer(commandPool, device)
 
-	coreDriver.EXPECT().VkCmdEndRenderPass2(
+	coreLoader.EXPECT().VkCmdEndRenderPass2(
 		commandBuffer.Handle(),
 		gomock.Not(gomock.Nil()),
-	).DoAndReturn(func(commandBuffer driver.VkCommandBuffer,
-		pSubpassEndInfo *driver.VkSubpassEndInfo) {
+	).DoAndReturn(func(commandBuffer loader.VkCommandBuffer,
+		pSubpassEndInfo *loader.VkSubpassEndInfo) {
 
 		val := reflect.ValueOf(pSubpassEndInfo).Elem()
 
@@ -97,7 +97,7 @@ func TestCommandBuffer_CmdEndRenderPass2(t *testing.T) {
 		require.True(t, val.FieldByName("pNext").IsNil())
 	})
 
-	err := commandBuffer.CmdEndRenderPass2(core1_2.SubpassEndInfo{})
+	err := driver.CmdEndRenderPass2(commandBuffer, core1_2.SubpassEndInfo{})
 	require.NoError(t, err)
 }
 
@@ -105,19 +105,19 @@ func TestVulkanExtension_CmdNextSubpass2(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	coreDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_2)
-	device := mocks1_2.EasyMockDevice(ctrl, coreDriver)
-	commandPool := mocks1_2.EasyMockCommandPool(ctrl, device)
-	builder := impl1_2.DeviceObjectBuilderImpl{}
-	commandBuffer := builder.CreateCommandBufferObject(coreDriver, commandPool.Handle(), device.Handle(), mocks.NewFakeCommandBufferHandle(), common.Vulkan1_2).(core1_2.CommandBuffer)
+	coreLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_2)
+	driver := mocks1_2.InternalDeviceDriver(coreLoader)
+	device := mocks.NewDummyDevice(common.Vulkan1_2, []string{})
+	commandPool := mocks.NewDummyCommandPool(device)
+	commandBuffer := mocks.NewDummyCommandBuffer(commandPool, device)
 
-	coreDriver.EXPECT().VkCmdNextSubpass2(
+	coreLoader.EXPECT().VkCmdNextSubpass2(
 		commandBuffer.Handle(),
 		gomock.Not(gomock.Nil()),
 		gomock.Not(gomock.Nil()),
-	).DoAndReturn(func(commandBuffer driver.VkCommandBuffer,
-		pSubpassBeginInfo *driver.VkSubpassBeginInfo,
-		pSubpassEndInfo *driver.VkSubpassEndInfo) {
+	).DoAndReturn(func(commandBuffer loader.VkCommandBuffer,
+		pSubpassBeginInfo *loader.VkSubpassBeginInfo,
+		pSubpassEndInfo *loader.VkSubpassEndInfo) {
 
 		val := reflect.ValueOf(pSubpassBeginInfo).Elem()
 		require.Equal(t, uint64(1000109005), val.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_SUBPASS_BEGIN_INFO
@@ -129,7 +129,8 @@ func TestVulkanExtension_CmdNextSubpass2(t *testing.T) {
 		require.True(t, val.FieldByName("pNext").IsNil())
 	})
 
-	err := commandBuffer.CmdNextSubpass2(
+	err := driver.CmdNextSubpass2(
+		commandBuffer,
 		core1_2.SubpassBeginInfo{
 			Contents: core1_0.SubpassContentsSecondaryCommandBuffers,
 		},
@@ -141,26 +142,27 @@ func TestCommandBuffer_CmdDrawIndexedIndirectCount(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	coreDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_2)
-	device := mocks1_2.EasyMockDevice(ctrl, coreDriver)
-	commandPool := mocks1_2.EasyMockCommandPool(ctrl, device)
-	builder := impl1_2.DeviceObjectBuilderImpl{}
-	commandBuffer := builder.CreateCommandBufferObject(coreDriver, commandPool.Handle(), device.Handle(), mocks.NewFakeCommandBufferHandle(), common.Vulkan1_2).(core1_2.CommandBuffer)
+	coreLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_2)
+	driver := mocks1_2.InternalDeviceDriver(coreLoader)
+	device := mocks.NewDummyDevice(common.Vulkan1_2, []string{})
+	commandPool := mocks.NewDummyCommandPool(device)
+	commandBuffer := mocks.NewDummyCommandBuffer(commandPool, device)
 
-	buffer := mocks1_2.EasyMockBuffer(ctrl)
-	countBuffer := mocks1_2.EasyMockBuffer(ctrl)
+	buffer := mocks.NewDummyBuffer(device)
+	countBuffer := mocks.NewDummyBuffer(device)
 
-	coreDriver.EXPECT().VkCmdDrawIndexedIndirectCount(
+	coreLoader.EXPECT().VkCmdDrawIndexedIndirectCount(
 		commandBuffer.Handle(),
 		buffer.Handle(),
-		driver.VkDeviceSize(1),
+		loader.VkDeviceSize(1),
 		countBuffer.Handle(),
-		driver.VkDeviceSize(3),
-		driver.Uint32(5),
-		driver.Uint32(7),
+		loader.VkDeviceSize(3),
+		loader.Uint32(5),
+		loader.Uint32(7),
 	)
 
-	commandBuffer.CmdDrawIndexedIndirectCount(
+	driver.CmdDrawIndexedIndirectCount(
+		commandBuffer,
 		buffer,
 		uint64(1),
 		countBuffer,
@@ -174,26 +176,27 @@ func TestCommandBuffer_CmdDrawIndirectCount(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	coreDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_2)
-	device := mocks1_2.EasyMockDevice(ctrl, coreDriver)
-	commandPool := mocks1_2.EasyMockCommandPool(ctrl, device)
-	builder := impl1_2.DeviceObjectBuilderImpl{}
-	commandBuffer := builder.CreateCommandBufferObject(coreDriver, commandPool.Handle(), device.Handle(), mocks.NewFakeCommandBufferHandle(), common.Vulkan1_2).(core1_2.CommandBuffer)
+	coreLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_2)
+	driver := mocks1_2.InternalDeviceDriver(coreLoader)
+	device := mocks.NewDummyDevice(common.Vulkan1_2, []string{})
+	commandPool := mocks.NewDummyCommandPool(device)
+	commandBuffer := mocks.NewDummyCommandBuffer(commandPool, device)
 
-	buffer := mocks1_2.EasyMockBuffer(ctrl)
-	countBuffer := mocks1_2.EasyMockBuffer(ctrl)
+	buffer := mocks.NewDummyBuffer(device)
+	countBuffer := mocks.NewDummyBuffer(device)
 
-	coreDriver.EXPECT().VkCmdDrawIndirectCount(
+	coreLoader.EXPECT().VkCmdDrawIndirectCount(
 		commandBuffer.Handle(),
 		buffer.Handle(),
-		driver.VkDeviceSize(11),
+		loader.VkDeviceSize(11),
 		countBuffer.Handle(),
-		driver.VkDeviceSize(13),
-		driver.Uint32(17),
-		driver.Uint32(19),
+		loader.VkDeviceSize(13),
+		loader.Uint32(17),
+		loader.Uint32(19),
 	)
 
-	commandBuffer.CmdDrawIndirectCount(
+	driver.CmdDrawIndirectCount(
+		commandBuffer,
 		buffer,
 		uint64(11),
 		countBuffer,

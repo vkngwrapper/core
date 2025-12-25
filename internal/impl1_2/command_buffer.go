@@ -1,21 +1,20 @@
 package impl1_2
 
 import (
+	"fmt"
+
 	"github.com/CannibalVox/cgoparam"
+	"github.com/vkngwrapper/core/v3"
 	"github.com/vkngwrapper/core/v3/common"
 	"github.com/vkngwrapper/core/v3/core1_0"
 	"github.com/vkngwrapper/core/v3/core1_2"
-	"github.com/vkngwrapper/core/v3/driver"
-	"github.com/vkngwrapper/core/v3/internal/impl1_1"
+	"github.com/vkngwrapper/core/v3/loader"
 )
 
-// VulkanCommandBuffer is an implementation of the CommandBuffer interface that actually communicates with Vulkan. This
-// is the default implementation. See the interface for more documentation.
-type VulkanCommandBuffer struct {
-	impl1_1.VulkanCommandBuffer
-}
-
-func (c *VulkanCommandBuffer) CmdBeginRenderPass2(renderPassBegin core1_0.RenderPassBeginInfo, subpassBegin core1_2.SubpassBeginInfo) error {
+func (v *DeviceVulkanDriver) CmdBeginRenderPass2(commandBuffer core.CommandBuffer, renderPassBegin core1_0.RenderPassBeginInfo, subpassBegin core1_2.SubpassBeginInfo) error {
+	if commandBuffer.Handle() == 0 {
+		return fmt.Errorf("commandBuffer cannot be uninitialized")
+	}
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
@@ -29,17 +28,20 @@ func (c *VulkanCommandBuffer) CmdBeginRenderPass2(renderPassBegin core1_0.Render
 		return err
 	}
 
-	c.Driver().VkCmdBeginRenderPass2(
-		c.Handle(),
-		(*driver.VkRenderPassBeginInfo)(renderPassBeginPtr),
-		(*driver.VkSubpassBeginInfo)(subpassBeginPtr),
+	v.LoaderObj.VkCmdBeginRenderPass2(
+		commandBuffer.Handle(),
+		(*loader.VkRenderPassBeginInfo)(renderPassBeginPtr),
+		(*loader.VkSubpassBeginInfo)(subpassBeginPtr),
 	)
 
-	c.CommandCounter().CommandCount++
 	return nil
 }
 
-func (c *VulkanCommandBuffer) CmdEndRenderPass2(subpassEnd core1_2.SubpassEndInfo) error {
+func (v *DeviceVulkanDriver) CmdEndRenderPass2(commandBuffer core.CommandBuffer, subpassEnd core1_2.SubpassEndInfo) error {
+	if commandBuffer.Handle() == 0 {
+		return fmt.Errorf("commandBuffer cannot be uninitialized")
+	}
+
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
@@ -48,16 +50,19 @@ func (c *VulkanCommandBuffer) CmdEndRenderPass2(subpassEnd core1_2.SubpassEndInf
 		return err
 	}
 
-	c.Driver().VkCmdEndRenderPass2(
-		c.Handle(),
-		(*driver.VkSubpassEndInfo)(subpassEndPtr),
+	v.LoaderObj.VkCmdEndRenderPass2(
+		commandBuffer.Handle(),
+		(*loader.VkSubpassEndInfo)(subpassEndPtr),
 	)
 
-	c.CommandCounter().CommandCount++
 	return nil
 }
 
-func (c *VulkanCommandBuffer) CmdNextSubpass2(subpassBegin core1_2.SubpassBeginInfo, subpassEnd core1_2.SubpassEndInfo) error {
+func (v *DeviceVulkanDriver) CmdNextSubpass2(commandBuffer core.CommandBuffer, subpassBegin core1_2.SubpassBeginInfo, subpassEnd core1_2.SubpassEndInfo) error {
+	if commandBuffer.Handle() == 0 {
+		return fmt.Errorf("commandBuffer cannot be uninitialized")
+	}
+
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
@@ -71,54 +76,53 @@ func (c *VulkanCommandBuffer) CmdNextSubpass2(subpassBegin core1_2.SubpassBeginI
 		return err
 	}
 
-	c.Driver().VkCmdNextSubpass2(
-		c.Handle(),
-		(*driver.VkSubpassBeginInfo)(subpassBeginPtr),
-		(*driver.VkSubpassEndInfo)(subpassEndPtr),
+	v.LoaderObj.VkCmdNextSubpass2(
+		commandBuffer.Handle(),
+		(*loader.VkSubpassBeginInfo)(subpassBeginPtr),
+		(*loader.VkSubpassEndInfo)(subpassEndPtr),
 	)
 
-	c.CommandCounter().CommandCount++
 	return nil
 }
 
-func (c *VulkanCommandBuffer) CmdDrawIndexedIndirectCount(buffer core1_0.Buffer, offset uint64, countBuffer core1_0.Buffer, countBufferOffset uint64, maxDrawCount, stride int) {
-	if buffer == nil {
+func (v *DeviceVulkanDriver) CmdDrawIndexedIndirectCount(commandBuffer core.CommandBuffer, buffer core.Buffer, offset uint64, countBuffer core.Buffer, countBufferOffset uint64, maxDrawCount, stride int) {
+	if commandBuffer.Handle() == 0 {
+		panic("commandBuffer cannot be uninitialized")
+	}
+	if buffer.Handle() == 0 {
 		panic("buffer cannot be nil")
 	}
-	if countBuffer == nil {
+	if countBuffer.Handle() == 0 {
 		panic("countBuffer cannot be nil")
 	}
-	c.Driver().VkCmdDrawIndexedIndirectCount(
-		c.Handle(),
+	v.LoaderObj.VkCmdDrawIndexedIndirectCount(
+		commandBuffer.Handle(),
 		buffer.Handle(),
-		driver.VkDeviceSize(offset),
+		loader.VkDeviceSize(offset),
 		countBuffer.Handle(),
-		driver.VkDeviceSize(countBufferOffset),
-		driver.Uint32(maxDrawCount),
-		driver.Uint32(stride),
+		loader.VkDeviceSize(countBufferOffset),
+		loader.Uint32(maxDrawCount),
+		loader.Uint32(stride),
 	)
-	counter := c.CommandCounter()
-	counter.CommandCount++
-	counter.DrawCallCount++
 }
 
-func (c *VulkanCommandBuffer) CmdDrawIndirectCount(buffer core1_0.Buffer, offset uint64, countBuffer core1_0.Buffer, countBufferOffset uint64, maxDrawCount, stride int) {
-	if buffer == nil {
-		panic("buffer cannot be nil")
+func (v *DeviceVulkanDriver) CmdDrawIndirectCount(commandBuffer core.CommandBuffer, buffer core.Buffer, offset uint64, countBuffer core.Buffer, countBufferOffset uint64, maxDrawCount, stride int) {
+	if commandBuffer.Handle() == 0 {
+		panic("commandBuffer cannot be uninitialized")
 	}
-	if countBuffer == nil {
-		panic("countBuffer cannot be nil")
+	if buffer.Handle() == 0 {
+		panic("buffer cannot be uninitialized")
 	}
-	c.Driver().VkCmdDrawIndirectCount(
-		c.Handle(),
+	if countBuffer.Handle() == 0 {
+		panic("countBuffer cannot be uninitialized")
+	}
+	v.LoaderObj.VkCmdDrawIndirectCount(
+		commandBuffer.Handle(),
 		buffer.Handle(),
-		driver.VkDeviceSize(offset),
+		loader.VkDeviceSize(offset),
 		countBuffer.Handle(),
-		driver.VkDeviceSize(countBufferOffset),
-		driver.Uint32(maxDrawCount),
-		driver.Uint32(stride),
+		loader.VkDeviceSize(countBufferOffset),
+		loader.Uint32(maxDrawCount),
+		loader.Uint32(stride),
 	)
-	counter := c.CommandCounter()
-	counter.CommandCount++
-	counter.DrawCallCount++
 }

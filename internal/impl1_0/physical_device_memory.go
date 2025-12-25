@@ -7,17 +7,22 @@ package impl1_0
 import "C"
 import (
 	"github.com/CannibalVox/cgoparam"
+	"github.com/vkngwrapper/core/v3"
 	"github.com/vkngwrapper/core/v3/core1_0"
-	"github.com/vkngwrapper/core/v3/driver"
+	"github.com/vkngwrapper/core/v3/loader"
 )
 
-func (d *VulkanPhysicalDevice) MemoryProperties() *core1_0.PhysicalDeviceMemoryProperties {
+func (v *InstanceVulkanDriver) GetPhysicalDeviceMemoryProperties(physicalDevice core.PhysicalDevice) *core1_0.PhysicalDeviceMemoryProperties {
+	if physicalDevice.Handle() == 0 {
+		panic("physicalDevice was uninitialized")
+	}
+
 	allocator := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(allocator)
 
 	propsUnsafe := allocator.Malloc(C.sizeof_struct_VkPhysicalDeviceMemoryProperties)
 
-	d.InstanceDriver.VkGetPhysicalDeviceMemoryProperties(d.PhysicalDeviceHandle, (*driver.VkPhysicalDeviceMemoryProperties)(propsUnsafe))
+	v.LoaderObj.VkGetPhysicalDeviceMemoryProperties(physicalDevice.Handle(), (*loader.VkPhysicalDeviceMemoryProperties)(propsUnsafe))
 
 	props := (*C.VkPhysicalDeviceMemoryProperties)(propsUnsafe)
 

@@ -1,31 +1,26 @@
 package impl1_1
 
 import (
-	"github.com/vkngwrapper/core/v3/driver"
-	"github.com/vkngwrapper/core/v3/internal/impl1_0"
+	"github.com/vkngwrapper/core/v3"
+	"github.com/vkngwrapper/core/v3/loader"
 )
 
-// VulkanCommandBuffer is an implementation of the CommandBuffer interface that actually communicates with Vulkan. This
-// is the default implementation. See the interface for more documentation.
-type VulkanCommandBuffer struct {
-	impl1_0.VulkanCommandBuffer
+func (v *DeviceVulkanDriver) CmdDispatchBase(commandBuffer core.CommandBuffer, baseGroupX, baseGroupY, baseGroupZ, groupCountX, groupCountY, groupCountZ int) {
+	if commandBuffer.Handle() == 0 {
+		panic("commandBuffer cannot be uninitialized")
+	}
+	v.LoaderObj.VkCmdDispatchBase(commandBuffer.Handle(),
+		loader.Uint32(baseGroupX),
+		loader.Uint32(baseGroupY),
+		loader.Uint32(baseGroupZ),
+		loader.Uint32(groupCountX),
+		loader.Uint32(groupCountY),
+		loader.Uint32(groupCountZ))
 }
 
-func (c *VulkanCommandBuffer) CmdDispatchBase(baseGroupX, baseGroupY, baseGroupZ, groupCountX, groupCountY, groupCountZ int) {
-	c.Driver().VkCmdDispatchBase(c.Handle(),
-		driver.Uint32(baseGroupX),
-		driver.Uint32(baseGroupY),
-		driver.Uint32(baseGroupZ),
-		driver.Uint32(groupCountX),
-		driver.Uint32(groupCountY),
-		driver.Uint32(groupCountZ))
-
-	counter := c.CommandCounter()
-	counter.CommandCount++
-	counter.DispatchCount++
-}
-
-func (c *VulkanCommandBuffer) CmdSetDeviceMask(deviceMask uint32) {
-	c.Driver().VkCmdSetDeviceMask(c.Handle(), driver.Uint32(deviceMask))
-	c.CommandCounter().CommandCount++
+func (v *DeviceVulkanDriver) CmdSetDeviceMask(commandBuffer core.CommandBuffer, deviceMask uint32) {
+	if commandBuffer.Handle() == 0 {
+		panic("commandBuffer cannot be uninitialized")
+	}
+	v.LoaderObj.VkCmdSetDeviceMask(commandBuffer.Handle(), loader.Uint32(deviceMask))
 }

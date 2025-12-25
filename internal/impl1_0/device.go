@@ -12,61 +12,44 @@ import (
 
 	"github.com/CannibalVox/cgoparam"
 	"github.com/pkg/errors"
+	"github.com/vkngwrapper/core/v3"
 	"github.com/vkngwrapper/core/v3/common"
 	"github.com/vkngwrapper/core/v3/core1_0"
-	"github.com/vkngwrapper/core/v3/driver"
+	"github.com/vkngwrapper/core/v3/loader"
 )
 
-// VulkanDevice is an implementation of the Device interface that actually communicates with Vulkan. This
-// is the default implementation. See the interface for more documentation.
-type VulkanDevice struct {
-	DeviceDriver driver.Driver
-	DeviceHandle driver.VkDevice
+func (v *DeviceVulkanDriver) DestroyDevice(device core.Device, callbacks *loader.AllocationCallbacks) {
+	if device.Handle() == 0 {
+		panic("device was uninitialized")
+	}
 
-	MaximumAPIVersion      common.APIVersion
-	ActiveDeviceExtensions map[string]struct{}
-	DeviceObjectBuilder    core1_0.DeviceObjectBuilder
+	v.LoaderObj.VkDestroyDevice(device.Handle(), callbacks.Handle())
 }
 
-func (d *VulkanDevice) Driver() driver.Driver {
-	return d.DeviceDriver
+func (v *DeviceVulkanDriver) DeviceWaitIdle(device core.Device) (common.VkResult, error) {
+	if device.Handle() == 0 {
+		return core1_0.VKErrorUnknown, errors.New("device was uninitialized")
+	}
+
+	return v.LoaderObj.VkDeviceWaitIdle(device.Handle())
 }
 
-func (d *VulkanDevice) Handle() driver.VkDevice {
-	return d.DeviceHandle
-}
-
-func (d *VulkanDevice) APIVersion() common.APIVersion {
-	return d.MaximumAPIVersion
-}
-
-func (d *VulkanDevice) IsDeviceExtensionActive(extensionName string) bool {
-	_, active := d.ActiveDeviceExtensions[extensionName]
-	return active
-}
-
-func (d *VulkanDevice) Destroy(callbacks *driver.AllocationCallbacks) {
-	d.DeviceDriver.VkDestroyDevice(d.DeviceHandle, callbacks.Handle())
-	d.DeviceDriver.Destroy()
-}
-
-func (d *VulkanDevice) WaitIdle() (common.VkResult, error) {
-	return d.DeviceDriver.VkDeviceWaitIdle(d.DeviceHandle)
-}
-
-func (d *VulkanDevice) WaitForFences(waitForAll bool, timeout time.Duration, fences []core1_0.Fence) (common.VkResult, error) {
+func (v *DeviceVulkanDriver) WaitForFences(waitForAll bool, timeout time.Duration, fences ...core.Fence) (common.VkResult, error) {
 	allocator := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(allocator)
 
 	fenceCount := len(fences)
 	fenceUnsafePtr := allocator.Malloc(fenceCount * int(unsafe.Sizeof([1]C.VkFence{})))
 
-	fencePtr := (*driver.VkFence)(fenceUnsafePtr)
+	fencePtr := (*loader.VkFence)(fenceUnsafePtr)
 
-	fenceSlice := ([]driver.VkFence)(unsafe.Slice(fencePtr, fenceCount))
+	fenceSlice := ([]loader.VkFence)(unsafe.Slice(fencePtr, fenceCount))
 	for i := 0; i < fenceCount; i++ {
-		if fences[i] == nil {
-			panic(fmt.Sprintf("element %d of slice fences is nil", i))
+		if fences[i].Handle() == 0 {
+			panic(fmt.Sprintf("element %d of slice fences is uninitialized", i))
+		}
+		if fences[i].DeviceHandle() != v.LoaderObj.DeviceHandle() {
+			panic(fmt.Sprintf("element %d of slice fences was not created by this driver's device", i))
 		}
 		fenceSlice[i] = fences[i].Handle()
 	}
@@ -76,29 +59,36 @@ func (d *VulkanDevice) WaitForFences(waitForAll bool, timeout time.Duration, fen
 		waitAllConst = C.VK_TRUE
 	}
 
-	return d.DeviceDriver.VkWaitForFences(d.DeviceHandle, driver.Uint32(fenceCount), fencePtr, driver.VkBool32(waitAllConst), driver.Uint64(common.TimeoutNanoseconds(timeout)))
+	return v.LoaderObj.VkWaitForFences(v.LoaderObj.DeviceHandle(), loader.Uint32(fenceCount), fencePtr, loader.VkBool32(waitAllConst), loader.Uint64(common.TimeoutNanoseconds(timeout)))
 }
 
-func (d *VulkanDevice) ResetFences(fences []core1_0.Fence) (common.VkResult, error) {
+func (v *DeviceVulkanDriver) ResetFences(fences ...core.Fence) (common.VkResult, error) {
 	allocator := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(allocator)
 
 	fenceCount := len(fences)
 	fenceUnsafePtr := allocator.Malloc(fenceCount * int(unsafe.Sizeof([1]C.VkFence{})))
 
-	fencePtr := (*driver.VkFence)(fenceUnsafePtr)
-	fenceSlice := ([]driver.VkFence)(unsafe.Slice(fencePtr, fenceCount))
+	fencePtr := (*loader.VkFence)(fenceUnsafePtr)
+	fenceSlice := ([]loader.VkFence)(unsafe.Slice(fencePtr, fenceCount))
 	for i := 0; i < fenceCount; i++ {
-		if fences[i] == nil {
-			panic(fmt.Sprintf("element %d of slice fences is nil", i))
+		if fences[i].Handle() == 0 {
+			panic(fmt.Sprintf("element %d of slice fences is uninitialized", i))
+		}
+		if fences[i].Handle() == 0 {
+			panic(fmt.Sprintf("element %d of slice fences was not created by this driver's device", i))
 		}
 		fenceSlice[i] = fences[i].Handle()
 	}
 
-	return d.DeviceDriver.VkResetFences(d.DeviceHandle, driver.Uint32(fenceCount), fencePtr)
+	return v.LoaderObj.VkResetFences(v.LoaderObj.DeviceHandle(), loader.Uint32(fenceCount), fencePtr)
 }
 
-func (d *VulkanDevice) UpdateDescriptorSets(writes []core1_0.WriteDescriptorSet, copies []core1_0.CopyDescriptorSet) error {
+func (v *DeviceVulkanDriver) UpdateDescriptorSets(device core.Device, writes []core1_0.WriteDescriptorSet, copies []core1_0.CopyDescriptorSet) error {
+	if device.Handle() == 0 {
+		return errors.New("device was uninitialized")
+	}
+
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
@@ -123,13 +113,22 @@ func (d *VulkanDevice) UpdateDescriptorSets(writes []core1_0.WriteDescriptorSet,
 		}
 	}
 
-	d.DeviceDriver.VkUpdateDescriptorSets(d.DeviceHandle, driver.Uint32(writeCount), (*driver.VkWriteDescriptorSet)(unsafe.Pointer(writePtr)), driver.Uint32(copyCount), (*driver.VkCopyDescriptorSet)(unsafe.Pointer(copyPtr)))
+	v.LoaderObj.VkUpdateDescriptorSets(device.Handle(), loader.Uint32(writeCount), (*loader.VkWriteDescriptorSet)(unsafe.Pointer(writePtr)), loader.Uint32(copyCount), (*loader.VkCopyDescriptorSet)(unsafe.Pointer(copyPtr)))
 	return nil
 }
 
-func (d *VulkanDevice) FlushMappedMemoryRanges(ranges []core1_0.MappedMemoryRange) (common.VkResult, error) {
+func (v *DeviceVulkanDriver) FlushMappedMemoryRanges(ranges ...core1_0.MappedMemoryRange) (common.VkResult, error) {
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
+
+	for i, r := range ranges {
+		if r.Memory.Handle() == 0 {
+			return core1_0.VKErrorUnknown, fmt.Errorf("received uninitialized DeviceMemory at element %d", i)
+		}
+		if v.LoaderObj.DeviceHandle() != r.Memory.DeviceHandle() {
+			return core1_0.VKErrorUnknown, fmt.Errorf("received memory that was not allocated by this driver's device at element %d", i)
+		}
+	}
 
 	rangeCount := len(ranges)
 	createInfos, err := common.AllocOptionSlice[C.VkMappedMemoryRange, core1_0.MappedMemoryRange](arena, ranges)
@@ -137,12 +136,21 @@ func (d *VulkanDevice) FlushMappedMemoryRanges(ranges []core1_0.MappedMemoryRang
 		return core1_0.VKErrorUnknown, err
 	}
 
-	return d.DeviceDriver.VkFlushMappedMemoryRanges(d.DeviceHandle, driver.Uint32(rangeCount), (*driver.VkMappedMemoryRange)(unsafe.Pointer(createInfos)))
+	return v.LoaderObj.VkFlushMappedMemoryRanges(v.LoaderObj.DeviceHandle(), loader.Uint32(rangeCount), (*loader.VkMappedMemoryRange)(unsafe.Pointer(createInfos)))
 }
 
-func (d *VulkanDevice) InvalidateMappedMemoryRanges(ranges []core1_0.MappedMemoryRange) (common.VkResult, error) {
+func (v *DeviceVulkanDriver) InvalidateMappedMemoryRanges(ranges ...core1_0.MappedMemoryRange) (common.VkResult, error) {
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
+
+	for i, r := range ranges {
+		if r.Memory.Handle() == 0 {
+			return core1_0.VKErrorUnknown, fmt.Errorf("received uninitialized DeviceMemory at element %d", i)
+		}
+		if v.LoaderObj.DeviceHandle() != r.Memory.DeviceHandle() {
+			return core1_0.VKErrorUnknown, fmt.Errorf("received memory that was not allocated by this driver's device at element %d", i)
+		}
+	}
 
 	rangeCount := len(ranges)
 	createInfos, err := common.AllocOptionSlice[C.VkMappedMemoryRange, core1_0.MappedMemoryRange](arena, ranges)
@@ -150,238 +158,286 @@ func (d *VulkanDevice) InvalidateMappedMemoryRanges(ranges []core1_0.MappedMemor
 		return core1_0.VKErrorUnknown, err
 	}
 
-	return d.DeviceDriver.VkInvalidateMappedMemoryRanges(d.DeviceHandle, driver.Uint32(rangeCount), (*driver.VkMappedMemoryRange)(unsafe.Pointer(createInfos)))
+	return v.LoaderObj.VkInvalidateMappedMemoryRanges(v.LoaderObj.DeviceHandle(), loader.Uint32(rangeCount), (*loader.VkMappedMemoryRange)(unsafe.Pointer(createInfos)))
 }
 
-func (d *VulkanDevice) CreateBufferView(allocationCallbacks *driver.AllocationCallbacks, options core1_0.BufferViewCreateInfo) (core1_0.BufferView, common.VkResult, error) {
+func (v *DeviceVulkanDriver) CreateBufferView(device core.Device, allocationCallbacks *loader.AllocationCallbacks, options core1_0.BufferViewCreateInfo) (core.BufferView, common.VkResult, error) {
+	if device.Handle() == 0 {
+		return core.BufferView{}, core1_0.VKErrorUnknown, errors.New("device was uninitialized")
+	}
+
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
 	createInfo, err := common.AllocOptions(arena, options)
 	if err != nil {
-		return nil, core1_0.VKErrorUnknown, err
+		return core.BufferView{}, core1_0.VKErrorUnknown, err
 	}
 
-	var bufferViewHandle driver.VkBufferView
+	var bufferViewHandle loader.VkBufferView
 
-	res, err := d.DeviceDriver.VkCreateBufferView(d.DeviceHandle, (*driver.VkBufferViewCreateInfo)(createInfo), allocationCallbacks.Handle(), &bufferViewHandle)
+	res, err := v.LoaderObj.VkCreateBufferView(device.Handle(), (*loader.VkBufferViewCreateInfo)(createInfo), allocationCallbacks.Handle(), &bufferViewHandle)
 	if err != nil {
-		return nil, res, err
+		return core.BufferView{}, res, err
 	}
 
-	bufferView := d.DeviceObjectBuilder.CreateBufferViewObject(d.DeviceDriver, d.DeviceHandle, bufferViewHandle, d.MaximumAPIVersion)
+	bufferView := core.InternalBufferView(device.Handle(), bufferViewHandle, device.APIVersion())
 
 	return bufferView, res, nil
 }
 
-func (d *VulkanDevice) CreateShaderModule(allocationCallbacks *driver.AllocationCallbacks, o core1_0.ShaderModuleCreateInfo) (core1_0.ShaderModule, common.VkResult, error) {
+func (v *DeviceVulkanDriver) CreateShaderModule(device core.Device, allocationCallbacks *loader.AllocationCallbacks, o core1_0.ShaderModuleCreateInfo) (core.ShaderModule, common.VkResult, error) {
+	if device.Handle() == 0 {
+		return core.ShaderModule{}, core1_0.VKErrorUnknown, errors.New("device was uninitialized")
+	}
+
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
 	createInfo, err := common.AllocOptions(arena, o)
 	if err != nil {
-		return nil, core1_0.VKErrorUnknown, err
+		return core.ShaderModule{}, core1_0.VKErrorUnknown, err
 	}
 
-	var shaderModuleHandle driver.VkShaderModule
-	res, err := d.DeviceDriver.VkCreateShaderModule(d.DeviceHandle, (*driver.VkShaderModuleCreateInfo)(createInfo), allocationCallbacks.Handle(), &shaderModuleHandle)
+	var shaderModuleHandle loader.VkShaderModule
+	res, err := v.LoaderObj.VkCreateShaderModule(device.Handle(), (*loader.VkShaderModuleCreateInfo)(createInfo), allocationCallbacks.Handle(), &shaderModuleHandle)
 	if err != nil {
-		return nil, res, err
+		return core.ShaderModule{}, res, err
 	}
 
-	shaderModule := d.DeviceObjectBuilder.CreateShaderModuleObject(d.DeviceDriver, d.DeviceHandle, shaderModuleHandle, d.MaximumAPIVersion)
+	shaderModule := core.InternalShaderModule(device.Handle(), shaderModuleHandle, device.APIVersion())
 
 	return shaderModule, res, nil
 }
 
-func (d *VulkanDevice) CreateImageView(allocationCallbacks *driver.AllocationCallbacks, o core1_0.ImageViewCreateInfo) (core1_0.ImageView, common.VkResult, error) {
+func (v *DeviceVulkanDriver) CreateImageView(device core.Device, allocationCallbacks *loader.AllocationCallbacks, o core1_0.ImageViewCreateInfo) (core.ImageView, common.VkResult, error) {
+	if device.Handle() == 0 {
+		return core.ImageView{}, core1_0.VKErrorUnknown, errors.New("device was uninitialized")
+	}
+
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
 	createInfo, err := common.AllocOptions(arena, o)
 	if err != nil {
-		return nil, core1_0.VKErrorUnknown, err
+		return core.ImageView{}, core1_0.VKErrorUnknown, err
 	}
 
-	var imageViewHandle driver.VkImageView
+	var imageViewHandle loader.VkImageView
 
-	res, err := d.DeviceDriver.VkCreateImageView(d.DeviceHandle, (*driver.VkImageViewCreateInfo)(createInfo), allocationCallbacks.Handle(), &imageViewHandle)
+	res, err := v.LoaderObj.VkCreateImageView(device.Handle(), (*loader.VkImageViewCreateInfo)(createInfo), allocationCallbacks.Handle(), &imageViewHandle)
 	if err != nil {
-		return nil, res, err
+		return core.ImageView{}, res, err
 	}
 
-	imageView := d.DeviceObjectBuilder.CreateImageViewObject(d.DeviceDriver, d.DeviceHandle, imageViewHandle, d.MaximumAPIVersion)
+	imageView := core.InternalImageView(device.Handle(), imageViewHandle, device.APIVersion())
 
 	return imageView, res, nil
 }
 
-func (d *VulkanDevice) CreateSemaphore(allocationCallbacks *driver.AllocationCallbacks, o core1_0.SemaphoreCreateInfo) (core1_0.Semaphore, common.VkResult, error) {
+func (v *DeviceVulkanDriver) CreateSemaphore(device core.Device, allocationCallbacks *loader.AllocationCallbacks, o core1_0.SemaphoreCreateInfo) (core.Semaphore, common.VkResult, error) {
+	if device.Handle() == 0 {
+		return core.Semaphore{}, core1_0.VKErrorUnknown, errors.New("device was uninitialized")
+	}
+
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
 	createInfo, err := common.AllocOptions(arena, o)
 	if err != nil {
-		return nil, core1_0.VKErrorUnknown, err
+		return core.Semaphore{}, core1_0.VKErrorUnknown, err
 	}
 
-	var semaphoreHandle driver.VkSemaphore
+	var semaphoreHandle loader.VkSemaphore
 
-	res, err := d.DeviceDriver.VkCreateSemaphore(d.DeviceHandle, (*driver.VkSemaphoreCreateInfo)(createInfo), allocationCallbacks.Handle(), &semaphoreHandle)
+	res, err := v.LoaderObj.VkCreateSemaphore(device.Handle(), (*loader.VkSemaphoreCreateInfo)(createInfo), allocationCallbacks.Handle(), &semaphoreHandle)
 	if err != nil {
-		return nil, res, err
+		return core.Semaphore{}, res, err
 	}
 
-	semaphore := d.DeviceObjectBuilder.CreateSemaphoreObject(d.DeviceDriver, d.DeviceHandle, semaphoreHandle, d.MaximumAPIVersion)
+	semaphore := core.InternalSemaphore(device.Handle(), semaphoreHandle, device.APIVersion())
 
 	return semaphore, res, nil
 }
 
-func (d *VulkanDevice) CreateFence(allocationCallbacks *driver.AllocationCallbacks, o core1_0.FenceCreateInfo) (core1_0.Fence, common.VkResult, error) {
+func (v *DeviceVulkanDriver) CreateFence(device core.Device, allocationCallbacks *loader.AllocationCallbacks, o core1_0.FenceCreateInfo) (core.Fence, common.VkResult, error) {
+	if device.Handle() == 0 {
+		return core.Fence{}, core1_0.VKErrorUnknown, errors.New("device was uninitialized")
+	}
+
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
 	createInfo, err := common.AllocOptions(arena, o)
 	if err != nil {
-		return nil, core1_0.VKErrorUnknown, err
+		return core.Fence{}, core1_0.VKErrorUnknown, err
 	}
 
-	var fenceHandle driver.VkFence
+	var fenceHandle loader.VkFence
 
-	res, err := d.DeviceDriver.VkCreateFence(d.DeviceHandle, (*driver.VkFenceCreateInfo)(createInfo), allocationCallbacks.Handle(), &fenceHandle)
+	res, err := v.LoaderObj.VkCreateFence(device.Handle(), (*loader.VkFenceCreateInfo)(createInfo), allocationCallbacks.Handle(), &fenceHandle)
 	if err != nil {
-		return nil, res, err
+		return core.Fence{}, res, err
 	}
 
-	fence := d.DeviceObjectBuilder.CreateFenceObject(d.DeviceDriver, d.DeviceHandle, fenceHandle, d.MaximumAPIVersion)
+	fence := core.InternalFence(device.Handle(), fenceHandle, device.APIVersion())
 
 	return fence, res, nil
 }
 
-func (d *VulkanDevice) CreateBuffer(allocationCallbacks *driver.AllocationCallbacks, o core1_0.BufferCreateInfo) (core1_0.Buffer, common.VkResult, error) {
+func (v *DeviceVulkanDriver) CreateBuffer(device core.Device, allocationCallbacks *loader.AllocationCallbacks, o core1_0.BufferCreateInfo) (core.Buffer, common.VkResult, error) {
+	if device.Handle() == 0 {
+		return core.Buffer{}, core1_0.VKErrorUnknown, errors.New("device was uninitialized")
+	}
+
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
 	createInfo, err := common.AllocOptions(arena, o)
 	if err != nil {
-		return nil, core1_0.VKErrorUnknown, err
+		return core.Buffer{}, core1_0.VKErrorUnknown, err
 	}
 
-	var bufferHandle driver.VkBuffer
+	var bufferHandle loader.VkBuffer
 
-	res, err := d.DeviceDriver.VkCreateBuffer(d.DeviceHandle, (*driver.VkBufferCreateInfo)(createInfo), allocationCallbacks.Handle(), &bufferHandle)
+	res, err := v.LoaderObj.VkCreateBuffer(device.Handle(), (*loader.VkBufferCreateInfo)(createInfo), allocationCallbacks.Handle(), &bufferHandle)
 	if err != nil {
-		return nil, res, err
+		return core.Buffer{}, res, err
 	}
 
-	buffer := d.DeviceObjectBuilder.CreateBufferObject(d.DeviceDriver, d.DeviceHandle, bufferHandle, d.MaximumAPIVersion)
+	buffer := core.InternalBuffer(device.Handle(), bufferHandle, device.APIVersion())
 
 	return buffer, res, nil
 }
 
-func (d *VulkanDevice) CreateDescriptorSetLayout(allocationCallbacks *driver.AllocationCallbacks, o core1_0.DescriptorSetLayoutCreateInfo) (core1_0.DescriptorSetLayout, common.VkResult, error) {
+func (v *DeviceVulkanDriver) CreateDescriptorSetLayout(device core.Device, allocationCallbacks *loader.AllocationCallbacks, o core1_0.DescriptorSetLayoutCreateInfo) (core.DescriptorSetLayout, common.VkResult, error) {
+	if device.Handle() == 0 {
+		return core.DescriptorSetLayout{}, core1_0.VKErrorUnknown, errors.New("device was uninitialized")
+	}
+
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
 	createInfo, err := common.AllocOptions(arena, o)
 	if err != nil {
-		return nil, core1_0.VKErrorUnknown, err
+		return core.DescriptorSetLayout{}, core1_0.VKErrorUnknown, err
 	}
 
-	var descriptorSetLayoutHandle driver.VkDescriptorSetLayout
+	var descriptorSetLayoutHandle loader.VkDescriptorSetLayout
 
-	res, err := d.DeviceDriver.VkCreateDescriptorSetLayout(d.DeviceHandle, (*driver.VkDescriptorSetLayoutCreateInfo)(createInfo), allocationCallbacks.Handle(), &descriptorSetLayoutHandle)
+	res, err := v.LoaderObj.VkCreateDescriptorSetLayout(device.Handle(), (*loader.VkDescriptorSetLayoutCreateInfo)(createInfo), allocationCallbacks.Handle(), &descriptorSetLayoutHandle)
 	if err != nil {
-		return nil, res, err
+		return core.DescriptorSetLayout{}, res, err
 	}
 
-	descriptorSetLayout := d.DeviceObjectBuilder.CreateDescriptorSetLayoutObject(d.DeviceDriver, d.DeviceHandle, descriptorSetLayoutHandle, d.MaximumAPIVersion)
+	descriptorSetLayout := core.InternalDescriptorSetLayout(device.Handle(), descriptorSetLayoutHandle, device.APIVersion())
 
 	return descriptorSetLayout, res, nil
 }
 
-func (d *VulkanDevice) CreateDescriptorPool(allocationCallbacks *driver.AllocationCallbacks, o core1_0.DescriptorPoolCreateInfo) (core1_0.DescriptorPool, common.VkResult, error) {
+func (v *DeviceVulkanDriver) CreateDescriptorPool(device core.Device, allocationCallbacks *loader.AllocationCallbacks, o core1_0.DescriptorPoolCreateInfo) (core.DescriptorPool, common.VkResult, error) {
+	if device.Handle() == 0 {
+		return core.DescriptorPool{}, core1_0.VKErrorUnknown, errors.New("device was uninitialized")
+	}
+
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
 	createInfo, err := common.AllocOptions(arena, o)
 	if err != nil {
-		return nil, core1_0.VKErrorUnknown, err
+		return core.DescriptorPool{}, core1_0.VKErrorUnknown, err
 	}
 
-	var descriptorPoolHandle driver.VkDescriptorPool
+	var descriptorPoolHandle loader.VkDescriptorPool
 
-	res, err := d.DeviceDriver.VkCreateDescriptorPool(d.DeviceHandle, (*driver.VkDescriptorPoolCreateInfo)(createInfo), allocationCallbacks.Handle(), &descriptorPoolHandle)
+	res, err := v.LoaderObj.VkCreateDescriptorPool(device.Handle(), (*loader.VkDescriptorPoolCreateInfo)(createInfo), allocationCallbacks.Handle(), &descriptorPoolHandle)
 	if err != nil {
-		return nil, res, err
+		return core.DescriptorPool{}, res, err
 	}
 
-	descriptorPool := d.DeviceObjectBuilder.CreateDescriptorPoolObject(d.DeviceDriver, d.DeviceHandle, descriptorPoolHandle, d.MaximumAPIVersion)
+	descriptorPool := core.InternalDescriptorPool(device.Handle(), descriptorPoolHandle, device.APIVersion())
 
 	return descriptorPool, res, nil
 }
 
-func (d *VulkanDevice) CreateCommandPool(allocationCallbacks *driver.AllocationCallbacks, o core1_0.CommandPoolCreateInfo) (core1_0.CommandPool, common.VkResult, error) {
+func (v *DeviceVulkanDriver) CreateCommandPool(device core.Device, allocationCallbacks *loader.AllocationCallbacks, o core1_0.CommandPoolCreateInfo) (core.CommandPool, common.VkResult, error) {
+	if device.Handle() == 0 {
+		return core.CommandPool{}, core1_0.VKErrorUnknown, errors.New("device was uninitialized")
+	}
+
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
 	createInfo, err := common.AllocOptions(arena, o)
 	if err != nil {
-		return nil, core1_0.VKErrorUnknown, err
+		return core.CommandPool{}, core1_0.VKErrorUnknown, err
 	}
 
-	var cmdPoolHandle driver.VkCommandPool
-	res, err := d.DeviceDriver.VkCreateCommandPool(d.DeviceHandle, (*driver.VkCommandPoolCreateInfo)(createInfo), allocationCallbacks.Handle(), &cmdPoolHandle)
+	var cmdPoolHandle loader.VkCommandPool
+	res, err := v.LoaderObj.VkCreateCommandPool(device.Handle(), (*loader.VkCommandPoolCreateInfo)(createInfo), allocationCallbacks.Handle(), &cmdPoolHandle)
 	if err != nil {
-		return nil, res, err
+		return core.CommandPool{}, res, err
 	}
 
-	commandPool := d.DeviceObjectBuilder.CreateCommandPoolObject(d.DeviceDriver, d.DeviceHandle, cmdPoolHandle, d.MaximumAPIVersion)
+	commandPool := core.InternalCommandPool(device.Handle(), cmdPoolHandle, device.APIVersion())
 
 	return commandPool, res, nil
 }
 
-func (d *VulkanDevice) CreateEvent(allocationCallbacks *driver.AllocationCallbacks, o core1_0.EventCreateInfo) (core1_0.Event, common.VkResult, error) {
+func (v *DeviceVulkanDriver) CreateEvent(device core.Device, allocationCallbacks *loader.AllocationCallbacks, o core1_0.EventCreateInfo) (core.Event, common.VkResult, error) {
+	if device.Handle() == 0 {
+		return core.Event{}, core1_0.VKErrorUnknown, errors.New("device was uninitialized")
+	}
+
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
 	createInfo, err := common.AllocOptions(arena, o)
 	if err != nil {
-		return nil, core1_0.VKErrorUnknown, err
+		return core.Event{}, core1_0.VKErrorUnknown, err
 	}
 
-	var eventHandle driver.VkEvent
-	res, err := d.DeviceDriver.VkCreateEvent(d.DeviceHandle, (*driver.VkEventCreateInfo)(createInfo), allocationCallbacks.Handle(), &eventHandle)
+	var eventHandle loader.VkEvent
+	res, err := v.LoaderObj.VkCreateEvent(device.Handle(), (*loader.VkEventCreateInfo)(createInfo), allocationCallbacks.Handle(), &eventHandle)
 	if err != nil {
-		return nil, res, err
+		return core.Event{}, res, err
 	}
 
-	event := d.DeviceObjectBuilder.CreateEventObject(d.DeviceDriver, d.DeviceHandle, eventHandle, d.MaximumAPIVersion)
+	event := core.InternalEvent(device.Handle(), eventHandle, device.APIVersion())
 
 	return event, res, nil
 }
 
-func (d *VulkanDevice) CreateFramebuffer(allocationCallbacks *driver.AllocationCallbacks, o core1_0.FramebufferCreateInfo) (core1_0.Framebuffer, common.VkResult, error) {
+func (v *DeviceVulkanDriver) CreateFramebuffer(device core.Device, allocationCallbacks *loader.AllocationCallbacks, o core1_0.FramebufferCreateInfo) (core.Framebuffer, common.VkResult, error) {
+	if device.Handle() == 0 {
+		return core.Framebuffer{}, core1_0.VKErrorUnknown, errors.New("device was uninitialized")
+	}
+
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
 	createInfo, err := common.AllocOptions(arena, o)
 	if err != nil {
-		return nil, core1_0.VKErrorUnknown, err
+		return core.Framebuffer{}, core1_0.VKErrorUnknown, err
 	}
 
-	var framebufferHandle driver.VkFramebuffer
+	var framebufferHandle loader.VkFramebuffer
 
-	res, err := d.DeviceDriver.VkCreateFramebuffer(d.DeviceHandle, (*driver.VkFramebufferCreateInfo)(createInfo), allocationCallbacks.Handle(), &framebufferHandle)
+	res, err := v.LoaderObj.VkCreateFramebuffer(device.Handle(), (*loader.VkFramebufferCreateInfo)(createInfo), allocationCallbacks.Handle(), &framebufferHandle)
 	if err != nil {
-		return nil, res, err
+		return core.Framebuffer{}, res, err
 	}
 
-	framebuffer := d.DeviceObjectBuilder.CreateFramebufferObject(d.DeviceDriver, d.DeviceHandle, framebufferHandle, d.MaximumAPIVersion)
+	framebuffer := core.InternalFramebuffer(device.Handle(), framebufferHandle, device.APIVersion())
 
 	return framebuffer, res, nil
 }
 
-func (d *VulkanDevice) CreateGraphicsPipelines(pipelineCache core1_0.PipelineCache, allocationCallbacks *driver.AllocationCallbacks, o []core1_0.GraphicsPipelineCreateInfo) ([]core1_0.Pipeline, common.VkResult, error) {
+func (v *DeviceVulkanDriver) CreateGraphicsPipelines(device core.Device, pipelineCache *core.PipelineCache, allocationCallbacks *loader.AllocationCallbacks, o ...core1_0.GraphicsPipelineCreateInfo) ([]core.Pipeline, common.VkResult, error) {
+	if device.Handle() == 0 {
+		return nil, core1_0.VKErrorUnknown, errors.New("device was uninitialized")
+	}
+
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
@@ -392,30 +448,34 @@ func (d *VulkanDevice) CreateGraphicsPipelines(pipelineCache core1_0.PipelineCac
 		return nil, core1_0.VKErrorUnknown, err
 	}
 
-	pipelinePtr := (*driver.VkPipeline)(arena.Malloc(pipelineCount * int(unsafe.Sizeof([1]driver.VkPipeline{}))))
+	pipelinePtr := (*loader.VkPipeline)(arena.Malloc(pipelineCount * int(unsafe.Sizeof([1]loader.VkPipeline{}))))
 
-	var pipelineCacheHandle driver.VkPipelineCache
+	var pipelineCacheHandle loader.VkPipelineCache
 	if pipelineCache != nil {
 		pipelineCacheHandle = pipelineCache.Handle()
 	}
 
-	res, err := d.DeviceDriver.VkCreateGraphicsPipelines(d.DeviceHandle, pipelineCacheHandle, driver.Uint32(pipelineCount), (*driver.VkGraphicsPipelineCreateInfo)(unsafe.Pointer(pipelineCreateInfosPtr)), allocationCallbacks.Handle(), pipelinePtr)
+	res, err := v.LoaderObj.VkCreateGraphicsPipelines(device.Handle(), pipelineCacheHandle, loader.Uint32(pipelineCount), (*loader.VkGraphicsPipelineCreateInfo)(unsafe.Pointer(pipelineCreateInfosPtr)), allocationCallbacks.Handle(), pipelinePtr)
 	if err != nil {
 		return nil, res, err
 	}
 
-	var output []core1_0.Pipeline
-	pipelineSlice := ([]driver.VkPipeline)(unsafe.Slice(pipelinePtr, pipelineCount))
+	var output []core.Pipeline
+	pipelineSlice := ([]loader.VkPipeline)(unsafe.Slice(pipelinePtr, pipelineCount))
 
 	for i := 0; i < pipelineCount; i++ {
-		pipeline := d.DeviceObjectBuilder.CreatePipelineObject(d.DeviceDriver, d.DeviceHandle, pipelineSlice[i], d.MaximumAPIVersion)
+		pipeline := core.InternalPipeline(device.Handle(), pipelineSlice[i], device.APIVersion())
 		output = append(output, pipeline)
 	}
 
 	return output, res, nil
 }
 
-func (d *VulkanDevice) CreateComputePipelines(pipelineCache core1_0.PipelineCache, allocationCallbacks *driver.AllocationCallbacks, o []core1_0.ComputePipelineCreateInfo) ([]core1_0.Pipeline, common.VkResult, error) {
+func (v *DeviceVulkanDriver) CreateComputePipelines(device core.Device, pipelineCache *core.PipelineCache, allocationCallbacks *loader.AllocationCallbacks, o ...core1_0.ComputePipelineCreateInfo) ([]core.Pipeline, common.VkResult, error) {
+	if device.Handle() == 0 {
+		return nil, core1_0.VKErrorUnknown, errors.New("device was uninitialized")
+	}
+
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
@@ -426,23 +486,23 @@ func (d *VulkanDevice) CreateComputePipelines(pipelineCache core1_0.PipelineCach
 		return nil, core1_0.VKErrorUnknown, err
 	}
 
-	pipelinePtr := (*driver.VkPipeline)(arena.Malloc(pipelineCount * int(unsafe.Sizeof([1]driver.VkPipeline{}))))
+	pipelinePtr := (*loader.VkPipeline)(arena.Malloc(pipelineCount * int(unsafe.Sizeof([1]loader.VkPipeline{}))))
 
-	var pipelineCacheHandle driver.VkPipelineCache
+	var pipelineCacheHandle loader.VkPipelineCache
 	if pipelineCache != nil {
 		pipelineCacheHandle = pipelineCache.Handle()
 	}
 
-	res, err := d.DeviceDriver.VkCreateComputePipelines(d.DeviceHandle, pipelineCacheHandle, driver.Uint32(pipelineCount), (*driver.VkComputePipelineCreateInfo)(unsafe.Pointer(pipelineCreateInfosPtr)), allocationCallbacks.Handle(), pipelinePtr)
+	res, err := v.LoaderObj.VkCreateComputePipelines(device.Handle(), pipelineCacheHandle, loader.Uint32(pipelineCount), (*loader.VkComputePipelineCreateInfo)(unsafe.Pointer(pipelineCreateInfosPtr)), allocationCallbacks.Handle(), pipelinePtr)
 	if err != nil {
 		return nil, res, err
 	}
 
-	var output []core1_0.Pipeline
-	pipelineSlice := ([]driver.VkPipeline)(unsafe.Slice(pipelinePtr, pipelineCount))
+	var output []core.Pipeline
+	pipelineSlice := ([]loader.VkPipeline)(unsafe.Slice(pipelinePtr, pipelineCount))
 
 	for i := 0; i < pipelineCount; i++ {
-		pipeline := d.DeviceObjectBuilder.CreatePipelineObject(d.DeviceDriver, d.DeviceHandle, pipelineSlice[i], d.MaximumAPIVersion)
+		pipeline := core.InternalPipeline(device.Handle(), pipelineSlice[i], device.APIVersion())
 
 		output = append(output, pipeline)
 	}
@@ -450,201 +510,226 @@ func (d *VulkanDevice) CreateComputePipelines(pipelineCache core1_0.PipelineCach
 	return output, res, nil
 }
 
-func (d *VulkanDevice) CreateImage(allocationCallbacks *driver.AllocationCallbacks, o core1_0.ImageCreateInfo) (core1_0.Image, common.VkResult, error) {
+func (v *DeviceVulkanDriver) CreateImage(device core.Device, allocationCallbacks *loader.AllocationCallbacks, o core1_0.ImageCreateInfo) (core.Image, common.VkResult, error) {
+	if device.Handle() == 0 {
+		return core.Image{}, core1_0.VKErrorUnknown, errors.New("device was uninitialized")
+	}
+
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
 	createInfo, err := common.AllocOptions(arena, o)
 	if err != nil {
-		return nil, core1_0.VKErrorUnknown, err
+		return core.Image{}, core1_0.VKErrorUnknown, err
 	}
 
-	var imageHandle driver.VkImage
-	res, err := d.DeviceDriver.VkCreateImage(d.DeviceHandle, (*driver.VkImageCreateInfo)(createInfo), allocationCallbacks.Handle(), &imageHandle)
+	var imageHandle loader.VkImage
+	res, err := v.LoaderObj.VkCreateImage(device.Handle(), (*loader.VkImageCreateInfo)(createInfo), allocationCallbacks.Handle(), &imageHandle)
 	if err != nil {
-		return nil, res, err
+		return core.Image{}, res, err
 	}
 
-	image := d.DeviceObjectBuilder.CreateImageObject(d.DeviceDriver, d.DeviceHandle, imageHandle, d.MaximumAPIVersion)
+	image := core.InternalImage(device.Handle(), imageHandle, device.APIVersion())
 
 	return image, res, nil
 }
 
-func (d *VulkanDevice) CreatePipelineCache(allocationCallbacks *driver.AllocationCallbacks, o core1_0.PipelineCacheCreateInfo) (core1_0.PipelineCache, common.VkResult, error) {
+func (v *DeviceVulkanDriver) CreatePipelineCache(device core.Device, allocationCallbacks *loader.AllocationCallbacks, o core1_0.PipelineCacheCreateInfo) (core.PipelineCache, common.VkResult, error) {
+	if device.Handle() == 0 {
+		return core.PipelineCache{}, core1_0.VKErrorUnknown, errors.New("device was uninitialized")
+	}
+
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
 	createInfo, err := common.AllocOptions(arena, o)
 	if err != nil {
-		return nil, core1_0.VKErrorUnknown, err
+		return core.PipelineCache{}, core1_0.VKErrorUnknown, err
 	}
 
-	var pipelineCacheHandle driver.VkPipelineCache
-	res, err := d.DeviceDriver.VkCreatePipelineCache(d.DeviceHandle, (*driver.VkPipelineCacheCreateInfo)(createInfo), allocationCallbacks.Handle(), &pipelineCacheHandle)
+	var pipelineCacheHandle loader.VkPipelineCache
+	res, err := v.LoaderObj.VkCreatePipelineCache(device.Handle(), (*loader.VkPipelineCacheCreateInfo)(createInfo), allocationCallbacks.Handle(), &pipelineCacheHandle)
 	if err != nil {
-		return nil, res, err
+		return core.PipelineCache{}, res, err
 	}
 
-	pipelineCache := d.DeviceObjectBuilder.CreatePipelineCacheObject(d.DeviceDriver, d.DeviceHandle, pipelineCacheHandle, d.MaximumAPIVersion)
+	pipelineCache := core.InternalPipelineCache(device.Handle(), pipelineCacheHandle, device.APIVersion())
 
 	return pipelineCache, res, nil
 }
 
-func (d *VulkanDevice) CreatePipelineLayout(allocationCallbacks *driver.AllocationCallbacks, o core1_0.PipelineLayoutCreateInfo) (core1_0.PipelineLayout, common.VkResult, error) {
+func (v *DeviceVulkanDriver) CreatePipelineLayout(device core.Device, allocationCallbacks *loader.AllocationCallbacks, o core1_0.PipelineLayoutCreateInfo) (core.PipelineLayout, common.VkResult, error) {
+	if device.Handle() == 0 {
+		return core.PipelineLayout{}, core1_0.VKErrorUnknown, errors.New("device was uninitialized")
+	}
+
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
 	createInfo, err := common.AllocOptions(arena, o)
 	if err != nil {
-		return nil, core1_0.VKErrorUnknown, err
+		return core.PipelineLayout{}, core1_0.VKErrorUnknown, err
 	}
 
-	var pipelineLayoutHandle driver.VkPipelineLayout
-	res, err := d.DeviceDriver.VkCreatePipelineLayout(d.DeviceHandle, (*driver.VkPipelineLayoutCreateInfo)(createInfo), allocationCallbacks.Handle(), &pipelineLayoutHandle)
+	var pipelineLayoutHandle loader.VkPipelineLayout
+	res, err := v.LoaderObj.VkCreatePipelineLayout(device.Handle(), (*loader.VkPipelineLayoutCreateInfo)(createInfo), allocationCallbacks.Handle(), &pipelineLayoutHandle)
 	if err != nil {
-		return nil, res, err
+		return core.PipelineLayout{}, res, err
 	}
 
-	pipelineLayout := d.DeviceObjectBuilder.CreatePipelineLayoutObject(d.DeviceDriver, d.DeviceHandle, pipelineLayoutHandle, d.MaximumAPIVersion)
+	pipelineLayout := core.InternalPipelineLayout(device.Handle(), pipelineLayoutHandle, device.APIVersion())
 
 	return pipelineLayout, res, nil
 }
 
-func (d *VulkanDevice) CreateQueryPool(allocationCallbacks *driver.AllocationCallbacks, o core1_0.QueryPoolCreateInfo) (core1_0.QueryPool, common.VkResult, error) {
+func (v *DeviceVulkanDriver) CreateQueryPool(device core.Device, allocationCallbacks *loader.AllocationCallbacks, o core1_0.QueryPoolCreateInfo) (core.QueryPool, common.VkResult, error) {
+	if device.Handle() == 0 {
+		return core.QueryPool{}, core1_0.VKErrorUnknown, errors.New("device was uninitialized")
+	}
+
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
 	createInfo, err := common.AllocOptions(arena, o)
 	if err != nil {
-		return nil, core1_0.VKErrorUnknown, err
+		return core.QueryPool{}, core1_0.VKErrorUnknown, err
 	}
 
-	var queryPoolHandle driver.VkQueryPool
+	var queryPoolHandle loader.VkQueryPool
 
-	res, err := d.DeviceDriver.VkCreateQueryPool(d.DeviceHandle, (*driver.VkQueryPoolCreateInfo)(createInfo), allocationCallbacks.Handle(), &queryPoolHandle)
+	res, err := v.LoaderObj.VkCreateQueryPool(device.Handle(), (*loader.VkQueryPoolCreateInfo)(createInfo), allocationCallbacks.Handle(), &queryPoolHandle)
 	if err != nil {
-		return nil, res, err
+		return core.QueryPool{}, res, err
 	}
 
-	queryPool := d.DeviceObjectBuilder.CreateQueryPoolObject(d.DeviceDriver, d.DeviceHandle, queryPoolHandle, d.MaximumAPIVersion)
+	queryPool := core.InternalQueryPool(device.Handle(), queryPoolHandle, device.APIVersion())
 	return queryPool, res, nil
 }
 
-func (d *VulkanDevice) CreateRenderPass(allocationCallbacks *driver.AllocationCallbacks, o core1_0.RenderPassCreateInfo) (core1_0.RenderPass, common.VkResult, error) {
+func (v *DeviceVulkanDriver) CreateRenderPass(device core.Device, allocationCallbacks *loader.AllocationCallbacks, o core1_0.RenderPassCreateInfo) (core.RenderPass, common.VkResult, error) {
+	if device.Handle() == 0 {
+		return core.RenderPass{}, core1_0.VKErrorUnknown, errors.New("device was uninitialized")
+	}
+
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
 	createInfo, err := common.AllocOptions(arena, o)
 	if err != nil {
-		return nil, core1_0.VKErrorUnknown, err
+		return core.RenderPass{}, core1_0.VKErrorUnknown, err
 	}
 
-	var renderPassHandle driver.VkRenderPass
+	var renderPassHandle loader.VkRenderPass
 
-	res, err := d.DeviceDriver.VkCreateRenderPass(d.DeviceHandle, (*driver.VkRenderPassCreateInfo)(createInfo), allocationCallbacks.Handle(), &renderPassHandle)
+	res, err := v.LoaderObj.VkCreateRenderPass(device.Handle(), (*loader.VkRenderPassCreateInfo)(createInfo), allocationCallbacks.Handle(), &renderPassHandle)
 	if err != nil {
-		return nil, res, err
+		return core.RenderPass{}, res, err
 	}
 
-	renderPass := d.DeviceObjectBuilder.CreateRenderPassObject(d.DeviceDriver, d.DeviceHandle, renderPassHandle, d.MaximumAPIVersion)
+	renderPass := core.InternalRenderPass(device.Handle(), renderPassHandle, device.APIVersion())
 
 	return renderPass, res, nil
 }
 
-func (d *VulkanDevice) CreateSampler(allocationCallbacks *driver.AllocationCallbacks, o core1_0.SamplerCreateInfo) (core1_0.Sampler, common.VkResult, error) {
+func (v *DeviceVulkanDriver) CreateSampler(device core.Device, allocationCallbacks *loader.AllocationCallbacks, o core1_0.SamplerCreateInfo) (core.Sampler, common.VkResult, error) {
+	if device.Handle() == 0 {
+		return core.Sampler{}, core1_0.VKErrorUnknown, errors.New("device was uninitialized")
+	}
+
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
 	createInfo, err := common.AllocOptions(arena, o)
 	if err != nil {
-		return nil, core1_0.VKErrorUnknown, err
+		return core.Sampler{}, core1_0.VKErrorUnknown, err
 	}
 
-	var samplerHandle driver.VkSampler
+	var samplerHandle loader.VkSampler
 
-	res, err := d.DeviceDriver.VkCreateSampler(d.DeviceHandle, (*driver.VkSamplerCreateInfo)(createInfo), allocationCallbacks.Handle(), &samplerHandle)
+	res, err := v.LoaderObj.VkCreateSampler(device.Handle(), (*loader.VkSamplerCreateInfo)(createInfo), allocationCallbacks.Handle(), &samplerHandle)
 	if err != nil {
-		return nil, res, err
+		return core.Sampler{}, res, err
 	}
 
-	sampler := d.DeviceObjectBuilder.CreateSamplerObject(d.DeviceDriver, d.DeviceHandle, samplerHandle, d.MaximumAPIVersion)
+	sampler := core.InternalSampler(device.Handle(), samplerHandle, device.APIVersion())
 
 	return sampler, res, nil
 }
 
-func (d *VulkanDevice) GetQueue(queueFamilyIndex int, queueIndex int) core1_0.Queue {
+func (v *DeviceVulkanDriver) GetQueue(device core.Device, queueFamilyIndex int, queueIndex int) core.Queue {
+	if device.Handle() == 0 {
+		panic("device was uninitialized")
+	}
 
-	var queueHandle driver.VkQueue
+	var queueHandle loader.VkQueue
 
-	d.DeviceDriver.VkGetDeviceQueue(d.DeviceHandle, driver.Uint32(queueFamilyIndex), driver.Uint32(queueIndex), &queueHandle)
+	v.LoaderObj.VkGetDeviceQueue(device.Handle(), loader.Uint32(queueFamilyIndex), loader.Uint32(queueIndex), &queueHandle)
 
-	queue := d.DeviceObjectBuilder.CreateQueueObject(d.DeviceDriver, d.DeviceHandle, queueHandle, d.MaximumAPIVersion)
+	queue := core.InternalQueue(device.Handle(), queueHandle, device.APIVersion())
 
 	return queue
 }
 
-func (d *VulkanDevice) AllocateMemory(allocationCallbacks *driver.AllocationCallbacks, o core1_0.MemoryAllocateInfo) (core1_0.DeviceMemory, common.VkResult, error) {
+func (v *DeviceVulkanDriver) AllocateMemory(device core.Device, allocationCallbacks *loader.AllocationCallbacks, o core1_0.MemoryAllocateInfo) (core.DeviceMemory, common.VkResult, error) {
+	if device.Handle() == 0 {
+		return core.DeviceMemory{}, core1_0.VKErrorUnknown, errors.New("device was uninitialized")
+	}
+
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
 	createInfo, err := common.AllocOptions(arena, o)
 	if err != nil {
-		return nil, core1_0.VKErrorUnknown, err
+		return core.DeviceMemory{}, core1_0.VKErrorUnknown, err
 	}
 
-	var deviceMemoryHandle driver.VkDeviceMemory
+	var deviceMemoryHandle loader.VkDeviceMemory
 
-	deviceDriver := d.DeviceDriver
-	deviceHandle := d.DeviceHandle
+	deviceDriver := v.LoaderObj
+	deviceHandle := device.Handle()
 
-	res, err := deviceDriver.VkAllocateMemory(deviceHandle, (*driver.VkMemoryAllocateInfo)(createInfo), allocationCallbacks.Handle(), &deviceMemoryHandle)
+	res, err := deviceDriver.VkAllocateMemory(deviceHandle, (*loader.VkMemoryAllocateInfo)(createInfo), allocationCallbacks.Handle(), &deviceMemoryHandle)
 	if err != nil {
-		return nil, res, err
+		return core.DeviceMemory{}, res, err
 	}
 
-	deviceMemory := d.DeviceObjectBuilder.CreateDeviceMemoryObject(deviceDriver, deviceHandle, deviceMemoryHandle, d.MaximumAPIVersion, o.AllocationSize)
+	deviceMemory := core.InternalDeviceMemory(device.Handle(), deviceMemoryHandle, device.APIVersion(), o.AllocationSize)
 
 	return deviceMemory, res, nil
 }
 
-func (d *VulkanDevice) FreeMemory(deviceMemory core1_0.DeviceMemory, allocationCallbacks *driver.AllocationCallbacks) {
-	// This is really only here for a kind of API symmetry
-	deviceMemory.Free(allocationCallbacks)
-}
-
-// Free a slice of command buffers which should all have the same device/driver/pool
+// Free a slice of command buffers which should all have the same device/loader/pool
 // guaranteed to have at least one element
-func (d *VulkanDevice) freeCommandBufferSlice(buffers []core1_0.CommandBuffer) {
+func (v *DeviceVulkanDriver) freeCommandBufferSlice(buffers []core.CommandBuffer) {
 	allocator := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(allocator)
 
 	bufferCount := len(buffers)
-	bufferDriver := buffers[0].Driver()
 	bufferDevice := buffers[0].DeviceHandle()
 	bufferPool := buffers[0].CommandPoolHandle()
 
 	size := bufferCount * int(unsafe.Sizeof([1]C.VkCommandBuffer{}))
-	bufferArrayPtr := (*driver.VkCommandBuffer)(allocator.Malloc(size))
-	bufferArraySlice := ([]driver.VkCommandBuffer)(unsafe.Slice(bufferArrayPtr, bufferCount))
+	bufferArrayPtr := (*loader.VkCommandBuffer)(allocator.Malloc(size))
+	bufferArraySlice := ([]loader.VkCommandBuffer)(unsafe.Slice(bufferArrayPtr, bufferCount))
 
 	for i := 0; i < bufferCount; i++ {
-		bufferArraySlice[i] = driver.VkCommandBuffer(0)
+		bufferArraySlice[i] = loader.VkCommandBuffer(0)
 
-		if buffers[i] != nil {
+		if buffers[i].Handle() != 0 {
 			bufferArraySlice[i] = buffers[i].Handle()
 		}
 	}
 
-	bufferDriver.VkFreeCommandBuffers(bufferDevice, bufferPool, driver.Uint32(bufferCount), bufferArrayPtr)
+	v.LoaderObj.VkFreeCommandBuffers(bufferDevice, bufferPool, loader.Uint32(bufferCount), bufferArrayPtr)
 }
 
-func (d *VulkanDevice) FreeCommandBuffers(buffers []core1_0.CommandBuffer) {
+func (v *DeviceVulkanDriver) FreeCommandBuffers(buffers ...core.CommandBuffer) {
 	bufferCount := len(buffers)
 	if bufferCount == 0 {
 		return
 	}
 
-	multimap := make(map[driver.VkCommandPool][]core1_0.CommandBuffer)
+	multimap := make(map[loader.VkCommandPool][]core.CommandBuffer)
 	for _, buffer := range buffers {
 		poolHandle := buffer.CommandPoolHandle()
 		existingSet := multimap[poolHandle]
@@ -652,15 +737,15 @@ func (d *VulkanDevice) FreeCommandBuffers(buffers []core1_0.CommandBuffer) {
 	}
 
 	for _, setBuffers := range multimap {
-		d.freeCommandBufferSlice(setBuffers)
+		v.freeCommandBufferSlice(setBuffers)
 	}
 }
 
-func (d *VulkanDevice) AllocateCommandBuffers(o core1_0.CommandBufferAllocateInfo) ([]core1_0.CommandBuffer, common.VkResult, error) {
+func (v *DeviceVulkanDriver) AllocateCommandBuffers(o core1_0.CommandBufferAllocateInfo) ([]core.CommandBuffer, common.VkResult, error) {
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
-	if o.CommandPool == nil {
+	if o.CommandPool.Handle() == 0 {
 		return nil, core1_0.VKErrorUnknown, errors.New("no command pool provided to allocate from")
 	}
 
@@ -670,20 +755,21 @@ func (d *VulkanDevice) AllocateCommandBuffers(o core1_0.CommandBufferAllocateInf
 	}
 
 	device := o.CommandPool.DeviceHandle()
+	version := o.CommandPool.APIVersion()
 
-	commandBufferPtr := (*driver.VkCommandBuffer)(arena.Malloc(o.CommandBufferCount * int(unsafe.Sizeof([1]driver.VkCommandBuffer{}))))
+	commandBufferPtr := (*loader.VkCommandBuffer)(arena.Malloc(o.CommandBufferCount * int(unsafe.Sizeof([1]loader.VkCommandBuffer{}))))
 
-	res, err := o.CommandPool.Driver().VkAllocateCommandBuffers(device, (*driver.VkCommandBufferAllocateInfo)(createInfo), commandBufferPtr)
+	res, err := v.LoaderObj.VkAllocateCommandBuffers(device, (*loader.VkCommandBufferAllocateInfo)(createInfo), commandBufferPtr)
 	err = res.ToError()
 	if err != nil {
 		return nil, res, err
 	}
 
-	commandBufferArray := ([]driver.VkCommandBuffer)(unsafe.Slice(commandBufferPtr, o.CommandBufferCount))
-	var result []core1_0.CommandBuffer
+	commandBufferArray := ([]loader.VkCommandBuffer)(unsafe.Slice(commandBufferPtr, o.CommandBufferCount))
+	var result []core.CommandBuffer
 
 	for i := 0; i < o.CommandBufferCount; i++ {
-		commandBuffer := d.DeviceObjectBuilder.CreateCommandBufferObject(o.CommandPool.Driver(), o.CommandPool.Handle(), device, commandBufferArray[i], o.CommandPool.APIVersion())
+		commandBuffer := core.InternalCommandBuffer(device, o.CommandPool.Handle(), commandBufferArray[i], version)
 
 		result = append(result, commandBuffer)
 	}
@@ -691,11 +777,11 @@ func (d *VulkanDevice) AllocateCommandBuffers(o core1_0.CommandBufferAllocateInf
 	return result, res, nil
 }
 
-func (d *VulkanDevice) AllocateDescriptorSets(o core1_0.DescriptorSetAllocateInfo) ([]core1_0.DescriptorSet, common.VkResult, error) {
+func (v *DeviceVulkanDriver) AllocateDescriptorSets(o core1_0.DescriptorSetAllocateInfo) ([]core.DescriptorSet, common.VkResult, error) {
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
-	if o.DescriptorPool == nil {
+	if o.DescriptorPool.Handle() == 0 {
 		return nil, core1_0.VKErrorUnknown, errors.New("no descriptor pool provided to allocate from")
 	}
 
@@ -705,21 +791,21 @@ func (d *VulkanDevice) AllocateDescriptorSets(o core1_0.DescriptorSetAllocateInf
 	}
 
 	device := o.DescriptorPool.DeviceHandle()
-	poolDriver := o.DescriptorPool.Driver()
+	version := o.DescriptorPool.APIVersion()
 
 	setCount := len(o.SetLayouts)
-	descriptorSets := (*driver.VkDescriptorSet)(arena.Malloc(setCount * int(unsafe.Sizeof([1]C.VkDescriptorSet{}))))
+	descriptorSets := (*loader.VkDescriptorSet)(arena.Malloc(setCount * int(unsafe.Sizeof([1]C.VkDescriptorSet{}))))
 
-	res, err := poolDriver.VkAllocateDescriptorSets(device, (*driver.VkDescriptorSetAllocateInfo)(createInfo), descriptorSets)
+	res, err := v.LoaderObj.VkAllocateDescriptorSets(device, (*loader.VkDescriptorSetAllocateInfo)(createInfo), descriptorSets)
 	if err != nil {
 		return nil, res, err
 	}
 
-	var sets []core1_0.DescriptorSet
-	descriptorSetSlice := ([]driver.VkDescriptorSet)(unsafe.Slice(descriptorSets, setCount))
+	var sets []core.DescriptorSet
+	descriptorSetSlice := ([]loader.VkDescriptorSet)(unsafe.Slice(descriptorSets, setCount))
 
 	for i := 0; i < setCount; i++ {
-		descriptorSet := d.DeviceObjectBuilder.CreateDescriptorSetObject(poolDriver, device, o.DescriptorPool.Handle(), descriptorSetSlice[i], o.DescriptorPool.APIVersion())
+		descriptorSet := core.InternalDescriptorSet(device, o.DescriptorPool.Handle(), descriptorSetSlice[i], version)
 
 		sets = append(sets, descriptorSet)
 	}
@@ -727,30 +813,29 @@ func (d *VulkanDevice) AllocateDescriptorSets(o core1_0.DescriptorSetAllocateInf
 	return sets, res, nil
 }
 
-// Free a slice of descriptor sets which should all have the same device/driver/pool
+// Free a slice of descriptor sets which should all have the same device/loader/pool
 // guaranteed to have at least one element
-func (d *VulkanDevice) freeDescriptorSetSlice(sets []core1_0.DescriptorSet) (common.VkResult, error) {
+func (v *DeviceVulkanDriver) freeDescriptorSetSlice(sets []core.DescriptorSet) (common.VkResult, error) {
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
 	setSize := len(sets)
 	arraySize := setSize * int(unsafe.Sizeof([1]C.VkDescriptorSet{}))
 
-	arrayPtr := (*driver.VkDescriptorSet)(arena.Malloc(arraySize))
-	arraySlice := ([]driver.VkDescriptorSet)(unsafe.Slice(arrayPtr, setSize))
+	arrayPtr := (*loader.VkDescriptorSet)(arena.Malloc(arraySize))
+	arraySlice := ([]loader.VkDescriptorSet)(unsafe.Slice(arrayPtr, setSize))
 
 	for i := 0; i < setSize; i++ {
-		arraySlice[i] = driver.VkDescriptorSet(0)
-		if sets[i] != nil {
+		arraySlice[i] = loader.VkDescriptorSet(0)
+		if sets[i].Handle() != 0 {
 			arraySlice[i] = sets[i].Handle()
 		}
 	}
 
-	setDriver := sets[0].Driver()
 	pool := sets[0].DescriptorPoolHandle()
 	device := sets[0].DeviceHandle()
 
-	res, err := setDriver.VkFreeDescriptorSets(device, pool, driver.Uint32(setSize), arrayPtr)
+	res, err := v.LoaderObj.VkFreeDescriptorSets(device, pool, loader.Uint32(setSize), arrayPtr)
 	if err != nil {
 		return res, err
 	}
@@ -758,8 +843,8 @@ func (d *VulkanDevice) freeDescriptorSetSlice(sets []core1_0.DescriptorSet) (com
 	return res, nil
 }
 
-func (d *VulkanDevice) FreeDescriptorSets(sets []core1_0.DescriptorSet) (common.VkResult, error) {
-	poolMultimap := make(map[driver.VkDescriptorPool][]core1_0.DescriptorSet)
+func (v *DeviceVulkanDriver) FreeDescriptorSets(sets ...core.DescriptorSet) (common.VkResult, error) {
+	poolMultimap := make(map[loader.VkDescriptorPool][]core.DescriptorSet)
 
 	for _, set := range sets {
 		poolHandle := set.DescriptorPoolHandle()
@@ -770,7 +855,7 @@ func (d *VulkanDevice) FreeDescriptorSets(sets []core1_0.DescriptorSet) (common.
 	var res common.VkResult
 	var err error
 	for _, set := range poolMultimap {
-		res, err = d.freeDescriptorSetSlice(set)
+		res, err = v.freeDescriptorSetSlice(set)
 		if err != nil {
 			return res, err
 		}

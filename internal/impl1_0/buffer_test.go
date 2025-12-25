@@ -6,11 +6,11 @@ import (
 	"unsafe"
 
 	"github.com/stretchr/testify/require"
+	"github.com/vkngwrapper/core/v3"
 	"github.com/vkngwrapper/core/v3/common"
 	"github.com/vkngwrapper/core/v3/core1_0"
-	"github.com/vkngwrapper/core/v3/driver"
-	mock_driver "github.com/vkngwrapper/core/v3/driver/mocks"
-	"github.com/vkngwrapper/core/v3/internal/impl1_0"
+	"github.com/vkngwrapper/core/v3/loader"
+	mock_driver "github.com/vkngwrapper/core/v3/loader/mocks"
 	"github.com/vkngwrapper/core/v3/mocks"
 	"github.com/vkngwrapper/core/v3/mocks/mocks1_0"
 	"go.uber.org/mock/gomock"
@@ -20,14 +20,14 @@ func TestBuffer_Create_NilIndices(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_0)
-	builder := impl1_0.InstanceObjectBuilderImpl{}
-	device := builder.CreateDeviceObject(mockDriver, mocks.NewFakeDeviceHandle(), common.Vulkan1_0, []string{})
+	mockLoader := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_0)
+	device := mocks.NewDummyDevice(common.Vulkan1_0, []string{})
+	driver := mocks1_0.InternalDeviceDriver(mockLoader)
 
 	expectedBuffer := mocks.NewFakeBufferHandle()
 
-	mockDriver.EXPECT().VkCreateBuffer(device.Handle(), gomock.Not(nil), nil, gomock.Not(nil)).DoAndReturn(
-		func(device driver.VkDevice, createInfo *driver.VkBufferCreateInfo, allocator *driver.VkAllocationCallbacks, buffer *driver.VkBuffer) (common.VkResult, error) {
+	mockLoader.EXPECT().VkCreateBuffer(device.Handle(), gomock.Not(nil), nil, gomock.Not(nil)).DoAndReturn(
+		func(device loader.VkDevice, createInfo *loader.VkBufferCreateInfo, allocator *loader.VkAllocationCallbacks, buffer *loader.VkBuffer) (common.VkResult, error) {
 			v := reflect.ValueOf(*createInfo)
 			require.Equal(t, v.FieldByName("sType").Uint(), uint64(12)) //VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO
 			require.True(t, v.FieldByName("pNext").IsNil())
@@ -44,7 +44,7 @@ func TestBuffer_Create_NilIndices(t *testing.T) {
 			return core1_0.VKSuccess, nil
 		})
 
-	buffer, res, err := device.CreateBuffer(nil, core1_0.BufferCreateInfo{
+	buffer, res, err := driver.CreateBuffer(device, nil, core1_0.BufferCreateInfo{
 		Size:               5,
 		Usage:              core1_0.BufferUsageVertexBuffer | core1_0.BufferUsageTransferSrc,
 		SharingMode:        core1_0.SharingModeExclusive,
@@ -60,14 +60,13 @@ func TestBasicBuffer_Create_QueueFamilyIndices(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_0)
-	builder := impl1_0.InstanceObjectBuilderImpl{}
-	device := builder.CreateDeviceObject(mockDriver, mocks.NewFakeDeviceHandle(), common.Vulkan1_0, []string{})
-
+	mockLoader := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_0)
+	device := mocks.NewDummyDevice(common.Vulkan1_0, []string{})
 	expectedBuffer := mocks.NewFakeBufferHandle()
+	driver := mocks1_0.InternalDeviceDriver(mockLoader)
 
-	mockDriver.EXPECT().VkCreateBuffer(device.Handle(), gomock.Not(nil), nil, gomock.Not(nil)).DoAndReturn(
-		func(device driver.VkDevice, createInfo *driver.VkBufferCreateInfo, allocator *driver.VkAllocationCallbacks, buffer *driver.VkBuffer) (common.VkResult, error) {
+	mockLoader.EXPECT().VkCreateBuffer(device.Handle(), gomock.Not(nil), nil, gomock.Not(nil)).DoAndReturn(
+		func(device loader.VkDevice, createInfo *loader.VkBufferCreateInfo, allocator *loader.VkAllocationCallbacks, buffer *loader.VkBuffer) (common.VkResult, error) {
 			v := reflect.ValueOf(*createInfo)
 			require.Equal(t, v.FieldByName("sType").Uint(), uint64(12)) //VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO
 			require.True(t, v.FieldByName("pNext").IsNil())
@@ -80,15 +79,15 @@ func TestBasicBuffer_Create_QueueFamilyIndices(t *testing.T) {
 			require.False(t, indicesVal.IsNil())
 
 			indicesPtrUnsafe := unsafe.Pointer(indicesVal.Elem().UnsafeAddr())
-			indicesSlice := ([]driver.Uint32)(unsafe.Slice((*driver.Uint32)(indicesPtrUnsafe), 4))
-			require.Equal(t, []driver.Uint32{1, 2, 3, 4}, indicesSlice)
+			indicesSlice := ([]loader.Uint32)(unsafe.Slice((*loader.Uint32)(indicesPtrUnsafe), 4))
+			require.Equal(t, []loader.Uint32{1, 2, 3, 4}, indicesSlice)
 
 			*buffer = expectedBuffer
 
 			return core1_0.VKSuccess, nil
 		})
 
-	buffer, res, err := device.CreateBuffer(nil, core1_0.BufferCreateInfo{
+	buffer, res, err := driver.CreateBuffer(device, nil, core1_0.BufferCreateInfo{
 		Size:               5,
 		Usage:              core1_0.BufferUsageVertexBuffer | core1_0.BufferUsageTransferSrc,
 		SharingMode:        core1_0.SharingModeExclusive,
@@ -105,22 +104,20 @@ func TestBuffer_MemoryRequirements(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_0)
+	mockLoader := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_0)
+	device := mocks.NewDummyDevice(common.Vulkan1_0, []string{})
+	buffer := mocks.NewDummyBuffer(device)
+	driver := mocks1_0.InternalDeviceDriver(mockLoader)
 
-	device := mocks1_0.EasyMockDevice(ctrl, mockDriver)
-
-	builder := impl1_0.DeviceObjectBuilderImpl{}
-	buffer := builder.CreateBufferObject(mockDriver, device.Handle(), mocks.NewFakeBufferHandle(), common.Vulkan1_0)
-
-	mockDriver.EXPECT().VkGetBufferMemoryRequirements(device.Handle(), buffer.Handle(), gomock.Not(nil)).DoAndReturn(
-		func(device driver.VkDevice, buffer driver.VkBuffer, requirements *driver.VkMemoryRequirements) {
+	mockLoader.EXPECT().VkGetBufferMemoryRequirements(device.Handle(), buffer.Handle(), gomock.Not(nil)).DoAndReturn(
+		func(device loader.VkDevice, buffer loader.VkBuffer, requirements *loader.VkMemoryRequirements) {
 			v := reflect.ValueOf(requirements).Elem()
 			*(*uint64)(unsafe.Pointer(v.FieldByName("size").UnsafeAddr())) = 5
 			*(*uint64)(unsafe.Pointer(v.FieldByName("alignment").UnsafeAddr())) = 8
 			*(*uint32)(unsafe.Pointer(v.FieldByName("memoryTypeBits").UnsafeAddr())) = 0xff
 		})
 
-	reqs := buffer.MemoryRequirements()
+	reqs := driver.GetBufferMemoryRequirements(buffer)
 	require.Equal(t, 5, reqs.Size)
 	require.Equal(t, 8, reqs.Alignment)
 	require.Equal(t, uint32(0xFF), reqs.MemoryTypeBits)
@@ -130,15 +127,15 @@ func TestBuffer_BindBufferMemory_Success(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_0)
+	mockLoader := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_0)
+	driver := mocks1_0.InternalDeviceDriver(mockLoader)
 
-	device := mocks1_0.EasyMockDevice(ctrl, mockDriver)
-	builder := impl1_0.DeviceObjectBuilderImpl{}
-	buffer := builder.CreateBufferObject(mockDriver, device.Handle(), mocks.NewFakeBufferHandle(), common.Vulkan1_0)
-	memory := mocks1_0.EasyMockDeviceMemory(ctrl)
+	device := mocks.NewDummyDevice(common.Vulkan1_0, []string{})
+	buffer := mocks.NewDummyBuffer(device)
+	memory := mocks.NewDummyDeviceMemory(device, 1)
 
-	mockDriver.EXPECT().VkBindBufferMemory(device.Handle(), buffer.Handle(), memory.Handle(), driver.VkDeviceSize(3)).Return(core1_0.VKSuccess, nil)
-	_, err := buffer.BindBufferMemory(memory, 3)
+	mockLoader.EXPECT().VkBindBufferMemory(device.Handle(), buffer.Handle(), memory.Handle(), loader.VkDeviceSize(3)).Return(core1_0.VKSuccess, nil)
+	_, err := driver.BindBufferMemory(buffer, memory, 3)
 	require.NoError(t, err)
 }
 
@@ -146,12 +143,12 @@ func TestBuffer_BindBufferMemory_FailNilMemory(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_0)
+	mockLoader := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_0)
+	driver := mocks1_0.InternalDeviceDriver(mockLoader)
 
-	device := mocks1_0.EasyMockDevice(ctrl, mockDriver)
-	builder := impl1_0.DeviceObjectBuilderImpl{}
-	buffer := builder.CreateBufferObject(mockDriver, device.Handle(), mocks.NewFakeBufferHandle(), common.Vulkan1_0)
+	device := mocks.NewDummyDevice(common.Vulkan1_0, []string{})
+	buffer := mocks.NewDummyBuffer(device)
 
-	_, err := buffer.BindBufferMemory(nil, 3)
-	require.EqualError(t, err, "received nil DeviceMemory")
+	_, err := driver.BindBufferMemory(buffer, core.DeviceMemory{}, 3)
+	require.EqualError(t, err, "received uninitialized DeviceMemory")
 }

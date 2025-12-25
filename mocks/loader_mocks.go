@@ -12,13 +12,14 @@ package mocks
 import (
 	reflect "reflect"
 
+	"github.com/vkngwrapper/core/v3"
 	common "github.com/vkngwrapper/core/v3/common"
 	core1_0 "github.com/vkngwrapper/core/v3/core1_0"
-	driver "github.com/vkngwrapper/core/v3/driver"
+	driver "github.com/vkngwrapper/core/v3/loader"
 	gomock "go.uber.org/mock/gomock"
 )
 
-// MockLoader is a mock of Loader interface.
+// MockLoader is a mock of loader interface.
 type MockLoader struct {
 	ctrl     *gomock.Controller
 	recorder *MockLoaderMockRecorder
@@ -105,10 +106,10 @@ func (mr *MockLoaderMockRecorder) AvailableLayers() *gomock.Call {
 }
 
 // CreateInstance mocks base method.
-func (m *MockLoader) CreateInstance(allocationCallbacks *driver.AllocationCallbacks, options core1_0.InstanceCreateInfo) (core1_0.Instance, common.VkResult, error) {
+func (m *MockLoader) CreateInstance(allocationCallbacks *driver.AllocationCallbacks, options core1_0.InstanceCreateInfo) (core.Instance, common.VkResult, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateInstance", allocationCallbacks, options)
-	ret0, _ := ret[0].(core1_0.Instance)
+	ret0, _ := ret[0].(core.Instance)
 	ret1, _ := ret[1].(common.VkResult)
 	ret2, _ := ret[2].(error)
 	return ret0, ret1, ret2
@@ -121,15 +122,15 @@ func (mr *MockLoaderMockRecorder) CreateInstance(allocationCallbacks, options an
 }
 
 // Driver mocks base method.
-func (m *MockLoader) Driver() driver.Driver {
+func (m *MockLoader) Driver() driver.Loader {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Driver")
-	ret0, _ := ret[0].(driver.Driver)
+	ret := m.ctrl.Call(m, "loader")
+	ret0, _ := ret[0].(driver.Loader)
 	return ret0
 }
 
 // Driver indicates an expected call of Driver.
 func (mr *MockLoaderMockRecorder) Driver() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Driver", reflect.TypeOf((*MockLoader)(nil).Driver))
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "loader", reflect.TypeOf((*MockLoader)(nil).Driver))
 }

@@ -10,6 +10,7 @@ import (
 
 	"github.com/CannibalVox/cgoparam"
 	"github.com/pkg/errors"
+	"github.com/vkngwrapper/core/v3"
 	"github.com/vkngwrapper/core/v3/common"
 	"github.com/vkngwrapper/core/v3/core1_0"
 )
@@ -303,14 +304,14 @@ func (o ImagePlaneMemoryRequirementsInfo) PopulateCPointer(allocator *cgoparam.A
 // https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkSamplerYcbcrConversionInfo.html
 type SamplerYcbcrConversionInfo struct {
 	// Conversion is a SamplerYcbcrConversion object created from the Device
-	Conversion SamplerYcbcrConversion
+	Conversion core.SamplerYcbcrConversion
 
 	common.NextOptions
 }
 
 func (o SamplerYcbcrConversionInfo) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
-	if o.Conversion == nil {
-		return nil, errors.New("core1_1.SamplerYcbcrConversionInfo.Conversion cannot be nil")
+	if o.Conversion.Handle() == 0 {
+		return nil, errors.New("core1_1.SamplerYcbcrConversionInfo.Conversion cannot be left unset")
 	}
 	if preallocatedPointer == nil {
 		preallocatedPointer = allocator.Malloc(int(unsafe.Sizeof(C.VkSamplerYcbcrConversionInfo{})))

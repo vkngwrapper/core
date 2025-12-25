@@ -10,6 +10,7 @@ import (
 
 	"github.com/CannibalVox/cgoparam"
 	"github.com/pkg/errors"
+	"github.com/vkngwrapper/core/v3"
 	"github.com/vkngwrapper/core/v3/common"
 )
 
@@ -68,7 +69,7 @@ type CommandBufferAllocateInfo struct {
 	// CommandBufferCount is the number of CommandBuffer objects to allocate from the CommandPool
 	CommandBufferCount int
 	// CommandPool is the CommandPool from which the CommandBuffer objects are allocated
-	CommandPool CommandPool
+	CommandPool core.CommandPool
 
 	common.NextOptions
 }
@@ -77,8 +78,8 @@ func (o CommandBufferAllocateInfo) PopulateCPointer(allocator *cgoparam.Allocato
 	if o.CommandBufferCount == 0 {
 		return nil, errors.New("attempted to create 0 command buffers")
 	}
-	if o.CommandPool == nil {
-		return nil, errors.New("core1_0.CommandBufferAllocateInfo.CommandPool may not be nil")
+	if o.CommandPool.Handle() == 0 {
+		return nil, errors.New("core1_0.CommandBufferAllocateInfo.CommandPool may not be left unset")
 	}
 
 	if preallocatedPointer == unsafe.Pointer(nil) {

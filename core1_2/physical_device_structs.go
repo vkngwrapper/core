@@ -16,7 +16,7 @@ import (
 	"github.com/vkngwrapper/core/v3/core1_1"
 )
 
-// DriverID specifies khronos driver id's
+// DriverID specifies khronos loader id's
 //
 // https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkDriverId.html
 type DriverID int32
@@ -65,11 +65,11 @@ func (e ShaderFloatControlsIndependence) String() string {
 ////
 
 const (
-	// MaxDriverInfoSize is the length of a PhysicalDevice driver information string
+	// MaxDriverInfoSize is the length of a PhysicalDevice loader information string
 	//
 	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VK_MAX_DRIVER_INFO_SIZE.html
 	MaxDriverInfoSize int = C.VK_MAX_DRIVER_INFO_SIZE
-	// MaxDriverNameSize is the maximum length of a PhysicalDevice driver name string
+	// MaxDriverNameSize is the maximum length of a PhysicalDevice loader name string
 	//
 	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VK_MAX_DRIVER_NAME_SIZE.html
 	MaxDriverNameSize int = C.VK_MAX_DRIVER_NAME_SIZE
@@ -232,17 +232,17 @@ func (v ConformanceVersion) IsAtLeast(other ConformanceVersion) bool {
 
 ////
 
-// PhysicalDeviceDriverProperties contains driver identification information
+// PhysicalDeviceDriverProperties contains loader identification information
 //
 // https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkPhysicalDeviceDriverProperties.html
 type PhysicalDeviceDriverProperties struct {
-	// DriverID is a unique identifier for the driver of the PhysicalDevice
+	// DriverID is a unique identifier for the loader of the PhysicalDevice
 	DriverID DriverID
-	// DriverName is a string which is the name of the driver
+	// DriverName is a string which is the name of the loader
 	DriverName string
-	// DriverInfo is a string with additional information about the driver
+	// DriverInfo is a string with additional information about the loader
 	DriverInfo string
-	// ConformanceVersion is the version of the Vulkan conformance test thsi driver is conformant
+	// ConformanceVersion is the version of the Vulkan conformance test thsi loader is conformant
 	// against
 	ConformanceVersion ConformanceVersion
 
@@ -644,7 +644,7 @@ func (o *PhysicalDeviceTimelineSemaphoreProperties) PopulateOutData(cDataPointer
 type PhysicalDeviceVulkan11Properties struct {
 	// DeviceUUID represents a universally-unique identifier for the Device
 	DeviceUUID uuid.UUID
-	// DriverUUID represents a universally-unique identifier for the driver build in use by
+	// DriverUUID represents a universally-unique identifier for the loader build in use by
 	// the Device
 	DriverUUID uuid.UUID
 	// DeviceLUID represents a locally-unique identifier for the Device
@@ -716,7 +716,7 @@ func (o *PhysicalDeviceVulkan11Properties) PopulateOutData(cDataPointer unsafe.P
 	driverUUIDBytes := C.GoBytes(unsafe.Pointer(&info.driverUUID[0]), C.VK_UUID_SIZE)
 	o.DriverUUID, err = uuid.FromBytes(driverUUIDBytes)
 	if err != nil {
-		return nil, errors.Wrap(err, "vulkan provided invalid driver uuid")
+		return nil, errors.Wrap(err, "vulkan provided invalid loader uuid")
 	}
 
 	o.DeviceLUID = *(*uint64)(unsafe.Pointer(&info.deviceLUID[0]))
@@ -743,13 +743,13 @@ func (o *PhysicalDeviceVulkan11Properties) PopulateOutData(cDataPointer unsafe.P
 //
 // https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkPhysicalDeviceVulkan12Properties.html
 type PhysicalDeviceVulkan12Properties struct {
-	// DriverID is a unique identifier for the driver of the PhysicalDevice
+	// DriverID is a unique identifier for the loader of the PhysicalDevice
 	DriverID DriverID
-	// DriverName is a string which is the name of the driver
+	// DriverName is a string which is the name of the loader
 	DriverName string
-	// DriverInfo is a string with additional information about the driver
+	// DriverInfo is a string with additional information about the loader
 	DriverInfo string
-	// ConformanceVersion is the version of the Vulkan conformance test this driver is
+	// ConformanceVersion is the version of the Vulkan conformance test this loader is
 	// comformant against
 	ConformanceVersion ConformanceVersion
 

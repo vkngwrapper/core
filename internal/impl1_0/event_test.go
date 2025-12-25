@@ -7,9 +7,8 @@ import (
 	"github.com/stretchr/testify/require"
 	"github.com/vkngwrapper/core/v3/common"
 	"github.com/vkngwrapper/core/v3/core1_0"
-	"github.com/vkngwrapper/core/v3/driver"
-	mock_driver "github.com/vkngwrapper/core/v3/driver/mocks"
-	"github.com/vkngwrapper/core/v3/internal/impl1_0"
+	"github.com/vkngwrapper/core/v3/loader"
+	mock_loader "github.com/vkngwrapper/core/v3/loader/mocks"
 	"github.com/vkngwrapper/core/v3/mocks"
 	"github.com/vkngwrapper/core/v3/mocks/mocks1_0"
 	"go.uber.org/mock/gomock"
@@ -19,13 +18,13 @@ func TestVulkanLoader1_0_CreateEvent(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockDriver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_0)
-	builder := &impl1_0.InstanceObjectBuilderImpl{}
-	device := builder.CreateDeviceObject(mockDriver, mocks.NewFakeDeviceHandle(), common.Vulkan1_0, []string{})
+	mockLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_0)
+	driver := mocks1_0.InternalDeviceDriver(mockLoader)
+	device := mocks.NewDummyDevice(common.Vulkan1_0, []string{})
 	eventHandle := mocks.NewFakeEventHandle()
 
-	mockDriver.EXPECT().VkCreateEvent(device.Handle(), gomock.Not(nil), nil, gomock.Not(nil)).DoAndReturn(
-		func(device driver.VkDevice, pCreateInfo *driver.VkEventCreateInfo, pAllocator *driver.VkAllocationCallbacks, pEvent *driver.VkEvent) (common.VkResult, error) {
+	mockLoader.EXPECT().VkCreateEvent(device.Handle(), gomock.Not(nil), nil, gomock.Not(nil)).DoAndReturn(
+		func(device loader.VkDevice, pCreateInfo *loader.VkEventCreateInfo, pAllocator *loader.VkAllocationCallbacks, pEvent *loader.VkEvent) (common.VkResult, error) {
 			val := reflect.ValueOf(*pCreateInfo)
 
 			require.Equal(t, uint64(10), val.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_EVENT_CREATE_INFO
@@ -36,7 +35,7 @@ func TestVulkanLoader1_0_CreateEvent(t *testing.T) {
 			return core1_0.VKSuccess, nil
 		})
 
-	event, _, err := device.CreateEvent(nil, core1_0.EventCreateInfo{
+	event, _, err := driver.CreateEvent(device, nil, core1_0.EventCreateInfo{
 		Flags: 0,
 	})
 	require.NoError(t, err)
@@ -48,14 +47,14 @@ func TestVulkanEvent_Set(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	driver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_0)
-	device := mocks1_0.EasyMockDevice(ctrl, driver)
-	builder := &impl1_0.DeviceObjectBuilderImpl{}
-	event := builder.CreateEventObject(driver, device.Handle(), mocks.NewFakeEventHandle(), common.Vulkan1_0)
+	mockLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_0)
+	driver := mocks1_0.InternalDeviceDriver(mockLoader)
+	device := mocks.NewDummyDevice(common.Vulkan1_0, []string{})
+	event := mocks.NewDummyEvent(device)
 
-	driver.EXPECT().VkSetEvent(device.Handle(), event.Handle()).Return(core1_0.VKSuccess, nil)
+	mockLoader.EXPECT().VkSetEvent(device.Handle(), event.Handle()).Return(core1_0.VKSuccess, nil)
 
-	_, err := event.Set()
+	_, err := driver.SetEvent(event)
 	require.NoError(t, err)
 }
 
@@ -63,14 +62,14 @@ func TestVulkanEvent_Reset(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	driver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_0)
-	device := mocks1_0.EasyMockDevice(ctrl, driver)
-	builder := &impl1_0.DeviceObjectBuilderImpl{}
-	event := builder.CreateEventObject(driver, device.Handle(), mocks.NewFakeEventHandle(), common.Vulkan1_0)
+	mockLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_0)
+	driver := mocks1_0.InternalDeviceDriver(mockLoader)
+	device := mocks.NewDummyDevice(common.Vulkan1_0, []string{})
+	event := mocks.NewDummyEvent(device)
 
-	driver.EXPECT().VkResetEvent(device.Handle(), event.Handle()).Return(core1_0.VKSuccess, nil)
+	mockLoader.EXPECT().VkResetEvent(device.Handle(), event.Handle()).Return(core1_0.VKSuccess, nil)
 
-	_, err := event.Reset()
+	_, err := driver.ResetEvent(event)
 	require.NoError(t, err)
 }
 
@@ -78,14 +77,14 @@ func TestVulkanEvent_Status(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	driver := mock_driver.DriverForVersion(ctrl, common.Vulkan1_0)
-	device := mocks1_0.EasyMockDevice(ctrl, driver)
-	builder := &impl1_0.DeviceObjectBuilderImpl{}
-	event := builder.CreateEventObject(driver, device.Handle(), mocks.NewFakeEventHandle(), common.Vulkan1_0)
+	mockLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_0)
+	driver := mocks1_0.InternalDeviceDriver(mockLoader)
+	device := mocks.NewDummyDevice(common.Vulkan1_0, []string{})
+	event := mocks.NewDummyEvent(device)
 
-	driver.EXPECT().VkGetEventStatus(device.Handle(), event.Handle()).Return(core1_0.VKEventReset, nil)
+	mockLoader.EXPECT().VkGetEventStatus(device.Handle(), event.Handle()).Return(core1_0.VKEventReset, nil)
 
-	res, err := event.Status()
+	res, err := driver.GetEventStatus(event)
 	require.NoError(t, err)
 	require.Equal(t, core1_0.VKEventReset, res)
 }
