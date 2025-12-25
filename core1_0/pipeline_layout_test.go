@@ -8,8 +8,9 @@ import (
 	"github.com/stretchr/testify/require"
 	"github.com/vkngwrapper/core/v3/common"
 	"github.com/vkngwrapper/core/v3/core1_0"
+	"github.com/vkngwrapper/core/v3/internal/impl1_0"
 	"github.com/vkngwrapper/core/v3/loader"
-	mock_driver "github.com/vkngwrapper/core/v3/loader/mocks"
+	mock_loader "github.com/vkngwrapper/core/v3/loader/mocks"
 	"github.com/vkngwrapper/core/v3/mocks"
 	"github.com/vkngwrapper/core/v3/types"
 	"go.uber.org/mock/gomock"
@@ -19,13 +20,14 @@ func TestVulkanLoader1_0_CreatePipelineLayout(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockDriver := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_0)
+	mockLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_0)
+	driver := impl1_0.NewDeviceDriver(mockLoader)
 	device := mocks.NewDummyDevice(common.Vulkan1_0, []string{})
 	descriptorSetLayout1 := mocks.NewDummyDescriptorSetLayout(device)
 	descriptorSetLayout2 := mocks.NewDummyDescriptorSetLayout(device)
 	layoutHandle := mocks.NewFakePipelineLayout()
 
-	mockDriver.EXPECT().VkCreatePipelineLayout(device.Handle(), gomock.Not(nil), nil, gomock.Not(nil)).DoAndReturn(
+	mockLoader.EXPECT().VkCreatePipelineLayout(device.Handle(), gomock.Not(nil), nil, gomock.Not(nil)).DoAndReturn(
 		func(device loader.VkDevice, pCreateInfo *loader.VkPipelineLayoutCreateInfo, pAllocator *loader.VkAllocationCallbacks, pPipelineLayout *loader.VkPipelineLayout) (common.VkResult, error) {
 			*pPipelineLayout = layoutHandle
 
@@ -64,7 +66,7 @@ func TestVulkanLoader1_0_CreatePipelineLayout(t *testing.T) {
 			return core1_0.VKSuccess, nil
 		})
 
-	layout, _, err := device.CreatePipelineLayout(nil, core1_0.PipelineLayoutCreateInfo{
+	layout, _, err := driver.CreatePipelineLayout(device, nil, core1_0.PipelineLayoutCreateInfo{
 		SetLayouts: []types.DescriptorSetLayout{descriptorSetLayout1, descriptorSetLayout2},
 		PushConstantRanges: []core1_0.PushConstantRange{
 			{
