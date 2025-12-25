@@ -9,10 +9,10 @@ import (
 	"github.com/vkngwrapper/core/v3"
 	"github.com/vkngwrapper/core/v3/common"
 	"github.com/vkngwrapper/core/v3/core1_0"
-	"github.com/vkngwrapper/core/v3/internal/impl1_0"
 	"github.com/vkngwrapper/core/v3/loader"
 	mock_loader "github.com/vkngwrapper/core/v3/loader/mocks"
 	"github.com/vkngwrapper/core/v3/mocks"
+	"github.com/vkngwrapper/core/v3/mocks/mocks1_0"
 	"go.uber.org/mock/gomock"
 )
 
@@ -21,7 +21,7 @@ func TestVulkanQueue_WaitForIdle(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_0)
-	driver := impl1_0.NewDeviceDriver(mockLoader)
+	driver := mocks1_0.InternalDeviceDriver(mockLoader)
 	device := mocks.NewDummyDevice(common.Vulkan1_0, []string{})
 	queue := mocks.NewDummyQueue(device)
 
@@ -36,7 +36,7 @@ func TestVulkanQueue_BindSparse(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_0)
-	driver := impl1_0.NewDeviceDriver(mockLoader)
+	driver := mocks1_0.InternalDeviceDriver(mockLoader)
 	device := mocks.NewDummyDevice(common.Vulkan1_0, []string{})
 	queue := mocks.NewDummyQueue(device)
 

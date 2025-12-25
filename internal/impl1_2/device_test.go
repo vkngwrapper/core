@@ -11,10 +11,10 @@ import (
 	"github.com/vkngwrapper/core/v3/common"
 	"github.com/vkngwrapper/core/v3/core1_0"
 	"github.com/vkngwrapper/core/v3/core1_2"
-	"github.com/vkngwrapper/core/v3/internal/impl1_2"
 	"github.com/vkngwrapper/core/v3/loader"
 	mock_loader "github.com/vkngwrapper/core/v3/loader/mocks"
 	"github.com/vkngwrapper/core/v3/mocks"
+	"github.com/vkngwrapper/core/v3/mocks/mocks1_2"
 	"go.uber.org/mock/gomock"
 )
 
@@ -23,7 +23,7 @@ func TestDevice_CreateRenderPass(t *testing.T) {
 	defer ctrl.Finish()
 
 	coreLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_2)
-	driver := impl1_2.NewDeviceDriver(coreLoader)
+	driver := mocks1_2.InternalDeviceDriver(coreLoader)
 	device := mocks.NewDummyDevice(common.Vulkan1_2, []string{})
 	mockRenderPass := mocks.NewDummyRenderPass(device)
 
@@ -240,7 +240,7 @@ func TestDevice_GetBufferDeviceAddress(t *testing.T) {
 	defer ctrl.Finish()
 
 	coreLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_2)
-	driver := impl1_2.NewDeviceDriver(coreLoader)
+	driver := mocks1_2.InternalDeviceDriver(coreLoader)
 	device := mocks.NewDummyDevice(common.Vulkan1_2, []string{})
 	buffer := mocks.NewDummyBuffer(device)
 
@@ -270,7 +270,7 @@ func TestDevice_GetBufferOpaqueCaptureAddress(t *testing.T) {
 	defer ctrl.Finish()
 
 	coreLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_2)
-	driver := impl1_2.NewDeviceDriver(coreLoader)
+	driver := mocks1_2.InternalDeviceDriver(coreLoader)
 	device := mocks.NewDummyDevice(common.Vulkan1_2, []string{})
 	buffer := mocks.NewDummyBuffer(device)
 
@@ -300,7 +300,7 @@ func TestDevice_GetDeviceMemoryOpaqueCaptureAddress(t *testing.T) {
 	defer ctrl.Finish()
 
 	coreLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_2)
-	driver := impl1_2.NewDeviceDriver(coreLoader)
+	driver := mocks1_2.InternalDeviceDriver(coreLoader)
 	device := mocks.NewDummyDevice(common.Vulkan1_2, []string{})
 	deviceMemory := mocks.NewDummyDeviceMemory(device, 1)
 
@@ -330,7 +330,7 @@ func TestVulkanDevice_SignalSemaphore(t *testing.T) {
 	defer ctrl.Finish()
 
 	coreLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_2)
-	driver := impl1_2.NewDeviceDriver(coreLoader)
+	driver := mocks1_2.InternalDeviceDriver(coreLoader)
 	device := mocks.NewDummyDevice(common.Vulkan1_2, []string{})
 	semaphore := mocks.NewDummySemaphore(device)
 
@@ -362,7 +362,7 @@ func TestVulkanDevice_WaitSemaphores(t *testing.T) {
 	defer ctrl.Finish()
 
 	coreLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_2)
-	driver := impl1_2.NewDeviceDriver(coreLoader)
+	driver := mocks1_2.InternalDeviceDriver(coreLoader)
 	device := mocks.NewDummyDevice(common.Vulkan1_2, []string{})
 
 	semaphore1 := mocks.NewDummySemaphore(device)

@@ -9,10 +9,10 @@ import (
 	"github.com/stretchr/testify/require"
 	"github.com/vkngwrapper/core/v3/common"
 	"github.com/vkngwrapper/core/v3/core1_0"
-	"github.com/vkngwrapper/core/v3/internal/impl1_0"
 	"github.com/vkngwrapper/core/v3/loader"
 	mock_driver "github.com/vkngwrapper/core/v3/loader/mocks"
 	"github.com/vkngwrapper/core/v3/mocks"
+	"github.com/vkngwrapper/core/v3/mocks/mocks1_0"
 	"go.uber.org/mock/gomock"
 )
 
@@ -29,7 +29,7 @@ func TestVulkanPhysicalDevice_AvailableExtensionsForLayer(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockLoader := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_0)
-	driver := impl1_0.NewInstanceDriver(mockLoader)
+	driver := mocks1_0.InternalCoreInstanceDriver(mockLoader)
 	instance := mocks.NewDummyInstance(common.Vulkan1_0, []string{})
 	physicalDevice := mocks.NewDummyPhysicalDevice(instance, common.Vulkan1_0)
 
@@ -93,7 +93,7 @@ func TestVulkanPhysicalDevice_AvailableExtensions(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockLoader := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_0)
-	driver := impl1_0.NewInstanceDriver(mockLoader)
+	driver := mocks1_0.InternalCoreInstanceDriver(mockLoader)
 	instance := mocks.NewDummyInstance(common.Vulkan1_0, []string{})
 	physicalDevice := mocks.NewDummyPhysicalDevice(instance, common.Vulkan1_0)
 
@@ -141,7 +141,7 @@ func TestVulkanPhysicalDevice_AvailableExtensions_Incomplete(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockLoader := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_0)
-	driver := impl1_0.NewInstanceDriver(mockLoader)
+	driver := mocks1_0.InternalCoreInstanceDriver(mockLoader)
 	instance := mocks.NewDummyInstance(common.Vulkan1_0, []string{})
 	physicalDevice := mocks.NewDummyPhysicalDevice(instance, common.Vulkan1_0)
 
@@ -199,7 +199,7 @@ func TestVulkanPhysicalDevice_AvailableLayers(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockLoader := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_0)
-	driver := impl1_0.NewInstanceDriver(mockLoader)
+	driver := mocks1_0.InternalCoreInstanceDriver(mockLoader)
 	instance := mocks.NewDummyInstance(common.Vulkan1_0, []string{})
 	physicalDevice := mocks.NewDummyPhysicalDevice(instance, common.Vulkan1_0)
 
@@ -259,7 +259,7 @@ func TestVulkanPhysicalDevice_AvailableLayers_Incomplete(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockLoader := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_0)
-	driver := impl1_0.NewInstanceDriver(mockLoader)
+	driver := mocks1_0.InternalCoreInstanceDriver(mockLoader)
 	instance := mocks.NewDummyInstance(common.Vulkan1_0, []string{})
 	physicalDevice := mocks.NewDummyPhysicalDevice(instance, common.Vulkan1_0)
 
@@ -329,7 +329,7 @@ func TestVulkanPhysicalDevice_QueueFamilyProperties(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockLoader := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_0)
-	driver := impl1_0.NewInstanceDriver(mockLoader)
+	driver := mocks1_0.InternalCoreInstanceDriver(mockLoader)
 	instance := mocks.NewDummyInstance(common.Vulkan1_0, []string{})
 	physicalDevice := mocks.NewDummyPhysicalDevice(instance, common.Vulkan1_0)
 
@@ -367,7 +367,7 @@ func TestVulkanPhysicalDevice_Properties(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockLoader := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_0)
-	driver := impl1_0.NewInstanceDriver(mockLoader)
+	driver := mocks1_0.InternalCoreInstanceDriver(mockLoader)
 	instance := mocks.NewDummyInstance(common.Vulkan1_0, []string{})
 	physicalDevice := mocks.NewDummyPhysicalDevice(instance, common.Vulkan1_0)
 
@@ -449,7 +449,7 @@ func TestVulkanPhysicalDevice_Features(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockLoader := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_0)
-	driver := impl1_0.NewInstanceDriver(mockLoader)
+	driver := mocks1_0.InternalCoreInstanceDriver(mockLoader)
 	instance := mocks.NewDummyInstance(common.Vulkan1_0, []string{})
 	physicalDevice := mocks.NewDummyPhysicalDevice(instance, common.Vulkan1_0)
 
@@ -579,7 +579,7 @@ func TestVulkanPhysicalDevice_FormatProperties(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockLoader := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_0)
-	driver := impl1_0.NewInstanceDriver(mockLoader)
+	driver := mocks1_0.InternalCoreInstanceDriver(mockLoader)
 	instance := mocks.NewDummyInstance(common.Vulkan1_0, []string{})
 	physicalDevice := mocks.NewDummyPhysicalDevice(instance, common.Vulkan1_0)
 
@@ -606,7 +606,7 @@ func TestVulkanPhysicalDevice_ImageFormatProperties(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockLoader := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_0)
-	driver := impl1_0.NewInstanceDriver(mockLoader)
+	driver := mocks1_0.InternalCoreInstanceDriver(mockLoader)
 	instance := mocks.NewDummyInstance(common.Vulkan1_0, []string{})
 	physicalDevice := mocks.NewDummyPhysicalDevice(instance, common.Vulkan1_0)
 
@@ -656,7 +656,7 @@ func TestVulkanPhysicalDevice_SparseImageFormatProperties(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockLoader := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_0)
-	driver := impl1_0.NewInstanceDriver(mockLoader)
+	driver := mocks1_0.InternalCoreInstanceDriver(mockLoader)
 	instance := mocks.NewDummyInstance(common.Vulkan1_0, []string{})
 	physicalDevice := mocks.NewDummyPhysicalDevice(instance, common.Vulkan1_0)
 
@@ -725,7 +725,7 @@ func TestVulkanPhysicalDevice_MemoryProperties(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockLoader := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_0)
-	driver := impl1_0.NewInstanceDriver(mockLoader)
+	driver := mocks1_0.InternalCoreInstanceDriver(mockLoader)
 	instance := mocks.NewDummyInstance(common.Vulkan1_0, []string{})
 	physicalDevice := mocks.NewDummyPhysicalDevice(instance, common.Vulkan1_0)
 

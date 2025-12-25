@@ -9,7 +9,6 @@ import (
 	"github.com/vkngwrapper/core/v3"
 	"github.com/vkngwrapper/core/v3/common"
 	"github.com/vkngwrapper/core/v3/core1_0"
-	"github.com/vkngwrapper/core/v3/internal/impl1_0"
 	"github.com/vkngwrapper/core/v3/loader"
 	"github.com/vkngwrapper/core/v3/loader/mocks"
 	"github.com/vkngwrapper/core/v3/mocks"
@@ -62,7 +61,7 @@ func TestVulkanDescriptorSet_Free(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_0)
-	driver := impl1_0.NewDeviceDriver(mockLoader)
+	driver := mocks1_0.InternalDeviceDriver(mockLoader)
 	device := mocks.NewDummyDevice(common.Vulkan1_0, []string{})
 	pool := mocks.NewDummyDescriptorPool(device)
 	set := mocks.NewDummyDescriptorSet(pool, device)
@@ -84,7 +83,7 @@ func TestVulkanLoader1_0_CreateFrameBuffer(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_0)
-	driver := impl1_0.NewDeviceDriver(mockLoader)
+	driver := mocks1_0.InternalDeviceDriver(mockLoader)
 	device := mocks.NewDummyDevice(common.Vulkan1_0, []string{})
 	renderPass := mocks.NewDummyRenderPass(device)
 	imageView1 := mocks.NewDummyImageView(device)
@@ -135,7 +134,7 @@ func TestVulkanLoader1_0_CreateImageView(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_0)
-	driver := impl1_0.NewDeviceDriver(mockLoader)
+	driver := mocks1_0.InternalDeviceDriver(mockLoader)
 	device := mocks.NewDummyDevice(common.Vulkan1_0, []string{})
 	imageViewHandle := mocks.NewFakeImageViewHandle()
 	image := mocks.NewDummyImage(device)
@@ -196,7 +195,7 @@ func TestVulkanLoader1_0_CreateSampler(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_0)
-	driver := impl1_0.NewDeviceDriver(mockLoader)
+	driver := mocks1_0.InternalDeviceDriver(mockLoader)
 	device := mocks.NewDummyDevice(common.Vulkan1_0, []string{})
 
 	samplerHandle := mocks.NewFakeSamplerHandle()
@@ -256,7 +255,7 @@ func TestVulkanLoader1_0_CreateSemaphore(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_0)
-	driver := impl1_0.NewDeviceDriver(mockLoader)
+	driver := mocks1_0.InternalDeviceDriver(mockLoader)
 	device := mocks.NewDummyDevice(common.Vulkan1_0, []string{})
 	semaphoreHandle := mocks.NewFakeSemaphore()
 
@@ -283,7 +282,7 @@ func TestVulkanLoader1_0_CreateShaderModule(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_0)
-	driver := impl1_0.NewDeviceDriver(mockLoader)
+	driver := mocks1_0.InternalDeviceDriver(mockLoader)
 	device := mocks.NewDummyDevice(common.Vulkan1_0, []string{})
 	handle := mocks.NewFakeShaderModule()
 

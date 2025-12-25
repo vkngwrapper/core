@@ -9,10 +9,10 @@ import (
 	"github.com/vkngwrapper/core/v3/common"
 	"github.com/vkngwrapper/core/v3/core1_0"
 	"github.com/vkngwrapper/core/v3/core1_1"
-	"github.com/vkngwrapper/core/v3/internal/impl1_1"
 	"github.com/vkngwrapper/core/v3/loader"
 	mock_loader "github.com/vkngwrapper/core/v3/loader/mocks"
 	"github.com/vkngwrapper/core/v3/mocks"
+	"github.com/vkngwrapper/core/v3/mocks/mocks1_1"
 	"go.uber.org/mock/gomock"
 )
 
@@ -21,7 +21,7 @@ func TestVulkanDevice_DescriptorSetLayoutSupport(t *testing.T) {
 	defer ctrl.Finish()
 
 	coreLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_1)
-	driver := impl1_1.NewDeviceDriver(coreLoader)
+	driver := mocks1_1.InternalDeviceDriver(coreLoader)
 	device := mocks.NewDummyDevice(common.Vulkan1_1, []string{})
 
 	coreLoader.EXPECT().VkGetDescriptorSetLayoutSupport(
@@ -66,7 +66,7 @@ func TestVulkanDevice_BindBufferMemory(t *testing.T) {
 	defer ctrl.Finish()
 
 	coreLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_1)
-	driver := impl1_1.NewDeviceDriver(coreLoader)
+	driver := mocks1_1.InternalDeviceDriver(coreLoader)
 	device := mocks.NewDummyDevice(common.Vulkan1_1, []string{})
 
 	buffer1 := mocks.NewDummyBuffer(device)
@@ -117,7 +117,7 @@ func TestVulkanDevice_BindImageMemory(t *testing.T) {
 	defer ctrl.Finish()
 
 	coreLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_1)
-	driver := impl1_1.NewDeviceDriver(coreLoader)
+	driver := mocks1_1.InternalDeviceDriver(coreLoader)
 	device := mocks.NewDummyDevice(common.Vulkan1_1, []string{})
 
 	image1 := mocks.NewDummyImage(device)
@@ -168,7 +168,7 @@ func TestVulkanDevice_BufferMemoryRequirements(t *testing.T) {
 	defer ctrl.Finish()
 
 	coreLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_1)
-	driver := impl1_1.NewDeviceDriver(coreLoader)
+	driver := mocks1_1.InternalDeviceDriver(coreLoader)
 
 	device := mocks.NewDummyDevice(common.Vulkan1_1, []string{})
 
@@ -213,7 +213,7 @@ func TestVulkanDevice_ImageMemoryRequirements(t *testing.T) {
 	defer ctrl.Finish()
 
 	coreLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_1)
-	driver := impl1_1.NewDeviceDriver(coreLoader)
+	driver := mocks1_1.InternalDeviceDriver(coreLoader)
 
 	device := mocks.NewDummyDevice(common.Vulkan1_1, []string{})
 
@@ -258,7 +258,7 @@ func TestVulkanExtension_SparseImageMemoryRequirements(t *testing.T) {
 	defer ctrl.Finish()
 
 	coreLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_1)
-	driver := impl1_1.NewDeviceDriver(coreLoader)
+	driver := mocks1_1.InternalDeviceDriver(coreLoader)
 	device := mocks.NewDummyDevice(common.Vulkan1_1, []string{})
 
 	image := mocks.NewDummyImage(device)
@@ -390,7 +390,7 @@ func TestVulkanDevice_GetDeviceGroupPeerMemoryFeatures(t *testing.T) {
 	defer ctrl.Finish()
 
 	coreLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_1)
-	driver := impl1_1.NewDeviceDriver(coreLoader)
+	driver := mocks1_1.InternalDeviceDriver(coreLoader)
 	device := mocks.NewDummyDevice(common.Vulkan1_1, []string{})
 
 	coreLoader.EXPECT().VkGetDeviceGroupPeerMemoryFeatures(
@@ -419,7 +419,7 @@ func TestVulkanLoader_CreateSamplerYcbcrConversion(t *testing.T) {
 	defer ctrl.Finish()
 
 	coreLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_1)
-	driver := impl1_1.NewDeviceDriver(coreLoader)
+	driver := mocks1_1.InternalDeviceDriver(coreLoader)
 	device := mocks.NewDummyDevice(common.Vulkan1_1, []string{})
 
 	mockYcbcr := mocks.NewDummySamplerYcbcrConversion(device)
@@ -490,7 +490,7 @@ func TestVulkanLoader1_1_CreateDescriptorUpdateTemplate(t *testing.T) {
 	defer ctrl.Finish()
 
 	coreLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_1)
-	driver := impl1_1.NewDeviceDriver(coreLoader)
+	driver := mocks1_1.InternalDeviceDriver(coreLoader)
 	device := mocks.NewDummyDevice(common.Vulkan1_1, []string{})
 
 	mockQueue := mocks.NewDummyQueue(device)

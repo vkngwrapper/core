@@ -9,10 +9,10 @@ import (
 	"github.com/vkngwrapper/core/v3/common"
 	"github.com/vkngwrapper/core/v3/core1_0"
 	"github.com/vkngwrapper/core/v3/core1_1"
-	"github.com/vkngwrapper/core/v3/internal/impl1_0"
 	"github.com/vkngwrapper/core/v3/loader"
 	mock_loader "github.com/vkngwrapper/core/v3/loader/mocks"
 	"github.com/vkngwrapper/core/v3/mocks"
+	"github.com/vkngwrapper/core/v3/mocks/mocks1_0"
 	"go.uber.org/mock/gomock"
 )
 
@@ -21,7 +21,7 @@ func TestInputAttachmentAspectOptions(t *testing.T) {
 	defer ctrl.Finish()
 
 	coreLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_1)
-	driver := impl1_0.NewDeviceDriver(coreLoader)
+	driver := mocks1_0.InternalDeviceDriver(coreLoader)
 	device := mocks.NewDummyDevice(common.Vulkan1_1, []string{})
 
 	expectedRenderPass := mocks.NewDummyRenderPass(device)
@@ -81,7 +81,7 @@ func TestDeviceGroupRenderPassBeginOptions(t *testing.T) {
 	defer ctrl.Finish()
 
 	coreLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_0)
-	driver := impl1_0.NewDeviceDriver(coreLoader)
+	driver := mocks1_0.InternalDeviceDriver(coreLoader)
 	device := mocks.NewDummyDevice(common.Vulkan1_1, []string{})
 	commandPool := mocks.NewDummyCommandPool(device)
 
@@ -159,7 +159,7 @@ func TestRenderPassMultiviewOptions(t *testing.T) {
 	defer ctrl.Finish()
 
 	coreLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_1)
-	driver := impl1_0.NewDeviceDriver(coreLoader)
+	driver := mocks1_0.InternalDeviceDriver(coreLoader)
 	device := mocks.NewDummyDevice(common.Vulkan1_1, []string{})
 
 	mockRenderPass := mocks.NewDummyRenderPass(device)

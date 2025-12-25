@@ -1,13 +1,13 @@
 //go:build windows
 
-package core
+package bootstrap
 
 import "C"
 import (
 	"syscall"
 	"unsafe"
 
-	"github.com/vkngwrapper/core/v3/loader"
+	"github.com/vkngwrapper/core/v3/core1_0"
 )
 
 var vulkanDLL syscall.Handle
@@ -33,12 +33,12 @@ func loadProcAddr() error {
 //
 // Allowing cgo to bring us the vkGetInstanceProcAddr method on windows, for whatever reason, causes heap corruption
 // when the garbage collector runs. For whatever reason, manually loading it from dll does not have this issue
-func CreateSystemLoader() (loader.Loader, error) {
+func CreateSystemDriver() (core1_0.GlobalDriver, error) {
 	if getInstanceProcAddr == nil {
 		err := loadProcAddr()
 		if err != nil {
 			return nil, err
 		}
 	}
-	return loader.CreateLoaderFromProcAddr(getInstanceProcAddr)
+	return CreateDriverFromProcAddr(getInstanceProcAddr)
 }

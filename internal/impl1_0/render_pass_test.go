@@ -8,10 +8,10 @@ import (
 	"github.com/stretchr/testify/require"
 	"github.com/vkngwrapper/core/v3/common"
 	"github.com/vkngwrapper/core/v3/core1_0"
-	"github.com/vkngwrapper/core/v3/internal/impl1_0"
 	"github.com/vkngwrapper/core/v3/loader"
 	mock_loader "github.com/vkngwrapper/core/v3/loader/mocks"
 	"github.com/vkngwrapper/core/v3/mocks"
+	"github.com/vkngwrapper/core/v3/mocks/mocks1_0"
 	"go.uber.org/mock/gomock"
 )
 
@@ -20,7 +20,7 @@ func TestVulkanLoader1_0_CreateRenderPass_Success(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_0)
-	driver := impl1_0.NewDeviceDriver(mockLoader)
+	driver := mocks1_0.InternalDeviceDriver(mockLoader)
 	device := mocks.NewDummyDevice(common.Vulkan1_0, []string{})
 	renderPassHandle := mocks.NewFakeRenderPassHandle()
 
@@ -245,7 +245,7 @@ func TestVulkanLoader1_0_CreateRenderPass_SuccessNoNonColorAttachments(t *testin
 	defer ctrl.Finish()
 
 	mockLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_0)
-	driver := impl1_0.NewDeviceDriver(mockLoader)
+	driver := mocks1_0.InternalDeviceDriver(mockLoader)
 	device := mocks.NewDummyDevice(common.Vulkan1_0, []string{})
 	renderPassHandle := mocks.NewFakeRenderPassHandle()
 
@@ -445,7 +445,7 @@ func TestVulkanLoader1_0_CreateRenderPass_MismatchResolve(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_0)
-	driver := impl1_0.NewDeviceDriver(mockLoader)
+	driver := mocks1_0.InternalDeviceDriver(mockLoader)
 	device := mocks.NewDummyDevice(common.Vulkan1_0, []string{})
 
 	_, _, err := driver.CreateRenderPass(device, nil, core1_0.RenderPassCreateInfo{
@@ -553,7 +553,7 @@ func TestVulkanRenderPass_RenderAreaGranularity(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_0)
-	driver := impl1_0.NewDeviceDriver(mockLoader)
+	driver := mocks1_0.InternalDeviceDriver(mockLoader)
 	device := mocks.NewDummyDevice(common.Vulkan1_0, []string{})
 	renderPass := mocks.NewDummyRenderPass(device)
 

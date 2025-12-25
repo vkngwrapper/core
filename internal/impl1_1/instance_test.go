@@ -8,10 +8,10 @@ import (
 	"github.com/stretchr/testify/require"
 	"github.com/vkngwrapper/core/v3/common"
 	"github.com/vkngwrapper/core/v3/core1_0"
-	"github.com/vkngwrapper/core/v3/internal/impl1_1"
 	"github.com/vkngwrapper/core/v3/loader"
 	mock_loader "github.com/vkngwrapper/core/v3/loader/mocks"
 	"github.com/vkngwrapper/core/v3/mocks"
+	"github.com/vkngwrapper/core/v3/mocks/mocks1_1"
 	"go.uber.org/mock/gomock"
 )
 
@@ -20,7 +20,7 @@ func TestVulkanInstance_EnumeratePhysicalDeviceGroups(t *testing.T) {
 	defer ctrl.Finish()
 
 	coreLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_1)
-	driver := impl1_1.NewInstanceDriver(coreLoader)
+	driver := mocks1_1.InternalCoreInstanceDriver(coreLoader)
 	instance := mocks.NewDummyInstance(common.Vulkan1_1, []string{})
 
 	physicalDevice1 := mocks.NewDummyPhysicalDevice(instance, common.Vulkan1_1)
@@ -142,7 +142,7 @@ func TestVulkanInstance_EnumeratePhysicalDeviceGroups_Incomplete(t *testing.T) {
 	defer ctrl.Finish()
 
 	coreLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_1)
-	driver := impl1_1.NewInstanceDriver(coreLoader)
+	driver := mocks1_1.InternalCoreInstanceDriver(coreLoader)
 	instance := mocks.NewDummyInstance(common.Vulkan1_1, []string{})
 
 	physicalDevice1 := mocks.NewDummyPhysicalDevice(instance, common.Vulkan1_1)

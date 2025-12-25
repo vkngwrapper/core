@@ -8,10 +8,10 @@ import (
 	"github.com/stretchr/testify/require"
 	"github.com/vkngwrapper/core/v3/common"
 	"github.com/vkngwrapper/core/v3/core1_0"
-	"github.com/vkngwrapper/core/v3/internal/impl1_0"
 	"github.com/vkngwrapper/core/v3/loader"
 	mock_loader "github.com/vkngwrapper/core/v3/loader/mocks"
 	"github.com/vkngwrapper/core/v3/mocks"
+	"github.com/vkngwrapper/core/v3/mocks/mocks1_0"
 	"go.uber.org/mock/gomock"
 )
 
@@ -20,7 +20,7 @@ func TestVulkanLoader1_0_CreateImage(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_0)
-	driver := impl1_0.NewDeviceDriver(mockLoader)
+	driver := mocks1_0.InternalDeviceDriver(mockLoader)
 	device := mocks.NewDummyDevice(common.Vulkan1_0, []string{})
 	imageHandle := mocks.NewFakeImageHandle()
 
@@ -84,7 +84,7 @@ func TestVulkanImage_MemoryRequirements(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_0)
-	driver := impl1_0.NewDeviceDriver(mockLoader)
+	driver := mocks1_0.InternalDeviceDriver(mockLoader)
 	device := mocks.NewDummyDevice(common.Vulkan1_0, []string{})
 	image := mocks.NewDummyImage(device)
 
@@ -109,7 +109,7 @@ func TestVulkanImage_BindImageMemory(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_0)
-	driver := impl1_0.NewDeviceDriver(mockLoader)
+	driver := mocks1_0.InternalDeviceDriver(mockLoader)
 	device := mocks.NewDummyDevice(common.Vulkan1_0, []string{})
 	memory := mocks.NewDummyDeviceMemory(device, 1)
 	image := mocks.NewDummyImage(device)
@@ -125,7 +125,7 @@ func TestVulkanImage_SubresourceLayout(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_0)
-	driver := impl1_0.NewDeviceDriver(mockLoader)
+	driver := mocks1_0.InternalDeviceDriver(mockLoader)
 	device := mocks.NewDummyDevice(common.Vulkan1_0, []string{})
 	image := mocks.NewDummyImage(device)
 
@@ -163,7 +163,7 @@ func TestVulkanImage_SparseMemoryRequirements(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_0)
-	driver := impl1_0.NewDeviceDriver(mockLoader)
+	driver := mocks1_0.InternalDeviceDriver(mockLoader)
 	device := mocks.NewDummyDevice(common.Vulkan1_0, []string{})
 	image := mocks.NewDummyImage(device)
 

@@ -8,10 +8,10 @@ import (
 	"github.com/vkngwrapper/core/v3/common"
 	"github.com/vkngwrapper/core/v3/core1_0"
 	"github.com/vkngwrapper/core/v3/core1_2"
-	"github.com/vkngwrapper/core/v3/internal/impl1_2"
 	"github.com/vkngwrapper/core/v3/loader"
 	mock_loader "github.com/vkngwrapper/core/v3/loader/mocks"
 	"github.com/vkngwrapper/core/v3/mocks"
+	"github.com/vkngwrapper/core/v3/mocks/mocks1_2"
 	"go.uber.org/mock/gomock"
 )
 
@@ -20,7 +20,7 @@ func TestBufferOpaqueCaptureAddressCreateOptions(t *testing.T) {
 	defer ctrl.Finish()
 
 	coreLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_2)
-	driver := impl1_2.NewDeviceDriver(coreLoader)
+	driver := mocks1_2.InternalDeviceDriver(coreLoader)
 	device := mocks.NewDummyDevice(common.Vulkan1_2, []string{})
 	mockBuffer := mocks.NewDummyBuffer(device)
 
@@ -68,7 +68,7 @@ func TestMemoryOpaqueCaptureAddressAllocateOptions(t *testing.T) {
 	defer ctrl.Finish()
 
 	coreLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_0)
-	driver := impl1_2.NewDeviceDriver(coreLoader)
+	driver := mocks1_2.InternalDeviceDriver(coreLoader)
 	device := mocks.NewDummyDevice(common.Vulkan1_2, []string{})
 	mockMemory := mocks.NewDummyDeviceMemory(device, 1)
 

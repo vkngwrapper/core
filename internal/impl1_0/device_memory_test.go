@@ -8,10 +8,10 @@ import (
 	"github.com/stretchr/testify/require"
 	"github.com/vkngwrapper/core/v3/common"
 	"github.com/vkngwrapper/core/v3/core1_0"
-	"github.com/vkngwrapper/core/v3/internal/impl1_0"
 	"github.com/vkngwrapper/core/v3/loader"
 	mock_loader "github.com/vkngwrapper/core/v3/loader/mocks"
 	"github.com/vkngwrapper/core/v3/mocks"
+	"github.com/vkngwrapper/core/v3/mocks/mocks1_0"
 	"go.uber.org/mock/gomock"
 )
 
@@ -20,7 +20,7 @@ func TestVulkanDeviceMemory_MapMemory(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_0)
-	driver := impl1_0.NewDeviceDriver(mockLoader)
+	driver := mocks1_0.InternalDeviceDriver(mockLoader)
 	device := mocks.NewDummyDevice(common.Vulkan1_0, []string{})
 	memory := mocks.NewDummyDeviceMemory(device, 1)
 	memoryPtr := unsafe.Pointer(t)
@@ -42,7 +42,7 @@ func TestVulkanDeviceMemory_UnmapMemory(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_0)
-	driver := impl1_0.NewDeviceDriver(mockLoader)
+	driver := mocks1_0.InternalDeviceDriver(mockLoader)
 	device := mocks.NewDummyDevice(common.Vulkan1_0, []string{})
 	memory := mocks.NewDummyDeviceMemory(device, 1)
 
@@ -56,7 +56,7 @@ func TestVulkanDeviceMemory_Commitment(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_0)
-	driver := impl1_0.NewDeviceDriver(mockLoader)
+	driver := mocks1_0.InternalDeviceDriver(mockLoader)
 	device := mocks.NewDummyDevice(common.Vulkan1_0, []string{})
 	memory := mocks.NewDummyDeviceMemory(device, 1)
 
@@ -75,7 +75,7 @@ func TestVulkanDeviceMemory_Flush(t *testing.T) {
 	device := mocks.NewDummyDevice(common.Vulkan1_0, []string{})
 	mockLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_0)
 	mockLoader.EXPECT().DeviceHandle().Return(device.Handle()).AnyTimes()
-	driver := impl1_0.NewDeviceDriver(mockLoader)
+	driver := mocks1_0.InternalDeviceDriver(mockLoader)
 	memory := mocks.NewDummyDeviceMemory(device, 113)
 
 	mockLoader.EXPECT().VkFlushMappedMemoryRanges(device.Handle(), loader.Uint32(1), gomock.Not(nil)).DoAndReturn(
@@ -106,7 +106,7 @@ func TestVulkanDeviceMemory_Invalidate(t *testing.T) {
 	device := mocks.NewDummyDevice(common.Vulkan1_0, []string{})
 	mockLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_0)
 	mockLoader.EXPECT().DeviceHandle().Return(device.Handle()).AnyTimes()
-	driver := impl1_0.NewDeviceDriver(mockLoader)
+	driver := mocks1_0.InternalDeviceDriver(mockLoader)
 	memory := mocks.NewDummyDeviceMemory(device, 113)
 
 	mockLoader.EXPECT().VkInvalidateMappedMemoryRanges(device.Handle(), loader.Uint32(1), gomock.Not(nil)).DoAndReturn(
@@ -135,7 +135,7 @@ func TestVulkanDeviceMemory_AllocateAndFreeMemory(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_0)
-	driver := impl1_0.NewDeviceDriver(mockLoader)
+	driver := mocks1_0.InternalDeviceDriver(mockLoader)
 	device := mocks.NewDummyDevice(common.Vulkan1_0, []string{})
 	expectedMemory := mocks.NewDummyDeviceMemory(device, 1)
 

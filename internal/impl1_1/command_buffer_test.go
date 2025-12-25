@@ -4,10 +4,10 @@ import (
 	"testing"
 
 	"github.com/vkngwrapper/core/v3/common"
-	"github.com/vkngwrapper/core/v3/internal/impl1_1"
 	"github.com/vkngwrapper/core/v3/loader"
 	mock_loader "github.com/vkngwrapper/core/v3/loader/mocks"
 	"github.com/vkngwrapper/core/v3/mocks"
+	"github.com/vkngwrapper/core/v3/mocks/mocks1_1"
 	"go.uber.org/mock/gomock"
 )
 
@@ -16,7 +16,7 @@ func TestCommandBuffer_CmdDispatchBase(t *testing.T) {
 	defer ctrl.Finish()
 
 	coreLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_1)
-	driver := impl1_1.NewDeviceDriver(coreLoader)
+	driver := mocks1_1.InternalDeviceDriver(coreLoader)
 	device := mocks.NewDummyDevice(common.Vulkan1_1, []string{})
 	commandPool := mocks.NewDummyCommandPool(device)
 	commandBuffer := mocks.NewDummyCommandBuffer(commandPool, device)
@@ -39,7 +39,7 @@ func TestCommandBuffer_CmdSetDeviceMask(t *testing.T) {
 	defer ctrl.Finish()
 
 	coreLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_1)
-	driver := impl1_1.NewDeviceDriver(coreLoader)
+	driver := mocks1_1.InternalDeviceDriver(coreLoader)
 	device := mocks.NewDummyDevice(common.Vulkan1_1, []string{})
 	commandPool := mocks.NewDummyCommandPool(device)
 	commandBuffer := mocks.NewDummyCommandBuffer(commandPool, device)
