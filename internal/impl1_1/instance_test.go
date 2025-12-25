@@ -8,12 +8,10 @@ import (
 	"github.com/stretchr/testify/require"
 	"github.com/vkngwrapper/core/v3/common"
 	"github.com/vkngwrapper/core/v3/core1_0"
-	"github.com/vkngwrapper/core/v3/core1_1"
 	"github.com/vkngwrapper/core/v3/internal/impl1_1"
 	"github.com/vkngwrapper/core/v3/loader"
-	mock_driver "github.com/vkngwrapper/core/v3/loader/mocks"
+	mock_loader "github.com/vkngwrapper/core/v3/loader/mocks"
 	"github.com/vkngwrapper/core/v3/mocks"
-	"github.com/vkngwrapper/core/v3/mocks/mocks1_1"
 	"go.uber.org/mock/gomock"
 )
 
@@ -21,17 +19,18 @@ func TestVulkanInstance_EnumeratePhysicalDeviceGroups(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	coreDriver := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_1)
-	instance := impl1_1.CreateInstanceObject(coreDriver, mocks.NewFakeInstanceHandle(), common.Vulkan1_1, []string{}).(core1_1.Instance)
+	coreLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_1)
+	driver := impl1_1.NewInstanceDriver(coreLoader)
+	instance := mocks.NewDummyInstance(common.Vulkan1_1, []string{})
 
-	physicalDevice1 := mocks1_1.EasyMockPhysicalDevice(ctrl, coreDriver)
-	physicalDevice2 := mocks1_1.EasyMockPhysicalDevice(ctrl, coreDriver)
-	physicalDevice3 := mocks1_1.EasyMockPhysicalDevice(ctrl, coreDriver)
-	physicalDevice4 := mocks1_1.EasyMockPhysicalDevice(ctrl, coreDriver)
-	physicalDevice5 := mocks1_1.EasyMockPhysicalDevice(ctrl, coreDriver)
-	physicalDevice6 := mocks1_1.EasyMockPhysicalDevice(ctrl, coreDriver)
+	physicalDevice1 := mocks.NewDummyPhysicalDevice(instance, common.Vulkan1_1)
+	physicalDevice2 := mocks.NewDummyPhysicalDevice(instance, common.Vulkan1_1)
+	physicalDevice3 := mocks.NewDummyPhysicalDevice(instance, common.Vulkan1_1)
+	physicalDevice4 := mocks.NewDummyPhysicalDevice(instance, common.Vulkan1_1)
+	physicalDevice5 := mocks.NewDummyPhysicalDevice(instance, common.Vulkan1_1)
+	physicalDevice6 := mocks.NewDummyPhysicalDevice(instance, common.Vulkan1_1)
 
-	coreDriver.EXPECT().VkEnumeratePhysicalDeviceGroups(
+	coreLoader.EXPECT().VkEnumeratePhysicalDeviceGroups(
 		instance.Handle(),
 		gomock.Not(gomock.Nil()),
 		gomock.Nil(),
@@ -41,7 +40,7 @@ func TestVulkanInstance_EnumeratePhysicalDeviceGroups(t *testing.T) {
 		return core1_0.VKSuccess, nil
 	})
 
-	coreDriver.EXPECT().VkEnumeratePhysicalDeviceGroups(
+	coreLoader.EXPECT().VkEnumeratePhysicalDeviceGroups(
 		instance.Handle(),
 		gomock.Not(gomock.Nil()),
 		gomock.Not(gomock.Nil()),
@@ -83,43 +82,43 @@ func TestVulkanInstance_EnumeratePhysicalDeviceGroups(t *testing.T) {
 		return core1_0.VKSuccess, nil
 	})
 
-	coreDriver.EXPECT().VkGetPhysicalDeviceProperties(physicalDevice1.Handle(), gomock.Not(gomock.Nil())).
+	coreLoader.EXPECT().VkGetPhysicalDeviceProperties(physicalDevice1.Handle(), gomock.Not(gomock.Nil())).
 		DoAndReturn(func(device loader.VkPhysicalDevice, pProperties *loader.VkPhysicalDeviceProperties) {
 			value := reflect.ValueOf(pProperties).Elem()
 			*(*loader.Uint32)(unsafe.Pointer(value.FieldByName("apiVersion").UnsafeAddr())) = loader.Uint32(common.Vulkan1_0)
 		})
 
-	coreDriver.EXPECT().VkGetPhysicalDeviceProperties(physicalDevice2.Handle(), gomock.Not(gomock.Nil())).
+	coreLoader.EXPECT().VkGetPhysicalDeviceProperties(physicalDevice2.Handle(), gomock.Not(gomock.Nil())).
 		DoAndReturn(func(device loader.VkPhysicalDevice, pProperties *loader.VkPhysicalDeviceProperties) {
 			value := reflect.ValueOf(pProperties).Elem()
 			*(*loader.Uint32)(unsafe.Pointer(value.FieldByName("apiVersion").UnsafeAddr())) = loader.Uint32(common.Vulkan1_0)
 		})
 
-	coreDriver.EXPECT().VkGetPhysicalDeviceProperties(physicalDevice3.Handle(), gomock.Not(gomock.Nil())).
+	coreLoader.EXPECT().VkGetPhysicalDeviceProperties(physicalDevice3.Handle(), gomock.Not(gomock.Nil())).
 		DoAndReturn(func(device loader.VkPhysicalDevice, pProperties *loader.VkPhysicalDeviceProperties) {
 			value := reflect.ValueOf(pProperties).Elem()
 			*(*loader.Uint32)(unsafe.Pointer(value.FieldByName("apiVersion").UnsafeAddr())) = loader.Uint32(common.Vulkan1_0)
 		})
 
-	coreDriver.EXPECT().VkGetPhysicalDeviceProperties(physicalDevice4.Handle(), gomock.Not(gomock.Nil())).
+	coreLoader.EXPECT().VkGetPhysicalDeviceProperties(physicalDevice4.Handle(), gomock.Not(gomock.Nil())).
 		DoAndReturn(func(device loader.VkPhysicalDevice, pProperties *loader.VkPhysicalDeviceProperties) {
 			value := reflect.ValueOf(pProperties).Elem()
 			*(*loader.Uint32)(unsafe.Pointer(value.FieldByName("apiVersion").UnsafeAddr())) = loader.Uint32(common.Vulkan1_0)
 		})
 
-	coreDriver.EXPECT().VkGetPhysicalDeviceProperties(physicalDevice5.Handle(), gomock.Not(gomock.Nil())).
+	coreLoader.EXPECT().VkGetPhysicalDeviceProperties(physicalDevice5.Handle(), gomock.Not(gomock.Nil())).
 		DoAndReturn(func(device loader.VkPhysicalDevice, pProperties *loader.VkPhysicalDeviceProperties) {
 			value := reflect.ValueOf(pProperties).Elem()
 			*(*loader.Uint32)(unsafe.Pointer(value.FieldByName("apiVersion").UnsafeAddr())) = loader.Uint32(common.Vulkan1_0)
 		})
 
-	coreDriver.EXPECT().VkGetPhysicalDeviceProperties(physicalDevice6.Handle(), gomock.Not(gomock.Nil())).
+	coreLoader.EXPECT().VkGetPhysicalDeviceProperties(physicalDevice6.Handle(), gomock.Not(gomock.Nil())).
 		DoAndReturn(func(device loader.VkPhysicalDevice, pProperties *loader.VkPhysicalDeviceProperties) {
 			value := reflect.ValueOf(pProperties).Elem()
 			*(*loader.Uint32)(unsafe.Pointer(value.FieldByName("apiVersion").UnsafeAddr())) = loader.Uint32(common.Vulkan1_0)
 		})
 
-	groups, _, err := instance.EnumeratePhysicalDeviceGroups(nil)
+	groups, _, err := driver.EnumeratePhysicalDeviceGroups(instance, nil)
 	require.NoError(t, err)
 	require.Len(t, groups, 3)
 	require.True(t, groups[0].SubsetAllocation)
@@ -142,17 +141,18 @@ func TestVulkanInstance_EnumeratePhysicalDeviceGroups_Incomplete(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	coreDriver := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_1)
-	instance := impl1_1.CreateInstanceObject(coreDriver, mocks.NewFakeInstanceHandle(), common.Vulkan1_1, []string{}).(core1_1.Instance)
+	coreLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_1)
+	driver := impl1_1.NewInstanceDriver(coreLoader)
+	instance := mocks.NewDummyInstance(common.Vulkan1_1, []string{})
 
-	physicalDevice1 := mocks1_1.EasyMockPhysicalDevice(ctrl, coreDriver)
-	physicalDevice2 := mocks1_1.EasyMockPhysicalDevice(ctrl, coreDriver)
-	physicalDevice3 := mocks1_1.EasyMockPhysicalDevice(ctrl, coreDriver)
-	physicalDevice4 := mocks1_1.EasyMockPhysicalDevice(ctrl, coreDriver)
-	physicalDevice5 := mocks1_1.EasyMockPhysicalDevice(ctrl, coreDriver)
-	physicalDevice6 := mocks1_1.EasyMockPhysicalDevice(ctrl, coreDriver)
+	physicalDevice1 := mocks.NewDummyPhysicalDevice(instance, common.Vulkan1_1)
+	physicalDevice2 := mocks.NewDummyPhysicalDevice(instance, common.Vulkan1_1)
+	physicalDevice3 := mocks.NewDummyPhysicalDevice(instance, common.Vulkan1_1)
+	physicalDevice4 := mocks.NewDummyPhysicalDevice(instance, common.Vulkan1_1)
+	physicalDevice5 := mocks.NewDummyPhysicalDevice(instance, common.Vulkan1_1)
+	physicalDevice6 := mocks.NewDummyPhysicalDevice(instance, common.Vulkan1_1)
 
-	coreDriver.EXPECT().VkEnumeratePhysicalDeviceGroups(
+	coreLoader.EXPECT().VkEnumeratePhysicalDeviceGroups(
 		instance.Handle(),
 		gomock.Not(gomock.Nil()),
 		gomock.Nil(),
@@ -162,7 +162,7 @@ func TestVulkanInstance_EnumeratePhysicalDeviceGroups_Incomplete(t *testing.T) {
 		return core1_0.VKSuccess, nil
 	})
 
-	coreDriver.EXPECT().VkEnumeratePhysicalDeviceGroups(
+	coreLoader.EXPECT().VkEnumeratePhysicalDeviceGroups(
 		instance.Handle(),
 		gomock.Not(gomock.Nil()),
 		gomock.Not(gomock.Nil()),
@@ -193,7 +193,7 @@ func TestVulkanInstance_EnumeratePhysicalDeviceGroups_Incomplete(t *testing.T) {
 		return core1_0.VKIncomplete, nil
 	})
 
-	coreDriver.EXPECT().VkEnumeratePhysicalDeviceGroups(
+	coreLoader.EXPECT().VkEnumeratePhysicalDeviceGroups(
 		instance.Handle(),
 		gomock.Not(gomock.Nil()),
 		gomock.Nil(),
@@ -203,7 +203,7 @@ func TestVulkanInstance_EnumeratePhysicalDeviceGroups_Incomplete(t *testing.T) {
 		return core1_0.VKSuccess, nil
 	})
 
-	coreDriver.EXPECT().VkEnumeratePhysicalDeviceGroups(
+	coreLoader.EXPECT().VkEnumeratePhysicalDeviceGroups(
 		instance.Handle(),
 		gomock.Not(gomock.Nil()),
 		gomock.Not(gomock.Nil()),
@@ -245,43 +245,43 @@ func TestVulkanInstance_EnumeratePhysicalDeviceGroups_Incomplete(t *testing.T) {
 		return core1_0.VKSuccess, nil
 	})
 
-	coreDriver.EXPECT().VkGetPhysicalDeviceProperties(physicalDevice1.Handle(), gomock.Not(gomock.Nil())).
+	coreLoader.EXPECT().VkGetPhysicalDeviceProperties(physicalDevice1.Handle(), gomock.Not(gomock.Nil())).
 		DoAndReturn(func(device loader.VkPhysicalDevice, pProperties *loader.VkPhysicalDeviceProperties) {
 			value := reflect.ValueOf(pProperties).Elem()
 			*(*loader.Uint32)(unsafe.Pointer(value.FieldByName("apiVersion").UnsafeAddr())) = loader.Uint32(common.Vulkan1_0)
 		}).Times(2)
 
-	coreDriver.EXPECT().VkGetPhysicalDeviceProperties(physicalDevice2.Handle(), gomock.Not(gomock.Nil())).
+	coreLoader.EXPECT().VkGetPhysicalDeviceProperties(physicalDevice2.Handle(), gomock.Not(gomock.Nil())).
 		DoAndReturn(func(device loader.VkPhysicalDevice, pProperties *loader.VkPhysicalDeviceProperties) {
 			value := reflect.ValueOf(pProperties).Elem()
 			*(*loader.Uint32)(unsafe.Pointer(value.FieldByName("apiVersion").UnsafeAddr())) = loader.Uint32(common.Vulkan1_0)
 		}).Times(2)
 
-	coreDriver.EXPECT().VkGetPhysicalDeviceProperties(physicalDevice3.Handle(), gomock.Not(gomock.Nil())).
+	coreLoader.EXPECT().VkGetPhysicalDeviceProperties(physicalDevice3.Handle(), gomock.Not(gomock.Nil())).
 		DoAndReturn(func(device loader.VkPhysicalDevice, pProperties *loader.VkPhysicalDeviceProperties) {
 			value := reflect.ValueOf(pProperties).Elem()
 			*(*loader.Uint32)(unsafe.Pointer(value.FieldByName("apiVersion").UnsafeAddr())) = loader.Uint32(common.Vulkan1_0)
 		}).Times(2)
 
-	coreDriver.EXPECT().VkGetPhysicalDeviceProperties(physicalDevice4.Handle(), gomock.Not(gomock.Nil())).
+	coreLoader.EXPECT().VkGetPhysicalDeviceProperties(physicalDevice4.Handle(), gomock.Not(gomock.Nil())).
 		DoAndReturn(func(device loader.VkPhysicalDevice, pProperties *loader.VkPhysicalDeviceProperties) {
 			value := reflect.ValueOf(pProperties).Elem()
 			*(*loader.Uint32)(unsafe.Pointer(value.FieldByName("apiVersion").UnsafeAddr())) = loader.Uint32(common.Vulkan1_0)
 		})
 
-	coreDriver.EXPECT().VkGetPhysicalDeviceProperties(physicalDevice5.Handle(), gomock.Not(gomock.Nil())).
+	coreLoader.EXPECT().VkGetPhysicalDeviceProperties(physicalDevice5.Handle(), gomock.Not(gomock.Nil())).
 		DoAndReturn(func(device loader.VkPhysicalDevice, pProperties *loader.VkPhysicalDeviceProperties) {
 			value := reflect.ValueOf(pProperties).Elem()
 			*(*loader.Uint32)(unsafe.Pointer(value.FieldByName("apiVersion").UnsafeAddr())) = loader.Uint32(common.Vulkan1_0)
 		})
 
-	coreDriver.EXPECT().VkGetPhysicalDeviceProperties(physicalDevice6.Handle(), gomock.Not(gomock.Nil())).
+	coreLoader.EXPECT().VkGetPhysicalDeviceProperties(physicalDevice6.Handle(), gomock.Not(gomock.Nil())).
 		DoAndReturn(func(device loader.VkPhysicalDevice, pProperties *loader.VkPhysicalDeviceProperties) {
 			value := reflect.ValueOf(pProperties).Elem()
 			*(*loader.Uint32)(unsafe.Pointer(value.FieldByName("apiVersion").UnsafeAddr())) = loader.Uint32(common.Vulkan1_0)
 		})
 
-	groups, _, err := instance.EnumeratePhysicalDeviceGroups(nil)
+	groups, _, err := driver.EnumeratePhysicalDeviceGroups(instance, nil)
 	require.NoError(t, err)
 	require.Len(t, groups, 3)
 	require.True(t, groups[0].SubsetAllocation)

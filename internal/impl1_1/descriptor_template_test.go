@@ -13,7 +13,6 @@ import (
 	"github.com/vkngwrapper/core/v3/loader"
 	mock_driver "github.com/vkngwrapper/core/v3/loader/mocks"
 	"github.com/vkngwrapper/core/v3/mocks"
-	"github.com/vkngwrapper/core/v3/mocks/mocks1_1"
 	"go.uber.org/mock/gomock"
 )
 
@@ -21,16 +20,16 @@ func TestVulkanExtension_CreateDescriptorUpdateTemplate(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	coreDriver := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_1)
+	coreLoader := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_1)
+	driver := impl1_1.NewDeviceDriver(coreLoader)
 
-	builder := &impl1_1.InstanceObjectBuilderImpl{}
-	device := builder.CreateDeviceObject(coreDriver, mocks.NewFakeDeviceHandle(), common.Vulkan1_1, []string{}).(core1_1.Device)
-	descriptorLayout := mocks1_1.EasyMockDescriptorSetLayout(ctrl)
-	pipelineLayout := mocks1_1.EasyMockPipelineLayout(ctrl)
+	device := mocks.NewDummyDevice(common.Vulkan1_1, []string{})
+	descriptorLayout := mocks.NewDummyDescriptorSetLayout(device)
+	pipelineLayout := mocks.NewDummyPipelineLayout(device)
 
 	handle := mocks.NewFakeDescriptorUpdateTemplate()
 
-	coreDriver.EXPECT().VkCreateDescriptorUpdateTemplate(
+	coreLoader.EXPECT().VkCreateDescriptorUpdateTemplate(
 		device.Handle(),
 		gomock.Not(gomock.Nil()),
 		gomock.Nil(),
@@ -76,13 +75,13 @@ func TestVulkanExtension_CreateDescriptorUpdateTemplate(t *testing.T) {
 
 		return core1_0.VKSuccess, nil
 	})
-	coreDriver.EXPECT().VkDestroyDescriptorUpdateTemplate(
+	coreLoader.EXPECT().VkDestroyDescriptorUpdateTemplate(
 		device.Handle(),
 		handle,
 		gomock.Nil(),
 	)
 
-	template, _, err := device.CreateDescriptorUpdateTemplate(core1_1.DescriptorUpdateTemplateCreateInfo{
+	template, _, err := driver.CreateDescriptorUpdateTemplate(device, core1_1.DescriptorUpdateTemplateCreateInfo{
 		DescriptorUpdateEntries: []core1_1.DescriptorUpdateTemplateEntry{
 			{
 				DstBinding:      1,
@@ -111,23 +110,24 @@ func TestVulkanExtension_CreateDescriptorUpdateTemplate(t *testing.T) {
 	require.NotNil(t, template)
 	require.Equal(t, handle, template.Handle())
 
-	template.Destroy(nil)
+	driver.DestroyDescriptorUpdateTemplate(template, nil)
 }
 
 func TestVulkanDescriptorTemplate_UpdateDescriptorSetFromBuffer(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	coreDriver := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_1)
+	coreLoader := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_1)
+	driver := impl1_1.NewDeviceDriver(coreLoader)
 
-	builder := &impl1_1.InstanceObjectBuilderImpl{}
-	device := builder.CreateDeviceObject(coreDriver, mocks.NewFakeDeviceHandle(), common.Vulkan1_1, []string{}).(core1_1.Device)
-	descriptorSet := mocks1_1.EasyMockDescriptorSet(ctrl)
-	buffer := mocks1_1.EasyMockBuffer(ctrl)
+	device := mocks.NewDummyDevice(common.Vulkan1_1, []string{})
+	pool := mocks.NewDummyDescriptorPool(device)
+	descriptorSet := mocks.NewDummyDescriptorSet(pool, device)
+	buffer := mocks.NewDummyBuffer(device)
 
 	handle := mocks.NewFakeDescriptorUpdateTemplate()
 
-	coreDriver.EXPECT().VkCreateDescriptorUpdateTemplate(
+	coreLoader.EXPECT().VkCreateDescriptorUpdateTemplate(
 		device.Handle(),
 		gomock.Not(gomock.Nil()),
 		gomock.Nil(),
@@ -143,7 +143,7 @@ func TestVulkanDescriptorTemplate_UpdateDescriptorSetFromBuffer(t *testing.T) {
 		return core1_0.VKSuccess, nil
 	})
 
-	coreDriver.EXPECT().VkUpdateDescriptorSetWithTemplate(
+	coreLoader.EXPECT().VkUpdateDescriptorSetWithTemplate(
 		device.Handle(),
 		descriptorSet.Handle(),
 		handle,
@@ -161,11 +161,11 @@ func TestVulkanDescriptorTemplate_UpdateDescriptorSetFromBuffer(t *testing.T) {
 		require.Equal(t, uint64(3), info.FieldByName("_range").Uint())
 	})
 
-	template, _, err := device.CreateDescriptorUpdateTemplate(core1_1.DescriptorUpdateTemplateCreateInfo{}, nil)
+	template, _, err := driver.CreateDescriptorUpdateTemplate(device, core1_1.DescriptorUpdateTemplateCreateInfo{}, nil)
 	require.NoError(t, err)
 	require.NotNil(t, template)
 
-	template.UpdateDescriptorSetFromBuffer(descriptorSet, core1_0.DescriptorBufferInfo{
+	driver.UpdateDescriptorSetWithTemplateFromBuffer(descriptorSet, template, core1_0.DescriptorBufferInfo{
 		Buffer: buffer,
 		Offset: 1,
 		Range:  3,
@@ -176,17 +176,18 @@ func TestVulkanDescriptorTemplate_UpdateDescriptorSetFromImage(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	coreDriver := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_1)
+	coreLoader := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_1)
+	driver := impl1_1.NewDeviceDriver(coreLoader)
 
-	builder := &impl1_1.InstanceObjectBuilderImpl{}
-	device := builder.CreateDeviceObject(coreDriver, mocks.NewFakeDeviceHandle(), common.Vulkan1_1, []string{}).(core1_1.Device)
-	descriptorSet := mocks1_1.EasyMockDescriptorSet(ctrl)
-	sampler := mocks1_1.EasyMockSampler(ctrl)
-	imageView := mocks1_1.EasyMockImageView(ctrl)
+	device := mocks.NewDummyDevice(common.Vulkan1_1, []string{})
+	pool := mocks.NewDummyDescriptorPool(device)
+	descriptorSet := mocks.NewDummyDescriptorSet(pool, device)
+	sampler := mocks.NewDummySampler(device)
+	imageView := mocks.NewDummyImageView(device)
 
 	handle := mocks.NewFakeDescriptorUpdateTemplate()
 
-	coreDriver.EXPECT().VkCreateDescriptorUpdateTemplate(
+	coreLoader.EXPECT().VkCreateDescriptorUpdateTemplate(
 		device.Handle(),
 		gomock.Not(gomock.Nil()),
 		gomock.Nil(),
@@ -202,7 +203,7 @@ func TestVulkanDescriptorTemplate_UpdateDescriptorSetFromImage(t *testing.T) {
 		return core1_0.VKSuccess, nil
 	})
 
-	coreDriver.EXPECT().VkUpdateDescriptorSetWithTemplate(
+	coreLoader.EXPECT().VkUpdateDescriptorSetWithTemplate(
 		device.Handle(),
 		descriptorSet.Handle(),
 		handle,
@@ -220,11 +221,11 @@ func TestVulkanDescriptorTemplate_UpdateDescriptorSetFromImage(t *testing.T) {
 		require.Equal(t, uint64(7), info.FieldByName("imageLayout").Uint()) // VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL
 	})
 
-	template, _, err := device.CreateDescriptorUpdateTemplate(core1_1.DescriptorUpdateTemplateCreateInfo{}, nil)
+	template, _, err := driver.CreateDescriptorUpdateTemplate(device, core1_1.DescriptorUpdateTemplateCreateInfo{}, nil)
 	require.NoError(t, err)
 	require.NotNil(t, template)
 
-	template.UpdateDescriptorSetFromImage(descriptorSet, core1_0.DescriptorImageInfo{
+	driver.UpdateDescriptorSetWithTemplateFromImage(descriptorSet, template, core1_0.DescriptorImageInfo{
 		Sampler:     sampler,
 		ImageView:   imageView,
 		ImageLayout: core1_0.ImageLayoutTransferDstOptimal,
@@ -235,16 +236,17 @@ func TestVulkanDescriptorTemplate_UpdateDescriptorSetFromObjectHandle(t *testing
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	coreDriver := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_1)
+	coreLoader := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_1)
+	driver := impl1_1.NewDeviceDriver(coreLoader)
 
-	builder := &impl1_1.InstanceObjectBuilderImpl{}
-	device := builder.CreateDeviceObject(coreDriver, mocks.NewFakeDeviceHandle(), common.Vulkan1_1, []string{}).(core1_1.Device)
-	descriptorSet := mocks1_1.EasyMockDescriptorSet(ctrl)
-	bufferView := mocks1_1.EasyMockBufferView(ctrl)
+	device := mocks.NewDummyDevice(common.Vulkan1_1, []string{})
+	pool := mocks.NewDummyDescriptorPool(device)
+	descriptorSet := mocks.NewDummyDescriptorSet(pool, device)
+	bufferView := mocks.NewDummyBufferView(device)
 
 	handle := mocks.NewFakeDescriptorUpdateTemplate()
 
-	coreDriver.EXPECT().VkCreateDescriptorUpdateTemplate(
+	coreLoader.EXPECT().VkCreateDescriptorUpdateTemplate(
 		device.Handle(),
 		gomock.Not(gomock.Nil()),
 		gomock.Nil(),
@@ -260,7 +262,7 @@ func TestVulkanDescriptorTemplate_UpdateDescriptorSetFromObjectHandle(t *testing
 		return core1_0.VKSuccess, nil
 	})
 
-	coreDriver.EXPECT().VkUpdateDescriptorSetWithTemplate(
+	coreLoader.EXPECT().VkUpdateDescriptorSetWithTemplate(
 		device.Handle(),
 		descriptorSet.Handle(),
 		handle,
@@ -275,9 +277,9 @@ func TestVulkanDescriptorTemplate_UpdateDescriptorSetFromObjectHandle(t *testing
 		require.Equal(t, bufferView.Handle(), info)
 	})
 
-	template, _, err := device.CreateDescriptorUpdateTemplate(core1_1.DescriptorUpdateTemplateCreateInfo{}, nil)
+	template, _, err := driver.CreateDescriptorUpdateTemplate(device, core1_1.DescriptorUpdateTemplateCreateInfo{}, nil)
 	require.NoError(t, err)
 	require.NotNil(t, template)
 
-	template.UpdateDescriptorSetFromObjectHandle(descriptorSet, loader.VulkanHandle(bufferView.Handle()))
+	driver.UpdateDescriptorSetWithTemplateFromObjectHandle(descriptorSet, template, loader.VulkanHandle(bufferView.Handle()))
 }

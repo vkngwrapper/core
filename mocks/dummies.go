@@ -104,3 +104,7 @@ func NewDummySemaphore(device types.Device) types.Semaphore {
 func NewDummyShaderModule(device types.Device) types.ShaderModule {
 	return types.InternalShaderModule(device.Handle(), NewFakeShaderModule(), device.APIVersion())
 }
+
+func NewDummySamplerYcbcrConversion(device types.Device) types.SamplerYcbcrConversion {
+	return types.InternalSamplerYcbcrConversion(device.Handle(), NewFakeSamplerYcbcrConversionHandle(), device.APIVersion())
+}
