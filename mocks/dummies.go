@@ -1,110 +1,110 @@
 package mocks
 
 import (
+	"github.com/vkngwrapper/core/v3"
 	"github.com/vkngwrapper/core/v3/common"
-	types "github.com/vkngwrapper/core/v3/types"
 )
 
-func NewDummyInstance(version common.APIVersion, instanceExtensions []string) types.Instance {
-	return types.InternalInstance(NewFakeInstanceHandle(), version, instanceExtensions)
+func NewDummyInstance(version common.APIVersion, instanceExtensions []string) core.Instance {
+	return core.InternalInstance(NewFakeInstanceHandle(), version, instanceExtensions)
 }
 
-func NewDummyPhysicalDevice(instance types.Instance, deviceVersion common.APIVersion) types.PhysicalDevice {
-	return types.InternalPhysicalDevice(NewFakePhysicalDeviceHandle(), instance.APIVersion(), deviceVersion)
+func NewDummyPhysicalDevice(instance core.Instance, deviceVersion common.APIVersion) core.PhysicalDevice {
+	return core.InternalPhysicalDevice(NewFakePhysicalDeviceHandle(), instance.APIVersion(), deviceVersion)
 }
 
-func NewDummyDevice(deviceVersion common.APIVersion, deviceExtensions []string) types.Device {
-	return types.InternalDevice(NewFakeDeviceHandle(), deviceVersion, deviceExtensions)
+func NewDummyDevice(deviceVersion common.APIVersion, deviceExtensions []string) core.Device {
+	return core.InternalDevice(NewFakeDeviceHandle(), deviceVersion, deviceExtensions)
 }
 
-func NewDummyBuffer(device types.Device) types.Buffer {
-	return types.InternalBuffer(device.Handle(), NewFakeBufferHandle(), device.APIVersion())
+func NewDummyBuffer(device core.Device) core.Buffer {
+	return core.InternalBuffer(device.Handle(), NewFakeBufferHandle(), device.APIVersion())
 }
 
-func NewDummyBufferView(device types.Device) types.BufferView {
-	return types.InternalBufferView(device.Handle(), NewFakeBufferViewHandle(), device.APIVersion())
+func NewDummyBufferView(device core.Device) core.BufferView {
+	return core.InternalBufferView(device.Handle(), NewFakeBufferViewHandle(), device.APIVersion())
 }
 
-func NewDummyCommandBuffer(commandPool types.CommandPool, device types.Device) types.CommandBuffer {
-	return types.InternalCommandBuffer(device.Handle(), commandPool.Handle(), NewFakeCommandBufferHandle(), device.APIVersion())
+func NewDummyCommandBuffer(commandPool core.CommandPool, device core.Device) core.CommandBuffer {
+	return core.InternalCommandBuffer(device.Handle(), commandPool.Handle(), NewFakeCommandBufferHandle(), device.APIVersion())
 }
 
-func NewDummyCommandPool(device types.Device) types.CommandPool {
-	return types.InternalCommandPool(device.Handle(), NewFakeCommandPoolHandle(), device.APIVersion())
+func NewDummyCommandPool(device core.Device) core.CommandPool {
+	return core.InternalCommandPool(device.Handle(), NewFakeCommandPoolHandle(), device.APIVersion())
 }
 
-func NewDummyDescriptorPool(device types.Device) types.DescriptorPool {
-	return types.InternalDescriptorPool(device.Handle(), NewFakeDescriptorPool(), device.APIVersion())
+func NewDummyDescriptorPool(device core.Device) core.DescriptorPool {
+	return core.InternalDescriptorPool(device.Handle(), NewFakeDescriptorPool(), device.APIVersion())
 }
 
-func NewDummyDescriptorSet(descriptorPool types.DescriptorPool, device types.Device) types.DescriptorSet {
-	return types.InternalDescriptorSet(device.Handle(), descriptorPool.Handle(), NewFakeDescriptorSet(), device.APIVersion())
+func NewDummyDescriptorSet(descriptorPool core.DescriptorPool, device core.Device) core.DescriptorSet {
+	return core.InternalDescriptorSet(device.Handle(), descriptorPool.Handle(), NewFakeDescriptorSet(), device.APIVersion())
 }
 
-func NewDummyDescriptorSetLayout(device types.Device) types.DescriptorSetLayout {
-	return types.InternalDescriptorSetLayout(device.Handle(), NewFakeDescriptorSetLayout(), device.APIVersion())
+func NewDummyDescriptorSetLayout(device core.Device) core.DescriptorSetLayout {
+	return core.InternalDescriptorSetLayout(device.Handle(), NewFakeDescriptorSetLayout(), device.APIVersion())
 }
 
-func NewDummyDeviceMemory(device types.Device, size int) types.DeviceMemory {
-	return types.InternalDeviceMemory(device.Handle(), NewFakeDeviceMemoryHandle(), device.APIVersion(), size)
+func NewDummyDeviceMemory(device core.Device, size int) core.DeviceMemory {
+	return core.InternalDeviceMemory(device.Handle(), NewFakeDeviceMemoryHandle(), device.APIVersion(), size)
 }
 
-func NewDummyEvent(device types.Device) types.Event {
-	return types.InternalEvent(device.Handle(), NewFakeEventHandle(), device.APIVersion())
+func NewDummyEvent(device core.Device) core.Event {
+	return core.InternalEvent(device.Handle(), NewFakeEventHandle(), device.APIVersion())
 }
 
-func NewDummyFence(device types.Device) types.Fence {
-	return types.InternalFence(device.Handle(), NewFakeFenceHandle(), device.APIVersion())
+func NewDummyFence(device core.Device) core.Fence {
+	return core.InternalFence(device.Handle(), NewFakeFenceHandle(), device.APIVersion())
 }
 
-func NewDummyFramebuffer(device types.Device) types.Framebuffer {
-	return types.InternalFramebuffer(device.Handle(), NewFakeFramebufferHandle(), device.APIVersion())
+func NewDummyFramebuffer(device core.Device) core.Framebuffer {
+	return core.InternalFramebuffer(device.Handle(), NewFakeFramebufferHandle(), device.APIVersion())
 }
 
-func NewDummyImage(device types.Device) types.Image {
-	return types.InternalImage(device.Handle(), NewFakeImageHandle(), device.APIVersion())
+func NewDummyImage(device core.Device) core.Image {
+	return core.InternalImage(device.Handle(), NewFakeImageHandle(), device.APIVersion())
 }
 
-func NewDummyImageView(device types.Device) types.ImageView {
-	return types.InternalImageView(device.Handle(), NewFakeImageViewHandle(), device.APIVersion())
+func NewDummyImageView(device core.Device) core.ImageView {
+	return core.InternalImageView(device.Handle(), NewFakeImageViewHandle(), device.APIVersion())
 }
 
-func NewDummyPipeline(device types.Device) types.Pipeline {
-	return types.InternalPipeline(device.Handle(), NewFakePipeline(), device.APIVersion())
+func NewDummyPipeline(device core.Device) core.Pipeline {
+	return core.InternalPipeline(device.Handle(), NewFakePipeline(), device.APIVersion())
 }
 
-func NewDummyPipelineCache(device types.Device) types.PipelineCache {
-	return types.InternalPipelineCache(device.Handle(), NewFakePipelineCache(), device.APIVersion())
+func NewDummyPipelineCache(device core.Device) core.PipelineCache {
+	return core.InternalPipelineCache(device.Handle(), NewFakePipelineCache(), device.APIVersion())
 }
 
-func NewDummyPipelineLayout(device types.Device) types.PipelineLayout {
-	return types.InternalPipelineLayout(device.Handle(), NewFakePipelineLayout(), device.APIVersion())
+func NewDummyPipelineLayout(device core.Device) core.PipelineLayout {
+	return core.InternalPipelineLayout(device.Handle(), NewFakePipelineLayout(), device.APIVersion())
 }
 
-func NewDummyQueryPool(device types.Device) types.QueryPool {
-	return types.InternalQueryPool(device.Handle(), NewFakeQueryPool(), device.APIVersion())
+func NewDummyQueryPool(device core.Device) core.QueryPool {
+	return core.InternalQueryPool(device.Handle(), NewFakeQueryPool(), device.APIVersion())
 }
 
-func NewDummyQueue(device types.Device) types.Queue {
-	return types.InternalQueue(device.Handle(), NewFakeQueue(), device.APIVersion())
+func NewDummyQueue(device core.Device) core.Queue {
+	return core.InternalQueue(device.Handle(), NewFakeQueue(), device.APIVersion())
 }
 
-func NewDummyRenderPass(device types.Device) types.RenderPass {
-	return types.InternalRenderPass(device.Handle(), NewFakeRenderPassHandle(), device.APIVersion())
+func NewDummyRenderPass(device core.Device) core.RenderPass {
+	return core.InternalRenderPass(device.Handle(), NewFakeRenderPassHandle(), device.APIVersion())
 }
 
-func NewDummySampler(device types.Device) types.Sampler {
-	return types.InternalSampler(device.Handle(), NewFakeSamplerHandle(), device.APIVersion())
+func NewDummySampler(device core.Device) core.Sampler {
+	return core.InternalSampler(device.Handle(), NewFakeSamplerHandle(), device.APIVersion())
 }
 
-func NewDummySemaphore(device types.Device) types.Semaphore {
-	return types.InternalSemaphore(device.Handle(), NewFakeSemaphore(), device.APIVersion())
+func NewDummySemaphore(device core.Device) core.Semaphore {
+	return core.InternalSemaphore(device.Handle(), NewFakeSemaphore(), device.APIVersion())
 }
 
-func NewDummyShaderModule(device types.Device) types.ShaderModule {
-	return types.InternalShaderModule(device.Handle(), NewFakeShaderModule(), device.APIVersion())
+func NewDummyShaderModule(device core.Device) core.ShaderModule {
+	return core.InternalShaderModule(device.Handle(), NewFakeShaderModule(), device.APIVersion())
 }
 
-func NewDummySamplerYcbcrConversion(device types.Device) types.SamplerYcbcrConversion {
-	return types.InternalSamplerYcbcrConversion(device.Handle(), NewFakeSamplerYcbcrConversionHandle(), device.APIVersion())
+func NewDummySamplerYcbcrConversion(device core.Device) core.SamplerYcbcrConversion {
+	return core.InternalSamplerYcbcrConversion(device.Handle(), NewFakeSamplerYcbcrConversionHandle(), device.APIVersion())
 }

@@ -6,6 +6,7 @@ import (
 	"unsafe"
 
 	"github.com/stretchr/testify/require"
+	"github.com/vkngwrapper/core/v3"
 	"github.com/vkngwrapper/core/v3/common"
 	"github.com/vkngwrapper/core/v3/core1_0"
 	"github.com/vkngwrapper/core/v3/core1_2"
@@ -13,7 +14,6 @@ import (
 	"github.com/vkngwrapper/core/v3/loader"
 	mock_loader "github.com/vkngwrapper/core/v3/loader/mocks"
 	"github.com/vkngwrapper/core/v3/mocks"
-	"github.com/vkngwrapper/core/v3/types"
 	"go.uber.org/mock/gomock"
 )
 
@@ -142,7 +142,7 @@ func TestRenderPassAttachmentBeginInfo(t *testing.T) {
 
 	err := driver.CmdBeginRenderPass(commandBuffer, core1_0.SubpassContentsInline, core1_0.RenderPassBeginInfo{
 		NextOptions: common.NextOptions{core1_2.RenderPassAttachmentBeginInfo{
-			Attachments: []types.ImageView{imageView1, imageView2},
+			Attachments: []core.ImageView{imageView1, imageView2},
 		}},
 	})
 	require.NoError(t, err)

@@ -1,11 +1,11 @@
 package impl1_1
 
 import (
+	"github.com/vkngwrapper/core/v3"
 	"github.com/vkngwrapper/core/v3/loader"
-	"github.com/vkngwrapper/core/v3/types"
 )
 
-func (v *DeviceVulkanDriver) CmdDispatchBase(commandBuffer types.CommandBuffer, baseGroupX, baseGroupY, baseGroupZ, groupCountX, groupCountY, groupCountZ int) {
+func (v *DeviceVulkanDriver) CmdDispatchBase(commandBuffer core.CommandBuffer, baseGroupX, baseGroupY, baseGroupZ, groupCountX, groupCountY, groupCountZ int) {
 	if commandBuffer.Handle() == 0 {
 		panic("commandBuffer cannot be uninitialized")
 	}
@@ -18,7 +18,7 @@ func (v *DeviceVulkanDriver) CmdDispatchBase(commandBuffer types.CommandBuffer, 
 		loader.Uint32(groupCountZ))
 }
 
-func (v *DeviceVulkanDriver) CmdSetDeviceMask(commandBuffer types.CommandBuffer, deviceMask uint32) {
+func (v *DeviceVulkanDriver) CmdSetDeviceMask(commandBuffer core.CommandBuffer, deviceMask uint32) {
 	if commandBuffer.Handle() == 0 {
 		panic("commandBuffer cannot be uninitialized")
 	}

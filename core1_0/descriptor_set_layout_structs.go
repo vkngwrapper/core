@@ -10,8 +10,8 @@ import (
 
 	"github.com/CannibalVox/cgoparam"
 	"github.com/pkg/errors"
+	"github.com/vkngwrapper/core/v3"
 	"github.com/vkngwrapper/core/v3/common"
-	"github.com/vkngwrapper/core/v3/types"
 )
 
 const (
@@ -91,7 +91,7 @@ type DescriptorSetLayoutBinding struct {
 
 	// ImmutableSamplers is a slice of Sampler objects that will be copied into the set layout
 	// and used for the corresponding binding.
-	ImmutableSamplers []types.Sampler
+	ImmutableSamplers []core.Sampler
 }
 
 // DescriptorSetLayoutCreateInfo specifies parameters of a newly-created DescriptorSetLayout

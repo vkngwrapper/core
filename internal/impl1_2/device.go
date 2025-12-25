@@ -5,23 +5,23 @@ import (
 	"time"
 
 	"github.com/CannibalVox/cgoparam"
+	"github.com/vkngwrapper/core/v3"
 	"github.com/vkngwrapper/core/v3/common"
 	"github.com/vkngwrapper/core/v3/core1_0"
 	"github.com/vkngwrapper/core/v3/core1_2"
 	"github.com/vkngwrapper/core/v3/loader"
-	"github.com/vkngwrapper/core/v3/types"
 )
 
-func (v *DeviceVulkanDriver) CreateRenderPass2(device types.Device, allocator *loader.AllocationCallbacks, options core1_2.RenderPassCreateInfo2) (types.RenderPass, common.VkResult, error) {
+func (v *DeviceVulkanDriver) CreateRenderPass2(device core.Device, allocator *loader.AllocationCallbacks, options core1_2.RenderPassCreateInfo2) (core.RenderPass, common.VkResult, error) {
 	if device.Handle() == 0 {
-		return types.RenderPass{}, core1_0.VKErrorUnknown, fmt.Errorf("device cannot be uninitialized")
+		return core.RenderPass{}, core1_0.VKErrorUnknown, fmt.Errorf("device cannot be uninitialized")
 	}
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
 	infoPtr, err := common.AllocOptions(arena, options)
 	if err != nil {
-		return types.RenderPass{}, core1_0.VKErrorUnknown, err
+		return core.RenderPass{}, core1_0.VKErrorUnknown, err
 	}
 
 	var renderPassHandle loader.VkRenderPass
@@ -32,10 +32,10 @@ func (v *DeviceVulkanDriver) CreateRenderPass2(device types.Device, allocator *l
 		&renderPassHandle,
 	)
 	if err != nil {
-		return types.RenderPass{}, res, err
+		return core.RenderPass{}, res, err
 	}
 
-	renderPass := types.InternalRenderPass(
+	renderPass := core.InternalRenderPass(
 		device.Handle(),
 		renderPassHandle,
 		device.APIVersion(),

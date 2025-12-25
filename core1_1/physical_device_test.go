@@ -7,6 +7,7 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/require"
+	"github.com/vkngwrapper/core/v3"
 	"github.com/vkngwrapper/core/v3/common"
 	"github.com/vkngwrapper/core/v3/core1_0"
 	"github.com/vkngwrapper/core/v3/core1_1"
@@ -14,7 +15,6 @@ import (
 	"github.com/vkngwrapper/core/v3/loader"
 	mock_loader "github.com/vkngwrapper/core/v3/loader/mocks"
 	"github.com/vkngwrapper/core/v3/mocks"
-	"github.com/vkngwrapper/core/v3/types"
 	"go.uber.org/mock/gomock"
 )
 
@@ -889,7 +889,7 @@ func TestDeviceGroupOptions(t *testing.T) {
 			},
 		},
 		NextOptions: common.NextOptions{Next: core1_1.DeviceGroupDeviceCreateInfo{
-			PhysicalDevices: []types.PhysicalDevice{physicalDevice1, physicalDevice2, physicalDevice3},
+			PhysicalDevices: []core.PhysicalDevice{physicalDevice1, physicalDevice2, physicalDevice3},
 		}},
 	})
 	require.NoError(t, err)

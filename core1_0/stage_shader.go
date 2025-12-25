@@ -12,8 +12,8 @@ import (
 
 	"github.com/CannibalVox/cgoparam"
 	"github.com/pkg/errors"
+	"github.com/vkngwrapper/core/v3"
 	"github.com/vkngwrapper/core/v3/common"
-	"github.com/vkngwrapper/core/v3/types"
 )
 
 const (
@@ -70,7 +70,7 @@ type PipelineShaderStageCreateInfo struct {
 	// Stage specifies a single Pipeline stage
 	Stage ShaderStageFlags
 	// Module contains the shader code for this stage
-	Module types.ShaderModule
+	Module core.ShaderModule
 	// SpecializationInfo is a map specifying specialization contents
 	SpecializationInfo map[uint32]any
 

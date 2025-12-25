@@ -10,20 +10,20 @@ import (
 	"unsafe"
 
 	"github.com/CannibalVox/cgoparam"
+	"github.com/vkngwrapper/core/v3"
 	"github.com/vkngwrapper/core/v3/common"
 	"github.com/vkngwrapper/core/v3/core1_0"
 	"github.com/vkngwrapper/core/v3/loader"
-	"github.com/vkngwrapper/core/v3/types"
 )
 
-func (v *DeviceVulkanDriver) QueueWaitIdle(queue types.Queue) (common.VkResult, error) {
+func (v *DeviceVulkanDriver) QueueWaitIdle(queue core.Queue) (common.VkResult, error) {
 	if queue.Handle() == 0 {
 		return core1_0.VKErrorUnknown, fmt.Errorf("queue is uninitialized")
 	}
 	return v.LoaderObj.VkQueueWaitIdle(queue.Handle())
 }
 
-func (v *DeviceVulkanDriver) QueueBindSparse(queue types.Queue, fence *types.Fence, bindInfos ...core1_0.BindSparseInfo) (common.VkResult, error) {
+func (v *DeviceVulkanDriver) QueueBindSparse(queue core.Queue, fence *core.Fence, bindInfos ...core1_0.BindSparseInfo) (common.VkResult, error) {
 	if queue.Handle() == 0 {
 		return core1_0.VKErrorUnknown, fmt.Errorf("queue is uninitialized")
 	}

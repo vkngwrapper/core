@@ -6,6 +6,7 @@ import (
 	"unsafe"
 
 	"github.com/stretchr/testify/require"
+	"github.com/vkngwrapper/core/v3"
 	"github.com/vkngwrapper/core/v3/common"
 	"github.com/vkngwrapper/core/v3/core1_0"
 	"github.com/vkngwrapper/core/v3/core1_1"
@@ -14,7 +15,6 @@ import (
 	"github.com/vkngwrapper/core/v3/loader"
 	mock_loader "github.com/vkngwrapper/core/v3/loader/mocks"
 	"github.com/vkngwrapper/core/v3/mocks"
-	"github.com/vkngwrapper/core/v3/types"
 	"go.uber.org/mock/gomock"
 )
 
@@ -71,7 +71,7 @@ func TestDescriptorSetVariableDescriptorCountAllocateOptions(t *testing.T) {
 
 	sets, _, err := driver.AllocateDescriptorSets(core1_0.DescriptorSetAllocateInfo{
 		DescriptorPool: descriptorPool,
-		SetLayouts: []types.DescriptorSetLayout{
+		SetLayouts: []core.DescriptorSetLayout{
 			descriptorLayout1,
 			descriptorLayout2,
 			descriptorLayout3,

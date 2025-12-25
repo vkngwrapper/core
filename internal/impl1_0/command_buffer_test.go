@@ -8,17 +8,17 @@ import (
 	"unsafe"
 
 	"github.com/stretchr/testify/require"
+	"github.com/vkngwrapper/core/v3"
 	"github.com/vkngwrapper/core/v3/common"
 	"github.com/vkngwrapper/core/v3/core1_0"
 	"github.com/vkngwrapper/core/v3/loader"
 	mock_loader "github.com/vkngwrapper/core/v3/loader/mocks"
 	"github.com/vkngwrapper/core/v3/mocks"
 	"github.com/vkngwrapper/core/v3/mocks/mocks1_0"
-	"github.com/vkngwrapper/core/v3/types"
 	"go.uber.org/mock/gomock"
 )
 
-func setup(t *testing.T, ctrl *gomock.Controller) (*mock_loader.MockLoader, core1_0.DeviceDriver, types.Device, types.CommandBuffer) {
+func setup(t *testing.T, ctrl *gomock.Controller) (*mock_loader.MockLoader, core1_0.DeviceDriver, core.Device, core.CommandBuffer) {
 	mockLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_0)
 	device := mocks.NewDummyDevice(common.Vulkan1_0, []string{})
 	pool := mocks.NewDummyCommandPool(device)
@@ -28,7 +28,7 @@ func setup(t *testing.T, ctrl *gomock.Controller) (*mock_loader.MockLoader, core
 	return mockLoader, driver, device, buffer
 }
 
-func setupWithRenderPass(t *testing.T, ctrl *gomock.Controller) (*mock_loader.MockLoader, core1_0.DeviceDriver, types.Device, types.CommandBuffer, types.RenderPass, types.Framebuffer) {
+func setupWithRenderPass(t *testing.T, ctrl *gomock.Controller) (*mock_loader.MockLoader, core1_0.DeviceDriver, core.Device, core.CommandBuffer, core.RenderPass, core.Framebuffer) {
 	mockLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_0)
 	device := mocks.NewDummyDevice(common.Vulkan1_0, []string{})
 	pool := mocks.NewDummyCommandPool(device)
@@ -218,7 +218,7 @@ func TestVulkanCommandBuffer_CmdBindVertexBuffers(t *testing.T) {
 			require.ElementsMatch(t, []loader.VkDeviceSize{2}, singleOffset)
 		})
 
-	driver.CmdBindVertexBuffers(buffer, 0, []types.Buffer{vertexBuffer}, []int{2})
+	driver.CmdBindVertexBuffers(buffer, 0, []core.Buffer{vertexBuffer}, []int{2})
 }
 
 func TestVulkanCommandBuffer_CmdBindIndexBuffer(t *testing.T) {
@@ -259,7 +259,7 @@ func TestVulkanCommandBuffer_CmdBindDescriptorSets(t *testing.T) {
 			require.ElementsMatch(t, []loader.Uint32{4, 5, 6}, dynamicOffsetSlice)
 		})
 
-	driver.CmdBindDescriptorSets(buffer, core1_0.PipelineBindPointCompute, pipelineLayout, 3, []types.DescriptorSet{
+	driver.CmdBindDescriptorSets(buffer, core1_0.PipelineBindPointCompute, pipelineLayout, 3, []core.DescriptorSet{
 		descriptorSet,
 	}, []int{4, 5, 6})
 }
@@ -988,7 +988,7 @@ func TestVulkanCommandBuffer_CmdWaitEvents(t *testing.T) {
 
 	err := driver.CmdWaitEvents(
 		buffer,
-		[]types.Event{event1, event2},
+		[]core.Event{event1, event2},
 		core1_0.PipelineStageAllCommands,
 		core1_0.PipelineStageTessellationControlShader,
 		[]core1_0.MemoryBarrier{
@@ -1191,7 +1191,7 @@ func TestVulkanCommandBuffer_CmdExecuteCommands(t *testing.T) {
 	cmd2 := mocks.NewDummyCommandBuffer(pool, device)
 	cmd3 := mocks.NewDummyCommandBuffer(pool, device)
 
-	commandBuffers := []types.CommandBuffer{
+	commandBuffers := []core.CommandBuffer{
 		cmd1, cmd2, cmd3,
 	}
 

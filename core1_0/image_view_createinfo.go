@@ -10,8 +10,8 @@ import (
 
 	"github.com/CannibalVox/cgoparam"
 	"github.com/pkg/errors"
+	"github.com/vkngwrapper/core/v3"
 	"github.com/vkngwrapper/core/v3/common"
-	"github.com/vkngwrapper/core/v3/types"
 )
 
 const (
@@ -114,7 +114,7 @@ type ComponentMapping struct {
 // ImageViewCreateInfo specifies parameters of a newly-created ImageView
 type ImageViewCreateInfo struct {
 	// Image is an Image on which the view will be created
-	Image types.Image
+	Image core.Image
 
 	// Flags describes additional parameters of the ImageView
 	Flags ImageViewCreateFlags

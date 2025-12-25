@@ -10,20 +10,20 @@ import (
 	"unsafe"
 
 	"github.com/CannibalVox/cgoparam"
+	"github.com/vkngwrapper/core/v3"
 	"github.com/vkngwrapper/core/v3/common"
 	"github.com/vkngwrapper/core/v3/core1_0"
 	"github.com/vkngwrapper/core/v3/loader"
-	"github.com/vkngwrapper/core/v3/types"
 )
 
-func (v *InstanceVulkanDriver) DestroyInstance(instance types.Instance, callbacks *loader.AllocationCallbacks) {
+func (v *InstanceVulkanDriver) DestroyInstance(instance core.Instance, callbacks *loader.AllocationCallbacks) {
 	if instance.Handle() == 0 {
 		panic("instance was uninitialized")
 	}
 	v.LoaderObj.VkDestroyInstance(instance.Handle(), callbacks.Handle())
 }
 
-func (v *InstanceVulkanDriver) EnumeratePhysicalDevices(instance types.Instance) ([]types.PhysicalDevice, common.VkResult, error) {
+func (v *InstanceVulkanDriver) EnumeratePhysicalDevices(instance core.Instance) ([]core.PhysicalDevice, common.VkResult, error) {
 	if instance.Handle() == 0 {
 		return nil, core1_0.VKErrorUnknown, fmt.Errorf("instance was uninitialized")
 	}
@@ -51,7 +51,7 @@ func (v *InstanceVulkanDriver) EnumeratePhysicalDevices(instance types.Instance)
 	}
 
 	goCount := uint32(*count)
-	var devices []types.PhysicalDevice
+	var devices []core.PhysicalDevice
 	for ind := uint32(0); ind < goCount; ind++ {
 		propertiesUnsafe := allocator.Malloc(int(unsafe.Sizeof([1]C.VkPhysicalDeviceProperties{})))
 
@@ -64,7 +64,7 @@ func (v *InstanceVulkanDriver) EnumeratePhysicalDevices(instance types.Instance)
 		}
 
 		deviceVersion := instance.APIVersion().Min(properties.APIVersion)
-		physicalDevice := types.InternalPhysicalDevice(deviceHandles[ind], instance.APIVersion(), deviceVersion)
+		physicalDevice := core.InternalPhysicalDevice(deviceHandles[ind], instance.APIVersion(), deviceVersion)
 
 		devices = append(devices, physicalDevice)
 	}

@@ -4,14 +4,14 @@ import (
 	"fmt"
 
 	"github.com/CannibalVox/cgoparam"
+	"github.com/vkngwrapper/core/v3"
 	"github.com/vkngwrapper/core/v3/common"
 	"github.com/vkngwrapper/core/v3/core1_0"
 	"github.com/vkngwrapper/core/v3/core1_2"
 	"github.com/vkngwrapper/core/v3/loader"
-	"github.com/vkngwrapper/core/v3/types"
 )
 
-func (v *DeviceVulkanDriver) CmdBeginRenderPass2(commandBuffer types.CommandBuffer, renderPassBegin core1_0.RenderPassBeginInfo, subpassBegin core1_2.SubpassBeginInfo) error {
+func (v *DeviceVulkanDriver) CmdBeginRenderPass2(commandBuffer core.CommandBuffer, renderPassBegin core1_0.RenderPassBeginInfo, subpassBegin core1_2.SubpassBeginInfo) error {
 	if commandBuffer.Handle() == 0 {
 		return fmt.Errorf("commandBuffer cannot be uninitialized")
 	}
@@ -37,7 +37,7 @@ func (v *DeviceVulkanDriver) CmdBeginRenderPass2(commandBuffer types.CommandBuff
 	return nil
 }
 
-func (v *DeviceVulkanDriver) CmdEndRenderPass2(commandBuffer types.CommandBuffer, subpassEnd core1_2.SubpassEndInfo) error {
+func (v *DeviceVulkanDriver) CmdEndRenderPass2(commandBuffer core.CommandBuffer, subpassEnd core1_2.SubpassEndInfo) error {
 	if commandBuffer.Handle() == 0 {
 		return fmt.Errorf("commandBuffer cannot be uninitialized")
 	}
@@ -58,7 +58,7 @@ func (v *DeviceVulkanDriver) CmdEndRenderPass2(commandBuffer types.CommandBuffer
 	return nil
 }
 
-func (v *DeviceVulkanDriver) CmdNextSubpass2(commandBuffer types.CommandBuffer, subpassBegin core1_2.SubpassBeginInfo, subpassEnd core1_2.SubpassEndInfo) error {
+func (v *DeviceVulkanDriver) CmdNextSubpass2(commandBuffer core.CommandBuffer, subpassBegin core1_2.SubpassBeginInfo, subpassEnd core1_2.SubpassEndInfo) error {
 	if commandBuffer.Handle() == 0 {
 		return fmt.Errorf("commandBuffer cannot be uninitialized")
 	}
@@ -85,7 +85,7 @@ func (v *DeviceVulkanDriver) CmdNextSubpass2(commandBuffer types.CommandBuffer, 
 	return nil
 }
 
-func (v *DeviceVulkanDriver) CmdDrawIndexedIndirectCount(commandBuffer types.CommandBuffer, buffer types.Buffer, offset uint64, countBuffer types.Buffer, countBufferOffset uint64, maxDrawCount, stride int) {
+func (v *DeviceVulkanDriver) CmdDrawIndexedIndirectCount(commandBuffer core.CommandBuffer, buffer core.Buffer, offset uint64, countBuffer core.Buffer, countBufferOffset uint64, maxDrawCount, stride int) {
 	if commandBuffer.Handle() == 0 {
 		panic("commandBuffer cannot be uninitialized")
 	}
@@ -106,7 +106,7 @@ func (v *DeviceVulkanDriver) CmdDrawIndexedIndirectCount(commandBuffer types.Com
 	)
 }
 
-func (v *DeviceVulkanDriver) CmdDrawIndirectCount(commandBuffer types.CommandBuffer, buffer types.Buffer, offset uint64, countBuffer types.Buffer, countBufferOffset uint64, maxDrawCount, stride int) {
+func (v *DeviceVulkanDriver) CmdDrawIndirectCount(commandBuffer core.CommandBuffer, buffer core.Buffer, offset uint64, countBuffer core.Buffer, countBufferOffset uint64, maxDrawCount, stride int) {
 	if commandBuffer.Handle() == 0 {
 		panic("commandBuffer cannot be uninitialized")
 	}

@@ -10,8 +10,8 @@ import (
 
 	"github.com/CannibalVox/cgoparam"
 	"github.com/pkg/errors"
+	"github.com/vkngwrapper/core/v3"
 	"github.com/vkngwrapper/core/v3/common"
-	"github.com/vkngwrapper/core/v3/types"
 )
 
 const (
@@ -67,14 +67,14 @@ type GraphicsPipelineCreateInfo struct {
 
 	// Layout is the description of binding locations used by both the Pipeline and DescriptorSet
 	// objects used with the Pipeline
-	Layout types.PipelineLayout
+	Layout core.PipelineLayout
 	// RenderPass is a RenderPass object describing the environment in which the Pipeline will be used
-	RenderPass types.RenderPass
+	RenderPass core.RenderPass
 
 	// Subpass is the index of the subpass in the RenderPass where this Pipeline will be used
 	Subpass int
 	// BasePipeline is a Pipeline object to derive from
-	BasePipeline types.Pipeline
+	BasePipeline core.Pipeline
 	// BasePipelineIndex is an index into the createInfos parameter to use as a Pipeline to derive from
 	BasePipelineIndex int
 
@@ -222,10 +222,10 @@ type ComputePipelineCreateInfo struct {
 	Stage PipelineShaderStageCreateInfo
 	// Layout is the description of binding locations used by both the Pipeline and DescriptorSet
 	// objects used with the Pipeline
-	Layout types.PipelineLayout
+	Layout core.PipelineLayout
 
 	// BasePipeline is a Pipeline to derive from
-	BasePipeline types.Pipeline
+	BasePipeline core.Pipeline
 	// BasePipelineIndex is an index into the createInfos parameters to use as a Pipeline to derive from
 	BasePipelineIndex int
 

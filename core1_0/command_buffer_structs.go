@@ -10,8 +10,8 @@ import (
 
 	"github.com/CannibalVox/cgoparam"
 	"github.com/pkg/errors"
+	"github.com/vkngwrapper/core/v3"
 	"github.com/vkngwrapper/core/v3/common"
-	"github.com/vkngwrapper/core/v3/types"
 )
 
 const (
@@ -69,7 +69,7 @@ type CommandBufferAllocateInfo struct {
 	// CommandBufferCount is the number of CommandBuffer objects to allocate from the CommandPool
 	CommandBufferCount int
 	// CommandPool is the CommandPool from which the CommandBuffer objects are allocated
-	CommandPool types.CommandPool
+	CommandPool core.CommandPool
 
 	common.NextOptions
 }

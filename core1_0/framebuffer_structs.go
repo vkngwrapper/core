@@ -10,8 +10,8 @@ import (
 
 	"github.com/CannibalVox/cgoparam"
 	"github.com/pkg/errors"
+	"github.com/vkngwrapper/core/v3"
 	"github.com/vkngwrapper/core/v3/common"
-	"github.com/vkngwrapper/core/v3/types"
 )
 
 // FramebufferCreateInfo specifies parameters of a newly-created Framebuffer
@@ -20,7 +20,7 @@ import (
 type FramebufferCreateInfo struct {
 	// Attachments is a slice ImageView objects, each of which will be used as the corresponding
 	// attachment in a RenderPass instance
-	Attachments []types.ImageView
+	Attachments []core.ImageView
 	// Flags is a bitmask of FramebufferCreateFlags
 	Flags FramebufferCreateFlags
 
@@ -32,7 +32,7 @@ type FramebufferCreateInfo struct {
 	Layers uint32
 
 	// RenderPass is a RenderPass defining what render passes the Framebuffer will be compatible with
-	RenderPass types.RenderPass
+	RenderPass core.RenderPass
 
 	common.NextOptions
 }

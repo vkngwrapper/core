@@ -10,14 +10,14 @@ import (
 	"unsafe"
 
 	"github.com/CannibalVox/cgoparam"
+	"github.com/vkngwrapper/core/v3"
 	"github.com/vkngwrapper/core/v3/common"
 	"github.com/vkngwrapper/core/v3/core1_0"
 	"github.com/vkngwrapper/core/v3/core1_1"
 	"github.com/vkngwrapper/core/v3/loader"
-	"github.com/vkngwrapper/core/v3/types"
 )
 
-func (v *InstanceVulkanDriver) attemptEnumeratePhysicalDeviceGroups(instance types.Instance, outDataFactory func() *core1_1.PhysicalDeviceGroupProperties) ([]*core1_1.PhysicalDeviceGroupProperties, common.VkResult, error) {
+func (v *InstanceVulkanDriver) attemptEnumeratePhysicalDeviceGroups(instance core.Instance, outDataFactory func() *core1_1.PhysicalDeviceGroupProperties) ([]*core1_1.PhysicalDeviceGroupProperties, common.VkResult, error) {
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
@@ -69,7 +69,7 @@ func (v *InstanceVulkanDriver) attemptEnumeratePhysicalDeviceGroups(instance typ
 	return outDataSlice, res, nil
 }
 
-func (v *InstanceVulkanDriver) EnumeratePhysicalDeviceGroups(instance types.Instance, outDataFactory func() *core1_1.PhysicalDeviceGroupProperties) ([]*core1_1.PhysicalDeviceGroupProperties, common.VkResult, error) {
+func (v *InstanceVulkanDriver) EnumeratePhysicalDeviceGroups(instance core.Instance, outDataFactory func() *core1_1.PhysicalDeviceGroupProperties) ([]*core1_1.PhysicalDeviceGroupProperties, common.VkResult, error) {
 	var outData []*core1_1.PhysicalDeviceGroupProperties
 	var result common.VkResult
 	var err error

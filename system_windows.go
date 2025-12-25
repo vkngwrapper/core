@@ -6,6 +6,8 @@ import "C"
 import (
 	"syscall"
 	"unsafe"
+
+	"github.com/vkngwrapper/core/v3/loader"
 )
 
 var vulkanDLL syscall.Handle
@@ -27,16 +29,16 @@ func loadProcAddr() error {
 	return nil
 }
 
-//// CreateSystemLoader generates a Loader from a vulkan-1.dll/so located on the local file system
-////
-//// Allowing cgo to bring us the vkGetInstanceProcAddr method on windows, for whatever reason, causes heap corruption
-//// when the garbage collector runs. For whatever reason, manually loading it from dll does not have this issue
-//func CreateSystemLoader() (*VulkanLoader, error) {
-//	if getInstanceProcAddr == nil {
-//		err := loadProcAddr()
-//		if err != nil {
-//			return nil, err
-//		}
-//	}
-//	return CreateLoaderFromProcAddr(getInstanceProcAddr)
-//}
+// CreateSystemLoader generates a Loader from a vulkan-1.dll/so located on the local file system
+//
+// Allowing cgo to bring us the vkGetInstanceProcAddr method on windows, for whatever reason, causes heap corruption
+// when the garbage collector runs. For whatever reason, manually loading it from dll does not have this issue
+func CreateSystemLoader() (loader.Loader, error) {
+	if getInstanceProcAddr == nil {
+		err := loadProcAddr()
+		if err != nil {
+			return nil, err
+		}
+	}
+	return loader.CreateLoaderFromProcAddr(getInstanceProcAddr)
+}

@@ -2,20 +2,20 @@ package impl1_0
 
 import (
 	"github.com/pkg/errors"
+	"github.com/vkngwrapper/core/v3"
 	"github.com/vkngwrapper/core/v3/common"
 	"github.com/vkngwrapper/core/v3/core1_0"
 	"github.com/vkngwrapper/core/v3/loader"
-	"github.com/vkngwrapper/core/v3/types"
 )
 
-func (v *DeviceVulkanDriver) DestroyDescriptorPool(descriptorPool types.DescriptorPool, callbacks *loader.AllocationCallbacks) {
+func (v *DeviceVulkanDriver) DestroyDescriptorPool(descriptorPool core.DescriptorPool, callbacks *loader.AllocationCallbacks) {
 	if descriptorPool.Handle() == 0 {
 		panic("descriptorPool was uninitialized")
 	}
 	v.LoaderObj.VkDestroyDescriptorPool(descriptorPool.DeviceHandle(), descriptorPool.Handle(), callbacks.Handle())
 }
 
-func (v *DeviceVulkanDriver) ResetDescriptorPool(descriptorPool types.DescriptorPool, flags core1_0.DescriptorPoolResetFlags) (common.VkResult, error) {
+func (v *DeviceVulkanDriver) ResetDescriptorPool(descriptorPool core.DescriptorPool, flags core1_0.DescriptorPoolResetFlags) (common.VkResult, error) {
 	if descriptorPool.Handle() == 0 {
 		return core1_0.VKErrorUnknown, errors.New("descriptorPool was uninitialized")
 	}

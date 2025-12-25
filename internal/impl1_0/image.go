@@ -10,13 +10,13 @@ import (
 
 	"github.com/CannibalVox/cgoparam"
 	"github.com/pkg/errors"
+	"github.com/vkngwrapper/core/v3"
 	"github.com/vkngwrapper/core/v3/common"
 	"github.com/vkngwrapper/core/v3/core1_0"
 	"github.com/vkngwrapper/core/v3/loader"
-	"github.com/vkngwrapper/core/v3/types"
 )
 
-func (v *DeviceVulkanDriver) DestroyImage(image types.Image, callbacks *loader.AllocationCallbacks) {
+func (v *DeviceVulkanDriver) DestroyImage(image core.Image, callbacks *loader.AllocationCallbacks) {
 	if image.Handle() == 0 {
 		panic("image was uninitialized")
 	}
@@ -24,7 +24,7 @@ func (v *DeviceVulkanDriver) DestroyImage(image types.Image, callbacks *loader.A
 	v.LoaderObj.VkDestroyImage(image.DeviceHandle(), image.Handle(), callbacks.Handle())
 }
 
-func (v *DeviceVulkanDriver) GetImageMemoryRequirements(image types.Image) *core1_0.MemoryRequirements {
+func (v *DeviceVulkanDriver) GetImageMemoryRequirements(image core.Image) *core1_0.MemoryRequirements {
 	if image.Handle() == 0 {
 		panic("image was uninitialized")
 	}
@@ -45,7 +45,7 @@ func (v *DeviceVulkanDriver) GetImageMemoryRequirements(image types.Image) *core
 	}
 }
 
-func (v *DeviceVulkanDriver) BindImageMemory(image types.Image, memory types.DeviceMemory, offset int) (common.VkResult, error) {
+func (v *DeviceVulkanDriver) BindImageMemory(image core.Image, memory core.DeviceMemory, offset int) (common.VkResult, error) {
 	if image.Handle() == 0 {
 		return core1_0.VKErrorUnknown, errors.New("received uninitialized Image")
 	}
@@ -59,7 +59,7 @@ func (v *DeviceVulkanDriver) BindImageMemory(image types.Image, memory types.Dev
 	return v.LoaderObj.VkBindImageMemory(image.DeviceHandle(), image.Handle(), memory.Handle(), loader.VkDeviceSize(offset))
 }
 
-func (v *DeviceVulkanDriver) GetImageSubresourceLayout(image types.Image, subresource *core1_0.ImageSubresource) *core1_0.SubresourceLayout {
+func (v *DeviceVulkanDriver) GetImageSubresourceLayout(image core.Image, subresource *core1_0.ImageSubresource) *core1_0.SubresourceLayout {
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 

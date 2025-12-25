@@ -6,13 +6,13 @@ import (
 	"unsafe"
 
 	"github.com/stretchr/testify/require"
+	"github.com/vkngwrapper/core/v3"
 	"github.com/vkngwrapper/core/v3/common"
 	"github.com/vkngwrapper/core/v3/core1_0"
 	"github.com/vkngwrapper/core/v3/internal/impl1_0"
 	"github.com/vkngwrapper/core/v3/loader"
 	mock_loader "github.com/vkngwrapper/core/v3/loader/mocks"
 	"github.com/vkngwrapper/core/v3/mocks"
-	"github.com/vkngwrapper/core/v3/types"
 	"go.uber.org/mock/gomock"
 )
 
@@ -115,7 +115,7 @@ func TestDescriptorSetLayout_Create_SingleBindingImmutableSamplers(t *testing.T)
 				DescriptorType:  core1_0.DescriptorTypeCombinedImageSampler,
 				DescriptorCount: 4,
 				StageFlags:      core1_0.StageGeometry,
-				ImmutableSamplers: []types.Sampler{
+				ImmutableSamplers: []core.Sampler{
 					sampler1, sampler2, sampler3, sampler4,
 				},
 			},
@@ -148,7 +148,7 @@ func TestDescriptorSetLayout_Create_FailBindingSamplerMismatch(t *testing.T) {
 				DescriptorType:  core1_0.DescriptorTypeCombinedImageSampler,
 				DescriptorCount: 3,
 				StageFlags:      core1_0.StageGeometry,
-				ImmutableSamplers: []types.Sampler{
+				ImmutableSamplers: []core.Sampler{
 					sampler1, sampler2, sampler3, sampler4,
 				},
 			},

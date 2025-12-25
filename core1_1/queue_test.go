@@ -6,6 +6,7 @@ import (
 	"unsafe"
 
 	"github.com/stretchr/testify/require"
+	"github.com/vkngwrapper/core/v3"
 	"github.com/vkngwrapper/core/v3/common"
 	"github.com/vkngwrapper/core/v3/core1_0"
 	"github.com/vkngwrapper/core/v3/core1_1"
@@ -13,7 +14,6 @@ import (
 	"github.com/vkngwrapper/core/v3/loader"
 	mock_loader "github.com/vkngwrapper/core/v3/loader/mocks"
 	"github.com/vkngwrapper/core/v3/mocks"
-	"github.com/vkngwrapper/core/v3/types"
 	"go.uber.org/mock/gomock"
 )
 
@@ -78,9 +78,9 @@ func TestDeviceGroupSubmitOptions(t *testing.T) {
 
 	_, err := driver.QueueSubmit(queue, &fence,
 		core1_0.SubmitInfo{
-			CommandBuffers:   []types.CommandBuffer{commandBuffer},
-			WaitSemaphores:   []types.Semaphore{semaphore1},
-			SignalSemaphores: []types.Semaphore{semaphore2, semaphore3},
+			CommandBuffers:   []core.CommandBuffer{commandBuffer},
+			WaitSemaphores:   []core.Semaphore{semaphore1},
+			SignalSemaphores: []core.Semaphore{semaphore2, semaphore3},
 			WaitDstStageMask: []core1_0.PipelineStageFlags{core1_0.PipelineStageBottomOfPipe},
 
 			NextOptions: common.NextOptions{
@@ -146,9 +146,9 @@ func TestProtectedMemorySubmitOptions(t *testing.T) {
 
 	_, err := driver.QueueSubmit(queue, &fence,
 		core1_0.SubmitInfo{
-			CommandBuffers:   []types.CommandBuffer{commandBuffer},
-			WaitSemaphores:   []types.Semaphore{semaphore1},
-			SignalSemaphores: []types.Semaphore{semaphore2, semaphore3},
+			CommandBuffers:   []core.CommandBuffer{commandBuffer},
+			WaitSemaphores:   []core.Semaphore{semaphore1},
+			SignalSemaphores: []core.Semaphore{semaphore2, semaphore3},
 			WaitDstStageMask: []core1_0.PipelineStageFlags{core1_0.PipelineStageBottomOfPipe},
 
 			NextOptions: common.NextOptions{

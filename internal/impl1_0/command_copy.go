@@ -10,13 +10,13 @@ import (
 
 	"github.com/CannibalVox/cgoparam"
 	"github.com/pkg/errors"
+	"github.com/vkngwrapper/core/v3"
 	"github.com/vkngwrapper/core/v3/common"
 	"github.com/vkngwrapper/core/v3/core1_0"
 	"github.com/vkngwrapper/core/v3/loader"
-	"github.com/vkngwrapper/core/v3/types"
 )
 
-func (v *DeviceVulkanDriver) CmdCopyBuffer(commandBuffer types.CommandBuffer, srcBuffer types.Buffer, dstBuffer types.Buffer, copyRegions ...core1_0.BufferCopy) error {
+func (v *DeviceVulkanDriver) CmdCopyBuffer(commandBuffer core.CommandBuffer, srcBuffer core.Buffer, dstBuffer core.Buffer, copyRegions ...core1_0.BufferCopy) error {
 	if commandBuffer.Handle() == 0 {
 		return errors.New("commandBuffer cannot be uninitialized")
 	}
@@ -39,7 +39,7 @@ func (v *DeviceVulkanDriver) CmdCopyBuffer(commandBuffer types.CommandBuffer, sr
 	return nil
 }
 
-func (v *DeviceVulkanDriver) CmdCopyImage(commandBuffer types.CommandBuffer, srcImage types.Image, srcImageLayout core1_0.ImageLayout, dstImage types.Image, dstImageLayout core1_0.ImageLayout, regions ...core1_0.ImageCopy) error {
+func (v *DeviceVulkanDriver) CmdCopyImage(commandBuffer core.CommandBuffer, srcImage core.Image, srcImageLayout core1_0.ImageLayout, dstImage core.Image, dstImageLayout core1_0.ImageLayout, regions ...core1_0.ImageCopy) error {
 	if commandBuffer.Handle() == 0 {
 		return errors.New("commandBuffer cannot be uninitialized")
 	}

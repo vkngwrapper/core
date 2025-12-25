@@ -7,6 +7,7 @@ import (
 	"unsafe"
 
 	"github.com/stretchr/testify/require"
+	"github.com/vkngwrapper/core/v3"
 	"github.com/vkngwrapper/core/v3/common"
 	"github.com/vkngwrapper/core/v3/core1_0"
 	"github.com/vkngwrapper/core/v3/core1_2"
@@ -14,7 +15,6 @@ import (
 	"github.com/vkngwrapper/core/v3/loader"
 	mock_loader "github.com/vkngwrapper/core/v3/loader/mocks"
 	"github.com/vkngwrapper/core/v3/mocks"
-	"github.com/vkngwrapper/core/v3/types"
 	"go.uber.org/mock/gomock"
 )
 
@@ -397,7 +397,7 @@ func TestVulkanDevice_WaitSemaphores(t *testing.T) {
 		time.Minute,
 		core1_2.SemaphoreWaitInfo{
 			Flags: core1_2.SemaphoreWaitAny,
-			Semaphores: []types.Semaphore{
+			Semaphores: []core.Semaphore{
 				semaphore1,
 				semaphore2,
 			},

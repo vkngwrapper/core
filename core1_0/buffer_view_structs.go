@@ -10,8 +10,8 @@ import (
 
 	"github.com/CannibalVox/cgoparam"
 	"github.com/pkg/errors"
+	"github.com/vkngwrapper/core/v3"
 	"github.com/vkngwrapper/core/v3/common"
-	"github.com/vkngwrapper/core/v3/types"
 )
 
 // BufferViewCreateFlags is a set of flags reserved for future use
@@ -36,7 +36,7 @@ func (f BufferViewCreateFlags) String() string {
 // https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkBufferViewCreateInfo.html
 type BufferViewCreateInfo struct {
 	// Buffer is the Buffer on which the view will be created
-	Buffer types.Buffer
+	Buffer core.Buffer
 	// Flags is reserved for future use
 	Flags BufferViewCreateFlags
 	// Format describes the format of the data element in the Buffer

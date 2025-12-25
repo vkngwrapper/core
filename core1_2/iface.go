@@ -3,11 +3,11 @@ package core1_2
 import (
 	"time"
 
+	"github.com/vkngwrapper/core/v3"
 	"github.com/vkngwrapper/core/v3/common"
 	"github.com/vkngwrapper/core/v3/core1_0"
 	"github.com/vkngwrapper/core/v3/core1_1"
 	"github.com/vkngwrapper/core/v3/loader"
-	"github.com/vkngwrapper/core/v3/types"
 )
 
 //go:generate mockgen -source ./iface.go -destination ../mocks/mocks1_2/mocks.go -package mocks1_2
@@ -29,7 +29,7 @@ type DeviceDriver interface {
 	// subpassBegin - Contains information about the subpass which is about to begin rendering
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkCmdBeginRenderPass2.html
-	CmdBeginRenderPass2(commandBuffer types.CommandBuffer, renderPassBegin core1_0.RenderPassBeginInfo, subpassBegin SubpassBeginInfo) error
+	CmdBeginRenderPass2(commandBuffer core.CommandBuffer, renderPassBegin core1_0.RenderPassBeginInfo, subpassBegin SubpassBeginInfo) error
 	// CmdEndRenderPass2 ends the current RenderPass
 	//
 	// commandBuffer - the CommandBuffer to record to
@@ -37,7 +37,7 @@ type DeviceDriver interface {
 	// subpassEnd - Contains information about how the previous subpass will be ended
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkCmdEndRenderPass2.html
-	CmdEndRenderPass2(commandBuffer types.CommandBuffer, subpassEnd SubpassEndInfo) error
+	CmdEndRenderPass2(commandBuffer core.CommandBuffer, subpassEnd SubpassEndInfo) error
 	// CmdNextSubpass2 transitions to the next subpass of a RenderPass
 	//
 	// commandBuffer - the CommandBuffer to record to
@@ -47,7 +47,7 @@ type DeviceDriver interface {
 	// subpassEnd - Contains information about how the previous subpass will be ended.
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkCmdNextSubpass2.html
-	CmdNextSubpass2(commandBuffer types.CommandBuffer, subpassBegin SubpassBeginInfo, subpassEnd SubpassEndInfo) error
+	CmdNextSubpass2(commandBuffer core.CommandBuffer, subpassBegin SubpassBeginInfo, subpassEnd SubpassEndInfo) error
 	// CmdDrawIndexedIndirectCount draws with indirect parameters, indexed vertices, and draw count
 	//
 	// commandBuffer - the CommandBuffer to record to
@@ -65,7 +65,7 @@ type DeviceDriver interface {
 	// stride - The byte stride between successive sets of draw parameters
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkCmdDrawIndexedIndirectCount.html
-	CmdDrawIndexedIndirectCount(commandBuffer types.CommandBuffer, buffer types.Buffer, offset uint64, countBuffer types.Buffer, countBufferOffset uint64, maxDrawCount, stride int)
+	CmdDrawIndexedIndirectCount(commandBuffer core.CommandBuffer, buffer core.Buffer, offset uint64, countBuffer core.Buffer, countBufferOffset uint64, maxDrawCount, stride int)
 	// CmdDrawIndirectCount draws primitives with indirect parameters and draw count
 	//
 	// commandBuffer - the CommandBuffer to record to
@@ -83,7 +83,7 @@ type DeviceDriver interface {
 	// stride - The byte stride between successive sets of draw parameters
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkCmdDrawIndirectCount.html
-	CmdDrawIndirectCount(commandBuffer types.CommandBuffer, buffer types.Buffer, offset uint64, countBuffer types.Buffer, countBufferOffset uint64, maxDrawCount, stride int)
+	CmdDrawIndirectCount(commandBuffer core.CommandBuffer, buffer core.Buffer, offset uint64, countBuffer core.Buffer, countBufferOffset uint64, maxDrawCount, stride int)
 
 	// CreateRenderPass2 creates a new RenderPass object
 	//
@@ -94,7 +94,7 @@ type DeviceDriver interface {
 	// options - Describes the parameters of the RenderPass
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkCreateRenderPass2.html
-	CreateRenderPass2(device types.Device, allocator *loader.AllocationCallbacks, options RenderPassCreateInfo2) (types.RenderPass, common.VkResult, error)
+	CreateRenderPass2(device core.Device, allocator *loader.AllocationCallbacks, options RenderPassCreateInfo2) (core.RenderPass, common.VkResult, error)
 
 	// GetBufferDeviceAddress queries an address of a Buffer
 	//
@@ -141,14 +141,14 @@ type DeviceDriver interface {
 	// queryCount - The number of queries to reset
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkResetQueryPool.html
-	ResetQueryPool(queryPool types.QueryPool, firstQuery, queryCount int)
+	ResetQueryPool(queryPool core.QueryPool, firstQuery, queryCount int)
 
 	// GetSemaphoreCounterValue queries the current state of a timeline Semaphore
 	//
 	// semaphore - The timeline Semaphore to query
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkGetSemaphoreCounterValue.html
-	GetSemaphoreCounterValue(semaphore types.Semaphore) (uint64, common.VkResult, error)
+	GetSemaphoreCounterValue(semaphore core.Semaphore) (uint64, common.VkResult, error)
 }
 
 type CoreDeviceDriver interface {

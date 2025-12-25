@@ -10,9 +10,9 @@ import (
 
 	"github.com/CannibalVox/cgoparam"
 	"github.com/pkg/errors"
+	"github.com/vkngwrapper/core/v3"
 	"github.com/vkngwrapper/core/v3/common"
 	"github.com/vkngwrapper/core/v3/core1_0"
-	"github.com/vkngwrapper/core/v3/types"
 )
 
 // BindBufferMemoryInfo specifies how to bind a Buffer to DeviceMemory
@@ -20,9 +20,9 @@ import (
 // https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkBindBufferMemoryInfo.html
 type BindBufferMemoryInfo struct {
 	// Buffer is the Buffer to be attached to memory
-	Buffer types.Buffer
+	Buffer core.Buffer
 	// Memory describes the DeviceMemory object to attach
-	Memory types.DeviceMemory
+	Memory core.DeviceMemory
 	// MemoryOffset is the start offset of the region of memory which is to be bound to the Buffer
 	MemoryOffset int
 
@@ -55,9 +55,9 @@ func (o BindBufferMemoryInfo) PopulateCPointer(allocator *cgoparam.Allocator, pr
 // BindImageMemoryInfo specifies how to bind an Image to DeviceMemory
 type BindImageMemoryInfo struct {
 	// Image is the image to be attached to DeviceMemory
-	Image types.Image
+	Image core.Image
 	// Memory describes the DeviceMemory to attach
-	Memory types.DeviceMemory
+	Memory core.DeviceMemory
 	// MemoryOffset is the start offset of the region of DeviceMemory to be bound to the Image
 	MemoryOffset uint64
 

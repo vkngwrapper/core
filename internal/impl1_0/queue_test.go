@@ -6,13 +6,13 @@ import (
 	"unsafe"
 
 	"github.com/stretchr/testify/require"
+	"github.com/vkngwrapper/core/v3"
 	"github.com/vkngwrapper/core/v3/common"
 	"github.com/vkngwrapper/core/v3/core1_0"
 	"github.com/vkngwrapper/core/v3/internal/impl1_0"
 	"github.com/vkngwrapper/core/v3/loader"
 	mock_loader "github.com/vkngwrapper/core/v3/loader/mocks"
 	"github.com/vkngwrapper/core/v3/mocks"
-	"github.com/vkngwrapper/core/v3/types"
 	"go.uber.org/mock/gomock"
 )
 
@@ -153,8 +153,8 @@ func TestVulkanQueue_BindSparse(t *testing.T) {
 
 	_, err := driver.QueueBindSparse(queue, nil,
 		core1_0.BindSparseInfo{
-			WaitSemaphores:   []types.Semaphore{semaphore1},
-			SignalSemaphores: []types.Semaphore{semaphore2, semaphore3},
+			WaitSemaphores:   []core.Semaphore{semaphore1},
+			SignalSemaphores: []core.Semaphore{semaphore2, semaphore3},
 			BufferBinds: []core1_0.SparseBufferMemoryBindInfo{
 				{
 					Buffer: buffer,

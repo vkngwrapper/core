@@ -3,13 +3,13 @@ package impl1_2
 import (
 	"fmt"
 
+	"github.com/vkngwrapper/core/v3"
 	"github.com/vkngwrapper/core/v3/common"
 	"github.com/vkngwrapper/core/v3/core1_0"
 	"github.com/vkngwrapper/core/v3/loader"
-	"github.com/vkngwrapper/core/v3/types"
 )
 
-func (v *DeviceVulkanDriver) GetSemaphoreCounterValue(semaphore types.Semaphore) (uint64, common.VkResult, error) {
+func (v *DeviceVulkanDriver) GetSemaphoreCounterValue(semaphore core.Semaphore) (uint64, common.VkResult, error) {
 	if semaphore.Handle() == 0 {
 		return 0, core1_0.VKErrorUnknown, fmt.Errorf("semaphore cannot be uninitialized")
 	}

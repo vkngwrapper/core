@@ -6,13 +6,13 @@ import (
 	"unsafe"
 
 	"github.com/stretchr/testify/require"
+	"github.com/vkngwrapper/core/v3"
 	"github.com/vkngwrapper/core/v3/common"
 	"github.com/vkngwrapper/core/v3/core1_0"
 	"github.com/vkngwrapper/core/v3/loader"
 	mock_driver "github.com/vkngwrapper/core/v3/loader/mocks"
 	"github.com/vkngwrapper/core/v3/mocks"
 	"github.com/vkngwrapper/core/v3/mocks/mocks1_0"
-	"github.com/vkngwrapper/core/v3/types"
 	"go.uber.org/mock/gomock"
 )
 
@@ -149,6 +149,6 @@ func TestBuffer_BindBufferMemory_FailNilMemory(t *testing.T) {
 	device := mocks.NewDummyDevice(common.Vulkan1_0, []string{})
 	buffer := mocks.NewDummyBuffer(device)
 
-	_, err := driver.BindBufferMemory(buffer, types.DeviceMemory{}, 3)
+	_, err := driver.BindBufferMemory(buffer, core.DeviceMemory{}, 3)
 	require.EqualError(t, err, "received uninitialized DeviceMemory")
 }

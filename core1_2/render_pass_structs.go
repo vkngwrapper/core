@@ -10,9 +10,9 @@ import (
 
 	"github.com/CannibalVox/cgoparam"
 	"github.com/pkg/errors"
+	"github.com/vkngwrapper/core/v3"
 	"github.com/vkngwrapper/core/v3/common"
 	"github.com/vkngwrapper/core/v3/core1_0"
-	"github.com/vkngwrapper/core/v3/types"
 )
 
 // SubpassBeginInfo specifies subpass begin information
@@ -446,7 +446,7 @@ func (o AttachmentReferenceStencilLayout) PopulateCPointer(allocator *cgoparam.A
 type RenderPassAttachmentBeginInfo struct {
 	// Attachments is a slice of ImageView objects, each of which will be used as the corresponding
 	// attachment in the RenderPass instance
-	Attachments []types.ImageView
+	Attachments []core.ImageView
 
 	common.NextOptions
 }

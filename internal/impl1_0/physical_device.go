@@ -10,13 +10,13 @@ import (
 	"unsafe"
 
 	"github.com/CannibalVox/cgoparam"
+	"github.com/vkngwrapper/core/v3"
 	"github.com/vkngwrapper/core/v3/common"
 	"github.com/vkngwrapper/core/v3/core1_0"
 	"github.com/vkngwrapper/core/v3/loader"
-	"github.com/vkngwrapper/core/v3/types"
 )
 
-func (v *InstanceVulkanDriver) GetPhysicalDeviceQueueFamilyProperties(physicalDevice types.PhysicalDevice) []*core1_0.QueueFamilyProperties {
+func (v *InstanceVulkanDriver) GetPhysicalDeviceQueueFamilyProperties(physicalDevice core.PhysicalDevice) []*core1_0.QueueFamilyProperties {
 	if physicalDevice.Handle() == 0 {
 		panic("physicalDevice was uninitialized")
 	}
@@ -55,7 +55,7 @@ func (v *InstanceVulkanDriver) GetPhysicalDeviceQueueFamilyProperties(physicalDe
 	return queueFamilies
 }
 
-func (v *InstanceVulkanDriver) GetPhysicalDeviceProperties(physicalDevice types.PhysicalDevice) (*core1_0.PhysicalDeviceProperties, error) {
+func (v *InstanceVulkanDriver) GetPhysicalDeviceProperties(physicalDevice core.PhysicalDevice) (*core1_0.PhysicalDeviceProperties, error) {
 	if physicalDevice.Handle() == 0 {
 		return nil, fmt.Errorf("physicalDevice was uninitialized")
 	}
@@ -71,7 +71,7 @@ func (v *InstanceVulkanDriver) GetPhysicalDeviceProperties(physicalDevice types.
 	return properties, err
 }
 
-func (v *InstanceVulkanDriver) GetPhysicalDeviceFeatures(physicalDevice types.PhysicalDevice) *core1_0.PhysicalDeviceFeatures {
+func (v *InstanceVulkanDriver) GetPhysicalDeviceFeatures(physicalDevice core.PhysicalDevice) *core1_0.PhysicalDeviceFeatures {
 	if physicalDevice.Handle() == 0 {
 		panic("physicalDevice was uninitialized")
 	}
@@ -88,7 +88,7 @@ func (v *InstanceVulkanDriver) GetPhysicalDeviceFeatures(physicalDevice types.Ph
 	return features
 }
 
-func (v *InstanceVulkanDriver) attemptAvailableExtensions(physicalDevice types.PhysicalDevice, layerNamePtr *loader.Char) (map[string]*core1_0.ExtensionProperties, common.VkResult, error) {
+func (v *InstanceVulkanDriver) attemptAvailableExtensions(physicalDevice core.PhysicalDevice, layerNamePtr *loader.Char) (map[string]*core1_0.ExtensionProperties, common.VkResult, error) {
 	allocator := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(allocator)
 
@@ -130,7 +130,7 @@ func (v *InstanceVulkanDriver) attemptAvailableExtensions(physicalDevice types.P
 	return retVal, res, nil
 }
 
-func (v *InstanceVulkanDriver) EnumerateDeviceExtensionProperties(physicalDevice types.PhysicalDevice) (map[string]*core1_0.ExtensionProperties, common.VkResult, error) {
+func (v *InstanceVulkanDriver) EnumerateDeviceExtensionProperties(physicalDevice core.PhysicalDevice) (map[string]*core1_0.ExtensionProperties, common.VkResult, error) {
 	if physicalDevice.Handle() == 0 {
 		return nil, core1_0.VKErrorUnknown, fmt.Errorf("physicalDevice is uninitialized")
 	}
@@ -147,7 +147,7 @@ func (v *InstanceVulkanDriver) EnumerateDeviceExtensionProperties(physicalDevice
 	return layers, result, err
 }
 
-func (v *InstanceVulkanDriver) EnumerateDeviceExtensionPropertiesForLayer(physicalDevice types.PhysicalDevice, layerName string) (map[string]*core1_0.ExtensionProperties, common.VkResult, error) {
+func (v *InstanceVulkanDriver) EnumerateDeviceExtensionPropertiesForLayer(physicalDevice core.PhysicalDevice, layerName string) (map[string]*core1_0.ExtensionProperties, common.VkResult, error) {
 	if physicalDevice.Handle() == 0 {
 		return nil, core1_0.VKErrorUnknown, fmt.Errorf("physicalDevice is uninitialized")
 	}
@@ -168,7 +168,7 @@ func (v *InstanceVulkanDriver) EnumerateDeviceExtensionPropertiesForLayer(physic
 	return layers, result, err
 }
 
-func (v *InstanceVulkanDriver) attemptAvailableLayers(physicalDevice types.PhysicalDevice) (map[string]*core1_0.LayerProperties, common.VkResult, error) {
+func (v *InstanceVulkanDriver) attemptAvailableLayers(physicalDevice core.PhysicalDevice) (map[string]*core1_0.LayerProperties, common.VkResult, error) {
 	allocator := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(allocator)
 
@@ -214,7 +214,7 @@ func (v *InstanceVulkanDriver) attemptAvailableLayers(physicalDevice types.Physi
 	return retVal, res, nil
 }
 
-func (v *InstanceVulkanDriver) EnumerateDeviceLayerProperties(physicalDevice types.PhysicalDevice) (map[string]*core1_0.LayerProperties, common.VkResult, error) {
+func (v *InstanceVulkanDriver) EnumerateDeviceLayerProperties(physicalDevice core.PhysicalDevice) (map[string]*core1_0.LayerProperties, common.VkResult, error) {
 	if physicalDevice.Handle() == 0 {
 		return nil, core1_0.VKErrorUnknown, fmt.Errorf("physicalDevice is uninitialized")
 	}
@@ -231,7 +231,7 @@ func (v *InstanceVulkanDriver) EnumerateDeviceLayerProperties(physicalDevice typ
 	return layers, result, err
 }
 
-func (v *InstanceVulkanDriver) GetPhysicalDeviceFormatProperties(physicalDevice types.PhysicalDevice, format core1_0.Format) *core1_0.FormatProperties {
+func (v *InstanceVulkanDriver) GetPhysicalDeviceFormatProperties(physicalDevice core.PhysicalDevice, format core1_0.Format) *core1_0.FormatProperties {
 	if physicalDevice.Handle() == 0 {
 		panic("physicalDevice is uninitialized")
 	}
@@ -249,7 +249,7 @@ func (v *InstanceVulkanDriver) GetPhysicalDeviceFormatProperties(physicalDevice 
 	}
 }
 
-func (v *InstanceVulkanDriver) GetPhysicalDeviceImageFormatProperties(physicalDevice types.PhysicalDevice, format core1_0.Format, imageType core1_0.ImageType, tiling core1_0.ImageTiling, usages core1_0.ImageUsageFlags, flags core1_0.ImageCreateFlags) (*core1_0.ImageFormatProperties, common.VkResult, error) {
+func (v *InstanceVulkanDriver) GetPhysicalDeviceImageFormatProperties(physicalDevice core.PhysicalDevice, format core1_0.Format, imageType core1_0.ImageType, tiling core1_0.ImageTiling, usages core1_0.ImageUsageFlags, flags core1_0.ImageCreateFlags) (*core1_0.ImageFormatProperties, common.VkResult, error) {
 	if physicalDevice.Handle() == 0 {
 		return nil, core1_0.VKErrorUnknown, fmt.Errorf("physicalDevice is uninitialized")
 	}
@@ -276,7 +276,7 @@ func (v *InstanceVulkanDriver) GetPhysicalDeviceImageFormatProperties(physicalDe
 	}, res, nil
 }
 
-func (v *InstanceVulkanDriver) GetPhysicalDeviceSparseImageFormatProperties(physicalDevice types.PhysicalDevice, format core1_0.Format, imageType core1_0.ImageType, samples core1_0.SampleCountFlags, usages core1_0.ImageUsageFlags, tiling core1_0.ImageTiling) []core1_0.SparseImageFormatProperties {
+func (v *InstanceVulkanDriver) GetPhysicalDeviceSparseImageFormatProperties(physicalDevice core.PhysicalDevice, format core1_0.Format, imageType core1_0.ImageType, samples core1_0.SampleCountFlags, usages core1_0.ImageUsageFlags, tiling core1_0.ImageTiling) []core1_0.SparseImageFormatProperties {
 	if physicalDevice.Handle() == 0 {
 		panic("physicalDevice is uninitialized")
 	}
@@ -312,30 +312,30 @@ func (v *InstanceVulkanDriver) GetPhysicalDeviceSparseImageFormatProperties(phys
 	return outReqs
 }
 
-func (v *InstanceVulkanDriver) CreateDevice(physicalDevice types.PhysicalDevice, allocationCallbacks *loader.AllocationCallbacks, options core1_0.DeviceCreateInfo) (types.Device, common.VkResult, error) {
+func (v *InstanceVulkanDriver) CreateDevice(physicalDevice core.PhysicalDevice, allocationCallbacks *loader.AllocationCallbacks, options core1_0.DeviceCreateInfo) (core.Device, common.VkResult, error) {
 	if physicalDevice.Handle() == 0 {
-		return types.Device{}, core1_0.VKErrorUnknown, fmt.Errorf("physicalDevice is uninitialized")
+		return core.Device{}, core1_0.VKErrorUnknown, fmt.Errorf("physicalDevice is uninitialized")
 	}
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
 	createInfo, err := common.AllocOptions(arena, options)
 	if err != nil {
-		return types.Device{}, core1_0.VKErrorUnknown, err
+		return core.Device{}, core1_0.VKErrorUnknown, err
 	}
 
 	var deviceHandle loader.VkDevice
 	res, err := v.LoaderObj.VkCreateDevice(physicalDevice.Handle(), (*loader.VkDeviceCreateInfo)(createInfo), allocationCallbacks.Handle(), &deviceHandle)
 	if err != nil {
-		return types.Device{}, res, err
+		return core.Device{}, res, err
 	}
 
 	// deviceDriver, err := v.LoaderObj.CreateDeviceLoader(deviceHandle)
 	// if err != nil {
-	// 	return types.Device{}, core1_0.VKErrorUnknown, err
+	// 	return core.Device{}, core1_0.VKErrorUnknown, err
 	// }
 
-	device := types.InternalDevice(deviceHandle, physicalDevice.DeviceAPIVersion(), options.EnabledExtensionNames)
+	device := core.InternalDevice(deviceHandle, physicalDevice.DeviceAPIVersion(), options.EnabledExtensionNames)
 
 	return device, res, nil
 }

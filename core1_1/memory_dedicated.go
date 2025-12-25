@@ -10,9 +10,9 @@ import (
 
 	"github.com/CannibalVox/cgoparam"
 	"github.com/pkg/errors"
+	"github.com/vkngwrapper/core/v3"
 	"github.com/vkngwrapper/core/v3/common"
 	"github.com/vkngwrapper/core/v3/loader"
-	"github.com/vkngwrapper/core/v3/types"
 )
 
 // MemoryDedicatedAllocateInfo specifies a dedicated memory allocation resource
@@ -20,9 +20,9 @@ import (
 // https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkMemoryDedicatedAllocateInfo.html
 type MemoryDedicatedAllocateInfo struct {
 	// Image is nil or the Image object which this memory will be bound to
-	Image types.Image
+	Image core.Image
 	// Buffer is nil or the Buffer object this memory will be bound to
-	Buffer types.Buffer
+	Buffer core.Buffer
 
 	common.NextOptions
 }

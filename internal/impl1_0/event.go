@@ -3,13 +3,13 @@ package impl1_0
 import (
 	"fmt"
 
+	"github.com/vkngwrapper/core/v3"
 	"github.com/vkngwrapper/core/v3/common"
 	"github.com/vkngwrapper/core/v3/core1_0"
 	"github.com/vkngwrapper/core/v3/loader"
-	"github.com/vkngwrapper/core/v3/types"
 )
 
-func (v *DeviceVulkanDriver) DestroyEvent(event types.Event, callbacks *loader.AllocationCallbacks) {
+func (v *DeviceVulkanDriver) DestroyEvent(event core.Event, callbacks *loader.AllocationCallbacks) {
 	if event.Handle() == 0 {
 		panic("event was uninitialized")
 	}
@@ -17,7 +17,7 @@ func (v *DeviceVulkanDriver) DestroyEvent(event types.Event, callbacks *loader.A
 	v.LoaderObj.VkDestroyEvent(event.DeviceHandle(), event.Handle(), callbacks.Handle())
 }
 
-func (v *DeviceVulkanDriver) SetEvent(event types.Event) (common.VkResult, error) {
+func (v *DeviceVulkanDriver) SetEvent(event core.Event) (common.VkResult, error) {
 	if event.Handle() == 0 {
 		return core1_0.VKErrorUnknown, fmt.Errorf("event was uninitialized")
 	}
@@ -25,7 +25,7 @@ func (v *DeviceVulkanDriver) SetEvent(event types.Event) (common.VkResult, error
 	return v.LoaderObj.VkSetEvent(event.DeviceHandle(), event.Handle())
 }
 
-func (v *DeviceVulkanDriver) ResetEvent(event types.Event) (common.VkResult, error) {
+func (v *DeviceVulkanDriver) ResetEvent(event core.Event) (common.VkResult, error) {
 	if event.Handle() == 0 {
 		return core1_0.VKErrorUnknown, fmt.Errorf("event was uninitialized")
 	}
@@ -33,7 +33,7 @@ func (v *DeviceVulkanDriver) ResetEvent(event types.Event) (common.VkResult, err
 	return v.LoaderObj.VkResetEvent(event.DeviceHandle(), event.Handle())
 }
 
-func (v *DeviceVulkanDriver) GetEventStatus(event types.Event) (common.VkResult, error) {
+func (v *DeviceVulkanDriver) GetEventStatus(event core.Event) (common.VkResult, error) {
 	if event.Handle() == 0 {
 		return core1_0.VKErrorUnknown, fmt.Errorf("event was uninitialized")
 	}

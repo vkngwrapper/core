@@ -9,8 +9,8 @@ import (
 	"unsafe"
 
 	"github.com/CannibalVox/cgoparam"
+	"github.com/vkngwrapper/core/v3"
 	"github.com/vkngwrapper/core/v3/common"
-	"github.com/vkngwrapper/core/v3/types"
 )
 
 // PipelineLayoutCreateFlags represents PipelineLayout creation flag bits
@@ -50,7 +50,7 @@ type PipelineLayoutCreateInfo struct {
 	Flags PipelineLayoutCreateFlags
 
 	// SetLayouts is a slice of DescriptorSetLayout objects
-	SetLayouts []types.DescriptorSetLayout
+	SetLayouts []core.DescriptorSetLayout
 	// PushConstantRanges is a slice of PushConstantRange structures defining a set of push constant
 	// ranges for use in a single PipelineLayout
 	PushConstantRanges []PushConstantRange

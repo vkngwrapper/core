@@ -6,13 +6,13 @@ import (
 	"unsafe"
 
 	"github.com/stretchr/testify/require"
+	"github.com/vkngwrapper/core/v3"
 	"github.com/vkngwrapper/core/v3/common"
 	"github.com/vkngwrapper/core/v3/core1_0"
 	"github.com/vkngwrapper/core/v3/internal/impl1_0"
 	"github.com/vkngwrapper/core/v3/loader"
 	mock_loader "github.com/vkngwrapper/core/v3/loader/mocks"
 	"github.com/vkngwrapper/core/v3/mocks"
-	"github.com/vkngwrapper/core/v3/types"
 	"go.uber.org/mock/gomock"
 )
 
@@ -117,7 +117,7 @@ func TestDescriptorPool_AllocAndFree_Single(t *testing.T) {
 
 	sets, _, err := driver.AllocateDescriptorSets(core1_0.DescriptorSetAllocateInfo{
 		DescriptorPool: pool,
-		SetLayouts:     []types.DescriptorSetLayout{layout},
+		SetLayouts:     []core.DescriptorSetLayout{layout},
 	})
 	require.NoError(t, err)
 
@@ -184,7 +184,7 @@ func TestDescriptorPool_AllocAndFree_Multi(t *testing.T) {
 
 	sets, _, err := driver.AllocateDescriptorSets(core1_0.DescriptorSetAllocateInfo{
 		DescriptorPool: pool,
-		SetLayouts:     []types.DescriptorSetLayout{layout1, layout2, layout3},
+		SetLayouts:     []core.DescriptorSetLayout{layout1, layout2, layout3},
 	})
 	require.NoError(t, err)
 

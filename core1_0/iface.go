@@ -4,9 +4,9 @@ import (
 	"time"
 	"unsafe"
 
+	"github.com/vkngwrapper/core/v3"
 	"github.com/vkngwrapper/core/v3/common"
 	"github.com/vkngwrapper/core/v3/loader"
-	"github.com/vkngwrapper/core/v3/types"
 )
 
 //go:generate mockgen -source ./iface.go -destination ../mocks/mocks1_0/mocks.go -package mocks1_0
@@ -38,7 +38,7 @@ type GlobalDriver interface {
 	// options - Controls creation of the Instance
 	//
 	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/vkCreateInstance.html
-	CreateInstance(allocationCallbacks *loader.AllocationCallbacks, options InstanceCreateInfo) (types.Instance, common.VkResult, error)
+	CreateInstance(allocationCallbacks *loader.AllocationCallbacks, options InstanceCreateInfo) (core.Instance, common.VkResult, error)
 }
 
 type CoreInstanceDriver interface {
@@ -53,7 +53,7 @@ type CoreInstanceDriver interface {
 	// callbacks - Controls host memory deallocation
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkDestroyInstance.html
-	DestroyInstance(instance types.Instance, callbacks *loader.AllocationCallbacks)
+	DestroyInstance(instance core.Instance, callbacks *loader.AllocationCallbacks)
 
 	// CreateDevice creates a new logical device as a connection to a PhysicalDevice
 	//
@@ -64,40 +64,40 @@ type CoreInstanceDriver interface {
 	// options - Parameters affecting the creation of the Device
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkCreateDevice.html
-	CreateDevice(physicalDevice types.PhysicalDevice, allocationCallbacks *loader.AllocationCallbacks, options DeviceCreateInfo) (types.Device, common.VkResult, error)
+	CreateDevice(physicalDevice core.PhysicalDevice, allocationCallbacks *loader.AllocationCallbacks, options DeviceCreateInfo) (core.Device, common.VkResult, error)
 
 	// EnumeratePhysicalDevices enumerates the physical devices accessible to an Instance
 	//
 	// instance - The Instance object to enumerate physical devices on
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkEnumeratePhysicalDevices.html
-	EnumeratePhysicalDevices(instance types.Instance) ([]types.PhysicalDevice, common.VkResult, error)
+	EnumeratePhysicalDevices(instance core.Instance) ([]core.PhysicalDevice, common.VkResult, error)
 
 	// GetPhysicalDeviceQueueFamilyProperties reports properties of the queues of a PhysicalDevice
 	//
 	// physicalDevice - the PhysicalDevice to retrieve queues for
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkGetPhysicalDeviceQueueFamilyProperties.html
-	GetPhysicalDeviceQueueFamilyProperties(physicalDevice types.PhysicalDevice) []*QueueFamilyProperties
+	GetPhysicalDeviceQueueFamilyProperties(physicalDevice core.PhysicalDevice) []*QueueFamilyProperties
 
 	// GetPhysicalDeviceProperties returns properties of a PhysicalDevice
 	//
 	// physicalDevice - the PhysicalDevice to retrieve properties for
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkGetPhysicalDeviceProperties.html
-	GetPhysicalDeviceProperties(physicalDevice types.PhysicalDevice) (*PhysicalDeviceProperties, error)
+	GetPhysicalDeviceProperties(physicalDevice core.PhysicalDevice) (*PhysicalDeviceProperties, error)
 	// GetPhysicalDeviceFeatures reports capabilities of a PhysicalDevice
 	//
 	// physicalDevice - The PhysicalDevice to retrieve features for
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkGetPhysicalDeviceFeatures.html
-	GetPhysicalDeviceFeatures(physicalDevice types.PhysicalDevice) *PhysicalDeviceFeatures
+	GetPhysicalDeviceFeatures(physicalDevice core.PhysicalDevice) *PhysicalDeviceFeatures
 	// EnumerateDeviceExtensionProperties returns properties of available PhysicalDevice extensions
 	//
 	// physicalDevice - The PhysicalDevice to retrieve device extensions for
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkEnumerateDeviceExtensionProperties.html
-	EnumerateDeviceExtensionProperties(physicalDevice types.PhysicalDevice) (map[string]*ExtensionProperties, common.VkResult, error)
+	EnumerateDeviceExtensionProperties(physicalDevice core.PhysicalDevice) (map[string]*ExtensionProperties, common.VkResult, error)
 	// EnumerateDeviceExtensionPropertiesForLayer returns properties of available PhysicalDevice extensions
 	// for the specifies layer
 	//
@@ -106,19 +106,19 @@ type CoreInstanceDriver interface {
 	// layerName - Name of the layer to retrieve extensions from
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkEnumerateDeviceExtensionProperties.html
-	EnumerateDeviceExtensionPropertiesForLayer(physicalDevice types.PhysicalDevice, layerName string) (map[string]*ExtensionProperties, common.VkResult, error)
+	EnumerateDeviceExtensionPropertiesForLayer(physicalDevice core.PhysicalDevice, layerName string) (map[string]*ExtensionProperties, common.VkResult, error)
 	// EnumerateDeviceLayerProperties returns properties of available PhysicalDevice layers
 	//
 	// physicalDevice - The PhysicalDevice to retrieve layer properties for
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkEnumerateDeviceLayerProperties.html
-	EnumerateDeviceLayerProperties(physicalDevice types.PhysicalDevice) (map[string]*LayerProperties, common.VkResult, error)
+	EnumerateDeviceLayerProperties(physicalDevice core.PhysicalDevice) (map[string]*LayerProperties, common.VkResult, error)
 	// GetPhysicalDeviceMemoryProperties reports memory information for a PhysicalDevice
 	//
 	// physicalDevice - The PhysicalDevice to retrieve memory properties for
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkGetPhysicalDeviceMemoryProperties.html
-	GetPhysicalDeviceMemoryProperties(physicalDevice types.PhysicalDevice) *PhysicalDeviceMemoryProperties
+	GetPhysicalDeviceMemoryProperties(physicalDevice core.PhysicalDevice) *PhysicalDeviceMemoryProperties
 	// GetPhysicalDeviceFormatProperties lists a PhysicalDevice object's format capabilities
 	//
 	// physicalDevice - The PhysicalDevice to retrieve format properties for
@@ -126,7 +126,7 @@ type CoreInstanceDriver interface {
 	// format - The format whose properties are queried
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkGetPhysicalDeviceFormatProperties.html
-	GetPhysicalDeviceFormatProperties(physicalDevice types.PhysicalDevice, format Format) *FormatProperties
+	GetPhysicalDeviceFormatProperties(physicalDevice core.PhysicalDevice, format Format) *FormatProperties
 	// GetPhysicalDeviceImageFormatProperties lists a PhysicalDevice object's image format capabilities
 	//
 	// physicalDevice - The PhysicalDevice to retrieve image format properties for
@@ -142,7 +142,7 @@ type CoreInstanceDriver interface {
 	// flags - Specifies additional parmeters of the Image
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkGetPhysicalDeviceImageFormatProperties.html
-	GetPhysicalDeviceImageFormatProperties(physicalDevice types.PhysicalDevice, format Format, imageType ImageType, tiling ImageTiling, usages ImageUsageFlags, flags ImageCreateFlags) (*ImageFormatProperties, common.VkResult, error)
+	GetPhysicalDeviceImageFormatProperties(physicalDevice core.PhysicalDevice, format Format, imageType ImageType, tiling ImageTiling, usages ImageUsageFlags, flags ImageCreateFlags) (*ImageFormatProperties, common.VkResult, error)
 	// GetPhysicalDeviceSparseImageFormatProperties retrieves properties of an image format applied to sparse images
 	//
 	// physicalDevice - The PhysicalDevice to retireve sparse image format properties for
@@ -158,7 +158,7 @@ type CoreInstanceDriver interface {
 	// tiling - The tiling arrangement of the texel blocks in memory
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkGetPhysicalDeviceSparseImageFormatProperties.html
-	GetPhysicalDeviceSparseImageFormatProperties(physicalDevice types.PhysicalDevice, format Format, imageType ImageType, samples SampleCountFlags, usages ImageUsageFlags, tiling ImageTiling) []SparseImageFormatProperties
+	GetPhysicalDeviceSparseImageFormatProperties(physicalDevice core.PhysicalDevice, format Format, imageType ImageType, samples SampleCountFlags, usages ImageUsageFlags, tiling ImageTiling) []SparseImageFormatProperties
 }
 
 type DeviceDriver interface {
@@ -173,13 +173,13 @@ type DeviceDriver interface {
 	// callbacks - An set of allocation callbacks to control the memory free behavior of this command
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkDestroyBuffer.html
-	DestroyBuffer(buffer types.Buffer, callbacks *loader.AllocationCallbacks)
+	DestroyBuffer(buffer core.Buffer, callbacks *loader.AllocationCallbacks)
 	// GetBufferMemoryRequirements returns the memory requirements for a Buffer.
 	//
 	// buffer - The Buffer object to retrieve memory requirements for
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkGetBufferMemoryRequirements.html
-	GetBufferMemoryRequirements(buffer types.Buffer) *MemoryRequirements
+	GetBufferMemoryRequirements(buffer core.Buffer) *MemoryRequirements
 	// BindBufferMemory binds DeviceMemory to a Buffer
 	//
 	// buffer - The Buffer object to bind to memory
@@ -189,7 +189,7 @@ type DeviceDriver interface {
 	// offset - The start offset of the region of memory which is to be bound to the buffer.
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkBindBufferMemory.html
-	BindBufferMemory(buffer types.Buffer, memory types.DeviceMemory, offset int) (common.VkResult, error)
+	BindBufferMemory(buffer core.Buffer, memory core.DeviceMemory, offset int) (common.VkResult, error)
 	// DestroyBufferView deletes a buffer view and the underlying structures from the device. **Warning**
 	// after destruction, the object will continue to exist, but the Vulkan object handle
 	// that backs it will be invalid. Do not call further methods with the BufferView object.
@@ -199,14 +199,14 @@ type DeviceDriver interface {
 	// callbacks - Controls host memory deallocation
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkDestroyBufferView.html
-	DestroyBufferView(bufferView types.BufferView, callbacks *loader.AllocationCallbacks)
+	DestroyBufferView(bufferView core.BufferView, callbacks *loader.AllocationCallbacks)
 	// FreeCommandBuffers frees the provided CommandBuffer objects and usually returns the underlying
 	// memory to the CommandPool.
 	//
 	// commandBuffers - one or more CommandBuffer objects to free
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkFreeCommandBuffers.html
-	FreeCommandBuffers(commandBuffers ...types.CommandBuffer)
+	FreeCommandBuffers(commandBuffers ...core.CommandBuffer)
 	// BeginCommandBuffer starts recording on a CommandBuffer
 	//
 	// commandBuffer - The CommandBuffer object to begin recording on
@@ -214,13 +214,13 @@ type DeviceDriver interface {
 	// o - Defines additional information about how the CommandBuffer begins recording
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkBeginCommandBuffer.html
-	BeginCommandBuffer(commandBuffer types.CommandBuffer, o CommandBufferBeginInfo) (common.VkResult, error)
+	BeginCommandBuffer(commandBuffer core.CommandBuffer, o CommandBufferBeginInfo) (common.VkResult, error)
 	// EndCommandBuffer finishes recording on a CommandBuffer
 	//
 	// commandBuffer - The CommandBuffer object to end recording on
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkEndCommandBuffer.html
-	EndCommandBuffer(commandBuffer types.CommandBuffer) (common.VkResult, error)
+	EndCommandBuffer(commandBuffer core.CommandBuffer) (common.VkResult, error)
 	// ResetCommandBuffer returns a CommandBuffer to its initial state
 	//
 	// commandBuffer - The CommandBuffer object to reset
@@ -228,7 +228,7 @@ type DeviceDriver interface {
 	// flags - Options controlling the reset operation
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkResetCommandBuffer.html
-	ResetCommandBuffer(commandBuffer types.CommandBuffer, flags CommandBufferResetFlags) (common.VkResult, error)
+	ResetCommandBuffer(commandBuffer core.CommandBuffer, flags CommandBufferResetFlags) (common.VkResult, error)
 
 	// CmdBeginRenderPass begins a new RenderPass
 	//
@@ -239,13 +239,13 @@ type DeviceDriver interface {
 	// o - Specifies the RenderPass to begin an instance of, and the Framebuffer the instance uses
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkCmdBeginRenderPass.html
-	CmdBeginRenderPass(commandBuffer types.CommandBuffer, contents SubpassContents, o RenderPassBeginInfo) error
+	CmdBeginRenderPass(commandBuffer core.CommandBuffer, contents SubpassContents, o RenderPassBeginInfo) error
 	// CmdEndRenderPass ends the current RenderPass
 	//
 	// commandBuffer - The CommandBuffer object to record to
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkCmdEndRenderPass.html
-	CmdEndRenderPass(commandBuffer types.CommandBuffer)
+	CmdEndRenderPass(commandBuffer core.CommandBuffer)
 	// CmdBindPipeline binds a pipeline object to this CommandBuffer
 	//
 	// commandBuffer - The CommandBuffer object to record to
@@ -255,7 +255,7 @@ type DeviceDriver interface {
 	// pipeline - The Pipeline to be bound
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkCmdBindPipeline.html
-	CmdBindPipeline(commandBuffer types.CommandBuffer, bindPoint PipelineBindPoint, pipeline types.Pipeline)
+	CmdBindPipeline(commandBuffer core.CommandBuffer, bindPoint PipelineBindPoint, pipeline core.Pipeline)
 	// CmdDraw draws primitives without indexing the vertices
 	//
 	// commandBuffer - The CommandBuffer object to record to
@@ -269,7 +269,7 @@ type DeviceDriver interface {
 	// firstInstance - The instance ID of the first instance to draw
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkCmdDraw.html
-	CmdDraw(commandBuffer types.CommandBuffer, vertexCount, instanceCount int, firstVertex, firstInstance uint32)
+	CmdDraw(commandBuffer core.CommandBuffer, vertexCount, instanceCount int, firstVertex, firstInstance uint32)
 	// CmdDrawIndexed draws primitives with indexed vertices
 	//
 	// commandBuffer - The CommandBuffer object to record to
@@ -285,7 +285,7 @@ type DeviceDriver interface {
 	// firstInstance - The instance ID of the first instance to draw
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkCmdDrawIndexed.html
-	CmdDrawIndexed(commandBuffer types.CommandBuffer, indexCount, instanceCount int, firstIndex uint32, vertexOffset int, firstInstance uint32)
+	CmdDrawIndexed(commandBuffer core.CommandBuffer, indexCount, instanceCount int, firstIndex uint32, vertexOffset int, firstInstance uint32)
 	// CmdBindVertexBuffers binds vertex Buffers to this CommandBuffer
 	//
 	// commandBuffer - The CommandBuffer object to record to
@@ -297,7 +297,7 @@ type DeviceDriver interface {
 	// bufferOffsets - A slice of Buffer offsets
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkCmdBindVertexBuffers.html
-	CmdBindVertexBuffers(commandBuffer types.CommandBuffer, firstBinding int, buffers []types.Buffer, bufferOffsets []int)
+	CmdBindVertexBuffers(commandBuffer core.CommandBuffer, firstBinding int, buffers []core.Buffer, bufferOffsets []int)
 	// CmdBindIndexBuffer binds an index Buffer to this CommandBuffer
 	//
 	// commandBuffer - The CommandBuffer object to record to
@@ -309,7 +309,7 @@ type DeviceDriver interface {
 	// indexType - Specifies the size of the indices
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkCmdBindIndexBuffer.html
-	CmdBindIndexBuffer(commandBuffer types.CommandBuffer, buffer types.Buffer, offset int, indexType IndexType)
+	CmdBindIndexBuffer(commandBuffer core.CommandBuffer, buffer core.Buffer, offset int, indexType IndexType)
 	// CmdCopyBuffer copies data between Buffer regions
 	//
 	// commandBuffer - The CommandBuffer object to record to
@@ -321,7 +321,7 @@ type DeviceDriver interface {
 	// copyRegions - A slice of structures specifying the regions to copy
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkCmdCopyBuffer.html
-	CmdCopyBuffer(commandBuffer types.CommandBuffer, srcBuffer types.Buffer, dstBuffer types.Buffer, copyRegions ...BufferCopy) error
+	CmdCopyBuffer(commandBuffer core.CommandBuffer, srcBuffer core.Buffer, dstBuffer core.Buffer, copyRegions ...BufferCopy) error
 	// CmdBindDescriptorSets binds DescriptorSets to this CommandBuffer
 	//
 	// commandBuffer - The CommandBuffer object to record to
@@ -337,7 +337,7 @@ type DeviceDriver interface {
 	// dynamicOffsets - A slice of values specifying dynamic offsets
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkCmdBindDescriptorSets.html
-	CmdBindDescriptorSets(commandBuffer types.CommandBuffer, bindPoint PipelineBindPoint, layout types.PipelineLayout, firstSet int, sets []types.DescriptorSet, dynamicOffsets []int)
+	CmdBindDescriptorSets(commandBuffer core.CommandBuffer, bindPoint PipelineBindPoint, layout core.PipelineLayout, firstSet int, sets []core.DescriptorSet, dynamicOffsets []int)
 	// CmdPipelineBarrier inserts a memory dependency into the recorded commands
 	//
 	// commandBuffer - The CommandBuffer object to record to
@@ -355,7 +355,7 @@ type DeviceDriver interface {
 	// imageMemoryBarriers - A slice of ImageMemoryBarrier structures
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkCmdPipelineBarrier.html
-	CmdPipelineBarrier(commandBuffer types.CommandBuffer, srcStageMask, dstStageMask PipelineStageFlags, dependencies DependencyFlags, memoryBarriers []MemoryBarrier, bufferMemoryBarriers []BufferMemoryBarrier, imageMemoryBarriers []ImageMemoryBarrier) error
+	CmdPipelineBarrier(commandBuffer core.CommandBuffer, srcStageMask, dstStageMask PipelineStageFlags, dependencies DependencyFlags, memoryBarriers []MemoryBarrier, bufferMemoryBarriers []BufferMemoryBarrier, imageMemoryBarriers []ImageMemoryBarrier) error
 	// CmdCopyBufferToImage copies data from a Buffer to an Image
 	//
 	// commandBuffer - The CommandBuffer object to record to
@@ -369,7 +369,7 @@ type DeviceDriver interface {
 	// regions - A slice of BufferImageCopy structures specifying the regions to copy
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkCmdCopyBufferToImage.html
-	CmdCopyBufferToImage(commandBuffer types.CommandBuffer, buffer types.Buffer, image types.Image, layout ImageLayout, regions ...BufferImageCopy) error
+	CmdCopyBufferToImage(commandBuffer core.CommandBuffer, buffer core.Buffer, image core.Image, layout ImageLayout, regions ...BufferImageCopy) error
 	// CmdBlitImage copies regions of an Image, potentially performing format conversion
 	//
 	// commandBuffer - The CommandBuffer object to record to
@@ -387,7 +387,7 @@ type DeviceDriver interface {
 	// filter - Specifies the filter to apply if the blits require scaling
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkCmdBlitImage.html
-	CmdBlitImage(commandBuffer types.CommandBuffer, sourceImage types.Image, sourceImageLayout ImageLayout, destinationImage types.Image, destinationImageLayout ImageLayout, regions []ImageBlit, filter Filter) error
+	CmdBlitImage(commandBuffer core.CommandBuffer, sourceImage core.Image, sourceImageLayout ImageLayout, destinationImage core.Image, destinationImageLayout ImageLayout, regions []ImageBlit, filter Filter) error
 	// CmdPushConstants updates the values of push constants
 	//
 	// commandBuffer - The CommandBuffer object to record to
@@ -401,7 +401,7 @@ type DeviceDriver interface {
 	// valueBytes - A slice of bytes containing the new push constant values
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkCmdPushConstants.html
-	CmdPushConstants(commandBuffer types.CommandBuffer, layout types.PipelineLayout, stageFlags ShaderStageFlags, offset int, valueBytes []byte)
+	CmdPushConstants(commandBuffer core.CommandBuffer, layout core.PipelineLayout, stageFlags ShaderStageFlags, offset int, valueBytes []byte)
 	// CmdSetViewport sets the viewport dynamically for a CommandBuffer
 	//
 	// commandBuffer - The CommandBuffer object to record to
@@ -409,7 +409,7 @@ type DeviceDriver interface {
 	// viewports - A slice of Viewport structures specifying viewport parameters
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkCmdSetViewport.html
-	CmdSetViewport(commandBuffer types.CommandBuffer, viewports ...Viewport)
+	CmdSetViewport(commandBuffer core.CommandBuffer, viewports ...Viewport)
 	// CmdSetScissor sets scissor rectangles dynamically for a CommandBuffer
 	//
 	// commandBuffer - The CommandBuffer object to record to
@@ -417,7 +417,7 @@ type DeviceDriver interface {
 	// scissors - A slice of Rect2D structures specifying scissor rectangles
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkCmdSetScissor.html
-	CmdSetScissor(commandBuffer types.CommandBuffer, scissors ...Rect2D)
+	CmdSetScissor(commandBuffer core.CommandBuffer, scissors ...Rect2D)
 	// CmdCopyImage copies data between Images
 	//
 	// commandBuffer - The CommandBuffer object to record to
@@ -433,7 +433,7 @@ type DeviceDriver interface {
 	// regions - A slice of ImageCopy structures specifying the regions to copy
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkCmdCopyImage.html
-	CmdCopyImage(commandBuffer types.CommandBuffer, srcImage types.Image, srcImageLayout ImageLayout, dstImage types.Image, dstImageLayout ImageLayout, regions ...ImageCopy) error
+	CmdCopyImage(commandBuffer core.CommandBuffer, srcImage core.Image, srcImageLayout ImageLayout, dstImage core.Image, dstImageLayout ImageLayout, regions ...ImageCopy) error
 	// CmdNextSubpass transitions to the next subpass of a RenderPass
 	//
 	// commandBuffer - The CommandBuffer object to record to
@@ -441,7 +441,7 @@ type DeviceDriver interface {
 	// contents - Specifies how the commands in the next subpass will be provided
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkCmdNextSubpass.html
-	CmdNextSubpass(commandBuffer types.CommandBuffer, contents SubpassContents)
+	CmdNextSubpass(commandBuffer core.CommandBuffer, contents SubpassContents)
 	// CmdWaitEvents waits for one or more events and inserts a set of memory
 	//
 	// commandBuffer - The CommandBuffer object to record to
@@ -459,7 +459,7 @@ type DeviceDriver interface {
 	// imageMemoryBarriers - A slice of ImageMemoryBarrier structures
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkCmdWaitEvents.html
-	CmdWaitEvents(commandBuffer types.CommandBuffer, events []types.Event, srcStageMask PipelineStageFlags, dstStageMask PipelineStageFlags, memoryBarriers []MemoryBarrier, bufferMemoryBarriers []BufferMemoryBarrier, imageMemoryBarriers []ImageMemoryBarrier) error
+	CmdWaitEvents(commandBuffer core.CommandBuffer, events []core.Event, srcStageMask PipelineStageFlags, dstStageMask PipelineStageFlags, memoryBarriers []MemoryBarrier, bufferMemoryBarriers []BufferMemoryBarrier, imageMemoryBarriers []ImageMemoryBarrier) error
 	// CmdSetEvent sets an Event object to the signaled state
 	//
 	// commandBuffer - The CommandBuffer object to record to
@@ -469,7 +469,7 @@ type DeviceDriver interface {
 	// stageMask - Specifies teh source stage mask used to determine the first synchronization scope
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkCmdSetEvent.html
-	CmdSetEvent(commandBuffer types.CommandBuffer, event types.Event, stageMask PipelineStageFlags)
+	CmdSetEvent(commandBuffer core.CommandBuffer, event core.Event, stageMask PipelineStageFlags)
 	// CmdClearColorImage clears regions of a color Image
 	//
 	// commandBuffer - The CommandBuffer object to record to
@@ -484,7 +484,7 @@ type DeviceDriver interface {
 	// and aspects to be cleared.
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkCmdClearColorImage.html
-	CmdClearColorImage(commandBuffer types.CommandBuffer, image types.Image, imageLayout ImageLayout, color ClearColorValue, ranges ...ImageSubresourceRange)
+	CmdClearColorImage(commandBuffer core.CommandBuffer, image core.Image, imageLayout ImageLayout, color ClearColorValue, ranges ...ImageSubresourceRange)
 	// CmdResetQueryPool resets queries in a QueryPool
 	//
 	// commandBuffer - The CommandBuffer object to record to
@@ -496,7 +496,7 @@ type DeviceDriver interface {
 	// queryCount - The number of queries to reset
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkCmdResetQueryPool.html
-	CmdResetQueryPool(commandBuffer types.CommandBuffer, queryPool types.QueryPool, startQuery, queryCount int)
+	CmdResetQueryPool(commandBuffer core.CommandBuffer, queryPool core.QueryPool, startQuery, queryCount int)
 	// CmdBeginQuery begins a query
 	//
 	// commandBuffer - The CommandBuffer object to record to
@@ -508,7 +508,7 @@ type DeviceDriver interface {
 	// flags - Specifies constraints on the types of queries that can be performed
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkCmdBeginQuery.html
-	CmdBeginQuery(commandBuffer types.CommandBuffer, queryPool types.QueryPool, query int, flags QueryControlFlags)
+	CmdBeginQuery(commandBuffer core.CommandBuffer, queryPool core.QueryPool, query int, flags QueryControlFlags)
 	// CmdEndQuery ends a query
 	//
 	// commandBuffer - The CommandBuffer object to record to
@@ -518,7 +518,7 @@ type DeviceDriver interface {
 	// query - The query index within the QueryPool where the result is stored
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkCmdEndQuery.html
-	CmdEndQuery(commandBuffer types.CommandBuffer, queryPool types.QueryPool, query int)
+	CmdEndQuery(commandBuffer core.CommandBuffer, queryPool core.QueryPool, query int)
 	// CmdCopyQueryPoolResults copies the results of queries in a QueryPool to a Buffer object
 	//
 	// commandBuffer - The CommandBuffer object to record to
@@ -538,7 +538,7 @@ type DeviceDriver interface {
 	// flags - Specifies how and when results are returned
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkCmdCopyQueryPoolResults.html
-	CmdCopyQueryPoolResults(commandBuffer types.CommandBuffer, queryPool types.QueryPool, firstQuery, queryCount int, dstBuffer types.Buffer, dstOffset, stride int, flags QueryResultFlags)
+	CmdCopyQueryPoolResults(commandBuffer core.CommandBuffer, queryPool core.QueryPool, firstQuery, queryCount int, dstBuffer core.Buffer, dstOffset, stride int, flags QueryResultFlags)
 	// CmdExecuteCommands executes a secondary CommandBuffer from a primary CommandBuffer
 	//
 	// commandBuffer - The CommandBuffer object to record to
@@ -547,7 +547,7 @@ type DeviceDriver interface {
 	// in the order they are listed in the slice
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkCmdExecuteCommands.html
-	CmdExecuteCommands(commandBuffer types.CommandBuffer, commandBuffers ...types.CommandBuffer)
+	CmdExecuteCommands(commandBuffer core.CommandBuffer, commandBuffers ...core.CommandBuffer)
 	// CmdClearAttachments clears regions within bound Framebuffer attachments
 	//
 	// commandBuffer - The CommandBuffer object to record to
@@ -557,7 +557,7 @@ type DeviceDriver interface {
 	// rects - A slice of ClearRect structures defining regions within each selected attachment to clear
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkCmdClearAttachments.html
-	CmdClearAttachments(commandBuffer types.CommandBuffer, attachments []ClearAttachment, rects []ClearRect) error
+	CmdClearAttachments(commandBuffer core.CommandBuffer, attachments []ClearAttachment, rects []ClearRect) error
 	// CmdClearDepthStencilImage fills regions of a combined depth/stencil image
 	//
 	// commandBuffer - The CommandBuffer object to record to
@@ -572,7 +572,7 @@ type DeviceDriver interface {
 	// and aspects to be cleared
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkCmdClearDepthStencilImage.html
-	CmdClearDepthStencilImage(commandBuffer types.CommandBuffer, image types.Image, imageLayout ImageLayout, depthStencil *ClearValueDepthStencil, ranges ...ImageSubresourceRange)
+	CmdClearDepthStencilImage(commandBuffer core.CommandBuffer, image core.Image, imageLayout ImageLayout, depthStencil *ClearValueDepthStencil, ranges ...ImageSubresourceRange)
 	// CmdCopyImageToBuffer copies image data into a buffer
 	//
 	// commandBuffer - The CommandBuffer object to record to
@@ -586,7 +586,7 @@ type DeviceDriver interface {
 	// regions - A slice of BufferImageCopy structures specifying the regions to copy
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkCmdCopyImageToBuffer.html
-	CmdCopyImageToBuffer(commandBuffer types.CommandBuffer, srcImage types.Image, srcImageLayout ImageLayout, dstBuffer types.Buffer, regions ...BufferImageCopy) error
+	CmdCopyImageToBuffer(commandBuffer core.CommandBuffer, srcImage core.Image, srcImageLayout ImageLayout, dstBuffer core.Buffer, regions ...BufferImageCopy) error
 	// CmdDispatch dispatches compute work items
 	//
 	// commandBuffer - The CommandBuffer object to record to
@@ -598,7 +598,7 @@ type DeviceDriver interface {
 	// groupCountZ - the number of local workgroups to dispatch in the Z dimension
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkCmdDispatch.html
-	CmdDispatch(commandBuffer types.CommandBuffer, groupCountX, groupCountY, groupCountZ int)
+	CmdDispatch(commandBuffer core.CommandBuffer, groupCountX, groupCountY, groupCountZ int)
 	// CmdDispatchIndirect dispatches compute work items with indirect parameters
 	//
 	// commandBuffer - The CommandBuffer object to record to
@@ -608,7 +608,7 @@ type DeviceDriver interface {
 	// offset - The byte offset into the Buffer where parameters begin
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkCmdDispatchIndirect.html
-	CmdDispatchIndirect(commandBuffer types.CommandBuffer, buffer types.Buffer, offset int)
+	CmdDispatchIndirect(commandBuffer core.CommandBuffer, buffer core.Buffer, offset int)
 	// CmdDrawIndexedIndirect draws primitives with indirect parameters and indexed vertices
 	//
 	// commandBuffer - The CommandBuffer object to record to
@@ -622,7 +622,7 @@ type DeviceDriver interface {
 	// stride - The byte stride between successive sets of draw parameters
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkCmdDrawIndexedIndirect.html
-	CmdDrawIndexedIndirect(commandBuffer types.CommandBuffer, buffer types.Buffer, offset int, drawCount, stride int)
+	CmdDrawIndexedIndirect(commandBuffer core.CommandBuffer, buffer core.Buffer, offset int, drawCount, stride int)
 	// CmdDrawIndirect draws primitives with indirect parameters
 	//
 	// commandBuffer - The CommandBuffer object to record to
@@ -636,7 +636,7 @@ type DeviceDriver interface {
 	// stride - The byte stride between successive sets of draw parameters
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkCmdDrawIndirect.html
-	CmdDrawIndirect(commandBuffer types.CommandBuffer, buffer types.Buffer, offset int, drawCount, stride int)
+	CmdDrawIndirect(commandBuffer core.CommandBuffer, buffer core.Buffer, offset int, drawCount, stride int)
 	// CmdFillBuffer fills a region of a buffer with a fixed value
 	//
 	// commandBuffer - The CommandBuffer object to record to
@@ -650,7 +650,7 @@ type DeviceDriver interface {
 	// data - The 4-byte word written repeatedly to the Buffer to fill size bytes of data.
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkCmdFillBuffer.html
-	CmdFillBuffer(commandBuffer types.CommandBuffer, dstBuffer types.Buffer, dstOffset int, size int, data uint32)
+	CmdFillBuffer(commandBuffer core.CommandBuffer, dstBuffer core.Buffer, dstOffset int, size int, data uint32)
 	// CmdResetEvent resets an Event object to non-signaled state
 	//
 	// commandBuffer - The CommandBuffer object to record to
@@ -660,7 +660,7 @@ type DeviceDriver interface {
 	// stageMask - Specifies the source stage mask used to determine when the Event is unsignaled
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkCmdResetEvent.html
-	CmdResetEvent(commandBuffer types.CommandBuffer, event types.Event, stageMask PipelineStageFlags)
+	CmdResetEvent(commandBuffer core.CommandBuffer, event core.Event, stageMask PipelineStageFlags)
 	// CmdResolveImage resolves regions of an Image
 	//
 	// commandBuffer - The CommandBuffer object to record to
@@ -676,7 +676,7 @@ type DeviceDriver interface {
 	// regions - A slice of ImageResolve structure specifying the regions to resolve
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkCmdResolveImage.html
-	CmdResolveImage(commandBuffer types.CommandBuffer, srcImage types.Image, srcImageLayout ImageLayout, dstImage types.Image, dstImageLayout ImageLayout, regions ...ImageResolve) error
+	CmdResolveImage(commandBuffer core.CommandBuffer, srcImage core.Image, srcImageLayout ImageLayout, dstImage core.Image, dstImageLayout ImageLayout, regions ...ImageResolve) error
 	// CmdSetBlendConstants sets the values of the blend constants
 	//
 	// commandBuffer - The CommandBuffer object to record to
@@ -685,7 +685,7 @@ type DeviceDriver interface {
 	// color used in blending, depending on the blend factor
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkCmdSetBlendConstants.html
-	CmdSetBlendConstants(commandBuffer types.CommandBuffer, blendConstants [4]float32)
+	CmdSetBlendConstants(commandBuffer core.CommandBuffer, blendConstants [4]float32)
 	// CmdSetDepthBias sets depth bias factors and clamp dynamically for the CommandBuffer
 	//
 	// commandBuffer - The CommandBuffer object to record to
@@ -697,7 +697,7 @@ type DeviceDriver interface {
 	// depthBiasSlopeFactor - The scalar factor applied to a fragment's slope in depth bias calculations
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkCmdSetDepthBias.html
-	CmdSetDepthBias(commandBuffer types.CommandBuffer, depthBiasConstantFactor, depthBiasClamp, depthBiasSlopeFactor float32)
+	CmdSetDepthBias(commandBuffer core.CommandBuffer, depthBiasConstantFactor, depthBiasClamp, depthBiasSlopeFactor float32)
 	// CmdSetDepthBounds sets depth bounds range dynamically for the CommandBuffer
 	//
 	// commandBuffer - The CommandBuffer object to record to
@@ -707,7 +707,7 @@ type DeviceDriver interface {
 	// max - The maximum depth bound
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkCmdSetDepthBounds.html
-	CmdSetDepthBounds(commandBuffer types.CommandBuffer, min, max float32)
+	CmdSetDepthBounds(commandBuffer core.CommandBuffer, min, max float32)
 	// CmdSetLineWidth sets line width dynamically for the CommandBuffer
 	//
 	// commandBuffer - The CommandBuffer object to record to
@@ -715,7 +715,7 @@ type DeviceDriver interface {
 	// lineWidth - The width of rasterized line segments
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkCmdSetLineWidth.html
-	CmdSetLineWidth(commandBuffer types.CommandBuffer, lineWidth float32)
+	CmdSetLineWidth(commandBuffer core.CommandBuffer, lineWidth float32)
 	// CmdSetStencilCompareMask sets the stencil compare mask dynamically for the CommandBuffer
 	//
 	// commandBuffer - The CommandBuffer object to record to
@@ -725,7 +725,7 @@ type DeviceDriver interface {
 	// compareMask - The new value to use as the stencil compare mask
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkCmdSetStencilCompareMask.html
-	CmdSetStencilCompareMask(commandBuffer types.CommandBuffer, faceMask StencilFaceFlags, compareMask uint32)
+	CmdSetStencilCompareMask(commandBuffer core.CommandBuffer, faceMask StencilFaceFlags, compareMask uint32)
 	// CmdSetStencilReference sets stencil reference value dynamically for the CommandBuffer
 	//
 	// commandBuffer - The CommandBuffer object to record to
@@ -735,7 +735,7 @@ type DeviceDriver interface {
 	// reference - The new value to use as the stencil reference value
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkCmdSetStencilReference.html
-	CmdSetStencilReference(commandBuffer types.CommandBuffer, faceMask StencilFaceFlags, reference uint32)
+	CmdSetStencilReference(commandBuffer core.CommandBuffer, faceMask StencilFaceFlags, reference uint32)
 	// CmdSetStencilWriteMask sets the stencil write mask dynamically for the CommandBuffer
 	//
 	// commandBuffer - The CommandBuffer object to record to
@@ -745,7 +745,7 @@ type DeviceDriver interface {
 	// reference - The new value to use as the stencil write mask
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkCmdSetStencilWriteMask.html
-	CmdSetStencilWriteMask(commandBuffer types.CommandBuffer, faceMask StencilFaceFlags, writeMask uint32)
+	CmdSetStencilWriteMask(commandBuffer core.CommandBuffer, faceMask StencilFaceFlags, writeMask uint32)
 	// CmdUpdateBuffer updates a buffer's contents from host memory
 	//
 	// commandBuffer - The CommandBuffer object to record to
@@ -759,7 +759,7 @@ type DeviceDriver interface {
 	// data - The source data for the buffer update, must be at least dataSize bytes in size
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkCmdUpdateBuffer.html
-	CmdUpdateBuffer(commandBuffer types.CommandBuffer, dstBuffer types.Buffer, dstOffset int, dataSize int, data []byte)
+	CmdUpdateBuffer(commandBuffer core.CommandBuffer, dstBuffer core.Buffer, dstOffset int, dataSize int, data []byte)
 	// CmdWriteTimestamp writes a device timestamp into a query object
 	//
 	// commandBuffer - The CommandBuffer object to record to
@@ -771,7 +771,7 @@ type DeviceDriver interface {
 	// query - The query within the QueryPool that will contain the timestamp
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkCmdWriteTimestamp.html
-	CmdWriteTimestamp(commandBuffer types.CommandBuffer, pipelineStage PipelineStageFlags, queryPool types.QueryPool, query int)
+	CmdWriteTimestamp(commandBuffer core.CommandBuffer, pipelineStage PipelineStageFlags, queryPool core.QueryPool, query int)
 	// DestroyCommandPool destroys a CommandPool object and the underlying structures. **Warning** after
 	// destruction, the object will continue to exist, but the Vulkan object handle that backs
 	// it will be invalid. Do not call further methods on the CommandPool.
@@ -781,7 +781,7 @@ type DeviceDriver interface {
 	// callbacks - Controls host memory deallocation
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkDestroyCommandPool.html
-	DestroyCommandPool(commandPool types.CommandPool, callbacks *loader.AllocationCallbacks)
+	DestroyCommandPool(commandPool core.CommandPool, callbacks *loader.AllocationCallbacks)
 	// ResetCommandPool resets a CommandPool, recycling all the resources from all the CommandBuffer objects
 	// allocated from the CommandPool back to the CommandPool.  All CommandBuffer objects that
 	// have been allocated from the CommandPool are put in the initial state.
@@ -791,7 +791,7 @@ type DeviceDriver interface {
 	// flags - Controls the reset operation
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkResetCommandPool.html
-	ResetCommandPool(commandPool types.CommandPool, flags CommandPoolResetFlags) (common.VkResult, error)
+	ResetCommandPool(commandPool core.CommandPool, flags CommandPoolResetFlags) (common.VkResult, error)
 	// DestroyDescriptorPool destroys a DescriptorPool object and the underlying structures. **Warning** after
 	// destruction, the object will continue to exist, but the Vulkan object handle that backs it will
 	// be invalid. Do not call further methods with the DescriptorPool
@@ -801,7 +801,7 @@ type DeviceDriver interface {
 	// callbacks - Controls host memory deallocation
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkDestroyDescriptorPool.html
-	DestroyDescriptorPool(descriptorPool types.DescriptorPool, callbacks *loader.AllocationCallbacks)
+	DestroyDescriptorPool(descriptorPool core.DescriptorPool, callbacks *loader.AllocationCallbacks)
 	// ResetDescriptorPool resets the DescriptorPool and recycles all of the resources from all of the
 	// DescriptorSet objects allocated from the DescriptorPool back to the DescriptorPool, and the
 	// DescriptorSet objects are implicitly freed.
@@ -811,13 +811,13 @@ type DeviceDriver interface {
 	// flags - Reserved (always 0)
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkResetDescriptorPool.html
-	ResetDescriptorPool(descriptorPool types.DescriptorPool, flags DescriptorPoolResetFlags) (common.VkResult, error)
+	ResetDescriptorPool(descriptorPool core.DescriptorPool, flags DescriptorPoolResetFlags) (common.VkResult, error)
 	// FreeDescriptorSets frees the provided DescriptorSet objects
 	//
 	// sets - One or more DescriptorSet objects to free
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkFreeDescriptorSets.html
-	FreeDescriptorSets(sets ...types.DescriptorSet) (common.VkResult, error)
+	FreeDescriptorSets(sets ...core.DescriptorSet) (common.VkResult, error)
 	// DestroyDescriptorSetLayout destroys a DescriptorSetLayout object and the underlying structures.
 	// **Warning** after destruction, the object will continue to exist, but the Vulkan object handle
 	// that backs it will be invalid. Do not call further methods with the DescriptorSetLayout
@@ -827,7 +827,7 @@ type DeviceDriver interface {
 	// callbacks - Controls host memory deallocation
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkDestroyDescriptorSetLayout.html
-	DestroyDescriptorSetLayout(descriptorSetLayout types.DescriptorSetLayout, callbacks *loader.AllocationCallbacks)
+	DestroyDescriptorSetLayout(descriptorSetLayout core.DescriptorSetLayout, callbacks *loader.AllocationCallbacks)
 	// MapMemory maps a memory object into application address space
 	//
 	// memory - DeviceMemory object to map
@@ -840,13 +840,13 @@ type DeviceDriver interface {
 	// flags - Reserved (always 0)
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkMapMemory.html
-	MapMemory(memory types.DeviceMemory, offset int, size int, flags MemoryMapFlags) (unsafe.Pointer, common.VkResult, error)
+	MapMemory(memory core.DeviceMemory, offset int, size int, flags MemoryMapFlags) (unsafe.Pointer, common.VkResult, error)
 	// UnmapMemory unmaps a previously-mapped memory object
 	//
 	// memory - The DeviceMemory object to unmap
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkUnmapMemory.html
-	UnmapMemory(memory types.DeviceMemory)
+	UnmapMemory(memory core.DeviceMemory)
 	// FreeMemory frees the DeviceMemory. **Warning** after freeing, the object will continue to exist,
 	// but the Vulkan object handle that backs it will be invalid. Do not call further methods with
 	// the DeviceMemory object.
@@ -856,13 +856,13 @@ type DeviceDriver interface {
 	// callbacks - Controls host memory deallocation
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkFreeMemory.html
-	FreeMemory(memory types.DeviceMemory, callbacks *loader.AllocationCallbacks)
+	FreeMemory(memory core.DeviceMemory, callbacks *loader.AllocationCallbacks)
 	// GetDeviceMemoryCommitment returns the current number of bytes currently committed to a DeviceMemory
 	//
 	// memory - The DeviceMemory object to get memory commitment for
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkGetDeviceMemoryCommitment.html
-	GetDeviceMemoryCommitment(memory types.DeviceMemory) int
+	GetDeviceMemoryCommitment(memory core.DeviceMemory) int
 	// FlushMappedMemoryRanges flushes the provided mapped memory ranges to a device
 	//
 	// ranges - The memory ranges to flush to the device
@@ -884,7 +884,7 @@ type DeviceDriver interface {
 	// o - Parameters affecting the creation of the Buffer
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkCreateBuffer.html
-	CreateBuffer(device types.Device, allocationCallbacks *loader.AllocationCallbacks, o BufferCreateInfo) (types.Buffer, common.VkResult, error)
+	CreateBuffer(device core.Device, allocationCallbacks *loader.AllocationCallbacks, o BufferCreateInfo) (core.Buffer, common.VkResult, error)
 	// CreateBufferView creates a new BufferView object
 	//
 	// device - The Device to create the BufferView on
@@ -894,7 +894,7 @@ type DeviceDriver interface {
 	// o - Parameters affecting the creation of the BufferView
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkCreateBufferView.html
-	CreateBufferView(device types.Device, allocationCallbacks *loader.AllocationCallbacks, o BufferViewCreateInfo) (types.BufferView, common.VkResult, error)
+	CreateBufferView(device core.Device, allocationCallbacks *loader.AllocationCallbacks, o BufferViewCreateInfo) (core.BufferView, common.VkResult, error)
 	// CreateCommandPool creates a new CommandPool object
 	//
 	// device - The Device to create the CommandPool on
@@ -904,7 +904,7 @@ type DeviceDriver interface {
 	// o - Parameters affecting the creation of the CommandPool
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkCreateCommandPool.html
-	CreateCommandPool(device types.Device, allocationCallbacks *loader.AllocationCallbacks, o CommandPoolCreateInfo) (types.CommandPool, common.VkResult, error)
+	CreateCommandPool(device core.Device, allocationCallbacks *loader.AllocationCallbacks, o CommandPoolCreateInfo) (core.CommandPool, common.VkResult, error)
 	// CreateDescriptorPool creates a new DescriptorPool object
 	//
 	// device - The Device to create the DescriptorPool on
@@ -914,7 +914,7 @@ type DeviceDriver interface {
 	// o - Parameters affecting the creation of the DescriptorPool
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkCreateDescriptorPool.html
-	CreateDescriptorPool(device types.Device, allocationCallbacks *loader.AllocationCallbacks, o DescriptorPoolCreateInfo) (types.DescriptorPool, common.VkResult, error)
+	CreateDescriptorPool(device core.Device, allocationCallbacks *loader.AllocationCallbacks, o DescriptorPoolCreateInfo) (core.DescriptorPool, common.VkResult, error)
 	// CreateDescriptorSetLayout creates a new DescriptorSetLayout object
 	//
 	// device - The Device to create the DescriptorSetLayout on
@@ -924,7 +924,7 @@ type DeviceDriver interface {
 	// o - Parameters affecting the creation of the DescriptorSetLayout
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkCreateDescriptorSetLayout.html
-	CreateDescriptorSetLayout(device types.Device, allocationCallbacks *loader.AllocationCallbacks, o DescriptorSetLayoutCreateInfo) (types.DescriptorSetLayout, common.VkResult, error)
+	CreateDescriptorSetLayout(device core.Device, allocationCallbacks *loader.AllocationCallbacks, o DescriptorSetLayoutCreateInfo) (core.DescriptorSetLayout, common.VkResult, error)
 	// CreateEvent creates a new Event object
 	//
 	// device - The Device to create the Event on
@@ -934,7 +934,7 @@ type DeviceDriver interface {
 	// o - Parameters affecting the creation of the Event
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkCreateEvent.html
-	CreateEvent(device types.Device, allocationCallbacks *loader.AllocationCallbacks, options EventCreateInfo) (types.Event, common.VkResult, error)
+	CreateEvent(device core.Device, allocationCallbacks *loader.AllocationCallbacks, options EventCreateInfo) (core.Event, common.VkResult, error)
 	// CreateFence creates a new Fence object
 	//
 	// device - The Device to create the Fence on
@@ -944,7 +944,7 @@ type DeviceDriver interface {
 	// o - Parameters affecting the creation of the Fence
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkCreateFence.html
-	CreateFence(device types.Device, allocationCallbacks *loader.AllocationCallbacks, o FenceCreateInfo) (types.Fence, common.VkResult, error)
+	CreateFence(device core.Device, allocationCallbacks *loader.AllocationCallbacks, o FenceCreateInfo) (core.Fence, common.VkResult, error)
 	// CreateFramebuffer creates a new Framebuffer object
 	//
 	// device - The Device to create the Framebuffer on
@@ -954,7 +954,7 @@ type DeviceDriver interface {
 	// o - Parameters affecting the creation of the Framebuffer
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkCreateFramebuffer.html
-	CreateFramebuffer(device types.Device, allocationCallbacks *loader.AllocationCallbacks, o FramebufferCreateInfo) (types.Framebuffer, common.VkResult, error)
+	CreateFramebuffer(device core.Device, allocationCallbacks *loader.AllocationCallbacks, o FramebufferCreateInfo) (core.Framebuffer, common.VkResult, error)
 	// CreateGraphicsPipelines creates a slice of new Pipeline objects which can be used for drawing graphics
 	//
 	// device - The Device to create the Pipeline on
@@ -966,7 +966,7 @@ type DeviceDriver interface {
 	// o - A slice of GraphicsPipelineCreateInfo structures containing parameters affecting the creation of the Pipeline objects
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkCreateGraphicsPipelines.html
-	CreateGraphicsPipelines(device types.Device, pipelineCache *types.PipelineCache, allocationCallbacks *loader.AllocationCallbacks, o ...GraphicsPipelineCreateInfo) ([]types.Pipeline, common.VkResult, error)
+	CreateGraphicsPipelines(device core.Device, pipelineCache *core.PipelineCache, allocationCallbacks *loader.AllocationCallbacks, o ...GraphicsPipelineCreateInfo) ([]core.Pipeline, common.VkResult, error)
 	// CreateComputePipelines creates a slice of new Pipeline objects which can be used for dispatching compute workloads
 	//
 	// device - The Device to create the Pipeline on
@@ -978,7 +978,7 @@ type DeviceDriver interface {
 	// o - A slice of ComputePipelineCreateInfo structures containing parameters affecting the creation of the Pipeline objects
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkCreateComputePipelines.html
-	CreateComputePipelines(device types.Device, pipelineCache *types.PipelineCache, allocationCallbacks *loader.AllocationCallbacks, o ...ComputePipelineCreateInfo) ([]types.Pipeline, common.VkResult, error)
+	CreateComputePipelines(device core.Device, pipelineCache *core.PipelineCache, allocationCallbacks *loader.AllocationCallbacks, o ...ComputePipelineCreateInfo) ([]core.Pipeline, common.VkResult, error)
 	// CreateImage creates a new Image object
 	//
 	// device - The Device to create the Image on
@@ -988,7 +988,7 @@ type DeviceDriver interface {
 	// o - Parameters affecting the creation of the Image
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkCreateImage.html
-	CreateImage(device types.Device, allocationCallbacks *loader.AllocationCallbacks, options ImageCreateInfo) (types.Image, common.VkResult, error)
+	CreateImage(device core.Device, allocationCallbacks *loader.AllocationCallbacks, options ImageCreateInfo) (core.Image, common.VkResult, error)
 	// CreateImageView creates a new ImageView object
 	//
 	// device - The Device to create the ImageView on
@@ -998,7 +998,7 @@ type DeviceDriver interface {
 	// o - Parameters affecting the creation of the ImageView
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkCreateImageView.html
-	CreateImageView(device types.Device, allocationCallbacks *loader.AllocationCallbacks, o ImageViewCreateInfo) (types.ImageView, common.VkResult, error)
+	CreateImageView(device core.Device, allocationCallbacks *loader.AllocationCallbacks, o ImageViewCreateInfo) (core.ImageView, common.VkResult, error)
 	// CreatePipelineCache creates a new PipelineCache object
 	//
 	// device - The Device to create the PipelineCache on
@@ -1008,7 +1008,7 @@ type DeviceDriver interface {
 	// o - Parameters affecting the creation of the PipelineCache
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkCreatePipelineCache.html
-	CreatePipelineCache(device types.Device, allocationCallbacks *loader.AllocationCallbacks, o PipelineCacheCreateInfo) (types.PipelineCache, common.VkResult, error)
+	CreatePipelineCache(device core.Device, allocationCallbacks *loader.AllocationCallbacks, o PipelineCacheCreateInfo) (core.PipelineCache, common.VkResult, error)
 	// CreatePipelineLayout creates a new PipelineLayout object
 	//
 	// device - The Device to create the PipelineLayout on
@@ -1018,7 +1018,7 @@ type DeviceDriver interface {
 	// o - Parameters affecting the creation of the PipelineLayout
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkCreatePipelineLayout.html
-	CreatePipelineLayout(device types.Device, allocationCallbacks *loader.AllocationCallbacks, o PipelineLayoutCreateInfo) (types.PipelineLayout, common.VkResult, error)
+	CreatePipelineLayout(device core.Device, allocationCallbacks *loader.AllocationCallbacks, o PipelineLayoutCreateInfo) (core.PipelineLayout, common.VkResult, error)
 	// CreateQueryPool creates a new QueryPool object
 	//
 	// device - The Device to create the QueryPool on
@@ -1028,7 +1028,7 @@ type DeviceDriver interface {
 	// o - Parameters affecting the creation of the QueryPool
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkCreateQueryPool.html
-	CreateQueryPool(device types.Device, allocationCallbacks *loader.AllocationCallbacks, o QueryPoolCreateInfo) (types.QueryPool, common.VkResult, error)
+	CreateQueryPool(device core.Device, allocationCallbacks *loader.AllocationCallbacks, o QueryPoolCreateInfo) (core.QueryPool, common.VkResult, error)
 	// CreateRenderPass creates a new RenderPass object
 	//
 	// device - The Device to create the RenderPass on
@@ -1038,7 +1038,7 @@ type DeviceDriver interface {
 	// o - Parameters affecting the creation of the RenderPass
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkCreateRenderPass.html
-	CreateRenderPass(device types.Device, allocationCallbacks *loader.AllocationCallbacks, o RenderPassCreateInfo) (types.RenderPass, common.VkResult, error)
+	CreateRenderPass(device core.Device, allocationCallbacks *loader.AllocationCallbacks, o RenderPassCreateInfo) (core.RenderPass, common.VkResult, error)
 	// CreateSampler creates a new Sampler object
 	//
 	// device - The Device to create the Sampler on
@@ -1048,7 +1048,7 @@ type DeviceDriver interface {
 	// o - Parameters affecting the creation of the Sampler
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkCreateSampler.html
-	CreateSampler(device types.Device, allocationCallbacks *loader.AllocationCallbacks, o SamplerCreateInfo) (types.Sampler, common.VkResult, error)
+	CreateSampler(device core.Device, allocationCallbacks *loader.AllocationCallbacks, o SamplerCreateInfo) (core.Sampler, common.VkResult, error)
 	// CreateSemaphore creates a new Semaphore object
 	//
 	// device - The Device to create the Semaphore on
@@ -1058,7 +1058,7 @@ type DeviceDriver interface {
 	// o - Parameters affecting the creation of the Semaphore
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkCreateSemaphore.html
-	CreateSemaphore(device types.Device, allocationCallbacks *loader.AllocationCallbacks, o SemaphoreCreateInfo) (types.Semaphore, common.VkResult, error)
+	CreateSemaphore(device core.Device, allocationCallbacks *loader.AllocationCallbacks, o SemaphoreCreateInfo) (core.Semaphore, common.VkResult, error)
 	// CreateShaderModule creates a new ShaderModule object
 	//
 	// device - The Device to create the ShaderModule on
@@ -1068,7 +1068,7 @@ type DeviceDriver interface {
 	// o - Parameters affecting the creation of the ShaderModule
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkCreateShaderModule.html
-	CreateShaderModule(device types.Device, allocationCallbacks *loader.AllocationCallbacks, o ShaderModuleCreateInfo) (types.ShaderModule, common.VkResult, error)
+	CreateShaderModule(device core.Device, allocationCallbacks *loader.AllocationCallbacks, o ShaderModuleCreateInfo) (core.ShaderModule, common.VkResult, error)
 
 	// GetQueue gets a Queue object from the Device
 	//
@@ -1079,7 +1079,7 @@ type DeviceDriver interface {
 	// queueIndex - The index within this queue family of the Queue to retrieve
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkGetDeviceQueue.html
-	GetQueue(device types.Device, queueFamilyIndex int, queueIndex int) types.Queue
+	GetQueue(device core.Device, queueFamilyIndex int, queueIndex int) core.Queue
 	// AllocateMemory allocates DeviceMemory
 	//
 	// device - The Device to allocate the DeviceMemory on
@@ -1089,7 +1089,7 @@ type DeviceDriver interface {
 	// o - Describes the parameters of the allocation
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkAllocateMemory.html
-	AllocateMemory(device types.Device, allocationCallbacks *loader.AllocationCallbacks, o MemoryAllocateInfo) (types.DeviceMemory, common.VkResult, error)
+	AllocateMemory(device core.Device, allocationCallbacks *loader.AllocationCallbacks, o MemoryAllocateInfo) (core.DeviceMemory, common.VkResult, error)
 
 	// AllocateCommandBuffers allocates CommandBuffer objects from an existing CommandPool
 	//
@@ -1098,7 +1098,7 @@ type DeviceDriver interface {
 	// o - Describes parameters of the allocation
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkAllocateCommandBuffers.html
-	AllocateCommandBuffers(o CommandBufferAllocateInfo) ([]types.CommandBuffer, common.VkResult, error)
+	AllocateCommandBuffers(o CommandBufferAllocateInfo) ([]core.CommandBuffer, common.VkResult, error)
 	// AllocateDescriptorSets allocates one or more DescriptorSet objects from a DescriptorPool
 	//
 	// device - The Device to allocate the DescriptorSet objects on
@@ -1106,7 +1106,7 @@ type DeviceDriver interface {
 	// o - Describes the parameters of the allocation
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkAllocateDescriptorSets.html
-	AllocateDescriptorSets(o DescriptorSetAllocateInfo) ([]types.DescriptorSet, common.VkResult, error)
+	AllocateDescriptorSets(o DescriptorSetAllocateInfo) ([]core.DescriptorSet, common.VkResult, error)
 
 	// DestroyDevice destroys a logical Device object.  **Warning** after destruction, the object will continue
 	// to exist, but the Vulkan object handle that backs it will be invalid. Do not call further methods
@@ -1117,13 +1117,13 @@ type DeviceDriver interface {
 	// callbacks - Controls host memory deallocation
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkDestroyDevice.html
-	DestroyDevice(device types.Device, callbacks *loader.AllocationCallbacks)
+	DestroyDevice(device core.Device, callbacks *loader.AllocationCallbacks)
 	// DeviceWaitIdle waits for the Device to become idle
 	//
 	// device - The Device to wait on
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkDeviceWaitIdle.html
-	DeviceWaitIdle(device types.Device) (common.VkResult, error)
+	DeviceWaitIdle(device core.Device) (common.VkResult, error)
 	// WaitForFences waits for one or more Fence objects to become signaled
 	//
 	// waitForAll - If true, then the call will wait until all fences in `fences` are signaled. If
@@ -1136,13 +1136,13 @@ type DeviceDriver interface {
 	// fences - A slice of Fence objects to wait for
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkWaitForFences.html
-	WaitForFences(waitForAll bool, timeout time.Duration, fences ...types.Fence) (common.VkResult, error)
+	WaitForFences(waitForAll bool, timeout time.Duration, fences ...core.Fence) (common.VkResult, error)
 	// ResetFences resets one or more objects to the unsignaled state
 	//
 	// fences - A slice of Fence objects to reset
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkResetFences.html
-	ResetFences(fences ...types.Fence) (common.VkResult, error)
+	ResetFences(fences ...core.Fence) (common.VkResult, error)
 	// UpdateDescriptorSets updates the contents of one or more DescriptorSet objects
 	//
 	// device - The device to update the DescriptorSet objects on
@@ -1154,7 +1154,7 @@ type DeviceDriver interface {
 	// copy between
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkUpdateDescriptorSets.html
-	UpdateDescriptorSets(device types.Device, writes []WriteDescriptorSet, copies []CopyDescriptorSet) error
+	UpdateDescriptorSets(device core.Device, writes []WriteDescriptorSet, copies []CopyDescriptorSet) error
 	// DestroyEvent destroys an Event and the underlying structures. **Warning** after destruction,
 	// the object will continue to exist, but the Vulkan object handle that backs it will be invalid.
 	// Do not call further methods with the Event
@@ -1163,25 +1163,25 @@ type DeviceDriver interface {
 	//
 	// callbacks - Controls host memory deallocation
 	//
-	DestroyEvent(event types.Event, callbacks *loader.AllocationCallbacks)
+	DestroyEvent(event core.Event, callbacks *loader.AllocationCallbacks)
 	// SetEvent sets the Event to the signaled state
 	//
 	// event - The Event object to signal
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkSetEvent.html
-	SetEvent(event types.Event) (common.VkResult, error)
+	SetEvent(event core.Event) (common.VkResult, error)
 	// ResetEvent sets this Event to the unsignaled state
 	//
 	// event - The Event object to unsignal
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkResetEvent.html
-	ResetEvent(event types.Event) (common.VkResult, error)
+	ResetEvent(event core.Event) (common.VkResult, error)
 	// GetEventStatus retrieves the status of this Event
 	//
 	// event - The Event object to retrieve the status from
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkGetEventStatus.html
-	GetEventStatus(event types.Event) (common.VkResult, error)
+	GetEventStatus(event core.Event) (common.VkResult, error)
 	// DestroyFence destroys the Fence object and the underlying structures.  **Warning** after destruction,
 	// the object will continue to exist, but the Vulkan object handle that backs it will be invalid.
 	// Do not call further methods with the Fence.
@@ -1191,13 +1191,13 @@ type DeviceDriver interface {
 	// callbacks - Controls host memory deallocation
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkDestroyFence.html
-	DestroyFence(fence types.Fence, callbacks *loader.AllocationCallbacks)
+	DestroyFence(fence core.Fence, callbacks *loader.AllocationCallbacks)
 	// GetFenceStatus returns the status of a Fence
 	//
 	// fence - The Fence object to get the status of
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkGetFenceStatus.html
-	GetFenceStatus(fence types.Fence) (common.VkResult, error)
+	GetFenceStatus(fence core.Fence) (common.VkResult, error)
 	// DestroyFramebuffer destroys a Framebuffer object and the underlying structures. **Warning** after destruction,
 	// the object will continue to exist, but the Vulkan object handle that backs it will be invalid. Do
 	// not call further methods with the Framebuffer.
@@ -1207,7 +1207,7 @@ type DeviceDriver interface {
 	// callbacks - Controls host memory deallocation
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkDestroyFramebuffer.html
-	DestroyFramebuffer(framebuffer types.Framebuffer, callbacks *loader.AllocationCallbacks)
+	DestroyFramebuffer(framebuffer core.Framebuffer, callbacks *loader.AllocationCallbacks)
 	// DestroyImage destroys an Image object and the underlying structures. **Warning** after destruction,
 	// the object will continue to exist, but the Vulkan object handle that backs it will be invalid.
 	// Do not call further methods with the Image
@@ -1217,13 +1217,13 @@ type DeviceDriver interface {
 	// callbacks - Controls host memory deallocation
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkDestroyImage.html
-	DestroyImage(image types.Image, callbacks *loader.AllocationCallbacks)
+	DestroyImage(image core.Image, callbacks *loader.AllocationCallbacks)
 	// GetImageMemoryRequirements returns the memory requirements for an Image
 	//
 	// image - The Image to get the memory requirements for
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkGetImageMemoryRequirements.html
-	GetImageMemoryRequirements(image types.Image) *MemoryRequirements
+	GetImageMemoryRequirements(image core.Image) *MemoryRequirements
 	// BindImageMemory binds a DeviceMemory object to this Image object
 	//
 	// image - The Image to bind to memory
@@ -1233,7 +1233,7 @@ type DeviceDriver interface {
 	// offset - The start offset of the region of memory which is to be bound to the image.
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkBindImageMemory.html
-	BindImageMemory(image types.Image, memory types.DeviceMemory, offset int) (common.VkResult, error)
+	BindImageMemory(image core.Image, memory core.DeviceMemory, offset int) (common.VkResult, error)
 	// GetImageSubresourceLayout retrieves information about an Image subresource
 	//
 	// image - The Image to retrieve subresource data for
@@ -1241,17 +1241,17 @@ type DeviceDriver interface {
 	// subresource - Selects a specific subresource from the Image
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkGetImageSubresourceLayout.html
-	GetImageSubresourceLayout(image types.Image, subresource *ImageSubresource) *SubresourceLayout
+	GetImageSubresourceLayout(image core.Image, subresource *ImageSubresource) *SubresourceLayout
 	// GetImageSparseMemoryRequirements queries the memory requirements for a sparse image
 	//
 	// image - The Image to retrieve sparse memory requirements for
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkGetImageSparseMemoryRequirements.html
-	GetImageSparseMemoryRequirements(image types.Image) []SparseImageMemoryRequirements
+	GetImageSparseMemoryRequirements(image core.Image) []SparseImageMemoryRequirements
 	// DestroyImageView destroys an ImageView object and the underlying structures. **Warning** after destruction,
 	// the object will continue to exist, but the Vulkan object handle that backs it will be invalid. Do not
 	// call further methods with the image
-	DestroyImageView(image types.ImageView, callbacks *loader.AllocationCallbacks)
+	DestroyImageView(image core.ImageView, callbacks *loader.AllocationCallbacks)
 
 	// DestroyPipeline destroys a Pipeline object and the underlying structures. **Warning** after
 	// destruction, the object will continue to exist, but the Vulkan object handle that backs it will be
@@ -1262,7 +1262,7 @@ type DeviceDriver interface {
 	// callbacks - Controls host memory deallocation
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkDestroyPipeline.html
-	DestroyPipeline(pipeline types.Pipeline, callbacks *loader.AllocationCallbacks)
+	DestroyPipeline(pipeline core.Pipeline, callbacks *loader.AllocationCallbacks)
 
 	// DestroyPipelineCache destroys a PipelineCache object and the underlying structures. **Warning** after
 	// destruction, the object will continue to exist, but the Vulkan object handle that backs it will
@@ -1273,11 +1273,11 @@ type DeviceDriver interface {
 	// callbacks - Controls host memory deallocation
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkDestroyPipelineCache.html
-	DestroyPipelineCache(cache types.PipelineCache, callbacks *loader.AllocationCallbacks)
+	DestroyPipelineCache(cache core.PipelineCache, callbacks *loader.AllocationCallbacks)
 	// GetPipelineCacheData gets the data store from this PipelineCache
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkGetPipelineCacheData.html
-	GetPipelineCacheData(cache types.PipelineCache) ([]byte, common.VkResult, error)
+	GetPipelineCacheData(cache core.PipelineCache) ([]byte, common.VkResult, error)
 	// MergePipelineCaches combines the data stores of multiple PipelineCache object into another one
 	//
 	// dstCache - The PipelineCache that the source caches will be merged into
@@ -1285,7 +1285,7 @@ type DeviceDriver interface {
 	// srcCaches - A slice of PipelineCache objects which will be merged into the destination PipelineCache
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkMergePipelineCaches.html
-	MergePipelineCaches(dstCache types.PipelineCache, srcCaches ...types.PipelineCache) (common.VkResult, error)
+	MergePipelineCaches(dstCache core.PipelineCache, srcCaches ...core.PipelineCache) (common.VkResult, error)
 
 	// DestroyPipelineLayout destroys a PipelineLayout object and the underlying structures. **Warning** after
 	// destruction, the object will continue to exist, but the Vulkan object handle that backs it will be
@@ -1296,7 +1296,7 @@ type DeviceDriver interface {
 	// callbacks - Controls host memory deallocation
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkDestroyPipelineLayout.html
-	DestroyPipelineLayout(layout types.PipelineLayout, callbacks *loader.AllocationCallbacks)
+	DestroyPipelineLayout(layout core.PipelineLayout, callbacks *loader.AllocationCallbacks)
 
 	// DestroyQueryPool destroys a QueryPool object and the underlying structures. **Warning** after destruction,
 	// the object will continue to exist, but the Vulkan object handle that backs it will be invalid.
@@ -1307,7 +1307,7 @@ type DeviceDriver interface {
 	// callbacks - Controls host memory deallocation
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkDestroyQueryPool.html
-	DestroyQueryPool(queryPool types.QueryPool, callbacks *loader.AllocationCallbacks)
+	DestroyQueryPool(queryPool core.QueryPool, callbacks *loader.AllocationCallbacks)
 	// GetQueryPoolResults retrieves the status and results for a set of queries, and populates those results
 	// into a preallocated byte array
 	//
@@ -1324,14 +1324,14 @@ type DeviceDriver interface {
 	// flags - Specifies how and when results are returned
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkGetQueryPoolResults.html
-	GetQueryPoolResults(queryPool types.QueryPool, firstQuery, queryCount int, results []byte, resultStride int, flags QueryResultFlags) (common.VkResult, error)
+	GetQueryPoolResults(queryPool core.QueryPool, firstQuery, queryCount int, results []byte, resultStride int, flags QueryResultFlags) (common.VkResult, error)
 
 	// QueueWaitIdle waits for a Queue to become idle
 	//
 	// queue - The Queue to wait on
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkQueueWaitIdle.html
-	QueueWaitIdle(queue types.Queue) (common.VkResult, error)
+	QueueWaitIdle(queue core.Queue) (common.VkResult, error)
 	// QueueSubmit submits a sequence of Semaphore or CommandBuffer objects to a queue
 	//
 	// queue - The Queue to submit to
@@ -1342,7 +1342,7 @@ type DeviceDriver interface {
 	// o - A slice of SubmitInfo structures, each specifying a CommandBuffer submission batch
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkQueueSubmit.html
-	QueueSubmit(queue types.Queue, fence *types.Fence, o ...SubmitInfo) (common.VkResult, error)
+	QueueSubmit(queue core.Queue, fence *core.Fence, o ...SubmitInfo) (common.VkResult, error)
 	// QueueBindSparse binds DeviceMemory to a sparse resource object
 	//
 	// queue -The queue to submit the sparse binding operation to
@@ -1352,7 +1352,7 @@ type DeviceDriver interface {
 	// bindInfos - A slice of BindSparseInfo structures, each speicfying a sparse binding submission batch
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkQueueBindSparse.html
-	QueueBindSparse(queue types.Queue, fence *types.Fence, bindInfos ...BindSparseInfo) (common.VkResult, error)
+	QueueBindSparse(queue core.Queue, fence *core.Fence, bindInfos ...BindSparseInfo) (common.VkResult, error)
 
 	// DestroyRenderPass destroys a RenderPass object and the underlying structures.  **Warning** after
 	// destruction, the object will continue to exist, but the Vulkan object handle that backs it will
@@ -1361,13 +1361,13 @@ type DeviceDriver interface {
 	// renderPass - The RenderPass object to destroy
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkDestroyRenderPass.html
-	DestroyRenderPass(renderPass types.RenderPass, callbacks *loader.AllocationCallbacks)
+	DestroyRenderPass(renderPass core.RenderPass, callbacks *loader.AllocationCallbacks)
 	// GetRenderAreaGranularity returns the granularity for optimal render area
 	//
 	// renderPass - The RenderPass object to get granularity information for
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkGetRenderAreaGranularity.html
-	GetRenderAreaGranularity(renderPass types.RenderPass) Extent2D
+	GetRenderAreaGranularity(renderPass core.RenderPass) Extent2D
 
 	// DestroySampler destroys a Sampler object and the underlying structures. **Warning** after destruction,
 	// the object will continue to exist, but the Vulkan objec thandle that backs it will be invalid.
@@ -1378,7 +1378,7 @@ type DeviceDriver interface {
 	// callbacks - Controls host memory deallocation
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkDestroySampler.html
-	DestroySampler(sampler types.Sampler, callbacks *loader.AllocationCallbacks)
+	DestroySampler(sampler core.Sampler, callbacks *loader.AllocationCallbacks)
 
 	// DestroySemaphore destroys a Semaphore object and the underlying structures. **Warning** after destruction,
 	// the object will continue to exist, but the Vulkan object handle that backs it will be invalid.
@@ -1389,7 +1389,7 @@ type DeviceDriver interface {
 	// callbacks - Controls host memory deallocation
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkDestroySemaphore.html
-	DestroySemaphore(semaphore types.Semaphore, callbacks *loader.AllocationCallbacks)
+	DestroySemaphore(semaphore core.Semaphore, callbacks *loader.AllocationCallbacks)
 
 	// DestroyShaderModule destroys a ShaderModule object and the underlying structures. **Warning** after
 	// destruction, the object will continue to exist, but the Vulkan object handle that backs it will
@@ -1400,7 +1400,7 @@ type DeviceDriver interface {
 	// callbacks - Controls host memory deallocation
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkDestroyShaderModule.html
-	DestroyShaderModule(shaderModule types.ShaderModule, callbacks *loader.AllocationCallbacks)
+	DestroyShaderModule(shaderModule core.ShaderModule, callbacks *loader.AllocationCallbacks)
 }
 
 type CoreDeviceDriver interface {

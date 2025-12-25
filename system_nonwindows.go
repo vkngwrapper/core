@@ -7,8 +7,9 @@ package core
 #include "common/vulkan.h"
 */
 import "C"
+import "github.com/vkngwrapper/core/v3/loader"
 
-//// CreateSystemLoader generates a Loader from a vulkan-1.dll/so located on the local file system
-//func CreateSystemLoader() (*VulkanLoader, error) {
-//	return CreateLoaderFromProcAddr(unsafe.Pointer(C.vkGetInstanceProcAddr))
-//}
+// CreateSystemLoader generates a Loader from a vulkan-1.dll/so located on the local file system
+func CreateSystemLoader() (loader.Loader, error) {
+	return loader.CreateLoaderFromProcAddr(unsafe.Pointer(C.vkGetInstanceProcAddr))
+}

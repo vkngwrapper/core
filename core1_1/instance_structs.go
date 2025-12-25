@@ -10,10 +10,10 @@ import (
 
 	"github.com/CannibalVox/cgoparam"
 	"github.com/pkg/errors"
+	"github.com/vkngwrapper/core/v3"
 	"github.com/vkngwrapper/core/v3/common"
 	"github.com/vkngwrapper/core/v3/core1_0"
 	"github.com/vkngwrapper/core/v3/loader"
-	"github.com/vkngwrapper/core/v3/types"
 )
 
 // PhysicalDeviceGroupProperties specifies PhysicalDevice group properties
@@ -22,7 +22,7 @@ import (
 type PhysicalDeviceGroupProperties struct {
 	// PhysicalDevices is a slice of PhysicalDevice objects that represent all PhysicalDevice
 	// objects in the group
-	PhysicalDevices []types.PhysicalDevice
+	PhysicalDevices []core.PhysicalDevice
 	// SubsetAllocation specifies whether logical Device objects created from the group support
 	// allocating DeviceMemory on a subset of Device objects, via MemoryAllocateFlagsInfo
 	SubsetAllocation bool
@@ -59,7 +59,7 @@ func (o *PhysicalDeviceGroupProperties) PopulateOutData(cPointer unsafe.Pointer,
 	}
 
 	count := int(createInfo.physicalDeviceCount)
-	o.PhysicalDevices = make([]types.PhysicalDevice, count)
+	o.PhysicalDevices = make([]core.PhysicalDevice, count)
 
 	propertiesUnsafe := arena.Malloc(C.sizeof_struct_VkPhysicalDeviceProperties)
 
@@ -75,7 +75,7 @@ func (o *PhysicalDeviceGroupProperties) PopulateOutData(cPointer unsafe.Pointer,
 
 		deviceVersion := instanceVersion.Min(properties.APIVersion)
 
-		o.PhysicalDevices[i] = types.InternalPhysicalDevice(handle, instanceVersion, deviceVersion)
+		o.PhysicalDevices[i] = core.InternalPhysicalDevice(handle, instanceVersion, deviceVersion)
 	}
 
 	return createInfo.pNext, nil

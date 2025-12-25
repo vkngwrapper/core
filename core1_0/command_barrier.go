@@ -10,8 +10,8 @@ import (
 
 	"github.com/CannibalVox/cgoparam"
 	"github.com/pkg/errors"
+	"github.com/vkngwrapper/core/v3"
 	"github.com/vkngwrapper/core/v3/common"
-	"github.com/vkngwrapper/core/v3/types"
 )
 
 // MemoryBarrier specifies a global memory barrier
@@ -54,7 +54,7 @@ type BufferMemoryBarrier struct {
 	DstQueueFamilyIndex int
 
 	// Buffer is the buffer whose backing memory is affected by the barrier
-	Buffer types.Buffer
+	Buffer core.Buffer
 
 	// Offset is an offset in bytes into the backing memory for Buffer
 	Offset int
@@ -105,7 +105,7 @@ type ImageMemoryBarrier struct {
 	DstQueueFamilyIndex int
 
 	// Image is the Image object affected by this barrier
-	Image types.Image
+	Image core.Image
 	// SubresourceRange describes the image subresource range within Image that is affected by this barrier
 	SubresourceRange ImageSubresourceRange
 

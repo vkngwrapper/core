@@ -9,10 +9,10 @@ import (
 	"unsafe"
 
 	"github.com/CannibalVox/cgoparam"
+	"github.com/vkngwrapper/core/v3"
 	"github.com/vkngwrapper/core/v3/common"
 	"github.com/vkngwrapper/core/v3/core1_0"
 	"github.com/vkngwrapper/core/v3/loader"
-	"github.com/vkngwrapper/core/v3/types"
 )
 
 func (l *GlobalVulkanDriver) attemptAvailableExtensions(layerName *loader.Char) (map[string]*core1_0.ExtensionProperties, common.VkResult, error) {
@@ -138,23 +138,23 @@ func (l *GlobalVulkanDriver) AvailableLayers() (map[string]*core1_0.LayerPropert
 	return layers, result, err
 }
 
-func (l *GlobalVulkanDriver) CreateInstance(allocationCallbacks *loader.AllocationCallbacks, options core1_0.InstanceCreateInfo) (types.Instance, common.VkResult, error) {
+func (l *GlobalVulkanDriver) CreateInstance(allocationCallbacks *loader.AllocationCallbacks, options core1_0.InstanceCreateInfo) (core.Instance, common.VkResult, error) {
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
 	createInfo, err := common.AllocOptions(arena, options)
 	if err != nil {
-		return types.Instance{}, core1_0.VKErrorUnknown, err
+		return core.Instance{}, core1_0.VKErrorUnknown, err
 	}
 
 	var instanceHandle loader.VkInstance
 
 	res, err := l.LoaderObj.VkCreateInstance((*loader.VkInstanceCreateInfo)(createInfo), allocationCallbacks.Handle(), &instanceHandle)
 	if err != nil {
-		return types.Instance{}, res, err
+		return core.Instance{}, res, err
 	}
 
 	version := l.LoaderObj.Version().Min(options.APIVersion)
 
-	return types.InternalInstance(instanceHandle, version, options.EnabledExtensionNames), res, nil
+	return core.InternalInstance(instanceHandle, version, options.EnabledExtensionNames), res, nil
 }

@@ -10,8 +10,8 @@ import (
 
 	"github.com/CannibalVox/cgoparam"
 	"github.com/pkg/errors"
+	"github.com/vkngwrapper/core/v3"
 	"github.com/vkngwrapper/core/v3/common"
-	"github.com/vkngwrapper/core/v3/types"
 )
 
 const (
@@ -36,7 +36,7 @@ type SparseMemoryBind struct {
 	Size int
 
 	// Memory is the DeviceMemory object that the range of the resource is bound to
-	Memory types.DeviceMemory
+	Memory core.DeviceMemory
 	// MemoryOffset is the offset into the DeviceMemory object to bind the resource range to
 	MemoryOffset int
 
@@ -68,7 +68,7 @@ func (b SparseMemoryBind) PopulateCPointer(allocator *cgoparam.Allocator, preall
 // https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkSparseBufferMemoryBindInfo.html
 type SparseBufferMemoryBindInfo struct {
 	// Buffer is the Buffer object to be bound
-	Buffer types.Buffer
+	Buffer core.Buffer
 	// Binds is a slice of SparseMemoryBind structures
 	Binds []SparseMemoryBind
 }
@@ -78,7 +78,7 @@ type SparseBufferMemoryBindInfo struct {
 // https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkSparseImageOpaqueMemoryBindInfo.html
 type SparseImageOpaqueMemoryBindInfo struct {
 	// Image is the Image object to be bound
-	Image types.Image
+	Image core.Image
 	// Binds is a slice of SparseMemoryBind structures
 	Binds []SparseMemoryBind
 }
@@ -95,7 +95,7 @@ type SparseImageMemoryBind struct {
 	Extent Extent3D
 
 	// Memory is the DeviceMemory object that the sparse Image blocks of the Image are bound to
-	Memory types.DeviceMemory
+	Memory core.DeviceMemory
 	// MemoryOffset is an offset into the DeviceMemory object
 	MemoryOffset int
 
@@ -108,7 +108,7 @@ type SparseImageMemoryBind struct {
 // https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkSparseImageMemoryBindInfo.html
 type SparseImageMemoryBindInfo struct {
 	// Image is the Image object to be bound
-	Image types.Image
+	Image core.Image
 	// Binds is a slice of SparseImageMemoryBind structures
 	Binds []SparseImageMemoryBind
 }
@@ -119,10 +119,10 @@ type SparseImageMemoryBindInfo struct {
 type BindSparseInfo struct {
 	// WaitSemaphores is a slice of Semaphore objects upon which to wait before the sparse
 	// binding operations for this batch begin execution
-	WaitSemaphores []types.Semaphore
+	WaitSemaphores []core.Semaphore
 	// SignalSemaphores a slice of Semaphore objects which will be signaled when the sparse binding
 	// operations for this batch have completed execution
-	SignalSemaphores []types.Semaphore
+	SignalSemaphores []core.Semaphore
 
 	// BufferBinds is a slice of SparseBufferMemoryBindInfo structures
 	BufferBinds []SparseBufferMemoryBindInfo

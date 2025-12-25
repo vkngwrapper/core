@@ -10,9 +10,9 @@ import (
 
 	"github.com/CannibalVox/cgoparam"
 	"github.com/pkg/errors"
+	"github.com/vkngwrapper/core/v3"
 	"github.com/vkngwrapper/core/v3/common"
 	"github.com/vkngwrapper/core/v3/loader"
-	"github.com/vkngwrapper/core/v3/types"
 )
 
 const (
@@ -137,16 +137,16 @@ func init() {
 // https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkSubmitInfo.html
 type SubmitInfo struct {
 	// CommandBuffers is a slice of CommandBuffer objects to execute in the batch
-	CommandBuffers []types.CommandBuffer
+	CommandBuffers []core.CommandBuffer
 	// WaitSemaphores is a slice of Semaphore objects upon which to wait before the CommandBuffer
 	// objects for this batch begin execution
-	WaitSemaphores []types.Semaphore
+	WaitSemaphores []core.Semaphore
 	// WaitDstStageMask is a slice of PipelineStageFlags at which each corresponding semaphore
 	// wait will occur
 	WaitDstStageMask []PipelineStageFlags
 	// SignalSemaphores is a slice of Semaphore objects which will be signaled when the
 	// CommandBuffer objects for this batch have completed execution
-	SignalSemaphores []types.Semaphore
+	SignalSemaphores []core.Semaphore
 
 	common.NextOptions
 }

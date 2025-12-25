@@ -10,10 +10,10 @@ import (
 
 	"github.com/CannibalVox/cgoparam"
 	"github.com/pkg/errors"
+	"github.com/vkngwrapper/core/v3"
 	"github.com/vkngwrapper/core/v3/common"
 	"github.com/vkngwrapper/core/v3/core1_0"
 	"github.com/vkngwrapper/core/v3/core1_1"
-	"github.com/vkngwrapper/core/v3/types"
 )
 
 const (
@@ -67,7 +67,7 @@ func init() {
 // https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkBufferDeviceAddressInfo.html
 type BufferDeviceAddressInfo struct {
 	// Buffer specifies the Buffer whose address is being queried
-	Buffer types.Buffer
+	Buffer core.Buffer
 
 	common.NextOptions
 }
@@ -100,7 +100,7 @@ func (o BufferDeviceAddressInfo) PopulateOutData(cDataPointer unsafe.Pointer, he
 // https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkDeviceMemoryOpaqueCaptureAddressInfo.html
 type DeviceMemoryOpaqueCaptureAddressInfo struct {
 	// Memory specifies the DeviceMemory whose address is being queried
-	Memory types.DeviceMemory
+	Memory core.DeviceMemory
 
 	common.NextOptions
 }

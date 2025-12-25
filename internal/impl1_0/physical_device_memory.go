@@ -7,12 +7,12 @@ package impl1_0
 import "C"
 import (
 	"github.com/CannibalVox/cgoparam"
+	"github.com/vkngwrapper/core/v3"
 	"github.com/vkngwrapper/core/v3/core1_0"
 	"github.com/vkngwrapper/core/v3/loader"
-	"github.com/vkngwrapper/core/v3/types"
 )
 
-func (v *InstanceVulkanDriver) GetPhysicalDeviceMemoryProperties(physicalDevice types.PhysicalDevice) *core1_0.PhysicalDeviceMemoryProperties {
+func (v *InstanceVulkanDriver) GetPhysicalDeviceMemoryProperties(physicalDevice core.PhysicalDevice) *core1_0.PhysicalDeviceMemoryProperties {
 	if physicalDevice.Handle() == 0 {
 		panic("physicalDevice was uninitialized")
 	}

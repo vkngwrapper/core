@@ -9,9 +9,9 @@ import (
 	"unsafe"
 
 	"github.com/CannibalVox/cgoparam"
+	"github.com/vkngwrapper/core/v3"
 	"github.com/vkngwrapper/core/v3/common"
 	"github.com/vkngwrapper/core/v3/core1_0"
-	"github.com/vkngwrapper/core/v3/types"
 )
 
 // DescriptorUpdateTemplateType indicates the valid usage of the DescriptorUpdateTemplate
@@ -111,12 +111,12 @@ type DescriptorUpdateTemplateCreateInfo struct {
 	TemplateType DescriptorUpdateTemplateType
 
 	// DescriptorSetLayout is the DescriptorSetLayout used to build the DescriptorUpdateTemplate
-	DescriptorSetLayout types.DescriptorSetLayout
+	DescriptorSetLayout core.DescriptorSetLayout
 
 	// PipelineBindPoint indicates the type of the Pipeline that will use the descriptors
 	PipelineBindPoint core1_0.PipelineBindPoint
 	// PipelineLayout is a PipelineLayout object used to program the bindings
-	PipelineLayout types.PipelineLayout
+	PipelineLayout core.PipelineLayout
 	// Set is the set number of the DescriptorSet in the PipelineLayout that will be updated
 	Set int
 

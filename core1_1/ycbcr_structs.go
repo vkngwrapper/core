@@ -10,9 +10,9 @@ import (
 
 	"github.com/CannibalVox/cgoparam"
 	"github.com/pkg/errors"
+	"github.com/vkngwrapper/core/v3"
 	"github.com/vkngwrapper/core/v3/common"
 	"github.com/vkngwrapper/core/v3/core1_0"
-	"github.com/vkngwrapper/core/v3/types"
 )
 
 // ChromaLocation is the position of downsampled chroma samples
@@ -304,7 +304,7 @@ func (o ImagePlaneMemoryRequirementsInfo) PopulateCPointer(allocator *cgoparam.A
 // https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkSamplerYcbcrConversionInfo.html
 type SamplerYcbcrConversionInfo struct {
 	// Conversion is a SamplerYcbcrConversion object created from the Device
-	Conversion types.SamplerYcbcrConversion
+	Conversion core.SamplerYcbcrConversion
 
 	common.NextOptions
 }
