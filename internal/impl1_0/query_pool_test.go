@@ -12,9 +12,8 @@ import (
 	"github.com/vkngwrapper/core/v3/core1_0"
 	"github.com/vkngwrapper/core/v3/internal/impl1_0"
 	"github.com/vkngwrapper/core/v3/loader"
-	mock_driver "github.com/vkngwrapper/core/v3/loader/mocks"
+	mock_loader "github.com/vkngwrapper/core/v3/loader/mocks"
 	"github.com/vkngwrapper/core/v3/mocks"
-	"github.com/vkngwrapper/core/v3/mocks/mocks1_0"
 	"go.uber.org/mock/gomock"
 )
 
@@ -22,12 +21,12 @@ func TestVulkanLoader1_0_CreateQueryPool(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockDriver := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_0)
-	builder := &impl1_0.InstanceObjectBuilderImpl{}
-	device := builder.CreateDeviceObject(mockDriver, mocks.NewFakeDeviceHandle(), common.Vulkan1_0, []string{})
+	mockLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_0)
+	driver := impl1_0.NewDeviceDriver(mockLoader)
+	device := mocks.NewDummyDevice(common.Vulkan1_0, []string{})
 	poolHandle := mocks.NewFakeQueryPool()
 
-	mockDriver.EXPECT().VkCreateQueryPool(device.Handle(), gomock.Not(nil), nil, gomock.Not(nil)).DoAndReturn(
+	mockLoader.EXPECT().VkCreateQueryPool(device.Handle(), gomock.Not(nil), nil, gomock.Not(nil)).DoAndReturn(
 		func(device loader.VkDevice, pCreateInfo *loader.VkQueryPoolCreateInfo, pAllocator *loader.VkAllocationCallbacks, pQueryPool *loader.VkQueryPool) (common.VkResult, error) {
 			val := reflect.ValueOf(*pCreateInfo)
 			require.Equal(t, uint64(11), val.FieldByName("sType").Uint()) // VK_STRUCTURE_TYPE_QUERY_POOL_CREATE_INFO
@@ -41,7 +40,7 @@ func TestVulkanLoader1_0_CreateQueryPool(t *testing.T) {
 			return core1_0.VKSuccess, nil
 		})
 
-	queryPool, _, err := device.CreateQueryPool(nil, core1_0.QueryPoolCreateInfo{
+	queryPool, _, err := driver.CreateQueryPool(device, nil, core1_0.QueryPoolCreateInfo{
 		QueryType:          core1_0.QueryTypeOcclusion,
 		QueryCount:         5,
 		PipelineStatistics: core1_0.QueryPipelineStatisticGeometryShaderPrimitives,
@@ -55,13 +54,12 @@ func TestVulkanQueryPool_PopulateResults(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockDriver := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_0)
-	device := mocks1_0.EasyMockDevice(ctrl, mockDriver)
+	mockLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_0)
+	driver := impl1_0.NewDeviceDriver(mockLoader)
+	device := mocks.NewDummyDevice(common.Vulkan1_0, []string{})
+	queryPool := mocks.NewDummyQueryPool(device)
 
-	builder := &impl1_0.DeviceObjectBuilderImpl{}
-	queryPool := builder.CreateQueryPoolObject(mockDriver, device.Handle(), mocks.NewFakeQueryPool(), common.Vulkan1_0)
-
-	mockDriver.EXPECT().VkGetQueryPoolResults(
+	mockLoader.EXPECT().VkGetQueryPoolResults(
 		device.Handle(),
 		queryPool.Handle(),
 		loader.Uint32(1),
@@ -90,7 +88,7 @@ func TestVulkanQueryPool_PopulateResults(t *testing.T) {
 		})
 
 	results := make([]byte, 40)
-	_, err := queryPool.PopulateResults(1, 3, results, 8, core1_0.QueryResultPartial)
+	_, err := driver.GetQueryPoolResults(queryPool, 1, 3, results, 8, core1_0.QueryResultPartial)
 	require.NoError(t, err)
 	require.Len(t, results, 40)
 

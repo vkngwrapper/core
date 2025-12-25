@@ -966,7 +966,7 @@ type DeviceDriver interface {
 	// o - A slice of GraphicsPipelineCreateInfo structures containing parameters affecting the creation of the Pipeline objects
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkCreateGraphicsPipelines.html
-	CreateGraphicsPipelines(device types.Device, pipelineCache types.PipelineCache, allocationCallbacks *loader.AllocationCallbacks, o ...GraphicsPipelineCreateInfo) ([]types.Pipeline, common.VkResult, error)
+	CreateGraphicsPipelines(device types.Device, pipelineCache *types.PipelineCache, allocationCallbacks *loader.AllocationCallbacks, o ...GraphicsPipelineCreateInfo) ([]types.Pipeline, common.VkResult, error)
 	// CreateComputePipelines creates a slice of new Pipeline objects which can be used for dispatching compute workloads
 	//
 	// device - The Device to create the Pipeline on
@@ -978,7 +978,7 @@ type DeviceDriver interface {
 	// o - A slice of ComputePipelineCreateInfo structures containing parameters affecting the creation of the Pipeline objects
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkCreateComputePipelines.html
-	CreateComputePipelines(device types.Device, pipelineCache types.PipelineCache, allocationCallbacks *loader.AllocationCallbacks, o ...ComputePipelineCreateInfo) ([]types.Pipeline, common.VkResult, error)
+	CreateComputePipelines(device types.Device, pipelineCache *types.PipelineCache, allocationCallbacks *loader.AllocationCallbacks, o ...ComputePipelineCreateInfo) ([]types.Pipeline, common.VkResult, error)
 	// CreateImage creates a new Image object
 	//
 	// device - The Device to create the Image on

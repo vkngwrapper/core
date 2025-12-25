@@ -433,7 +433,7 @@ func (v *DeviceVulkanDriver) CreateFramebuffer(device types.Device, allocationCa
 	return framebuffer, res, nil
 }
 
-func (v *DeviceVulkanDriver) CreateGraphicsPipelines(device types.Device, pipelineCache types.PipelineCache, allocationCallbacks *loader.AllocationCallbacks, o ...core1_0.GraphicsPipelineCreateInfo) ([]types.Pipeline, common.VkResult, error) {
+func (v *DeviceVulkanDriver) CreateGraphicsPipelines(device types.Device, pipelineCache *types.PipelineCache, allocationCallbacks *loader.AllocationCallbacks, o ...core1_0.GraphicsPipelineCreateInfo) ([]types.Pipeline, common.VkResult, error) {
 	if device.Handle() == 0 {
 		return nil, core1_0.VKErrorUnknown, errors.New("device was uninitialized")
 	}
@@ -451,7 +451,7 @@ func (v *DeviceVulkanDriver) CreateGraphicsPipelines(device types.Device, pipeli
 	pipelinePtr := (*loader.VkPipeline)(arena.Malloc(pipelineCount * int(unsafe.Sizeof([1]loader.VkPipeline{}))))
 
 	var pipelineCacheHandle loader.VkPipelineCache
-	if pipelineCache.Handle() != 0 {
+	if pipelineCache != nil {
 		pipelineCacheHandle = pipelineCache.Handle()
 	}
 
@@ -471,7 +471,7 @@ func (v *DeviceVulkanDriver) CreateGraphicsPipelines(device types.Device, pipeli
 	return output, res, nil
 }
 
-func (v *DeviceVulkanDriver) CreateComputePipelines(device types.Device, pipelineCache types.PipelineCache, allocationCallbacks *loader.AllocationCallbacks, o ...core1_0.ComputePipelineCreateInfo) ([]types.Pipeline, common.VkResult, error) {
+func (v *DeviceVulkanDriver) CreateComputePipelines(device types.Device, pipelineCache *types.PipelineCache, allocationCallbacks *loader.AllocationCallbacks, o ...core1_0.ComputePipelineCreateInfo) ([]types.Pipeline, common.VkResult, error) {
 	if device.Handle() == 0 {
 		return nil, core1_0.VKErrorUnknown, errors.New("device was uninitialized")
 	}
@@ -489,7 +489,7 @@ func (v *DeviceVulkanDriver) CreateComputePipelines(device types.Device, pipelin
 	pipelinePtr := (*loader.VkPipeline)(arena.Malloc(pipelineCount * int(unsafe.Sizeof([1]loader.VkPipeline{}))))
 
 	var pipelineCacheHandle loader.VkPipelineCache
-	if pipelineCache.Handle() != 0 {
+	if pipelineCache != nil {
 		pipelineCacheHandle = pipelineCache.Handle()
 	}
 

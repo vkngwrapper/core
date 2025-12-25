@@ -10,9 +10,9 @@ import (
 	"github.com/vkngwrapper/core/v3/core1_0"
 	"github.com/vkngwrapper/core/v3/internal/impl1_0"
 	"github.com/vkngwrapper/core/v3/loader"
-	mock_driver "github.com/vkngwrapper/core/v3/loader/mocks"
+	mock_loader "github.com/vkngwrapper/core/v3/loader/mocks"
 	"github.com/vkngwrapper/core/v3/mocks"
-	"github.com/vkngwrapper/core/v3/mocks/mocks1_0"
+	"github.com/vkngwrapper/core/v3/types"
 	"go.uber.org/mock/gomock"
 )
 
@@ -20,15 +20,14 @@ func TestVulkanQueue_WaitForIdle(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	driver := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_0)
-	device := mocks1_0.EasyMockDevice(ctrl, driver)
+	mockLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_0)
+	driver := impl1_0.NewDeviceDriver(mockLoader)
+	device := mocks.NewDummyDevice(common.Vulkan1_0, []string{})
+	queue := mocks.NewDummyQueue(device)
 
-	builder := &impl1_0.DeviceObjectBuilderImpl{}
-	queue := builder.CreateQueueObject(driver, device.Handle(), mocks.NewFakeQueue(), common.Vulkan1_0)
+	mockLoader.EXPECT().VkQueueWaitIdle(queue.Handle()).Return(core1_0.VKSuccess, nil)
 
-	driver.EXPECT().VkQueueWaitIdle(queue.Handle()).Return(core1_0.VKSuccess, nil)
-
-	_, err := queue.WaitIdle()
+	_, err := driver.QueueWaitIdle(queue)
 	require.NoError(t, err)
 }
 
@@ -36,24 +35,24 @@ func TestVulkanQueue_BindSparse(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockDriver := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_0)
-	device := mocks1_0.EasyMockDevice(ctrl, mockDriver)
-	builder := &impl1_0.DeviceObjectBuilderImpl{}
-	queue := builder.CreateQueueObject(mockDriver, device.Handle(), mocks.NewFakeQueue(), common.Vulkan1_0)
+	mockLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_0)
+	driver := impl1_0.NewDeviceDriver(mockLoader)
+	device := mocks.NewDummyDevice(common.Vulkan1_0, []string{})
+	queue := mocks.NewDummyQueue(device)
 
-	semaphore1 := mocks1_0.EasyMockSemaphore(ctrl)
-	semaphore2 := mocks1_0.EasyMockSemaphore(ctrl)
-	semaphore3 := mocks1_0.EasyMockSemaphore(ctrl)
+	semaphore1 := mocks.NewDummySemaphore(device)
+	semaphore2 := mocks.NewDummySemaphore(device)
+	semaphore3 := mocks.NewDummySemaphore(device)
 
-	buffer := mocks1_0.EasyMockBuffer(ctrl)
-	image1 := mocks1_0.EasyMockImage(ctrl)
-	image2 := mocks1_0.EasyMockImage(ctrl)
-	memory1 := mocks1_0.EasyMockDeviceMemory(ctrl)
-	memory2 := mocks1_0.EasyMockDeviceMemory(ctrl)
-	memory3 := mocks1_0.EasyMockDeviceMemory(ctrl)
-	memory4 := mocks1_0.EasyMockDeviceMemory(ctrl)
+	buffer := mocks.NewDummyBuffer(device)
+	image1 := mocks.NewDummyImage(device)
+	image2 := mocks.NewDummyImage(device)
+	memory1 := mocks.NewDummyDeviceMemory(device, 1)
+	memory2 := mocks.NewDummyDeviceMemory(device, 1)
+	memory3 := mocks.NewDummyDeviceMemory(device, 1)
+	memory4 := mocks.NewDummyDeviceMemory(device, 1)
 
-	mockDriver.EXPECT().VkQueueBindSparse(queue.Handle(), loader.Uint32(1), gomock.Not(nil), loader.VkFence(loader.NullHandle)).DoAndReturn(
+	mockLoader.EXPECT().VkQueueBindSparse(queue.Handle(), loader.Uint32(1), gomock.Not(nil), loader.VkFence(loader.NullHandle)).DoAndReturn(
 		func(queue loader.VkQueue, bindInfoCount loader.Uint32, pBindInfo *loader.VkBindSparseInfo, fence loader.VkFence) (common.VkResult, error) {
 			bindSlice := ([]loader.VkBindSparseInfo)(unsafe.Slice(pBindInfo, 1))
 			val := reflect.ValueOf(bindSlice).Index(0)
@@ -152,10 +151,10 @@ func TestVulkanQueue_BindSparse(t *testing.T) {
 			return core1_0.VKSuccess, nil
 		})
 
-	_, err := queue.BindSparse(nil, []core1_0.BindSparseInfo{
-		{
-			WaitSemaphores:   []core1_0.Semaphore{semaphore1},
-			SignalSemaphores: []core1_0.Semaphore{semaphore2, semaphore3},
+	_, err := driver.QueueBindSparse(queue, nil,
+		core1_0.BindSparseInfo{
+			WaitSemaphores:   []types.Semaphore{semaphore1},
+			SignalSemaphores: []types.Semaphore{semaphore2, semaphore3},
 			BufferBinds: []core1_0.SparseBufferMemoryBindInfo{
 				{
 					Buffer: buffer,
@@ -209,6 +208,6 @@ func TestVulkanQueue_BindSparse(t *testing.T) {
 				},
 			},
 		},
-	})
+	)
 	require.NoError(t, err)
 }

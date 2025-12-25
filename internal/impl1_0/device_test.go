@@ -11,9 +11,9 @@ import (
 	"github.com/vkngwrapper/core/v3/core1_0"
 	"github.com/vkngwrapper/core/v3/internal/impl1_0"
 	"github.com/vkngwrapper/core/v3/loader"
-	mock_driver "github.com/vkngwrapper/core/v3/loader/mocks"
+	mock_loader "github.com/vkngwrapper/core/v3/loader/mocks"
 	"github.com/vkngwrapper/core/v3/mocks"
-	"github.com/vkngwrapper/core/v3/mocks/mocks1_0"
+	"github.com/vkngwrapper/core/v3/types"
 	"go.uber.org/mock/gomock"
 )
 
@@ -21,16 +21,13 @@ func TestVulkanLoader1_0_CreateDevice_Success(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockDriver := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_0)
-	instance := mocks1_0.EasyMockInstance(ctrl, mockDriver)
+	mockLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_0)
+	driver := impl1_0.NewInstanceDriver(mockLoader)
+	instance := mocks.NewDummyInstance(common.Vulkan1_0, []string{})
+	physicalDevice := mocks.NewDummyPhysicalDevice(instance, common.Vulkan1_0)
+	expectedDevice := mocks.NewDummyDevice(common.Vulkan1_0, []string{})
 
-	builder := &impl1_0.InstanceObjectBuilderImpl{}
-	physicalDevice := builder.CreatePhysicalDeviceObject(mockDriver, instance.Handle(), mocks.NewFakePhysicalDeviceHandle(), common.Vulkan1_0, common.Vulkan1_0)
-
-	deviceHandle := mocks.NewFakeDeviceHandle()
-
-	mockDriver.EXPECT().CreateDeviceDriver(gomock.Any()).Return(mockDriver, nil)
-	mockDriver.EXPECT().VkCreateDevice(physicalDevice.Handle(), gomock.Not(nil), nil, gomock.Not(nil)).DoAndReturn(
+	mockLoader.EXPECT().VkCreateDevice(physicalDevice.Handle(), gomock.Not(nil), nil, gomock.Not(nil)).DoAndReturn(
 		func(physicalDevice loader.VkPhysicalDevice, pCreateInfo *loader.VkDeviceCreateInfo, pAllocator *loader.VkAllocationCallbacks, pDevice *loader.VkDevice) (common.VkResult, error) {
 			v := reflect.ValueOf(*pCreateInfo)
 
@@ -96,11 +93,11 @@ func TestVulkanLoader1_0_CreateDevice_Success(t *testing.T) {
 			prioritySlice = ([]float32)(unsafe.Slice(priorityPtr, 1))
 			require.Equal(t, float32(0.5), prioritySlice[0])
 
-			*pDevice = deviceHandle
+			*pDevice = expectedDevice.Handle()
 			return core1_0.VKSuccess, nil
 		})
 
-	device, _, err := physicalDevice.CreateDevice(nil, core1_0.DeviceCreateInfo{
+	device, _, err := driver.CreateDevice(physicalDevice, nil, core1_0.DeviceCreateInfo{
 		QueueCreateInfos: []core1_0.DeviceQueueCreateInfo{
 			{
 				QueueFamilyIndex: 1,
@@ -119,19 +116,19 @@ func TestVulkanLoader1_0_CreateDevice_Success(t *testing.T) {
 	})
 	require.NoError(t, err)
 	require.NotNil(t, device)
-	require.Equal(t, deviceHandle, device.Handle())
+	require.Equal(t, expectedDevice.Handle(), device.Handle())
 }
 
 func TestVulkanLoader1_0_CreateDevice_FailNoQueueFamilies(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockDriver := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_0)
-	instance := mocks1_0.EasyMockInstance(ctrl, mockDriver)
-	builder := &impl1_0.InstanceObjectBuilderImpl{}
-	physicalDevice := builder.CreatePhysicalDeviceObject(mockDriver, instance.Handle(), mocks.NewFakePhysicalDeviceHandle(), common.Vulkan1_0, common.Vulkan1_0)
+	mockLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_0)
+	driver := impl1_0.NewInstanceDriver(mockLoader)
+	instance := mocks.NewDummyInstance(common.Vulkan1_0, []string{})
+	physicalDevice := mocks.NewDummyPhysicalDevice(instance, common.Vulkan1_0)
 
-	_, _, err := physicalDevice.CreateDevice(nil, core1_0.DeviceCreateInfo{
+	_, _, err := driver.CreateDevice(physicalDevice, nil, core1_0.DeviceCreateInfo{
 		QueueCreateInfos:      []core1_0.DeviceQueueCreateInfo{},
 		EnabledExtensionNames: []string{"A", "B", "C"},
 		EnabledFeatures: &core1_0.PhysicalDeviceFeatures{
@@ -146,12 +143,12 @@ func TestVulkanLoader1_0_CreateDevice_FailFamilyWithoutPriorities(t *testing.T) 
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockDriver := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_0)
-	instance := mocks1_0.EasyMockInstance(ctrl, mockDriver)
-	builder := &impl1_0.InstanceObjectBuilderImpl{}
-	physicalDevice := builder.CreatePhysicalDeviceObject(mockDriver, instance.Handle(), mocks.NewFakePhysicalDeviceHandle(), common.Vulkan1_0, common.Vulkan1_0)
+	mockLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_0)
+	driver := impl1_0.NewInstanceDriver(mockLoader)
+	instance := mocks.NewDummyInstance(common.Vulkan1_0, []string{})
+	physicalDevice := mocks.NewDummyPhysicalDevice(instance, common.Vulkan1_0)
 
-	_, _, err := physicalDevice.CreateDevice(nil, core1_0.DeviceCreateInfo{
+	_, _, err := driver.CreateDevice(physicalDevice, nil, core1_0.DeviceCreateInfo{
 		QueueCreateInfos: []core1_0.DeviceQueueCreateInfo{
 			{
 				QueueFamilyIndex: 1,
@@ -175,32 +172,33 @@ func TestDevice_GetQueue(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockDriver := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_0)
-	builder := &impl1_0.InstanceObjectBuilderImpl{}
-	device := builder.CreateDeviceObject(mockDriver, mocks.NewFakeDeviceHandle(), common.Vulkan1_0, []string{})
-	queueHandle := mocks.NewFakeQueue()
+	mockLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_0)
+	driver := impl1_0.NewDeviceDriver(mockLoader)
+	device := mocks.NewDummyDevice(common.Vulkan1_0, []string{})
+	expectedQueue := mocks.NewDummyQueue(device)
 
-	mockDriver.EXPECT().VkGetDeviceQueue(device.Handle(), loader.Uint32(1), loader.Uint32(2), gomock.Not(nil)).DoAndReturn(
+	mockLoader.EXPECT().VkGetDeviceQueue(device.Handle(), loader.Uint32(1), loader.Uint32(2), gomock.Not(nil)).DoAndReturn(
 		func(device loader.VkDevice, queueFamilyIndex, queueIndex loader.Uint32, pQueue *loader.VkQueue) {
-			*pQueue = queueHandle
+			*pQueue = expectedQueue.Handle()
 		})
 
-	queue := device.GetQueue(1, 2)
+	queue := driver.GetQueue(device, 1, 2)
 	require.NotNil(t, queue)
-	require.Equal(t, queueHandle, queue.Handle())
+	require.Equal(t, expectedQueue.Handle(), queue.Handle())
 }
 
 func TestDevice_WaitForFences_Timeout(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockDriver := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_0)
-	builder := &impl1_0.InstanceObjectBuilderImpl{}
-	device := builder.CreateDeviceObject(mockDriver, mocks.NewFakeDeviceHandle(), common.Vulkan1_0, []string{})
-	fence1 := mocks1_0.EasyMockFence(ctrl)
-	fence2 := mocks1_0.EasyMockFence(ctrl)
+	device := mocks.NewDummyDevice(common.Vulkan1_0, []string{})
+	mockLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_0)
+	mockLoader.EXPECT().DeviceHandle().Return(device.Handle()).AnyTimes()
+	driver := impl1_0.NewDeviceDriver(mockLoader)
+	fence1 := mocks.NewDummyFence(device)
+	fence2 := mocks.NewDummyFence(device)
 
-	mockDriver.EXPECT().VkWaitForFences(device.Handle(), loader.Uint32(2), gomock.Not(nil), loader.VkBool32(1), loader.Uint64(1)).DoAndReturn(
+	mockLoader.EXPECT().VkWaitForFences(device.Handle(), loader.Uint32(2), gomock.Not(nil), loader.VkBool32(1), loader.Uint64(1)).DoAndReturn(
 		func(device loader.VkDevice, fenceCount loader.Uint32, pFences *loader.VkFence, waitAll loader.VkBool32, timeout loader.Uint64) (common.VkResult, error) {
 			fenceSlice := ([]loader.VkFence)(unsafe.Slice(pFences, 2))
 			require.Equal(t, fence1.Handle(), fenceSlice[0])
@@ -209,9 +207,7 @@ func TestDevice_WaitForFences_Timeout(t *testing.T) {
 			return core1_0.VKSuccess, nil
 		})
 
-	_, err := device.WaitForFences(true, time.Nanosecond, []core1_0.Fence{
-		fence1, fence2,
-	})
+	_, err := driver.WaitForFences(true, time.Nanosecond, fence1, fence2)
 	require.NoError(t, err)
 }
 
@@ -219,12 +215,13 @@ func TestDevice_WaitForFences_NoTimeout(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockDriver := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_0)
-	builder := &impl1_0.InstanceObjectBuilderImpl{}
-	device := builder.CreateDeviceObject(mockDriver, mocks.NewFakeDeviceHandle(), common.Vulkan1_0, []string{})
-	fence1 := mocks1_0.EasyMockFence(ctrl)
+	device := mocks.NewDummyDevice(common.Vulkan1_0, []string{})
+	mockLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_0)
+	mockLoader.EXPECT().DeviceHandle().Return(device.Handle()).AnyTimes()
+	driver := impl1_0.NewDeviceDriver(mockLoader)
+	fence1 := mocks.NewDummyFence(device)
 
-	mockDriver.EXPECT().VkWaitForFences(device.Handle(), loader.Uint32(1), gomock.Not(nil), loader.VkBool32(0), loader.Uint64(0xffffffffffffffff)).DoAndReturn(
+	mockLoader.EXPECT().VkWaitForFences(device.Handle(), loader.Uint32(1), gomock.Not(nil), loader.VkBool32(0), loader.Uint64(0xffffffffffffffff)).DoAndReturn(
 		func(device loader.VkDevice, fenceCount loader.Uint32, pFences *loader.VkFence, waitAll loader.VkBool32, timeout loader.Uint64) (common.VkResult, error) {
 			fenceSlice := ([]loader.VkFence)(unsafe.Slice(pFences, 1))
 			require.Equal(t, fence1.Handle(), fenceSlice[0])
@@ -232,9 +229,7 @@ func TestDevice_WaitForFences_NoTimeout(t *testing.T) {
 			return core1_0.VKSuccess, nil
 		})
 
-	_, err := device.WaitForFences(false, common.NoTimeout, []core1_0.Fence{
-		fence1,
-	})
+	_, err := driver.WaitForFences(false, common.NoTimeout, fence1)
 	require.NoError(t, err)
 }
 
@@ -242,12 +237,12 @@ func TestDevice_WaitForIdle(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockDriver := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_0)
-	builder := &impl1_0.InstanceObjectBuilderImpl{}
-	device := builder.CreateDeviceObject(mockDriver, mocks.NewFakeDeviceHandle(), common.Vulkan1_0, []string{})
+	mockLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_0)
+	driver := impl1_0.NewDeviceDriver(mockLoader)
+	device := mocks.NewDummyDevice(common.Vulkan1_0, []string{})
 
-	mockDriver.EXPECT().VkDeviceWaitIdle(device.Handle()).Return(core1_0.VKSuccess, nil)
-	_, err := device.WaitIdle()
+	mockLoader.EXPECT().VkDeviceWaitIdle(device.Handle()).Return(core1_0.VKSuccess, nil)
+	_, err := driver.DeviceWaitIdle(device)
 	require.NoError(t, err)
 }
 
@@ -255,14 +250,14 @@ func TestVulkanDevice_ResetFences(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockDriver := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_0)
+	device := mocks.NewDummyDevice(common.Vulkan1_0, []string{})
+	mockLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_0)
+	mockLoader.EXPECT().DeviceHandle().Return(device.Handle()).AnyTimes()
+	driver := impl1_0.NewDeviceDriver(mockLoader)
+	fence1 := mocks.NewDummyFence(device)
+	fence2 := mocks.NewDummyFence(device)
 
-	builder := &impl1_0.InstanceObjectBuilderImpl{}
-	device := builder.CreateDeviceObject(mockDriver, mocks.NewFakeDeviceHandle(), common.Vulkan1_0, []string{})
-	fence1 := mocks1_0.EasyMockFence(ctrl)
-	fence2 := mocks1_0.EasyMockFence(ctrl)
-
-	mockDriver.EXPECT().VkResetFences(device.Handle(), loader.Uint32(2), gomock.Not(nil)).DoAndReturn(
+	mockLoader.EXPECT().VkResetFences(device.Handle(), loader.Uint32(2), gomock.Not(nil)).DoAndReturn(
 		func(device loader.VkDevice, fenceCount loader.Uint32, pFence *loader.VkFence) (common.VkResult, error) {
 			fences := ([]loader.VkFence)(unsafe.Slice(pFence, 2))
 
@@ -271,7 +266,7 @@ func TestVulkanDevice_ResetFences(t *testing.T) {
 			return core1_0.VKSuccess, nil
 		})
 
-	_, err := device.ResetFences([]core1_0.Fence{fence1, fence2})
+	_, err := driver.ResetFences(fence1, fence2)
 	require.NoError(t, err)
 }
 
@@ -279,16 +274,17 @@ func TestVulkanDevice_UpdateDescriptorSets_WriteImageInfo(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockDriver := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_0)
-	builder := &impl1_0.InstanceObjectBuilderImpl{}
-	device := builder.CreateDeviceObject(mockDriver, mocks.NewFakeDeviceHandle(), common.Vulkan1_0, []string{})
-	destDescriptor := mocks1_0.EasyMockDescriptorSet(ctrl)
-	sampler1 := mocks1_0.EasyMockSampler(ctrl)
-	sampler2 := mocks1_0.EasyMockSampler(ctrl)
-	imageView1 := mocks1_0.EasyMockImageView(ctrl)
-	imageView2 := mocks1_0.EasyMockImageView(ctrl)
+	mockLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_0)
+	driver := impl1_0.NewDeviceDriver(mockLoader)
+	device := mocks.NewDummyDevice(common.Vulkan1_0, []string{})
+	pool := mocks.NewDummyDescriptorPool(device)
+	destDescriptor := mocks.NewDummyDescriptorSet(pool, device)
+	sampler1 := mocks.NewDummySampler(device)
+	sampler2 := mocks.NewDummySampler(device)
+	imageView1 := mocks.NewDummyImageView(device)
+	imageView2 := mocks.NewDummyImageView(device)
 
-	mockDriver.EXPECT().VkUpdateDescriptorSets(device.Handle(), loader.Uint32(1), gomock.Not(nil), loader.Uint32(0), nil).DoAndReturn(
+	mockLoader.EXPECT().VkUpdateDescriptorSets(device.Handle(), loader.Uint32(1), gomock.Not(nil), loader.Uint32(0), nil).DoAndReturn(
 		func(device loader.VkDevice, descriptorWriteCount loader.Uint32, pDescriptorWrites *loader.VkWriteDescriptorSet, descriptorCopyCount loader.Uint32, pDescriptorCopies *loader.VkCopyDescriptorSet) error {
 			writeSlice := ([]loader.VkWriteDescriptorSet)(unsafe.Slice(pDescriptorWrites, 1))
 			writeVal := reflect.ValueOf(writeSlice[0])
@@ -321,7 +317,7 @@ func TestVulkanDevice_UpdateDescriptorSets_WriteImageInfo(t *testing.T) {
 			return nil
 		})
 
-	err := device.UpdateDescriptorSets([]core1_0.WriteDescriptorSet{
+	err := driver.UpdateDescriptorSets(device, []core1_0.WriteDescriptorSet{
 		{
 			DstSet:          destDescriptor,
 			DstBinding:      1,
@@ -348,14 +344,15 @@ func TestVulkanDevice_UpdateDescriptorSets_WriteBufferInfo(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockDriver := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_0)
-	builder := &impl1_0.InstanceObjectBuilderImpl{}
-	device := builder.CreateDeviceObject(mockDriver, mocks.NewFakeDeviceHandle(), common.Vulkan1_0, []string{})
-	destDescriptor := mocks1_0.EasyMockDescriptorSet(ctrl)
-	buffer1 := mocks1_0.EasyMockBuffer(ctrl)
-	buffer2 := mocks1_0.EasyMockBuffer(ctrl)
+	mockLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_0)
+	driver := impl1_0.NewDeviceDriver(mockLoader)
+	device := mocks.NewDummyDevice(common.Vulkan1_0, []string{})
+	pool := mocks.NewDummyDescriptorPool(device)
+	destDescriptor := mocks.NewDummyDescriptorSet(pool, device)
+	buffer1 := mocks.NewDummyBuffer(device)
+	buffer2 := mocks.NewDummyBuffer(device)
 
-	mockDriver.EXPECT().VkUpdateDescriptorSets(device.Handle(), loader.Uint32(1), gomock.Not(nil), loader.Uint32(0), nil).DoAndReturn(
+	mockLoader.EXPECT().VkUpdateDescriptorSets(device.Handle(), loader.Uint32(1), gomock.Not(nil), loader.Uint32(0), nil).DoAndReturn(
 		func(device loader.VkDevice, descriptorWriteCount loader.Uint32, pDescriptorWrites *loader.VkWriteDescriptorSet, descriptorCopyCount loader.Uint32, pDescriptorCopies *loader.VkCopyDescriptorSet) error {
 			writeSlice := ([]loader.VkWriteDescriptorSet)(unsafe.Slice(pDescriptorWrites, 1))
 			writeVal := reflect.ValueOf(writeSlice[0])
@@ -388,7 +385,7 @@ func TestVulkanDevice_UpdateDescriptorSets_WriteBufferInfo(t *testing.T) {
 			return nil
 		})
 
-	err := device.UpdateDescriptorSets([]core1_0.WriteDescriptorSet{
+	err := driver.UpdateDescriptorSets(device, []core1_0.WriteDescriptorSet{
 		{
 			DstSet:          destDescriptor,
 			DstBinding:      1,
@@ -416,14 +413,15 @@ func TestVulkanDevice_UpdateDescriptorSets_TexelBufferView(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockDriver := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_0)
-	builder := &impl1_0.InstanceObjectBuilderImpl{}
-	device := builder.CreateDeviceObject(mockDriver, mocks.NewFakeDeviceHandle(), common.Vulkan1_0, []string{})
-	destDescriptor := mocks1_0.EasyMockDescriptorSet(ctrl)
-	bufferView1 := mocks1_0.EasyMockBufferView(ctrl)
-	bufferView2 := mocks1_0.EasyMockBufferView(ctrl)
+	mockLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_0)
+	driver := impl1_0.NewDeviceDriver(mockLoader)
+	device := mocks.NewDummyDevice(common.Vulkan1_0, []string{})
+	pool := mocks.NewDummyDescriptorPool(device)
+	destDescriptor := mocks.NewDummyDescriptorSet(pool, device)
+	bufferView1 := mocks.NewDummyBufferView(device)
+	bufferView2 := mocks.NewDummyBufferView(device)
 
-	mockDriver.EXPECT().VkUpdateDescriptorSets(device.Handle(), loader.Uint32(1), gomock.Not(nil), loader.Uint32(0), nil).DoAndReturn(
+	mockLoader.EXPECT().VkUpdateDescriptorSets(device.Handle(), loader.Uint32(1), gomock.Not(nil), loader.Uint32(0), nil).DoAndReturn(
 		func(device loader.VkDevice, descriptorWriteCount loader.Uint32, pDescriptorWrites *loader.VkWriteDescriptorSet, descriptorCopyCount loader.Uint32, pDescriptorCopies *loader.VkCopyDescriptorSet) error {
 			writeSlice := ([]loader.VkWriteDescriptorSet)(unsafe.Slice(pDescriptorWrites, 1))
 			writeVal := reflect.ValueOf(writeSlice[0])
@@ -449,13 +447,13 @@ func TestVulkanDevice_UpdateDescriptorSets_TexelBufferView(t *testing.T) {
 			return nil
 		})
 
-	err := device.UpdateDescriptorSets([]core1_0.WriteDescriptorSet{
+	err := driver.UpdateDescriptorSets(device, []core1_0.WriteDescriptorSet{
 		{
 			DstSet:          destDescriptor,
 			DstBinding:      1,
 			DstArrayElement: 3,
 			DescriptorType:  core1_0.DescriptorTypeUniformBuffer,
-			TexelBufferView: []core1_0.BufferView{
+			TexelBufferView: []types.BufferView{
 				bufferView1, bufferView2,
 			},
 		},
@@ -467,13 +465,14 @@ func TestVulkanDevice_UpdateDescriptorSets_Copy(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockDriver := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_0)
-	builder := &impl1_0.InstanceObjectBuilderImpl{}
-	device := builder.CreateDeviceObject(mockDriver, mocks.NewFakeDeviceHandle(), common.Vulkan1_0, []string{})
-	srcDescriptor := mocks1_0.EasyMockDescriptorSet(ctrl)
-	destDescriptor := mocks1_0.EasyMockDescriptorSet(ctrl)
+	mockLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_0)
+	driver := impl1_0.NewDeviceDriver(mockLoader)
+	device := mocks.NewDummyDevice(common.Vulkan1_0, []string{})
+	pool := mocks.NewDummyDescriptorPool(device)
+	srcDescriptor := mocks.NewDummyDescriptorSet(pool, device)
+	destDescriptor := mocks.NewDummyDescriptorSet(pool, device)
 
-	mockDriver.EXPECT().VkUpdateDescriptorSets(device.Handle(), loader.Uint32(0), nil, loader.Uint32(1), gomock.Not(nil)).DoAndReturn(
+	mockLoader.EXPECT().VkUpdateDescriptorSets(device.Handle(), loader.Uint32(0), nil, loader.Uint32(1), gomock.Not(nil)).DoAndReturn(
 		func(device loader.VkDevice, descriptorWriteCount loader.Uint32, pDescriptorWrites *loader.VkWriteDescriptorSet, descriptorCopyCount loader.Uint32, pDescriptorCopies *loader.VkCopyDescriptorSet) error {
 			copySlice := ([]loader.VkCopyDescriptorSet)(unsafe.Slice(pDescriptorCopies, 1))
 			copyVal := reflect.ValueOf(copySlice[0])
@@ -491,7 +490,7 @@ func TestVulkanDevice_UpdateDescriptorSets_Copy(t *testing.T) {
 			return nil
 		})
 
-	err := device.UpdateDescriptorSets(nil, []core1_0.CopyDescriptorSet{
+	err := driver.UpdateDescriptorSets(device, nil, []core1_0.CopyDescriptorSet{
 		{
 			SrcSet:          srcDescriptor,
 			SrcBinding:      3,
@@ -512,18 +511,19 @@ func TestVulkanDevice_UpdateDescriptorSets_FailureImageInfoAndBufferInfo(t *test
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockDriver := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_0)
-	builder := &impl1_0.InstanceObjectBuilderImpl{}
-	device := builder.CreateDeviceObject(mockDriver, mocks.NewFakeDeviceHandle(), common.Vulkan1_0, []string{})
-	destDescriptor := mocks1_0.EasyMockDescriptorSet(ctrl)
-	buffer1 := mocks1_0.EasyMockBuffer(ctrl)
-	buffer2 := mocks1_0.EasyMockBuffer(ctrl)
-	sampler1 := mocks1_0.EasyMockSampler(ctrl)
-	sampler2 := mocks1_0.EasyMockSampler(ctrl)
-	imageView1 := mocks1_0.EasyMockImageView(ctrl)
-	imageView2 := mocks1_0.EasyMockImageView(ctrl)
+	mockLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_0)
+	driver := impl1_0.NewDeviceDriver(mockLoader)
+	device := mocks.NewDummyDevice(common.Vulkan1_0, []string{})
+	pool := mocks.NewDummyDescriptorPool(device)
+	destDescriptor := mocks.NewDummyDescriptorSet(pool, device)
+	buffer1 := mocks.NewDummyBuffer(device)
+	buffer2 := mocks.NewDummyBuffer(device)
+	sampler1 := mocks.NewDummySampler(device)
+	sampler2 := mocks.NewDummySampler(device)
+	imageView1 := mocks.NewDummyImageView(device)
+	imageView2 := mocks.NewDummyImageView(device)
 
-	err := device.UpdateDescriptorSets([]core1_0.WriteDescriptorSet{
+	err := driver.UpdateDescriptorSets(device, []core1_0.WriteDescriptorSet{
 		{
 			DstSet:          destDescriptor,
 			DstBinding:      1,
@@ -563,18 +563,19 @@ func TestVulkanDevice_UpdateDescriptorSets_FailureImageInfoAndBufferView(t *test
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockDriver := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_0)
-	builder := &impl1_0.InstanceObjectBuilderImpl{}
-	device := builder.CreateDeviceObject(mockDriver, mocks.NewFakeDeviceHandle(), common.Vulkan1_0, []string{})
-	destDescriptor := mocks1_0.EasyMockDescriptorSet(ctrl)
-	bufferView1 := mocks1_0.EasyMockBufferView(ctrl)
-	bufferView2 := mocks1_0.EasyMockBufferView(ctrl)
-	sampler1 := mocks1_0.EasyMockSampler(ctrl)
-	sampler2 := mocks1_0.EasyMockSampler(ctrl)
-	imageView1 := mocks1_0.EasyMockImageView(ctrl)
-	imageView2 := mocks1_0.EasyMockImageView(ctrl)
+	mockLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_0)
+	driver := impl1_0.NewDeviceDriver(mockLoader)
+	device := mocks.NewDummyDevice(common.Vulkan1_0, []string{})
+	pool := mocks.NewDummyDescriptorPool(device)
+	destDescriptor := mocks.NewDummyDescriptorSet(pool, device)
+	bufferView1 := mocks.NewDummyBufferView(device)
+	bufferView2 := mocks.NewDummyBufferView(device)
+	sampler1 := mocks.NewDummySampler(device)
+	sampler2 := mocks.NewDummySampler(device)
+	imageView1 := mocks.NewDummyImageView(device)
+	imageView2 := mocks.NewDummyImageView(device)
 
-	err := device.UpdateDescriptorSets([]core1_0.WriteDescriptorSet{
+	err := driver.UpdateDescriptorSets(device, []core1_0.WriteDescriptorSet{
 		{
 			DstSet:          destDescriptor,
 			DstBinding:      1,
@@ -592,7 +593,7 @@ func TestVulkanDevice_UpdateDescriptorSets_FailureImageInfoAndBufferView(t *test
 					ImageLayout: core1_0.ImageLayoutPreInitialized,
 				},
 			},
-			TexelBufferView: []core1_0.BufferView{
+			TexelBufferView: []types.BufferView{
 				bufferView1, bufferView2,
 			},
 		},
@@ -605,16 +606,18 @@ func TestVulkanDevice_UpdateDescriptorSets_FailureBufferInfoAndBufferView(t *tes
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockDriver := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_0)
-	builder := &impl1_0.InstanceObjectBuilderImpl{}
-	device := builder.CreateDeviceObject(mockDriver, mocks.NewFakeDeviceHandle(), common.Vulkan1_0, []string{})
-	destDescriptor := mocks1_0.EasyMockDescriptorSet(ctrl)
-	buffer1 := mocks1_0.EasyMockBuffer(ctrl)
-	buffer2 := mocks1_0.EasyMockBuffer(ctrl)
-	bufferView1 := mocks1_0.EasyMockBufferView(ctrl)
-	bufferView2 := mocks1_0.EasyMockBufferView(ctrl)
+	mockLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_0)
 
-	err := device.UpdateDescriptorSets([]core1_0.WriteDescriptorSet{
+	driver := impl1_0.NewDeviceDriver(mockLoader)
+	device := mocks.NewDummyDevice(common.Vulkan1_0, []string{})
+	pool := mocks.NewDummyDescriptorPool(device)
+	destDescriptor := mocks.NewDummyDescriptorSet(pool, device)
+	buffer1 := mocks.NewDummyBuffer(device)
+	buffer2 := mocks.NewDummyBuffer(device)
+	bufferView1 := mocks.NewDummyBufferView(device)
+	bufferView2 := mocks.NewDummyBufferView(device)
+
+	err := driver.UpdateDescriptorSets(device, []core1_0.WriteDescriptorSet{
 		{
 			DstSet:          destDescriptor,
 			DstBinding:      1,
@@ -632,7 +635,7 @@ func TestVulkanDevice_UpdateDescriptorSets_FailureBufferInfoAndBufferView(t *tes
 					Range:  17,
 				},
 			},
-			TexelBufferView: []core1_0.BufferView{
+			TexelBufferView: []types.BufferView{
 				bufferView1, bufferView2,
 			},
 		},
@@ -645,12 +648,13 @@ func TestVulkanDevice_UpdateDescriptorSets_FailureNoSource(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockDriver := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_0)
-	builder := &impl1_0.InstanceObjectBuilderImpl{}
-	device := builder.CreateDeviceObject(mockDriver, mocks.NewFakeDeviceHandle(), common.Vulkan1_0, []string{})
-	destDescriptor := mocks1_0.EasyMockDescriptorSet(ctrl)
+	mockLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_0)
+	driver := impl1_0.NewDeviceDriver(mockLoader)
+	device := mocks.NewDummyDevice(common.Vulkan1_0, []string{})
+	pool := mocks.NewDummyDescriptorPool(device)
+	destDescriptor := mocks.NewDummyDescriptorSet(pool, device)
 
-	err := device.UpdateDescriptorSets([]core1_0.WriteDescriptorSet{
+	err := driver.UpdateDescriptorSets(device, []core1_0.WriteDescriptorSet{
 		{
 			DstSet:          destDescriptor,
 			DstBinding:      1,
@@ -666,14 +670,14 @@ func TestVulkanDevice_FlushMappedMemoryRanges(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockDriver := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_0)
+	device := mocks.NewDummyDevice(common.Vulkan1_0, []string{})
+	mockLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_0)
+	mockLoader.EXPECT().DeviceHandle().Return(device.Handle()).AnyTimes()
+	driver := impl1_0.NewDeviceDriver(mockLoader)
+	mem1 := mocks.NewDummyDeviceMemory(device, 1)
+	mem2 := mocks.NewDummyDeviceMemory(device, 1)
 
-	builder := &impl1_0.InstanceObjectBuilderImpl{}
-	device := builder.CreateDeviceObject(mockDriver, mocks.NewFakeDeviceHandle(), common.Vulkan1_0, []string{})
-	mem1 := mocks1_0.EasyMockDeviceMemory(ctrl)
-	mem2 := mocks1_0.EasyMockDeviceMemory(ctrl)
-
-	mockDriver.EXPECT().VkFlushMappedMemoryRanges(device.Handle(), loader.Uint32(2), gomock.Not(nil)).DoAndReturn(
+	mockLoader.EXPECT().VkFlushMappedMemoryRanges(device.Handle(), loader.Uint32(2), gomock.Not(nil)).DoAndReturn(
 		func(device loader.VkDevice, rangeCount loader.Uint32, pRanges *loader.VkMappedMemoryRange) (common.VkResult, error) {
 			val := reflect.ValueOf([]loader.VkMappedMemoryRange(unsafe.Slice(pRanges, 2)))
 
@@ -694,18 +698,18 @@ func TestVulkanDevice_FlushMappedMemoryRanges(t *testing.T) {
 			return core1_0.VKSuccess, nil
 		})
 
-	_, err := device.FlushMappedMemoryRanges([]core1_0.MappedMemoryRange{
-		{
+	_, err := driver.FlushMappedMemoryRanges(
+		core1_0.MappedMemoryRange{
 			Memory: mem1,
 			Offset: 1,
 			Size:   3,
 		},
-		{
+		core1_0.MappedMemoryRange{
 			Memory: mem2,
 			Offset: 5,
 			Size:   7,
 		},
-	})
+	)
 	require.NoError(t, err)
 }
 
@@ -713,13 +717,14 @@ func TestVulkanDevice_InvalidateMappedMemoryRanges(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockDriver := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_0)
-	builder := &impl1_0.InstanceObjectBuilderImpl{}
-	device := builder.CreateDeviceObject(mockDriver, mocks.NewFakeDeviceHandle(), common.Vulkan1_0, []string{})
-	mem1 := mocks1_0.EasyMockDeviceMemory(ctrl)
-	mem2 := mocks1_0.EasyMockDeviceMemory(ctrl)
+	device := mocks.NewDummyDevice(common.Vulkan1_0, []string{})
+	mockLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_0)
+	mockLoader.EXPECT().DeviceHandle().Return(device.Handle()).AnyTimes()
+	driver := impl1_0.NewDeviceDriver(mockLoader)
+	mem1 := mocks.NewDummyDeviceMemory(device, 1)
+	mem2 := mocks.NewDummyDeviceMemory(device, 1)
 
-	mockDriver.EXPECT().VkInvalidateMappedMemoryRanges(device.Handle(), loader.Uint32(2), gomock.Not(nil)).DoAndReturn(
+	mockLoader.EXPECT().VkInvalidateMappedMemoryRanges(device.Handle(), loader.Uint32(2), gomock.Not(nil)).DoAndReturn(
 		func(device loader.VkDevice, rangeCount loader.Uint32, pRanges *loader.VkMappedMemoryRange) (common.VkResult, error) {
 			val := reflect.ValueOf([]loader.VkMappedMemoryRange(unsafe.Slice(pRanges, 2)))
 
@@ -740,17 +745,17 @@ func TestVulkanDevice_InvalidateMappedMemoryRanges(t *testing.T) {
 			return core1_0.VKSuccess, nil
 		})
 
-	_, err := device.InvalidateMappedMemoryRanges([]core1_0.MappedMemoryRange{
-		{
+	_, err := driver.InvalidateMappedMemoryRanges(
+		core1_0.MappedMemoryRange{
 			Memory: mem1,
 			Offset: 1,
 			Size:   3,
 		},
-		{
+		core1_0.MappedMemoryRange{
 			Memory: mem2,
 			Offset: 5,
 			Size:   7,
 		},
-	})
+	)
 	require.NoError(t, err)
 }

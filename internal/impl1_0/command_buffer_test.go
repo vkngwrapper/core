@@ -208,14 +208,13 @@ func TestVulkanCommandBuffer_CmdBindVertexBuffers(t *testing.T) {
 
 	mockLoader, driver, device, buffer := setup(t, ctrl)
 	vertexBuffer := mocks.NewDummyBuffer(device)
-	bufferHandle := mocks.NewFakeBufferHandle()
 
 	mockLoader.EXPECT().VkCmdBindVertexBuffers(buffer.Handle(), loader.Uint32(0), loader.Uint32(1), gomock.Not(nil), gomock.Not(nil)).DoAndReturn(
 		func(commandBuffer loader.VkCommandBuffer, firstBinding loader.Uint32, bindingCount loader.Uint32, pBuffers *loader.VkBuffer, pOffsets *loader.VkDeviceSize) {
 			singleBuffer := ([]loader.VkBuffer)(unsafe.Slice(pBuffers, 1))
 			singleOffset := ([]loader.VkDeviceSize)(unsafe.Slice(pOffsets, 1))
 
-			require.Equal(t, bufferHandle, singleBuffer[0])
+			require.Equal(t, vertexBuffer.Handle(), singleBuffer[0])
 			require.ElementsMatch(t, []loader.VkDeviceSize{2}, singleOffset)
 		})
 
