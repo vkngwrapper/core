@@ -11,9 +11,8 @@ import (
 	"github.com/vkngwrapper/core/v3/core1_2"
 	"github.com/vkngwrapper/core/v3/internal/impl1_2"
 	"github.com/vkngwrapper/core/v3/loader"
-	mock_driver "github.com/vkngwrapper/core/v3/loader/mocks"
+	mock_loader "github.com/vkngwrapper/core/v3/loader/mocks"
 	"github.com/vkngwrapper/core/v3/mocks"
-	"github.com/vkngwrapper/core/v3/mocks/mocks1_2"
 	"go.uber.org/mock/gomock"
 )
 
@@ -21,13 +20,13 @@ func TestSemaphoreTypeCreateOptions(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	coreDriver := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_2)
+	coreLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_2)
+	driver := impl1_2.NewDeviceDriver(coreLoader)
 
-	builder := &impl1_2.InstanceObjectBuilderImpl{}
-	device := builder.CreateDeviceObject(coreDriver, mocks.NewFakeDeviceHandle(), common.Vulkan1_2, []string{})
-	mockSemaphore := mocks1_2.EasyMockSemaphore(ctrl)
+	device := mocks.NewDummyDevice(common.Vulkan1_2, []string{})
+	mockSemaphore := mocks.NewDummySemaphore(device)
 
-	coreDriver.EXPECT().VkCreateSemaphore(
+	coreLoader.EXPECT().VkCreateSemaphore(
 		device.Handle(),
 		gomock.Not(gomock.Nil()),
 		gomock.Nil(),
@@ -53,7 +52,8 @@ func TestSemaphoreTypeCreateOptions(t *testing.T) {
 		return core1_0.VKSuccess, nil
 	})
 
-	semaphore, _, err := device.CreateSemaphore(
+	semaphore, _, err := driver.CreateSemaphore(
+		device,
 		nil,
 		core1_0.SemaphoreCreateInfo{
 			NextOptions: common.NextOptions{core1_2.SemaphoreTypeCreateInfo{
@@ -69,13 +69,13 @@ func TestTimelineSemaphoreSubmitOptions(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	coreDriver := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_2)
-	device := mocks1_2.EasyMockDevice(ctrl, coreDriver)
-	builder := &impl1_2.DeviceObjectBuilderImpl{}
-	queue := builder.CreateQueueObject(coreDriver, device.Handle(), mocks.NewFakeQueue(), common.Vulkan1_2)
-	fence := mocks1_2.EasyMockFence(ctrl)
+	coreLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_2)
+	driver := impl1_2.NewDeviceDriver(coreLoader)
+	device := mocks.NewDummyDevice(common.Vulkan1_2, []string{})
+	queue := mocks.NewDummyQueue(device)
+	fence := mocks.NewDummyFence(device)
 
-	coreDriver.EXPECT().VkQueueSubmit(
+	coreLoader.EXPECT().VkQueueSubmit(
 		queue.Handle(),
 		loader.Uint32(1),
 		gomock.Not(gomock.Nil()),
@@ -106,17 +106,18 @@ func TestTimelineSemaphoreSubmitOptions(t *testing.T) {
 		return core1_0.VKSuccess, nil
 	})
 
-	_, err := queue.Submit(
-		fence,
-		[]core1_0.SubmitInfo{
-			{
-				NextOptions: common.NextOptions{
-					core1_2.TimelineSemaphoreSubmitInfo{
-						WaitSemaphoreValues:   []uint64{3, 5},
-						SignalSemaphoreValues: []uint64{7, 11, 13},
-					},
+	_, err := driver.QueueSubmit(
+		queue,
+		&fence,
+
+		core1_0.SubmitInfo{
+			NextOptions: common.NextOptions{
+				core1_2.TimelineSemaphoreSubmitInfo{
+					WaitSemaphoreValues:   []uint64{3, 5},
+					SignalSemaphoreValues: []uint64{7, 11, 13},
 				},
 			},
-		})
+		},
+	)
 	require.NoError(t, err)
 }

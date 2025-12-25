@@ -11,9 +11,8 @@ import (
 	"github.com/vkngwrapper/core/v3/core1_1"
 	"github.com/vkngwrapper/core/v3/internal/impl1_1"
 	"github.com/vkngwrapper/core/v3/loader"
-	mock_driver "github.com/vkngwrapper/core/v3/loader/mocks"
+	mock_loader "github.com/vkngwrapper/core/v3/loader/mocks"
 	"github.com/vkngwrapper/core/v3/mocks"
-	"github.com/vkngwrapper/core/v3/mocks/mocks1_1"
 	"go.uber.org/mock/gomock"
 )
 
@@ -21,12 +20,12 @@ func TestTessellationDomainOriginOptions(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	coreDriver := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_0)
-	builder := &impl1_1.InstanceObjectBuilderImpl{}
-	device := builder.CreateDeviceObject(coreDriver, mocks.NewFakeDeviceHandle(), common.Vulkan1_1, []string{}).(core1_1.Device)
-	expectedPipeline := mocks1_1.EasyMockPipeline(ctrl)
+	coreLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_0)
+	driver := impl1_1.NewDeviceDriver(coreLoader)
+	device := mocks.NewDummyDevice(common.Vulkan1_1, []string{})
+	expectedPipeline := mocks.NewDummyPipeline(device)
 
-	coreDriver.EXPECT().VkCreateGraphicsPipelines(device.Handle(), loader.VkPipelineCache(0), loader.Uint32(1), gomock.Not(gomock.Nil()), gomock.Nil(), gomock.Not(gomock.Nil())).
+	coreLoader.EXPECT().VkCreateGraphicsPipelines(device.Handle(), loader.VkPipelineCache(0), loader.Uint32(1), gomock.Not(gomock.Nil()), gomock.Nil(), gomock.Not(gomock.Nil())).
 		DoAndReturn(func(device loader.VkDevice, pipelineCache loader.VkPipelineCache, createInfoCount loader.Uint32, pCreateInfos *loader.VkGraphicsPipelineCreateInfo, pAllocator *loader.VkAllocationCallbacks, pPipelines *loader.VkPipeline) (common.VkResult, error) {
 			pipelineSlice := ([]loader.VkPipeline)(unsafe.Slice(pPipelines, 1))
 			pipelineSlice[0] = expectedPipeline.Handle()
@@ -57,14 +56,14 @@ func TestTessellationDomainOriginOptions(t *testing.T) {
 	domainOriginState := core1_1.PipelineTessellationDomainOriginStateCreateInfo{
 		DomainOrigin: core1_1.TessellationDomainOriginLowerLeft,
 	}
-	pipelines, _, err := device.CreateGraphicsPipelines(nil, nil, []core1_0.GraphicsPipelineCreateInfo{
-		{
+	pipelines, _, err := driver.CreateGraphicsPipelines(device, nil, nil,
+		core1_0.GraphicsPipelineCreateInfo{
 			TessellationState: &core1_0.PipelineTessellationStateCreateInfo{
 				PatchControlPoints: 1,
 				NextOptions:        common.NextOptions{Next: domainOriginState},
 			},
 		},
-	})
+	)
 	require.NoError(t, err)
 	require.Len(t, pipelines, 1)
 	require.Equal(t, expectedPipeline.Handle(), pipelines[0].Handle())

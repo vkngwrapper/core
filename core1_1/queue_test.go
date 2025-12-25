@@ -11,9 +11,9 @@ import (
 	"github.com/vkngwrapper/core/v3/core1_1"
 	"github.com/vkngwrapper/core/v3/internal/impl1_1"
 	"github.com/vkngwrapper/core/v3/loader"
-	mock_driver "github.com/vkngwrapper/core/v3/loader/mocks"
+	mock_loader "github.com/vkngwrapper/core/v3/loader/mocks"
 	"github.com/vkngwrapper/core/v3/mocks"
-	"github.com/vkngwrapper/core/v3/mocks/mocks1_1"
+	"github.com/vkngwrapper/core/v3/types"
 	"go.uber.org/mock/gomock"
 )
 
@@ -21,20 +21,21 @@ func TestDeviceGroupSubmitOptions(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	coreDriver := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_1)
+	coreLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_1)
 
-	device := mocks1_1.EasyMockDevice(ctrl, coreDriver)
-	fence := mocks1_1.EasyMockFence(ctrl)
-	commandBuffer := mocks1_1.EasyMockCommandBuffer(ctrl)
+	device := mocks.NewDummyDevice(common.Vulkan1_1, []string{})
+	driver := impl1_1.NewDeviceDriver(coreLoader)
+	fence := mocks.NewDummyFence(device)
+	pool := mocks.NewDummyCommandPool(device)
+	commandBuffer := mocks.NewDummyCommandBuffer(pool, device)
 
-	semaphore1 := mocks1_1.EasyMockSemaphore(ctrl)
-	semaphore2 := mocks1_1.EasyMockSemaphore(ctrl)
-	semaphore3 := mocks1_1.EasyMockSemaphore(ctrl)
+	semaphore1 := mocks.NewDummySemaphore(device)
+	semaphore2 := mocks.NewDummySemaphore(device)
+	semaphore3 := mocks.NewDummySemaphore(device)
 
-	builder := &impl1_1.DeviceObjectBuilderImpl{}
-	queue := builder.CreateQueueObject(coreDriver, device.Handle(), mocks.NewFakeQueue(), common.Vulkan1_1)
+	queue := mocks.NewDummyQueue(device)
 
-	coreDriver.EXPECT().VkQueueSubmit(
+	coreLoader.EXPECT().VkQueueSubmit(
 		queue.Handle(),
 		loader.Uint32(1),
 		gomock.Not(gomock.Nil()),
@@ -75,11 +76,11 @@ func TestDeviceGroupSubmitOptions(t *testing.T) {
 		return core1_0.VKSuccess, nil
 	})
 
-	_, err := queue.Submit(fence, []core1_0.SubmitInfo{
-		{
-			CommandBuffers:   []core1_0.CommandBuffer{commandBuffer},
-			WaitSemaphores:   []core1_0.Semaphore{semaphore1},
-			SignalSemaphores: []core1_0.Semaphore{semaphore2, semaphore3},
+	_, err := driver.QueueSubmit(queue, &fence,
+		core1_0.SubmitInfo{
+			CommandBuffers:   []types.CommandBuffer{commandBuffer},
+			WaitSemaphores:   []types.Semaphore{semaphore1},
+			SignalSemaphores: []types.Semaphore{semaphore2, semaphore3},
 			WaitDstStageMask: []core1_0.PipelineStageFlags{core1_0.PipelineStageBottomOfPipe},
 
 			NextOptions: common.NextOptions{
@@ -90,7 +91,7 @@ func TestDeviceGroupSubmitOptions(t *testing.T) {
 				},
 			},
 		},
-	})
+	)
 	require.NoError(t, err)
 }
 
@@ -98,20 +99,20 @@ func TestProtectedMemorySubmitOptions(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	coreDriver := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_1)
+	coreLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_1)
+	driver := impl1_1.NewDeviceDriver(coreLoader)
+	device := mocks.NewDummyDevice(common.Vulkan1_1, []string{})
+	fence := mocks.NewDummyFence(device)
+	pool := mocks.NewDummyCommandPool(device)
+	commandBuffer := mocks.NewDummyCommandBuffer(pool, device)
 
-	device := mocks1_1.EasyMockDevice(ctrl, coreDriver)
-	fence := mocks1_1.EasyMockFence(ctrl)
-	commandBuffer := mocks1_1.EasyMockCommandBuffer(ctrl)
+	semaphore1 := mocks.NewDummySemaphore(device)
+	semaphore2 := mocks.NewDummySemaphore(device)
+	semaphore3 := mocks.NewDummySemaphore(device)
 
-	semaphore1 := mocks1_1.EasyMockSemaphore(ctrl)
-	semaphore2 := mocks1_1.EasyMockSemaphore(ctrl)
-	semaphore3 := mocks1_1.EasyMockSemaphore(ctrl)
+	queue := mocks.NewDummyQueue(device)
 
-	builder := &impl1_1.DeviceObjectBuilderImpl{}
-	queue := builder.CreateQueueObject(coreDriver, device.Handle(), mocks.NewFakeQueue(), common.Vulkan1_1)
-
-	coreDriver.EXPECT().VkQueueSubmit(
+	coreLoader.EXPECT().VkQueueSubmit(
 		queue.Handle(),
 		loader.Uint32(1),
 		gomock.Not(gomock.Nil()),
@@ -143,11 +144,11 @@ func TestProtectedMemorySubmitOptions(t *testing.T) {
 		return core1_0.VKSuccess, nil
 	})
 
-	_, err := queue.Submit(fence, []core1_0.SubmitInfo{
-		{
-			CommandBuffers:   []core1_0.CommandBuffer{commandBuffer},
-			WaitSemaphores:   []core1_0.Semaphore{semaphore1},
-			SignalSemaphores: []core1_0.Semaphore{semaphore2, semaphore3},
+	_, err := driver.QueueSubmit(queue, &fence,
+		core1_0.SubmitInfo{
+			CommandBuffers:   []types.CommandBuffer{commandBuffer},
+			WaitSemaphores:   []types.Semaphore{semaphore1},
+			SignalSemaphores: []types.Semaphore{semaphore2, semaphore3},
 			WaitDstStageMask: []core1_0.PipelineStageFlags{core1_0.PipelineStageBottomOfPipe},
 
 			NextOptions: common.NextOptions{
@@ -156,6 +157,6 @@ func TestProtectedMemorySubmitOptions(t *testing.T) {
 				},
 			},
 		},
-	})
+	)
 	require.NoError(t, err)
 }

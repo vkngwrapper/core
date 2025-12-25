@@ -11,9 +11,8 @@ import (
 	"github.com/vkngwrapper/core/v3/core1_2"
 	"github.com/vkngwrapper/core/v3/internal/impl1_2"
 	"github.com/vkngwrapper/core/v3/loader"
-	mock_driver "github.com/vkngwrapper/core/v3/loader/mocks"
+	mock_loader "github.com/vkngwrapper/core/v3/loader/mocks"
 	"github.com/vkngwrapper/core/v3/mocks"
-	"github.com/vkngwrapper/core/v3/mocks/mocks1_2"
 	"go.uber.org/mock/gomock"
 )
 
@@ -21,13 +20,13 @@ func TestFramebufferAttachmentsCreateOptions(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	coreDriver := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_2)
-	builder := &impl1_2.InstanceObjectBuilderImpl{}
-	device := builder.CreateDeviceObject(coreDriver, mocks.NewFakeDeviceHandle(), common.Vulkan1_2, []string{})
+	coreLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_2)
+	driver := impl1_2.NewDeviceDriver(coreLoader)
+	device := mocks.NewDummyDevice(common.Vulkan1_2, []string{})
 
-	mockFramebuffer := mocks1_2.EasyMockFramebuffer(ctrl)
+	mockFramebuffer := mocks.NewDummyFramebuffer(device)
 
-	coreDriver.EXPECT().VkCreateFramebuffer(
+	coreLoader.EXPECT().VkCreateFramebuffer(
 		device.Handle(),
 		gomock.Not(gomock.Nil()),
 		gomock.Nil(),
@@ -86,7 +85,8 @@ func TestFramebufferAttachmentsCreateOptions(t *testing.T) {
 		return core1_0.VKSuccess, nil
 	})
 
-	framebuffer, _, err := device.CreateFramebuffer(
+	framebuffer, _, err := driver.CreateFramebuffer(
+		device,
 		nil,
 		core1_0.FramebufferCreateInfo{
 			NextOptions: common.NextOptions{

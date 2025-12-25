@@ -12,9 +12,9 @@ import (
 	"github.com/vkngwrapper/core/v3/core1_2"
 	"github.com/vkngwrapper/core/v3/internal/impl1_2"
 	"github.com/vkngwrapper/core/v3/loader"
-	mock_driver "github.com/vkngwrapper/core/v3/loader/mocks"
+	mock_loader "github.com/vkngwrapper/core/v3/loader/mocks"
 	"github.com/vkngwrapper/core/v3/mocks"
-	"github.com/vkngwrapper/core/v3/mocks/mocks1_2"
+	"github.com/vkngwrapper/core/v3/types"
 	"go.uber.org/mock/gomock"
 )
 
@@ -22,22 +22,22 @@ func TestDescriptorSetVariableDescriptorCountAllocateOptions(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	coreDriver := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_2)
+	coreLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_2)
+	driver := impl1_2.NewDeviceDriver(coreLoader)
 
-	builder := &impl1_2.InstanceObjectBuilderImpl{}
-	device := builder.CreateDeviceObject(coreDriver, mocks.NewFakeDeviceHandle(), common.Vulkan1_2, []string{})
-	descriptorPool := mocks1_2.EasyMockDescriptorPool(ctrl, device)
-	descriptorLayout1 := mocks1_2.EasyMockDescriptorSetLayout(ctrl)
-	descriptorLayout2 := mocks1_2.EasyMockDescriptorSetLayout(ctrl)
-	descriptorLayout3 := mocks1_2.EasyMockDescriptorSetLayout(ctrl)
-	descriptorLayout4 := mocks1_2.EasyMockDescriptorSetLayout(ctrl)
+	device := mocks.NewDummyDevice(common.Vulkan1_2, []string{})
+	descriptorPool := mocks.NewDummyDescriptorPool(device)
+	descriptorLayout1 := mocks.NewDummyDescriptorSetLayout(device)
+	descriptorLayout2 := mocks.NewDummyDescriptorSetLayout(device)
+	descriptorLayout3 := mocks.NewDummyDescriptorSetLayout(device)
+	descriptorLayout4 := mocks.NewDummyDescriptorSetLayout(device)
 
-	mockDescriptorSet1 := mocks1_2.EasyMockDescriptorSet(ctrl)
-	mockDescriptorSet2 := mocks1_2.EasyMockDescriptorSet(ctrl)
-	mockDescriptorSet3 := mocks1_2.EasyMockDescriptorSet(ctrl)
-	mockDescriptorSet4 := mocks1_2.EasyMockDescriptorSet(ctrl)
+	mockDescriptorSet1 := mocks.NewDummyDescriptorSet(descriptorPool, device)
+	mockDescriptorSet2 := mocks.NewDummyDescriptorSet(descriptorPool, device)
+	mockDescriptorSet3 := mocks.NewDummyDescriptorSet(descriptorPool, device)
+	mockDescriptorSet4 := mocks.NewDummyDescriptorSet(descriptorPool, device)
 
-	coreDriver.EXPECT().VkAllocateDescriptorSets(
+	coreLoader.EXPECT().VkAllocateDescriptorSets(
 		device.Handle(),
 		gomock.Not(gomock.Nil()),
 		gomock.Not(gomock.Nil()),
@@ -69,9 +69,9 @@ func TestDescriptorSetVariableDescriptorCountAllocateOptions(t *testing.T) {
 		return core1_0.VKSuccess, nil
 	})
 
-	sets, _, err := device.AllocateDescriptorSets(core1_0.DescriptorSetAllocateInfo{
+	sets, _, err := driver.AllocateDescriptorSets(core1_0.DescriptorSetAllocateInfo{
 		DescriptorPool: descriptorPool,
-		SetLayouts: []core1_0.DescriptorSetLayout{
+		SetLayouts: []types.DescriptorSetLayout{
 			descriptorLayout1,
 			descriptorLayout2,
 			descriptorLayout3,
@@ -102,12 +102,13 @@ func TestDescriptorSetLayoutBindingFlagsCreateOptions(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	coreDriver := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_2)
-	builder := &impl1_2.InstanceObjectBuilderImpl{}
-	device := builder.CreateDeviceObject(coreDriver, mocks.NewFakeDeviceHandle(), common.Vulkan1_0, []string{})
-	mockDescriptorSetLayout := mocks1_2.EasyMockDescriptorSetLayout(ctrl)
+	coreLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_2)
+	driver := impl1_2.NewDeviceDriver(coreLoader)
 
-	coreDriver.EXPECT().VkCreateDescriptorSetLayout(
+	device := mocks.NewDummyDevice(common.Vulkan1_2, []string{})
+	mockDescriptorSetLayout := mocks.NewDummyDescriptorSetLayout(device)
+
+	coreLoader.EXPECT().VkCreateDescriptorSetLayout(
 		device.Handle(),
 		gomock.Not(gomock.Nil()),
 		gomock.Nil(),
@@ -132,7 +133,8 @@ func TestDescriptorSetLayoutBindingFlagsCreateOptions(t *testing.T) {
 		return core1_0.VKSuccess, nil
 	})
 
-	descriptorSetLayout, _, err := device.CreateDescriptorSetLayout(
+	descriptorSetLayout, _, err := driver.CreateDescriptorSetLayout(
+		device,
 		nil,
 		core1_0.DescriptorSetLayoutCreateInfo{
 			NextOptions: common.NextOptions{
@@ -152,11 +154,11 @@ func TestDescriptorSetVariableDescriptorCountLayoutSupportOutData(t *testing.T) 
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	coreDriver := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_2)
-	builder := &impl1_2.InstanceObjectBuilderImpl{}
-	device := builder.CreateDeviceObject(coreDriver, mocks.NewFakeDeviceHandle(), common.Vulkan1_2, []string{}).(core1_2.Device)
+	coreLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_2)
+	driver := impl1_2.NewDeviceDriver(coreLoader)
+	device := mocks.NewDummyDevice(common.Vulkan1_2, []string{})
 
-	coreDriver.EXPECT().VkGetDescriptorSetLayoutSupport(
+	coreLoader.EXPECT().VkGetDescriptorSetLayoutSupport(
 		device.Handle(),
 		gomock.Not(gomock.Nil()),
 		gomock.Not(gomock.Nil()),
@@ -175,7 +177,8 @@ func TestDescriptorSetVariableDescriptorCountLayoutSupportOutData(t *testing.T) 
 	})
 
 	var outData core1_2.DescriptorSetVariableDescriptorCountLayoutSupport
-	err := device.DescriptorSetLayoutSupport(
+	err := driver.GetDescriptorSetLayoutSupport(
+		device,
 		core1_0.DescriptorSetLayoutCreateInfo{},
 		&core1_1.DescriptorSetLayoutSupport{
 			NextOutData: common.NextOutData{&outData},

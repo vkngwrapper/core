@@ -13,7 +13,6 @@ import (
 	"github.com/vkngwrapper/core/v3/loader"
 	mock_driver "github.com/vkngwrapper/core/v3/loader/mocks"
 	"github.com/vkngwrapper/core/v3/mocks"
-	"github.com/vkngwrapper/core/v3/mocks/mocks1_1"
 	"go.uber.org/mock/gomock"
 )
 
@@ -21,13 +20,13 @@ func TestImagePlaneMemoryRequirementsOptions(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	coreDriver := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_1)
-	builder := &impl1_1.InstanceObjectBuilderImpl{}
-	device := builder.CreateDeviceObject(coreDriver, mocks.NewFakeDeviceHandle(), common.Vulkan1_1, []string{}).(core1_1.Device)
+	coreLoader := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_1)
+	driver := impl1_1.NewDeviceDriver(coreLoader)
+	device := mocks.NewDummyDevice(common.Vulkan1_1, []string{})
 
-	image := mocks1_1.EasyMockImage(ctrl)
+	image := mocks.NewDummyImage(device)
 
-	coreDriver.EXPECT().VkGetImageMemoryRequirements2(
+	coreLoader.EXPECT().VkGetImageMemoryRequirements2(
 		device.Handle(),
 		gomock.Not(gomock.Nil()),
 		gomock.Not(gomock.Nil()),
@@ -55,7 +54,7 @@ func TestImagePlaneMemoryRequirementsOptions(t *testing.T) {
 	})
 
 	var outData core1_1.MemoryRequirements2
-	err := device.ImageMemoryRequirements2(
+	err := driver.GetImageMemoryRequirements2(
 		core1_1.ImageMemoryRequirementsInfo2{
 			Image: image,
 			NextOptions: common.NextOptions{
@@ -79,15 +78,15 @@ func TestSamplerYcbcrConversionOptions(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	coreDriver := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_0)
-	builder := &impl1_1.InstanceObjectBuilderImpl{}
-	device := builder.CreateDeviceObject(coreDriver, mocks.NewFakeDeviceHandle(), common.Vulkan1_1, []string{}).(core1_1.Device)
+	coreLoader := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_0)
+	driver := impl1_1.NewDeviceDriver(coreLoader)
+	device := mocks.NewDummyDevice(common.Vulkan1_1, []string{})
 
-	image := mocks1_1.EasyMockImage(ctrl)
-	ycbcr := mocks1_1.EasyMockSamplerYcbcrConversion(ctrl)
-	mockImageView := mocks1_1.EasyMockImageView(ctrl)
+	image := mocks.NewDummyImage(device)
+	ycbcr := mocks.NewDummySamplerYcbcrConversion(device)
+	mockImageView := mocks.NewDummyImageView(device)
 
-	coreDriver.EXPECT().VkCreateImageView(
+	coreLoader.EXPECT().VkCreateImageView(
 		device.Handle(),
 		gomock.Not(gomock.Nil()),
 		gomock.Nil(),
@@ -113,7 +112,8 @@ func TestSamplerYcbcrConversionOptions(t *testing.T) {
 		return core1_0.VKSuccess, nil
 	})
 
-	imageView, _, err := device.CreateImageView(
+	imageView, _, err := driver.CreateImageView(
+		device,
 		nil,
 		core1_0.ImageViewCreateInfo{
 			Image:  image,
@@ -133,12 +133,12 @@ func TestSamplerYcbcrImageFormatOutData(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	coreDriver := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_1)
-	instance := impl1_1.CreateInstanceObject(coreDriver, mocks.NewFakeInstanceHandle(), common.Vulkan1_1, []string{})
-	builder := &impl1_1.InstanceObjectBuilderImpl{}
-	physicalDevice := builder.CreatePhysicalDeviceObject(coreDriver, instance.Handle(), mocks.NewFakePhysicalDeviceHandle(), common.Vulkan1_1, common.Vulkan1_1).(core1_1.PhysicalDevice)
+	coreLoader := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_1)
+	driver := impl1_1.NewInstanceDriver(coreLoader)
+	instance := mocks.NewDummyInstance(common.Vulkan1_1, []string{})
+	physicalDevice := mocks.NewDummyPhysicalDevice(instance, common.Vulkan1_1)
 
-	coreDriver.EXPECT().VkGetPhysicalDeviceImageFormatProperties2(
+	coreLoader.EXPECT().VkGetPhysicalDeviceImageFormatProperties2(
 		physicalDevice.Handle(),
 		gomock.Not(gomock.Nil()),
 		gomock.Not(gomock.Nil()),
@@ -164,7 +164,8 @@ func TestSamplerYcbcrImageFormatOutData(t *testing.T) {
 		})
 
 	var outData core1_1.SamplerYcbcrConversionImageFormatProperties
-	_, err := physicalDevice.ImageFormatProperties2(
+	_, err := driver.GetPhysicalDeviceImageFormatProperties2(
+		physicalDevice,
 		core1_1.PhysicalDeviceImageFormatInfo2{},
 		&core1_1.ImageFormatProperties2{
 			NextOutData: common.NextOutData{&outData},

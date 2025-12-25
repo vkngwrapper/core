@@ -9,11 +9,10 @@ import (
 	"github.com/vkngwrapper/core/v3/common"
 	"github.com/vkngwrapper/core/v3/core1_0"
 	"github.com/vkngwrapper/core/v3/core1_1"
-	"github.com/vkngwrapper/core/v3/internal/impl1_1"
+	"github.com/vkngwrapper/core/v3/internal/impl1_0"
 	"github.com/vkngwrapper/core/v3/loader"
-	mock_driver "github.com/vkngwrapper/core/v3/loader/mocks"
+	mock_loader "github.com/vkngwrapper/core/v3/loader/mocks"
 	"github.com/vkngwrapper/core/v3/mocks"
-	"github.com/vkngwrapper/core/v3/mocks/mocks1_1"
 	"go.uber.org/mock/gomock"
 )
 
@@ -21,13 +20,13 @@ func TestInputAttachmentAspectOptions(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	coreDriver := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_1)
-	builder := &impl1_1.InstanceObjectBuilderImpl{}
-	device := builder.CreateDeviceObject(coreDriver, mocks.NewFakeDeviceHandle(), common.Vulkan1_1, []string{}).(core1_1.Device)
+	coreLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_1)
+	driver := impl1_0.NewDeviceDriver(coreLoader)
+	device := mocks.NewDummyDevice(common.Vulkan1_1, []string{})
 
-	expectedRenderPass := mocks1_1.EasyMockRenderPass(ctrl)
+	expectedRenderPass := mocks.NewDummyRenderPass(device)
 
-	coreDriver.EXPECT().VkCreateRenderPass(device.Handle(), gomock.Not(gomock.Nil()), gomock.Nil(), gomock.Not(gomock.Nil())).
+	coreLoader.EXPECT().VkCreateRenderPass(device.Handle(), gomock.Not(gomock.Nil()), gomock.Nil(), gomock.Not(gomock.Nil())).
 		DoAndReturn(func(device loader.VkDevice, pCreateInfo *loader.VkRenderPassCreateInfo, pAllocator *loader.VkAllocationCallbacks, pRenderPass *loader.VkRenderPass) (common.VkResult, error) {
 			*pRenderPass = expectedRenderPass.Handle()
 
@@ -70,7 +69,7 @@ func TestInputAttachmentAspectOptions(t *testing.T) {
 			},
 		},
 	}
-	renderPass, _, err := device.CreateRenderPass(nil, core1_0.RenderPassCreateInfo{
+	renderPass, _, err := driver.CreateRenderPass(device, nil, core1_0.RenderPassCreateInfo{
 		NextOptions: common.NextOptions{Next: aspectOptions},
 	})
 	require.NoError(t, err)
@@ -81,16 +80,16 @@ func TestDeviceGroupRenderPassBeginOptions(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	coreDriver := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_0)
-	device := mocks1_1.EasyMockDevice(ctrl, coreDriver)
-	commandPool := mocks1_1.EasyMockCommandPool(ctrl, device)
+	coreLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_0)
+	driver := impl1_0.NewDeviceDriver(coreLoader)
+	device := mocks.NewDummyDevice(common.Vulkan1_1, []string{})
+	commandPool := mocks.NewDummyCommandPool(device)
 
-	builder := &impl1_1.DeviceObjectBuilderImpl{}
-	commandBuffer := builder.CreateCommandBufferObject(coreDriver, commandPool.Handle(), device.Handle(), mocks.NewFakeCommandBufferHandle(), common.Vulkan1_1)
-	renderPass := mocks1_1.EasyMockRenderPass(ctrl)
-	framebuffer := mocks1_1.EasyMockFramebuffer(ctrl)
+	commandBuffer := mocks.NewDummyCommandBuffer(commandPool, device)
+	renderPass := mocks.NewDummyRenderPass(device)
+	framebuffer := mocks.NewDummyFramebuffer(device)
 
-	coreDriver.EXPECT().VkCmdBeginRenderPass(
+	coreLoader.EXPECT().VkCmdBeginRenderPass(
 		commandBuffer.Handle(),
 		gomock.Not(gomock.Nil()),
 		loader.VkSubpassContents(1), // VK_SUBPASS_CONTENTS_SECONDARY_COMMAND_BUFFERS
@@ -129,7 +128,8 @@ func TestDeviceGroupRenderPassBeginOptions(t *testing.T) {
 		require.Equal(t, uint64(19), oneArea.FieldByName("extent").FieldByName("height").Uint())
 	})
 
-	err := commandBuffer.CmdBeginRenderPass(
+	err := driver.CmdBeginRenderPass(
+		commandBuffer,
 		core1_0.SubpassContentsSecondaryCommandBuffers,
 		core1_0.RenderPassBeginInfo{
 			RenderPass:  renderPass,
@@ -158,13 +158,13 @@ func TestRenderPassMultiviewOptions(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	coreDriver := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_1)
-	builder := &impl1_1.InstanceObjectBuilderImpl{}
-	device := builder.CreateDeviceObject(coreDriver, mocks.NewFakeDeviceHandle(), common.Vulkan1_1, []string{}).(core1_1.Device)
+	coreLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_1)
+	driver := impl1_0.NewDeviceDriver(coreLoader)
+	device := mocks.NewDummyDevice(common.Vulkan1_1, []string{})
 
-	mockRenderPass := mocks1_1.EasyMockRenderPass(ctrl)
+	mockRenderPass := mocks.NewDummyRenderPass(device)
 
-	coreDriver.EXPECT().VkCreateRenderPass(
+	coreLoader.EXPECT().VkCreateRenderPass(
 		device.Handle(),
 		gomock.Not(gomock.Nil()),
 		gomock.Nil(),
@@ -203,7 +203,7 @@ func TestRenderPassMultiviewOptions(t *testing.T) {
 		return core1_0.VKSuccess, nil
 	})
 
-	renderPass, _, err := device.CreateRenderPass(nil, core1_0.RenderPassCreateInfo{
+	renderPass, _, err := driver.CreateRenderPass(device, nil, core1_0.RenderPassCreateInfo{
 		NextOptions: common.NextOptions{
 			core1_1.RenderPassMultiviewCreateInfo{
 				ViewMasks:        []uint32{1, 2, 7},

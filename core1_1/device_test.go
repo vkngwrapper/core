@@ -11,9 +11,9 @@ import (
 	"github.com/vkngwrapper/core/v3/core1_1"
 	"github.com/vkngwrapper/core/v3/internal/impl1_1"
 	"github.com/vkngwrapper/core/v3/loader"
-	mock_driver "github.com/vkngwrapper/core/v3/loader/mocks"
+	mock_loader "github.com/vkngwrapper/core/v3/loader/mocks"
 	"github.com/vkngwrapper/core/v3/mocks"
-	"github.com/vkngwrapper/core/v3/mocks/mocks1_1"
+	"github.com/vkngwrapper/core/v3/types"
 	"go.uber.org/mock/gomock"
 )
 
@@ -21,14 +21,14 @@ func TestBindBufferMemoryDeviceGroupOptions(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	coreDriver := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_1)
-	builder := &impl1_1.InstanceObjectBuilderImpl{}
-	device := builder.CreateDeviceObject(coreDriver, mocks.NewFakeDeviceHandle(), common.Vulkan1_1, []string{}).(core1_1.Device)
+	coreLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_1)
+	driver := impl1_1.NewDeviceDriver(coreLoader)
+	device := mocks.NewDummyDevice(common.Vulkan1_1, []string{})
 
-	buffer := mocks1_1.EasyMockBuffer(ctrl)
-	memory := mocks1_1.EasyMockDeviceMemory(ctrl)
+	buffer := mocks.NewDummyBuffer(device)
+	memory := mocks.NewDummyDeviceMemory(device, 1)
 
-	coreDriver.EXPECT().VkBindBufferMemory2(
+	coreLoader.EXPECT().VkBindBufferMemory2(
 		device.Handle(),
 		loader.Uint32(1),
 		gomock.Not(gomock.Nil()),
@@ -61,8 +61,8 @@ func TestBindBufferMemoryDeviceGroupOptions(t *testing.T) {
 		return core1_0.VKSuccess, nil
 	})
 
-	_, err := device.BindBufferMemory2([]core1_1.BindBufferMemoryInfo{
-		{
+	_, err := driver.BindBufferMemory2(
+		core1_1.BindBufferMemoryInfo{
 			Buffer:       buffer,
 			Memory:       memory,
 			MemoryOffset: 1,
@@ -73,7 +73,7 @@ func TestBindBufferMemoryDeviceGroupOptions(t *testing.T) {
 				},
 			},
 		},
-	})
+	)
 	require.NoError(t, err)
 }
 
@@ -81,14 +81,14 @@ func TestBindImageMemoryDeviceGroupOptions(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	coreDriver := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_1)
-	builder := &impl1_1.InstanceObjectBuilderImpl{}
-	device := builder.CreateDeviceObject(coreDriver, mocks.NewFakeDeviceHandle(), common.Vulkan1_1, []string{}).(core1_1.Device)
+	coreLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_1)
+	driver := impl1_1.NewDeviceDriver(coreLoader)
+	device := mocks.NewDummyDevice(common.Vulkan1_1, []string{})
 
-	image := mocks1_1.EasyMockImage(ctrl)
-	memory := mocks1_1.EasyMockDeviceMemory(ctrl)
+	image := mocks.NewDummyImage(device)
+	memory := mocks.NewDummyDeviceMemory(device, 1)
 
-	coreDriver.EXPECT().VkBindImageMemory2(
+	coreLoader.EXPECT().VkBindImageMemory2(
 		device.Handle(),
 		loader.Uint32(1),
 		gomock.Not(gomock.Nil()),
@@ -139,8 +139,8 @@ func TestBindImageMemoryDeviceGroupOptions(t *testing.T) {
 		return core1_0.VKSuccess, nil
 	})
 
-	_, err := device.BindImageMemory2([]core1_1.BindImageMemoryInfo{
-		{
+	_, err := driver.BindImageMemory2(
+		core1_1.BindImageMemoryInfo{
 			Image:        image,
 			Memory:       memory,
 			MemoryOffset: 1,
@@ -161,7 +161,7 @@ func TestBindImageMemoryDeviceGroupOptions(t *testing.T) {
 				},
 			},
 		},
-	})
+	)
 	require.NoError(t, err)
 }
 
@@ -169,14 +169,14 @@ func TestBindImagePlaneMemoryOptions(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	coreDriver := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_1)
-	builder := &impl1_1.InstanceObjectBuilderImpl{}
-	device := builder.CreateDeviceObject(coreDriver, mocks.NewFakeDeviceHandle(), common.Vulkan1_1, []string{}).(core1_1.Device)
+	coreLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_1)
+	driver := impl1_1.NewDeviceDriver(coreLoader)
+	device := mocks.NewDummyDevice(common.Vulkan1_1, []string{})
 
-	image := mocks1_1.EasyMockImage(ctrl)
-	memory := mocks1_1.EasyMockDeviceMemory(ctrl)
+	image := mocks.NewDummyImage(device)
+	memory := mocks.NewDummyDeviceMemory(device, 1)
 
-	coreDriver.EXPECT().VkBindImageMemory2(
+	coreLoader.EXPECT().VkBindImageMemory2(
 		device.Handle(),
 		loader.Uint32(1),
 		gomock.Not(gomock.Nil()),
@@ -200,8 +200,8 @@ func TestBindImagePlaneMemoryOptions(t *testing.T) {
 		return core1_0.VKSuccess, nil
 	})
 
-	_, err := device.BindImageMemory2([]core1_1.BindImageMemoryInfo{
-		{
+	_, err := driver.BindImageMemory2(
+		core1_1.BindImageMemoryInfo{
 			Image:  image,
 			Memory: memory,
 
@@ -211,7 +211,7 @@ func TestBindImagePlaneMemoryOptions(t *testing.T) {
 				},
 			},
 		},
-	})
+	)
 	require.NoError(t, err)
 }
 
@@ -219,20 +219,19 @@ func TestDeviceGroupBindSparseOptions(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	coreDriver := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_1)
-	builder := &impl1_1.InstanceObjectBuilderImpl{}
-	device := builder.CreateDeviceObject(coreDriver, mocks.NewFakeDeviceHandle(), common.Vulkan1_1, []string{}).(core1_1.Device)
+	coreLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_1)
+	driver := impl1_1.NewDeviceDriver(coreLoader)
+	device := mocks.NewDummyDevice(common.Vulkan1_1, []string{})
 
-	fence := mocks1_1.EasyMockFence(ctrl)
+	fence := mocks.NewDummyFence(device)
 
-	semaphore1 := mocks1_1.EasyMockSemaphore(ctrl)
-	semaphore2 := mocks1_1.EasyMockSemaphore(ctrl)
-	semaphore3 := mocks1_1.EasyMockSemaphore(ctrl)
+	semaphore1 := mocks.NewDummySemaphore(device)
+	semaphore2 := mocks.NewDummySemaphore(device)
+	semaphore3 := mocks.NewDummySemaphore(device)
 
-	devBuilder := &impl1_1.DeviceObjectBuilderImpl{}
-	queue := devBuilder.CreateQueueObject(coreDriver, device.Handle(), mocks.NewFakeQueue(), common.Vulkan1_1)
+	queue := mocks.NewDummyQueue(device)
 
-	coreDriver.EXPECT().VkQueueBindSparse(
+	coreLoader.EXPECT().VkQueueBindSparse(
 		queue.Handle(),
 		loader.Uint32(1),
 		gomock.Not(gomock.Nil()),
@@ -266,10 +265,10 @@ func TestDeviceGroupBindSparseOptions(t *testing.T) {
 		return core1_0.VKSuccess, nil
 	})
 
-	_, err := queue.BindSparse(fence, []core1_0.BindSparseInfo{
-		{
-			WaitSemaphores:   []core1_0.Semaphore{semaphore1},
-			SignalSemaphores: []core1_0.Semaphore{semaphore2, semaphore3},
+	_, err := driver.QueueBindSparse(queue, &fence,
+		core1_0.BindSparseInfo{
+			WaitSemaphores:   []types.Semaphore{semaphore1},
+			SignalSemaphores: []types.Semaphore{semaphore2, semaphore3},
 			NextOptions: common.NextOptions{
 				core1_1.DeviceGroupBindSparseInfo{
 					ResourceDeviceIndex: 1,
@@ -277,6 +276,6 @@ func TestDeviceGroupBindSparseOptions(t *testing.T) {
 				},
 			},
 		},
-	})
+	)
 	require.NoError(t, err)
 }

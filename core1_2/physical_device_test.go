@@ -13,9 +13,8 @@ import (
 	"github.com/vkngwrapper/core/v3/core1_2"
 	"github.com/vkngwrapper/core/v3/internal/impl1_2"
 	"github.com/vkngwrapper/core/v3/loader"
-	mock_driver "github.com/vkngwrapper/core/v3/loader/mocks"
+	mock_loader "github.com/vkngwrapper/core/v3/loader/mocks"
 	"github.com/vkngwrapper/core/v3/mocks"
-	"github.com/vkngwrapper/core/v3/mocks/mocks1_2"
 	"go.uber.org/mock/gomock"
 )
 
@@ -23,13 +22,13 @@ func TestPhysicalDeviceDriverOutData(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	coreDriver := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_2)
-	instance := mocks1_2.EasyMockInstance(ctrl, coreDriver)
+	coreLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_2)
+	driver := impl1_2.NewInstanceDriver(coreLoader)
+	instance := mocks.NewDummyInstance(common.Vulkan1_2, []string{})
 
-	builder := &impl1_2.InstanceObjectBuilderImpl{}
-	physicalDevice := builder.CreatePhysicalDeviceObject(coreDriver, instance.Handle(), mocks.NewFakePhysicalDeviceHandle(), common.Vulkan1_2, common.Vulkan1_2).(core1_2.PhysicalDevice)
+	physicalDevice := mocks.NewDummyPhysicalDevice(instance, common.Vulkan1_2)
 
-	coreDriver.EXPECT().VkGetPhysicalDeviceProperties2(
+	coreLoader.EXPECT().VkGetPhysicalDeviceProperties2(
 		physicalDevice.Handle(),
 		gomock.Not(gomock.Nil()),
 	).DoAndReturn(
@@ -69,7 +68,8 @@ func TestPhysicalDeviceDriverOutData(t *testing.T) {
 		})
 
 	var driverOutData core1_2.PhysicalDeviceDriverProperties
-	err := physicalDevice.Properties2(
+	err := driver.GetPhysicalDeviceProperties2(
+		physicalDevice,
 		&core1_1.PhysicalDeviceProperties2{
 			NextOutData: common.NextOutData{&driverOutData},
 		})
@@ -86,12 +86,12 @@ func TestPhysicalDeviceDepthStencilResolveOutData(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	coreDriver := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_2)
-	instance := mocks1_2.EasyMockInstance(ctrl, coreDriver)
-	builder := &impl1_2.InstanceObjectBuilderImpl{}
-	physicalDevice := builder.CreatePhysicalDeviceObject(coreDriver, instance.Handle(), mocks.NewFakePhysicalDeviceHandle(), common.Vulkan1_2, common.Vulkan1_2).(core1_2.PhysicalDevice)
+	coreLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_2)
+	driver := impl1_2.NewInstanceDriver(coreLoader)
+	instance := mocks.NewDummyInstance(common.Vulkan1_2, []string{})
+	physicalDevice := mocks.NewDummyPhysicalDevice(instance, common.Vulkan1_2)
 
-	coreDriver.EXPECT().VkGetPhysicalDeviceProperties2(
+	coreLoader.EXPECT().VkGetPhysicalDeviceProperties2(
 		physicalDevice.Handle(),
 		gomock.Not(gomock.Nil()),
 	).DoAndReturn(func(physicalDevice loader.VkPhysicalDevice,
@@ -114,7 +114,8 @@ func TestPhysicalDeviceDepthStencilResolveOutData(t *testing.T) {
 	})
 
 	var outData core1_2.PhysicalDeviceDepthStencilResolveProperties
-	err := physicalDevice.Properties2(
+	err := driver.GetPhysicalDeviceProperties2(
+		physicalDevice,
 		&core1_1.PhysicalDeviceProperties2{
 			NextOutData: common.NextOutData{&outData},
 		})
@@ -131,12 +132,12 @@ func TestPhysicalDeviceDescriptorIndexingOutData(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	coreDriver := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_2)
-	instance := mocks1_2.EasyMockInstance(ctrl, coreDriver)
-	builder := &impl1_2.InstanceObjectBuilderImpl{}
-	physicalDevice := builder.CreatePhysicalDeviceObject(coreDriver, instance.Handle(), mocks.NewFakePhysicalDeviceHandle(), common.Vulkan1_2, common.Vulkan1_2).(core1_2.PhysicalDevice)
+	coreLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_2)
+	driver := impl1_2.NewInstanceDriver(coreLoader)
+	instance := mocks.NewDummyInstance(common.Vulkan1_2, []string{})
+	physicalDevice := mocks.NewDummyPhysicalDevice(instance, common.Vulkan1_2)
 
-	coreDriver.EXPECT().VkGetPhysicalDeviceProperties2(
+	coreLoader.EXPECT().VkGetPhysicalDeviceProperties2(
 		physicalDevice.Handle(),
 		gomock.Not(gomock.Nil()),
 	).DoAndReturn(func(physicalDevice loader.VkPhysicalDevice,
@@ -177,7 +178,8 @@ func TestPhysicalDeviceDescriptorIndexingOutData(t *testing.T) {
 	})
 
 	var outData core1_2.PhysicalDeviceDescriptorIndexingProperties
-	err := physicalDevice.Properties2(
+	err := driver.GetPhysicalDeviceProperties2(
+		physicalDevice,
 		&core1_1.PhysicalDeviceProperties2{
 			NextOutData: common.NextOutData{&outData},
 		})
@@ -217,12 +219,12 @@ func TestPhysicalDeviceFloatControlsOutData(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	coreDriver := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_2)
-	instance := mocks1_2.EasyMockInstance(ctrl, coreDriver)
-	builder := &impl1_2.InstanceObjectBuilderImpl{}
-	physicalDevice := builder.CreatePhysicalDeviceObject(coreDriver, instance.Handle(), mocks.NewFakePhysicalDeviceHandle(), common.Vulkan1_2, common.Vulkan1_2).(core1_2.PhysicalDevice)
+	coreLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_2)
+	driver := impl1_2.NewInstanceDriver(coreLoader)
+	instance := mocks.NewDummyInstance(common.Vulkan1_2, []string{})
+	physicalDevice := mocks.NewDummyPhysicalDevice(instance, common.Vulkan1_2)
 
-	coreDriver.EXPECT().VkGetPhysicalDeviceProperties2(
+	coreLoader.EXPECT().VkGetPhysicalDeviceProperties2(
 		physicalDevice.Handle(),
 		gomock.Not(gomock.Nil()),
 	).DoAndReturn(func(physicalDevice loader.VkPhysicalDevice,
@@ -258,7 +260,8 @@ func TestPhysicalDeviceFloatControlsOutData(t *testing.T) {
 	})
 
 	var outData core1_2.PhysicalDeviceFloatControlsProperties
-	err := physicalDevice.Properties2(
+	err := driver.GetPhysicalDeviceProperties2(
+		physicalDevice,
 		&core1_1.PhysicalDeviceProperties2{
 			NextOutData: common.NextOutData{&outData},
 		})
@@ -289,12 +292,12 @@ func TestPhysicalDeviceSamplerFilterMinmaxOutData(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	coreDriver := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_2)
-	instance := mocks1_2.EasyMockInstance(ctrl, coreDriver)
-	builder := &impl1_2.InstanceObjectBuilderImpl{}
-	physicalDevice := builder.CreatePhysicalDeviceObject(coreDriver, instance.Handle(), mocks.NewFakePhysicalDeviceHandle(), common.Vulkan1_2, common.Vulkan1_2).(core1_2.PhysicalDevice)
+	coreLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_2)
+	driver := impl1_2.NewInstanceDriver(coreLoader)
+	instance := mocks.NewDummyInstance(common.Vulkan1_2, []string{})
+	physicalDevice := mocks.NewDummyPhysicalDevice(instance, common.Vulkan1_2)
 
-	coreDriver.EXPECT().VkGetPhysicalDeviceProperties2(
+	coreLoader.EXPECT().VkGetPhysicalDeviceProperties2(
 		physicalDevice.Handle(),
 		gomock.Not(gomock.Nil()),
 	).DoAndReturn(func(physicalDevice loader.VkPhysicalDevice,
@@ -312,7 +315,8 @@ func TestPhysicalDeviceSamplerFilterMinmaxOutData(t *testing.T) {
 	})
 
 	var outData core1_2.PhysicalDeviceSamplerFilterMinmaxProperties
-	err := physicalDevice.Properties2(
+	err := driver.GetPhysicalDeviceProperties2(
+		physicalDevice,
 		&core1_1.PhysicalDeviceProperties2{
 			NextOutData: common.NextOutData{&outData},
 		})
@@ -327,12 +331,12 @@ func TestPhysicalDeviceTimelineSemaphoreOutData(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	coreDriver := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_2)
-	instance := mocks1_2.EasyMockInstance(ctrl, coreDriver)
-	builder := &impl1_2.InstanceObjectBuilderImpl{}
-	physicalDevice := builder.CreatePhysicalDeviceObject(coreDriver, instance.Handle(), mocks.NewFakePhysicalDeviceHandle(), common.Vulkan1_2, common.Vulkan1_2).(core1_2.PhysicalDevice)
+	coreLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_2)
+	driver := impl1_2.NewInstanceDriver(coreLoader)
+	instance := mocks.NewDummyInstance(common.Vulkan1_2, []string{})
+	physicalDevice := mocks.NewDummyPhysicalDevice(instance, common.Vulkan1_2)
 
-	coreDriver.EXPECT().VkGetPhysicalDeviceProperties2(
+	coreLoader.EXPECT().VkGetPhysicalDeviceProperties2(
 		physicalDevice.Handle(),
 		gomock.Not(gomock.Nil()),
 	).DoAndReturn(func(physicalDevice loader.VkPhysicalDevice, pProperties *loader.VkPhysicalDeviceProperties2) {
@@ -348,7 +352,8 @@ func TestPhysicalDeviceTimelineSemaphoreOutData(t *testing.T) {
 	})
 
 	var outData core1_2.PhysicalDeviceTimelineSemaphoreProperties
-	err := physicalDevice.Properties2(
+	err := driver.GetPhysicalDeviceProperties2(
+		physicalDevice,
 		&core1_1.PhysicalDeviceProperties2{
 			NextOutData: common.NextOutData{&outData},
 		})
@@ -362,10 +367,10 @@ func TestPhysicalDeviceVulkan11OutData(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	coreDriver := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_2)
-	instance := mocks1_2.EasyMockInstance(ctrl, coreDriver)
-	builder := &impl1_2.InstanceObjectBuilderImpl{}
-	physicalDevice := builder.CreatePhysicalDeviceObject(coreDriver, instance.Handle(), mocks.NewFakePhysicalDeviceHandle(), common.Vulkan1_2, common.Vulkan1_2).(core1_2.PhysicalDevice)
+	coreLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_2)
+	driver := impl1_2.NewInstanceDriver(coreLoader)
+	instance := mocks.NewDummyInstance(common.Vulkan1_2, []string{})
+	physicalDevice := mocks.NewDummyPhysicalDevice(instance, common.Vulkan1_2)
 
 	deviceUUID, err := uuid.NewRandom()
 	require.NoError(t, err)
@@ -373,7 +378,7 @@ func TestPhysicalDeviceVulkan11OutData(t *testing.T) {
 	driverUUID, err := uuid.NewRandom()
 	require.NoError(t, err)
 
-	coreDriver.EXPECT().VkGetPhysicalDeviceProperties2(
+	coreLoader.EXPECT().VkGetPhysicalDeviceProperties2(
 		physicalDevice.Handle(),
 		gomock.Not(gomock.Nil()),
 	).DoAndReturn(func(physicalDevice loader.VkPhysicalDevice, pProperties *loader.VkPhysicalDeviceProperties2) {
@@ -415,7 +420,8 @@ func TestPhysicalDeviceVulkan11OutData(t *testing.T) {
 	})
 
 	var outData core1_2.PhysicalDeviceVulkan11Properties
-	err = physicalDevice.Properties2(
+	err = driver.GetPhysicalDeviceProperties2(
+		physicalDevice,
 		&core1_1.PhysicalDeviceProperties2{
 			NextOutData: common.NextOutData{&outData},
 		})
@@ -443,12 +449,12 @@ func TestPhysicalDeviceVulkan12OutData(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	coreDriver := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_2)
-	instance := mocks1_2.EasyMockInstance(ctrl, coreDriver)
-	builder := &impl1_2.InstanceObjectBuilderImpl{}
-	physicalDevice := builder.CreatePhysicalDeviceObject(coreDriver, instance.Handle(), mocks.NewFakePhysicalDeviceHandle(), common.Vulkan1_2, common.Vulkan1_2).(core1_2.PhysicalDevice)
+	coreLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_2)
+	driver := impl1_2.NewInstanceDriver(coreLoader)
+	instance := mocks.NewDummyInstance(common.Vulkan1_2, []string{})
+	physicalDevice := mocks.NewDummyPhysicalDevice(instance, common.Vulkan1_2)
 
-	coreDriver.EXPECT().VkGetPhysicalDeviceProperties2(
+	coreLoader.EXPECT().VkGetPhysicalDeviceProperties2(
 		physicalDevice.Handle(),
 		gomock.Not(gomock.Nil()),
 	).DoAndReturn(func(physicalDevice loader.VkPhysicalDevice, pProperties *loader.VkPhysicalDeviceProperties2) {
@@ -533,7 +539,8 @@ func TestPhysicalDeviceVulkan12OutData(t *testing.T) {
 	})
 
 	var outData core1_2.PhysicalDeviceVulkan12Properties
-	err := physicalDevice.Properties2(
+	err := driver.GetPhysicalDeviceProperties2(
+		physicalDevice,
 		&core1_1.PhysicalDeviceProperties2{
 			NextOutData: common.NextOutData{&outData},
 		})

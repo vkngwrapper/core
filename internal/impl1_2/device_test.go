@@ -12,9 +12,9 @@ import (
 	"github.com/vkngwrapper/core/v3/core1_2"
 	"github.com/vkngwrapper/core/v3/internal/impl1_2"
 	"github.com/vkngwrapper/core/v3/loader"
-	mock_driver "github.com/vkngwrapper/core/v3/loader/mocks"
+	mock_loader "github.com/vkngwrapper/core/v3/loader/mocks"
 	"github.com/vkngwrapper/core/v3/mocks"
-	"github.com/vkngwrapper/core/v3/mocks/mocks1_2"
+	"github.com/vkngwrapper/core/v3/types"
 	"go.uber.org/mock/gomock"
 )
 
@@ -22,12 +22,12 @@ func TestDevice_CreateRenderPass(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	coreDriver := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_2)
-	builder := &impl1_2.InstanceObjectBuilderImpl{}
-	device := builder.CreateDeviceObject(coreDriver, mocks.NewFakeDeviceHandle(), common.Vulkan1_2, []string{}).(core1_2.Device)
-	mockRenderPass := mocks1_2.EasyMockRenderPass(ctrl)
+	coreLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_2)
+	driver := impl1_2.NewDeviceDriver(coreLoader)
+	device := mocks.NewDummyDevice(common.Vulkan1_2, []string{})
+	mockRenderPass := mocks.NewDummyRenderPass(device)
 
-	coreDriver.EXPECT().VkCreateRenderPass2(
+	coreLoader.EXPECT().VkCreateRenderPass2(
 		device.Handle(),
 		gomock.Not(gomock.Nil()),
 		gomock.Nil(),
@@ -150,7 +150,8 @@ func TestDevice_CreateRenderPass(t *testing.T) {
 		return core1_0.VKSuccess, nil
 	})
 
-	renderPass, _, err := device.CreateRenderPass2(
+	renderPass, _, err := driver.CreateRenderPass2(
+		device,
 		nil,
 		core1_2.RenderPassCreateInfo2{
 			Flags: 0,
@@ -238,12 +239,12 @@ func TestDevice_GetBufferDeviceAddress(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	coreDriver := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_2)
-	builder := &impl1_2.InstanceObjectBuilderImpl{}
-	device := builder.CreateDeviceObject(coreDriver, mocks.NewFakeDeviceHandle(), common.Vulkan1_2, []string{}).(core1_2.Device)
-	buffer := mocks1_2.EasyMockBuffer(ctrl)
+	coreLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_2)
+	driver := impl1_2.NewDeviceDriver(coreLoader)
+	device := mocks.NewDummyDevice(common.Vulkan1_2, []string{})
+	buffer := mocks.NewDummyBuffer(device)
 
-	coreDriver.EXPECT().VkGetBufferDeviceAddress(
+	coreLoader.EXPECT().VkGetBufferDeviceAddress(
 		device.Handle(),
 		gomock.Not(gomock.Nil()),
 	).DoAndReturn(func(device loader.VkDevice, pInfo *loader.VkBufferDeviceAddressInfo) loader.VkDeviceAddress {
@@ -256,7 +257,7 @@ func TestDevice_GetBufferDeviceAddress(t *testing.T) {
 		return 5
 	})
 
-	address, err := device.GetBufferDeviceAddress(
+	address, err := driver.GetBufferDeviceAddress(
 		core1_2.BufferDeviceAddressInfo{
 			Buffer: buffer,
 		})
@@ -268,12 +269,12 @@ func TestDevice_GetBufferOpaqueCaptureAddress(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	coreDriver := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_2)
-	builder := &impl1_2.InstanceObjectBuilderImpl{}
-	device := builder.CreateDeviceObject(coreDriver, mocks.NewFakeDeviceHandle(), common.Vulkan1_2, []string{}).(core1_2.Device)
-	buffer := mocks1_2.EasyMockBuffer(ctrl)
+	coreLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_2)
+	driver := impl1_2.NewDeviceDriver(coreLoader)
+	device := mocks.NewDummyDevice(common.Vulkan1_2, []string{})
+	buffer := mocks.NewDummyBuffer(device)
 
-	coreDriver.EXPECT().VkGetBufferOpaqueCaptureAddress(
+	coreLoader.EXPECT().VkGetBufferOpaqueCaptureAddress(
 		device.Handle(),
 		gomock.Not(gomock.Nil()),
 	).DoAndReturn(func(device loader.VkDevice, pInfo *loader.VkBufferDeviceAddressInfo) loader.Uint64 {
@@ -286,7 +287,7 @@ func TestDevice_GetBufferOpaqueCaptureAddress(t *testing.T) {
 		return 7
 	})
 
-	address, err := device.GetBufferOpaqueCaptureAddress(
+	address, err := driver.GetBufferOpaqueCaptureAddress(
 		core1_2.BufferDeviceAddressInfo{
 			Buffer: buffer,
 		})
@@ -298,12 +299,12 @@ func TestDevice_GetDeviceMemoryOpaqueCaptureAddress(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	coreDriver := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_2)
-	builder := &impl1_2.InstanceObjectBuilderImpl{}
-	device := builder.CreateDeviceObject(coreDriver, mocks.NewFakeDeviceHandle(), common.Vulkan1_2, []string{}).(core1_2.Device)
-	deviceMemory := mocks1_2.EasyMockDeviceMemory(ctrl)
+	coreLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_2)
+	driver := impl1_2.NewDeviceDriver(coreLoader)
+	device := mocks.NewDummyDevice(common.Vulkan1_2, []string{})
+	deviceMemory := mocks.NewDummyDeviceMemory(device, 1)
 
-	coreDriver.EXPECT().VkGetDeviceMemoryOpaqueCaptureAddress(
+	coreLoader.EXPECT().VkGetDeviceMemoryOpaqueCaptureAddress(
 		device.Handle(),
 		gomock.Not(gomock.Nil()),
 	).DoAndReturn(func(device loader.VkDevice, pInfo *loader.VkDeviceMemoryOpaqueCaptureAddressInfo) loader.Uint64 {
@@ -316,7 +317,7 @@ func TestDevice_GetDeviceMemoryOpaqueCaptureAddress(t *testing.T) {
 		return 11
 	})
 
-	address, err := device.GetDeviceMemoryOpaqueCaptureAddress(
+	address, err := driver.GetDeviceMemoryOpaqueCaptureAddress(
 		core1_2.DeviceMemoryOpaqueCaptureAddressInfo{
 			Memory: deviceMemory,
 		})
@@ -328,12 +329,12 @@ func TestVulkanDevice_SignalSemaphore(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	coreDriver := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_2)
-	builder := &impl1_2.InstanceObjectBuilderImpl{}
-	device := builder.CreateDeviceObject(coreDriver, mocks.NewFakeDeviceHandle(), common.Vulkan1_2, []string{}).(core1_2.Device)
-	semaphore := mocks1_2.EasyMockSemaphore(ctrl)
+	coreLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_2)
+	driver := impl1_2.NewDeviceDriver(coreLoader)
+	device := mocks.NewDummyDevice(common.Vulkan1_2, []string{})
+	semaphore := mocks.NewDummySemaphore(device)
 
-	coreDriver.EXPECT().VkSignalSemaphore(
+	coreLoader.EXPECT().VkSignalSemaphore(
 		device.Handle(),
 		gomock.Not(gomock.Nil()),
 	).DoAndReturn(func(device loader.VkDevice,
@@ -348,7 +349,7 @@ func TestVulkanDevice_SignalSemaphore(t *testing.T) {
 		return core1_0.VKSuccess, nil
 	})
 
-	_, err := device.SignalSemaphore(
+	_, err := driver.SignalSemaphore(
 		core1_2.SemaphoreSignalInfo{
 			Semaphore: semaphore,
 			Value:     uint64(13),
@@ -360,14 +361,14 @@ func TestVulkanDevice_WaitSemaphores(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	coreDriver := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_2)
-	builder := &impl1_2.InstanceObjectBuilderImpl{}
-	device := builder.CreateDeviceObject(coreDriver, mocks.NewFakeDeviceHandle(), common.Vulkan1_2, []string{}).(core1_2.Device)
+	coreLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_2)
+	driver := impl1_2.NewDeviceDriver(coreLoader)
+	device := mocks.NewDummyDevice(common.Vulkan1_2, []string{})
 
-	semaphore1 := mocks1_2.EasyMockSemaphore(ctrl)
-	semaphore2 := mocks1_2.EasyMockSemaphore(ctrl)
+	semaphore1 := mocks.NewDummySemaphore(device)
+	semaphore2 := mocks.NewDummySemaphore(device)
 
-	coreDriver.EXPECT().VkWaitSemaphores(
+	coreLoader.EXPECT().VkWaitSemaphores(
 		device.Handle(),
 		gomock.Not(gomock.Nil()),
 		loader.Uint64(60000000000),
@@ -392,11 +393,11 @@ func TestVulkanDevice_WaitSemaphores(t *testing.T) {
 		return core1_0.VKSuccess, nil
 	})
 
-	_, err := device.WaitSemaphores(
+	_, err := driver.WaitSemaphores(
 		time.Minute,
 		core1_2.SemaphoreWaitInfo{
 			Flags: core1_2.SemaphoreWaitAny,
-			Semaphores: []core1_0.Semaphore{
+			Semaphores: []types.Semaphore{
 				semaphore1,
 				semaphore2,
 			},

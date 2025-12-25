@@ -10,9 +10,8 @@ import (
 	"github.com/vkngwrapper/core/v3/core1_1"
 	"github.com/vkngwrapper/core/v3/internal/impl1_1"
 	"github.com/vkngwrapper/core/v3/loader"
-	mock_driver "github.com/vkngwrapper/core/v3/loader/mocks"
+	mock_loader "github.com/vkngwrapper/core/v3/loader/mocks"
 	"github.com/vkngwrapper/core/v3/mocks"
-	"github.com/vkngwrapper/core/v3/mocks/mocks1_1"
 	"go.uber.org/mock/gomock"
 )
 
@@ -20,13 +19,13 @@ func TestExportFenceOptions(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	coreDriver := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_0)
-	builder := &impl1_1.InstanceObjectBuilderImpl{}
-	device := builder.CreateDeviceObject(coreDriver, mocks.NewFakeDeviceHandle(), common.Vulkan1_1, []string{}).(core1_1.Device)
+	coreLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_0)
+	driver := impl1_1.NewDeviceDriver(coreLoader)
+	device := mocks.NewDummyDevice(common.Vulkan1_1, []string{})
 
-	mockFence := mocks1_1.EasyMockFence(ctrl)
+	mockFence := mocks.NewDummyFence(device)
 
-	coreDriver.EXPECT().VkCreateFence(
+	coreLoader.EXPECT().VkCreateFence(
 		device.Handle(),
 		gomock.Not(gomock.Nil()),
 		gomock.Nil(),
@@ -48,7 +47,8 @@ func TestExportFenceOptions(t *testing.T) {
 		return core1_0.VKSuccess, nil
 	})
 
-	fence, _, err := device.CreateFence(
+	fence, _, err := driver.CreateFence(
+		device,
 		nil,
 		core1_0.FenceCreateInfo{
 			Flags: core1_0.FenceCreateSignaled,

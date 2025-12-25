@@ -10,9 +10,8 @@ import (
 	"github.com/vkngwrapper/core/v3/core1_2"
 	"github.com/vkngwrapper/core/v3/internal/impl1_2"
 	"github.com/vkngwrapper/core/v3/loader"
-	mock_driver "github.com/vkngwrapper/core/v3/loader/mocks"
+	mock_loader "github.com/vkngwrapper/core/v3/loader/mocks"
 	"github.com/vkngwrapper/core/v3/mocks"
-	"github.com/vkngwrapper/core/v3/mocks/mocks1_2"
 	"go.uber.org/mock/gomock"
 )
 
@@ -20,12 +19,12 @@ func TestSamplerReductionModeCreateOptions(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	coreDriver := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_2)
-	builder := &impl1_2.InstanceObjectBuilderImpl{}
-	device := builder.CreateDeviceObject(coreDriver, mocks.NewFakeDeviceHandle(), common.Vulkan1_2, []string{})
-	mockSampler := mocks1_2.EasyMockSampler(ctrl)
+	coreLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_2)
+	driver := impl1_2.NewDeviceDriver(coreLoader)
+	device := mocks.NewDummyDevice(common.Vulkan1_2, []string{})
+	mockSampler := mocks.NewDummySampler(device)
 
-	coreDriver.EXPECT().VkCreateSampler(
+	coreLoader.EXPECT().VkCreateSampler(
 		device.Handle(),
 		gomock.Not(gomock.Nil()),
 		gomock.Nil(),
@@ -49,7 +48,8 @@ func TestSamplerReductionModeCreateOptions(t *testing.T) {
 		return core1_0.VKSuccess, nil
 	})
 
-	sampler, _, err := device.CreateSampler(
+	sampler, _, err := driver.CreateSampler(
+		device,
 		nil,
 		core1_0.SamplerCreateInfo{
 			NextOptions: common.NextOptions{core1_2.SamplerReductionModeCreateInfo{

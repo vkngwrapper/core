@@ -11,9 +11,9 @@ import (
 	"github.com/vkngwrapper/core/v3/core1_2"
 	"github.com/vkngwrapper/core/v3/internal/impl1_2"
 	"github.com/vkngwrapper/core/v3/loader"
-	mock_driver "github.com/vkngwrapper/core/v3/loader/mocks"
+	mock_loader "github.com/vkngwrapper/core/v3/loader/mocks"
 	"github.com/vkngwrapper/core/v3/mocks"
-	"github.com/vkngwrapper/core/v3/mocks/mocks1_2"
+	"github.com/vkngwrapper/core/v3/types"
 	"go.uber.org/mock/gomock"
 )
 
@@ -21,12 +21,12 @@ func TestAttachmentDescriptionStencilLayoutOptions(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	coreDriver := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_2)
-	builder := &impl1_2.InstanceObjectBuilderImpl{}
-	device := builder.CreateDeviceObject(coreDriver, mocks.NewFakeDeviceHandle(), common.Vulkan1_2, []string{}).(core1_2.Device)
-	mockRenderPass := mocks1_2.EasyMockRenderPass(ctrl)
+	coreLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_2)
+	driver := impl1_2.NewDeviceDriver(coreLoader)
+	device := mocks.NewDummyDevice(common.Vulkan1_2, []string{})
+	mockRenderPass := mocks.NewDummyRenderPass(device)
 
-	coreDriver.EXPECT().VkCreateRenderPass2(
+	coreLoader.EXPECT().VkCreateRenderPass2(
 		device.Handle(),
 		gomock.Not(gomock.Nil()),
 		gomock.Nil(),
@@ -72,7 +72,8 @@ func TestAttachmentDescriptionStencilLayoutOptions(t *testing.T) {
 		return core1_0.VKSuccess, nil
 	})
 
-	renderPass, _, err := device.CreateRenderPass2(
+	renderPass, _, err := driver.CreateRenderPass2(
+		device,
 		nil,
 		core1_2.RenderPassCreateInfo2{
 			Attachments: []core1_2.AttachmentDescription2{
@@ -105,16 +106,16 @@ func TestRenderPassAttachmentBeginInfo(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	coreDriver := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_2)
-	device := mocks1_2.EasyMockDevice(ctrl, coreDriver)
-	commandPool := mocks1_2.EasyMockCommandPool(ctrl, device)
-	builder := &impl1_2.DeviceObjectBuilderImpl{}
-	commandBuffer := builder.CreateCommandBufferObject(coreDriver, commandPool.Handle(), device.Handle(), mocks.NewFakeCommandBufferHandle(), common.Vulkan1_0)
+	coreLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_2)
+	driver := impl1_2.NewDeviceDriver(coreLoader)
+	device := mocks.NewDummyDevice(common.Vulkan1_2, []string{})
+	commandPool := mocks.NewDummyCommandPool(device)
+	commandBuffer := mocks.NewDummyCommandBuffer(commandPool, device)
 
-	imageView1 := mocks1_2.EasyMockImageView(ctrl)
-	imageView2 := mocks1_2.EasyMockImageView(ctrl)
+	imageView1 := mocks.NewDummyImageView(device)
+	imageView2 := mocks.NewDummyImageView(device)
 
-	coreDriver.EXPECT().VkCmdBeginRenderPass(
+	coreLoader.EXPECT().VkCmdBeginRenderPass(
 		commandBuffer.Handle(),
 		gomock.Not(gomock.Nil()),
 		loader.VkSubpassContents(0), // VK_SUBPASS_CONTENTS_INLINE
@@ -139,9 +140,9 @@ func TestRenderPassAttachmentBeginInfo(t *testing.T) {
 		require.Equal(t, imageView2.Handle(), *(*loader.VkImageView)(secondImageView))
 	})
 
-	err := commandBuffer.CmdBeginRenderPass(core1_0.SubpassContentsInline, core1_0.RenderPassBeginInfo{
+	err := driver.CmdBeginRenderPass(commandBuffer, core1_0.SubpassContentsInline, core1_0.RenderPassBeginInfo{
 		NextOptions: common.NextOptions{core1_2.RenderPassAttachmentBeginInfo{
-			Attachments: []core1_0.ImageView{imageView1, imageView2},
+			Attachments: []types.ImageView{imageView1, imageView2},
 		}},
 	})
 	require.NoError(t, err)
@@ -151,12 +152,12 @@ func TestSubpassDescriptionDepthStencilResolveOptions(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	coreDriver := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_2)
-	builder := &impl1_2.InstanceObjectBuilderImpl{}
-	device := builder.CreateDeviceObject(coreDriver, mocks.NewFakeDeviceHandle(), common.Vulkan1_2, []string{}).(core1_2.Device)
-	mockRenderPass := mocks1_2.EasyMockRenderPass(ctrl)
+	coreLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_2)
+	driver := impl1_2.NewDeviceDriver(coreLoader)
+	device := mocks.NewDummyDevice(common.Vulkan1_2, []string{})
+	mockRenderPass := mocks.NewDummyRenderPass(device)
 
-	coreDriver.EXPECT().VkCreateRenderPass2(
+	coreLoader.EXPECT().VkCreateRenderPass2(
 		device.Handle(),
 		gomock.Not(gomock.Nil()),
 		gomock.Nil(),
@@ -195,7 +196,7 @@ func TestSubpassDescriptionDepthStencilResolveOptions(t *testing.T) {
 		return core1_0.VKSuccess, nil
 	})
 
-	renderPass, _, err := device.CreateRenderPass2(nil,
+	renderPass, _, err := driver.CreateRenderPass2(device, nil,
 		core1_2.RenderPassCreateInfo2{
 			Subpasses: []core1_2.SubpassDescription2{
 				{
