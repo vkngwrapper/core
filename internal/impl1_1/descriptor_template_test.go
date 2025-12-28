@@ -20,12 +20,12 @@ func TestVulkanExtension_CreateDescriptorUpdateTemplate(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	coreLoader := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_1)
-	driver := mocks1_1.InternalDeviceDriver(coreLoader)
-
 	device := mocks.NewDummyDevice(common.Vulkan1_1, []string{})
 	descriptorLayout := mocks.NewDummyDescriptorSetLayout(device)
 	pipelineLayout := mocks.NewDummyPipelineLayout(device)
+
+	coreLoader := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_1)
+	driver := mocks1_1.InternalDeviceDriver(device, coreLoader)
 
 	handle := mocks.NewFakeDescriptorUpdateTemplate()
 
@@ -117,13 +117,13 @@ func TestVulkanDescriptorTemplate_UpdateDescriptorSetFromBuffer(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	coreLoader := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_1)
-	driver := mocks1_1.InternalDeviceDriver(coreLoader)
-
 	device := mocks.NewDummyDevice(common.Vulkan1_1, []string{})
 	pool := mocks.NewDummyDescriptorPool(device)
 	descriptorSet := mocks.NewDummyDescriptorSet(pool, device)
 	buffer := mocks.NewDummyBuffer(device)
+
+	coreLoader := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_1)
+	driver := mocks1_1.InternalDeviceDriver(device, coreLoader)
 
 	handle := mocks.NewFakeDescriptorUpdateTemplate()
 
@@ -176,14 +176,14 @@ func TestVulkanDescriptorTemplate_UpdateDescriptorSetFromImage(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	coreLoader := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_1)
-	driver := mocks1_1.InternalDeviceDriver(coreLoader)
-
 	device := mocks.NewDummyDevice(common.Vulkan1_1, []string{})
 	pool := mocks.NewDummyDescriptorPool(device)
 	descriptorSet := mocks.NewDummyDescriptorSet(pool, device)
 	sampler := mocks.NewDummySampler(device)
 	imageView := mocks.NewDummyImageView(device)
+
+	coreLoader := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_1)
+	driver := mocks1_1.InternalDeviceDriver(device, coreLoader)
 
 	handle := mocks.NewFakeDescriptorUpdateTemplate()
 
@@ -236,13 +236,13 @@ func TestVulkanDescriptorTemplate_UpdateDescriptorSetFromObjectHandle(t *testing
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	coreLoader := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_1)
-	driver := mocks1_1.InternalDeviceDriver(coreLoader)
-
 	device := mocks.NewDummyDevice(common.Vulkan1_1, []string{})
 	pool := mocks.NewDummyDescriptorPool(device)
 	descriptorSet := mocks.NewDummyDescriptorSet(pool, device)
 	bufferView := mocks.NewDummyBufferView(device)
+
+	coreLoader := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_1)
+	driver := mocks1_1.InternalDeviceDriver(device, coreLoader)
 
 	handle := mocks.NewFakeDescriptorUpdateTemplate()
 

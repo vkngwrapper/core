@@ -20,10 +20,11 @@ func TestTessellationDomainOriginOptions(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	coreLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_0)
-	driver := mocks1_1.InternalDeviceDriver(coreLoader)
 	device := mocks.NewDummyDevice(common.Vulkan1_1, []string{})
 	expectedPipeline := mocks.NewDummyPipeline(device)
+
+	coreLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_0)
+	driver := mocks1_1.InternalDeviceDriver(device, coreLoader)
 
 	coreLoader.EXPECT().VkCreateGraphicsPipelines(device.Handle(), loader.VkPipelineCache(0), loader.Uint32(1), gomock.Not(gomock.Nil()), gomock.Nil(), gomock.Not(gomock.Nil())).
 		DoAndReturn(func(device loader.VkDevice, pipelineCache loader.VkPipelineCache, createInfoCount loader.Uint32, pCreateInfos *loader.VkGraphicsPipelineCreateInfo, pAllocator *loader.VkAllocationCallbacks, pPipelines *loader.VkPipeline) (common.VkResult, error) {
@@ -56,7 +57,7 @@ func TestTessellationDomainOriginOptions(t *testing.T) {
 	domainOriginState := core1_1.PipelineTessellationDomainOriginStateCreateInfo{
 		DomainOrigin: core1_1.TessellationDomainOriginLowerLeft,
 	}
-	pipelines, _, err := driver.CreateGraphicsPipelines(device, nil, nil,
+	pipelines, _, err := driver.CreateGraphicsPipelines(nil, nil,
 		core1_0.GraphicsPipelineCreateInfo{
 			TessellationState: &core1_0.PipelineTessellationStateCreateInfo{
 				PatchControlPoints: 1,

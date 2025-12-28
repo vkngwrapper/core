@@ -19,10 +19,11 @@ func TestVulkanLoader1_0_CreateRenderPass_Success(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_0)
-	driver := mocks1_0.InternalDeviceDriver(mockLoader)
 	device := mocks.NewDummyDevice(common.Vulkan1_0, []string{})
 	renderPassHandle := mocks.NewFakeRenderPassHandle()
+
+	mockLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_0)
+	driver := mocks1_0.InternalDeviceDriver(device, mockLoader)
 
 	mockLoader.EXPECT().VkCreateRenderPass(device.Handle(), gomock.Not(nil), nil, gomock.Not(nil)).DoAndReturn(
 		func(deviceHandle loader.VkDevice, pCreateInfo *loader.VkRenderPassCreateInfo, pAllocator *loader.VkAllocationCallbacks, pRenderPass *loader.VkRenderPass) (common.VkResult, error) {
@@ -142,7 +143,7 @@ func TestVulkanLoader1_0_CreateRenderPass_Success(t *testing.T) {
 			return core1_0.VKSuccess, nil
 		})
 
-	renderPass, _, err := driver.CreateRenderPass(device, nil, core1_0.RenderPassCreateInfo{
+	renderPass, _, err := driver.CreateRenderPass(nil, core1_0.RenderPassCreateInfo{
 		Flags: 0,
 		Attachments: []core1_0.AttachmentDescription{
 			{
@@ -244,10 +245,11 @@ func TestVulkanLoader1_0_CreateRenderPass_SuccessNoNonColorAttachments(t *testin
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_0)
-	driver := mocks1_0.InternalDeviceDriver(mockLoader)
 	device := mocks.NewDummyDevice(common.Vulkan1_0, []string{})
 	renderPassHandle := mocks.NewFakeRenderPassHandle()
+
+	mockLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_0)
+	driver := mocks1_0.InternalDeviceDriver(device, mockLoader)
 
 	mockLoader.EXPECT().VkCreateRenderPass(device.Handle(), gomock.Not(nil), nil, gomock.Not(nil)).DoAndReturn(
 		func(deviceHandle loader.VkDevice, pCreateInfo *loader.VkRenderPassCreateInfo, pAllocator *loader.VkAllocationCallbacks, pRenderPass *loader.VkRenderPass) (common.VkResult, error) {
@@ -355,7 +357,7 @@ func TestVulkanLoader1_0_CreateRenderPass_SuccessNoNonColorAttachments(t *testin
 			return core1_0.VKSuccess, nil
 		})
 
-	renderPass, _, err := driver.CreateRenderPass(device, nil, core1_0.RenderPassCreateInfo{
+	renderPass, _, err := driver.CreateRenderPass(nil, core1_0.RenderPassCreateInfo{
 		Flags: 0,
 		Attachments: []core1_0.AttachmentDescription{
 			{
@@ -444,11 +446,12 @@ func TestVulkanLoader1_0_CreateRenderPass_MismatchResolve(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_0)
-	driver := mocks1_0.InternalDeviceDriver(mockLoader)
 	device := mocks.NewDummyDevice(common.Vulkan1_0, []string{})
 
-	_, _, err := driver.CreateRenderPass(device, nil, core1_0.RenderPassCreateInfo{
+	mockLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_0)
+	driver := mocks1_0.InternalDeviceDriver(device, mockLoader)
+
+	_, _, err := driver.CreateRenderPass(nil, core1_0.RenderPassCreateInfo{
 		Flags: 0,
 		Attachments: []core1_0.AttachmentDescription{
 			{
@@ -552,10 +555,11 @@ func TestVulkanRenderPass_RenderAreaGranularity(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_0)
-	driver := mocks1_0.InternalDeviceDriver(mockLoader)
 	device := mocks.NewDummyDevice(common.Vulkan1_0, []string{})
 	renderPass := mocks.NewDummyRenderPass(device)
+
+	mockLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_0)
+	driver := mocks1_0.InternalDeviceDriver(device, mockLoader)
 
 	mockLoader.EXPECT().VkGetRenderAreaGranularity(device.Handle(), renderPass.Handle(), gomock.Not(nil)).DoAndReturn(
 		func(device loader.VkDevice, renderPass loader.VkRenderPass, pGranularity *loader.VkExtent2D) {

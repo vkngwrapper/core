@@ -20,10 +20,11 @@ func TestDescriptorSetLayout_Create_SingleBinding(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_0)
-	driver := mocks1_0.InternalDeviceDriver(mockLoader)
 	device := mocks.NewDummyDevice(common.Vulkan1_0, []string{})
 	expectedLayout := mocks.NewDummyDescriptorSetLayout(device)
+
+	mockLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_0)
+	driver := mocks1_0.InternalDeviceDriver(device, mockLoader)
 
 	mockLoader.EXPECT().VkCreateDescriptorSetLayout(device.Handle(), gomock.Not(nil), nil, gomock.Not(nil)).DoAndReturn(
 		func(device loader.VkDevice, pCreateInfo *loader.VkDescriptorSetLayoutCreateInfo, pAllocator *loader.VkAllocationCallbacks, pDescriptorSetLayout *loader.VkDescriptorSetLayout) (common.VkResult, error) {
@@ -47,7 +48,7 @@ func TestDescriptorSetLayout_Create_SingleBinding(t *testing.T) {
 			return core1_0.VKSuccess, nil
 		})
 
-	layout, _, err := driver.CreateDescriptorSetLayout(device, nil, core1_0.DescriptorSetLayoutCreateInfo{
+	layout, _, err := driver.CreateDescriptorSetLayout(nil, core1_0.DescriptorSetLayoutCreateInfo{
 		Flags: 0,
 		Bindings: []core1_0.DescriptorSetLayoutBinding{
 			{
@@ -68,10 +69,11 @@ func TestDescriptorSetLayout_Create_SingleBindingImmutableSamplers(t *testing.T)
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_0)
-	driver := mocks1_0.InternalDeviceDriver(mockLoader)
 	device := mocks.NewDummyDevice(common.Vulkan1_0, []string{})
 	expectedLayout := mocks.NewDummyDescriptorSetLayout(device)
+
+	mockLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_0)
+	driver := mocks1_0.InternalDeviceDriver(device, mockLoader)
 
 	sampler1 := mocks.NewDummySampler(device)
 	sampler2 := mocks.NewDummySampler(device)
@@ -107,7 +109,7 @@ func TestDescriptorSetLayout_Create_SingleBindingImmutableSamplers(t *testing.T)
 			return core1_0.VKSuccess, nil
 		})
 
-	layout, _, err := driver.CreateDescriptorSetLayout(device, nil, core1_0.DescriptorSetLayoutCreateInfo{
+	layout, _, err := driver.CreateDescriptorSetLayout(nil, core1_0.DescriptorSetLayoutCreateInfo{
 		Flags: 0,
 		Bindings: []core1_0.DescriptorSetLayoutBinding{
 			{
@@ -131,16 +133,17 @@ func TestDescriptorSetLayout_Create_FailBindingSamplerMismatch(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_0)
-	driver := mocks1_0.InternalDeviceDriver(mockLoader)
 	device := mocks.NewDummyDevice(common.Vulkan1_0, []string{})
+
+	mockLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_0)
+	driver := mocks1_0.InternalDeviceDriver(device, mockLoader)
 
 	sampler1 := mocks.NewDummySampler(device)
 	sampler2 := mocks.NewDummySampler(device)
 	sampler3 := mocks.NewDummySampler(device)
 	sampler4 := mocks.NewDummySampler(device)
 
-	_, _, err := driver.CreateDescriptorSetLayout(device, nil, core1_0.DescriptorSetLayoutCreateInfo{
+	_, _, err := driver.CreateDescriptorSetLayout(nil, core1_0.DescriptorSetLayoutCreateInfo{
 		Flags: 0,
 		Bindings: []core1_0.DescriptorSetLayoutBinding{
 			{
@@ -162,10 +165,11 @@ func TestDescriptorSetLayout_Create_MultiBinding(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_0)
-	driver := mocks1_0.InternalDeviceDriver(mockLoader)
 	device := mocks.NewDummyDevice(common.Vulkan1_0, []string{})
 	expectedLayout := mocks.NewDummyDescriptorSetLayout(device)
+
+	mockLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_0)
+	driver := mocks1_0.InternalDeviceDriver(device, mockLoader)
 
 	mockLoader.EXPECT().VkCreateDescriptorSetLayout(device.Handle(), gomock.Not(nil), nil, gomock.Not(nil)).DoAndReturn(
 		func(device loader.VkDevice, pCreateInfo *loader.VkDescriptorSetLayoutCreateInfo, pAllocator *loader.VkAllocationCallbacks, pDescriptorSetLayout *loader.VkDescriptorSetLayout) (common.VkResult, error) {
@@ -203,7 +207,7 @@ func TestDescriptorSetLayout_Create_MultiBinding(t *testing.T) {
 			return core1_0.VKSuccess, nil
 		})
 
-	layout, _, err := driver.CreateDescriptorSetLayout(device, nil, core1_0.DescriptorSetLayoutCreateInfo{
+	layout, _, err := driver.CreateDescriptorSetLayout(nil, core1_0.DescriptorSetLayoutCreateInfo{
 		Flags: 0,
 		Bindings: []core1_0.DescriptorSetLayoutBinding{
 			{

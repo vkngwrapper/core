@@ -7,7 +7,7 @@ import (
 )
 
 type InstanceDriverFactory func(global *GlobalVulkanDriver, instance core.Instance) (core1_0.CoreInstanceDriver, error)
-type DeviceDriverFactory func(global *GlobalVulkanDriver, device core.Device) (core1_0.CoreDeviceDriver, error)
+type DeviceDriverFactory func(instance core1_0.CoreInstanceDriver, device core.Device) (core1_0.CoreDeviceDriver, error)
 
 type GlobalVulkanDriver struct {
 	LoaderObj             loader.Loader
@@ -25,23 +25,37 @@ func (l *GlobalVulkanDriver) BuildInstanceDriver(instance core.Instance) (core1_
 
 type InstanceVulkanDriver struct {
 	GlobalVulkanDriver
+	InstanceObj core.Instance
 }
 
 func (l *InstanceVulkanDriver) BuildDeviceDriver(device core.Device) (core1_0.CoreDeviceDriver, error) {
-	return l.DeviceDriverFactory(&l.GlobalVulkanDriver, device)
+	return l.DeviceDriverFactory(l, device)
+}
+
+func (l *InstanceVulkanDriver) Instance() core.Instance {
+	return l.InstanceObj
 }
 
 type DeviceVulkanDriver struct {
 	LoaderObj loader.Loader
+	DeviceObj core.Device
 }
 
 func (v *DeviceVulkanDriver) Loader() loader.Loader {
 	return v.LoaderObj
 }
 
+func (v *DeviceVulkanDriver) Device() core.Device {
+	return v.DeviceObj
+}
+
 type CoreVulkanDriver struct {
-	InstanceVulkanDriver
+	InstanceDriverObj core1_0.CoreInstanceDriver
 	DeviceVulkanDriver
+}
+
+func (c *CoreVulkanDriver) InstanceDriver() core1_0.CoreInstanceDriver {
+	return c.InstanceDriverObj
 }
 
 var _ core1_0.GlobalDriver = &GlobalVulkanDriver{}

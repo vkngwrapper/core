@@ -20,9 +20,9 @@ func TestDescriptorPool_Create(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_0)
-	driver := mocks1_0.InternalDeviceDriver(mockLoader)
 	device := mocks.NewDummyDevice(common.Vulkan1_0, []string{})
+	mockLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_0)
+	driver := mocks1_0.InternalDeviceDriver(device, mockLoader)
 
 	expectedHandle := mocks.NewFakeDescriptorPool()
 
@@ -54,7 +54,7 @@ func TestDescriptorPool_Create(t *testing.T) {
 			return core1_0.VKSuccess, nil
 		})
 
-	pool, _, err := driver.CreateDescriptorPool(device, nil, core1_0.DescriptorPoolCreateInfo{
+	pool, _, err := driver.CreateDescriptorPool(nil, core1_0.DescriptorPoolCreateInfo{
 		Flags:   core1_0.DescriptorPoolCreateFreeDescriptorSet,
 		MaxSets: 3,
 		PoolSizes: []core1_0.DescriptorPoolSize{
@@ -77,12 +77,13 @@ func TestDescriptorPool_AllocAndFree_Single(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_0)
-	driver := mocks1_0.InternalDeviceDriver(mockLoader)
 	device := mocks.NewDummyDevice(common.Vulkan1_0, []string{})
 	pool := mocks.NewDummyDescriptorPool(device)
 	layout := mocks.NewDummyDescriptorSetLayout(device)
 	set := mocks.NewDummyDescriptorSet(pool, device)
+
+	mockLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_0)
+	driver := mocks1_0.InternalDeviceDriver(device, mockLoader)
 
 	mockLoader.EXPECT().VkAllocateDescriptorSets(device.Handle(), gomock.Not(nil), gomock.Not(nil)).DoAndReturn(
 		func(device loader.VkDevice, pAllocateInfo *loader.VkDescriptorSetAllocateInfo, pSets *loader.VkDescriptorSet) (common.VkResult, error) {
@@ -132,10 +133,11 @@ func TestDescriptorPool_AllocAndFree_Multi(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_0)
-	driver := mocks1_0.InternalDeviceDriver(mockLoader)
 	device := mocks.NewDummyDevice(common.Vulkan1_0, []string{})
 	pool := mocks.NewDummyDescriptorPool(device)
+
+	mockLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_0)
+	driver := mocks1_0.InternalDeviceDriver(device, mockLoader)
 
 	set1 := mocks.NewDummyDescriptorSet(pool, device)
 	set2 := mocks.NewDummyDescriptorSet(pool, device)
@@ -201,10 +203,11 @@ func TestVulkanDescriptorPool_Reset(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_0)
-	driver := mocks1_0.InternalDeviceDriver(mockLoader)
 	device := mocks.NewDummyDevice(common.Vulkan1_0, []string{})
 	pool := mocks.NewDummyDescriptorPool(device)
+
+	mockLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_0)
+	driver := mocks1_0.InternalDeviceDriver(device, mockLoader)
 
 	mockLoader.EXPECT().VkResetDescriptorPool(device.Handle(), pool.Handle(), loader.VkDescriptorPoolResetFlags(3)).Return(core1_0.VKSuccess, nil)
 

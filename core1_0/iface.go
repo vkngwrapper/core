@@ -43,17 +43,19 @@ type GlobalDriver interface {
 
 type CoreInstanceDriver interface {
 	GlobalDriver
+	Instance() core.Instance
 
-	// DestroyInstance destroys an Instance object and the underlying structures. **Warning** after destruction,
-	// the object will continue to exist, but the Vulkan object handle that backs it will be invalid.
-	// Do not call further methods using the Instance.
+	// DestroyInstance destroys the Instance object underlying this driver and the underlying
+	// structures. **Warning** after destruction, the object will continue to exist, but the
+	// Vulkan object handle that backs it will be invalid. Do not call further methods on this driver
+	// or using the Instance.
 	//
 	// instance - The Vulkan instance to destroy
 	//
 	// callbacks - Controls host memory deallocation
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkDestroyInstance.html
-	DestroyInstance(instance core.Instance, callbacks *loader.AllocationCallbacks)
+	DestroyInstance(callbacks *loader.AllocationCallbacks)
 
 	// CreateDevice creates a new logical device as a connection to a PhysicalDevice
 	//
@@ -68,10 +70,8 @@ type CoreInstanceDriver interface {
 
 	// EnumeratePhysicalDevices enumerates the physical devices accessible to an Instance
 	//
-	// instance - The Instance object to enumerate physical devices on
-	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkEnumeratePhysicalDevices.html
-	EnumeratePhysicalDevices(instance core.Instance) ([]core.PhysicalDevice, common.VkResult, error)
+	EnumeratePhysicalDevices() ([]core.PhysicalDevice, common.VkResult, error)
 
 	// GetPhysicalDeviceQueueFamilyProperties reports properties of the queues of a PhysicalDevice
 	//
@@ -163,6 +163,7 @@ type CoreInstanceDriver interface {
 
 type DeviceDriver interface {
 	Loader() loader.Loader
+	Device() core.Device
 
 	// DestroyBuffer deletes a buffer and underlying structures from the device. **Warning**
 	// after destruction, the object will still exist, but the Vulkan object handle
@@ -877,87 +878,69 @@ type DeviceDriver interface {
 	InvalidateMappedMemoryRanges(ranges ...MappedMemoryRange) (common.VkResult, error)
 	// CreateBuffer creates a new Buffer object
 	//
-	// device - The Device to create the Buffer on
-	//
 	// allocationCallbacks - Controls host memory allocation
 	//
 	// o - Parameters affecting the creation of the Buffer
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkCreateBuffer.html
-	CreateBuffer(device core.Device, allocationCallbacks *loader.AllocationCallbacks, o BufferCreateInfo) (core.Buffer, common.VkResult, error)
+	CreateBuffer(allocationCallbacks *loader.AllocationCallbacks, o BufferCreateInfo) (core.Buffer, common.VkResult, error)
 	// CreateBufferView creates a new BufferView object
-	//
-	// device - The Device to create the BufferView on
 	//
 	// allocationCallbacks - Controls host memory allocation
 	//
 	// o - Parameters affecting the creation of the BufferView
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkCreateBufferView.html
-	CreateBufferView(device core.Device, allocationCallbacks *loader.AllocationCallbacks, o BufferViewCreateInfo) (core.BufferView, common.VkResult, error)
+	CreateBufferView(allocationCallbacks *loader.AllocationCallbacks, o BufferViewCreateInfo) (core.BufferView, common.VkResult, error)
 	// CreateCommandPool creates a new CommandPool object
-	//
-	// device - The Device to create the CommandPool on
 	//
 	// allocationCallbacks - Controls host memory allocation
 	//
 	// o - Parameters affecting the creation of the CommandPool
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkCreateCommandPool.html
-	CreateCommandPool(device core.Device, allocationCallbacks *loader.AllocationCallbacks, o CommandPoolCreateInfo) (core.CommandPool, common.VkResult, error)
+	CreateCommandPool(allocationCallbacks *loader.AllocationCallbacks, o CommandPoolCreateInfo) (core.CommandPool, common.VkResult, error)
 	// CreateDescriptorPool creates a new DescriptorPool object
-	//
-	// device - The Device to create the DescriptorPool on
 	//
 	// allocationCallbacks - Controls host memory allocation
 	//
 	// o - Parameters affecting the creation of the DescriptorPool
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkCreateDescriptorPool.html
-	CreateDescriptorPool(device core.Device, allocationCallbacks *loader.AllocationCallbacks, o DescriptorPoolCreateInfo) (core.DescriptorPool, common.VkResult, error)
+	CreateDescriptorPool(allocationCallbacks *loader.AllocationCallbacks, o DescriptorPoolCreateInfo) (core.DescriptorPool, common.VkResult, error)
 	// CreateDescriptorSetLayout creates a new DescriptorSetLayout object
-	//
-	// device - The Device to create the DescriptorSetLayout on
 	//
 	// allocationCallbacks - Controls host memory allocation
 	//
 	// o - Parameters affecting the creation of the DescriptorSetLayout
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkCreateDescriptorSetLayout.html
-	CreateDescriptorSetLayout(device core.Device, allocationCallbacks *loader.AllocationCallbacks, o DescriptorSetLayoutCreateInfo) (core.DescriptorSetLayout, common.VkResult, error)
+	CreateDescriptorSetLayout(allocationCallbacks *loader.AllocationCallbacks, o DescriptorSetLayoutCreateInfo) (core.DescriptorSetLayout, common.VkResult, error)
 	// CreateEvent creates a new Event object
-	//
-	// device - The Device to create the Event on
 	//
 	// allocationCallbacks - Controls host memory allocation
 	//
 	// o - Parameters affecting the creation of the Event
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkCreateEvent.html
-	CreateEvent(device core.Device, allocationCallbacks *loader.AllocationCallbacks, options EventCreateInfo) (core.Event, common.VkResult, error)
+	CreateEvent(allocationCallbacks *loader.AllocationCallbacks, options EventCreateInfo) (core.Event, common.VkResult, error)
 	// CreateFence creates a new Fence object
-	//
-	// device - The Device to create the Fence on
 	//
 	// allocationCallbacks - Controls host memory allocation
 	//
 	// o - Parameters affecting the creation of the Fence
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkCreateFence.html
-	CreateFence(device core.Device, allocationCallbacks *loader.AllocationCallbacks, o FenceCreateInfo) (core.Fence, common.VkResult, error)
+	CreateFence(allocationCallbacks *loader.AllocationCallbacks, o FenceCreateInfo) (core.Fence, common.VkResult, error)
 	// CreateFramebuffer creates a new Framebuffer object
-	//
-	// device - The Device to create the Framebuffer on
 	//
 	// allocationCallbacks - Controls host memory allocation
 	//
 	// o - Parameters affecting the creation of the Framebuffer
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkCreateFramebuffer.html
-	CreateFramebuffer(device core.Device, allocationCallbacks *loader.AllocationCallbacks, o FramebufferCreateInfo) (core.Framebuffer, common.VkResult, error)
+	CreateFramebuffer(allocationCallbacks *loader.AllocationCallbacks, o FramebufferCreateInfo) (core.Framebuffer, common.VkResult, error)
 	// CreateGraphicsPipelines creates a slice of new Pipeline objects which can be used for drawing graphics
-	//
-	// device - The Device to create the Pipeline on
 	//
 	// pipelineCache - A PipelineCache object which can be used to accelerate pipeline creation
 	//
@@ -966,10 +949,8 @@ type DeviceDriver interface {
 	// o - A slice of GraphicsPipelineCreateInfo structures containing parameters affecting the creation of the Pipeline objects
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkCreateGraphicsPipelines.html
-	CreateGraphicsPipelines(device core.Device, pipelineCache *core.PipelineCache, allocationCallbacks *loader.AllocationCallbacks, o ...GraphicsPipelineCreateInfo) ([]core.Pipeline, common.VkResult, error)
+	CreateGraphicsPipelines(pipelineCache *core.PipelineCache, allocationCallbacks *loader.AllocationCallbacks, o ...GraphicsPipelineCreateInfo) ([]core.Pipeline, common.VkResult, error)
 	// CreateComputePipelines creates a slice of new Pipeline objects which can be used for dispatching compute workloads
-	//
-	// device - The Device to create the Pipeline on
 	//
 	// pipelineCache - A PipelineCache object which can be used to accelerate pipeline creation
 	//
@@ -978,122 +959,98 @@ type DeviceDriver interface {
 	// o - A slice of ComputePipelineCreateInfo structures containing parameters affecting the creation of the Pipeline objects
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkCreateComputePipelines.html
-	CreateComputePipelines(device core.Device, pipelineCache *core.PipelineCache, allocationCallbacks *loader.AllocationCallbacks, o ...ComputePipelineCreateInfo) ([]core.Pipeline, common.VkResult, error)
+	CreateComputePipelines(pipelineCache *core.PipelineCache, allocationCallbacks *loader.AllocationCallbacks, o ...ComputePipelineCreateInfo) ([]core.Pipeline, common.VkResult, error)
 	// CreateImage creates a new Image object
-	//
-	// device - The Device to create the Image on
 	//
 	// allocationCallbacks - Controls host memory allocation
 	//
 	// o - Parameters affecting the creation of the Image
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkCreateImage.html
-	CreateImage(device core.Device, allocationCallbacks *loader.AllocationCallbacks, options ImageCreateInfo) (core.Image, common.VkResult, error)
+	CreateImage(allocationCallbacks *loader.AllocationCallbacks, options ImageCreateInfo) (core.Image, common.VkResult, error)
 	// CreateImageView creates a new ImageView object
-	//
-	// device - The Device to create the ImageView on
 	//
 	// allocationCallbacks - Controls host memory allocation
 	//
 	// o - Parameters affecting the creation of the ImageView
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkCreateImageView.html
-	CreateImageView(device core.Device, allocationCallbacks *loader.AllocationCallbacks, o ImageViewCreateInfo) (core.ImageView, common.VkResult, error)
+	CreateImageView(allocationCallbacks *loader.AllocationCallbacks, o ImageViewCreateInfo) (core.ImageView, common.VkResult, error)
 	// CreatePipelineCache creates a new PipelineCache object
-	//
-	// device - The Device to create the PipelineCache on
 	//
 	// allocationCallbacks - Controls host memory allocation
 	//
 	// o - Parameters affecting the creation of the PipelineCache
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkCreatePipelineCache.html
-	CreatePipelineCache(device core.Device, allocationCallbacks *loader.AllocationCallbacks, o PipelineCacheCreateInfo) (core.PipelineCache, common.VkResult, error)
+	CreatePipelineCache(allocationCallbacks *loader.AllocationCallbacks, o PipelineCacheCreateInfo) (core.PipelineCache, common.VkResult, error)
 	// CreatePipelineLayout creates a new PipelineLayout object
-	//
-	// device - The Device to create the PipelineLayout on
 	//
 	// allocationCallbacks - Controls host memory allocation
 	//
 	// o - Parameters affecting the creation of the PipelineLayout
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkCreatePipelineLayout.html
-	CreatePipelineLayout(device core.Device, allocationCallbacks *loader.AllocationCallbacks, o PipelineLayoutCreateInfo) (core.PipelineLayout, common.VkResult, error)
+	CreatePipelineLayout(allocationCallbacks *loader.AllocationCallbacks, o PipelineLayoutCreateInfo) (core.PipelineLayout, common.VkResult, error)
 	// CreateQueryPool creates a new QueryPool object
-	//
-	// device - The Device to create the QueryPool on
 	//
 	// allocationCallbacks - Controls host memory allocation
 	//
 	// o - Parameters affecting the creation of the QueryPool
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkCreateQueryPool.html
-	CreateQueryPool(device core.Device, allocationCallbacks *loader.AllocationCallbacks, o QueryPoolCreateInfo) (core.QueryPool, common.VkResult, error)
+	CreateQueryPool(allocationCallbacks *loader.AllocationCallbacks, o QueryPoolCreateInfo) (core.QueryPool, common.VkResult, error)
 	// CreateRenderPass creates a new RenderPass object
-	//
-	// device - The Device to create the RenderPass on
 	//
 	// allocationCallbacks - Controls host memory allocation
 	//
 	// o - Parameters affecting the creation of the RenderPass
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkCreateRenderPass.html
-	CreateRenderPass(device core.Device, allocationCallbacks *loader.AllocationCallbacks, o RenderPassCreateInfo) (core.RenderPass, common.VkResult, error)
+	CreateRenderPass(allocationCallbacks *loader.AllocationCallbacks, o RenderPassCreateInfo) (core.RenderPass, common.VkResult, error)
 	// CreateSampler creates a new Sampler object
-	//
-	// device - The Device to create the Sampler on
 	//
 	// allocationCallbacks - Controls host memory allocation
 	//
 	// o - Parameters affecting the creation of the Sampler
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkCreateSampler.html
-	CreateSampler(device core.Device, allocationCallbacks *loader.AllocationCallbacks, o SamplerCreateInfo) (core.Sampler, common.VkResult, error)
+	CreateSampler(allocationCallbacks *loader.AllocationCallbacks, o SamplerCreateInfo) (core.Sampler, common.VkResult, error)
 	// CreateSemaphore creates a new Semaphore object
-	//
-	// device - The Device to create the Semaphore on
 	//
 	// allocationCallbacks - Controls host memory allocation
 	//
 	// o - Parameters affecting the creation of the Semaphore
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkCreateSemaphore.html
-	CreateSemaphore(device core.Device, allocationCallbacks *loader.AllocationCallbacks, o SemaphoreCreateInfo) (core.Semaphore, common.VkResult, error)
+	CreateSemaphore(allocationCallbacks *loader.AllocationCallbacks, o SemaphoreCreateInfo) (core.Semaphore, common.VkResult, error)
 	// CreateShaderModule creates a new ShaderModule object
-	//
-	// device - The Device to create the ShaderModule on
 	//
 	// allocationCallbacks - Controls host memory allocation
 	//
 	// o - Parameters affecting the creation of the ShaderModule
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkCreateShaderModule.html
-	CreateShaderModule(device core.Device, allocationCallbacks *loader.AllocationCallbacks, o ShaderModuleCreateInfo) (core.ShaderModule, common.VkResult, error)
+	CreateShaderModule(allocationCallbacks *loader.AllocationCallbacks, o ShaderModuleCreateInfo) (core.ShaderModule, common.VkResult, error)
 
 	// GetQueue gets a Queue object from the Device
-	//
-	// device - The Device to get the Queue from
 	//
 	// queueFamilyIndex - The index of the queue family to which the Queue belongs
 	//
 	// queueIndex - The index within this queue family of the Queue to retrieve
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkGetDeviceQueue.html
-	GetQueue(device core.Device, queueFamilyIndex int, queueIndex int) core.Queue
+	GetQueue(queueFamilyIndex int, queueIndex int) core.Queue
 	// AllocateMemory allocates DeviceMemory
-	//
-	// device - The Device to allocate the DeviceMemory on
 	//
 	// allocationCallbacks - Controls host memory allocation
 	//
 	// o - Describes the parameters of the allocation
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkAllocateMemory.html
-	AllocateMemory(device core.Device, allocationCallbacks *loader.AllocationCallbacks, o MemoryAllocateInfo) (core.DeviceMemory, common.VkResult, error)
+	AllocateMemory(allocationCallbacks *loader.AllocationCallbacks, o MemoryAllocateInfo) (core.DeviceMemory, common.VkResult, error)
 
 	// AllocateCommandBuffers allocates CommandBuffer objects from an existing CommandPool
-	//
-	// device - The Device to allocate the CommandBuffer objects on
 	//
 	// o - Describes parameters of the allocation
 	//
@@ -1108,22 +1065,21 @@ type DeviceDriver interface {
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkAllocateDescriptorSets.html
 	AllocateDescriptorSets(o DescriptorSetAllocateInfo) ([]core.DescriptorSet, common.VkResult, error)
 
-	// DestroyDevice destroys a logical Device object.  **Warning** after destruction, the object will continue
-	// to exist, but the Vulkan object handle that backs it will be invalid. Do not call further methods
-	// with the Device.
-	//
-	// device - Device to destroy
+	// DestroyDevice destroys the logical Device object backing this driver.  **Warning** after
+	// destruction, the object will continue to exist, but the Vulkan object handle that backs
+	// it will be invalid. Do not call further methods on this driver or with the underlying
+	// Device.
 	//
 	// callbacks - Controls host memory deallocation
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkDestroyDevice.html
-	DestroyDevice(device core.Device, callbacks *loader.AllocationCallbacks)
+	DestroyDevice(callbacks *loader.AllocationCallbacks)
 	// DeviceWaitIdle waits for the Device to become idle
 	//
 	// device - The Device to wait on
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkDeviceWaitIdle.html
-	DeviceWaitIdle(device core.Device) (common.VkResult, error)
+	DeviceWaitIdle() (common.VkResult, error)
 	// WaitForFences waits for one or more Fence objects to become signaled
 	//
 	// waitForAll - If true, then the call will wait until all fences in `fences` are signaled. If
@@ -1145,8 +1101,6 @@ type DeviceDriver interface {
 	ResetFences(fences ...core.Fence) (common.VkResult, error)
 	// UpdateDescriptorSets updates the contents of one or more DescriptorSet objects
 	//
-	// device - The device to update the DescriptorSet objects on
-	//
 	// writes - A slice of WriteDescriptorSet structures describing the DescriptorSet objects to
 	// write to
 	//
@@ -1154,7 +1108,7 @@ type DeviceDriver interface {
 	// copy between
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkUpdateDescriptorSets.html
-	UpdateDescriptorSets(device core.Device, writes []WriteDescriptorSet, copies []CopyDescriptorSet) error
+	UpdateDescriptorSets(writes []WriteDescriptorSet, copies []CopyDescriptorSet) error
 	// DestroyEvent destroys an Event and the underlying structures. **Warning** after destruction,
 	// the object will continue to exist, but the Vulkan object handle that backs it will be invalid.
 	// Do not call further methods with the Event
@@ -1404,6 +1358,6 @@ type DeviceDriver interface {
 }
 
 type CoreDeviceDriver interface {
-	CoreInstanceDriver
+	InstanceDriver() CoreInstanceDriver
 	DeviceDriver
 }

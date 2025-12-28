@@ -152,6 +152,6 @@ type DeviceDriver interface {
 }
 
 type CoreDeviceDriver interface {
-	CoreInstanceDriver
+	InstanceDriver() core1_0.CoreInstanceDriver
 	DeviceDriver
 }

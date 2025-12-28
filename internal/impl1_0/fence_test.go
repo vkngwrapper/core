@@ -20,10 +20,11 @@ func TestVulkanLoader1_0_CreateFence(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_0)
-	driver := mocks1_0.InternalDeviceDriver(mockLoader)
 	device := mocks.NewDummyDevice(common.Vulkan1_0, []string{})
 	fenceHandle := mocks.NewFakeFenceHandle()
+
+	mockLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_0)
+	driver := mocks1_0.InternalDeviceDriver(device, mockLoader)
 
 	mockLoader.EXPECT().VkCreateFence(device.Handle(), gomock.Not(nil), nil, gomock.Not(nil)).DoAndReturn(
 		func(device loader.VkDevice, pCreateInfo *loader.VkFenceCreateInfo, pAllocator *loader.VkAllocationCallbacks, pFence *loader.VkFence) (common.VkResult, error) {
@@ -37,7 +38,7 @@ func TestVulkanLoader1_0_CreateFence(t *testing.T) {
 			return core1_0.VKSuccess, nil
 		})
 
-	fence, _, err := driver.CreateFence(device, nil, core1_0.FenceCreateInfo{
+	fence, _, err := driver.CreateFence(nil, core1_0.FenceCreateInfo{
 		Flags: core1_0.FenceCreateSignaled,
 	})
 	require.NoError(t, err)
@@ -52,7 +53,7 @@ func TestVulkanFence_Wait(t *testing.T) {
 	device := mocks.NewDummyDevice(common.Vulkan1_0, []string{})
 	mockLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_0)
 	mockLoader.EXPECT().DeviceHandle().Return(device.Handle()).AnyTimes()
-	driver := mocks1_0.InternalDeviceDriver(mockLoader)
+	driver := mocks1_0.InternalDeviceDriver(device, mockLoader)
 
 	fence := mocks.NewDummyFence(device)
 
@@ -75,7 +76,7 @@ func TestVulkanFence_Reset(t *testing.T) {
 	device := mocks.NewDummyDevice(common.Vulkan1_0, []string{})
 	mockLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_0)
 	mockLoader.EXPECT().DeviceHandle().Return(device.Handle()).AnyTimes()
-	driver := mocks1_0.InternalDeviceDriver(mockLoader)
+	driver := mocks1_0.InternalDeviceDriver(device, mockLoader)
 	fence := mocks.NewDummyFence(device)
 
 	mockLoader.EXPECT().VkResetFences(device.Handle(), loader.Uint32(1), gomock.Not(nil)).DoAndReturn(
@@ -94,10 +95,11 @@ func TestVulkanFence_Status(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_0)
-	driver := mocks1_0.InternalDeviceDriver(mockLoader)
 	device := mocks.NewDummyDevice(common.Vulkan1_0, []string{})
 	fence := mocks.NewDummyFence(device)
+
+	mockLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_0)
+	driver := mocks1_0.InternalDeviceDriver(device, mockLoader)
 
 	mockLoader.EXPECT().VkGetFenceStatus(device.Handle(), fence.Handle()).Return(core1_0.VKNotReady, nil)
 

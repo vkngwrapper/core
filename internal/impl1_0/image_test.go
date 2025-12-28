@@ -19,10 +19,11 @@ func TestVulkanLoader1_0_CreateImage(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_0)
-	driver := mocks1_0.InternalDeviceDriver(mockLoader)
 	device := mocks.NewDummyDevice(common.Vulkan1_0, []string{})
 	imageHandle := mocks.NewFakeImageHandle()
+
+	mockLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_0)
+	driver := mocks1_0.InternalDeviceDriver(device, mockLoader)
 
 	mockLoader.EXPECT().VkCreateImage(device.Handle(), gomock.Not(nil), nil, gomock.Not(nil)).DoAndReturn(
 		func(device loader.VkDevice, pCreateInfo *loader.VkImageCreateInfo, pAllocator *loader.VkAllocationCallbacks, pImage *loader.VkImage) (common.VkResult, error) {
@@ -56,7 +57,7 @@ func TestVulkanLoader1_0_CreateImage(t *testing.T) {
 			return core1_0.VKSuccess, nil
 		})
 
-	image, _, err := driver.CreateImage(device, nil, core1_0.ImageCreateInfo{
+	image, _, err := driver.CreateImage(nil, core1_0.ImageCreateInfo{
 		Flags:     core1_0.ImageCreateCubeCompatible,
 		ImageType: core1_0.ImageType2D,
 		Format:    core1_0.FormatA2R10G10B10SignedNormalizedPacked,
@@ -83,10 +84,11 @@ func TestVulkanImage_MemoryRequirements(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_0)
-	driver := mocks1_0.InternalDeviceDriver(mockLoader)
 	device := mocks.NewDummyDevice(common.Vulkan1_0, []string{})
 	image := mocks.NewDummyImage(device)
+
+	mockLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_0)
+	driver := mocks1_0.InternalDeviceDriver(device, mockLoader)
 
 	mockLoader.EXPECT().VkGetImageMemoryRequirements(device.Handle(), image.Handle(), gomock.Not(nil)).DoAndReturn(
 		func(device loader.VkDevice, image loader.VkImage, pRequirements *loader.VkMemoryRequirements) {
@@ -108,11 +110,12 @@ func TestVulkanImage_BindImageMemory(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_0)
-	driver := mocks1_0.InternalDeviceDriver(mockLoader)
 	device := mocks.NewDummyDevice(common.Vulkan1_0, []string{})
 	memory := mocks.NewDummyDeviceMemory(device, 1)
 	image := mocks.NewDummyImage(device)
+
+	mockLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_0)
+	driver := mocks1_0.InternalDeviceDriver(device, mockLoader)
 
 	mockLoader.EXPECT().VkBindImageMemory(device.Handle(), image.Handle(), memory.Handle(), loader.VkDeviceSize(3)).Return(core1_0.VKSuccess, nil)
 
@@ -124,10 +127,11 @@ func TestVulkanImage_SubresourceLayout(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_0)
-	driver := mocks1_0.InternalDeviceDriver(mockLoader)
 	device := mocks.NewDummyDevice(common.Vulkan1_0, []string{})
 	image := mocks.NewDummyImage(device)
+
+	mockLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_0)
+	driver := mocks1_0.InternalDeviceDriver(device, mockLoader)
 
 	mockLoader.EXPECT().VkGetImageSubresourceLayout(device.Handle(), image.Handle(), gomock.Not(nil), gomock.Not(nil)).DoAndReturn(
 		func(device loader.VkDevice, image loader.VkImage, pSubresource *loader.VkImageSubresource, pLayout *loader.VkSubresourceLayout) {
@@ -162,10 +166,11 @@ func TestVulkanImage_SparseMemoryRequirements(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_0)
-	driver := mocks1_0.InternalDeviceDriver(mockLoader)
 	device := mocks.NewDummyDevice(common.Vulkan1_0, []string{})
 	image := mocks.NewDummyImage(device)
+
+	mockLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_0)
+	driver := mocks1_0.InternalDeviceDriver(device, mockLoader)
 
 	mockLoader.EXPECT().VkGetImageSparseMemoryRequirements(device.Handle(), image.Handle(), gomock.Not(nil), nil).DoAndReturn(
 		func(device loader.VkDevice, image loader.VkImage, pReqCount *loader.Uint32, pRequirements *loader.VkSparseImageMemoryRequirements) {

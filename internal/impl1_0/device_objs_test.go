@@ -20,11 +20,12 @@ func TestVulkanLoader1_0_CreateBufferView(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_0)
-	driver := mocks1_0.InternalDeviceDriver(mockLoader)
 	device := mocks.NewDummyDevice(common.Vulkan1_0, []string{})
 	buffer := mocks.NewDummyBuffer(device)
 	expectedBufferView := mocks.NewFakeBufferViewHandle()
+
+	mockLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_0)
+	driver := mocks1_0.InternalDeviceDriver(device, mockLoader)
 
 	mockLoader.EXPECT().VkCreateBufferView(device.Handle(), gomock.Not(nil), nil, gomock.Not(nil)).DoAndReturn(
 		func(device loader.VkDevice, pCreateInfo *loader.VkBufferViewCreateInfo, pAllocator *loader.VkAllocationCallbacks, pBufferView *loader.VkBufferView) (common.VkResult, error) {
@@ -44,7 +45,7 @@ func TestVulkanLoader1_0_CreateBufferView(t *testing.T) {
 			return core1_0.VKSuccess, nil
 		})
 
-	bufferView, res, err := driver.CreateBufferView(device, nil, core1_0.BufferViewCreateInfo{
+	bufferView, res, err := driver.CreateBufferView(nil, core1_0.BufferViewCreateInfo{
 		Buffer: buffer,
 		Format: core1_0.FormatR32G32SignedFloat,
 		Offset: 5,
@@ -60,11 +61,12 @@ func TestVulkanDescriptorSet_Free(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_0)
-	driver := mocks1_0.InternalDeviceDriver(mockLoader)
 	device := mocks.NewDummyDevice(common.Vulkan1_0, []string{})
 	pool := mocks.NewDummyDescriptorPool(device)
 	set := mocks.NewDummyDescriptorSet(pool, device)
+
+	mockLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_0)
+	driver := mocks1_0.InternalDeviceDriver(device, mockLoader)
 
 	mockLoader.EXPECT().VkFreeDescriptorSets(device.Handle(), pool.Handle(), loader.Uint32(1), gomock.Not(unsafe.Pointer(nil))).DoAndReturn(
 		func(device loader.VkDevice, descriptorPool loader.VkDescriptorPool, descriptorSetCount loader.Uint32, pDescriptorSets *loader.VkDescriptorSet) (common.VkResult, error) {
@@ -82,12 +84,13 @@ func TestVulkanLoader1_0_CreateFrameBuffer(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_0)
-	driver := mocks1_0.InternalDeviceDriver(mockLoader)
 	device := mocks.NewDummyDevice(common.Vulkan1_0, []string{})
 	renderPass := mocks.NewDummyRenderPass(device)
 	imageView1 := mocks.NewDummyImageView(device)
 	imageView2 := mocks.NewDummyImageView(device)
+
+	mockLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_0)
+	driver := mocks1_0.InternalDeviceDriver(device, mockLoader)
 
 	framebufferHandle := mocks.NewFakeFramebufferHandle()
 
@@ -114,7 +117,7 @@ func TestVulkanLoader1_0_CreateFrameBuffer(t *testing.T) {
 			return core1_0.VKSuccess, nil
 		})
 
-	framebuffer, _, err := driver.CreateFramebuffer(device, nil, core1_0.FramebufferCreateInfo{
+	framebuffer, _, err := driver.CreateFramebuffer(nil, core1_0.FramebufferCreateInfo{
 		Flags:      0,
 		RenderPass: renderPass,
 		Width:      3,
@@ -133,11 +136,12 @@ func TestVulkanLoader1_0_CreateImageView(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_0)
-	driver := mocks1_0.InternalDeviceDriver(mockLoader)
 	device := mocks.NewDummyDevice(common.Vulkan1_0, []string{})
 	imageViewHandle := mocks.NewFakeImageViewHandle()
 	image := mocks.NewDummyImage(device)
+
+	mockLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_0)
+	driver := mocks1_0.InternalDeviceDriver(device, mockLoader)
 
 	mockLoader.EXPECT().VkCreateImageView(device.Handle(), gomock.Not(nil), nil, gomock.Not(nil)).DoAndReturn(
 		func(device loader.VkDevice, pCreateInfo *loader.VkImageViewCreateInfo, pAllocator *loader.VkAllocationCallbacks, pImageView *loader.VkImageView) (common.VkResult, error) {
@@ -166,7 +170,7 @@ func TestVulkanLoader1_0_CreateImageView(t *testing.T) {
 			return core1_0.VKSuccess, nil
 		})
 
-	imageView, _, err := driver.CreateImageView(device, nil, core1_0.ImageViewCreateInfo{
+	imageView, _, err := driver.CreateImageView(nil, core1_0.ImageViewCreateInfo{
 		Image:    image,
 		ViewType: core1_0.ImageViewType2D,
 		Format:   core1_0.FormatA2B10G10R10SignedScaledPacked,
@@ -194,9 +198,10 @@ func TestVulkanLoader1_0_CreateSampler(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_0)
-	driver := mocks1_0.InternalDeviceDriver(mockLoader)
 	device := mocks.NewDummyDevice(common.Vulkan1_0, []string{})
+
+	mockLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_0)
+	driver := mocks1_0.InternalDeviceDriver(device, mockLoader)
 
 	samplerHandle := mocks.NewFakeSamplerHandle()
 
@@ -227,7 +232,7 @@ func TestVulkanLoader1_0_CreateSampler(t *testing.T) {
 			return core1_0.VKSuccess, nil
 		})
 
-	sampler, _, err := driver.CreateSampler(device, nil, core1_0.SamplerCreateInfo{
+	sampler, _, err := driver.CreateSampler(nil, core1_0.SamplerCreateInfo{
 		Flags:                   0,
 		MagFilter:               core1_0.FilterNearest,
 		MinFilter:               core1_0.FilterLinear,
@@ -254,10 +259,11 @@ func TestVulkanLoader1_0_CreateSemaphore(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_0)
-	driver := mocks1_0.InternalDeviceDriver(mockLoader)
 	device := mocks.NewDummyDevice(common.Vulkan1_0, []string{})
 	semaphoreHandle := mocks.NewFakeSemaphore()
+
+	mockLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_0)
+	driver := mocks1_0.InternalDeviceDriver(device, mockLoader)
 
 	mockLoader.EXPECT().VkCreateSemaphore(device.Handle(), gomock.Not(nil), nil, gomock.Not(nil)).DoAndReturn(
 		func(device loader.VkDevice, pCreateInfo *loader.VkSemaphoreCreateInfo, pAllocator *loader.VkAllocationCallbacks, pSemaphore *loader.VkSemaphore) (common.VkResult, error) {
@@ -271,7 +277,7 @@ func TestVulkanLoader1_0_CreateSemaphore(t *testing.T) {
 			return core1_0.VKSuccess, nil
 		})
 
-	semaphore, _, err := driver.CreateSemaphore(device, nil, core1_0.SemaphoreCreateInfo{})
+	semaphore, _, err := driver.CreateSemaphore(nil, core1_0.SemaphoreCreateInfo{})
 	require.NoError(t, err)
 	require.NotNil(t, semaphore)
 	require.Equal(t, semaphoreHandle, semaphore.Handle())
@@ -281,10 +287,11 @@ func TestVulkanLoader1_0_CreateShaderModule(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_0)
-	driver := mocks1_0.InternalDeviceDriver(mockLoader)
 	device := mocks.NewDummyDevice(common.Vulkan1_0, []string{})
 	handle := mocks.NewFakeShaderModule()
+
+	mockLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_0)
+	driver := mocks1_0.InternalDeviceDriver(device, mockLoader)
 
 	mockLoader.EXPECT().VkCreateShaderModule(device.Handle(), gomock.Not(nil), nil, gomock.Not(nil)).DoAndReturn(
 		func(device loader.VkDevice, pCreateInfo *loader.VkShaderModuleCreateInfo, pAllocator *loader.VkAllocationCallbacks, pShaderModule *loader.VkShaderModule) (common.VkResult, error) {
@@ -304,7 +311,7 @@ func TestVulkanLoader1_0_CreateShaderModule(t *testing.T) {
 			return core1_0.VKSuccess, nil
 		})
 
-	shaderModule, _, err := driver.CreateShaderModule(device, nil, core1_0.ShaderModuleCreateInfo{
+	shaderModule, _, err := driver.CreateShaderModule(nil, core1_0.ShaderModuleCreateInfo{
 		Code: []uint32{1, 1, 2, 3, 5, 8, 13, 21},
 	})
 	require.NoError(t, err)

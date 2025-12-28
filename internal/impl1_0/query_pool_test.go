@@ -21,10 +21,11 @@ func TestVulkanLoader1_0_CreateQueryPool(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_0)
-	driver := mocks1_0.InternalDeviceDriver(mockLoader)
 	device := mocks.NewDummyDevice(common.Vulkan1_0, []string{})
 	poolHandle := mocks.NewFakeQueryPool()
+
+	mockLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_0)
+	driver := mocks1_0.InternalDeviceDriver(device, mockLoader)
 
 	mockLoader.EXPECT().VkCreateQueryPool(device.Handle(), gomock.Not(nil), nil, gomock.Not(nil)).DoAndReturn(
 		func(device loader.VkDevice, pCreateInfo *loader.VkQueryPoolCreateInfo, pAllocator *loader.VkAllocationCallbacks, pQueryPool *loader.VkQueryPool) (common.VkResult, error) {
@@ -40,7 +41,7 @@ func TestVulkanLoader1_0_CreateQueryPool(t *testing.T) {
 			return core1_0.VKSuccess, nil
 		})
 
-	queryPool, _, err := driver.CreateQueryPool(device, nil, core1_0.QueryPoolCreateInfo{
+	queryPool, _, err := driver.CreateQueryPool(nil, core1_0.QueryPoolCreateInfo{
 		QueryType:          core1_0.QueryTypeOcclusion,
 		QueryCount:         5,
 		PipelineStatistics: core1_0.QueryPipelineStatisticGeometryShaderPrimitives,
@@ -54,10 +55,11 @@ func TestVulkanQueryPool_PopulateResults(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_0)
-	driver := mocks1_0.InternalDeviceDriver(mockLoader)
 	device := mocks.NewDummyDevice(common.Vulkan1_0, []string{})
 	queryPool := mocks.NewDummyQueryPool(device)
+
+	mockLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_0)
+	driver := mocks1_0.InternalDeviceDriver(device, mockLoader)
 
 	mockLoader.EXPECT().VkGetQueryPoolResults(
 		device.Handle(),

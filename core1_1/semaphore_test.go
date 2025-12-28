@@ -19,9 +19,10 @@ func TestExportSemaphoreOptions(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	coreLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_0)
-	driver := mocks1_1.InternalDeviceDriver(coreLoader)
 	device := mocks.NewDummyDevice(common.Vulkan1_1, []string{})
+
+	coreLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_0)
+	driver := mocks1_1.InternalDeviceDriver(device, coreLoader)
 
 	mockSemaphore := mocks.NewDummySemaphore(device)
 
@@ -50,7 +51,7 @@ func TestExportSemaphoreOptions(t *testing.T) {
 		return core1_0.VKSuccess, nil
 	})
 
-	semaphore, _, err := driver.CreateSemaphore(device, nil, core1_0.SemaphoreCreateInfo{
+	semaphore, _, err := driver.CreateSemaphore(nil, core1_0.SemaphoreCreateInfo{
 		NextOptions: common.NextOptions{
 			core1_1.ExportSemaphoreCreateInfo{
 				HandleTypes: core1_1.ExternalSemaphoreHandleTypeOpaqueWin32KMT,

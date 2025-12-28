@@ -19,10 +19,11 @@ func TestBufferOpaqueCaptureAddressCreateOptions(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	coreLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_2)
-	driver := mocks1_2.InternalDeviceDriver(coreLoader)
 	device := mocks.NewDummyDevice(common.Vulkan1_2, []string{})
 	mockBuffer := mocks.NewDummyBuffer(device)
+
+	coreLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_2)
+	driver := mocks1_2.InternalDeviceDriver(device, coreLoader)
 
 	coreLoader.EXPECT().VkCreateBuffer(
 		device.Handle(),
@@ -50,7 +51,6 @@ func TestBufferOpaqueCaptureAddressCreateOptions(t *testing.T) {
 	})
 
 	buffer, _, err := driver.CreateBuffer(
-		device,
 		nil,
 		core1_0.BufferCreateInfo{
 			NextOptions: common.NextOptions{
@@ -67,10 +67,11 @@ func TestMemoryOpaqueCaptureAddressAllocateOptions(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	coreLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_0)
-	driver := mocks1_2.InternalDeviceDriver(coreLoader)
 	device := mocks.NewDummyDevice(common.Vulkan1_2, []string{})
 	mockMemory := mocks.NewDummyDeviceMemory(device, 1)
+
+	coreLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_0)
+	driver := mocks1_2.InternalDeviceDriver(device, coreLoader)
 
 	coreLoader.EXPECT().VkAllocateMemory(
 		device.Handle(),
@@ -98,7 +99,6 @@ func TestMemoryOpaqueCaptureAddressAllocateOptions(t *testing.T) {
 	})
 
 	memory, _, err := driver.AllocateMemory(
-		device,
 		nil,
 		core1_0.MemoryAllocateInfo{
 			NextOptions: common.NextOptions{

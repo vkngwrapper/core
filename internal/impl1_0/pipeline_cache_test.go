@@ -19,9 +19,10 @@ func TestVulkanLoader1_0_CreatePipelineCache(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_0)
-	driver := mocks1_0.InternalDeviceDriver(mockLoader)
 	device := mocks.NewDummyDevice(common.Vulkan1_0, []string{})
+
+	mockLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_0)
+	driver := mocks1_0.InternalDeviceDriver(device, mockLoader)
 
 	pipelineCacheHandle := mocks.NewFakePipelineCache()
 
@@ -46,7 +47,7 @@ func TestVulkanLoader1_0_CreatePipelineCache(t *testing.T) {
 			return core1_0.VKSuccess, nil
 		})
 
-	pipelineCache, _, err := driver.CreatePipelineCache(device, nil, core1_0.PipelineCacheCreateInfo{
+	pipelineCache, _, err := driver.CreatePipelineCache(nil, core1_0.PipelineCacheCreateInfo{
 		Flags:       0,
 		InitialData: []byte{1, 3, 5, 7},
 	})
@@ -59,10 +60,11 @@ func TestVulkanPipelineCache_CacheData(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_0)
-	driver := mocks1_0.InternalDeviceDriver(mockLoader)
 	device := mocks.NewDummyDevice(common.Vulkan1_0, []string{})
 	pipelineCache := mocks.NewDummyPipelineCache(device)
+
+	mockLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_0)
+	driver := mocks1_0.InternalDeviceDriver(device, mockLoader)
 
 	mockLoader.EXPECT().VkGetPipelineCacheData(device.Handle(), pipelineCache.Handle(), gomock.Not(nil), unsafe.Pointer(nil)).DoAndReturn(
 		func(device loader.VkDevice, pipelineCache loader.VkPipelineCache, pSize *loader.Size, pCacheData unsafe.Pointer) (common.VkResult, error) {
@@ -88,7 +90,7 @@ func TestVulkanPipelineCache_MergePipelineCaches(t *testing.T) {
 
 	mockLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_0)
 	device := mocks.NewDummyDevice(common.Vulkan1_0, []string{})
-	driver := mocks1_0.InternalDeviceDriver(mockLoader)
+	driver := mocks1_0.InternalDeviceDriver(device, mockLoader)
 	pipelineCache := mocks.NewDummyPipelineCache(device)
 
 	srcPipeline1 := mocks.NewDummyPipelineCache(device)

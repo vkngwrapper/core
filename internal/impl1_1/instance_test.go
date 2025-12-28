@@ -19,9 +19,10 @@ func TestVulkanInstance_EnumeratePhysicalDeviceGroups(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	coreLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_1)
-	driver := mocks1_1.InternalCoreInstanceDriver(coreLoader)
 	instance := mocks.NewDummyInstance(common.Vulkan1_1, []string{})
+
+	coreLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_1)
+	driver := mocks1_1.InternalCoreInstanceDriver(instance, coreLoader)
 
 	physicalDevice1 := mocks.NewDummyPhysicalDevice(instance, common.Vulkan1_1)
 	physicalDevice2 := mocks.NewDummyPhysicalDevice(instance, common.Vulkan1_1)
@@ -141,9 +142,10 @@ func TestVulkanInstance_EnumeratePhysicalDeviceGroups_Incomplete(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	coreLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_1)
-	driver := mocks1_1.InternalCoreInstanceDriver(coreLoader)
 	instance := mocks.NewDummyInstance(common.Vulkan1_1, []string{})
+
+	coreLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_1)
+	driver := mocks1_1.InternalCoreInstanceDriver(instance, coreLoader)
 
 	physicalDevice1 := mocks.NewDummyPhysicalDevice(instance, common.Vulkan1_1)
 	physicalDevice2 := mocks.NewDummyPhysicalDevice(instance, common.Vulkan1_1)
