@@ -178,7 +178,6 @@ func TestDescriptorSetVariableDescriptorCountLayoutSupportOutData(t *testing.T) 
 
 	var outData core1_2.DescriptorSetVariableDescriptorCountLayoutSupport
 	err := driver.GetDescriptorSetLayoutSupport(
-		device,
 		core1_0.DescriptorSetLayoutCreateInfo{},
 		&core1_1.DescriptorSetLayoutSupport{
 			NextOutData: common.NextOutData{&outData},

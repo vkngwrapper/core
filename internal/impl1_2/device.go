@@ -12,10 +12,7 @@ import (
 	"github.com/vkngwrapper/core/v3/loader"
 )
 
-func (v *DeviceVulkanDriver) CreateRenderPass2(device core.Device, allocator *loader.AllocationCallbacks, options core1_2.RenderPassCreateInfo2) (core.RenderPass, common.VkResult, error) {
-	if device.Handle() == 0 {
-		return core.RenderPass{}, core1_0.VKErrorUnknown, fmt.Errorf("device cannot be uninitialized")
-	}
+func (v *DeviceVulkanDriver) CreateRenderPass2(allocator *loader.AllocationCallbacks, options core1_2.RenderPassCreateInfo2) (core.RenderPass, common.VkResult, error) {
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
@@ -26,7 +23,7 @@ func (v *DeviceVulkanDriver) CreateRenderPass2(device core.Device, allocator *lo
 
 	var renderPassHandle loader.VkRenderPass
 	res, err := v.LoaderObj.VkCreateRenderPass2(
-		device.Handle(),
+		v.DeviceObj.Handle(),
 		(*loader.VkRenderPassCreateInfo2)(infoPtr),
 		allocator.Handle(),
 		&renderPassHandle,
@@ -36,9 +33,9 @@ func (v *DeviceVulkanDriver) CreateRenderPass2(device core.Device, allocator *lo
 	}
 
 	renderPass := core.InternalRenderPass(
-		device.Handle(),
+		v.DeviceObj.Handle(),
 		renderPassHandle,
-		device.APIVersion(),
+		v.DeviceObj.APIVersion(),
 	)
 
 	return renderPass, res, nil

@@ -50,7 +50,7 @@ func TestVulkanDevice_DescriptorSetLayoutSupport(t *testing.T) {
 		})
 
 	outData := &core1_1.DescriptorSetLayoutSupport{}
-	err := driver.GetDescriptorSetLayoutSupport(device, core1_0.DescriptorSetLayoutCreateInfo{
+	err := driver.GetDescriptorSetLayoutSupport(core1_0.DescriptorSetLayoutCreateInfo{
 		Bindings: []core1_0.DescriptorSetLayoutBinding{
 			{
 				Binding:         1,
@@ -413,7 +413,6 @@ func TestVulkanDevice_GetDeviceGroupPeerMemoryFeatures(t *testing.T) {
 	})
 
 	features := driver.GetDeviceGroupPeerMemoryFeatures(
-		device,
 		1, 3, 5,
 	)
 	require.Equal(t, core1_1.PeerMemoryFeatureCopySrc, features)
@@ -461,7 +460,6 @@ func TestVulkanLoader_CreateSamplerYcbcrConversion(t *testing.T) {
 		})
 
 	ycbcr, _, err := driver.CreateSamplerYcbcrConversion(
-		device,
 		core1_1.SamplerYcbcrConversionCreateInfo{
 			Format:     core1_1.FormatB12X4G12X4R12X4G12X4HorizontalChromaComponentPacked,
 			YcbcrModel: core1_1.SamplerYcbcrModelConversionYcbcr709,
@@ -522,7 +520,6 @@ func TestVulkanLoader1_1_CreateDescriptorUpdateTemplate(t *testing.T) {
 	})
 
 	queue, err := driver.GetDeviceQueue2(
-		device,
 		core1_1.DeviceQueueInfo2{
 			Flags:            core1_1.DeviceQueueCreateProtected,
 			QueueFamilyIndex: 3,

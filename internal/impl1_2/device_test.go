@@ -152,7 +152,6 @@ func TestDevice_CreateRenderPass(t *testing.T) {
 	})
 
 	renderPass, _, err := driver.CreateRenderPass2(
-		device,
 		nil,
 		core1_2.RenderPassCreateInfo2{
 			Flags: 0,

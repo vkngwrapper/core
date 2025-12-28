@@ -74,7 +74,6 @@ func TestAttachmentDescriptionStencilLayoutOptions(t *testing.T) {
 	})
 
 	renderPass, _, err := driver.CreateRenderPass2(
-		device,
 		nil,
 		core1_2.RenderPassCreateInfo2{
 			Attachments: []core1_2.AttachmentDescription2{
@@ -199,7 +198,7 @@ func TestSubpassDescriptionDepthStencilResolveOptions(t *testing.T) {
 		return core1_0.VKSuccess, nil
 	})
 
-	renderPass, _, err := driver.CreateRenderPass2(device, nil,
+	renderPass, _, err := driver.CreateRenderPass2(nil,
 		core1_2.RenderPassCreateInfo2{
 			Subpasses: []core1_2.SubpassDescription2{
 				{
