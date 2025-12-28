@@ -1,6 +1,7 @@
 package impl1_1
 
 import (
+	"github.com/vkngwrapper/core/v3/core1_0"
 	"github.com/vkngwrapper/core/v3/core1_1"
 	"github.com/vkngwrapper/core/v3/internal/impl1_0"
 )
@@ -14,8 +15,12 @@ type DeviceVulkanDriver struct {
 }
 
 type CoreVulkanDriver struct {
-	InstanceVulkanDriver
+	InstanceDriverObj core1_0.CoreInstanceDriver
 	DeviceVulkanDriver
+}
+
+func (c *CoreVulkanDriver) InstanceDriver() core1_0.CoreInstanceDriver {
+	return c.InstanceDriverObj
 }
 
 var _ core1_1.CoreInstanceDriver = &InstanceVulkanDriver{}

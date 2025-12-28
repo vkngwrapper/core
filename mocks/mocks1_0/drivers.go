@@ -11,32 +11,34 @@ func InternalGlobalDriver(loader loader.Loader) core1_0.GlobalDriver {
 	return &impl1_0.GlobalVulkanDriver{
 		LoaderObj: loader,
 		InstanceDriverFactory: func(global *impl1_0.GlobalVulkanDriver, instance core.Instance) (core1_0.CoreInstanceDriver, error) {
-			return InternalCoreInstanceDriver(loader), nil
+			return InternalCoreInstanceDriver(instance, loader), nil
 		},
-		DeviceDriverFactory: func(global *impl1_0.GlobalVulkanDriver, device core.Device) (core1_0.CoreDeviceDriver, error) {
-			return InternalCoreDriver(loader), nil
+		DeviceDriverFactory: func(driver core1_0.CoreInstanceDriver, device core.Device) (core1_0.CoreDeviceDriver, error) {
+			return InternalCoreDriver(driver.Instance(), device, driver.Loader()), nil
 		},
 	}
 }
 
-func InternalCoreInstanceDriver(loader loader.Loader) core1_0.CoreInstanceDriver {
+func InternalCoreInstanceDriver(instance core.Instance, loader loader.Loader) core1_0.CoreInstanceDriver {
 	global := InternalGlobalDriver(loader).(*impl1_0.GlobalVulkanDriver)
 	return &impl1_0.InstanceVulkanDriver{
 		GlobalVulkanDriver: *global,
+		InstanceObj:        instance,
 	}
 }
 
-func InternalDeviceDriver(loader loader.Loader) core1_0.DeviceDriver {
+func InternalDeviceDriver(device core.Device, loader loader.Loader) core1_0.DeviceDriver {
 	return &impl1_0.DeviceVulkanDriver{
 		LoaderObj: loader,
+		DeviceObj: device,
 	}
 }
 
-func InternalCoreDriver(loader loader.Loader) core1_0.CoreDeviceDriver {
-	instance := InternalCoreInstanceDriver(loader).(*impl1_0.InstanceVulkanDriver)
-	device := InternalDeviceDriver(loader).(*impl1_0.DeviceVulkanDriver)
+func InternalCoreDriver(instance core.Instance, device core.Device, loader loader.Loader) core1_0.CoreDeviceDriver {
+	instanceDriver := InternalCoreInstanceDriver(instance, loader)
+	deviceDriver := InternalDeviceDriver(device, loader).(*impl1_0.DeviceVulkanDriver)
 	return &impl1_0.CoreVulkanDriver{
-		InstanceVulkanDriver: *instance,
-		DeviceVulkanDriver:   *device,
+		InstanceDriverObj:  instanceDriver,
+		DeviceVulkanDriver: *deviceDriver,
 	}
 }

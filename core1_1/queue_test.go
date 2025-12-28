@@ -24,7 +24,7 @@ func TestDeviceGroupSubmitOptions(t *testing.T) {
 	coreLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_1)
 
 	device := mocks.NewDummyDevice(common.Vulkan1_1, []string{})
-	driver := mocks1_1.InternalDeviceDriver(coreLoader)
+	driver := mocks1_1.InternalDeviceDriver(device, coreLoader)
 	fence := mocks.NewDummyFence(device)
 	pool := mocks.NewDummyCommandPool(device)
 	commandBuffer := mocks.NewDummyCommandBuffer(pool, device)
@@ -99,12 +99,13 @@ func TestProtectedMemorySubmitOptions(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	coreLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_1)
-	driver := mocks1_1.InternalDeviceDriver(coreLoader)
 	device := mocks.NewDummyDevice(common.Vulkan1_1, []string{})
 	fence := mocks.NewDummyFence(device)
 	pool := mocks.NewDummyCommandPool(device)
 	commandBuffer := mocks.NewDummyCommandBuffer(pool, device)
+
+	coreLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_1)
+	driver := mocks1_1.InternalDeviceDriver(device, coreLoader)
 
 	semaphore1 := mocks.NewDummySemaphore(device)
 	semaphore2 := mocks.NewDummySemaphore(device)

@@ -108,3 +108,7 @@ func NewDummyShaderModule(device core.Device) core.ShaderModule {
 func NewDummySamplerYcbcrConversion(device core.Device) core.SamplerYcbcrConversion {
 	return core.InternalSamplerYcbcrConversion(device.Handle(), NewFakeSamplerYcbcrConversionHandle(), device.APIVersion())
 }
+
+func NewDummyDescriptorUpdateTemplate(device core.Device) core.DescriptorUpdateTemplate {
+	return core.InternalDescriptorUpdateTemplate(device.Handle(), NewFakeDescriptorUpdateTemplate(), device.APIVersion())
+}

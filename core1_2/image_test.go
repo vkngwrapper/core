@@ -20,10 +20,11 @@ func TestImageStencilUsageCreateOptions(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	coreLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_0)
-	driver := mocks1_2.InternalDeviceDriver(coreLoader)
 	device := mocks.NewDummyDevice(common.Vulkan1_0, []string{})
 	mockImage := mocks.NewDummyImage(device)
+
+	coreLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_0)
+	driver := mocks1_2.InternalDeviceDriver(device, coreLoader)
 
 	coreLoader.EXPECT().VkCreateImage(
 		device.Handle(),
@@ -51,7 +52,6 @@ func TestImageStencilUsageCreateOptions(t *testing.T) {
 	})
 
 	image, _, err := driver.CreateImage(
-		device,
 		nil,
 		core1_0.ImageCreateInfo{
 			NextOptions: common.NextOptions{core1_2.ImageStencilUsageCreateInfo{
@@ -66,9 +66,10 @@ func TestImageFormatListCreateOptions(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	coreLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_2)
-	driver := mocks1_2.InternalDeviceDriver(coreLoader)
 	device := mocks.NewDummyDevice(common.Vulkan1_2, []string{})
+
+	coreLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_2)
+	driver := mocks1_2.InternalDeviceDriver(device, coreLoader)
 
 	mockImage := mocks.NewDummyImage(device)
 
@@ -102,7 +103,6 @@ func TestImageFormatListCreateOptions(t *testing.T) {
 	})
 
 	image, _, err := driver.CreateImage(
-		device,
 		nil,
 		core1_0.ImageCreateInfo{
 			NextOptions: common.NextOptions{

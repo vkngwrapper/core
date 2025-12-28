@@ -6,7 +6,6 @@ package impl1_0
 */
 import "C"
 import (
-	"fmt"
 	"unsafe"
 
 	"github.com/CannibalVox/cgoparam"
@@ -16,24 +15,17 @@ import (
 	"github.com/vkngwrapper/core/v3/loader"
 )
 
-func (v *InstanceVulkanDriver) DestroyInstance(instance core.Instance, callbacks *loader.AllocationCallbacks) {
-	if instance.Handle() == 0 {
-		panic("instance was uninitialized")
-	}
-	v.LoaderObj.VkDestroyInstance(instance.Handle(), callbacks.Handle())
+func (v *InstanceVulkanDriver) DestroyInstance(callbacks *loader.AllocationCallbacks) {
+	v.LoaderObj.VkDestroyInstance(v.InstanceObj.Handle(), callbacks.Handle())
 }
 
-func (v *InstanceVulkanDriver) EnumeratePhysicalDevices(instance core.Instance) ([]core.PhysicalDevice, common.VkResult, error) {
-	if instance.Handle() == 0 {
-		return nil, core1_0.VKErrorUnknown, fmt.Errorf("instance was uninitialized")
-	}
-
+func (v *InstanceVulkanDriver) EnumeratePhysicalDevices() ([]core.PhysicalDevice, common.VkResult, error) {
 	allocator := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(allocator)
 
 	count := (*loader.Uint32)(allocator.Malloc(int(unsafe.Sizeof(loader.Uint32(0)))))
 
-	res, err := v.LoaderObj.VkEnumeratePhysicalDevices(instance.Handle(), count, nil)
+	res, err := v.LoaderObj.VkEnumeratePhysicalDevices(v.InstanceObj.Handle(), count, nil)
 	if err != nil {
 		return nil, res, err
 	}
@@ -45,7 +37,7 @@ func (v *InstanceVulkanDriver) EnumeratePhysicalDevices(instance core.Instance) 
 	allocatedHandles := allocator.Malloc(int(uintptr(*count) * unsafe.Sizeof([1]loader.VkPhysicalDevice{})))
 
 	deviceHandles := ([]loader.VkPhysicalDevice)(unsafe.Slice((*loader.VkPhysicalDevice)(allocatedHandles), int(*count)))
-	res, err = v.LoaderObj.VkEnumeratePhysicalDevices(instance.Handle(), count, (*loader.VkPhysicalDevice)(allocatedHandles))
+	res, err = v.LoaderObj.VkEnumeratePhysicalDevices(v.InstanceObj.Handle(), count, (*loader.VkPhysicalDevice)(allocatedHandles))
 	if err != nil {
 		return nil, res, err
 	}
@@ -63,8 +55,8 @@ func (v *InstanceVulkanDriver) EnumeratePhysicalDevices(instance core.Instance) 
 			return nil, core1_0.VKErrorUnknown, err
 		}
 
-		deviceVersion := instance.APIVersion().Min(properties.APIVersion)
-		physicalDevice := core.InternalPhysicalDevice(deviceHandles[ind], instance.APIVersion(), deviceVersion)
+		deviceVersion := v.InstanceObj.APIVersion().Min(properties.APIVersion)
+		physicalDevice := core.InternalPhysicalDevice(deviceHandles[ind], v.InstanceObj.APIVersion(), deviceVersion)
 
 		devices = append(devices, physicalDevice)
 	}

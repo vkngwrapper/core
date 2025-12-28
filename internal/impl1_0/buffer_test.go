@@ -22,7 +22,7 @@ func TestBuffer_Create_NilIndices(t *testing.T) {
 
 	mockLoader := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_0)
 	device := mocks.NewDummyDevice(common.Vulkan1_0, []string{})
-	driver := mocks1_0.InternalDeviceDriver(mockLoader)
+	driver := mocks1_0.InternalDeviceDriver(device, mockLoader)
 
 	expectedBuffer := mocks.NewFakeBufferHandle()
 
@@ -44,7 +44,7 @@ func TestBuffer_Create_NilIndices(t *testing.T) {
 			return core1_0.VKSuccess, nil
 		})
 
-	buffer, res, err := driver.CreateBuffer(device, nil, core1_0.BufferCreateInfo{
+	buffer, res, err := driver.CreateBuffer(nil, core1_0.BufferCreateInfo{
 		Size:               5,
 		Usage:              core1_0.BufferUsageVertexBuffer | core1_0.BufferUsageTransferSrc,
 		SharingMode:        core1_0.SharingModeExclusive,
@@ -63,7 +63,7 @@ func TestBasicBuffer_Create_QueueFamilyIndices(t *testing.T) {
 	mockLoader := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_0)
 	device := mocks.NewDummyDevice(common.Vulkan1_0, []string{})
 	expectedBuffer := mocks.NewFakeBufferHandle()
-	driver := mocks1_0.InternalDeviceDriver(mockLoader)
+	driver := mocks1_0.InternalDeviceDriver(device, mockLoader)
 
 	mockLoader.EXPECT().VkCreateBuffer(device.Handle(), gomock.Not(nil), nil, gomock.Not(nil)).DoAndReturn(
 		func(device loader.VkDevice, createInfo *loader.VkBufferCreateInfo, allocator *loader.VkAllocationCallbacks, buffer *loader.VkBuffer) (common.VkResult, error) {
@@ -87,7 +87,7 @@ func TestBasicBuffer_Create_QueueFamilyIndices(t *testing.T) {
 			return core1_0.VKSuccess, nil
 		})
 
-	buffer, res, err := driver.CreateBuffer(device, nil, core1_0.BufferCreateInfo{
+	buffer, res, err := driver.CreateBuffer(nil, core1_0.BufferCreateInfo{
 		Size:               5,
 		Usage:              core1_0.BufferUsageVertexBuffer | core1_0.BufferUsageTransferSrc,
 		SharingMode:        core1_0.SharingModeExclusive,
@@ -107,7 +107,7 @@ func TestBuffer_MemoryRequirements(t *testing.T) {
 	mockLoader := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_0)
 	device := mocks.NewDummyDevice(common.Vulkan1_0, []string{})
 	buffer := mocks.NewDummyBuffer(device)
-	driver := mocks1_0.InternalDeviceDriver(mockLoader)
+	driver := mocks1_0.InternalDeviceDriver(device, mockLoader)
 
 	mockLoader.EXPECT().VkGetBufferMemoryRequirements(device.Handle(), buffer.Handle(), gomock.Not(nil)).DoAndReturn(
 		func(device loader.VkDevice, buffer loader.VkBuffer, requirements *loader.VkMemoryRequirements) {
@@ -127,12 +127,12 @@ func TestBuffer_BindBufferMemory_Success(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockLoader := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_0)
-	driver := mocks1_0.InternalDeviceDriver(mockLoader)
-
 	device := mocks.NewDummyDevice(common.Vulkan1_0, []string{})
 	buffer := mocks.NewDummyBuffer(device)
 	memory := mocks.NewDummyDeviceMemory(device, 1)
+
+	mockLoader := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_0)
+	driver := mocks1_0.InternalDeviceDriver(device, mockLoader)
 
 	mockLoader.EXPECT().VkBindBufferMemory(device.Handle(), buffer.Handle(), memory.Handle(), loader.VkDeviceSize(3)).Return(core1_0.VKSuccess, nil)
 	_, err := driver.BindBufferMemory(buffer, memory, 3)
@@ -143,11 +143,11 @@ func TestBuffer_BindBufferMemory_FailNilMemory(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockLoader := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_0)
-	driver := mocks1_0.InternalDeviceDriver(mockLoader)
-
 	device := mocks.NewDummyDevice(common.Vulkan1_0, []string{})
 	buffer := mocks.NewDummyBuffer(device)
+
+	mockLoader := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_0)
+	driver := mocks1_0.InternalDeviceDriver(device, mockLoader)
 
 	_, err := driver.BindBufferMemory(buffer, core.DeviceMemory{}, 3)
 	require.EqualError(t, err, "received uninitialized DeviceMemory")

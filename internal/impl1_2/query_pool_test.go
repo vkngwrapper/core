@@ -15,10 +15,11 @@ func TestVulkanQueryPool_ResetQueryPool(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	coreLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_2)
-	driver := mocks1_2.InternalDeviceDriver(coreLoader)
 	device := mocks.NewDummyDevice(common.Vulkan1_2, []string{})
 	queryPool := mocks.NewDummyQueryPool(device)
+
+	coreLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_2)
+	driver := mocks1_2.InternalDeviceDriver(device, coreLoader)
 
 	coreLoader.EXPECT().VkResetQueryPool(
 		device.Handle(),

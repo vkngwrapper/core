@@ -22,9 +22,10 @@ func TestPhysicalDeviceDriverOutData(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	coreLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_2)
-	driver := mocks1_2.InternalCoreInstanceDriver(coreLoader)
 	instance := mocks.NewDummyInstance(common.Vulkan1_2, []string{})
+
+	coreLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_2)
+	driver := mocks1_2.InternalCoreInstanceDriver(instance, coreLoader)
 
 	physicalDevice := mocks.NewDummyPhysicalDevice(instance, common.Vulkan1_2)
 
@@ -86,10 +87,11 @@ func TestPhysicalDeviceDepthStencilResolveOutData(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	coreLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_2)
-	driver := mocks1_2.InternalCoreInstanceDriver(coreLoader)
 	instance := mocks.NewDummyInstance(common.Vulkan1_2, []string{})
 	physicalDevice := mocks.NewDummyPhysicalDevice(instance, common.Vulkan1_2)
+
+	coreLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_2)
+	driver := mocks1_2.InternalCoreInstanceDriver(instance, coreLoader)
 
 	coreLoader.EXPECT().VkGetPhysicalDeviceProperties2(
 		physicalDevice.Handle(),
@@ -132,10 +134,11 @@ func TestPhysicalDeviceDescriptorIndexingOutData(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	coreLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_2)
-	driver := mocks1_2.InternalCoreInstanceDriver(coreLoader)
 	instance := mocks.NewDummyInstance(common.Vulkan1_2, []string{})
 	physicalDevice := mocks.NewDummyPhysicalDevice(instance, common.Vulkan1_2)
+
+	coreLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_2)
+	driver := mocks1_2.InternalCoreInstanceDriver(instance, coreLoader)
 
 	coreLoader.EXPECT().VkGetPhysicalDeviceProperties2(
 		physicalDevice.Handle(),
@@ -219,10 +222,11 @@ func TestPhysicalDeviceFloatControlsOutData(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	coreLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_2)
-	driver := mocks1_2.InternalCoreInstanceDriver(coreLoader)
 	instance := mocks.NewDummyInstance(common.Vulkan1_2, []string{})
 	physicalDevice := mocks.NewDummyPhysicalDevice(instance, common.Vulkan1_2)
+
+	coreLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_2)
+	driver := mocks1_2.InternalCoreInstanceDriver(instance, coreLoader)
 
 	coreLoader.EXPECT().VkGetPhysicalDeviceProperties2(
 		physicalDevice.Handle(),
@@ -292,10 +296,11 @@ func TestPhysicalDeviceSamplerFilterMinmaxOutData(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	coreLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_2)
-	driver := mocks1_2.InternalCoreInstanceDriver(coreLoader)
 	instance := mocks.NewDummyInstance(common.Vulkan1_2, []string{})
 	physicalDevice := mocks.NewDummyPhysicalDevice(instance, common.Vulkan1_2)
+
+	coreLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_2)
+	driver := mocks1_2.InternalCoreInstanceDriver(instance, coreLoader)
 
 	coreLoader.EXPECT().VkGetPhysicalDeviceProperties2(
 		physicalDevice.Handle(),
@@ -331,10 +336,11 @@ func TestPhysicalDeviceTimelineSemaphoreOutData(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	coreLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_2)
-	driver := mocks1_2.InternalCoreInstanceDriver(coreLoader)
 	instance := mocks.NewDummyInstance(common.Vulkan1_2, []string{})
 	physicalDevice := mocks.NewDummyPhysicalDevice(instance, common.Vulkan1_2)
+
+	coreLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_2)
+	driver := mocks1_2.InternalCoreInstanceDriver(instance, coreLoader)
 
 	coreLoader.EXPECT().VkGetPhysicalDeviceProperties2(
 		physicalDevice.Handle(),
@@ -367,10 +373,11 @@ func TestPhysicalDeviceVulkan11OutData(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	coreLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_2)
-	driver := mocks1_2.InternalCoreInstanceDriver(coreLoader)
 	instance := mocks.NewDummyInstance(common.Vulkan1_2, []string{})
 	physicalDevice := mocks.NewDummyPhysicalDevice(instance, common.Vulkan1_2)
+
+	coreLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_2)
+	driver := mocks1_2.InternalCoreInstanceDriver(instance, coreLoader)
 
 	deviceUUID, err := uuid.NewRandom()
 	require.NoError(t, err)
@@ -449,10 +456,11 @@ func TestPhysicalDeviceVulkan12OutData(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	coreLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_2)
-	driver := mocks1_2.InternalCoreInstanceDriver(coreLoader)
 	instance := mocks.NewDummyInstance(common.Vulkan1_2, []string{})
 	physicalDevice := mocks.NewDummyPhysicalDevice(instance, common.Vulkan1_2)
+
+	coreLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_2)
+	driver := mocks1_2.InternalCoreInstanceDriver(instance, coreLoader)
 
 	coreLoader.EXPECT().VkGetPhysicalDeviceProperties2(
 		physicalDevice.Handle(),

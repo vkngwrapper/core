@@ -182,10 +182,7 @@ func (v *DeviceVulkanDriver) GetImageSparseMemoryRequirements2(o core1_1.ImageSp
 	return outDataSlice, nil
 }
 
-func (v *DeviceVulkanDriver) GetDescriptorSetLayoutSupport(device core.Device, o core1_0.DescriptorSetLayoutCreateInfo, outData *core1_1.DescriptorSetLayoutSupport) error {
-	if device.Handle() == 0 {
-		return fmt.Errorf("device cannot be uninitialized")
-	}
+func (v *DeviceVulkanDriver) GetDescriptorSetLayoutSupport(o core1_0.DescriptorSetLayoutCreateInfo, outData *core1_1.DescriptorSetLayoutSupport) error {
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
@@ -199,25 +196,21 @@ func (v *DeviceVulkanDriver) GetDescriptorSetLayoutSupport(device core.Device, o
 		return err
 	}
 
-	v.LoaderObj.VkGetDescriptorSetLayoutSupport(device.Handle(),
+	v.LoaderObj.VkGetDescriptorSetLayoutSupport(v.DeviceObj.Handle(),
 		(*loader.VkDescriptorSetLayoutCreateInfo)(optionsPtr),
 		(*loader.VkDescriptorSetLayoutSupport)(outDataPtr))
 
 	return common.PopulateOutData(outData, outDataPtr)
 }
 
-func (v *DeviceVulkanDriver) GetDeviceGroupPeerMemoryFeatures(device core.Device, heapIndex, localDeviceIndex, remoteDeviceIndex int) core1_1.PeerMemoryFeatureFlags {
-	if device.Handle() == 0 {
-		panic("device cannot be uninitialized")
-	}
-
+func (v *DeviceVulkanDriver) GetDeviceGroupPeerMemoryFeatures(heapIndex, localDeviceIndex, remoteDeviceIndex int) core1_1.PeerMemoryFeatureFlags {
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
 	featuresPtr := (*loader.VkPeerMemoryFeatureFlags)(arena.Malloc(int(unsafe.Sizeof(C.VkPeerMemoryFeatureFlags(0)))))
 
 	v.LoaderObj.VkGetDeviceGroupPeerMemoryFeatures(
-		device.Handle(),
+		v.DeviceObj.Handle(),
 		loader.Uint32(heapIndex),
 		loader.Uint32(localDeviceIndex),
 		loader.Uint32(remoteDeviceIndex),
@@ -227,11 +220,7 @@ func (v *DeviceVulkanDriver) GetDeviceGroupPeerMemoryFeatures(device core.Device
 	return core1_1.PeerMemoryFeatureFlags(*featuresPtr)
 }
 
-func (v *DeviceVulkanDriver) CreateDescriptorUpdateTemplate(device core.Device, o core1_1.DescriptorUpdateTemplateCreateInfo, allocator *loader.AllocationCallbacks) (core.DescriptorUpdateTemplate, common.VkResult, error) {
-	if device.Handle() == 0 {
-		return core.DescriptorUpdateTemplate{}, core1_0.VKErrorUnknown, fmt.Errorf("device cannot be uninitialized")
-	}
-
+func (v *DeviceVulkanDriver) CreateDescriptorUpdateTemplate(o core1_1.DescriptorUpdateTemplateCreateInfo, allocator *loader.AllocationCallbacks) (core.DescriptorUpdateTemplate, common.VkResult, error) {
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
@@ -241,7 +230,7 @@ func (v *DeviceVulkanDriver) CreateDescriptorUpdateTemplate(device core.Device, 
 	}
 
 	var templateHandle loader.VkDescriptorUpdateTemplate
-	res, err := v.LoaderObj.VkCreateDescriptorUpdateTemplate(device.Handle(),
+	res, err := v.LoaderObj.VkCreateDescriptorUpdateTemplate(v.DeviceObj.Handle(),
 		(*loader.VkDescriptorUpdateTemplateCreateInfo)(createInfoPtr),
 		allocator.Handle(),
 		&templateHandle,
@@ -250,13 +239,10 @@ func (v *DeviceVulkanDriver) CreateDescriptorUpdateTemplate(device core.Device, 
 		return core.DescriptorUpdateTemplate{}, res, err
 	}
 
-	return core.InternalDescriptorUpdateTemplate(device.Handle(), templateHandle, device.APIVersion()), res, nil
+	return core.InternalDescriptorUpdateTemplate(v.DeviceObj.Handle(), templateHandle, v.DeviceObj.APIVersion()), res, nil
 }
 
-func (v *DeviceVulkanDriver) CreateSamplerYcbcrConversion(device core.Device, o core1_1.SamplerYcbcrConversionCreateInfo, allocator *loader.AllocationCallbacks) (core.SamplerYcbcrConversion, common.VkResult, error) {
-	if device.Handle() == 0 {
-		return core.SamplerYcbcrConversion{}, core1_0.VKErrorUnknown, fmt.Errorf("device cannot be uninitialized")
-	}
+func (v *DeviceVulkanDriver) CreateSamplerYcbcrConversion(o core1_1.SamplerYcbcrConversionCreateInfo, allocator *loader.AllocationCallbacks) (core.SamplerYcbcrConversion, common.VkResult, error) {
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
@@ -267,7 +253,7 @@ func (v *DeviceVulkanDriver) CreateSamplerYcbcrConversion(device core.Device, o 
 
 	var ycbcrHandle loader.VkSamplerYcbcrConversion
 	res, err := v.LoaderObj.VkCreateSamplerYcbcrConversion(
-		device.Handle(),
+		v.DeviceObj.Handle(),
 		(*loader.VkSamplerYcbcrConversionCreateInfo)(optionPtr),
 		allocator.Handle(),
 		&ycbcrHandle,
@@ -276,14 +262,10 @@ func (v *DeviceVulkanDriver) CreateSamplerYcbcrConversion(device core.Device, o 
 		return core.SamplerYcbcrConversion{}, res, err
 	}
 
-	return core.InternalSamplerYcbcrConversion(device.Handle(), ycbcrHandle, device.APIVersion()), res, nil
+	return core.InternalSamplerYcbcrConversion(v.DeviceObj.Handle(), ycbcrHandle, v.DeviceObj.APIVersion()), res, nil
 }
 
-func (v *DeviceVulkanDriver) GetDeviceQueue2(device core.Device, o core1_1.DeviceQueueInfo2) (core.Queue, error) {
-	if device.Handle() == 0 {
-		return core.Queue{}, fmt.Errorf("device cannot be uninitialized")
-	}
-
+func (v *DeviceVulkanDriver) GetDeviceQueue2(o core1_1.DeviceQueueInfo2) (core.Queue, error) {
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
@@ -294,10 +276,10 @@ func (v *DeviceVulkanDriver) GetDeviceQueue2(device core.Device, o core1_1.Devic
 
 	var queue loader.VkQueue
 	v.LoaderObj.VkGetDeviceQueue2(
-		device.Handle(),
+		v.DeviceObj.Handle(),
 		(*loader.VkDeviceQueueInfo2)(optionPtr),
 		&queue,
 	)
 
-	return core.InternalQueue(device.Handle(), queue, device.APIVersion()), nil
+	return core.InternalQueue(v.DeviceObj.Handle(), queue, v.DeviceObj.APIVersion()), nil
 }

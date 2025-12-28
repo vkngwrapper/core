@@ -22,15 +22,15 @@ func TestDescriptorSetVariableDescriptorCountAllocateOptions(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	coreLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_2)
-	driver := mocks1_2.InternalDeviceDriver(coreLoader)
-
 	device := mocks.NewDummyDevice(common.Vulkan1_2, []string{})
 	descriptorPool := mocks.NewDummyDescriptorPool(device)
 	descriptorLayout1 := mocks.NewDummyDescriptorSetLayout(device)
 	descriptorLayout2 := mocks.NewDummyDescriptorSetLayout(device)
 	descriptorLayout3 := mocks.NewDummyDescriptorSetLayout(device)
 	descriptorLayout4 := mocks.NewDummyDescriptorSetLayout(device)
+
+	coreLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_2)
+	driver := mocks1_2.InternalDeviceDriver(device, coreLoader)
 
 	mockDescriptorSet1 := mocks.NewDummyDescriptorSet(descriptorPool, device)
 	mockDescriptorSet2 := mocks.NewDummyDescriptorSet(descriptorPool, device)
@@ -102,11 +102,11 @@ func TestDescriptorSetLayoutBindingFlagsCreateOptions(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	coreLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_2)
-	driver := mocks1_2.InternalDeviceDriver(coreLoader)
-
 	device := mocks.NewDummyDevice(common.Vulkan1_2, []string{})
 	mockDescriptorSetLayout := mocks.NewDummyDescriptorSetLayout(device)
+
+	coreLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_2)
+	driver := mocks1_2.InternalDeviceDriver(device, coreLoader)
 
 	coreLoader.EXPECT().VkCreateDescriptorSetLayout(
 		device.Handle(),
@@ -134,7 +134,6 @@ func TestDescriptorSetLayoutBindingFlagsCreateOptions(t *testing.T) {
 	})
 
 	descriptorSetLayout, _, err := driver.CreateDescriptorSetLayout(
-		device,
 		nil,
 		core1_0.DescriptorSetLayoutCreateInfo{
 			NextOptions: common.NextOptions{
@@ -154,9 +153,10 @@ func TestDescriptorSetVariableDescriptorCountLayoutSupportOutData(t *testing.T) 
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	coreLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_2)
-	driver := mocks1_2.InternalDeviceDriver(coreLoader)
 	device := mocks.NewDummyDevice(common.Vulkan1_2, []string{})
+
+	coreLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_2)
+	driver := mocks1_2.InternalDeviceDriver(device, coreLoader)
 
 	coreLoader.EXPECT().VkGetDescriptorSetLayoutSupport(
 		device.Handle(),
@@ -178,7 +178,6 @@ func TestDescriptorSetVariableDescriptorCountLayoutSupportOutData(t *testing.T) 
 
 	var outData core1_2.DescriptorSetVariableDescriptorCountLayoutSupport
 	err := driver.GetDescriptorSetLayoutSupport(
-		device,
 		core1_0.DescriptorSetLayoutCreateInfo{},
 		&core1_1.DescriptorSetLayoutSupport{
 			NextOutData: common.NextOutData{&outData},

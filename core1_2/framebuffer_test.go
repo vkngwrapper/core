@@ -20,9 +20,10 @@ func TestFramebufferAttachmentsCreateOptions(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	coreLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_2)
-	driver := mocks1_2.InternalDeviceDriver(coreLoader)
 	device := mocks.NewDummyDevice(common.Vulkan1_2, []string{})
+
+	coreLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_2)
+	driver := mocks1_2.InternalDeviceDriver(device, coreLoader)
 
 	mockFramebuffer := mocks.NewDummyFramebuffer(device)
 
@@ -86,7 +87,6 @@ func TestFramebufferAttachmentsCreateOptions(t *testing.T) {
 	})
 
 	framebuffer, _, err := driver.CreateFramebuffer(
-		device,
 		nil,
 		core1_0.FramebufferCreateInfo{
 			NextOptions: common.NextOptions{

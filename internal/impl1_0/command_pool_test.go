@@ -19,11 +19,11 @@ func TestCommandPoolCreateBasic(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_0)
-	driver := mocks1_0.InternalDeviceDriver(mockLoader)
-
 	device := mocks.NewDummyDevice(common.Vulkan1_0, []string{})
 	pool := mocks.NewDummyCommandPool(device)
+
+	mockLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_0)
+	driver := mocks1_0.InternalDeviceDriver(device, mockLoader)
 
 	mockLoader.EXPECT().VkCreateCommandPool(device.Handle(), gomock.Not(nil), nil, gomock.Not(nil)).DoAndReturn(
 		func(device loader.VkDevice, createInfo *loader.VkCommandPoolCreateInfo, allocator *loader.VkAllocationCallbacks, commandPool *loader.VkCommandPool) (common.VkResult, error) {
@@ -38,7 +38,7 @@ func TestCommandPoolCreateBasic(t *testing.T) {
 			return core1_0.VKSuccess, nil
 		})
 
-	pool, res, err := driver.CreateCommandPool(device, nil, core1_0.CommandPoolCreateInfo{
+	pool, res, err := driver.CreateCommandPool(nil, core1_0.CommandPoolCreateInfo{
 		Flags:            core1_0.CommandPoolCreateResetBuffer,
 		QueueFamilyIndex: 1,
 	})
@@ -52,12 +52,12 @@ func TestCommandBufferSingleAllocateFree(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_0)
-	driver := mocks1_0.InternalDeviceDriver(mockLoader)
-
 	device := mocks.NewDummyDevice(common.Vulkan1_0, []string{})
 	commandPool := mocks.NewDummyCommandPool(device)
 	buffer := mocks.NewDummyCommandBuffer(commandPool, device)
+
+	mockLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_0)
+	driver := mocks1_0.InternalDeviceDriver(device, mockLoader)
 
 	mockLoader.EXPECT().VkAllocateCommandBuffers(device.Handle(), gomock.Not(nil), gomock.Not(nil)).DoAndReturn(
 		func(device loader.VkDevice, createInfo *loader.VkCommandBufferAllocateInfo, commandBuffers *loader.VkCommandBuffer) (common.VkResult, error) {
@@ -101,11 +101,11 @@ func TestCommandBufferMultiAllocateFree(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_0)
-	driver := mocks1_0.InternalDeviceDriver(mockLoader)
-
 	device := mocks.NewDummyDevice(common.Vulkan1_0, []string{})
 	commandPool := mocks.NewDummyCommandPool(device)
+
+	mockLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_0)
+	driver := mocks1_0.InternalDeviceDriver(device, mockLoader)
 
 	bufferHandles := []loader.VkCommandBuffer{
 		mocks.NewFakeCommandBufferHandle(),
@@ -160,10 +160,11 @@ func TestVulkanCommandPool_Reset(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_0)
-	driver := mocks1_0.InternalDeviceDriver(mockLoader)
 	device := mocks.NewDummyDevice(common.Vulkan1_0, []string{})
 	commandPool := mocks.NewDummyCommandPool(device)
+
+	mockLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_0)
+	driver := mocks1_0.InternalDeviceDriver(device, mockLoader)
 
 	mockLoader.EXPECT().VkResetCommandPool(device.Handle(), commandPool.Handle(),
 		loader.VkCommandPoolResetFlags(1), // VK_COMMAND_POOL_RESET_RELEASE_RESOURCES_BIT

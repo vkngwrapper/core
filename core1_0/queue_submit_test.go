@@ -20,10 +20,11 @@ func TestSubmitToQueue_SignalSuccess(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_0)
-	driver := mocks1_0.InternalDeviceDriver(mockLoader)
 	device := mocks.NewDummyDevice(common.Vulkan1_0, []string{})
 	queue := mocks.NewDummyQueue(device)
+
+	mockLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_0)
+	driver := mocks1_0.InternalDeviceDriver(device, mockLoader)
 
 	fence := mocks.NewDummyFence(device)
 	pool := mocks.NewDummyCommandPool(device)
@@ -90,10 +91,11 @@ func TestSubmitToQueue_NoSignalSuccess(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_0)
-	driver := mocks1_0.InternalDeviceDriver(mockLoader)
 	device := mocks.NewDummyDevice(common.Vulkan1_0, []string{})
 	queue := mocks.NewDummyQueue(device)
+
+	mockLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_0)
+	driver := mocks1_0.InternalDeviceDriver(device, mockLoader)
 
 	pool := mocks.NewDummyCommandPool(device)
 	buffer := mocks.NewDummyCommandBuffer(pool, device)
@@ -138,10 +140,11 @@ func TestSubmitToQueue_MismatchWaitSemaphores(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_0)
-	driver := mocks1_0.InternalDeviceDriver(mockLoader)
 	device := mocks.NewDummyDevice(common.Vulkan1_0, []string{})
 	queue := mocks.NewDummyQueue(device)
+
+	mockLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_0)
+	driver := mocks1_0.InternalDeviceDriver(device, mockLoader)
 
 	pool := mocks.NewDummyCommandPool(device)
 	buffer := mocks.NewDummyCommandBuffer(pool, device)

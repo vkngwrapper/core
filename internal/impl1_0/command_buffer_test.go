@@ -23,7 +23,7 @@ func setup(t *testing.T, ctrl *gomock.Controller) (*mock_loader.MockLoader, core
 	device := mocks.NewDummyDevice(common.Vulkan1_0, []string{})
 	pool := mocks.NewDummyCommandPool(device)
 	buffer := mocks.NewDummyCommandBuffer(pool, device)
-	driver := mocks1_0.InternalDeviceDriver(mockLoader)
+	driver := mocks1_0.InternalDeviceDriver(device, mockLoader)
 
 	return mockLoader, driver, device, buffer
 }
@@ -35,7 +35,7 @@ func setupWithRenderPass(t *testing.T, ctrl *gomock.Controller) (*mock_loader.Mo
 	buffer := mocks.NewDummyCommandBuffer(pool, device)
 	renderPass := mocks.NewDummyRenderPass(device)
 	framebuffer := mocks.NewDummyFramebuffer(device)
-	driver := mocks1_0.InternalDeviceDriver(mockLoader)
+	driver := mocks1_0.InternalDeviceDriver(device, mockLoader)
 
 	return mockLoader, driver, device, buffer, renderPass, framebuffer
 }
@@ -168,12 +168,13 @@ func TestCommandBuffer_CmdBindGraphicsPipeline(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_0)
-	driver := mocks1_0.InternalDeviceDriver(mockLoader)
 	device := mocks.NewDummyDevice(common.Vulkan1_0, []string{})
 	pool := mocks.NewDummyCommandPool(device)
 	buffer := mocks.NewDummyCommandBuffer(pool, device)
 	pipeline := mocks.NewDummyPipeline(device)
+
+	mockLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_0)
+	driver := mocks1_0.InternalDeviceDriver(device, mockLoader)
 
 	mockLoader.EXPECT().VkCmdBindPipeline(buffer.Handle(), loader.VkPipelineBindPoint(0), pipeline.Handle())
 

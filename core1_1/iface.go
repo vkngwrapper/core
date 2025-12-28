@@ -128,7 +128,7 @@ type CoreInstanceDriver interface {
 	// PhysicalDeviceGroupProperties will be allocated with no chained structures.
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkEnumeratePhysicalDeviceGroups.html
-	EnumeratePhysicalDeviceGroups(instance core.Instance, outDataFactory func() *PhysicalDeviceGroupProperties) ([]*PhysicalDeviceGroupProperties, common.VkResult, error)
+	EnumeratePhysicalDeviceGroups(outDataFactory func() *PhysicalDeviceGroupProperties) ([]*PhysicalDeviceGroupProperties, common.VkResult, error)
 }
 
 type DeviceDriver interface {
@@ -218,7 +218,7 @@ type DeviceDriver interface {
 	// object will be populated. It should include any desired chained OutData objects
 	//
 	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/vkGetDescriptorSetLayoutSupport.html
-	GetDescriptorSetLayoutSupport(device core.Device, o core1_0.DescriptorSetLayoutCreateInfo, outData *DescriptorSetLayoutSupport) error
+	GetDescriptorSetLayoutSupport(o core1_0.DescriptorSetLayoutCreateInfo, outData *DescriptorSetLayoutSupport) error
 
 	// GetDeviceGroupPeerMemoryFeatures queries supported peer memory features of a Device
 	//
@@ -231,7 +231,7 @@ type DeviceDriver interface {
 	// remoteDeviceIndex - The device index of the PhysicalDevice that the memory is allocated for
 	//
 	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/vkGetDeviceGroupPeerMemoryFeatures.html
-	GetDeviceGroupPeerMemoryFeatures(device core.Device, heapIndex, localDeviceIndex, remoteDeviceIndex int) PeerMemoryFeatureFlags
+	GetDeviceGroupPeerMemoryFeatures(heapIndex, localDeviceIndex, remoteDeviceIndex int) PeerMemoryFeatureFlags
 
 	// CreateDescriptorUpdateTemplate creates a new DescriptorUpdateTemplate
 	//
@@ -242,7 +242,7 @@ type DeviceDriver interface {
 	// allocator - Controls host allocation behavior
 	//
 	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/vkCreateDescriptorUpdateTemplate.html
-	CreateDescriptorUpdateTemplate(device core.Device, o DescriptorUpdateTemplateCreateInfo, allocator *loader.AllocationCallbacks) (core.DescriptorUpdateTemplate, common.VkResult, error)
+	CreateDescriptorUpdateTemplate(o DescriptorUpdateTemplateCreateInfo, allocator *loader.AllocationCallbacks) (core.DescriptorUpdateTemplate, common.VkResult, error)
 	// CreateSamplerYcbcrConversion creates a new Y'CbCr conversion
 	//
 	// device - The Device used to created the SamplerYcbcrConversion
@@ -252,7 +252,7 @@ type DeviceDriver interface {
 	// allocator - Controls host allocation behavior
 	//
 	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/vkCreateSamplerYcbcrConversion.html
-	CreateSamplerYcbcrConversion(device core.Device, o SamplerYcbcrConversionCreateInfo, allocator *loader.AllocationCallbacks) (core.SamplerYcbcrConversion, common.VkResult, error)
+	CreateSamplerYcbcrConversion(o SamplerYcbcrConversionCreateInfo, allocator *loader.AllocationCallbacks) (core.SamplerYcbcrConversion, common.VkResult, error)
 
 	// GetDeviceQueue2 gets a Queue object from a Device
 	//
@@ -261,7 +261,7 @@ type DeviceDriver interface {
 	// o - Describes parameters of the Device Queue to be retrieved
 	//
 	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/vkGetDeviceQueue2.html
-	GetDeviceQueue2(device core.Device, o DeviceQueueInfo2) (core.Queue, error)
+	GetDeviceQueue2(o DeviceQueueInfo2) (core.Queue, error)
 
 	// DestroyDescriptorUpdateTemplate destroys a DescriptorUpdateTemplate object and the
 	// underlying structures. **Warning** after destruction, the object will continue to exist,
@@ -323,6 +323,6 @@ type DeviceDriver interface {
 }
 
 type CoreDeviceDriver interface {
-	CoreInstanceDriver
+	InstanceDriver() core1_0.CoreInstanceDriver
 	DeviceDriver
 }

@@ -19,9 +19,10 @@ func TestExportFenceOptions(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	coreLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_0)
-	driver := mocks1_1.InternalDeviceDriver(coreLoader)
 	device := mocks.NewDummyDevice(common.Vulkan1_1, []string{})
+
+	coreLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_0)
+	driver := mocks1_1.InternalDeviceDriver(device, coreLoader)
 
 	mockFence := mocks.NewDummyFence(device)
 
@@ -48,7 +49,6 @@ func TestExportFenceOptions(t *testing.T) {
 	})
 
 	fence, _, err := driver.CreateFence(
-		device,
 		nil,
 		core1_0.FenceCreateInfo{
 			Flags: core1_0.FenceCreateSignaled,

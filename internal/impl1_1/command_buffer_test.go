@@ -15,11 +15,12 @@ func TestCommandBuffer_CmdDispatchBase(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	coreLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_1)
-	driver := mocks1_1.InternalDeviceDriver(coreLoader)
 	device := mocks.NewDummyDevice(common.Vulkan1_1, []string{})
 	commandPool := mocks.NewDummyCommandPool(device)
 	commandBuffer := mocks.NewDummyCommandBuffer(commandPool, device)
+
+	coreLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_1)
+	driver := mocks1_1.InternalDeviceDriver(device, coreLoader)
 
 	coreLoader.EXPECT().VkCmdDispatchBase(
 		commandBuffer.Handle(),
@@ -38,11 +39,12 @@ func TestCommandBuffer_CmdSetDeviceMask(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	coreLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_1)
-	driver := mocks1_1.InternalDeviceDriver(coreLoader)
 	device := mocks.NewDummyDevice(common.Vulkan1_1, []string{})
 	commandPool := mocks.NewDummyCommandPool(device)
 	commandBuffer := mocks.NewDummyCommandBuffer(commandPool, device)
+
+	coreLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_1)
+	driver := mocks1_1.InternalDeviceDriver(device, coreLoader)
 
 	coreLoader.EXPECT().VkCmdSetDeviceMask(commandBuffer.Handle(), loader.Uint32(3))
 

@@ -41,6 +41,7 @@ func buildInstanceDriver(driver *impl1_0.GlobalVulkanDriver, instance core.Insta
 						InstanceDriverFactory: buildInstanceDriver,
 						DeviceDriverFactory:   buildDeviceDriver,
 					},
+					InstanceObj: instance,
 				},
 			},
 		}, nil
@@ -52,6 +53,7 @@ func buildInstanceDriver(driver *impl1_0.GlobalVulkanDriver, instance core.Insta
 					InstanceDriverFactory: buildInstanceDriver,
 					DeviceDriverFactory:   buildDeviceDriver,
 				},
+				InstanceObj: instance,
 			},
 		}, nil
 	default:
@@ -61,12 +63,13 @@ func buildInstanceDriver(driver *impl1_0.GlobalVulkanDriver, instance core.Insta
 				InstanceDriverFactory: buildInstanceDriver,
 				DeviceDriverFactory:   buildDeviceDriver,
 			},
+			InstanceObj: instance,
 		}, nil
 	}
 }
 
-func buildDeviceDriver(driver *impl1_0.GlobalVulkanDriver, device core.Device) (core1_0.CoreDeviceDriver, error) {
-	loaderObj, err := driver.LoaderObj.CreateDeviceLoader(device.Handle())
+func buildDeviceDriver(driver core1_0.CoreInstanceDriver, device core.Device) (core1_0.CoreDeviceDriver, error) {
+	loaderObj, err := driver.Loader().CreateDeviceLoader(device.Handle())
 	if err != nil {
 		return nil, err
 	}
@@ -74,53 +77,32 @@ func buildDeviceDriver(driver *impl1_0.GlobalVulkanDriver, device core.Device) (
 	switch device.APIVersion() {
 	case common.Vulkan1_2:
 		return &impl1_2.CoreVulkanDriver{
-			InstanceVulkanDriver: impl1_2.InstanceVulkanDriver{
-				InstanceVulkanDriver: impl1_1.InstanceVulkanDriver{
-					InstanceVulkanDriver: impl1_0.InstanceVulkanDriver{
-						GlobalVulkanDriver: impl1_0.GlobalVulkanDriver{
-							LoaderObj:             loaderObj,
-							InstanceDriverFactory: buildInstanceDriver,
-							DeviceDriverFactory:   buildDeviceDriver,
-						},
-					},
-				},
-			},
+			InstanceDriverObj: driver,
 			DeviceVulkanDriver: impl1_2.DeviceVulkanDriver{
 				DeviceVulkanDriver: impl1_1.DeviceVulkanDriver{
 					DeviceVulkanDriver: impl1_0.DeviceVulkanDriver{
 						LoaderObj: loaderObj,
+						DeviceObj: device,
 					},
 				},
 			},
 		}, nil
 	case common.Vulkan1_1:
 		return &impl1_1.CoreVulkanDriver{
-			InstanceVulkanDriver: impl1_1.InstanceVulkanDriver{
-				InstanceVulkanDriver: impl1_0.InstanceVulkanDriver{
-					GlobalVulkanDriver: impl1_0.GlobalVulkanDriver{
-						LoaderObj:             loaderObj,
-						InstanceDriverFactory: buildInstanceDriver,
-						DeviceDriverFactory:   buildDeviceDriver,
-					},
-				},
-			},
+			InstanceDriverObj: driver,
 			DeviceVulkanDriver: impl1_1.DeviceVulkanDriver{
 				DeviceVulkanDriver: impl1_0.DeviceVulkanDriver{
 					LoaderObj: loaderObj,
+					DeviceObj: device,
 				},
 			},
 		}, nil
 	default:
 		return &impl1_0.CoreVulkanDriver{
-			InstanceVulkanDriver: impl1_0.InstanceVulkanDriver{
-				GlobalVulkanDriver: impl1_0.GlobalVulkanDriver{
-					LoaderObj:             loaderObj,
-					InstanceDriverFactory: buildInstanceDriver,
-					DeviceDriverFactory:   buildDeviceDriver,
-				},
-			},
+			InstanceDriverObj: driver,
 			DeviceVulkanDriver: impl1_0.DeviceVulkanDriver{
 				LoaderObj: loaderObj,
+				DeviceObj: device,
 			},
 		}, nil
 	}

@@ -20,9 +20,10 @@ func TestImagePlaneMemoryRequirementsOptions(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	coreLoader := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_1)
-	driver := mocks1_1.InternalDeviceDriver(coreLoader)
 	device := mocks.NewDummyDevice(common.Vulkan1_1, []string{})
+
+	coreLoader := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_1)
+	driver := mocks1_1.InternalDeviceDriver(device, coreLoader)
 
 	image := mocks.NewDummyImage(device)
 
@@ -78,9 +79,10 @@ func TestSamplerYcbcrConversionOptions(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	coreLoader := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_0)
-	driver := mocks1_1.InternalDeviceDriver(coreLoader)
 	device := mocks.NewDummyDevice(common.Vulkan1_1, []string{})
+
+	coreLoader := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_0)
+	driver := mocks1_1.InternalDeviceDriver(device, coreLoader)
 
 	image := mocks.NewDummyImage(device)
 	ycbcr := mocks.NewDummySamplerYcbcrConversion(device)
@@ -113,7 +115,6 @@ func TestSamplerYcbcrConversionOptions(t *testing.T) {
 	})
 
 	imageView, _, err := driver.CreateImageView(
-		device,
 		nil,
 		core1_0.ImageViewCreateInfo{
 			Image:  image,
@@ -133,10 +134,11 @@ func TestSamplerYcbcrImageFormatOutData(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	coreLoader := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_1)
-	driver := mocks1_1.InternalCoreInstanceDriver(coreLoader)
 	instance := mocks.NewDummyInstance(common.Vulkan1_1, []string{})
 	physicalDevice := mocks.NewDummyPhysicalDevice(instance, common.Vulkan1_1)
+
+	coreLoader := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_1)
+	driver := mocks1_1.InternalCoreInstanceDriver(instance, coreLoader)
 
 	coreLoader.EXPECT().VkGetPhysicalDeviceImageFormatProperties2(
 		physicalDevice.Handle(),

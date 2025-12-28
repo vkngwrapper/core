@@ -20,12 +20,13 @@ func TestVulkanLoader1_0_CreatePipelineLayout(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_0)
-	driver := mocks1_0.InternalDeviceDriver(mockLoader)
 	device := mocks.NewDummyDevice(common.Vulkan1_0, []string{})
 	descriptorSetLayout1 := mocks.NewDummyDescriptorSetLayout(device)
 	descriptorSetLayout2 := mocks.NewDummyDescriptorSetLayout(device)
 	layoutHandle := mocks.NewFakePipelineLayout()
+
+	mockLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_0)
+	driver := mocks1_0.InternalDeviceDriver(device, mockLoader)
 
 	mockLoader.EXPECT().VkCreatePipelineLayout(device.Handle(), gomock.Not(nil), nil, gomock.Not(nil)).DoAndReturn(
 		func(device loader.VkDevice, pCreateInfo *loader.VkPipelineLayoutCreateInfo, pAllocator *loader.VkAllocationCallbacks, pPipelineLayout *loader.VkPipelineLayout) (common.VkResult, error) {
@@ -66,7 +67,7 @@ func TestVulkanLoader1_0_CreatePipelineLayout(t *testing.T) {
 			return core1_0.VKSuccess, nil
 		})
 
-	layout, _, err := driver.CreatePipelineLayout(device, nil, core1_0.PipelineLayoutCreateInfo{
+	layout, _, err := driver.CreatePipelineLayout(nil, core1_0.PipelineLayoutCreateInfo{
 		SetLayouts: []core.DescriptorSetLayout{descriptorSetLayout1, descriptorSetLayout2},
 		PushConstantRanges: []core1_0.PushConstantRange{
 			{

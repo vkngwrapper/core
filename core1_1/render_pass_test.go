@@ -20,9 +20,10 @@ func TestInputAttachmentAspectOptions(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	coreLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_1)
-	driver := mocks1_0.InternalDeviceDriver(coreLoader)
 	device := mocks.NewDummyDevice(common.Vulkan1_1, []string{})
+
+	coreLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_1)
+	driver := mocks1_0.InternalDeviceDriver(device, coreLoader)
 
 	expectedRenderPass := mocks.NewDummyRenderPass(device)
 
@@ -69,7 +70,7 @@ func TestInputAttachmentAspectOptions(t *testing.T) {
 			},
 		},
 	}
-	renderPass, _, err := driver.CreateRenderPass(device, nil, core1_0.RenderPassCreateInfo{
+	renderPass, _, err := driver.CreateRenderPass(nil, core1_0.RenderPassCreateInfo{
 		NextOptions: common.NextOptions{Next: aspectOptions},
 	})
 	require.NoError(t, err)
@@ -80,10 +81,11 @@ func TestDeviceGroupRenderPassBeginOptions(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	coreLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_0)
-	driver := mocks1_0.InternalDeviceDriver(coreLoader)
 	device := mocks.NewDummyDevice(common.Vulkan1_1, []string{})
 	commandPool := mocks.NewDummyCommandPool(device)
+
+	coreLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_0)
+	driver := mocks1_0.InternalDeviceDriver(device, coreLoader)
 
 	commandBuffer := mocks.NewDummyCommandBuffer(commandPool, device)
 	renderPass := mocks.NewDummyRenderPass(device)
@@ -158,9 +160,10 @@ func TestRenderPassMultiviewOptions(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	coreLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_1)
-	driver := mocks1_0.InternalDeviceDriver(coreLoader)
 	device := mocks.NewDummyDevice(common.Vulkan1_1, []string{})
+
+	coreLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_1)
+	driver := mocks1_0.InternalDeviceDriver(device, coreLoader)
 
 	mockRenderPass := mocks.NewDummyRenderPass(device)
 
@@ -203,7 +206,7 @@ func TestRenderPassMultiviewOptions(t *testing.T) {
 		return core1_0.VKSuccess, nil
 	})
 
-	renderPass, _, err := driver.CreateRenderPass(device, nil, core1_0.RenderPassCreateInfo{
+	renderPass, _, err := driver.CreateRenderPass(nil, core1_0.RenderPassCreateInfo{
 		NextOptions: common.NextOptions{
 			core1_1.RenderPassMultiviewCreateInfo{
 				ViewMasks:        []uint32{1, 2, 7},

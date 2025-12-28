@@ -104,11 +104,12 @@ func TestVulkanInstance_PhysicalDevices(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_2)
-	driver := mocks1_0.InternalCoreInstanceDriver(mockLoader)
 	instance := mocks.NewDummyInstance(common.Vulkan1_2, []string{})
 	device1 := mocks.NewFakePhysicalDeviceHandle()
 	device2 := mocks.NewFakePhysicalDeviceHandle()
+
+	mockLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_2)
+	driver := mocks1_0.InternalCoreInstanceDriver(instance, mockLoader)
 
 	mockLoader.EXPECT().VkEnumeratePhysicalDevices(instance.Handle(), gomock.Not(nil), nil).DoAndReturn(
 		func(instance loader.VkInstance, pPhysicalDeviceCount *loader.Uint32, pPhysicalDevices *loader.VkPhysicalDevice) (common.VkResult, error) {
@@ -140,7 +141,7 @@ func TestVulkanInstance_PhysicalDevices(t *testing.T) {
 			*(*uint32)(unsafe.Pointer(val.FieldByName("apiVersion").UnsafeAddr())) = uint32(1<<22 | 2<<12)
 		})
 
-	devices, _, err := driver.EnumeratePhysicalDevices(instance)
+	devices, _, err := driver.EnumeratePhysicalDevices()
 	require.NoError(t, err)
 	require.Len(t, devices, 2)
 	require.Equal(t, device1, devices[0].Handle())

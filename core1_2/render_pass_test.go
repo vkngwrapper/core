@@ -21,10 +21,11 @@ func TestAttachmentDescriptionStencilLayoutOptions(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	coreLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_2)
-	driver := mocks1_2.InternalDeviceDriver(coreLoader)
 	device := mocks.NewDummyDevice(common.Vulkan1_2, []string{})
 	mockRenderPass := mocks.NewDummyRenderPass(device)
+
+	coreLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_2)
+	driver := mocks1_2.InternalDeviceDriver(device, coreLoader)
 
 	coreLoader.EXPECT().VkCreateRenderPass2(
 		device.Handle(),
@@ -73,7 +74,6 @@ func TestAttachmentDescriptionStencilLayoutOptions(t *testing.T) {
 	})
 
 	renderPass, _, err := driver.CreateRenderPass2(
-		device,
 		nil,
 		core1_2.RenderPassCreateInfo2{
 			Attachments: []core1_2.AttachmentDescription2{
@@ -106,11 +106,12 @@ func TestRenderPassAttachmentBeginInfo(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	coreLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_2)
-	driver := mocks1_2.InternalDeviceDriver(coreLoader)
 	device := mocks.NewDummyDevice(common.Vulkan1_2, []string{})
 	commandPool := mocks.NewDummyCommandPool(device)
 	commandBuffer := mocks.NewDummyCommandBuffer(commandPool, device)
+
+	coreLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_2)
+	driver := mocks1_2.InternalDeviceDriver(device, coreLoader)
 
 	imageView1 := mocks.NewDummyImageView(device)
 	imageView2 := mocks.NewDummyImageView(device)
@@ -152,10 +153,11 @@ func TestSubpassDescriptionDepthStencilResolveOptions(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	coreLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_2)
-	driver := mocks1_2.InternalDeviceDriver(coreLoader)
 	device := mocks.NewDummyDevice(common.Vulkan1_2, []string{})
 	mockRenderPass := mocks.NewDummyRenderPass(device)
+
+	coreLoader := mock_loader.LoaderForVersion(ctrl, common.Vulkan1_2)
+	driver := mocks1_2.InternalDeviceDriver(device, coreLoader)
 
 	coreLoader.EXPECT().VkCreateRenderPass2(
 		device.Handle(),
@@ -196,7 +198,7 @@ func TestSubpassDescriptionDepthStencilResolveOptions(t *testing.T) {
 		return core1_0.VKSuccess, nil
 	})
 
-	renderPass, _, err := driver.CreateRenderPass2(device, nil,
+	renderPass, _, err := driver.CreateRenderPass2(nil,
 		core1_2.RenderPassCreateInfo2{
 			Subpasses: []core1_2.SubpassDescription2{
 				{

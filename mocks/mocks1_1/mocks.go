@@ -126,16 +126,16 @@ func (mr *MockCoreInstanceDriverMockRecorder) CreateInstance(allocationCallbacks
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateInstance", reflect.TypeOf((*MockCoreInstanceDriver)(nil).CreateInstance), allocationCallbacks, options)
 }
 
-// DestroyInstance mocks base method.
-func (m *MockCoreInstanceDriver) DestroyInstance(instance core.Instance, callbacks *loader.AllocationCallbacks) {
+// Destroy mocks base method.
+func (m *MockCoreInstanceDriver) DestroyInstance(callbacks *loader.AllocationCallbacks) {
 	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "DestroyInstance", instance, callbacks)
+	m.ctrl.Call(m, "Destroy", callbacks)
 }
 
-// DestroyInstance indicates an expected call of DestroyInstance.
-func (mr *MockCoreInstanceDriverMockRecorder) DestroyInstance(instance, callbacks any) *gomock.Call {
+// Destroy indicates an expected call of Destroy.
+func (mr *MockCoreInstanceDriverMockRecorder) Destroy(callbacks any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DestroyInstance", reflect.TypeOf((*MockCoreInstanceDriver)(nil).DestroyInstance), instance, callbacks)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Destroy", reflect.TypeOf((*MockCoreInstanceDriver)(nil).DestroyInstance), callbacks)
 }
 
 // EnumerateDeviceExtensionProperties mocks base method.
@@ -203,9 +203,9 @@ func (mr *MockCoreInstanceDriverMockRecorder) EnumeratePhysicalDeviceGroups(inst
 }
 
 // EnumeratePhysicalDevices mocks base method.
-func (m *MockCoreInstanceDriver) EnumeratePhysicalDevices(instance core.Instance) ([]core.PhysicalDevice, common.VkResult, error) {
+func (m *MockCoreInstanceDriver) EnumeratePhysicalDevices() ([]core.PhysicalDevice, common.VkResult, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "EnumeratePhysicalDevices", instance)
+	ret := m.ctrl.Call(m, "EnumeratePhysicalDevices")
 	ret0, _ := ret[0].([]core.PhysicalDevice)
 	ret1, _ := ret[1].(common.VkResult)
 	ret2, _ := ret[2].(error)
@@ -213,9 +213,9 @@ func (m *MockCoreInstanceDriver) EnumeratePhysicalDevices(instance core.Instance
 }
 
 // EnumeratePhysicalDevices indicates an expected call of EnumeratePhysicalDevices.
-func (mr *MockCoreInstanceDriverMockRecorder) EnumeratePhysicalDevices(instance any) *gomock.Call {
+func (mr *MockCoreInstanceDriverMockRecorder) EnumeratePhysicalDevices() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "EnumeratePhysicalDevices", reflect.TypeOf((*MockCoreInstanceDriver)(nil).EnumeratePhysicalDevices), instance)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "EnumeratePhysicalDevices", reflect.TypeOf((*MockCoreInstanceDriver)(nil).EnumeratePhysicalDevices))
 }
 
 // GetPhysicalDeviceExternalBufferProperties mocks base method.
@@ -533,9 +533,9 @@ func (mr *MockDeviceDriverMockRecorder) AllocateDescriptorSets(o any) *gomock.Ca
 }
 
 // AllocateMemory mocks base method.
-func (m *MockDeviceDriver) AllocateMemory(device core.Device, allocationCallbacks *loader.AllocationCallbacks, o core1_0.MemoryAllocateInfo) (core.DeviceMemory, common.VkResult, error) {
+func (m *MockDeviceDriver) AllocateMemory(allocationCallbacks *loader.AllocationCallbacks, o core1_0.MemoryAllocateInfo) (core.DeviceMemory, common.VkResult, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "AllocateMemory", device, allocationCallbacks, o)
+	ret := m.ctrl.Call(m, "AllocateMemory", allocationCallbacks, o)
 	ret0, _ := ret[0].(core.DeviceMemory)
 	ret1, _ := ret[1].(common.VkResult)
 	ret2, _ := ret[2].(error)
@@ -543,9 +543,9 @@ func (m *MockDeviceDriver) AllocateMemory(device core.Device, allocationCallback
 }
 
 // AllocateMemory indicates an expected call of AllocateMemory.
-func (mr *MockDeviceDriverMockRecorder) AllocateMemory(device, allocationCallbacks, o any) *gomock.Call {
+func (mr *MockDeviceDriverMockRecorder) AllocateMemory(allocationCallbacks, o any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AllocateMemory", reflect.TypeOf((*MockDeviceDriver)(nil).AllocateMemory), device, allocationCallbacks, o)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AllocateMemory", reflect.TypeOf((*MockDeviceDriver)(nil).AllocateMemory), allocationCallbacks, o)
 }
 
 // BeginCommandBuffer mocks base method.
@@ -1254,9 +1254,9 @@ func (mr *MockDeviceDriverMockRecorder) CmdWriteTimestamp(commandBuffer, pipelin
 }
 
 // CreateBuffer mocks base method.
-func (m *MockDeviceDriver) CreateBuffer(device core.Device, allocationCallbacks *loader.AllocationCallbacks, o core1_0.BufferCreateInfo) (core.Buffer, common.VkResult, error) {
+func (m *MockDeviceDriver) CreateBuffer(allocationCallbacks *loader.AllocationCallbacks, o core1_0.BufferCreateInfo) (core.Buffer, common.VkResult, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreateBuffer", device, allocationCallbacks, o)
+	ret := m.ctrl.Call(m, "CreateBuffer", allocationCallbacks, o)
 	ret0, _ := ret[0].(core.Buffer)
 	ret1, _ := ret[1].(common.VkResult)
 	ret2, _ := ret[2].(error)
@@ -1264,15 +1264,15 @@ func (m *MockDeviceDriver) CreateBuffer(device core.Device, allocationCallbacks 
 }
 
 // CreateBuffer indicates an expected call of CreateBuffer.
-func (mr *MockDeviceDriverMockRecorder) CreateBuffer(device, allocationCallbacks, o any) *gomock.Call {
+func (mr *MockDeviceDriverMockRecorder) CreateBuffer(allocationCallbacks, o any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateBuffer", reflect.TypeOf((*MockDeviceDriver)(nil).CreateBuffer), device, allocationCallbacks, o)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateBuffer", reflect.TypeOf((*MockDeviceDriver)(nil).CreateBuffer), allocationCallbacks, o)
 }
 
 // CreateBufferView mocks base method.
-func (m *MockDeviceDriver) CreateBufferView(device core.Device, allocationCallbacks *loader.AllocationCallbacks, o core1_0.BufferViewCreateInfo) (core.BufferView, common.VkResult, error) {
+func (m *MockDeviceDriver) CreateBufferView(allocationCallbacks *loader.AllocationCallbacks, o core1_0.BufferViewCreateInfo) (core.BufferView, common.VkResult, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreateBufferView", device, allocationCallbacks, o)
+	ret := m.ctrl.Call(m, "CreateBufferView", allocationCallbacks, o)
 	ret0, _ := ret[0].(core.BufferView)
 	ret1, _ := ret[1].(common.VkResult)
 	ret2, _ := ret[2].(error)
@@ -1280,15 +1280,15 @@ func (m *MockDeviceDriver) CreateBufferView(device core.Device, allocationCallba
 }
 
 // CreateBufferView indicates an expected call of CreateBufferView.
-func (mr *MockDeviceDriverMockRecorder) CreateBufferView(device, allocationCallbacks, o any) *gomock.Call {
+func (mr *MockDeviceDriverMockRecorder) CreateBufferView(allocationCallbacks, o any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateBufferView", reflect.TypeOf((*MockDeviceDriver)(nil).CreateBufferView), device, allocationCallbacks, o)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateBufferView", reflect.TypeOf((*MockDeviceDriver)(nil).CreateBufferView), allocationCallbacks, o)
 }
 
 // CreateCommandPool mocks base method.
-func (m *MockDeviceDriver) CreateCommandPool(device core.Device, allocationCallbacks *loader.AllocationCallbacks, o core1_0.CommandPoolCreateInfo) (core.CommandPool, common.VkResult, error) {
+func (m *MockDeviceDriver) CreateCommandPool(allocationCallbacks *loader.AllocationCallbacks, o core1_0.CommandPoolCreateInfo) (core.CommandPool, common.VkResult, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreateCommandPool", device, allocationCallbacks, o)
+	ret := m.ctrl.Call(m, "CreateCommandPool", allocationCallbacks, o)
 	ret0, _ := ret[0].(core.CommandPool)
 	ret1, _ := ret[1].(common.VkResult)
 	ret2, _ := ret[2].(error)
@@ -1296,15 +1296,15 @@ func (m *MockDeviceDriver) CreateCommandPool(device core.Device, allocationCallb
 }
 
 // CreateCommandPool indicates an expected call of CreateCommandPool.
-func (mr *MockDeviceDriverMockRecorder) CreateCommandPool(device, allocationCallbacks, o any) *gomock.Call {
+func (mr *MockDeviceDriverMockRecorder) CreateCommandPool(allocationCallbacks, o any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateCommandPool", reflect.TypeOf((*MockDeviceDriver)(nil).CreateCommandPool), device, allocationCallbacks, o)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateCommandPool", reflect.TypeOf((*MockDeviceDriver)(nil).CreateCommandPool), allocationCallbacks, o)
 }
 
 // CreateComputePipelines mocks base method.
-func (m *MockDeviceDriver) CreateComputePipelines(device core.Device, pipelineCache *core.PipelineCache, allocationCallbacks *loader.AllocationCallbacks, o ...core1_0.ComputePipelineCreateInfo) ([]core.Pipeline, common.VkResult, error) {
+func (m *MockDeviceDriver) CreateComputePipelines(pipelineCache *core.PipelineCache, allocationCallbacks *loader.AllocationCallbacks, o ...core1_0.ComputePipelineCreateInfo) ([]core.Pipeline, common.VkResult, error) {
 	m.ctrl.T.Helper()
-	varargs := []any{device, pipelineCache, allocationCallbacks}
+	varargs := []any{pipelineCache, allocationCallbacks}
 	for _, a := range o {
 		varargs = append(varargs, a)
 	}
@@ -1316,16 +1316,16 @@ func (m *MockDeviceDriver) CreateComputePipelines(device core.Device, pipelineCa
 }
 
 // CreateComputePipelines indicates an expected call of CreateComputePipelines.
-func (mr *MockDeviceDriverMockRecorder) CreateComputePipelines(device, pipelineCache, allocationCallbacks any, o ...any) *gomock.Call {
+func (mr *MockDeviceDriverMockRecorder) CreateComputePipelines(pipelineCache, allocationCallbacks any, o ...any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	varargs := append([]any{device, pipelineCache, allocationCallbacks}, o...)
+	varargs := append([]any{pipelineCache, allocationCallbacks}, o...)
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateComputePipelines", reflect.TypeOf((*MockDeviceDriver)(nil).CreateComputePipelines), varargs...)
 }
 
 // CreateDescriptorPool mocks base method.
-func (m *MockDeviceDriver) CreateDescriptorPool(device core.Device, allocationCallbacks *loader.AllocationCallbacks, o core1_0.DescriptorPoolCreateInfo) (core.DescriptorPool, common.VkResult, error) {
+func (m *MockDeviceDriver) CreateDescriptorPool(allocationCallbacks *loader.AllocationCallbacks, o core1_0.DescriptorPoolCreateInfo) (core.DescriptorPool, common.VkResult, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreateDescriptorPool", device, allocationCallbacks, o)
+	ret := m.ctrl.Call(m, "CreateDescriptorPool", allocationCallbacks, o)
 	ret0, _ := ret[0].(core.DescriptorPool)
 	ret1, _ := ret[1].(common.VkResult)
 	ret2, _ := ret[2].(error)
@@ -1333,15 +1333,15 @@ func (m *MockDeviceDriver) CreateDescriptorPool(device core.Device, allocationCa
 }
 
 // CreateDescriptorPool indicates an expected call of CreateDescriptorPool.
-func (mr *MockDeviceDriverMockRecorder) CreateDescriptorPool(device, allocationCallbacks, o any) *gomock.Call {
+func (mr *MockDeviceDriverMockRecorder) CreateDescriptorPool(allocationCallbacks, o any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateDescriptorPool", reflect.TypeOf((*MockDeviceDriver)(nil).CreateDescriptorPool), device, allocationCallbacks, o)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateDescriptorPool", reflect.TypeOf((*MockDeviceDriver)(nil).CreateDescriptorPool), allocationCallbacks, o)
 }
 
 // CreateDescriptorSetLayout mocks base method.
-func (m *MockDeviceDriver) CreateDescriptorSetLayout(device core.Device, allocationCallbacks *loader.AllocationCallbacks, o core1_0.DescriptorSetLayoutCreateInfo) (core.DescriptorSetLayout, common.VkResult, error) {
+func (m *MockDeviceDriver) CreateDescriptorSetLayout(allocationCallbacks *loader.AllocationCallbacks, o core1_0.DescriptorSetLayoutCreateInfo) (core.DescriptorSetLayout, common.VkResult, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreateDescriptorSetLayout", device, allocationCallbacks, o)
+	ret := m.ctrl.Call(m, "CreateDescriptorSetLayout", allocationCallbacks, o)
 	ret0, _ := ret[0].(core.DescriptorSetLayout)
 	ret1, _ := ret[1].(common.VkResult)
 	ret2, _ := ret[2].(error)
@@ -1349,9 +1349,9 @@ func (m *MockDeviceDriver) CreateDescriptorSetLayout(device core.Device, allocat
 }
 
 // CreateDescriptorSetLayout indicates an expected call of CreateDescriptorSetLayout.
-func (mr *MockDeviceDriverMockRecorder) CreateDescriptorSetLayout(device, allocationCallbacks, o any) *gomock.Call {
+func (mr *MockDeviceDriverMockRecorder) CreateDescriptorSetLayout(allocationCallbacks, o any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateDescriptorSetLayout", reflect.TypeOf((*MockDeviceDriver)(nil).CreateDescriptorSetLayout), device, allocationCallbacks, o)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateDescriptorSetLayout", reflect.TypeOf((*MockDeviceDriver)(nil).CreateDescriptorSetLayout), allocationCallbacks, o)
 }
 
 // CreateDescriptorUpdateTemplate mocks base method.
@@ -1371,9 +1371,9 @@ func (mr *MockDeviceDriverMockRecorder) CreateDescriptorUpdateTemplate(device, o
 }
 
 // CreateEvent mocks base method.
-func (m *MockDeviceDriver) CreateEvent(device core.Device, allocationCallbacks *loader.AllocationCallbacks, options core1_0.EventCreateInfo) (core.Event, common.VkResult, error) {
+func (m *MockDeviceDriver) CreateEvent(allocationCallbacks *loader.AllocationCallbacks, options core1_0.EventCreateInfo) (core.Event, common.VkResult, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreateEvent", device, allocationCallbacks, options)
+	ret := m.ctrl.Call(m, "CreateEvent", allocationCallbacks, options)
 	ret0, _ := ret[0].(core.Event)
 	ret1, _ := ret[1].(common.VkResult)
 	ret2, _ := ret[2].(error)
@@ -1381,15 +1381,15 @@ func (m *MockDeviceDriver) CreateEvent(device core.Device, allocationCallbacks *
 }
 
 // CreateEvent indicates an expected call of CreateEvent.
-func (mr *MockDeviceDriverMockRecorder) CreateEvent(device, allocationCallbacks, options any) *gomock.Call {
+func (mr *MockDeviceDriverMockRecorder) CreateEvent(allocationCallbacks, options any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateEvent", reflect.TypeOf((*MockDeviceDriver)(nil).CreateEvent), device, allocationCallbacks, options)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateEvent", reflect.TypeOf((*MockDeviceDriver)(nil).CreateEvent), allocationCallbacks, options)
 }
 
 // CreateFence mocks base method.
-func (m *MockDeviceDriver) CreateFence(device core.Device, allocationCallbacks *loader.AllocationCallbacks, o core1_0.FenceCreateInfo) (core.Fence, common.VkResult, error) {
+func (m *MockDeviceDriver) CreateFence(allocationCallbacks *loader.AllocationCallbacks, o core1_0.FenceCreateInfo) (core.Fence, common.VkResult, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreateFence", device, allocationCallbacks, o)
+	ret := m.ctrl.Call(m, "CreateFence", allocationCallbacks, o)
 	ret0, _ := ret[0].(core.Fence)
 	ret1, _ := ret[1].(common.VkResult)
 	ret2, _ := ret[2].(error)
@@ -1397,15 +1397,15 @@ func (m *MockDeviceDriver) CreateFence(device core.Device, allocationCallbacks *
 }
 
 // CreateFence indicates an expected call of CreateFence.
-func (mr *MockDeviceDriverMockRecorder) CreateFence(device, allocationCallbacks, o any) *gomock.Call {
+func (mr *MockDeviceDriverMockRecorder) CreateFence(allocationCallbacks, o any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateFence", reflect.TypeOf((*MockDeviceDriver)(nil).CreateFence), device, allocationCallbacks, o)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateFence", reflect.TypeOf((*MockDeviceDriver)(nil).CreateFence), allocationCallbacks, o)
 }
 
 // CreateFramebuffer mocks base method.
-func (m *MockDeviceDriver) CreateFramebuffer(device core.Device, allocationCallbacks *loader.AllocationCallbacks, o core1_0.FramebufferCreateInfo) (core.Framebuffer, common.VkResult, error) {
+func (m *MockDeviceDriver) CreateFramebuffer(allocationCallbacks *loader.AllocationCallbacks, o core1_0.FramebufferCreateInfo) (core.Framebuffer, common.VkResult, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreateFramebuffer", device, allocationCallbacks, o)
+	ret := m.ctrl.Call(m, "CreateFramebuffer", allocationCallbacks, o)
 	ret0, _ := ret[0].(core.Framebuffer)
 	ret1, _ := ret[1].(common.VkResult)
 	ret2, _ := ret[2].(error)
@@ -1413,15 +1413,15 @@ func (m *MockDeviceDriver) CreateFramebuffer(device core.Device, allocationCallb
 }
 
 // CreateFramebuffer indicates an expected call of CreateFramebuffer.
-func (mr *MockDeviceDriverMockRecorder) CreateFramebuffer(device, allocationCallbacks, o any) *gomock.Call {
+func (mr *MockDeviceDriverMockRecorder) CreateFramebuffer(allocationCallbacks, o any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateFramebuffer", reflect.TypeOf((*MockDeviceDriver)(nil).CreateFramebuffer), device, allocationCallbacks, o)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateFramebuffer", reflect.TypeOf((*MockDeviceDriver)(nil).CreateFramebuffer), allocationCallbacks, o)
 }
 
 // CreateGraphicsPipelines mocks base method.
-func (m *MockDeviceDriver) CreateGraphicsPipelines(device core.Device, pipelineCache *core.PipelineCache, allocationCallbacks *loader.AllocationCallbacks, o ...core1_0.GraphicsPipelineCreateInfo) ([]core.Pipeline, common.VkResult, error) {
+func (m *MockDeviceDriver) CreateGraphicsPipelines(pipelineCache *core.PipelineCache, allocationCallbacks *loader.AllocationCallbacks, o ...core1_0.GraphicsPipelineCreateInfo) ([]core.Pipeline, common.VkResult, error) {
 	m.ctrl.T.Helper()
-	varargs := []any{device, pipelineCache, allocationCallbacks}
+	varargs := []any{pipelineCache, allocationCallbacks}
 	for _, a := range o {
 		varargs = append(varargs, a)
 	}
@@ -1433,16 +1433,16 @@ func (m *MockDeviceDriver) CreateGraphicsPipelines(device core.Device, pipelineC
 }
 
 // CreateGraphicsPipelines indicates an expected call of CreateGraphicsPipelines.
-func (mr *MockDeviceDriverMockRecorder) CreateGraphicsPipelines(device, pipelineCache, allocationCallbacks any, o ...any) *gomock.Call {
+func (mr *MockDeviceDriverMockRecorder) CreateGraphicsPipelines(pipelineCache, allocationCallbacks any, o ...any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	varargs := append([]any{device, pipelineCache, allocationCallbacks}, o...)
+	varargs := append([]any{pipelineCache, allocationCallbacks}, o...)
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateGraphicsPipelines", reflect.TypeOf((*MockDeviceDriver)(nil).CreateGraphicsPipelines), varargs...)
 }
 
 // CreateImage mocks base method.
-func (m *MockDeviceDriver) CreateImage(device core.Device, allocationCallbacks *loader.AllocationCallbacks, options core1_0.ImageCreateInfo) (core.Image, common.VkResult, error) {
+func (m *MockDeviceDriver) CreateImage(allocationCallbacks *loader.AllocationCallbacks, options core1_0.ImageCreateInfo) (core.Image, common.VkResult, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreateImage", device, allocationCallbacks, options)
+	ret := m.ctrl.Call(m, "CreateImage", allocationCallbacks, options)
 	ret0, _ := ret[0].(core.Image)
 	ret1, _ := ret[1].(common.VkResult)
 	ret2, _ := ret[2].(error)
@@ -1450,15 +1450,15 @@ func (m *MockDeviceDriver) CreateImage(device core.Device, allocationCallbacks *
 }
 
 // CreateImage indicates an expected call of CreateImage.
-func (mr *MockDeviceDriverMockRecorder) CreateImage(device, allocationCallbacks, options any) *gomock.Call {
+func (mr *MockDeviceDriverMockRecorder) CreateImage(allocationCallbacks, options any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateImage", reflect.TypeOf((*MockDeviceDriver)(nil).CreateImage), device, allocationCallbacks, options)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateImage", reflect.TypeOf((*MockDeviceDriver)(nil).CreateImage), allocationCallbacks, options)
 }
 
 // CreateImageView mocks base method.
-func (m *MockDeviceDriver) CreateImageView(device core.Device, allocationCallbacks *loader.AllocationCallbacks, o core1_0.ImageViewCreateInfo) (core.ImageView, common.VkResult, error) {
+func (m *MockDeviceDriver) CreateImageView(allocationCallbacks *loader.AllocationCallbacks, o core1_0.ImageViewCreateInfo) (core.ImageView, common.VkResult, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreateImageView", device, allocationCallbacks, o)
+	ret := m.ctrl.Call(m, "CreateImageView", allocationCallbacks, o)
 	ret0, _ := ret[0].(core.ImageView)
 	ret1, _ := ret[1].(common.VkResult)
 	ret2, _ := ret[2].(error)
@@ -1466,15 +1466,15 @@ func (m *MockDeviceDriver) CreateImageView(device core.Device, allocationCallbac
 }
 
 // CreateImageView indicates an expected call of CreateImageView.
-func (mr *MockDeviceDriverMockRecorder) CreateImageView(device, allocationCallbacks, o any) *gomock.Call {
+func (mr *MockDeviceDriverMockRecorder) CreateImageView(allocationCallbacks, o any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateImageView", reflect.TypeOf((*MockDeviceDriver)(nil).CreateImageView), device, allocationCallbacks, o)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateImageView", reflect.TypeOf((*MockDeviceDriver)(nil).CreateImageView), allocationCallbacks, o)
 }
 
 // CreatePipelineCache mocks base method.
-func (m *MockDeviceDriver) CreatePipelineCache(device core.Device, allocationCallbacks *loader.AllocationCallbacks, o core1_0.PipelineCacheCreateInfo) (core.PipelineCache, common.VkResult, error) {
+func (m *MockDeviceDriver) CreatePipelineCache(allocationCallbacks *loader.AllocationCallbacks, o core1_0.PipelineCacheCreateInfo) (core.PipelineCache, common.VkResult, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreatePipelineCache", device, allocationCallbacks, o)
+	ret := m.ctrl.Call(m, "CreatePipelineCache", allocationCallbacks, o)
 	ret0, _ := ret[0].(core.PipelineCache)
 	ret1, _ := ret[1].(common.VkResult)
 	ret2, _ := ret[2].(error)
@@ -1482,15 +1482,15 @@ func (m *MockDeviceDriver) CreatePipelineCache(device core.Device, allocationCal
 }
 
 // CreatePipelineCache indicates an expected call of CreatePipelineCache.
-func (mr *MockDeviceDriverMockRecorder) CreatePipelineCache(device, allocationCallbacks, o any) *gomock.Call {
+func (mr *MockDeviceDriverMockRecorder) CreatePipelineCache(allocationCallbacks, o any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreatePipelineCache", reflect.TypeOf((*MockDeviceDriver)(nil).CreatePipelineCache), device, allocationCallbacks, o)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreatePipelineCache", reflect.TypeOf((*MockDeviceDriver)(nil).CreatePipelineCache), allocationCallbacks, o)
 }
 
 // CreatePipelineLayout mocks base method.
-func (m *MockDeviceDriver) CreatePipelineLayout(device core.Device, allocationCallbacks *loader.AllocationCallbacks, o core1_0.PipelineLayoutCreateInfo) (core.PipelineLayout, common.VkResult, error) {
+func (m *MockDeviceDriver) CreatePipelineLayout(allocationCallbacks *loader.AllocationCallbacks, o core1_0.PipelineLayoutCreateInfo) (core.PipelineLayout, common.VkResult, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreatePipelineLayout", device, allocationCallbacks, o)
+	ret := m.ctrl.Call(m, "CreatePipelineLayout", allocationCallbacks, o)
 	ret0, _ := ret[0].(core.PipelineLayout)
 	ret1, _ := ret[1].(common.VkResult)
 	ret2, _ := ret[2].(error)
@@ -1498,15 +1498,15 @@ func (m *MockDeviceDriver) CreatePipelineLayout(device core.Device, allocationCa
 }
 
 // CreatePipelineLayout indicates an expected call of CreatePipelineLayout.
-func (mr *MockDeviceDriverMockRecorder) CreatePipelineLayout(device, allocationCallbacks, o any) *gomock.Call {
+func (mr *MockDeviceDriverMockRecorder) CreatePipelineLayout(allocationCallbacks, o any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreatePipelineLayout", reflect.TypeOf((*MockDeviceDriver)(nil).CreatePipelineLayout), device, allocationCallbacks, o)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreatePipelineLayout", reflect.TypeOf((*MockDeviceDriver)(nil).CreatePipelineLayout), allocationCallbacks, o)
 }
 
 // CreateQueryPool mocks base method.
-func (m *MockDeviceDriver) CreateQueryPool(device core.Device, allocationCallbacks *loader.AllocationCallbacks, o core1_0.QueryPoolCreateInfo) (core.QueryPool, common.VkResult, error) {
+func (m *MockDeviceDriver) CreateQueryPool(allocationCallbacks *loader.AllocationCallbacks, o core1_0.QueryPoolCreateInfo) (core.QueryPool, common.VkResult, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreateQueryPool", device, allocationCallbacks, o)
+	ret := m.ctrl.Call(m, "CreateQueryPool", allocationCallbacks, o)
 	ret0, _ := ret[0].(core.QueryPool)
 	ret1, _ := ret[1].(common.VkResult)
 	ret2, _ := ret[2].(error)
@@ -1514,15 +1514,15 @@ func (m *MockDeviceDriver) CreateQueryPool(device core.Device, allocationCallbac
 }
 
 // CreateQueryPool indicates an expected call of CreateQueryPool.
-func (mr *MockDeviceDriverMockRecorder) CreateQueryPool(device, allocationCallbacks, o any) *gomock.Call {
+func (mr *MockDeviceDriverMockRecorder) CreateQueryPool(allocationCallbacks, o any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateQueryPool", reflect.TypeOf((*MockDeviceDriver)(nil).CreateQueryPool), device, allocationCallbacks, o)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateQueryPool", reflect.TypeOf((*MockDeviceDriver)(nil).CreateQueryPool), allocationCallbacks, o)
 }
 
 // CreateRenderPass mocks base method.
-func (m *MockDeviceDriver) CreateRenderPass(device core.Device, allocationCallbacks *loader.AllocationCallbacks, o core1_0.RenderPassCreateInfo) (core.RenderPass, common.VkResult, error) {
+func (m *MockDeviceDriver) CreateRenderPass(allocationCallbacks *loader.AllocationCallbacks, o core1_0.RenderPassCreateInfo) (core.RenderPass, common.VkResult, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreateRenderPass", device, allocationCallbacks, o)
+	ret := m.ctrl.Call(m, "CreateRenderPass", allocationCallbacks, o)
 	ret0, _ := ret[0].(core.RenderPass)
 	ret1, _ := ret[1].(common.VkResult)
 	ret2, _ := ret[2].(error)
@@ -1530,15 +1530,15 @@ func (m *MockDeviceDriver) CreateRenderPass(device core.Device, allocationCallba
 }
 
 // CreateRenderPass indicates an expected call of CreateRenderPass.
-func (mr *MockDeviceDriverMockRecorder) CreateRenderPass(device, allocationCallbacks, o any) *gomock.Call {
+func (mr *MockDeviceDriverMockRecorder) CreateRenderPass(allocationCallbacks, o any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateRenderPass", reflect.TypeOf((*MockDeviceDriver)(nil).CreateRenderPass), device, allocationCallbacks, o)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateRenderPass", reflect.TypeOf((*MockDeviceDriver)(nil).CreateRenderPass), allocationCallbacks, o)
 }
 
 // CreateSampler mocks base method.
-func (m *MockDeviceDriver) CreateSampler(device core.Device, allocationCallbacks *loader.AllocationCallbacks, o core1_0.SamplerCreateInfo) (core.Sampler, common.VkResult, error) {
+func (m *MockDeviceDriver) CreateSampler(allocationCallbacks *loader.AllocationCallbacks, o core1_0.SamplerCreateInfo) (core.Sampler, common.VkResult, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreateSampler", device, allocationCallbacks, o)
+	ret := m.ctrl.Call(m, "CreateSampler", allocationCallbacks, o)
 	ret0, _ := ret[0].(core.Sampler)
 	ret1, _ := ret[1].(common.VkResult)
 	ret2, _ := ret[2].(error)
@@ -1546,9 +1546,9 @@ func (m *MockDeviceDriver) CreateSampler(device core.Device, allocationCallbacks
 }
 
 // CreateSampler indicates an expected call of CreateSampler.
-func (mr *MockDeviceDriverMockRecorder) CreateSampler(device, allocationCallbacks, o any) *gomock.Call {
+func (mr *MockDeviceDriverMockRecorder) CreateSampler(allocationCallbacks, o any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateSampler", reflect.TypeOf((*MockDeviceDriver)(nil).CreateSampler), device, allocationCallbacks, o)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateSampler", reflect.TypeOf((*MockDeviceDriver)(nil).CreateSampler), allocationCallbacks, o)
 }
 
 // CreateSamplerYcbcrConversion mocks base method.
@@ -1568,9 +1568,9 @@ func (mr *MockDeviceDriverMockRecorder) CreateSamplerYcbcrConversion(device, o, 
 }
 
 // CreateSemaphore mocks base method.
-func (m *MockDeviceDriver) CreateSemaphore(device core.Device, allocationCallbacks *loader.AllocationCallbacks, o core1_0.SemaphoreCreateInfo) (core.Semaphore, common.VkResult, error) {
+func (m *MockDeviceDriver) CreateSemaphore(allocationCallbacks *loader.AllocationCallbacks, o core1_0.SemaphoreCreateInfo) (core.Semaphore, common.VkResult, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreateSemaphore", device, allocationCallbacks, o)
+	ret := m.ctrl.Call(m, "CreateSemaphore", allocationCallbacks, o)
 	ret0, _ := ret[0].(core.Semaphore)
 	ret1, _ := ret[1].(common.VkResult)
 	ret2, _ := ret[2].(error)
@@ -1578,15 +1578,15 @@ func (m *MockDeviceDriver) CreateSemaphore(device core.Device, allocationCallbac
 }
 
 // CreateSemaphore indicates an expected call of CreateSemaphore.
-func (mr *MockDeviceDriverMockRecorder) CreateSemaphore(device, allocationCallbacks, o any) *gomock.Call {
+func (mr *MockDeviceDriverMockRecorder) CreateSemaphore(allocationCallbacks, o any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateSemaphore", reflect.TypeOf((*MockDeviceDriver)(nil).CreateSemaphore), device, allocationCallbacks, o)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateSemaphore", reflect.TypeOf((*MockDeviceDriver)(nil).CreateSemaphore), allocationCallbacks, o)
 }
 
 // CreateShaderModule mocks base method.
-func (m *MockDeviceDriver) CreateShaderModule(device core.Device, allocationCallbacks *loader.AllocationCallbacks, o core1_0.ShaderModuleCreateInfo) (core.ShaderModule, common.VkResult, error) {
+func (m *MockDeviceDriver) CreateShaderModule(allocationCallbacks *loader.AllocationCallbacks, o core1_0.ShaderModuleCreateInfo) (core.ShaderModule, common.VkResult, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreateShaderModule", device, allocationCallbacks, o)
+	ret := m.ctrl.Call(m, "CreateShaderModule", allocationCallbacks, o)
 	ret0, _ := ret[0].(core.ShaderModule)
 	ret1, _ := ret[1].(common.VkResult)
 	ret2, _ := ret[2].(error)
@@ -1594,9 +1594,21 @@ func (m *MockDeviceDriver) CreateShaderModule(device core.Device, allocationCall
 }
 
 // CreateShaderModule indicates an expected call of CreateShaderModule.
-func (mr *MockDeviceDriverMockRecorder) CreateShaderModule(device, allocationCallbacks, o any) *gomock.Call {
+func (mr *MockDeviceDriverMockRecorder) CreateShaderModule(allocationCallbacks, o any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateShaderModule", reflect.TypeOf((*MockDeviceDriver)(nil).CreateShaderModule), device, allocationCallbacks, o)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateShaderModule", reflect.TypeOf((*MockDeviceDriver)(nil).CreateShaderModule), allocationCallbacks, o)
+}
+
+// Destroy mocks base method.
+func (m *MockDeviceDriver) DestroyDevice(callbacks *loader.AllocationCallbacks) {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "Destroy", callbacks)
+}
+
+// Destroy indicates an expected call of Destroy.
+func (mr *MockDeviceDriverMockRecorder) Destroy(callbacks any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Destroy", reflect.TypeOf((*MockDeviceDriver)(nil).DestroyDevice), callbacks)
 }
 
 // DestroyBuffer mocks base method.
@@ -1669,18 +1681,6 @@ func (m *MockDeviceDriver) DestroyDescriptorUpdateTemplate(template core.Descrip
 func (mr *MockDeviceDriverMockRecorder) DestroyDescriptorUpdateTemplate(template, allocator any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DestroyDescriptorUpdateTemplate", reflect.TypeOf((*MockDeviceDriver)(nil).DestroyDescriptorUpdateTemplate), template, allocator)
-}
-
-// DestroyDevice mocks base method.
-func (m *MockDeviceDriver) DestroyDevice(device core.Device, callbacks *loader.AllocationCallbacks) {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "DestroyDevice", device, callbacks)
-}
-
-// DestroyDevice indicates an expected call of DestroyDevice.
-func (mr *MockDeviceDriverMockRecorder) DestroyDevice(device, callbacks any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DestroyDevice", reflect.TypeOf((*MockDeviceDriver)(nil).DestroyDevice), device, callbacks)
 }
 
 // DestroyEvent mocks base method.
@@ -1852,18 +1852,18 @@ func (mr *MockDeviceDriverMockRecorder) DestroyShaderModule(shaderModule, callba
 }
 
 // DeviceWaitIdle mocks base method.
-func (m *MockDeviceDriver) DeviceWaitIdle(device core.Device) (common.VkResult, error) {
+func (m *MockDeviceDriver) DeviceWaitIdle() (common.VkResult, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "DeviceWaitIdle", device)
+	ret := m.ctrl.Call(m, "DeviceWaitIdle")
 	ret0, _ := ret[0].(common.VkResult)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // DeviceWaitIdle indicates an expected call of DeviceWaitIdle.
-func (mr *MockDeviceDriverMockRecorder) DeviceWaitIdle(device any) *gomock.Call {
+func (mr *MockDeviceDriverMockRecorder) DeviceWaitIdle() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeviceWaitIdle", reflect.TypeOf((*MockDeviceDriver)(nil).DeviceWaitIdle), device)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeviceWaitIdle", reflect.TypeOf((*MockDeviceDriver)(nil).DeviceWaitIdle))
 }
 
 // EndCommandBuffer mocks base method.
@@ -2165,17 +2165,17 @@ func (mr *MockDeviceDriverMockRecorder) GetQueryPoolResults(queryPool, firstQuer
 }
 
 // GetQueue mocks base method.
-func (m *MockDeviceDriver) GetQueue(device core.Device, queueFamilyIndex, queueIndex int) core.Queue {
+func (m *MockDeviceDriver) GetQueue(queueFamilyIndex, queueIndex int) core.Queue {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetQueue", device, queueFamilyIndex, queueIndex)
+	ret := m.ctrl.Call(m, "GetQueue", queueFamilyIndex, queueIndex)
 	ret0, _ := ret[0].(core.Queue)
 	return ret0
 }
 
 // GetQueue indicates an expected call of GetQueue.
-func (mr *MockDeviceDriverMockRecorder) GetQueue(device, queueFamilyIndex, queueIndex any) *gomock.Call {
+func (mr *MockDeviceDriverMockRecorder) GetQueue(queueFamilyIndex, queueIndex any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetQueue", reflect.TypeOf((*MockDeviceDriver)(nil).GetQueue), device, queueFamilyIndex, queueIndex)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetQueue", reflect.TypeOf((*MockDeviceDriver)(nil).GetQueue), queueFamilyIndex, queueIndex)
 }
 
 // GetRenderAreaGranularity mocks base method.
@@ -2471,17 +2471,17 @@ func (mr *MockDeviceDriverMockRecorder) UpdateDescriptorSetWithTemplateFromObjec
 }
 
 // UpdateDescriptorSets mocks base method.
-func (m *MockDeviceDriver) UpdateDescriptorSets(device core.Device, writes []core1_0.WriteDescriptorSet, copies []core1_0.CopyDescriptorSet) error {
+func (m *MockDeviceDriver) UpdateDescriptorSets(writes []core1_0.WriteDescriptorSet, copies []core1_0.CopyDescriptorSet) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "UpdateDescriptorSets", device, writes, copies)
+	ret := m.ctrl.Call(m, "UpdateDescriptorSets", writes, copies)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // UpdateDescriptorSets indicates an expected call of UpdateDescriptorSets.
-func (mr *MockDeviceDriverMockRecorder) UpdateDescriptorSets(device, writes, copies any) *gomock.Call {
+func (mr *MockDeviceDriverMockRecorder) UpdateDescriptorSets(writes, copies any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateDescriptorSets", reflect.TypeOf((*MockDeviceDriver)(nil).UpdateDescriptorSets), device, writes, copies)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateDescriptorSets", reflect.TypeOf((*MockDeviceDriver)(nil).UpdateDescriptorSets), writes, copies)
 }
 
 // WaitForFences mocks base method.
@@ -2561,9 +2561,9 @@ func (mr *MockCoreDeviceDriverMockRecorder) AllocateDescriptorSets(o any) *gomoc
 }
 
 // AllocateMemory mocks base method.
-func (m *MockCoreDeviceDriver) AllocateMemory(device core.Device, allocationCallbacks *loader.AllocationCallbacks, o core1_0.MemoryAllocateInfo) (core.DeviceMemory, common.VkResult, error) {
+func (m *MockCoreDeviceDriver) AllocateMemory(allocationCallbacks *loader.AllocationCallbacks, o core1_0.MemoryAllocateInfo) (core.DeviceMemory, common.VkResult, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "AllocateMemory", device, allocationCallbacks, o)
+	ret := m.ctrl.Call(m, "AllocateMemory", allocationCallbacks, o)
 	ret0, _ := ret[0].(core.DeviceMemory)
 	ret1, _ := ret[1].(common.VkResult)
 	ret2, _ := ret[2].(error)
@@ -2571,57 +2571,9 @@ func (m *MockCoreDeviceDriver) AllocateMemory(device core.Device, allocationCall
 }
 
 // AllocateMemory indicates an expected call of AllocateMemory.
-func (mr *MockCoreDeviceDriverMockRecorder) AllocateMemory(device, allocationCallbacks, o any) *gomock.Call {
+func (mr *MockCoreDeviceDriverMockRecorder) AllocateMemory(allocationCallbacks, o any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AllocateMemory", reflect.TypeOf((*MockCoreDeviceDriver)(nil).AllocateMemory), device, allocationCallbacks, o)
-}
-
-// AvailableExtensions mocks base method.
-func (m *MockCoreDeviceDriver) AvailableExtensions() (map[string]*core1_0.ExtensionProperties, common.VkResult, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "AvailableExtensions")
-	ret0, _ := ret[0].(map[string]*core1_0.ExtensionProperties)
-	ret1, _ := ret[1].(common.VkResult)
-	ret2, _ := ret[2].(error)
-	return ret0, ret1, ret2
-}
-
-// AvailableExtensions indicates an expected call of AvailableExtensions.
-func (mr *MockCoreDeviceDriverMockRecorder) AvailableExtensions() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AvailableExtensions", reflect.TypeOf((*MockCoreDeviceDriver)(nil).AvailableExtensions))
-}
-
-// AvailableExtensionsForLayer mocks base method.
-func (m *MockCoreDeviceDriver) AvailableExtensionsForLayer(layerName string) (map[string]*core1_0.ExtensionProperties, common.VkResult, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "AvailableExtensionsForLayer", layerName)
-	ret0, _ := ret[0].(map[string]*core1_0.ExtensionProperties)
-	ret1, _ := ret[1].(common.VkResult)
-	ret2, _ := ret[2].(error)
-	return ret0, ret1, ret2
-}
-
-// AvailableExtensionsForLayer indicates an expected call of AvailableExtensionsForLayer.
-func (mr *MockCoreDeviceDriverMockRecorder) AvailableExtensionsForLayer(layerName any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AvailableExtensionsForLayer", reflect.TypeOf((*MockCoreDeviceDriver)(nil).AvailableExtensionsForLayer), layerName)
-}
-
-// AvailableLayers mocks base method.
-func (m *MockCoreDeviceDriver) AvailableLayers() (map[string]*core1_0.LayerProperties, common.VkResult, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "AvailableLayers")
-	ret0, _ := ret[0].(map[string]*core1_0.LayerProperties)
-	ret1, _ := ret[1].(common.VkResult)
-	ret2, _ := ret[2].(error)
-	return ret0, ret1, ret2
-}
-
-// AvailableLayers indicates an expected call of AvailableLayers.
-func (mr *MockCoreDeviceDriverMockRecorder) AvailableLayers() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AvailableLayers", reflect.TypeOf((*MockCoreDeviceDriver)(nil).AvailableLayers))
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AllocateMemory", reflect.TypeOf((*MockCoreDeviceDriver)(nil).AllocateMemory), allocationCallbacks, o)
 }
 
 // BeginCommandBuffer mocks base method.
@@ -3330,9 +3282,9 @@ func (mr *MockCoreDeviceDriverMockRecorder) CmdWriteTimestamp(commandBuffer, pip
 }
 
 // CreateBuffer mocks base method.
-func (m *MockCoreDeviceDriver) CreateBuffer(device core.Device, allocationCallbacks *loader.AllocationCallbacks, o core1_0.BufferCreateInfo) (core.Buffer, common.VkResult, error) {
+func (m *MockCoreDeviceDriver) CreateBuffer(allocationCallbacks *loader.AllocationCallbacks, o core1_0.BufferCreateInfo) (core.Buffer, common.VkResult, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreateBuffer", device, allocationCallbacks, o)
+	ret := m.ctrl.Call(m, "CreateBuffer", allocationCallbacks, o)
 	ret0, _ := ret[0].(core.Buffer)
 	ret1, _ := ret[1].(common.VkResult)
 	ret2, _ := ret[2].(error)
@@ -3340,15 +3292,15 @@ func (m *MockCoreDeviceDriver) CreateBuffer(device core.Device, allocationCallba
 }
 
 // CreateBuffer indicates an expected call of CreateBuffer.
-func (mr *MockCoreDeviceDriverMockRecorder) CreateBuffer(device, allocationCallbacks, o any) *gomock.Call {
+func (mr *MockCoreDeviceDriverMockRecorder) CreateBuffer(allocationCallbacks, o any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateBuffer", reflect.TypeOf((*MockCoreDeviceDriver)(nil).CreateBuffer), device, allocationCallbacks, o)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateBuffer", reflect.TypeOf((*MockCoreDeviceDriver)(nil).CreateBuffer), allocationCallbacks, o)
 }
 
 // CreateBufferView mocks base method.
-func (m *MockCoreDeviceDriver) CreateBufferView(device core.Device, allocationCallbacks *loader.AllocationCallbacks, o core1_0.BufferViewCreateInfo) (core.BufferView, common.VkResult, error) {
+func (m *MockCoreDeviceDriver) CreateBufferView(allocationCallbacks *loader.AllocationCallbacks, o core1_0.BufferViewCreateInfo) (core.BufferView, common.VkResult, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreateBufferView", device, allocationCallbacks, o)
+	ret := m.ctrl.Call(m, "CreateBufferView", allocationCallbacks, o)
 	ret0, _ := ret[0].(core.BufferView)
 	ret1, _ := ret[1].(common.VkResult)
 	ret2, _ := ret[2].(error)
@@ -3356,15 +3308,15 @@ func (m *MockCoreDeviceDriver) CreateBufferView(device core.Device, allocationCa
 }
 
 // CreateBufferView indicates an expected call of CreateBufferView.
-func (mr *MockCoreDeviceDriverMockRecorder) CreateBufferView(device, allocationCallbacks, o any) *gomock.Call {
+func (mr *MockCoreDeviceDriverMockRecorder) CreateBufferView(allocationCallbacks, o any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateBufferView", reflect.TypeOf((*MockCoreDeviceDriver)(nil).CreateBufferView), device, allocationCallbacks, o)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateBufferView", reflect.TypeOf((*MockCoreDeviceDriver)(nil).CreateBufferView), allocationCallbacks, o)
 }
 
 // CreateCommandPool mocks base method.
-func (m *MockCoreDeviceDriver) CreateCommandPool(device core.Device, allocationCallbacks *loader.AllocationCallbacks, o core1_0.CommandPoolCreateInfo) (core.CommandPool, common.VkResult, error) {
+func (m *MockCoreDeviceDriver) CreateCommandPool(allocationCallbacks *loader.AllocationCallbacks, o core1_0.CommandPoolCreateInfo) (core.CommandPool, common.VkResult, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreateCommandPool", device, allocationCallbacks, o)
+	ret := m.ctrl.Call(m, "CreateCommandPool", allocationCallbacks, o)
 	ret0, _ := ret[0].(core.CommandPool)
 	ret1, _ := ret[1].(common.VkResult)
 	ret2, _ := ret[2].(error)
@@ -3372,15 +3324,15 @@ func (m *MockCoreDeviceDriver) CreateCommandPool(device core.Device, allocationC
 }
 
 // CreateCommandPool indicates an expected call of CreateCommandPool.
-func (mr *MockCoreDeviceDriverMockRecorder) CreateCommandPool(device, allocationCallbacks, o any) *gomock.Call {
+func (mr *MockCoreDeviceDriverMockRecorder) CreateCommandPool(allocationCallbacks, o any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateCommandPool", reflect.TypeOf((*MockCoreDeviceDriver)(nil).CreateCommandPool), device, allocationCallbacks, o)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateCommandPool", reflect.TypeOf((*MockCoreDeviceDriver)(nil).CreateCommandPool), allocationCallbacks, o)
 }
 
 // CreateComputePipelines mocks base method.
-func (m *MockCoreDeviceDriver) CreateComputePipelines(device core.Device, pipelineCache *core.PipelineCache, allocationCallbacks *loader.AllocationCallbacks, o ...core1_0.ComputePipelineCreateInfo) ([]core.Pipeline, common.VkResult, error) {
+func (m *MockCoreDeviceDriver) CreateComputePipelines(pipelineCache *core.PipelineCache, allocationCallbacks *loader.AllocationCallbacks, o ...core1_0.ComputePipelineCreateInfo) ([]core.Pipeline, common.VkResult, error) {
 	m.ctrl.T.Helper()
-	varargs := []any{device, pipelineCache, allocationCallbacks}
+	varargs := []any{pipelineCache, allocationCallbacks}
 	for _, a := range o {
 		varargs = append(varargs, a)
 	}
@@ -3392,16 +3344,16 @@ func (m *MockCoreDeviceDriver) CreateComputePipelines(device core.Device, pipeli
 }
 
 // CreateComputePipelines indicates an expected call of CreateComputePipelines.
-func (mr *MockCoreDeviceDriverMockRecorder) CreateComputePipelines(device, pipelineCache, allocationCallbacks any, o ...any) *gomock.Call {
+func (mr *MockCoreDeviceDriverMockRecorder) CreateComputePipelines(pipelineCache, allocationCallbacks any, o ...any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	varargs := append([]any{device, pipelineCache, allocationCallbacks}, o...)
+	varargs := append([]any{pipelineCache, allocationCallbacks}, o...)
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateComputePipelines", reflect.TypeOf((*MockCoreDeviceDriver)(nil).CreateComputePipelines), varargs...)
 }
 
 // CreateDescriptorPool mocks base method.
-func (m *MockCoreDeviceDriver) CreateDescriptorPool(device core.Device, allocationCallbacks *loader.AllocationCallbacks, o core1_0.DescriptorPoolCreateInfo) (core.DescriptorPool, common.VkResult, error) {
+func (m *MockCoreDeviceDriver) CreateDescriptorPool(allocationCallbacks *loader.AllocationCallbacks, o core1_0.DescriptorPoolCreateInfo) (core.DescriptorPool, common.VkResult, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreateDescriptorPool", device, allocationCallbacks, o)
+	ret := m.ctrl.Call(m, "CreateDescriptorPool", allocationCallbacks, o)
 	ret0, _ := ret[0].(core.DescriptorPool)
 	ret1, _ := ret[1].(common.VkResult)
 	ret2, _ := ret[2].(error)
@@ -3409,15 +3361,15 @@ func (m *MockCoreDeviceDriver) CreateDescriptorPool(device core.Device, allocati
 }
 
 // CreateDescriptorPool indicates an expected call of CreateDescriptorPool.
-func (mr *MockCoreDeviceDriverMockRecorder) CreateDescriptorPool(device, allocationCallbacks, o any) *gomock.Call {
+func (mr *MockCoreDeviceDriverMockRecorder) CreateDescriptorPool(allocationCallbacks, o any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateDescriptorPool", reflect.TypeOf((*MockCoreDeviceDriver)(nil).CreateDescriptorPool), device, allocationCallbacks, o)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateDescriptorPool", reflect.TypeOf((*MockCoreDeviceDriver)(nil).CreateDescriptorPool), allocationCallbacks, o)
 }
 
 // CreateDescriptorSetLayout mocks base method.
-func (m *MockCoreDeviceDriver) CreateDescriptorSetLayout(device core.Device, allocationCallbacks *loader.AllocationCallbacks, o core1_0.DescriptorSetLayoutCreateInfo) (core.DescriptorSetLayout, common.VkResult, error) {
+func (m *MockCoreDeviceDriver) CreateDescriptorSetLayout(allocationCallbacks *loader.AllocationCallbacks, o core1_0.DescriptorSetLayoutCreateInfo) (core.DescriptorSetLayout, common.VkResult, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreateDescriptorSetLayout", device, allocationCallbacks, o)
+	ret := m.ctrl.Call(m, "CreateDescriptorSetLayout", allocationCallbacks, o)
 	ret0, _ := ret[0].(core.DescriptorSetLayout)
 	ret1, _ := ret[1].(common.VkResult)
 	ret2, _ := ret[2].(error)
@@ -3425,9 +3377,9 @@ func (m *MockCoreDeviceDriver) CreateDescriptorSetLayout(device core.Device, all
 }
 
 // CreateDescriptorSetLayout indicates an expected call of CreateDescriptorSetLayout.
-func (mr *MockCoreDeviceDriverMockRecorder) CreateDescriptorSetLayout(device, allocationCallbacks, o any) *gomock.Call {
+func (mr *MockCoreDeviceDriverMockRecorder) CreateDescriptorSetLayout(allocationCallbacks, o any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateDescriptorSetLayout", reflect.TypeOf((*MockCoreDeviceDriver)(nil).CreateDescriptorSetLayout), device, allocationCallbacks, o)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateDescriptorSetLayout", reflect.TypeOf((*MockCoreDeviceDriver)(nil).CreateDescriptorSetLayout), allocationCallbacks, o)
 }
 
 // CreateDescriptorUpdateTemplate mocks base method.
@@ -3446,26 +3398,10 @@ func (mr *MockCoreDeviceDriverMockRecorder) CreateDescriptorUpdateTemplate(devic
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateDescriptorUpdateTemplate", reflect.TypeOf((*MockCoreDeviceDriver)(nil).CreateDescriptorUpdateTemplate), device, o, allocator)
 }
 
-// CreateDevice mocks base method.
-func (m *MockCoreDeviceDriver) CreateDevice(physicalDevice core.PhysicalDevice, allocationCallbacks *loader.AllocationCallbacks, options core1_0.DeviceCreateInfo) (core.Device, common.VkResult, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreateDevice", physicalDevice, allocationCallbacks, options)
-	ret0, _ := ret[0].(core.Device)
-	ret1, _ := ret[1].(common.VkResult)
-	ret2, _ := ret[2].(error)
-	return ret0, ret1, ret2
-}
-
-// CreateDevice indicates an expected call of CreateDevice.
-func (mr *MockCoreDeviceDriverMockRecorder) CreateDevice(physicalDevice, allocationCallbacks, options any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateDevice", reflect.TypeOf((*MockCoreDeviceDriver)(nil).CreateDevice), physicalDevice, allocationCallbacks, options)
-}
-
 // CreateEvent mocks base method.
-func (m *MockCoreDeviceDriver) CreateEvent(device core.Device, allocationCallbacks *loader.AllocationCallbacks, options core1_0.EventCreateInfo) (core.Event, common.VkResult, error) {
+func (m *MockCoreDeviceDriver) CreateEvent(allocationCallbacks *loader.AllocationCallbacks, options core1_0.EventCreateInfo) (core.Event, common.VkResult, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreateEvent", device, allocationCallbacks, options)
+	ret := m.ctrl.Call(m, "CreateEvent", allocationCallbacks, options)
 	ret0, _ := ret[0].(core.Event)
 	ret1, _ := ret[1].(common.VkResult)
 	ret2, _ := ret[2].(error)
@@ -3473,15 +3409,15 @@ func (m *MockCoreDeviceDriver) CreateEvent(device core.Device, allocationCallbac
 }
 
 // CreateEvent indicates an expected call of CreateEvent.
-func (mr *MockCoreDeviceDriverMockRecorder) CreateEvent(device, allocationCallbacks, options any) *gomock.Call {
+func (mr *MockCoreDeviceDriverMockRecorder) CreateEvent(allocationCallbacks, options any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateEvent", reflect.TypeOf((*MockCoreDeviceDriver)(nil).CreateEvent), device, allocationCallbacks, options)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateEvent", reflect.TypeOf((*MockCoreDeviceDriver)(nil).CreateEvent), allocationCallbacks, options)
 }
 
 // CreateFence mocks base method.
-func (m *MockCoreDeviceDriver) CreateFence(device core.Device, allocationCallbacks *loader.AllocationCallbacks, o core1_0.FenceCreateInfo) (core.Fence, common.VkResult, error) {
+func (m *MockCoreDeviceDriver) CreateFence(allocationCallbacks *loader.AllocationCallbacks, o core1_0.FenceCreateInfo) (core.Fence, common.VkResult, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreateFence", device, allocationCallbacks, o)
+	ret := m.ctrl.Call(m, "CreateFence", allocationCallbacks, o)
 	ret0, _ := ret[0].(core.Fence)
 	ret1, _ := ret[1].(common.VkResult)
 	ret2, _ := ret[2].(error)
@@ -3489,15 +3425,15 @@ func (m *MockCoreDeviceDriver) CreateFence(device core.Device, allocationCallbac
 }
 
 // CreateFence indicates an expected call of CreateFence.
-func (mr *MockCoreDeviceDriverMockRecorder) CreateFence(device, allocationCallbacks, o any) *gomock.Call {
+func (mr *MockCoreDeviceDriverMockRecorder) CreateFence(allocationCallbacks, o any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateFence", reflect.TypeOf((*MockCoreDeviceDriver)(nil).CreateFence), device, allocationCallbacks, o)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateFence", reflect.TypeOf((*MockCoreDeviceDriver)(nil).CreateFence), allocationCallbacks, o)
 }
 
 // CreateFramebuffer mocks base method.
-func (m *MockCoreDeviceDriver) CreateFramebuffer(device core.Device, allocationCallbacks *loader.AllocationCallbacks, o core1_0.FramebufferCreateInfo) (core.Framebuffer, common.VkResult, error) {
+func (m *MockCoreDeviceDriver) CreateFramebuffer(allocationCallbacks *loader.AllocationCallbacks, o core1_0.FramebufferCreateInfo) (core.Framebuffer, common.VkResult, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreateFramebuffer", device, allocationCallbacks, o)
+	ret := m.ctrl.Call(m, "CreateFramebuffer", allocationCallbacks, o)
 	ret0, _ := ret[0].(core.Framebuffer)
 	ret1, _ := ret[1].(common.VkResult)
 	ret2, _ := ret[2].(error)
@@ -3505,15 +3441,15 @@ func (m *MockCoreDeviceDriver) CreateFramebuffer(device core.Device, allocationC
 }
 
 // CreateFramebuffer indicates an expected call of CreateFramebuffer.
-func (mr *MockCoreDeviceDriverMockRecorder) CreateFramebuffer(device, allocationCallbacks, o any) *gomock.Call {
+func (mr *MockCoreDeviceDriverMockRecorder) CreateFramebuffer(allocationCallbacks, o any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateFramebuffer", reflect.TypeOf((*MockCoreDeviceDriver)(nil).CreateFramebuffer), device, allocationCallbacks, o)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateFramebuffer", reflect.TypeOf((*MockCoreDeviceDriver)(nil).CreateFramebuffer), allocationCallbacks, o)
 }
 
 // CreateGraphicsPipelines mocks base method.
-func (m *MockCoreDeviceDriver) CreateGraphicsPipelines(device core.Device, pipelineCache *core.PipelineCache, allocationCallbacks *loader.AllocationCallbacks, o ...core1_0.GraphicsPipelineCreateInfo) ([]core.Pipeline, common.VkResult, error) {
+func (m *MockCoreDeviceDriver) CreateGraphicsPipelines(pipelineCache *core.PipelineCache, allocationCallbacks *loader.AllocationCallbacks, o ...core1_0.GraphicsPipelineCreateInfo) ([]core.Pipeline, common.VkResult, error) {
 	m.ctrl.T.Helper()
-	varargs := []any{device, pipelineCache, allocationCallbacks}
+	varargs := []any{pipelineCache, allocationCallbacks}
 	for _, a := range o {
 		varargs = append(varargs, a)
 	}
@@ -3525,16 +3461,16 @@ func (m *MockCoreDeviceDriver) CreateGraphicsPipelines(device core.Device, pipel
 }
 
 // CreateGraphicsPipelines indicates an expected call of CreateGraphicsPipelines.
-func (mr *MockCoreDeviceDriverMockRecorder) CreateGraphicsPipelines(device, pipelineCache, allocationCallbacks any, o ...any) *gomock.Call {
+func (mr *MockCoreDeviceDriverMockRecorder) CreateGraphicsPipelines(pipelineCache, allocationCallbacks any, o ...any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	varargs := append([]any{device, pipelineCache, allocationCallbacks}, o...)
+	varargs := append([]any{pipelineCache, allocationCallbacks}, o...)
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateGraphicsPipelines", reflect.TypeOf((*MockCoreDeviceDriver)(nil).CreateGraphicsPipelines), varargs...)
 }
 
 // CreateImage mocks base method.
-func (m *MockCoreDeviceDriver) CreateImage(device core.Device, allocationCallbacks *loader.AllocationCallbacks, options core1_0.ImageCreateInfo) (core.Image, common.VkResult, error) {
+func (m *MockCoreDeviceDriver) CreateImage(allocationCallbacks *loader.AllocationCallbacks, options core1_0.ImageCreateInfo) (core.Image, common.VkResult, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreateImage", device, allocationCallbacks, options)
+	ret := m.ctrl.Call(m, "CreateImage", allocationCallbacks, options)
 	ret0, _ := ret[0].(core.Image)
 	ret1, _ := ret[1].(common.VkResult)
 	ret2, _ := ret[2].(error)
@@ -3542,15 +3478,15 @@ func (m *MockCoreDeviceDriver) CreateImage(device core.Device, allocationCallbac
 }
 
 // CreateImage indicates an expected call of CreateImage.
-func (mr *MockCoreDeviceDriverMockRecorder) CreateImage(device, allocationCallbacks, options any) *gomock.Call {
+func (mr *MockCoreDeviceDriverMockRecorder) CreateImage(allocationCallbacks, options any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateImage", reflect.TypeOf((*MockCoreDeviceDriver)(nil).CreateImage), device, allocationCallbacks, options)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateImage", reflect.TypeOf((*MockCoreDeviceDriver)(nil).CreateImage), allocationCallbacks, options)
 }
 
 // CreateImageView mocks base method.
-func (m *MockCoreDeviceDriver) CreateImageView(device core.Device, allocationCallbacks *loader.AllocationCallbacks, o core1_0.ImageViewCreateInfo) (core.ImageView, common.VkResult, error) {
+func (m *MockCoreDeviceDriver) CreateImageView(allocationCallbacks *loader.AllocationCallbacks, o core1_0.ImageViewCreateInfo) (core.ImageView, common.VkResult, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreateImageView", device, allocationCallbacks, o)
+	ret := m.ctrl.Call(m, "CreateImageView", allocationCallbacks, o)
 	ret0, _ := ret[0].(core.ImageView)
 	ret1, _ := ret[1].(common.VkResult)
 	ret2, _ := ret[2].(error)
@@ -3558,31 +3494,15 @@ func (m *MockCoreDeviceDriver) CreateImageView(device core.Device, allocationCal
 }
 
 // CreateImageView indicates an expected call of CreateImageView.
-func (mr *MockCoreDeviceDriverMockRecorder) CreateImageView(device, allocationCallbacks, o any) *gomock.Call {
+func (mr *MockCoreDeviceDriverMockRecorder) CreateImageView(allocationCallbacks, o any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateImageView", reflect.TypeOf((*MockCoreDeviceDriver)(nil).CreateImageView), device, allocationCallbacks, o)
-}
-
-// CreateInstance mocks base method.
-func (m *MockCoreDeviceDriver) CreateInstance(allocationCallbacks *loader.AllocationCallbacks, options core1_0.InstanceCreateInfo) (core.Instance, common.VkResult, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreateInstance", allocationCallbacks, options)
-	ret0, _ := ret[0].(core.Instance)
-	ret1, _ := ret[1].(common.VkResult)
-	ret2, _ := ret[2].(error)
-	return ret0, ret1, ret2
-}
-
-// CreateInstance indicates an expected call of CreateInstance.
-func (mr *MockCoreDeviceDriverMockRecorder) CreateInstance(allocationCallbacks, options any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateInstance", reflect.TypeOf((*MockCoreDeviceDriver)(nil).CreateInstance), allocationCallbacks, options)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateImageView", reflect.TypeOf((*MockCoreDeviceDriver)(nil).CreateImageView), allocationCallbacks, o)
 }
 
 // CreatePipelineCache mocks base method.
-func (m *MockCoreDeviceDriver) CreatePipelineCache(device core.Device, allocationCallbacks *loader.AllocationCallbacks, o core1_0.PipelineCacheCreateInfo) (core.PipelineCache, common.VkResult, error) {
+func (m *MockCoreDeviceDriver) CreatePipelineCache(allocationCallbacks *loader.AllocationCallbacks, o core1_0.PipelineCacheCreateInfo) (core.PipelineCache, common.VkResult, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreatePipelineCache", device, allocationCallbacks, o)
+	ret := m.ctrl.Call(m, "CreatePipelineCache", allocationCallbacks, o)
 	ret0, _ := ret[0].(core.PipelineCache)
 	ret1, _ := ret[1].(common.VkResult)
 	ret2, _ := ret[2].(error)
@@ -3590,15 +3510,15 @@ func (m *MockCoreDeviceDriver) CreatePipelineCache(device core.Device, allocatio
 }
 
 // CreatePipelineCache indicates an expected call of CreatePipelineCache.
-func (mr *MockCoreDeviceDriverMockRecorder) CreatePipelineCache(device, allocationCallbacks, o any) *gomock.Call {
+func (mr *MockCoreDeviceDriverMockRecorder) CreatePipelineCache(allocationCallbacks, o any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreatePipelineCache", reflect.TypeOf((*MockCoreDeviceDriver)(nil).CreatePipelineCache), device, allocationCallbacks, o)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreatePipelineCache", reflect.TypeOf((*MockCoreDeviceDriver)(nil).CreatePipelineCache), allocationCallbacks, o)
 }
 
 // CreatePipelineLayout mocks base method.
-func (m *MockCoreDeviceDriver) CreatePipelineLayout(device core.Device, allocationCallbacks *loader.AllocationCallbacks, o core1_0.PipelineLayoutCreateInfo) (core.PipelineLayout, common.VkResult, error) {
+func (m *MockCoreDeviceDriver) CreatePipelineLayout(allocationCallbacks *loader.AllocationCallbacks, o core1_0.PipelineLayoutCreateInfo) (core.PipelineLayout, common.VkResult, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreatePipelineLayout", device, allocationCallbacks, o)
+	ret := m.ctrl.Call(m, "CreatePipelineLayout", allocationCallbacks, o)
 	ret0, _ := ret[0].(core.PipelineLayout)
 	ret1, _ := ret[1].(common.VkResult)
 	ret2, _ := ret[2].(error)
@@ -3606,15 +3526,15 @@ func (m *MockCoreDeviceDriver) CreatePipelineLayout(device core.Device, allocati
 }
 
 // CreatePipelineLayout indicates an expected call of CreatePipelineLayout.
-func (mr *MockCoreDeviceDriverMockRecorder) CreatePipelineLayout(device, allocationCallbacks, o any) *gomock.Call {
+func (mr *MockCoreDeviceDriverMockRecorder) CreatePipelineLayout(allocationCallbacks, o any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreatePipelineLayout", reflect.TypeOf((*MockCoreDeviceDriver)(nil).CreatePipelineLayout), device, allocationCallbacks, o)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreatePipelineLayout", reflect.TypeOf((*MockCoreDeviceDriver)(nil).CreatePipelineLayout), allocationCallbacks, o)
 }
 
 // CreateQueryPool mocks base method.
-func (m *MockCoreDeviceDriver) CreateQueryPool(device core.Device, allocationCallbacks *loader.AllocationCallbacks, o core1_0.QueryPoolCreateInfo) (core.QueryPool, common.VkResult, error) {
+func (m *MockCoreDeviceDriver) CreateQueryPool(allocationCallbacks *loader.AllocationCallbacks, o core1_0.QueryPoolCreateInfo) (core.QueryPool, common.VkResult, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreateQueryPool", device, allocationCallbacks, o)
+	ret := m.ctrl.Call(m, "CreateQueryPool", allocationCallbacks, o)
 	ret0, _ := ret[0].(core.QueryPool)
 	ret1, _ := ret[1].(common.VkResult)
 	ret2, _ := ret[2].(error)
@@ -3622,15 +3542,15 @@ func (m *MockCoreDeviceDriver) CreateQueryPool(device core.Device, allocationCal
 }
 
 // CreateQueryPool indicates an expected call of CreateQueryPool.
-func (mr *MockCoreDeviceDriverMockRecorder) CreateQueryPool(device, allocationCallbacks, o any) *gomock.Call {
+func (mr *MockCoreDeviceDriverMockRecorder) CreateQueryPool(allocationCallbacks, o any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateQueryPool", reflect.TypeOf((*MockCoreDeviceDriver)(nil).CreateQueryPool), device, allocationCallbacks, o)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateQueryPool", reflect.TypeOf((*MockCoreDeviceDriver)(nil).CreateQueryPool), allocationCallbacks, o)
 }
 
 // CreateRenderPass mocks base method.
-func (m *MockCoreDeviceDriver) CreateRenderPass(device core.Device, allocationCallbacks *loader.AllocationCallbacks, o core1_0.RenderPassCreateInfo) (core.RenderPass, common.VkResult, error) {
+func (m *MockCoreDeviceDriver) CreateRenderPass(allocationCallbacks *loader.AllocationCallbacks, o core1_0.RenderPassCreateInfo) (core.RenderPass, common.VkResult, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreateRenderPass", device, allocationCallbacks, o)
+	ret := m.ctrl.Call(m, "CreateRenderPass", allocationCallbacks, o)
 	ret0, _ := ret[0].(core.RenderPass)
 	ret1, _ := ret[1].(common.VkResult)
 	ret2, _ := ret[2].(error)
@@ -3638,15 +3558,15 @@ func (m *MockCoreDeviceDriver) CreateRenderPass(device core.Device, allocationCa
 }
 
 // CreateRenderPass indicates an expected call of CreateRenderPass.
-func (mr *MockCoreDeviceDriverMockRecorder) CreateRenderPass(device, allocationCallbacks, o any) *gomock.Call {
+func (mr *MockCoreDeviceDriverMockRecorder) CreateRenderPass(allocationCallbacks, o any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateRenderPass", reflect.TypeOf((*MockCoreDeviceDriver)(nil).CreateRenderPass), device, allocationCallbacks, o)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateRenderPass", reflect.TypeOf((*MockCoreDeviceDriver)(nil).CreateRenderPass), allocationCallbacks, o)
 }
 
 // CreateSampler mocks base method.
-func (m *MockCoreDeviceDriver) CreateSampler(device core.Device, allocationCallbacks *loader.AllocationCallbacks, o core1_0.SamplerCreateInfo) (core.Sampler, common.VkResult, error) {
+func (m *MockCoreDeviceDriver) CreateSampler(allocationCallbacks *loader.AllocationCallbacks, o core1_0.SamplerCreateInfo) (core.Sampler, common.VkResult, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreateSampler", device, allocationCallbacks, o)
+	ret := m.ctrl.Call(m, "CreateSampler", allocationCallbacks, o)
 	ret0, _ := ret[0].(core.Sampler)
 	ret1, _ := ret[1].(common.VkResult)
 	ret2, _ := ret[2].(error)
@@ -3654,9 +3574,9 @@ func (m *MockCoreDeviceDriver) CreateSampler(device core.Device, allocationCallb
 }
 
 // CreateSampler indicates an expected call of CreateSampler.
-func (mr *MockCoreDeviceDriverMockRecorder) CreateSampler(device, allocationCallbacks, o any) *gomock.Call {
+func (mr *MockCoreDeviceDriverMockRecorder) CreateSampler(allocationCallbacks, o any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateSampler", reflect.TypeOf((*MockCoreDeviceDriver)(nil).CreateSampler), device, allocationCallbacks, o)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateSampler", reflect.TypeOf((*MockCoreDeviceDriver)(nil).CreateSampler), allocationCallbacks, o)
 }
 
 // CreateSamplerYcbcrConversion mocks base method.
@@ -3676,9 +3596,9 @@ func (mr *MockCoreDeviceDriverMockRecorder) CreateSamplerYcbcrConversion(device,
 }
 
 // CreateSemaphore mocks base method.
-func (m *MockCoreDeviceDriver) CreateSemaphore(device core.Device, allocationCallbacks *loader.AllocationCallbacks, o core1_0.SemaphoreCreateInfo) (core.Semaphore, common.VkResult, error) {
+func (m *MockCoreDeviceDriver) CreateSemaphore(allocationCallbacks *loader.AllocationCallbacks, o core1_0.SemaphoreCreateInfo) (core.Semaphore, common.VkResult, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreateSemaphore", device, allocationCallbacks, o)
+	ret := m.ctrl.Call(m, "CreateSemaphore", allocationCallbacks, o)
 	ret0, _ := ret[0].(core.Semaphore)
 	ret1, _ := ret[1].(common.VkResult)
 	ret2, _ := ret[2].(error)
@@ -3686,15 +3606,15 @@ func (m *MockCoreDeviceDriver) CreateSemaphore(device core.Device, allocationCal
 }
 
 // CreateSemaphore indicates an expected call of CreateSemaphore.
-func (mr *MockCoreDeviceDriverMockRecorder) CreateSemaphore(device, allocationCallbacks, o any) *gomock.Call {
+func (mr *MockCoreDeviceDriverMockRecorder) CreateSemaphore(allocationCallbacks, o any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateSemaphore", reflect.TypeOf((*MockCoreDeviceDriver)(nil).CreateSemaphore), device, allocationCallbacks, o)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateSemaphore", reflect.TypeOf((*MockCoreDeviceDriver)(nil).CreateSemaphore), allocationCallbacks, o)
 }
 
 // CreateShaderModule mocks base method.
-func (m *MockCoreDeviceDriver) CreateShaderModule(device core.Device, allocationCallbacks *loader.AllocationCallbacks, o core1_0.ShaderModuleCreateInfo) (core.ShaderModule, common.VkResult, error) {
+func (m *MockCoreDeviceDriver) CreateShaderModule(allocationCallbacks *loader.AllocationCallbacks, o core1_0.ShaderModuleCreateInfo) (core.ShaderModule, common.VkResult, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreateShaderModule", device, allocationCallbacks, o)
+	ret := m.ctrl.Call(m, "CreateShaderModule", allocationCallbacks, o)
 	ret0, _ := ret[0].(core.ShaderModule)
 	ret1, _ := ret[1].(common.VkResult)
 	ret2, _ := ret[2].(error)
@@ -3702,9 +3622,21 @@ func (m *MockCoreDeviceDriver) CreateShaderModule(device core.Device, allocation
 }
 
 // CreateShaderModule indicates an expected call of CreateShaderModule.
-func (mr *MockCoreDeviceDriverMockRecorder) CreateShaderModule(device, allocationCallbacks, o any) *gomock.Call {
+func (mr *MockCoreDeviceDriverMockRecorder) CreateShaderModule(allocationCallbacks, o any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateShaderModule", reflect.TypeOf((*MockCoreDeviceDriver)(nil).CreateShaderModule), device, allocationCallbacks, o)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateShaderModule", reflect.TypeOf((*MockCoreDeviceDriver)(nil).CreateShaderModule), allocationCallbacks, o)
+}
+
+// Destroy mocks base method.
+func (m *MockCoreDeviceDriver) DestroyDevice(callbacks *loader.AllocationCallbacks) {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "Destroy", callbacks)
+}
+
+// Destroy indicates an expected call of Destroy.
+func (mr *MockCoreDeviceDriverMockRecorder) Destroy(callbacks any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Destroy", reflect.TypeOf((*MockCoreDeviceDriver)(nil).DestroyDevice), callbacks)
 }
 
 // DestroyBuffer mocks base method.
@@ -3779,18 +3711,6 @@ func (mr *MockCoreDeviceDriverMockRecorder) DestroyDescriptorUpdateTemplate(temp
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DestroyDescriptorUpdateTemplate", reflect.TypeOf((*MockCoreDeviceDriver)(nil).DestroyDescriptorUpdateTemplate), template, allocator)
 }
 
-// DestroyDevice mocks base method.
-func (m *MockCoreDeviceDriver) DestroyDevice(device core.Device, callbacks *loader.AllocationCallbacks) {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "DestroyDevice", device, callbacks)
-}
-
-// DestroyDevice indicates an expected call of DestroyDevice.
-func (mr *MockCoreDeviceDriverMockRecorder) DestroyDevice(device, callbacks any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DestroyDevice", reflect.TypeOf((*MockCoreDeviceDriver)(nil).DestroyDevice), device, callbacks)
-}
-
 // DestroyEvent mocks base method.
 func (m *MockCoreDeviceDriver) DestroyEvent(event core.Event, callbacks *loader.AllocationCallbacks) {
 	m.ctrl.T.Helper()
@@ -3849,18 +3769,6 @@ func (m *MockCoreDeviceDriver) DestroyImageView(image core.ImageView, callbacks 
 func (mr *MockCoreDeviceDriverMockRecorder) DestroyImageView(image, callbacks any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DestroyImageView", reflect.TypeOf((*MockCoreDeviceDriver)(nil).DestroyImageView), image, callbacks)
-}
-
-// DestroyInstance mocks base method.
-func (m *MockCoreDeviceDriver) DestroyInstance(instance core.Instance, callbacks *loader.AllocationCallbacks) {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "DestroyInstance", instance, callbacks)
-}
-
-// DestroyInstance indicates an expected call of DestroyInstance.
-func (mr *MockCoreDeviceDriverMockRecorder) DestroyInstance(instance, callbacks any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DestroyInstance", reflect.TypeOf((*MockCoreDeviceDriver)(nil).DestroyInstance), instance, callbacks)
 }
 
 // DestroyPipeline mocks base method.
@@ -3972,18 +3880,18 @@ func (mr *MockCoreDeviceDriverMockRecorder) DestroyShaderModule(shaderModule, ca
 }
 
 // DeviceWaitIdle mocks base method.
-func (m *MockCoreDeviceDriver) DeviceWaitIdle(device core.Device) (common.VkResult, error) {
+func (m *MockCoreDeviceDriver) DeviceWaitIdle() (common.VkResult, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "DeviceWaitIdle", device)
+	ret := m.ctrl.Call(m, "DeviceWaitIdle")
 	ret0, _ := ret[0].(common.VkResult)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // DeviceWaitIdle indicates an expected call of DeviceWaitIdle.
-func (mr *MockCoreDeviceDriverMockRecorder) DeviceWaitIdle(device any) *gomock.Call {
+func (mr *MockCoreDeviceDriverMockRecorder) DeviceWaitIdle() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeviceWaitIdle", reflect.TypeOf((*MockCoreDeviceDriver)(nil).DeviceWaitIdle), device)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeviceWaitIdle", reflect.TypeOf((*MockCoreDeviceDriver)(nil).DeviceWaitIdle))
 }
 
 // EndCommandBuffer mocks base method.
@@ -3999,86 +3907,6 @@ func (m *MockCoreDeviceDriver) EndCommandBuffer(commandBuffer core.CommandBuffer
 func (mr *MockCoreDeviceDriverMockRecorder) EndCommandBuffer(commandBuffer any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "EndCommandBuffer", reflect.TypeOf((*MockCoreDeviceDriver)(nil).EndCommandBuffer), commandBuffer)
-}
-
-// EnumerateDeviceExtensionProperties mocks base method.
-func (m *MockCoreDeviceDriver) EnumerateDeviceExtensionProperties(physicalDevice core.PhysicalDevice) (map[string]*core1_0.ExtensionProperties, common.VkResult, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "EnumerateDeviceExtensionProperties", physicalDevice)
-	ret0, _ := ret[0].(map[string]*core1_0.ExtensionProperties)
-	ret1, _ := ret[1].(common.VkResult)
-	ret2, _ := ret[2].(error)
-	return ret0, ret1, ret2
-}
-
-// EnumerateDeviceExtensionProperties indicates an expected call of EnumerateDeviceExtensionProperties.
-func (mr *MockCoreDeviceDriverMockRecorder) EnumerateDeviceExtensionProperties(physicalDevice any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "EnumerateDeviceExtensionProperties", reflect.TypeOf((*MockCoreDeviceDriver)(nil).EnumerateDeviceExtensionProperties), physicalDevice)
-}
-
-// EnumerateDeviceExtensionPropertiesForLayer mocks base method.
-func (m *MockCoreDeviceDriver) EnumerateDeviceExtensionPropertiesForLayer(physicalDevice core.PhysicalDevice, layerName string) (map[string]*core1_0.ExtensionProperties, common.VkResult, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "EnumerateDeviceExtensionPropertiesForLayer", physicalDevice, layerName)
-	ret0, _ := ret[0].(map[string]*core1_0.ExtensionProperties)
-	ret1, _ := ret[1].(common.VkResult)
-	ret2, _ := ret[2].(error)
-	return ret0, ret1, ret2
-}
-
-// EnumerateDeviceExtensionPropertiesForLayer indicates an expected call of EnumerateDeviceExtensionPropertiesForLayer.
-func (mr *MockCoreDeviceDriverMockRecorder) EnumerateDeviceExtensionPropertiesForLayer(physicalDevice, layerName any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "EnumerateDeviceExtensionPropertiesForLayer", reflect.TypeOf((*MockCoreDeviceDriver)(nil).EnumerateDeviceExtensionPropertiesForLayer), physicalDevice, layerName)
-}
-
-// EnumerateDeviceLayerProperties mocks base method.
-func (m *MockCoreDeviceDriver) EnumerateDeviceLayerProperties(physicalDevice core.PhysicalDevice) (map[string]*core1_0.LayerProperties, common.VkResult, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "EnumerateDeviceLayerProperties", physicalDevice)
-	ret0, _ := ret[0].(map[string]*core1_0.LayerProperties)
-	ret1, _ := ret[1].(common.VkResult)
-	ret2, _ := ret[2].(error)
-	return ret0, ret1, ret2
-}
-
-// EnumerateDeviceLayerProperties indicates an expected call of EnumerateDeviceLayerProperties.
-func (mr *MockCoreDeviceDriverMockRecorder) EnumerateDeviceLayerProperties(physicalDevice any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "EnumerateDeviceLayerProperties", reflect.TypeOf((*MockCoreDeviceDriver)(nil).EnumerateDeviceLayerProperties), physicalDevice)
-}
-
-// EnumeratePhysicalDeviceGroups mocks base method.
-func (m *MockCoreDeviceDriver) EnumeratePhysicalDeviceGroups(instance core.Instance, outDataFactory func() *core1_1.PhysicalDeviceGroupProperties) ([]*core1_1.PhysicalDeviceGroupProperties, common.VkResult, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "EnumeratePhysicalDeviceGroups", instance, outDataFactory)
-	ret0, _ := ret[0].([]*core1_1.PhysicalDeviceGroupProperties)
-	ret1, _ := ret[1].(common.VkResult)
-	ret2, _ := ret[2].(error)
-	return ret0, ret1, ret2
-}
-
-// EnumeratePhysicalDeviceGroups indicates an expected call of EnumeratePhysicalDeviceGroups.
-func (mr *MockCoreDeviceDriverMockRecorder) EnumeratePhysicalDeviceGroups(instance, outDataFactory any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "EnumeratePhysicalDeviceGroups", reflect.TypeOf((*MockCoreDeviceDriver)(nil).EnumeratePhysicalDeviceGroups), instance, outDataFactory)
-}
-
-// EnumeratePhysicalDevices mocks base method.
-func (m *MockCoreDeviceDriver) EnumeratePhysicalDevices(instance core.Instance) ([]core.PhysicalDevice, common.VkResult, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "EnumeratePhysicalDevices", instance)
-	ret0, _ := ret[0].([]core.PhysicalDevice)
-	ret1, _ := ret[1].(common.VkResult)
-	ret2, _ := ret[2].(error)
-	return ret0, ret1, ret2
-}
-
-// EnumeratePhysicalDevices indicates an expected call of EnumeratePhysicalDevices.
-func (mr *MockCoreDeviceDriverMockRecorder) EnumeratePhysicalDevices(instance any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "EnumeratePhysicalDevices", reflect.TypeOf((*MockCoreDeviceDriver)(nil).EnumeratePhysicalDevices), instance)
 }
 
 // FlushMappedMemoryRanges mocks base method.
@@ -4333,250 +4161,6 @@ func (mr *MockCoreDeviceDriverMockRecorder) GetImageSubresourceLayout(image, sub
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetImageSubresourceLayout", reflect.TypeOf((*MockCoreDeviceDriver)(nil).GetImageSubresourceLayout), image, subresource)
 }
 
-// GetPhysicalDeviceExternalBufferProperties mocks base method.
-func (m *MockCoreDeviceDriver) GetPhysicalDeviceExternalBufferProperties(physicalDevice core.PhysicalDevice, o core1_1.PhysicalDeviceExternalBufferInfo, outData *core1_1.ExternalBufferProperties) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetPhysicalDeviceExternalBufferProperties", physicalDevice, o, outData)
-	ret0, _ := ret[0].(error)
-	return ret0
-}
-
-// GetPhysicalDeviceExternalBufferProperties indicates an expected call of GetPhysicalDeviceExternalBufferProperties.
-func (mr *MockCoreDeviceDriverMockRecorder) GetPhysicalDeviceExternalBufferProperties(physicalDevice, o, outData any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetPhysicalDeviceExternalBufferProperties", reflect.TypeOf((*MockCoreDeviceDriver)(nil).GetPhysicalDeviceExternalBufferProperties), physicalDevice, o, outData)
-}
-
-// GetPhysicalDeviceExternalFenceProperties mocks base method.
-func (m *MockCoreDeviceDriver) GetPhysicalDeviceExternalFenceProperties(physicalDevice core.PhysicalDevice, o core1_1.PhysicalDeviceExternalFenceInfo, outData *core1_1.ExternalFenceProperties) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetPhysicalDeviceExternalFenceProperties", physicalDevice, o, outData)
-	ret0, _ := ret[0].(error)
-	return ret0
-}
-
-// GetPhysicalDeviceExternalFenceProperties indicates an expected call of GetPhysicalDeviceExternalFenceProperties.
-func (mr *MockCoreDeviceDriverMockRecorder) GetPhysicalDeviceExternalFenceProperties(physicalDevice, o, outData any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetPhysicalDeviceExternalFenceProperties", reflect.TypeOf((*MockCoreDeviceDriver)(nil).GetPhysicalDeviceExternalFenceProperties), physicalDevice, o, outData)
-}
-
-// GetPhysicalDeviceExternalSemaphoreProperties mocks base method.
-func (m *MockCoreDeviceDriver) GetPhysicalDeviceExternalSemaphoreProperties(physicalDevice core.PhysicalDevice, o core1_1.PhysicalDeviceExternalSemaphoreInfo, outData *core1_1.ExternalSemaphoreProperties) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetPhysicalDeviceExternalSemaphoreProperties", physicalDevice, o, outData)
-	ret0, _ := ret[0].(error)
-	return ret0
-}
-
-// GetPhysicalDeviceExternalSemaphoreProperties indicates an expected call of GetPhysicalDeviceExternalSemaphoreProperties.
-func (mr *MockCoreDeviceDriverMockRecorder) GetPhysicalDeviceExternalSemaphoreProperties(physicalDevice, o, outData any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetPhysicalDeviceExternalSemaphoreProperties", reflect.TypeOf((*MockCoreDeviceDriver)(nil).GetPhysicalDeviceExternalSemaphoreProperties), physicalDevice, o, outData)
-}
-
-// GetPhysicalDeviceFeatures mocks base method.
-func (m *MockCoreDeviceDriver) GetPhysicalDeviceFeatures(physicalDevice core.PhysicalDevice) *core1_0.PhysicalDeviceFeatures {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetPhysicalDeviceFeatures", physicalDevice)
-	ret0, _ := ret[0].(*core1_0.PhysicalDeviceFeatures)
-	return ret0
-}
-
-// GetPhysicalDeviceFeatures indicates an expected call of GetPhysicalDeviceFeatures.
-func (mr *MockCoreDeviceDriverMockRecorder) GetPhysicalDeviceFeatures(physicalDevice any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetPhysicalDeviceFeatures", reflect.TypeOf((*MockCoreDeviceDriver)(nil).GetPhysicalDeviceFeatures), physicalDevice)
-}
-
-// GetPhysicalDeviceFeatures2 mocks base method.
-func (m *MockCoreDeviceDriver) GetPhysicalDeviceFeatures2(physicalDevice core.PhysicalDevice, out *core1_1.PhysicalDeviceFeatures2) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetPhysicalDeviceFeatures2", physicalDevice, out)
-	ret0, _ := ret[0].(error)
-	return ret0
-}
-
-// GetPhysicalDeviceFeatures2 indicates an expected call of GetPhysicalDeviceFeatures2.
-func (mr *MockCoreDeviceDriverMockRecorder) GetPhysicalDeviceFeatures2(physicalDevice, out any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetPhysicalDeviceFeatures2", reflect.TypeOf((*MockCoreDeviceDriver)(nil).GetPhysicalDeviceFeatures2), physicalDevice, out)
-}
-
-// GetPhysicalDeviceFormatProperties mocks base method.
-func (m *MockCoreDeviceDriver) GetPhysicalDeviceFormatProperties(physicalDevice core.PhysicalDevice, format core1_0.Format) *core1_0.FormatProperties {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetPhysicalDeviceFormatProperties", physicalDevice, format)
-	ret0, _ := ret[0].(*core1_0.FormatProperties)
-	return ret0
-}
-
-// GetPhysicalDeviceFormatProperties indicates an expected call of GetPhysicalDeviceFormatProperties.
-func (mr *MockCoreDeviceDriverMockRecorder) GetPhysicalDeviceFormatProperties(physicalDevice, format any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetPhysicalDeviceFormatProperties", reflect.TypeOf((*MockCoreDeviceDriver)(nil).GetPhysicalDeviceFormatProperties), physicalDevice, format)
-}
-
-// GetPhysicalDeviceFormatProperties2 mocks base method.
-func (m *MockCoreDeviceDriver) GetPhysicalDeviceFormatProperties2(physicalDevice core.PhysicalDevice, format core1_0.Format, out *core1_1.FormatProperties2) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetPhysicalDeviceFormatProperties2", physicalDevice, format, out)
-	ret0, _ := ret[0].(error)
-	return ret0
-}
-
-// GetPhysicalDeviceFormatProperties2 indicates an expected call of GetPhysicalDeviceFormatProperties2.
-func (mr *MockCoreDeviceDriverMockRecorder) GetPhysicalDeviceFormatProperties2(physicalDevice, format, out any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetPhysicalDeviceFormatProperties2", reflect.TypeOf((*MockCoreDeviceDriver)(nil).GetPhysicalDeviceFormatProperties2), physicalDevice, format, out)
-}
-
-// GetPhysicalDeviceImageFormatProperties mocks base method.
-func (m *MockCoreDeviceDriver) GetPhysicalDeviceImageFormatProperties(physicalDevice core.PhysicalDevice, format core1_0.Format, imageType core1_0.ImageType, tiling core1_0.ImageTiling, usages core1_0.ImageUsageFlags, flags core1_0.ImageCreateFlags) (*core1_0.ImageFormatProperties, common.VkResult, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetPhysicalDeviceImageFormatProperties", physicalDevice, format, imageType, tiling, usages, flags)
-	ret0, _ := ret[0].(*core1_0.ImageFormatProperties)
-	ret1, _ := ret[1].(common.VkResult)
-	ret2, _ := ret[2].(error)
-	return ret0, ret1, ret2
-}
-
-// GetPhysicalDeviceImageFormatProperties indicates an expected call of GetPhysicalDeviceImageFormatProperties.
-func (mr *MockCoreDeviceDriverMockRecorder) GetPhysicalDeviceImageFormatProperties(physicalDevice, format, imageType, tiling, usages, flags any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetPhysicalDeviceImageFormatProperties", reflect.TypeOf((*MockCoreDeviceDriver)(nil).GetPhysicalDeviceImageFormatProperties), physicalDevice, format, imageType, tiling, usages, flags)
-}
-
-// GetPhysicalDeviceImageFormatProperties2 mocks base method.
-func (m *MockCoreDeviceDriver) GetPhysicalDeviceImageFormatProperties2(physicalDevice core.PhysicalDevice, o core1_1.PhysicalDeviceImageFormatInfo2, out *core1_1.ImageFormatProperties2) (common.VkResult, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetPhysicalDeviceImageFormatProperties2", physicalDevice, o, out)
-	ret0, _ := ret[0].(common.VkResult)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// GetPhysicalDeviceImageFormatProperties2 indicates an expected call of GetPhysicalDeviceImageFormatProperties2.
-func (mr *MockCoreDeviceDriverMockRecorder) GetPhysicalDeviceImageFormatProperties2(physicalDevice, o, out any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetPhysicalDeviceImageFormatProperties2", reflect.TypeOf((*MockCoreDeviceDriver)(nil).GetPhysicalDeviceImageFormatProperties2), physicalDevice, o, out)
-}
-
-// GetPhysicalDeviceMemoryProperties mocks base method.
-func (m *MockCoreDeviceDriver) GetPhysicalDeviceMemoryProperties(physicalDevice core.PhysicalDevice) *core1_0.PhysicalDeviceMemoryProperties {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetPhysicalDeviceMemoryProperties", physicalDevice)
-	ret0, _ := ret[0].(*core1_0.PhysicalDeviceMemoryProperties)
-	return ret0
-}
-
-// GetPhysicalDeviceMemoryProperties indicates an expected call of GetPhysicalDeviceMemoryProperties.
-func (mr *MockCoreDeviceDriverMockRecorder) GetPhysicalDeviceMemoryProperties(physicalDevice any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetPhysicalDeviceMemoryProperties", reflect.TypeOf((*MockCoreDeviceDriver)(nil).GetPhysicalDeviceMemoryProperties), physicalDevice)
-}
-
-// GetPhysicalDeviceMemoryProperties2 mocks base method.
-func (m *MockCoreDeviceDriver) GetPhysicalDeviceMemoryProperties2(physicalDevice core.PhysicalDevice, out *core1_1.PhysicalDeviceMemoryProperties2) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetPhysicalDeviceMemoryProperties2", physicalDevice, out)
-	ret0, _ := ret[0].(error)
-	return ret0
-}
-
-// GetPhysicalDeviceMemoryProperties2 indicates an expected call of GetPhysicalDeviceMemoryProperties2.
-func (mr *MockCoreDeviceDriverMockRecorder) GetPhysicalDeviceMemoryProperties2(physicalDevice, out any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetPhysicalDeviceMemoryProperties2", reflect.TypeOf((*MockCoreDeviceDriver)(nil).GetPhysicalDeviceMemoryProperties2), physicalDevice, out)
-}
-
-// GetPhysicalDeviceProperties mocks base method.
-func (m *MockCoreDeviceDriver) GetPhysicalDeviceProperties(physicalDevice core.PhysicalDevice) (*core1_0.PhysicalDeviceProperties, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetPhysicalDeviceProperties", physicalDevice)
-	ret0, _ := ret[0].(*core1_0.PhysicalDeviceProperties)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// GetPhysicalDeviceProperties indicates an expected call of GetPhysicalDeviceProperties.
-func (mr *MockCoreDeviceDriverMockRecorder) GetPhysicalDeviceProperties(physicalDevice any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetPhysicalDeviceProperties", reflect.TypeOf((*MockCoreDeviceDriver)(nil).GetPhysicalDeviceProperties), physicalDevice)
-}
-
-// GetPhysicalDeviceProperties2 mocks base method.
-func (m *MockCoreDeviceDriver) GetPhysicalDeviceProperties2(physicalDevice core.PhysicalDevice, out *core1_1.PhysicalDeviceProperties2) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetPhysicalDeviceProperties2", physicalDevice, out)
-	ret0, _ := ret[0].(error)
-	return ret0
-}
-
-// GetPhysicalDeviceProperties2 indicates an expected call of GetPhysicalDeviceProperties2.
-func (mr *MockCoreDeviceDriverMockRecorder) GetPhysicalDeviceProperties2(physicalDevice, out any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetPhysicalDeviceProperties2", reflect.TypeOf((*MockCoreDeviceDriver)(nil).GetPhysicalDeviceProperties2), physicalDevice, out)
-}
-
-// GetPhysicalDeviceQueueFamilyProperties mocks base method.
-func (m *MockCoreDeviceDriver) GetPhysicalDeviceQueueFamilyProperties(physicalDevice core.PhysicalDevice) []*core1_0.QueueFamilyProperties {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetPhysicalDeviceQueueFamilyProperties", physicalDevice)
-	ret0, _ := ret[0].([]*core1_0.QueueFamilyProperties)
-	return ret0
-}
-
-// GetPhysicalDeviceQueueFamilyProperties indicates an expected call of GetPhysicalDeviceQueueFamilyProperties.
-func (mr *MockCoreDeviceDriverMockRecorder) GetPhysicalDeviceQueueFamilyProperties(physicalDevice any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetPhysicalDeviceQueueFamilyProperties", reflect.TypeOf((*MockCoreDeviceDriver)(nil).GetPhysicalDeviceQueueFamilyProperties), physicalDevice)
-}
-
-// GetPhysicalDeviceQueueFamilyProperties2 mocks base method.
-func (m *MockCoreDeviceDriver) GetPhysicalDeviceQueueFamilyProperties2(physicalDevice core.PhysicalDevice, outDataFactory func() *core1_1.QueueFamilyProperties2) ([]*core1_1.QueueFamilyProperties2, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetPhysicalDeviceQueueFamilyProperties2", physicalDevice, outDataFactory)
-	ret0, _ := ret[0].([]*core1_1.QueueFamilyProperties2)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// GetPhysicalDeviceQueueFamilyProperties2 indicates an expected call of GetPhysicalDeviceQueueFamilyProperties2.
-func (mr *MockCoreDeviceDriverMockRecorder) GetPhysicalDeviceQueueFamilyProperties2(physicalDevice, outDataFactory any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetPhysicalDeviceQueueFamilyProperties2", reflect.TypeOf((*MockCoreDeviceDriver)(nil).GetPhysicalDeviceQueueFamilyProperties2), physicalDevice, outDataFactory)
-}
-
-// GetPhysicalDeviceSparseImageFormatProperties mocks base method.
-func (m *MockCoreDeviceDriver) GetPhysicalDeviceSparseImageFormatProperties(physicalDevice core.PhysicalDevice, format core1_0.Format, imageType core1_0.ImageType, samples core1_0.SampleCountFlags, usages core1_0.ImageUsageFlags, tiling core1_0.ImageTiling) []core1_0.SparseImageFormatProperties {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetPhysicalDeviceSparseImageFormatProperties", physicalDevice, format, imageType, samples, usages, tiling)
-	ret0, _ := ret[0].([]core1_0.SparseImageFormatProperties)
-	return ret0
-}
-
-// GetPhysicalDeviceSparseImageFormatProperties indicates an expected call of GetPhysicalDeviceSparseImageFormatProperties.
-func (mr *MockCoreDeviceDriverMockRecorder) GetPhysicalDeviceSparseImageFormatProperties(physicalDevice, format, imageType, samples, usages, tiling any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetPhysicalDeviceSparseImageFormatProperties", reflect.TypeOf((*MockCoreDeviceDriver)(nil).GetPhysicalDeviceSparseImageFormatProperties), physicalDevice, format, imageType, samples, usages, tiling)
-}
-
-// GetPhysicalDeviceSparseImageFormatProperties2 mocks base method.
-func (m *MockCoreDeviceDriver) GetPhysicalDeviceSparseImageFormatProperties2(physicalDevice core.PhysicalDevice, o core1_1.PhysicalDeviceSparseImageFormatInfo2, outDataFactory func() *core1_1.SparseImageFormatProperties2) ([]*core1_1.SparseImageFormatProperties2, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetPhysicalDeviceSparseImageFormatProperties2", physicalDevice, o, outDataFactory)
-	ret0, _ := ret[0].([]*core1_1.SparseImageFormatProperties2)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// GetPhysicalDeviceSparseImageFormatProperties2 indicates an expected call of GetPhysicalDeviceSparseImageFormatProperties2.
-func (mr *MockCoreDeviceDriverMockRecorder) GetPhysicalDeviceSparseImageFormatProperties2(physicalDevice, o, outDataFactory any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetPhysicalDeviceSparseImageFormatProperties2", reflect.TypeOf((*MockCoreDeviceDriver)(nil).GetPhysicalDeviceSparseImageFormatProperties2), physicalDevice, o, outDataFactory)
-}
-
 // GetPipelineCacheData mocks base method.
 func (m *MockCoreDeviceDriver) GetPipelineCacheData(cache core.PipelineCache) ([]byte, common.VkResult, error) {
 	m.ctrl.T.Helper()
@@ -4609,17 +4193,17 @@ func (mr *MockCoreDeviceDriverMockRecorder) GetQueryPoolResults(queryPool, first
 }
 
 // GetQueue mocks base method.
-func (m *MockCoreDeviceDriver) GetQueue(device core.Device, queueFamilyIndex, queueIndex int) core.Queue {
+func (m *MockCoreDeviceDriver) GetQueue(queueFamilyIndex, queueIndex int) core.Queue {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetQueue", device, queueFamilyIndex, queueIndex)
+	ret := m.ctrl.Call(m, "GetQueue", queueFamilyIndex, queueIndex)
 	ret0, _ := ret[0].(core.Queue)
 	return ret0
 }
 
 // GetQueue indicates an expected call of GetQueue.
-func (mr *MockCoreDeviceDriverMockRecorder) GetQueue(device, queueFamilyIndex, queueIndex any) *gomock.Call {
+func (mr *MockCoreDeviceDriverMockRecorder) GetQueue(queueFamilyIndex, queueIndex any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetQueue", reflect.TypeOf((*MockCoreDeviceDriver)(nil).GetQueue), device, queueFamilyIndex, queueIndex)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetQueue", reflect.TypeOf((*MockCoreDeviceDriver)(nil).GetQueue), queueFamilyIndex, queueIndex)
 }
 
 // GetRenderAreaGranularity mocks base method.
@@ -4634,6 +4218,20 @@ func (m *MockCoreDeviceDriver) GetRenderAreaGranularity(renderPass core.RenderPa
 func (mr *MockCoreDeviceDriverMockRecorder) GetRenderAreaGranularity(renderPass any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetRenderAreaGranularity", reflect.TypeOf((*MockCoreDeviceDriver)(nil).GetRenderAreaGranularity), renderPass)
+}
+
+// InstanceDriver mocks base method.
+func (m *MockCoreDeviceDriver) InstanceDriver() core1_0.CoreInstanceDriver {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "InstanceDriver")
+	ret0, _ := ret[0].(core1_0.CoreInstanceDriver)
+	return ret0
+}
+
+// InstanceDriver indicates an expected call of InstanceDriver.
+func (mr *MockCoreDeviceDriverMockRecorder) InstanceDriver() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "InstanceDriver", reflect.TypeOf((*MockCoreDeviceDriver)(nil).InstanceDriver))
 }
 
 // InvalidateMappedMemoryRanges mocks base method.
@@ -4915,17 +4513,17 @@ func (mr *MockCoreDeviceDriverMockRecorder) UpdateDescriptorSetWithTemplateFromO
 }
 
 // UpdateDescriptorSets mocks base method.
-func (m *MockCoreDeviceDriver) UpdateDescriptorSets(device core.Device, writes []core1_0.WriteDescriptorSet, copies []core1_0.CopyDescriptorSet) error {
+func (m *MockCoreDeviceDriver) UpdateDescriptorSets(writes []core1_0.WriteDescriptorSet, copies []core1_0.CopyDescriptorSet) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "UpdateDescriptorSets", device, writes, copies)
+	ret := m.ctrl.Call(m, "UpdateDescriptorSets", writes, copies)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // UpdateDescriptorSets indicates an expected call of UpdateDescriptorSets.
-func (mr *MockCoreDeviceDriverMockRecorder) UpdateDescriptorSets(device, writes, copies any) *gomock.Call {
+func (mr *MockCoreDeviceDriverMockRecorder) UpdateDescriptorSets(writes, copies any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateDescriptorSets", reflect.TypeOf((*MockCoreDeviceDriver)(nil).UpdateDescriptorSets), device, writes, copies)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateDescriptorSets", reflect.TypeOf((*MockCoreDeviceDriver)(nil).UpdateDescriptorSets), writes, copies)
 }
 
 // WaitForFences mocks base method.
