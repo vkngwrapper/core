@@ -9,14 +9,14 @@ import (
 )
 
 func (v *DeviceVulkanDriver) DestroyDescriptorPool(descriptorPool core.DescriptorPool, callbacks *loader.AllocationCallbacks) {
-	if descriptorPool.Handle() == 0 {
+	if !descriptorPool.Initialized() {
 		panic("descriptorPool was uninitialized")
 	}
 	v.LoaderObj.VkDestroyDescriptorPool(descriptorPool.DeviceHandle(), descriptorPool.Handle(), callbacks.Handle())
 }
 
 func (v *DeviceVulkanDriver) ResetDescriptorPool(descriptorPool core.DescriptorPool, flags core1_0.DescriptorPoolResetFlags) (common.VkResult, error) {
-	if descriptorPool.Handle() == 0 {
+	if !descriptorPool.Initialized() {
 		return core1_0.VKErrorUnknown, errors.New("descriptorPool was uninitialized")
 	}
 	return v.LoaderObj.VkResetDescriptorPool(descriptorPool.DeviceHandle(), descriptorPool.Handle(), loader.VkDescriptorPoolResetFlags(flags))

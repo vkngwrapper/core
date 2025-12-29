@@ -28,6 +28,8 @@ func (b Buffer) APIVersion() common.APIVersion {
 	return b.apiVersion
 }
 
+func (b Buffer) Initialized() bool { return b.bufferHandle != 0 }
+
 func InternalBuffer(device loader.VkDevice, handle loader.VkBuffer, version common.APIVersion) Buffer {
 	return Buffer{
 		device:       device,
@@ -58,6 +60,8 @@ func (b BufferView) Handle() loader.VkBufferView {
 func (b BufferView) APIVersion() common.APIVersion {
 	return b.apiVersion
 }
+
+func (b BufferView) Initialized() bool { return b.bufferViewHandle != 0 }
 
 func InternalBufferView(device loader.VkDevice, handle loader.VkBufferView, version common.APIVersion) BufferView {
 	return BufferView{
@@ -95,6 +99,8 @@ func (b CommandBuffer) APIVersion() common.APIVersion {
 	return b.apiVersion
 }
 
+func (b CommandBuffer) Initialized() bool { return b.commandBufferHandle != 0 }
+
 func InternalCommandBuffer(device loader.VkDevice, commandPool loader.VkCommandPool, handle loader.VkCommandBuffer, version common.APIVersion) CommandBuffer {
 	return CommandBuffer{
 		device:              device,
@@ -124,6 +130,8 @@ func (p CommandPool) DeviceHandle() loader.VkDevice {
 func (p CommandPool) APIVersion() common.APIVersion {
 	return p.apiVersion
 }
+
+func (p CommandPool) Initialized() bool { return p.commandPoolHandle != 0 }
 
 func InternalCommandPool(device loader.VkDevice, handle loader.VkCommandPool, version common.APIVersion) CommandPool {
 	return CommandPool{
@@ -155,6 +163,8 @@ func (p DescriptorPool) APIVersion() common.APIVersion {
 	return p.apiVersion
 }
 
+func (p DescriptorPool) Initialized() bool { return p.descriptorPoolHandle != 0 }
+
 func InternalDescriptorPool(device loader.VkDevice, handle loader.VkDescriptorPool, version common.APIVersion) DescriptorPool {
 	return DescriptorPool{
 		descriptorPoolHandle: handle,
@@ -184,6 +194,8 @@ func (h DescriptorSetLayout) DeviceHandle() loader.VkDevice {
 func (h DescriptorSetLayout) APIVersion() common.APIVersion {
 	return h.apiVersion
 }
+
+func (h DescriptorSetLayout) Initialized() bool { return h.descriptorSetLayoutHandle != 0 }
 
 func InternalDescriptorSetLayout(device loader.VkDevice, handle loader.VkDescriptorSetLayout, version common.APIVersion) DescriptorSetLayout {
 	return DescriptorSetLayout{
@@ -219,6 +231,8 @@ func (s DescriptorSet) DescriptorPoolHandle() loader.VkDescriptorPool {
 func (s DescriptorSet) DeviceHandle() loader.VkDevice {
 	return s.device
 }
+
+func (s DescriptorSet) Initialized() bool { return s.descriptorSetHandle != 0 }
 
 func InternalDescriptorSet(device loader.VkDevice, descriptorPool loader.VkDescriptorPool, handle loader.VkDescriptorSet, version common.APIVersion) DescriptorSet {
 	return DescriptorSet{
@@ -257,6 +271,8 @@ func (m DeviceMemory) Size() int {
 	return m.size
 }
 
+func (m DeviceMemory) Initialized() bool { return m.deviceMemoryHandle != 0 }
+
 func InternalDeviceMemory(device loader.VkDevice, handle loader.VkDeviceMemory, version common.APIVersion, size int) DeviceMemory {
 	return DeviceMemory{
 		device:             device,
@@ -283,6 +299,8 @@ func (d Device) Handle() loader.VkDevice {
 func (d Device) APIVersion() common.APIVersion {
 	return d.apiVersion
 }
+
+func (d Device) Initialized() bool { return d.deviceHandle != 0 }
 
 func (d Device) IsDeviceExtensionActive(extensionName string) bool {
 	_, active := d.activeDeviceExtensions[extensionName]
@@ -314,17 +332,19 @@ type Event struct {
 	apiVersion common.APIVersion
 }
 
-func (e *Event) Handle() loader.VkEvent {
+func (e Event) Handle() loader.VkEvent {
 	return e.eventHandle
 }
 
-func (e *Event) DeviceHandle() loader.VkDevice {
+func (e Event) DeviceHandle() loader.VkDevice {
 	return e.device
 }
 
-func (e *Event) APIVersion() common.APIVersion {
+func (e Event) APIVersion() common.APIVersion {
 	return e.apiVersion
 }
+
+func (e Event) Initialized() bool { return e.eventHandle != 0 }
 
 func InternalEvent(device loader.VkDevice, handle loader.VkEvent, version common.APIVersion) Event {
 	return Event{
@@ -357,6 +377,8 @@ func (f Fence) APIVersion() common.APIVersion {
 	return f.apiVersion
 }
 
+func (f Fence) Initialized() bool { return f.fenceHandle != 0 }
+
 func InternalFence(device loader.VkDevice, handle loader.VkFence, version common.APIVersion) Fence {
 	return Fence{
 		device:      device,
@@ -386,6 +408,8 @@ func (b Framebuffer) DeviceHandle() loader.VkDevice {
 func (b Framebuffer) APIVersion() common.APIVersion {
 	return b.apiVersion
 }
+
+func (b Framebuffer) Initialized() bool { return b.framebufferHandle != 0 }
 
 func InternalFramebuffer(device loader.VkDevice, handle loader.VkFramebuffer, version common.APIVersion) Framebuffer {
 	return Framebuffer{
@@ -417,6 +441,8 @@ func (i Image) APIVersion() common.APIVersion {
 	return i.apiVersion
 }
 
+func (i Image) Initialized() bool { return i.imageHandle != 0 }
+
 func InternalImage(device loader.VkDevice, handle loader.VkImage, version common.APIVersion) Image {
 	return Image{
 		device:      device,
@@ -447,6 +473,8 @@ func (v ImageView) APIVersion() common.APIVersion {
 	return v.apiVersion
 }
 
+func (v ImageView) Initialized() bool { return v.imageViewHandle != 0 }
+
 func InternalImageView(device loader.VkDevice, handle loader.VkImageView, version common.APIVersion) ImageView {
 	return ImageView{
 		device:          device,
@@ -472,6 +500,8 @@ func (i Instance) Handle() loader.VkInstance {
 func (i Instance) APIVersion() common.APIVersion {
 	return i.maximumVersion
 }
+
+func (i Instance) Initialized() bool { return i.instanceHandle != 0 }
 
 func (i Instance) IsInstanceExtensionActive(extensionName string) bool {
 	_, active := i.activeInstanceExtensions[extensionName]
@@ -515,6 +545,8 @@ func (d PhysicalDevice) InstanceAPIVersion() common.APIVersion {
 	return d.instanceVersion
 }
 
+func (d PhysicalDevice) Initialized() bool { return d.physicalDeviceHandle != 0 }
+
 func InternalPhysicalDevice(handle loader.VkPhysicalDevice, instanceVersion common.APIVersion, deviceVersion common.APIVersion) PhysicalDevice {
 	return PhysicalDevice{
 		physicalDeviceHandle: handle,
@@ -544,6 +576,8 @@ func (p Pipeline) DeviceHandle() loader.VkDevice {
 func (p Pipeline) APIVersion() common.APIVersion {
 	return p.apiVersion
 }
+
+func (p Pipeline) Initialized() bool { return p.pipelineHandle != 0 }
 
 func InternalPipeline(device loader.VkDevice, handle loader.VkPipeline, version common.APIVersion) Pipeline {
 	return Pipeline{
@@ -576,6 +610,8 @@ func (c PipelineCache) APIVersion() common.APIVersion {
 	return c.apiVersion
 }
 
+func (c PipelineCache) Initialized() bool { return c.pipelineCacheHandle != 0 }
+
 func InternalPipelineCache(device loader.VkDevice, handle loader.VkPipelineCache, version common.APIVersion) PipelineCache {
 	return PipelineCache{
 		device:              device,
@@ -607,6 +643,8 @@ func (l PipelineLayout) APIVersion() common.APIVersion {
 	return l.apiVersion
 }
 
+func (l PipelineLayout) Initialized() bool { return l.pipelineLayoutHandle != 0 }
+
 func InternalPipelineLayout(device loader.VkDevice, handle loader.VkPipelineLayout, version common.APIVersion) PipelineLayout {
 	return PipelineLayout{
 		device:               device,
@@ -637,6 +675,8 @@ func (p QueryPool) APIVersion() common.APIVersion {
 	return p.apiVersion
 }
 
+func (p QueryPool) Initialized() bool { return p.queryPoolHandle != 0 }
+
 func InternalQueryPool(device loader.VkDevice, handle loader.VkQueryPool, version common.APIVersion) QueryPool {
 	return QueryPool{
 		device:          device,
@@ -666,6 +706,8 @@ func (q Queue) DeviceHandle() loader.VkDevice {
 func (q Queue) APIVersion() common.APIVersion {
 	return q.apiVersion
 }
+
+func (q Queue) Initialized() bool { return q.queueHandle != 0 }
 
 func InternalQueue(device loader.VkDevice, handle loader.VkQueue, version common.APIVersion) Queue {
 	return Queue{
@@ -698,6 +740,8 @@ func (p RenderPass) APIVersion() common.APIVersion {
 	return p.apiVersion
 }
 
+func (p RenderPass) Initialized() bool { return p.renderPassHandle != 0 }
+
 func InternalRenderPass(device loader.VkDevice, handle loader.VkRenderPass, version common.APIVersion) RenderPass {
 	return RenderPass{
 		device:           device,
@@ -728,6 +772,8 @@ func (s Sampler) DeviceHandle() loader.VkDevice {
 func (s Sampler) APIVersion() common.APIVersion {
 	return s.apiVersion
 }
+
+func (s Sampler) Initialized() bool { return s.samplerHandle != 0 }
 
 func InternalSampler(device loader.VkDevice, handle loader.VkSampler, version common.APIVersion) Sampler {
 	return Sampler{
@@ -760,6 +806,8 @@ func (s Semaphore) APIVersion() common.APIVersion {
 	return s.apiVersion
 }
 
+func (s Semaphore) Initialized() bool { return s.semaphoreHandle != 0 }
+
 func InternalSemaphore(device loader.VkDevice, handle loader.VkSemaphore, version common.APIVersion) Semaphore {
 	return Semaphore{
 		device:          device,
@@ -789,6 +837,8 @@ func (m ShaderModule) DeviceHandle() loader.VkDevice {
 func (m ShaderModule) APIVersion() common.APIVersion {
 	return m.apiVersion
 }
+
+func (m ShaderModule) Initialized() bool { return m.shaderModuleHandle != 0 }
 
 func InternalShaderModule(device loader.VkDevice, handle loader.VkShaderModule, version common.APIVersion) ShaderModule {
 	return ShaderModule{
@@ -821,6 +871,10 @@ func (y SamplerYcbcrConversion) APIVersion() common.APIVersion {
 	return y.apiVersion
 }
 
+func (y SamplerYcbcrConversion) Initialized() bool {
+	return y.ycbcrHandle != 0
+}
+
 func InternalSamplerYcbcrConversion(device loader.VkDevice, handle loader.VkSamplerYcbcrConversion, version common.APIVersion) SamplerYcbcrConversion {
 	return SamplerYcbcrConversion{
 		device:      device,
@@ -850,6 +904,10 @@ func (t DescriptorUpdateTemplate) DeviceHandle() loader.VkDevice {
 
 func (t DescriptorUpdateTemplate) APIVersion() common.APIVersion {
 	return t.apiVersion
+}
+
+func (t DescriptorUpdateTemplate) Initialized() bool {
+	return t.descriptorTemplateHandle != 0
 }
 
 func InternalDescriptorUpdateTemplate(device loader.VkDevice, handle loader.VkDescriptorUpdateTemplate, version common.APIVersion) DescriptorUpdateTemplate {

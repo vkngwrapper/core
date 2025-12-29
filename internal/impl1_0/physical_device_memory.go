@@ -13,7 +13,7 @@ import (
 )
 
 func (v *InstanceVulkanDriver) GetPhysicalDeviceMemoryProperties(physicalDevice core.PhysicalDevice) *core1_0.PhysicalDeviceMemoryProperties {
-	if physicalDevice.Handle() == 0 {
+	if !physicalDevice.Initialized() {
 		panic("physicalDevice was uninitialized")
 	}
 

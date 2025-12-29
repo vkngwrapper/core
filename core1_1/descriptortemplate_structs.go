@@ -146,11 +146,11 @@ func (o DescriptorUpdateTemplateCreateInfo) PopulateCPointer(allocator *cgoparam
 	createInfo.descriptorSetLayout = nil
 	createInfo.pipelineLayout = nil
 
-	if o.DescriptorSetLayout.Handle() != 0 {
+	if o.DescriptorSetLayout.Initialized() {
 		createInfo.descriptorSetLayout = C.VkDescriptorSetLayout(unsafe.Pointer(o.DescriptorSetLayout.Handle()))
 	}
 
-	if o.PipelineLayout.Handle() != 0 {
+	if o.PipelineLayout.Initialized() {
 		createInfo.pipelineLayout = C.VkPipelineLayout(unsafe.Pointer(o.PipelineLayout.Handle()))
 	}
 

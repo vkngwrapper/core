@@ -132,7 +132,7 @@ type ImageViewCreateInfo struct {
 }
 
 func (o ImageViewCreateInfo) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
-	if o.Image.Handle() == 0 {
+	if !o.Image.Initialized() {
 		return nil, errors.New("core1_0.ImageViewCreateInfo.Image cannot be left unset")
 	}
 	if preallocatedPointer == unsafe.Pointer(nil) {

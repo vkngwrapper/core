@@ -48,7 +48,7 @@ type BufferMemoryRequirementsInfo2 struct {
 }
 
 func (o BufferMemoryRequirementsInfo2) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
-	if o.Buffer.Handle() == 0 {
+	if !o.Buffer.Initialized() {
 		return nil, errors.New("core1_1.BufferMemoryRequirementsInfo2.Buffer cannot be left unset")
 	}
 	if preallocatedPointer == nil {
@@ -76,7 +76,7 @@ type ImageMemoryRequirementsInfo2 struct {
 }
 
 func (o ImageMemoryRequirementsInfo2) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
-	if o.Image.Handle() == 0 {
+	if !o.Image.Initialized() {
 		return nil, errors.New("core1_1.ImageMemoryRequirementsInfo2.Image cannot be left unset")
 	}
 	if preallocatedPointer == nil {
@@ -137,7 +137,7 @@ type ImageSparseMemoryRequirementsInfo2 struct {
 }
 
 func (o ImageSparseMemoryRequirementsInfo2) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
-	if o.Image.Handle() == 0 {
+	if !o.Image.Initialized() {
 		return nil, errors.New("core1_1.ImageSparseMemoryRequirementsInfo2.Image cannot be left unset")
 	}
 	if preallocatedPointer == nil {

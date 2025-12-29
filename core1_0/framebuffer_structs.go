@@ -46,7 +46,7 @@ func (o FramebufferCreateInfo) PopulateCPointer(allocator *cgoparam.Allocator, p
 	createInfo.flags = C.VkFramebufferCreateFlags(o.Flags)
 	createInfo.pNext = next
 
-	if o.RenderPass.Handle() != 0 {
+	if o.RenderPass.Initialized() {
 		createInfo.renderPass = (C.VkRenderPass)(unsafe.Pointer(o.RenderPass.Handle()))
 	}
 

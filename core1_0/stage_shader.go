@@ -78,7 +78,7 @@ type PipelineShaderStageCreateInfo struct {
 }
 
 func (s PipelineShaderStageCreateInfo) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
-	if s.Module.Handle() == 0 {
+	if !s.Module.Initialized() {
 		return nil, errors.New("core1_0.PipelineShaderStageCreateInfo.Module cannot be left unset")
 	}
 

@@ -27,7 +27,7 @@ type DescriptorSetAllocateInfo struct {
 }
 
 func (o DescriptorSetAllocateInfo) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
-	if o.DescriptorPool.Handle() == 0 {
+	if !o.DescriptorPool.Initialized() {
 		return nil, errors.New("core1_0.DescriptorSetAllocateInfo.DescriptorPool cannot be left unset")
 	}
 	if preallocatedPointer == unsafe.Pointer(nil) {
@@ -160,7 +160,7 @@ func (o WriteDescriptorSet) PopulateCPointer(allocator *cgoparam.Allocator, prea
 		return nil, errors.New("an extension descriptor source for a WriteDescriptorSet has been included, but so has a traditional descriptor source: ImageInfo, BufferInfo, or TexelBufferView")
 	}
 
-	if o.DstSet.Handle() == 0 {
+	if !o.DstSet.Initialized() {
 		return nil, errors.New("core1_0.WriteDescriptorSet.DstSet cannot be left unset")
 	}
 
@@ -262,10 +262,10 @@ func (o CopyDescriptorSet) PopulateCPointer(allocator *cgoparam.Allocator, preal
 	if preallocatedPointer == unsafe.Pointer(nil) {
 		preallocatedPointer = allocator.Malloc(C.sizeof_struct_VkCopyDescriptorSet)
 	}
-	if o.SrcSet.Handle() == 0 {
+	if !o.SrcSet.Initialized() {
 		return nil, errors.New("core1_0.CopyDescriptorSet.SrcSet cannot be left unset")
 	}
-	if o.DstSet.Handle() == 0 {
+	if !o.DstSet.Initialized() {
 		return nil, errors.New("core1_0.CopyDescriptorSet.DstSet cannot be left unset")
 	}
 

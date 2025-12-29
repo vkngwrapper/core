@@ -18,7 +18,7 @@ import (
 )
 
 func (v *DeviceVulkanDriver) BeginCommandBuffer(commandBuffer core.CommandBuffer, o core1_0.CommandBufferBeginInfo) (common.VkResult, error) {
-	if commandBuffer.Handle() == 0 {
+	if !commandBuffer.Initialized() {
 		return core1_0.VKErrorUnknown, errors.New("commandBuffer cannot be uninitialized")
 	}
 
@@ -34,7 +34,7 @@ func (v *DeviceVulkanDriver) BeginCommandBuffer(commandBuffer core.CommandBuffer
 }
 
 func (v *DeviceVulkanDriver) EndCommandBuffer(commandBuffer core.CommandBuffer) (common.VkResult, error) {
-	if commandBuffer.Handle() == 0 {
+	if !commandBuffer.Initialized() {
 		panic("commandBuffer cannot be uninitialized")
 	}
 
@@ -42,7 +42,7 @@ func (v *DeviceVulkanDriver) EndCommandBuffer(commandBuffer core.CommandBuffer) 
 }
 
 func (v *DeviceVulkanDriver) CmdBeginRenderPass(commandBuffer core.CommandBuffer, contents core1_0.SubpassContents, o core1_0.RenderPassBeginInfo) error {
-	if commandBuffer.Handle() == 0 {
+	if !commandBuffer.Initialized() {
 		return errors.New("commandBuffer cannot be uninitialized")
 	}
 	arena := cgoparam.GetAlloc()
@@ -58,7 +58,7 @@ func (v *DeviceVulkanDriver) CmdBeginRenderPass(commandBuffer core.CommandBuffer
 }
 
 func (v *DeviceVulkanDriver) CmdEndRenderPass(commandBuffer core.CommandBuffer) {
-	if commandBuffer.Handle() == 0 {
+	if !commandBuffer.Initialized() {
 		panic("commandBuffer cannot be uninitialized")
 	}
 
@@ -66,11 +66,11 @@ func (v *DeviceVulkanDriver) CmdEndRenderPass(commandBuffer core.CommandBuffer) 
 }
 
 func (v *DeviceVulkanDriver) CmdBindPipeline(commandBuffer core.CommandBuffer, bindPoint core1_0.PipelineBindPoint, pipeline core.Pipeline) {
-	if commandBuffer.Handle() == 0 {
+	if !commandBuffer.Initialized() {
 		panic("commandBuffer cannot be uninitialized")
 	}
 
-	if pipeline.Handle() == 0 {
+	if !pipeline.Initialized() {
 		panic("pipeline cannot be uninitialized")
 	}
 
@@ -78,7 +78,7 @@ func (v *DeviceVulkanDriver) CmdBindPipeline(commandBuffer core.CommandBuffer, b
 }
 
 func (v *DeviceVulkanDriver) CmdDraw(commandBuffer core.CommandBuffer, vertexCount, instanceCount int, firstVertex, firstInstance uint32) {
-	if commandBuffer.Handle() == 0 {
+	if !commandBuffer.Initialized() {
 		panic("commandBuffer cannot be uninitialized")
 	}
 
@@ -86,7 +86,7 @@ func (v *DeviceVulkanDriver) CmdDraw(commandBuffer core.CommandBuffer, vertexCou
 }
 
 func (v *DeviceVulkanDriver) CmdDrawIndexed(commandBuffer core.CommandBuffer, indexCount, instanceCount int, firstIndex uint32, vertexOffset int, firstInstance uint32) {
-	if commandBuffer.Handle() == 0 {
+	if !commandBuffer.Initialized() {
 		panic("commandBuffer cannot be uninitialized")
 	}
 
@@ -94,7 +94,7 @@ func (v *DeviceVulkanDriver) CmdDrawIndexed(commandBuffer core.CommandBuffer, in
 }
 
 func (v *DeviceVulkanDriver) CmdBindVertexBuffers(commandBuffer core.CommandBuffer, firstBinding int, buffers []core.Buffer, bufferOffsets []int) {
-	if commandBuffer.Handle() == 0 {
+	if !commandBuffer.Initialized() {
 		panic("commandBuffer cannot be uninitialized")
 	}
 
@@ -124,7 +124,7 @@ func (v *DeviceVulkanDriver) CmdBindVertexBuffers(commandBuffer core.CommandBuff
 }
 
 func (v *DeviceVulkanDriver) CmdBindIndexBuffer(commandBuffer core.CommandBuffer, buffer core.Buffer, offset int, indexType core1_0.IndexType) {
-	if commandBuffer.Handle() == 0 {
+	if !commandBuffer.Initialized() {
 		panic("commandBuffer cannot be uninitialized")
 	}
 
@@ -132,11 +132,11 @@ func (v *DeviceVulkanDriver) CmdBindIndexBuffer(commandBuffer core.CommandBuffer
 }
 
 func (v *DeviceVulkanDriver) CmdBindDescriptorSets(commandBuffer core.CommandBuffer, bindPoint core1_0.PipelineBindPoint, layout core.PipelineLayout, firstSet int, sets []core.DescriptorSet, dynamicOffsets []int) {
-	if commandBuffer.Handle() == 0 {
+	if !commandBuffer.Initialized() {
 		panic("commandBuffer cannot be uninitialized")
 	}
 
-	if layout.Handle() == 0 {
+	if !layout.Initialized() {
 		panic("layout cannot be uninitialized")
 	}
 
@@ -181,7 +181,7 @@ func (v *DeviceVulkanDriver) CmdBindDescriptorSets(commandBuffer core.CommandBuf
 }
 
 func (v *DeviceVulkanDriver) CmdPipelineBarrier(commandBuffer core.CommandBuffer, srcStageMask, dstStageMask core1_0.PipelineStageFlags, dependencies core1_0.DependencyFlags, memoryBarriers []core1_0.MemoryBarrier, bufferMemoryBarriers []core1_0.BufferMemoryBarrier, imageMemoryBarriers []core1_0.ImageMemoryBarrier) error {
-	if commandBuffer.Handle() == 0 {
+	if !commandBuffer.Initialized() {
 		panic("commandBuffer cannot be uninitialized")
 	}
 
@@ -223,14 +223,14 @@ func (v *DeviceVulkanDriver) CmdPipelineBarrier(commandBuffer core.CommandBuffer
 }
 
 func (v *DeviceVulkanDriver) CmdCopyBufferToImage(commandBuffer core.CommandBuffer, buffer core.Buffer, image core.Image, layout core1_0.ImageLayout, regions ...core1_0.BufferImageCopy) error {
-	if commandBuffer.Handle() == 0 {
+	if !commandBuffer.Initialized() {
 		panic("commandBuffer cannot be uninitialized")
 	}
 
-	if buffer.Handle() == 0 {
+	if !buffer.Initialized() {
 		panic("buffer cannot be uninitialized")
 	}
-	if image.Handle() == 0 {
+	if !image.Initialized() {
 		panic("image cannot be uninitialized")
 	}
 	arena := cgoparam.GetAlloc()
@@ -252,15 +252,15 @@ func (v *DeviceVulkanDriver) CmdCopyBufferToImage(commandBuffer core.CommandBuff
 }
 
 func (v *DeviceVulkanDriver) CmdBlitImage(commandBuffer core.CommandBuffer, sourceImage core.Image, sourceImageLayout core1_0.ImageLayout, destinationImage core.Image, destinationImageLayout core1_0.ImageLayout, regions []core1_0.ImageBlit, filter core1_0.Filter) error {
-	if commandBuffer.Handle() == 0 {
+	if !commandBuffer.Initialized() {
 		panic("commandBuffer cannot be uninitialized")
 	}
 
-	if sourceImage.Handle() == 0 {
+	if !sourceImage.Initialized() {
 		panic("sourceImage must not be uninitialized")
 	}
 
-	if destinationImage.Handle() == 0 {
+	if !destinationImage.Initialized() {
 		panic("destinationImage must not be uninitialized")
 	}
 
@@ -287,11 +287,11 @@ func (v *DeviceVulkanDriver) CmdBlitImage(commandBuffer core.CommandBuffer, sour
 }
 
 func (v *DeviceVulkanDriver) CmdPushConstants(commandBuffer core.CommandBuffer, layout core.PipelineLayout, stageFlags core1_0.ShaderStageFlags, offset int, valueBytes []byte) {
-	if commandBuffer.Handle() == 0 {
+	if !commandBuffer.Initialized() {
 		panic("commandBuffer cannot be uninitialized")
 	}
 
-	if layout.Handle() == 0 {
+	if !layout.Initialized() {
 		panic("layout cannot be uninitialized")
 	}
 
@@ -304,7 +304,7 @@ func (v *DeviceVulkanDriver) CmdPushConstants(commandBuffer core.CommandBuffer, 
 }
 
 func (v *DeviceVulkanDriver) CmdSetViewport(commandBuffer core.CommandBuffer, viewports ...core1_0.Viewport) {
-	if commandBuffer.Handle() == 0 {
+	if !commandBuffer.Initialized() {
 		panic("commandBuffer cannot be uninitialized")
 	}
 
@@ -333,7 +333,7 @@ func (v *DeviceVulkanDriver) CmdSetViewport(commandBuffer core.CommandBuffer, vi
 }
 
 func (v *DeviceVulkanDriver) CmdSetScissor(commandBuffer core.CommandBuffer, scissors ...core1_0.Rect2D) {
-	if commandBuffer.Handle() == 0 {
+	if !commandBuffer.Initialized() {
 		panic("commandBuffer cannot be uninitialized")
 	}
 
@@ -360,7 +360,7 @@ func (v *DeviceVulkanDriver) CmdSetScissor(commandBuffer core.CommandBuffer, sci
 }
 
 func (v *DeviceVulkanDriver) CmdNextSubpass(commandBuffer core.CommandBuffer, contents core1_0.SubpassContents) {
-	if commandBuffer.Handle() == 0 {
+	if !commandBuffer.Initialized() {
 		panic("commandBuffer cannot be uninitialized")
 	}
 
@@ -368,7 +368,7 @@ func (v *DeviceVulkanDriver) CmdNextSubpass(commandBuffer core.CommandBuffer, co
 }
 
 func (v *DeviceVulkanDriver) CmdWaitEvents(commandBuffer core.CommandBuffer, events []core.Event, srcStageMask core1_0.PipelineStageFlags, dstStageMask core1_0.PipelineStageFlags, memoryBarriers []core1_0.MemoryBarrier, bufferMemoryBarriers []core1_0.BufferMemoryBarrier, imageMemoryBarriers []core1_0.ImageMemoryBarrier) error {
-	if commandBuffer.Handle() == 0 {
+	if !commandBuffer.Initialized() {
 		panic("commandBuffer cannot be uninitialized")
 	}
 
@@ -424,11 +424,11 @@ func (v *DeviceVulkanDriver) CmdWaitEvents(commandBuffer core.CommandBuffer, eve
 }
 
 func (v *DeviceVulkanDriver) CmdSetEvent(commandBuffer core.CommandBuffer, event core.Event, stageMask core1_0.PipelineStageFlags) {
-	if commandBuffer.Handle() == 0 {
+	if !commandBuffer.Initialized() {
 		panic("commandBuffer cannot be uninitialized")
 	}
 
-	if event.Handle() == 0 {
+	if !event.Initialized() {
 		panic("event cannot be uninitialized")
 	}
 
@@ -436,11 +436,11 @@ func (v *DeviceVulkanDriver) CmdSetEvent(commandBuffer core.CommandBuffer, event
 }
 
 func (v *DeviceVulkanDriver) CmdClearColorImage(commandBuffer core.CommandBuffer, image core.Image, imageLayout core1_0.ImageLayout, color core1_0.ClearColorValue, ranges ...core1_0.ImageSubresourceRange) {
-	if commandBuffer.Handle() == 0 {
+	if !commandBuffer.Initialized() {
 		panic("commandBuffer cannot be uninitialized")
 	}
 
-	if image.Handle() == 0 {
+	if !image.Initialized() {
 		panic("image cannot be uninitialized")
 	}
 
@@ -473,11 +473,11 @@ func (v *DeviceVulkanDriver) CmdClearColorImage(commandBuffer core.CommandBuffer
 }
 
 func (v *DeviceVulkanDriver) CmdResetQueryPool(commandBuffer core.CommandBuffer, queryPool core.QueryPool, startQuery, queryCount int) {
-	if commandBuffer.Handle() == 0 {
+	if !commandBuffer.Initialized() {
 		panic("commandBuffer cannot be uninitialized")
 	}
 
-	if queryPool.Handle() == 0 {
+	if !queryPool.Initialized() {
 		panic("queryPool cannot be uninitialized")
 	}
 
@@ -485,11 +485,11 @@ func (v *DeviceVulkanDriver) CmdResetQueryPool(commandBuffer core.CommandBuffer,
 }
 
 func (v *DeviceVulkanDriver) CmdBeginQuery(commandBuffer core.CommandBuffer, queryPool core.QueryPool, query int, flags core1_0.QueryControlFlags) {
-	if commandBuffer.Handle() == 0 {
+	if !commandBuffer.Initialized() {
 		panic("commandBuffer cannot be uninitialized")
 	}
 
-	if queryPool.Handle() == 0 {
+	if !queryPool.Initialized() {
 		panic("queryPool cannot be uninitialized")
 	}
 
@@ -497,11 +497,11 @@ func (v *DeviceVulkanDriver) CmdBeginQuery(commandBuffer core.CommandBuffer, que
 }
 
 func (v *DeviceVulkanDriver) CmdEndQuery(commandBuffer core.CommandBuffer, queryPool core.QueryPool, query int) {
-	if commandBuffer.Handle() == 0 {
+	if !commandBuffer.Initialized() {
 		panic("commandBuffer cannot be uninitialized")
 	}
 
-	if queryPool.Handle() == 0 {
+	if !queryPool.Initialized() {
 		panic("queryPool cannot be uninitialized")
 	}
 
@@ -509,21 +509,21 @@ func (v *DeviceVulkanDriver) CmdEndQuery(commandBuffer core.CommandBuffer, query
 }
 
 func (v *DeviceVulkanDriver) CmdCopyQueryPoolResults(commandBuffer core.CommandBuffer, queryPool core.QueryPool, firstQuery, queryCount int, dstBuffer core.Buffer, dstOffset, stride int, flags core1_0.QueryResultFlags) {
-	if commandBuffer.Handle() == 0 {
+	if !commandBuffer.Initialized() {
 		panic("commandBuffer cannot be uninitialized")
 	}
 
-	if queryPool.Handle() == 0 {
+	if !queryPool.Initialized() {
 		panic("queryPool cannot be uninitialized")
 	}
-	if dstBuffer.Handle() == 0 {
+	if !dstBuffer.Initialized() {
 		panic("dstBuffer cannot be uninitialized")
 	}
 	v.LoaderObj.VkCmdCopyQueryPoolResults(commandBuffer.Handle(), queryPool.Handle(), loader.Uint32(firstQuery), loader.Uint32(queryCount), dstBuffer.Handle(), loader.VkDeviceSize(dstOffset), loader.VkDeviceSize(stride), loader.VkQueryResultFlags(flags))
 }
 
 func (v *DeviceVulkanDriver) CmdExecuteCommands(commandBuffer core.CommandBuffer, commandBuffers ...core.CommandBuffer) {
-	if commandBuffer.Handle() == 0 {
+	if !commandBuffer.Initialized() {
 		panic("commandBuffer cannot be uninitialized")
 	}
 
@@ -545,7 +545,7 @@ func (v *DeviceVulkanDriver) CmdExecuteCommands(commandBuffer core.CommandBuffer
 }
 
 func (v *DeviceVulkanDriver) CmdClearAttachments(commandBuffer core.CommandBuffer, attachments []core1_0.ClearAttachment, rects []core1_0.ClearRect) error {
-	if commandBuffer.Handle() == 0 {
+	if !commandBuffer.Initialized() {
 		panic("commandBuffer cannot be uninitialized")
 	}
 
@@ -569,11 +569,11 @@ func (v *DeviceVulkanDriver) CmdClearAttachments(commandBuffer core.CommandBuffe
 }
 
 func (v *DeviceVulkanDriver) CmdClearDepthStencilImage(commandBuffer core.CommandBuffer, image core.Image, imageLayout core1_0.ImageLayout, depthStencil *core1_0.ClearValueDepthStencil, ranges ...core1_0.ImageSubresourceRange) {
-	if commandBuffer.Handle() == 0 {
+	if !commandBuffer.Initialized() {
 		panic("commandBuffer cannot be uninitialized")
 	}
 
-	if image.Handle() == 0 {
+	if !image.Initialized() {
 		panic("image cannot be nil")
 	}
 	arena := cgoparam.GetAlloc()
@@ -599,14 +599,14 @@ func (v *DeviceVulkanDriver) CmdClearDepthStencilImage(commandBuffer core.Comman
 }
 
 func (v *DeviceVulkanDriver) CmdCopyImageToBuffer(commandBuffer core.CommandBuffer, srcImage core.Image, srcImageLayout core1_0.ImageLayout, dstBuffer core.Buffer, regions ...core1_0.BufferImageCopy) error {
-	if commandBuffer.Handle() == 0 {
+	if !commandBuffer.Initialized() {
 		panic("commandBuffer cannot be uninitialized")
 	}
 
-	if srcImage.Handle() == 0 {
+	if !srcImage.Initialized() {
 		panic("srcImage cannot be uninitailized")
 	}
-	if dstBuffer.Handle() == 0 {
+	if !dstBuffer.Initialized() {
 		panic("dstBuffer cannot be uninitialized")
 	}
 	arena := cgoparam.GetAlloc()
@@ -623,7 +623,7 @@ func (v *DeviceVulkanDriver) CmdCopyImageToBuffer(commandBuffer core.CommandBuff
 }
 
 func (v *DeviceVulkanDriver) CmdDispatch(commandBuffer core.CommandBuffer, groupCountX, groupCountY, groupCountZ int) {
-	if commandBuffer.Handle() == 0 {
+	if !commandBuffer.Initialized() {
 		panic("commandBuffer cannot be uninitialized")
 	}
 
@@ -631,69 +631,69 @@ func (v *DeviceVulkanDriver) CmdDispatch(commandBuffer core.CommandBuffer, group
 }
 
 func (v *DeviceVulkanDriver) CmdDispatchIndirect(commandBuffer core.CommandBuffer, buffer core.Buffer, offset int) {
-	if commandBuffer.Handle() == 0 {
+	if !commandBuffer.Initialized() {
 		panic("commandBuffer cannot be uninitialized")
 	}
 
-	if buffer.Handle() == 0 {
+	if !buffer.Initialized() {
 		panic("buffer cannot be uninitialized")
 	}
 	v.LoaderObj.VkCmdDispatchIndirect(commandBuffer.Handle(), buffer.Handle(), loader.VkDeviceSize(offset))
 }
 
 func (v *DeviceVulkanDriver) CmdDrawIndexedIndirect(commandBuffer core.CommandBuffer, buffer core.Buffer, offset int, drawCount, stride int) {
-	if commandBuffer.Handle() == 0 {
+	if !commandBuffer.Initialized() {
 		panic("commandBuffer cannot be uninitialized")
 	}
 
-	if buffer.Handle() == 0 {
+	if !buffer.Initialized() {
 		panic("buffer cannot be uninitialized")
 	}
 	v.LoaderObj.VkCmdDrawIndexedIndirect(commandBuffer.Handle(), buffer.Handle(), loader.VkDeviceSize(offset), loader.Uint32(drawCount), loader.Uint32(stride))
 }
 
 func (v *DeviceVulkanDriver) CmdDrawIndirect(commandBuffer core.CommandBuffer, buffer core.Buffer, offset int, drawCount, stride int) {
-	if commandBuffer.Handle() == 0 {
+	if !commandBuffer.Initialized() {
 		panic("commandBuffer cannot be uninitialized")
 	}
 
-	if buffer.Handle() == 0 {
+	if !buffer.Initialized() {
 		panic("buffer cannot be uninitialized")
 	}
 	v.LoaderObj.VkCmdDrawIndirect(commandBuffer.Handle(), buffer.Handle(), loader.VkDeviceSize(offset), loader.Uint32(drawCount), loader.Uint32(stride))
 }
 
 func (v *DeviceVulkanDriver) CmdFillBuffer(commandBuffer core.CommandBuffer, dstBuffer core.Buffer, dstOffset int, size int, data uint32) {
-	if commandBuffer.Handle() == 0 {
+	if !commandBuffer.Initialized() {
 		panic("commandBuffer cannot be uninitialized")
 	}
 
-	if dstBuffer.Handle() == 0 {
+	if !dstBuffer.Initialized() {
 		panic("dstBuffer cannot be uninitialized")
 	}
 	v.LoaderObj.VkCmdFillBuffer(commandBuffer.Handle(), dstBuffer.Handle(), loader.VkDeviceSize(dstOffset), loader.VkDeviceSize(size), loader.Uint32(data))
 }
 
 func (v *DeviceVulkanDriver) CmdResetEvent(commandBuffer core.CommandBuffer, event core.Event, stageMask core1_0.PipelineStageFlags) {
-	if commandBuffer.Handle() == 0 {
+	if !commandBuffer.Initialized() {
 		panic("commandBuffer cannot be uninitialized")
 	}
 
-	if event.Handle() == 0 {
+	if !event.Initialized() {
 		panic("event cannot be uninitialized")
 	}
 	v.LoaderObj.VkCmdResetEvent(commandBuffer.Handle(), event.Handle(), loader.VkPipelineStageFlags(stageMask))
 }
 
 func (v *DeviceVulkanDriver) CmdResolveImage(commandBuffer core.CommandBuffer, srcImage core.Image, srcImageLayout core1_0.ImageLayout, dstImage core.Image, dstImageLayout core1_0.ImageLayout, regions ...core1_0.ImageResolve) error {
-	if commandBuffer.Handle() == 0 {
+	if !commandBuffer.Initialized() {
 		panic("commandBuffer cannot be uninitialized")
 	}
 
-	if srcImage.Handle() == 0 {
+	if !srcImage.Initialized() {
 		panic("srcImage cannot be uninitialized")
 	}
-	if dstImage.Handle() == 0 {
+	if !dstImage.Initialized() {
 		panic("dstImage cannot be uninitialized")
 	}
 	arena := cgoparam.GetAlloc()
@@ -710,7 +710,7 @@ func (v *DeviceVulkanDriver) CmdResolveImage(commandBuffer core.CommandBuffer, s
 }
 
 func (v *DeviceVulkanDriver) CmdSetBlendConstants(commandBuffer core.CommandBuffer, blendConstants [4]float32) {
-	if commandBuffer.Handle() == 0 {
+	if !commandBuffer.Initialized() {
 		panic("commandBuffer cannot be uninitialized")
 	}
 
@@ -728,7 +728,7 @@ func (v *DeviceVulkanDriver) CmdSetBlendConstants(commandBuffer core.CommandBuff
 }
 
 func (v *DeviceVulkanDriver) CmdSetDepthBias(commandBuffer core.CommandBuffer, depthBiasConstantFactor, depthBiasClamp, depthBiasSlopeFactor float32) {
-	if commandBuffer.Handle() == 0 {
+	if !commandBuffer.Initialized() {
 		panic("commandBuffer cannot be uninitialized")
 	}
 
@@ -736,7 +736,7 @@ func (v *DeviceVulkanDriver) CmdSetDepthBias(commandBuffer core.CommandBuffer, d
 }
 
 func (v *DeviceVulkanDriver) CmdSetDepthBounds(commandBuffer core.CommandBuffer, min, max float32) {
-	if commandBuffer.Handle() == 0 {
+	if !commandBuffer.Initialized() {
 		panic("commandBuffer cannot be uninitialized")
 	}
 
@@ -744,7 +744,7 @@ func (v *DeviceVulkanDriver) CmdSetDepthBounds(commandBuffer core.CommandBuffer,
 }
 
 func (v *DeviceVulkanDriver) CmdSetLineWidth(commandBuffer core.CommandBuffer, lineWidth float32) {
-	if commandBuffer.Handle() == 0 {
+	if !commandBuffer.Initialized() {
 		panic("commandBuffer cannot be uninitialized")
 	}
 
@@ -752,7 +752,7 @@ func (v *DeviceVulkanDriver) CmdSetLineWidth(commandBuffer core.CommandBuffer, l
 }
 
 func (v *DeviceVulkanDriver) CmdSetStencilCompareMask(commandBuffer core.CommandBuffer, faceMask core1_0.StencilFaceFlags, compareMask uint32) {
-	if commandBuffer.Handle() == 0 {
+	if !commandBuffer.Initialized() {
 		panic("commandBuffer cannot be uninitialized")
 	}
 
@@ -760,7 +760,7 @@ func (v *DeviceVulkanDriver) CmdSetStencilCompareMask(commandBuffer core.Command
 }
 
 func (v *DeviceVulkanDriver) CmdSetStencilReference(commandBuffer core.CommandBuffer, faceMask core1_0.StencilFaceFlags, reference uint32) {
-	if commandBuffer.Handle() == 0 {
+	if !commandBuffer.Initialized() {
 		panic("commandBuffer cannot be uninitialized")
 	}
 
@@ -768,7 +768,7 @@ func (v *DeviceVulkanDriver) CmdSetStencilReference(commandBuffer core.CommandBu
 }
 
 func (v *DeviceVulkanDriver) CmdSetStencilWriteMask(commandBuffer core.CommandBuffer, faceMask core1_0.StencilFaceFlags, writeMask uint32) {
-	if commandBuffer.Handle() == 0 {
+	if !commandBuffer.Initialized() {
 		panic("commandBuffer cannot be uninitialized")
 	}
 
@@ -776,11 +776,11 @@ func (v *DeviceVulkanDriver) CmdSetStencilWriteMask(commandBuffer core.CommandBu
 }
 
 func (v *DeviceVulkanDriver) CmdUpdateBuffer(commandBuffer core.CommandBuffer, dstBuffer core.Buffer, dstOffset int, dataSize int, data []byte) {
-	if commandBuffer.Handle() == 0 {
+	if !commandBuffer.Initialized() {
 		panic("commandBuffer cannot be uninitialized")
 	}
 
-	if dstBuffer.Handle() == 0 {
+	if !dstBuffer.Initialized() {
 		panic("dstBuffer cannot be uninitialized")
 	}
 	arena := cgoparam.GetAlloc()
@@ -795,11 +795,11 @@ func (v *DeviceVulkanDriver) CmdUpdateBuffer(commandBuffer core.CommandBuffer, d
 }
 
 func (v *DeviceVulkanDriver) CmdWriteTimestamp(commandBuffer core.CommandBuffer, pipelineStage core1_0.PipelineStageFlags, queryPool core.QueryPool, query int) {
-	if commandBuffer.Handle() == 0 {
+	if !commandBuffer.Initialized() {
 		panic("commandBuffer cannot be uninitialized")
 	}
 
-	if queryPool.Handle() == 0 {
+	if !queryPool.Initialized() {
 		panic("queryPool cannot be uninitialized")
 	}
 
@@ -807,7 +807,7 @@ func (v *DeviceVulkanDriver) CmdWriteTimestamp(commandBuffer core.CommandBuffer,
 }
 
 func (v *DeviceVulkanDriver) ResetCommandBuffer(commandBuffer core.CommandBuffer, flags core1_0.CommandBufferResetFlags) (common.VkResult, error) {
-	if commandBuffer.Handle() == 0 {
+	if !commandBuffer.Initialized() {
 		return core1_0.VKErrorUnknown, errors.New("commandBuffer cannot be uninitialized")
 	}
 

@@ -310,7 +310,7 @@ type SamplerYcbcrConversionInfo struct {
 }
 
 func (o SamplerYcbcrConversionInfo) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
-	if o.Conversion.Handle() == 0 {
+	if !o.Conversion.Initialized() {
 		return nil, errors.New("core1_1.SamplerYcbcrConversionInfo.Conversion cannot be left unset")
 	}
 	if preallocatedPointer == nil {

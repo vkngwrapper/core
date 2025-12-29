@@ -10,7 +10,7 @@ import (
 )
 
 func (v *DeviceVulkanDriver) DestroyFence(fence core.Fence, callbacks *loader.AllocationCallbacks) {
-	if fence.Handle() == 0 {
+	if !fence.Initialized() {
 		panic("fence was uninitialized")
 	}
 
@@ -18,7 +18,7 @@ func (v *DeviceVulkanDriver) DestroyFence(fence core.Fence, callbacks *loader.Al
 }
 
 func (v *DeviceVulkanDriver) GetFenceStatus(fence core.Fence) (common.VkResult, error) {
-	if fence.Handle() == 0 {
+	if !fence.Initialized() {
 		return core1_0.VKErrorUnknown, fmt.Errorf("fence was uninitialized")
 	}
 	return v.LoaderObj.VkGetFenceStatus(fence.DeviceHandle(), fence.Handle())

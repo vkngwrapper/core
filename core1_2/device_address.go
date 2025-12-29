@@ -73,7 +73,7 @@ type BufferDeviceAddressInfo struct {
 }
 
 func (o BufferDeviceAddressInfo) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
-	if o.Buffer.Handle() == 0 {
+	if !o.Buffer.Initialized() {
 		return nil, errors.New("core1_2.DeviceMemoryAddressOptions.Buffer cannot be left unset")
 	}
 	if preallocatedPointer == nil {
@@ -106,7 +106,7 @@ type DeviceMemoryOpaqueCaptureAddressInfo struct {
 }
 
 func (o DeviceMemoryOpaqueCaptureAddressInfo) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
-	if o.Memory.Handle() == 0 {
+	if !o.Memory.Initialized() {
 		return nil, errors.New("core1_2.DeviceMemoryOpaqueCaptureAddressInfo.Memory cannot be left unset")
 	}
 	if preallocatedPointer == nil {

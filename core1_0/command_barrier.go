@@ -65,7 +65,7 @@ type BufferMemoryBarrier struct {
 }
 
 func (o BufferMemoryBarrier) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
-	if o.Buffer.Handle() == 0 {
+	if !o.Buffer.Initialized() {
 		return nil, errors.New("core1_0.BufferMemoryBarrier.Buffer cannot be left unset")
 	}
 	if preallocatedPointer == unsafe.Pointer(nil) {
@@ -113,7 +113,7 @@ type ImageMemoryBarrier struct {
 }
 
 func (o ImageMemoryBarrier) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
-	if o.Image.Handle() == 0 {
+	if !o.Image.Initialized() {
 		return nil, errors.New("core1_0.ImageMemoryBarrier.Image cannot be left unset")
 	}
 	if preallocatedPointer == unsafe.Pointer(nil) {

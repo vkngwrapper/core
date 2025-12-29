@@ -7,7 +7,7 @@ import (
 )
 
 func (v *DeviceVulkanDriver) TrimCommandPool(commandPool core.CommandPool, flags core1_1.CommandPoolTrimFlags) {
-	if commandPool.Handle() == 0 {
+	if !commandPool.Initialized() {
 		panic("commandPool was uninitialized")
 	}
 

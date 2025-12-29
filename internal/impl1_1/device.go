@@ -23,7 +23,7 @@ func (v *DeviceVulkanDriver) BindBufferMemory2(o ...core1_1.BindBufferMemoryInfo
 	}
 
 	for i, info := range o {
-		if info.Buffer.Handle() == 0 {
+		if !info.Buffer.Initialized() {
 			return core1_0.VKErrorUnknown, fmt.Errorf("buffers in the list of info objects cannot be uninitialized, but buffer %d is uninitialized", i)
 		}
 		if info.Buffer.DeviceHandle() != o[0].Buffer.DeviceHandle() {
@@ -51,7 +51,7 @@ func (v *DeviceVulkanDriver) BindImageMemory2(o ...core1_1.BindImageMemoryInfo) 
 	}
 
 	for i, info := range o {
-		if info.Image.Handle() == 0 {
+		if !info.Image.Initialized() {
 			return core1_0.VKErrorUnknown, fmt.Errorf("images in the list of info objects cannot be uninitialized but Image %d is uninitialized", i)
 		}
 		if info.Image.DeviceHandle() != o[0].Image.DeviceHandle() {
@@ -75,7 +75,7 @@ func (v *DeviceVulkanDriver) BindImageMemory2(o ...core1_1.BindImageMemoryInfo) 
 }
 
 func (v *DeviceVulkanDriver) GetBufferMemoryRequirements2(o core1_1.BufferMemoryRequirementsInfo2, out *core1_1.MemoryRequirements2) error {
-	if o.Buffer.Handle() == 0 {
+	if !o.Buffer.Initialized() {
 		return fmt.Errorf("o.Buffer cannot be uninitialized")
 	}
 
@@ -101,7 +101,7 @@ func (v *DeviceVulkanDriver) GetBufferMemoryRequirements2(o core1_1.BufferMemory
 }
 
 func (v *DeviceVulkanDriver) GetImageMemoryRequirements2(o core1_1.ImageMemoryRequirementsInfo2, out *core1_1.MemoryRequirements2) error {
-	if o.Image.Handle() == 0 {
+	if !o.Image.Initialized() {
 		return fmt.Errorf("o.Image cannot be uninitialized")
 	}
 
@@ -127,7 +127,7 @@ func (v *DeviceVulkanDriver) GetImageMemoryRequirements2(o core1_1.ImageMemoryRe
 }
 
 func (v *DeviceVulkanDriver) GetImageSparseMemoryRequirements2(o core1_1.ImageSparseMemoryRequirementsInfo2, outDataFactory func() *core1_1.SparseImageMemoryRequirements2) ([]*core1_1.SparseImageMemoryRequirements2, error) {
-	if o.Image.Handle() == 0 {
+	if !o.Image.Initialized() {
 		return nil, fmt.Errorf("o.Image cannot be uninitialized")
 	}
 

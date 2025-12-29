@@ -15,7 +15,7 @@ import (
 )
 
 func (v *DeviceVulkanDriver) GetImageSparseMemoryRequirements(image core.Image) []core1_0.SparseImageMemoryRequirements {
-	if image.Handle() == 0 {
+	if !image.Initialized() {
 		panic("image was uninitialized")
 	}
 	arena := cgoparam.GetAlloc()

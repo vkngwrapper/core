@@ -28,9 +28,9 @@ type MemoryDedicatedAllocateInfo struct {
 }
 
 func (o MemoryDedicatedAllocateInfo) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
-	if o.Image.Handle() != 0 && o.Buffer.Handle() != 0 {
+	if o.Image.Initialized() && o.Buffer.Initialized() {
 		return nil, errors.New("both Image and Buffer fields are set in MemoryDedicatedAllocateInfo- only one must be set")
-	} else if o.Image.Handle() == 0 && o.Buffer.Handle() == 0 {
+	} else if !o.Image.Initialized() && !o.Buffer.Initialized() {
 		return nil, errors.New("neither Image nor Buffer fields are set in MemoryDedicatedAllocateInfo- one must be set")
 	}
 
@@ -44,9 +44,9 @@ func (o MemoryDedicatedAllocateInfo) PopulateCPointer(allocator *cgoparam.Alloca
 	createInfo.image = nil
 	createInfo.buffer = nil
 
-	if o.Image.Handle() != 0 {
+	if o.Image.Initialized() {
 		createInfo.image = C.VkImage(unsafe.Pointer(o.Image.Handle()))
-	} else if o.Buffer.Handle() != 0 {
+	} else if o.Buffer.Initialized() {
 		createInfo.buffer = C.VkBuffer(unsafe.Pointer(o.Buffer.Handle()))
 	}
 

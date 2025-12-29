@@ -17,14 +17,14 @@ import (
 )
 
 func (v *DeviceVulkanDriver) DestroyPipelineCache(pipelineCache core.PipelineCache, callbacks *loader.AllocationCallbacks) {
-	if pipelineCache.Handle() == 0 {
+	if !pipelineCache.Initialized() {
 		panic("pipelineCache was uninitialized")
 	}
 	v.LoaderObj.VkDestroyPipelineCache(pipelineCache.DeviceHandle(), pipelineCache.Handle(), callbacks.Handle())
 }
 
 func (v *DeviceVulkanDriver) GetPipelineCacheData(pipelineCache core.PipelineCache) ([]byte, common.VkResult, error) {
-	if pipelineCache.Handle() == 0 {
+	if !pipelineCache.Initialized() {
 		return nil, core1_0.VKErrorUnknown, fmt.Errorf("pipelineCache was uninitialized")
 	}
 
@@ -54,7 +54,7 @@ func (v *DeviceVulkanDriver) GetPipelineCacheData(pipelineCache core.PipelineCac
 }
 
 func (v *DeviceVulkanDriver) MergePipelineCaches(dstCaches core.PipelineCache, srcCaches ...core.PipelineCache) (common.VkResult, error) {
-	if dstCaches.Handle() == 0 {
+	if !dstCaches.Initialized() {
 		panic("dstCaches was uninitialized")
 	}
 

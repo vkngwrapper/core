@@ -12,7 +12,7 @@ import (
 )
 
 func (v *DeviceVulkanDriver) CmdBeginRenderPass2(commandBuffer core.CommandBuffer, renderPassBegin core1_0.RenderPassBeginInfo, subpassBegin core1_2.SubpassBeginInfo) error {
-	if commandBuffer.Handle() == 0 {
+	if !commandBuffer.Initialized() {
 		return fmt.Errorf("commandBuffer cannot be uninitialized")
 	}
 	arena := cgoparam.GetAlloc()
@@ -38,7 +38,7 @@ func (v *DeviceVulkanDriver) CmdBeginRenderPass2(commandBuffer core.CommandBuffe
 }
 
 func (v *DeviceVulkanDriver) CmdEndRenderPass2(commandBuffer core.CommandBuffer, subpassEnd core1_2.SubpassEndInfo) error {
-	if commandBuffer.Handle() == 0 {
+	if !commandBuffer.Initialized() {
 		return fmt.Errorf("commandBuffer cannot be uninitialized")
 	}
 
@@ -59,7 +59,7 @@ func (v *DeviceVulkanDriver) CmdEndRenderPass2(commandBuffer core.CommandBuffer,
 }
 
 func (v *DeviceVulkanDriver) CmdNextSubpass2(commandBuffer core.CommandBuffer, subpassBegin core1_2.SubpassBeginInfo, subpassEnd core1_2.SubpassEndInfo) error {
-	if commandBuffer.Handle() == 0 {
+	if !commandBuffer.Initialized() {
 		return fmt.Errorf("commandBuffer cannot be uninitialized")
 	}
 
@@ -86,13 +86,13 @@ func (v *DeviceVulkanDriver) CmdNextSubpass2(commandBuffer core.CommandBuffer, s
 }
 
 func (v *DeviceVulkanDriver) CmdDrawIndexedIndirectCount(commandBuffer core.CommandBuffer, buffer core.Buffer, offset uint64, countBuffer core.Buffer, countBufferOffset uint64, maxDrawCount, stride int) {
-	if commandBuffer.Handle() == 0 {
+	if !commandBuffer.Initialized() {
 		panic("commandBuffer cannot be uninitialized")
 	}
-	if buffer.Handle() == 0 {
+	if !buffer.Initialized() {
 		panic("buffer cannot be nil")
 	}
-	if countBuffer.Handle() == 0 {
+	if !countBuffer.Initialized() {
 		panic("countBuffer cannot be nil")
 	}
 	v.LoaderObj.VkCmdDrawIndexedIndirectCount(
@@ -107,13 +107,13 @@ func (v *DeviceVulkanDriver) CmdDrawIndexedIndirectCount(commandBuffer core.Comm
 }
 
 func (v *DeviceVulkanDriver) CmdDrawIndirectCount(commandBuffer core.CommandBuffer, buffer core.Buffer, offset uint64, countBuffer core.Buffer, countBufferOffset uint64, maxDrawCount, stride int) {
-	if commandBuffer.Handle() == 0 {
+	if !commandBuffer.Initialized() {
 		panic("commandBuffer cannot be uninitialized")
 	}
-	if buffer.Handle() == 0 {
+	if !buffer.Initialized() {
 		panic("buffer cannot be uninitialized")
 	}
-	if countBuffer.Handle() == 0 {
+	if !countBuffer.Initialized() {
 		panic("countBuffer cannot be uninitialized")
 	}
 	v.LoaderObj.VkCmdDrawIndirectCount(

@@ -9,14 +9,14 @@ import (
 )
 
 func (v *DeviceVulkanDriver) DestroyCommandPool(commandPool core.CommandPool, callbacks *loader.AllocationCallbacks) {
-	if commandPool.Handle() == 0 {
+	if !commandPool.Initialized() {
 		panic("commandPool cannot be uninitialized")
 	}
 	v.LoaderObj.VkDestroyCommandPool(commandPool.DeviceHandle(), commandPool.Handle(), callbacks.Handle())
 }
 
 func (v *DeviceVulkanDriver) ResetCommandPool(commandPool core.CommandPool, flags core1_0.CommandPoolResetFlags) (common.VkResult, error) {
-	if commandPool.Handle() == 0 {
+	if !commandPool.Initialized() {
 		return core1_0.VKErrorUnknown, errors.New("commandPool cannot be uninitialized")
 	}
 

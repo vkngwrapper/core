@@ -10,7 +10,7 @@ import (
 )
 
 func (v *DeviceVulkanDriver) GetSemaphoreCounterValue(semaphore core.Semaphore) (uint64, common.VkResult, error) {
-	if semaphore.Handle() == 0 {
+	if !semaphore.Initialized() {
 		return 0, core1_0.VKErrorUnknown, fmt.Errorf("semaphore cannot be uninitialized")
 	}
 	var value loader.Uint64

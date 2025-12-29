@@ -17,7 +17,7 @@ import (
 )
 
 func (v *DeviceVulkanDriver) DestroyImage(image core.Image, callbacks *loader.AllocationCallbacks) {
-	if image.Handle() == 0 {
+	if !image.Initialized() {
 		panic("image was uninitialized")
 	}
 
@@ -25,7 +25,7 @@ func (v *DeviceVulkanDriver) DestroyImage(image core.Image, callbacks *loader.Al
 }
 
 func (v *DeviceVulkanDriver) GetImageMemoryRequirements(image core.Image) *core1_0.MemoryRequirements {
-	if image.Handle() == 0 {
+	if !image.Initialized() {
 		panic("image was uninitialized")
 	}
 
@@ -46,10 +46,10 @@ func (v *DeviceVulkanDriver) GetImageMemoryRequirements(image core.Image) *core1
 }
 
 func (v *DeviceVulkanDriver) BindImageMemory(image core.Image, memory core.DeviceMemory, offset int) (common.VkResult, error) {
-	if image.Handle() == 0 {
+	if !image.Initialized() {
 		return core1_0.VKErrorUnknown, errors.New("received uninitialized Image")
 	}
-	if memory.Handle() == 0 {
+	if !memory.Initialized() {
 		return core1_0.VKErrorUnknown, errors.New("received uninitialized DeviceMemory")
 	}
 	if offset < 0 {

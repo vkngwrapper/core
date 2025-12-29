@@ -17,7 +17,7 @@ import (
 )
 
 func (v *DeviceVulkanDriver) QueueSubmit(queue core.Queue, fence *core.Fence, o ...core1_0.SubmitInfo) (common.VkResult, error) {
-	if queue.Handle() == 0 {
+	if !queue.Initialized() {
 		return core1_0.VKErrorUnknown, fmt.Errorf("queue is uninitialized")
 	}
 	arena := cgoparam.GetAlloc()

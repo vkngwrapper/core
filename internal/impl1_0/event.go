@@ -10,7 +10,7 @@ import (
 )
 
 func (v *DeviceVulkanDriver) DestroyEvent(event core.Event, callbacks *loader.AllocationCallbacks) {
-	if event.Handle() == 0 {
+	if !event.Initialized() {
 		panic("event was uninitialized")
 	}
 
@@ -18,7 +18,7 @@ func (v *DeviceVulkanDriver) DestroyEvent(event core.Event, callbacks *loader.Al
 }
 
 func (v *DeviceVulkanDriver) SetEvent(event core.Event) (common.VkResult, error) {
-	if event.Handle() == 0 {
+	if !event.Initialized() {
 		return core1_0.VKErrorUnknown, fmt.Errorf("event was uninitialized")
 	}
 
@@ -26,7 +26,7 @@ func (v *DeviceVulkanDriver) SetEvent(event core.Event) (common.VkResult, error)
 }
 
 func (v *DeviceVulkanDriver) ResetEvent(event core.Event) (common.VkResult, error) {
-	if event.Handle() == 0 {
+	if !event.Initialized() {
 		return core1_0.VKErrorUnknown, fmt.Errorf("event was uninitialized")
 	}
 
@@ -34,7 +34,7 @@ func (v *DeviceVulkanDriver) ResetEvent(event core.Event) (common.VkResult, erro
 }
 
 func (v *DeviceVulkanDriver) GetEventStatus(event core.Event) (common.VkResult, error) {
-	if event.Handle() == 0 {
+	if !event.Initialized() {
 		return core1_0.VKErrorUnknown, fmt.Errorf("event was uninitialized")
 	}
 

@@ -30,10 +30,10 @@ type BindBufferMemoryInfo struct {
 }
 
 func (o BindBufferMemoryInfo) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
-	if o.Buffer.Handle() == 0 {
+	if !o.Buffer.Initialized() {
 		return nil, errors.Errorf("core1_1.BindBufferMemoryInfo.Buffer cannot be left unset")
 	}
-	if o.Memory.Handle() == 0 {
+	if !o.Memory.Initialized() {
 		return nil, errors.Errorf("core1_1.BindBufferMemoryInfo.Memory cannot be left unset")
 	}
 	if preallocatedPointer == nil {
@@ -65,10 +65,10 @@ type BindImageMemoryInfo struct {
 }
 
 func (o BindImageMemoryInfo) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
-	if o.Image.Handle() == 0 {
+	if !o.Image.Initialized() {
 		return nil, errors.Errorf("core1_1.BindImageMemoryInfo.Image cannot be left unset")
 	}
-	if o.Memory.Handle() == 0 {
+	if !o.Memory.Initialized() {
 		return nil, errors.Errorf("core1_1.BindImageMemoryInfo.Memory cannot be left unset")
 	}
 	if preallocatedPointer == nil {

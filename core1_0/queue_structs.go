@@ -56,7 +56,7 @@ func (b SparseMemoryBind) PopulateCPointer(allocator *cgoparam.Allocator, preall
 	bind.memoryOffset = C.VkDeviceSize(b.MemoryOffset)
 	bind.flags = C.VkSparseMemoryBindFlags(b.Flags)
 
-	if b.Memory.Handle() != 0 {
+	if b.Memory.Initialized() {
 		bind.memory = C.VkDeviceMemory(unsafe.Pointer(b.Memory.Handle()))
 	}
 

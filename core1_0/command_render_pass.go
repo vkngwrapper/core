@@ -63,11 +63,11 @@ func (o RenderPassBeginInfo) PopulateCPointer(allocator *cgoparam.Allocator, pre
 	createInfo.renderPass = nil
 	createInfo.framebuffer = nil
 
-	if o.RenderPass.Handle() != 0 {
+	if o.RenderPass.Initialized() {
 		createInfo.renderPass = (C.VkRenderPass)(unsafe.Pointer(o.RenderPass.Handle()))
 	}
 
-	if o.Framebuffer.Handle() != 0 {
+	if o.Framebuffer.Initialized() {
 		createInfo.framebuffer = (C.VkFramebuffer)(unsafe.Pointer(o.Framebuffer.Handle()))
 	}
 

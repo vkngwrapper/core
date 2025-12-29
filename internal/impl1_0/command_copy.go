@@ -17,13 +17,13 @@ import (
 )
 
 func (v *DeviceVulkanDriver) CmdCopyBuffer(commandBuffer core.CommandBuffer, srcBuffer core.Buffer, dstBuffer core.Buffer, copyRegions ...core1_0.BufferCopy) error {
-	if commandBuffer.Handle() == 0 {
+	if !commandBuffer.Initialized() {
 		return errors.New("commandBuffer cannot be uninitialized")
 	}
-	if srcBuffer.Handle() == 0 {
+	if !srcBuffer.Initialized() {
 		return errors.New("srcBuffer cannot be uninitialized")
 	}
-	if dstBuffer.Handle() == 0 {
+	if !dstBuffer.Initialized() {
 		return errors.New("dstBuffer cannot be uninitialized")
 	}
 
@@ -40,13 +40,13 @@ func (v *DeviceVulkanDriver) CmdCopyBuffer(commandBuffer core.CommandBuffer, src
 }
 
 func (v *DeviceVulkanDriver) CmdCopyImage(commandBuffer core.CommandBuffer, srcImage core.Image, srcImageLayout core1_0.ImageLayout, dstImage core.Image, dstImageLayout core1_0.ImageLayout, regions ...core1_0.ImageCopy) error {
-	if commandBuffer.Handle() == 0 {
+	if !commandBuffer.Initialized() {
 		return errors.New("commandBuffer cannot be uninitialized")
 	}
-	if srcImage.Handle() == 0 {
+	if !srcImage.Initialized() {
 		return errors.New("srcImage cannot be uninitialized")
 	}
-	if dstImage.Handle() == 0 {
+	if !dstImage.Initialized() {
 		return errors.New("dstImage cannot be uninitialized")
 	}
 	allocator := cgoparam.GetAlloc()

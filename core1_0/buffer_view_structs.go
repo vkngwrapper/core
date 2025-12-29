@@ -50,7 +50,7 @@ type BufferViewCreateInfo struct {
 }
 
 func (o BufferViewCreateInfo) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
-	if o.Buffer.Handle() == 0 {
+	if !o.Buffer.Initialized() {
 		return nil, errors.New("core1_0.BufferViewCreateInfo.Buffer cannot be left unset")
 	}
 

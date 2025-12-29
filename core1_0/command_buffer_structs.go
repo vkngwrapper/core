@@ -78,7 +78,7 @@ func (o CommandBufferAllocateInfo) PopulateCPointer(allocator *cgoparam.Allocato
 	if o.CommandBufferCount == 0 {
 		return nil, errors.New("attempted to create 0 command buffers")
 	}
-	if o.CommandPool.Handle() == 0 {
+	if !o.CommandPool.Initialized() {
 		return nil, errors.New("core1_0.CommandBufferAllocateInfo.CommandPool may not be left unset")
 	}
 

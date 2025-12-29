@@ -108,15 +108,15 @@ func (o GraphicsPipelineCreateInfo) PopulateCPointer(allocator *cgoparam.Allocat
 	createInfo.basePipelineHandle = (C.VkPipeline)(nil)
 	createInfo.basePipelineIndex = C.int32_t(o.BasePipelineIndex)
 
-	if o.Layout.Handle() != 0 {
+	if o.Layout.Initialized() {
 		createInfo.layout = (C.VkPipelineLayout)(unsafe.Pointer(o.Layout.Handle()))
 	}
 
-	if o.RenderPass.Handle() != 0 {
+	if o.RenderPass.Initialized() {
 		createInfo.renderPass = (C.VkRenderPass)(unsafe.Pointer(o.RenderPass.Handle()))
 	}
 
-	if o.BasePipeline.Handle() != 0 {
+	if o.BasePipeline.Initialized() {
 		createInfo.basePipelineHandle = (C.VkPipeline)(unsafe.Pointer(o.BasePipeline.Handle()))
 	}
 
@@ -233,7 +233,7 @@ type ComputePipelineCreateInfo struct {
 }
 
 func (o ComputePipelineCreateInfo) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
-	if o.Layout.Handle() == 0 {
+	if !o.Layout.Initialized() {
 		return nil, errors.New("core1_0.ComputePipelineCreateInfo.Layout cannot be left unset")
 	}
 	if preallocatedPointer == unsafe.Pointer(nil) {
@@ -251,7 +251,7 @@ func (o ComputePipelineCreateInfo) PopulateCPointer(allocator *cgoparam.Allocato
 		return nil, err
 	}
 
-	if o.BasePipeline.Handle() != 0 {
+	if o.BasePipeline.Initialized() {
 		createInfo.basePipelineHandle = C.VkPipeline(unsafe.Pointer(o.BasePipeline.Handle()))
 	}
 

@@ -66,7 +66,7 @@ type MappedMemoryRange struct {
 }
 
 func (r MappedMemoryRange) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
-	if r.Memory.Handle() == 0 {
+	if !r.Memory.Initialized() {
 		return nil, errors.New("core1_0.MappedMemoryRange.Memory cannot be left unset")
 	}
 	if preallocatedPointer == unsafe.Pointer(nil) {

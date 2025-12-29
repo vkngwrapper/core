@@ -42,7 +42,7 @@ func (v *DeviceVulkanDriver) CreateRenderPass2(allocator *loader.AllocationCallb
 }
 
 func (v *DeviceVulkanDriver) GetBufferDeviceAddress(o core1_2.BufferDeviceAddressInfo) (uint64, error) {
-	if o.Buffer.Handle() == 0 {
+	if !o.Buffer.Initialized() {
 		return 0, fmt.Errorf("o.Buffer cannot be uninitialized")
 	}
 
@@ -62,7 +62,7 @@ func (v *DeviceVulkanDriver) GetBufferDeviceAddress(o core1_2.BufferDeviceAddres
 }
 
 func (v *DeviceVulkanDriver) GetBufferOpaqueCaptureAddress(o core1_2.BufferDeviceAddressInfo) (uint64, error) {
-	if o.Buffer.Handle() == 0 {
+	if !o.Buffer.Initialized() {
 		return 0, fmt.Errorf("o.Buffer cannot be uninitialized")
 	}
 
@@ -82,7 +82,7 @@ func (v *DeviceVulkanDriver) GetBufferOpaqueCaptureAddress(o core1_2.BufferDevic
 }
 
 func (v *DeviceVulkanDriver) GetDeviceMemoryOpaqueCaptureAddress(o core1_2.DeviceMemoryOpaqueCaptureAddressInfo) (uint64, error) {
-	if o.Memory.Handle() == 0 {
+	if !o.Memory.Initialized() {
 		return 0, fmt.Errorf("o.Memory cannot be uninitialized")
 	}
 
@@ -102,7 +102,7 @@ func (v *DeviceVulkanDriver) GetDeviceMemoryOpaqueCaptureAddress(o core1_2.Devic
 }
 
 func (v *DeviceVulkanDriver) SignalSemaphore(o core1_2.SemaphoreSignalInfo) (common.VkResult, error) {
-	if o.Semaphore.Handle() == 0 {
+	if !o.Semaphore.Initialized() {
 		return core1_0.VKErrorUnknown, fmt.Errorf("o.Semaphore cannot be uninitialized")
 	}
 
@@ -126,7 +126,7 @@ func (v *DeviceVulkanDriver) WaitSemaphores(timeout time.Duration, o core1_2.Sem
 	}
 
 	for i, semaphore := range o.Semaphores {
-		if semaphore.Handle() == 0 {
+		if !semaphore.Initialized() {
 			return core1_0.VKErrorUnknown, fmt.Errorf("semaphore values cannot be uninitialized but semaphore %d is uninitialized", i)
 		}
 		if semaphore.DeviceHandle() != o.Semaphores[0].DeviceHandle() {

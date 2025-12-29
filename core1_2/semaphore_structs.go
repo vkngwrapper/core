@@ -90,7 +90,7 @@ type SemaphoreSignalInfo struct {
 }
 
 func (o SemaphoreSignalInfo) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
-	if o.Semaphore.Handle() == 0 {
+	if !o.Semaphore.Initialized() {
 		return nil, errors.New("core1_2.SemaphoreSignalInfo.Semaphore cannot be left unset")
 	}
 	if preallocatedPointer == nil {

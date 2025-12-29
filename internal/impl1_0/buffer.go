@@ -15,7 +15,7 @@ import (
 )
 
 func (v *DeviceVulkanDriver) DestroyBuffer(buffer core.Buffer, allocationCallbacks *loader.AllocationCallbacks) {
-	if buffer.Handle() == 0 {
+	if !buffer.Initialized() {
 		panic("buffer cannot be uninitialized")
 	}
 
@@ -26,7 +26,7 @@ func (v *DeviceVulkanDriver) DestroyBuffer(buffer core.Buffer, allocationCallbac
 }
 
 func (v *DeviceVulkanDriver) GetBufferMemoryRequirements(buffer core.Buffer) *core1_0.MemoryRequirements {
-	if buffer.Handle() == 0 {
+	if !buffer.Initialized() {
 		panic("buffer cannot be uninitialized")
 	}
 
@@ -47,11 +47,11 @@ func (v *DeviceVulkanDriver) GetBufferMemoryRequirements(buffer core.Buffer) *co
 }
 
 func (v *DeviceVulkanDriver) BindBufferMemory(buffer core.Buffer, memory core.DeviceMemory, offset int) (common.VkResult, error) {
-	if buffer.Handle() == 0 {
+	if !buffer.Initialized() {
 		return core1_0.VKErrorUnknown, errors.New("received uninitialized Buffer")
 	}
 
-	if memory.Handle() == 0 {
+	if !memory.Initialized() {
 		return core1_0.VKErrorUnknown, errors.New("received uninitialized DeviceMemory")
 	}
 

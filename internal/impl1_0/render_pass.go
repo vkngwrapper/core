@@ -15,14 +15,14 @@ import (
 )
 
 func (v *DeviceVulkanDriver) DestroyRenderPass(renderPass core.RenderPass, callbacks *loader.AllocationCallbacks) {
-	if renderPass.Handle() == 0 {
+	if !renderPass.Initialized() {
 		panic("renderPass was uninitialized")
 	}
 	v.LoaderObj.VkDestroyRenderPass(renderPass.DeviceHandle(), renderPass.Handle(), callbacks.Handle())
 }
 
 func (v *DeviceVulkanDriver) GetRenderAreaGranularity(renderPass core.RenderPass) core1_0.Extent2D {
-	if renderPass.Handle() == 0 {
+	if !renderPass.Initialized() {
 		panic("renderPass was uninitialized")
 	}
 	arena := cgoparam.GetAlloc()

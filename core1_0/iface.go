@@ -14,6 +14,8 @@ import (
 type GlobalDriver interface {
 	Loader() loader.Loader
 
+	BuildInstanceDriver(instance core.Instance) (CoreInstanceDriver, error)
+
 	// AvailableExtensions returns all of the instance extensions available on this Loader,
 	// in the form of a map of extension name to ExtensionProperties
 	//
@@ -44,6 +46,7 @@ type GlobalDriver interface {
 type CoreInstanceDriver interface {
 	GlobalDriver
 	Instance() core.Instance
+	BuildDeviceDriver(device core.Device) (CoreDeviceDriver, error)
 
 	// DestroyInstance destroys the Instance object underlying this driver and the underlying
 	// structures. **Warning** after destruction, the object will continue to exist, but the

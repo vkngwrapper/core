@@ -6,7 +6,7 @@ import (
 )
 
 func (v *DeviceVulkanDriver) ResetQueryPool(queryPool core.QueryPool, firstQuery, queryCount int) {
-	if queryPool.Handle() == 0 {
+	if !queryPool.Initialized() {
 		panic("queryPool cannot be uninitialized")
 	}
 

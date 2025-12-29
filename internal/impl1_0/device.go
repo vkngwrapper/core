@@ -110,7 +110,7 @@ func (v *DeviceVulkanDriver) FlushMappedMemoryRanges(ranges ...core1_0.MappedMem
 	defer cgoparam.ReturnAlloc(arena)
 
 	for i, r := range ranges {
-		if r.Memory.Handle() == 0 {
+		if !r.Memory.Initialized() {
 			return core1_0.VKErrorUnknown, fmt.Errorf("received uninitialized DeviceMemory at element %d", i)
 		}
 		if v.LoaderObj.DeviceHandle() != r.Memory.DeviceHandle() {
@@ -132,7 +132,7 @@ func (v *DeviceVulkanDriver) InvalidateMappedMemoryRanges(ranges ...core1_0.Mapp
 	defer cgoparam.ReturnAlloc(arena)
 
 	for i, r := range ranges {
-		if r.Memory.Handle() == 0 {
+		if !r.Memory.Initialized() {
 			return core1_0.VKErrorUnknown, fmt.Errorf("received uninitialized DeviceMemory at element %d", i)
 		}
 		if v.LoaderObj.DeviceHandle() != r.Memory.DeviceHandle() {
@@ -649,7 +649,7 @@ func (v *DeviceVulkanDriver) AllocateCommandBuffers(o core1_0.CommandBufferAlloc
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
-	if o.CommandPool.Handle() == 0 {
+	if !o.CommandPool.Initialized() {
 		return nil, core1_0.VKErrorUnknown, errors.New("no command pool provided to allocate from")
 	}
 
@@ -685,7 +685,7 @@ func (v *DeviceVulkanDriver) AllocateDescriptorSets(o core1_0.DescriptorSetAlloc
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
-	if o.DescriptorPool.Handle() == 0 {
+	if !o.DescriptorPool.Initialized() {
 		return nil, core1_0.VKErrorUnknown, errors.New("no descriptor pool provided to allocate from")
 	}
 
