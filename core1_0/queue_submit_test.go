@@ -6,7 +6,6 @@ import (
 	"unsafe"
 
 	"github.com/stretchr/testify/require"
-	"github.com/vkngwrapper/core/v3"
 	"github.com/vkngwrapper/core/v3/common"
 	"github.com/vkngwrapper/core/v3/core1_0"
 	"github.com/vkngwrapper/core/v3/loader"
@@ -78,10 +77,10 @@ func TestSubmitToQueue_SignalSuccess(t *testing.T) {
 
 	_, err := driver.QueueSubmit(queue, &fence,
 		core1_0.SubmitInfo{
-			CommandBuffers:   []core.CommandBuffer{buffer},
-			WaitSemaphores:   []core.Semaphore{waitSemaphore1, waitSemaphore2},
+			CommandBuffers:   []core1_0.CommandBuffer{buffer},
+			WaitSemaphores:   []core1_0.Semaphore{waitSemaphore1, waitSemaphore2},
 			WaitDstStageMask: []core1_0.PipelineStageFlags{core1_0.PipelineStageVertexShader, core1_0.PipelineStageFragmentShader},
-			SignalSemaphores: []core.Semaphore{signalSemaphore1, signalSemaphore2, signalSemaphore3},
+			SignalSemaphores: []core1_0.Semaphore{signalSemaphore1, signalSemaphore2, signalSemaphore3},
 		},
 	)
 	require.NoError(t, err)
@@ -127,10 +126,10 @@ func TestSubmitToQueue_NoSignalSuccess(t *testing.T) {
 
 	_, err := driver.QueueSubmit(queue, nil,
 		core1_0.SubmitInfo{
-			CommandBuffers:   []core.CommandBuffer{buffer},
-			WaitSemaphores:   []core.Semaphore{},
+			CommandBuffers:   []core1_0.CommandBuffer{buffer},
+			WaitSemaphores:   []core1_0.Semaphore{},
 			WaitDstStageMask: []core1_0.PipelineStageFlags{},
-			SignalSemaphores: []core.Semaphore{},
+			SignalSemaphores: []core1_0.Semaphore{},
 		},
 	)
 	require.NoError(t, err)
@@ -154,10 +153,10 @@ func TestSubmitToQueue_MismatchWaitSemaphores(t *testing.T) {
 
 	_, err := driver.QueueSubmit(queue, nil,
 		core1_0.SubmitInfo{
-			CommandBuffers:   []core.CommandBuffer{buffer},
-			WaitSemaphores:   []core.Semaphore{waitSemaphore1, waitSemaphore2},
+			CommandBuffers:   []core1_0.CommandBuffer{buffer},
+			WaitSemaphores:   []core1_0.Semaphore{waitSemaphore1, waitSemaphore2},
 			WaitDstStageMask: []core1_0.PipelineStageFlags{core1_0.PipelineStageFragmentShader},
-			SignalSemaphores: []core.Semaphore{},
+			SignalSemaphores: []core1_0.Semaphore{},
 		},
 	)
 	require.EqualError(t, err, "attempted to submit with 2 wait semaphores but 1 dst stages- these should match")

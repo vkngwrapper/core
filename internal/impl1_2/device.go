@@ -5,20 +5,19 @@ import (
 	"time"
 
 	"github.com/CannibalVox/cgoparam"
-	"github.com/vkngwrapper/core/v3"
 	"github.com/vkngwrapper/core/v3/common"
 	"github.com/vkngwrapper/core/v3/core1_0"
 	"github.com/vkngwrapper/core/v3/core1_2"
 	"github.com/vkngwrapper/core/v3/loader"
 )
 
-func (v *DeviceVulkanDriver) CreateRenderPass2(allocator *loader.AllocationCallbacks, options core1_2.RenderPassCreateInfo2) (core.RenderPass, common.VkResult, error) {
+func (v *DeviceVulkanDriver) CreateRenderPass2(allocator *loader.AllocationCallbacks, options core1_2.RenderPassCreateInfo2) (core1_0.RenderPass, common.VkResult, error) {
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
 	infoPtr, err := common.AllocOptions(arena, options)
 	if err != nil {
-		return core.RenderPass{}, core1_0.VKErrorUnknown, err
+		return core1_0.RenderPass{}, core1_0.VKErrorUnknown, err
 	}
 
 	var renderPassHandle loader.VkRenderPass
@@ -29,10 +28,10 @@ func (v *DeviceVulkanDriver) CreateRenderPass2(allocator *loader.AllocationCallb
 		&renderPassHandle,
 	)
 	if err != nil {
-		return core.RenderPass{}, res, err
+		return core1_0.RenderPass{}, res, err
 	}
 
-	renderPass := core.InternalRenderPass(
+	renderPass := core1_0.InternalRenderPass(
 		v.DeviceObj.Handle(),
 		renderPassHandle,
 		v.DeviceObj.APIVersion(),

@@ -1,7 +1,6 @@
 package core1_1
 
 import (
-	"github.com/vkngwrapper/core/v3"
 	"github.com/vkngwrapper/core/v3/common"
 	"github.com/vkngwrapper/core/v3/core1_0"
 	"github.com/vkngwrapper/core/v3/loader"
@@ -22,7 +21,7 @@ type CoreInstanceDriver interface {
 	// any desired chained OutData objects.
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkGetPhysicalDeviceExternalFenceProperties.html
-	GetPhysicalDeviceExternalFenceProperties(physicalDevice core.PhysicalDevice, o PhysicalDeviceExternalFenceInfo, outData *ExternalFenceProperties) error
+	GetPhysicalDeviceExternalFenceProperties(physicalDevice core1_0.PhysicalDevice, o PhysicalDeviceExternalFenceInfo, outData *ExternalFenceProperties) error
 	// GetPhysicalDeviceExternalBufferProperties queries external types supported by Buffer objects
 	//
 	// physicalDevice - the PHysicalDevice object to query
@@ -33,7 +32,7 @@ type CoreInstanceDriver interface {
 	// desired chained OutData objects.
 	//
 	// https://www.khronos.org/registry/VulkanSC/specs/1.0-extensions/man/html/vkGetPhysicalDeviceExternalBufferProperties.html
-	GetPhysicalDeviceExternalBufferProperties(physicalDevice core.PhysicalDevice, o PhysicalDeviceExternalBufferInfo, outData *ExternalBufferProperties) error
+	GetPhysicalDeviceExternalBufferProperties(physicalDevice core1_0.PhysicalDevice, o PhysicalDeviceExternalBufferInfo, outData *ExternalBufferProperties) error
 	// GetPhysicalDeviceExternalSemaphoreProperties queries external Semaphore capabilities
 	//
 	// physicalDevice - the PHysicalDevice object to query
@@ -44,7 +43,7 @@ type CoreInstanceDriver interface {
 	// desired chained OutData objects.
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkGetPhysicalDeviceExternalSemaphoreProperties.html
-	GetPhysicalDeviceExternalSemaphoreProperties(physicalDevice core.PhysicalDevice, o PhysicalDeviceExternalSemaphoreInfo, outData *ExternalSemaphoreProperties) error
+	GetPhysicalDeviceExternalSemaphoreProperties(physicalDevice core1_0.PhysicalDevice, o PhysicalDeviceExternalSemaphoreInfo, outData *ExternalSemaphoreProperties) error
 
 	// GetPhysicalDeviceFeatures2 reports capabilities of a PhysicalDevice
 	//
@@ -54,7 +53,7 @@ type CoreInstanceDriver interface {
 	// chained OutData objects.
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkGetPhysicalDeviceFeatures2.html
-	GetPhysicalDeviceFeatures2(physicalDevice core.PhysicalDevice, out *PhysicalDeviceFeatures2) error
+	GetPhysicalDeviceFeatures2(physicalDevice core1_0.PhysicalDevice, out *PhysicalDeviceFeatures2) error
 	// GetPhysicalDeviceFormatProperties2 lists a PhysicalDevice object's format capabilities
 	//
 	// physicalDevice - The PhysicalDevice object to query
@@ -65,7 +64,7 @@ type CoreInstanceDriver interface {
 	// chained OutData objects
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkGetPhysicalDeviceFormatProperties2.html
-	GetPhysicalDeviceFormatProperties2(physicalDevice core.PhysicalDevice, format core1_0.Format, out *FormatProperties2) error
+	GetPhysicalDeviceFormatProperties2(physicalDevice core1_0.PhysicalDevice, format core1_0.Format, out *FormatProperties2) error
 	// GetPhysicalDeviceImageFormatProperties2 lists a PhysicalDevice object's format capabilities
 	//
 	// physicalDevice - The PhysicalDevice object to query
@@ -76,7 +75,7 @@ type CoreInstanceDriver interface {
 	// chained OutData objects
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkGetPhysicalDeviceImageFormatProperties2.html
-	GetPhysicalDeviceImageFormatProperties2(physicalDevice core.PhysicalDevice, o PhysicalDeviceImageFormatInfo2, out *ImageFormatProperties2) (common.VkResult, error)
+	GetPhysicalDeviceImageFormatProperties2(physicalDevice core1_0.PhysicalDevice, o PhysicalDeviceImageFormatInfo2, out *ImageFormatProperties2) (common.VkResult, error)
 	// GetPhysicalDeviceMemoryProperties2 reports memory information for a PhysicalDevice
 	//
 	// out - A pre-allocated object in which the results will be populated. It should include any desired
@@ -85,7 +84,7 @@ type CoreInstanceDriver interface {
 	// chained OutData objects
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkGetPhysicalDeviceMemoryProperties2.html
-	GetPhysicalDeviceMemoryProperties2(physicalDevice core.PhysicalDevice, out *PhysicalDeviceMemoryProperties2) error
+	GetPhysicalDeviceMemoryProperties2(physicalDevice core1_0.PhysicalDevice, out *PhysicalDeviceMemoryProperties2) error
 	// GetPhysicalDeviceProperties2 returns properties of a PhysicalDevice
 	//
 	// physicalDevice - The PhysicalDevice object to query
@@ -94,7 +93,7 @@ type CoreInstanceDriver interface {
 	// chained OutData objects
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkGetPhysicalDeviceProperties2.html
-	GetPhysicalDeviceProperties2(physicalDevice core.PhysicalDevice, out *PhysicalDeviceProperties2) error
+	GetPhysicalDeviceProperties2(physicalDevice core1_0.PhysicalDevice, out *PhysicalDeviceProperties2) error
 	// GetPhysicalDeviceQueueFamilyProperties2 reports properties of the queues of a PhysicalDevice
 	//
 	// physicalDevice - The PhysicalDevice object to query
@@ -104,7 +103,7 @@ type CoreInstanceDriver interface {
 	// QueueFamilyProperties2 will be allocated with no chained structures.
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkGetPhysicalDeviceQueueFamilyProperties2.html
-	GetPhysicalDeviceQueueFamilyProperties2(physicalDevice core.PhysicalDevice, outDataFactory func() *QueueFamilyProperties2) ([]*QueueFamilyProperties2, error)
+	GetPhysicalDeviceQueueFamilyProperties2(physicalDevice core1_0.PhysicalDevice, outDataFactory func() *QueueFamilyProperties2) ([]*QueueFamilyProperties2, error)
 	// GetPhysicalDeviceSparseImageFormatProperties2 retrieves properties of an Image format applied to sparse Image
 	//
 	// physicalDevice - The PhysicalDevice object to query
@@ -116,7 +115,7 @@ type CoreInstanceDriver interface {
 	// SparseImageFormatProperties2 will be allocated with no chained structures.
 	//
 	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/vkGetPhysicalDeviceSparseImageFormatProperties2KHR.html
-	GetPhysicalDeviceSparseImageFormatProperties2(physicalDevice core.PhysicalDevice, o PhysicalDeviceSparseImageFormatInfo2, outDataFactory func() *SparseImageFormatProperties2) ([]*SparseImageFormatProperties2, error)
+	GetPhysicalDeviceSparseImageFormatProperties2(physicalDevice core1_0.PhysicalDevice, o PhysicalDeviceSparseImageFormatInfo2, outDataFactory func() *SparseImageFormatProperties2) ([]*SparseImageFormatProperties2, error)
 
 	// EnumeratePhysicalDeviceGroups enumerates groups of PhysicalDevice objects that can be used to
 	// create a single logical Device
@@ -151,7 +150,7 @@ type DeviceDriver interface {
 	// groupCountZ - The number of local workgroups to dispatch in the Z dimension
 	//
 	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/vkCmdDispatchBase.html
-	CmdDispatchBase(commandBuffer core.CommandBuffer, baseGroupX, baseGroupY, baseGroupZ, groupCountX, groupCountY, groupCountZ int)
+	CmdDispatchBase(commandBuffer core1_0.CommandBuffer, baseGroupX, baseGroupY, baseGroupZ, groupCountX, groupCountY, groupCountZ int)
 	// CmdSetDeviceMask modifies the device mask of a CommandBuffer
 	//
 	// commandBuffer - The CommandBuffer object to record to
@@ -159,14 +158,14 @@ type DeviceDriver interface {
 	// deviceMask - The new value of the current Device mask
 	//
 	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/vkCmdSetDeviceMask.html
-	CmdSetDeviceMask(commandBuffer core.CommandBuffer, deviceMask uint32)
+	CmdSetDeviceMask(commandBuffer core1_0.CommandBuffer, deviceMask uint32)
 
 	// TrimCommandPool trims a CommandPool
 	//
 	// flags - Reserved for future use
 	//
 	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/vkTrimCommandPool.html
-	TrimCommandPool(commandPool core.CommandPool, flags CommandPoolTrimFlags)
+	TrimCommandPool(commandPool core1_0.CommandPool, flags CommandPoolTrimFlags)
 
 	// BindBufferMemory2 binds DeviceMemory to Buffer objects
 	//
@@ -242,7 +241,7 @@ type DeviceDriver interface {
 	// allocator - Controls host allocation behavior
 	//
 	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/vkCreateDescriptorUpdateTemplate.html
-	CreateDescriptorUpdateTemplate(o DescriptorUpdateTemplateCreateInfo, allocator *loader.AllocationCallbacks) (core.DescriptorUpdateTemplate, common.VkResult, error)
+	CreateDescriptorUpdateTemplate(o DescriptorUpdateTemplateCreateInfo, allocator *loader.AllocationCallbacks) (DescriptorUpdateTemplate, common.VkResult, error)
 	// CreateSamplerYcbcrConversion creates a new Y'CbCr conversion
 	//
 	// device - The Device used to created the SamplerYcbcrConversion
@@ -252,7 +251,7 @@ type DeviceDriver interface {
 	// allocator - Controls host allocation behavior
 	//
 	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/vkCreateSamplerYcbcrConversion.html
-	CreateSamplerYcbcrConversion(o SamplerYcbcrConversionCreateInfo, allocator *loader.AllocationCallbacks) (core.SamplerYcbcrConversion, common.VkResult, error)
+	CreateSamplerYcbcrConversion(o SamplerYcbcrConversionCreateInfo, allocator *loader.AllocationCallbacks) (SamplerYcbcrConversion, common.VkResult, error)
 
 	// GetDeviceQueue2 gets a Queue object from a Device
 	//
@@ -261,7 +260,7 @@ type DeviceDriver interface {
 	// o - Describes parameters of the Device Queue to be retrieved
 	//
 	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/vkGetDeviceQueue2.html
-	GetDeviceQueue2(o DeviceQueueInfo2) (core.Queue, error)
+	GetDeviceQueue2(o DeviceQueueInfo2) (core1_0.Queue, error)
 
 	// DestroyDescriptorUpdateTemplate destroys a DescriptorUpdateTemplate object and the
 	// underlying structures. **Warning** after destruction, the object will continue to exist,
@@ -273,7 +272,7 @@ type DeviceDriver interface {
 	// callbacks - Controls host memory deallocation
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkDestroyDescriptorUpdateTemplate.html
-	DestroyDescriptorUpdateTemplate(template core.DescriptorUpdateTemplate, allocator *loader.AllocationCallbacks)
+	DestroyDescriptorUpdateTemplate(template DescriptorUpdateTemplate, allocator *loader.AllocationCallbacks)
 	// UpdateDescriptorSetWithTemplateFromBuffer updates the contents of a DescriptorSet object
 	// with a template and a Buffer
 	//
@@ -284,7 +283,7 @@ type DeviceDriver interface {
 	// data - Information and a Buffer used to write the descriptor
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkUpdateDescriptorSetWithTemplateKHR.html
-	UpdateDescriptorSetWithTemplateFromBuffer(descriptorSet core.DescriptorSet, template core.DescriptorUpdateTemplate, data core1_0.DescriptorBufferInfo)
+	UpdateDescriptorSetWithTemplateFromBuffer(descriptorSet core1_0.DescriptorSet, template DescriptorUpdateTemplate, data core1_0.DescriptorBufferInfo)
 	// UpdateDescriptorSetWithTemplateFromImage updates the contents of a DescriptorSet object with
 	// a template and an Image
 	//
@@ -295,7 +294,7 @@ type DeviceDriver interface {
 	// data - Information and an Image used to write the descriptor
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkUpdateDescriptorSetWithTemplateKHR.html
-	UpdateDescriptorSetWithTemplateFromImage(descriptorSet core.DescriptorSet, template core.DescriptorUpdateTemplate, data core1_0.DescriptorImageInfo)
+	UpdateDescriptorSetWithTemplateFromImage(descriptorSet core1_0.DescriptorSet, template DescriptorUpdateTemplate, data core1_0.DescriptorImageInfo)
 	// UpdateDescriptorSetWithTemplateFromObjectHandle updates the contents of a DescriptorSet object with
 	// a template and an arbitrary handle
 	//
@@ -307,7 +306,7 @@ type DeviceDriver interface {
 	// perhaps an acceleration structure.
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkUpdateDescriptorSetWithTemplateKHR.html
-	UpdateDescriptorSetWithTemplateFromObjectHandle(descriptorSet core.DescriptorSet, template core.DescriptorUpdateTemplate, data loader.VulkanHandle)
+	UpdateDescriptorSetWithTemplateFromObjectHandle(descriptorSet core1_0.DescriptorSet, template DescriptorUpdateTemplate, data loader.VulkanHandle)
 
 	// DestroySamplerYcbcrConversion destroys a SamplerYcbcrConversion object and the underlying
 	// structures. **Warning** after destruction, tye object will continue to exist, but the Vulkan
@@ -319,7 +318,7 @@ type DeviceDriver interface {
 	// callbacks - Controls host memory deallocation
 	//
 	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/vkDestroySamplerYcbcrConversion.html
-	DestroySamplerYcbcrConversion(conversion core.SamplerYcbcrConversion, allocator *loader.AllocationCallbacks)
+	DestroySamplerYcbcrConversion(conversion SamplerYcbcrConversion, allocator *loader.AllocationCallbacks)
 }
 
 type CoreDeviceDriver interface {

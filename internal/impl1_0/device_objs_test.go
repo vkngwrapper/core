@@ -6,7 +6,6 @@ import (
 	"unsafe"
 
 	"github.com/stretchr/testify/require"
-	"github.com/vkngwrapper/core/v3"
 	"github.com/vkngwrapper/core/v3/common"
 	"github.com/vkngwrapper/core/v3/core1_0"
 	"github.com/vkngwrapper/core/v3/loader"
@@ -123,7 +122,7 @@ func TestVulkanLoader1_0_CreateFrameBuffer(t *testing.T) {
 		Width:      3,
 		Height:     5,
 		Layers:     7,
-		Attachments: []core.ImageView{
+		Attachments: []core1_0.ImageView{
 			imageView1, imageView2,
 		},
 	})

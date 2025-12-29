@@ -10,7 +10,6 @@ import (
 
 	"github.com/CannibalVox/cgoparam"
 	"github.com/pkg/errors"
-	"github.com/vkngwrapper/core/v3"
 	"github.com/vkngwrapper/core/v3/common"
 )
 
@@ -67,14 +66,14 @@ type GraphicsPipelineCreateInfo struct {
 
 	// Layout is the description of binding locations used by both the Pipeline and DescriptorSet
 	// objects used with the Pipeline
-	Layout core.PipelineLayout
+	Layout PipelineLayout
 	// RenderPass is a RenderPass object describing the environment in which the Pipeline will be used
-	RenderPass core.RenderPass
+	RenderPass RenderPass
 
 	// Subpass is the index of the subpass in the RenderPass where this Pipeline will be used
 	Subpass int
 	// BasePipeline is a Pipeline object to derive from
-	BasePipeline core.Pipeline
+	BasePipeline Pipeline
 	// BasePipelineIndex is an index into the createInfos parameter to use as a Pipeline to derive from
 	BasePipelineIndex int
 
@@ -222,10 +221,10 @@ type ComputePipelineCreateInfo struct {
 	Stage PipelineShaderStageCreateInfo
 	// Layout is the description of binding locations used by both the Pipeline and DescriptorSet
 	// objects used with the Pipeline
-	Layout core.PipelineLayout
+	Layout PipelineLayout
 
 	// BasePipeline is a Pipeline to derive from
-	BasePipeline core.Pipeline
+	BasePipeline Pipeline
 	// BasePipelineIndex is an index into the createInfos parameters to use as a Pipeline to derive from
 	BasePipelineIndex int
 
@@ -234,7 +233,7 @@ type ComputePipelineCreateInfo struct {
 
 func (o ComputePipelineCreateInfo) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if !o.Layout.Initialized() {
-		return nil, errors.New("core1_0.ComputePipelineCreateInfo.Layout cannot be left unset")
+		return nil, errors.New("ComputePipelineCreateInfo.Layout cannot be left unset")
 	}
 	if preallocatedPointer == unsafe.Pointer(nil) {
 		preallocatedPointer = allocator.Malloc(C.sizeof_struct_VkComputePipelineCreateInfo)

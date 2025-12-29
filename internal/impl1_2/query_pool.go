@@ -1,11 +1,11 @@
 package impl1_2
 
 import (
-	"github.com/vkngwrapper/core/v3"
+	"github.com/vkngwrapper/core/v3/core1_0"
 	"github.com/vkngwrapper/core/v3/loader"
 )
 
-func (v *DeviceVulkanDriver) ResetQueryPool(queryPool core.QueryPool, firstQuery, queryCount int) {
+func (v *DeviceVulkanDriver) ResetQueryPool(queryPool core1_0.QueryPool, firstQuery, queryCount int) {
 	if !queryPool.Initialized() {
 		panic("queryPool cannot be uninitialized")
 	}

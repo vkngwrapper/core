@@ -10,7 +10,6 @@ import (
 	"unsafe"
 
 	"github.com/CannibalVox/cgoparam"
-	"github.com/vkngwrapper/core/v3"
 	"github.com/vkngwrapper/core/v3/common"
 	"github.com/vkngwrapper/core/v3/core1_0"
 	"github.com/vkngwrapper/core/v3/core1_1"
@@ -220,13 +219,13 @@ func (v *DeviceVulkanDriver) GetDeviceGroupPeerMemoryFeatures(heapIndex, localDe
 	return core1_1.PeerMemoryFeatureFlags(*featuresPtr)
 }
 
-func (v *DeviceVulkanDriver) CreateDescriptorUpdateTemplate(o core1_1.DescriptorUpdateTemplateCreateInfo, allocator *loader.AllocationCallbacks) (core.DescriptorUpdateTemplate, common.VkResult, error) {
+func (v *DeviceVulkanDriver) CreateDescriptorUpdateTemplate(o core1_1.DescriptorUpdateTemplateCreateInfo, allocator *loader.AllocationCallbacks) (core1_1.DescriptorUpdateTemplate, common.VkResult, error) {
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
 	createInfoPtr, err := common.AllocOptions(arena, o)
 	if err != nil {
-		return core.DescriptorUpdateTemplate{}, core1_0.VKErrorUnknown, err
+		return core1_1.DescriptorUpdateTemplate{}, core1_0.VKErrorUnknown, err
 	}
 
 	var templateHandle loader.VkDescriptorUpdateTemplate
@@ -236,19 +235,19 @@ func (v *DeviceVulkanDriver) CreateDescriptorUpdateTemplate(o core1_1.Descriptor
 		&templateHandle,
 	)
 	if err != nil {
-		return core.DescriptorUpdateTemplate{}, res, err
+		return core1_1.DescriptorUpdateTemplate{}, res, err
 	}
 
-	return core.InternalDescriptorUpdateTemplate(v.DeviceObj.Handle(), templateHandle, v.DeviceObj.APIVersion()), res, nil
+	return core1_1.InternalDescriptorUpdateTemplate(v.DeviceObj.Handle(), templateHandle, v.DeviceObj.APIVersion()), res, nil
 }
 
-func (v *DeviceVulkanDriver) CreateSamplerYcbcrConversion(o core1_1.SamplerYcbcrConversionCreateInfo, allocator *loader.AllocationCallbacks) (core.SamplerYcbcrConversion, common.VkResult, error) {
+func (v *DeviceVulkanDriver) CreateSamplerYcbcrConversion(o core1_1.SamplerYcbcrConversionCreateInfo, allocator *loader.AllocationCallbacks) (core1_1.SamplerYcbcrConversion, common.VkResult, error) {
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
 	optionPtr, err := common.AllocOptions(arena, o)
 	if err != nil {
-		return core.SamplerYcbcrConversion{}, core1_0.VKErrorUnknown, err
+		return core1_1.SamplerYcbcrConversion{}, core1_0.VKErrorUnknown, err
 	}
 
 	var ycbcrHandle loader.VkSamplerYcbcrConversion
@@ -259,19 +258,19 @@ func (v *DeviceVulkanDriver) CreateSamplerYcbcrConversion(o core1_1.SamplerYcbcr
 		&ycbcrHandle,
 	)
 	if err != nil {
-		return core.SamplerYcbcrConversion{}, res, err
+		return core1_1.SamplerYcbcrConversion{}, res, err
 	}
 
-	return core.InternalSamplerYcbcrConversion(v.DeviceObj.Handle(), ycbcrHandle, v.DeviceObj.APIVersion()), res, nil
+	return core1_1.InternalSamplerYcbcrConversion(v.DeviceObj.Handle(), ycbcrHandle, v.DeviceObj.APIVersion()), res, nil
 }
 
-func (v *DeviceVulkanDriver) GetDeviceQueue2(o core1_1.DeviceQueueInfo2) (core.Queue, error) {
+func (v *DeviceVulkanDriver) GetDeviceQueue2(o core1_1.DeviceQueueInfo2) (core1_0.Queue, error) {
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
 	optionPtr, err := common.AllocOptions(arena, o)
 	if err != nil {
-		return core.Queue{}, err
+		return core1_0.Queue{}, err
 	}
 
 	var queue loader.VkQueue
@@ -281,5 +280,5 @@ func (v *DeviceVulkanDriver) GetDeviceQueue2(o core1_1.DeviceQueueInfo2) (core.Q
 		&queue,
 	)
 
-	return core.InternalQueue(v.DeviceObj.Handle(), queue, v.DeviceObj.APIVersion()), nil
+	return core1_0.InternalQueue(v.DeviceObj.Handle(), queue, v.DeviceObj.APIVersion()), nil
 }

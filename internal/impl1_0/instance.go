@@ -9,7 +9,6 @@ import (
 	"unsafe"
 
 	"github.com/CannibalVox/cgoparam"
-	"github.com/vkngwrapper/core/v3"
 	"github.com/vkngwrapper/core/v3/common"
 	"github.com/vkngwrapper/core/v3/core1_0"
 	"github.com/vkngwrapper/core/v3/loader"
@@ -19,7 +18,7 @@ func (v *InstanceVulkanDriver) DestroyInstance(callbacks *loader.AllocationCallb
 	v.LoaderObj.VkDestroyInstance(v.InstanceObj.Handle(), callbacks.Handle())
 }
 
-func (v *InstanceVulkanDriver) EnumeratePhysicalDevices() ([]core.PhysicalDevice, common.VkResult, error) {
+func (v *InstanceVulkanDriver) EnumeratePhysicalDevices() ([]core1_0.PhysicalDevice, common.VkResult, error) {
 	allocator := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(allocator)
 
@@ -43,7 +42,7 @@ func (v *InstanceVulkanDriver) EnumeratePhysicalDevices() ([]core.PhysicalDevice
 	}
 
 	goCount := uint32(*count)
-	var devices []core.PhysicalDevice
+	var devices []core1_0.PhysicalDevice
 	for ind := uint32(0); ind < goCount; ind++ {
 		propertiesUnsafe := allocator.Malloc(int(unsafe.Sizeof([1]C.VkPhysicalDeviceProperties{})))
 
@@ -56,7 +55,7 @@ func (v *InstanceVulkanDriver) EnumeratePhysicalDevices() ([]core.PhysicalDevice
 		}
 
 		deviceVersion := v.InstanceObj.APIVersion().Min(properties.APIVersion)
-		physicalDevice := core.InternalPhysicalDevice(deviceHandles[ind], v.InstanceObj.APIVersion(), deviceVersion)
+		physicalDevice := core1_0.InternalPhysicalDevice(deviceHandles[ind], v.InstanceObj.APIVersion(), deviceVersion)
 
 		devices = append(devices, physicalDevice)
 	}

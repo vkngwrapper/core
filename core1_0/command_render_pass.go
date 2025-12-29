@@ -9,7 +9,6 @@ import (
 	"unsafe"
 
 	"github.com/CannibalVox/cgoparam"
-	"github.com/vkngwrapper/core/v3"
 	"github.com/vkngwrapper/core/v3/common"
 )
 
@@ -37,10 +36,10 @@ func init() {
 // https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkRenderPassBeginInfo.html
 type RenderPassBeginInfo struct {
 	// RenderPass is the RenderPass to begin an instance of
-	RenderPass core.RenderPass
+	RenderPass RenderPass
 	// Framebuffer is the Framebuffer containing the attachments that are used with the
 	// RenderPass
-	Framebuffer core.Framebuffer
+	Framebuffer Framebuffer
 
 	// RenderArea is the render area that is affected by this RenderPass instance
 	RenderArea Rect2D

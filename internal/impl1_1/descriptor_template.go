@@ -9,16 +9,16 @@ import (
 	"unsafe"
 
 	"github.com/CannibalVox/cgoparam"
-	"github.com/vkngwrapper/core/v3"
 	"github.com/vkngwrapper/core/v3/core1_0"
+	"github.com/vkngwrapper/core/v3/core1_1"
 	"github.com/vkngwrapper/core/v3/loader"
 )
 
-func (v *DeviceVulkanDriver) DestroyDescriptorUpdateTemplate(template core.DescriptorUpdateTemplate, allocator *loader.AllocationCallbacks) {
+func (v *DeviceVulkanDriver) DestroyDescriptorUpdateTemplate(template core1_1.DescriptorUpdateTemplate, allocator *loader.AllocationCallbacks) {
 	v.LoaderObj.VkDestroyDescriptorUpdateTemplate(template.DeviceHandle(), template.Handle(), allocator.Handle())
 }
 
-func (v *DeviceVulkanDriver) UpdateDescriptorSetWithTemplateFromImage(descriptorSet core.DescriptorSet, template core.DescriptorUpdateTemplate, data core1_0.DescriptorImageInfo) {
+func (v *DeviceVulkanDriver) UpdateDescriptorSetWithTemplateFromImage(descriptorSet core1_0.DescriptorSet, template core1_1.DescriptorUpdateTemplate, data core1_0.DescriptorImageInfo) {
 	if !descriptorSet.Initialized() {
 		panic("descriptorSet cannot be uninitialized")
 	}
@@ -50,7 +50,7 @@ func (v *DeviceVulkanDriver) UpdateDescriptorSetWithTemplateFromImage(descriptor
 	)
 }
 
-func (v *DeviceVulkanDriver) UpdateDescriptorSetWithTemplateFromBuffer(descriptorSet core.DescriptorSet, template core.DescriptorUpdateTemplate, data core1_0.DescriptorBufferInfo) {
+func (v *DeviceVulkanDriver) UpdateDescriptorSetWithTemplateFromBuffer(descriptorSet core1_0.DescriptorSet, template core1_1.DescriptorUpdateTemplate, data core1_0.DescriptorBufferInfo) {
 	if !descriptorSet.Initialized() {
 		panic("descriptorSet cannot be uninitialized")
 	}
@@ -78,7 +78,7 @@ func (v *DeviceVulkanDriver) UpdateDescriptorSetWithTemplateFromBuffer(descripto
 	)
 }
 
-func (v *DeviceVulkanDriver) UpdateDescriptorSetWithTemplateFromObjectHandle(descriptorSet core.DescriptorSet, template core.DescriptorUpdateTemplate, data loader.VulkanHandle) {
+func (v *DeviceVulkanDriver) UpdateDescriptorSetWithTemplateFromObjectHandle(descriptorSet core1_0.DescriptorSet, template core1_1.DescriptorUpdateTemplate, data loader.VulkanHandle) {
 	if !descriptorSet.Initialized() {
 		panic("descriptorSet cannot be uninitialized")
 	}

@@ -10,7 +10,6 @@ import (
 
 	"github.com/CannibalVox/cgoparam"
 	"github.com/pkg/errors"
-	"github.com/vkngwrapper/core/v3"
 	"github.com/vkngwrapper/core/v3/common"
 	"github.com/vkngwrapper/core/v3/core1_0"
 )
@@ -42,7 +41,7 @@ func init() {
 // https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkBufferMemoryRequirementsInfo2.html
 type BufferMemoryRequirementsInfo2 struct {
 	// Buffer is the Buffer to query
-	Buffer core.Buffer
+	Buffer core1_0.Buffer
 
 	common.NextOptions
 }
@@ -70,7 +69,7 @@ func (o BufferMemoryRequirementsInfo2) PopulateCPointer(allocator *cgoparam.Allo
 // https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkImageMemoryRequirementsInfo2.html
 type ImageMemoryRequirementsInfo2 struct {
 	// Image is the Image to query
-	Image core.Image
+	Image core1_0.Image
 
 	common.NextOptions
 }
@@ -131,7 +130,7 @@ func (o *MemoryRequirements2) PopulateOutData(cDataPointer unsafe.Pointer, helpe
 // https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkImageSparseMemoryRequirementsInfo2.html
 type ImageSparseMemoryRequirementsInfo2 struct {
 	// Image is the Image to query
-	Image core.Image
+	Image core1_0.Image
 
 	common.NextOptions
 }

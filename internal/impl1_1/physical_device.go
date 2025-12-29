@@ -10,14 +10,13 @@ import (
 	"unsafe"
 
 	"github.com/CannibalVox/cgoparam"
-	"github.com/vkngwrapper/core/v3"
 	"github.com/vkngwrapper/core/v3/common"
 	"github.com/vkngwrapper/core/v3/core1_0"
 	"github.com/vkngwrapper/core/v3/core1_1"
 	"github.com/vkngwrapper/core/v3/loader"
 )
 
-func (v *InstanceVulkanDriver) GetPhysicalDeviceExternalFenceProperties(physicalDevice core.PhysicalDevice, o core1_1.PhysicalDeviceExternalFenceInfo, outData *core1_1.ExternalFenceProperties) error {
+func (v *InstanceVulkanDriver) GetPhysicalDeviceExternalFenceProperties(physicalDevice core1_0.PhysicalDevice, o core1_1.PhysicalDeviceExternalFenceInfo, outData *core1_1.ExternalFenceProperties) error {
 	if !physicalDevice.Initialized() {
 		return fmt.Errorf("physicalDevice cannot be uninitialized")
 	}
@@ -43,7 +42,7 @@ func (v *InstanceVulkanDriver) GetPhysicalDeviceExternalFenceProperties(physical
 	return common.PopulateOutData(outData, outDataPtr)
 }
 
-func (v *InstanceVulkanDriver) GetPhysicalDeviceExternalBufferProperties(physicalDevice core.PhysicalDevice, o core1_1.PhysicalDeviceExternalBufferInfo, outData *core1_1.ExternalBufferProperties) error {
+func (v *InstanceVulkanDriver) GetPhysicalDeviceExternalBufferProperties(physicalDevice core1_0.PhysicalDevice, o core1_1.PhysicalDeviceExternalBufferInfo, outData *core1_1.ExternalBufferProperties) error {
 	if !physicalDevice.Initialized() {
 		return fmt.Errorf("physicalDevice cannot be uninitialized")
 	}
@@ -67,7 +66,7 @@ func (v *InstanceVulkanDriver) GetPhysicalDeviceExternalBufferProperties(physica
 	return common.PopulateOutData(outData, outDataPtr)
 }
 
-func (v *InstanceVulkanDriver) GetPhysicalDeviceExternalSemaphoreProperties(physicalDevice core.PhysicalDevice, o core1_1.PhysicalDeviceExternalSemaphoreInfo, outData *core1_1.ExternalSemaphoreProperties) error {
+func (v *InstanceVulkanDriver) GetPhysicalDeviceExternalSemaphoreProperties(physicalDevice core1_0.PhysicalDevice, o core1_1.PhysicalDeviceExternalSemaphoreInfo, outData *core1_1.ExternalSemaphoreProperties) error {
 	if !physicalDevice.Initialized() {
 		return fmt.Errorf("physicalDevice cannot be uninitialized")
 	}
@@ -93,7 +92,7 @@ func (v *InstanceVulkanDriver) GetPhysicalDeviceExternalSemaphoreProperties(phys
 	return common.PopulateOutData(outData, outDataPtr)
 }
 
-func (v *InstanceVulkanDriver) GetPhysicalDeviceFeatures2(physicalDevice core.PhysicalDevice, out *core1_1.PhysicalDeviceFeatures2) error {
+func (v *InstanceVulkanDriver) GetPhysicalDeviceFeatures2(physicalDevice core1_0.PhysicalDevice, out *core1_1.PhysicalDeviceFeatures2) error {
 	if !physicalDevice.Initialized() {
 		return fmt.Errorf("physicalDevice cannot be uninitialized")
 	}
@@ -110,7 +109,7 @@ func (v *InstanceVulkanDriver) GetPhysicalDeviceFeatures2(physicalDevice core.Ph
 	return common.PopulateOutData(out, outData)
 }
 
-func (v *InstanceVulkanDriver) GetPhysicalDeviceFormatProperties2(physicalDevice core.PhysicalDevice, format core1_0.Format, out *core1_1.FormatProperties2) error {
+func (v *InstanceVulkanDriver) GetPhysicalDeviceFormatProperties2(physicalDevice core1_0.PhysicalDevice, format core1_0.Format, out *core1_1.FormatProperties2) error {
 	if !physicalDevice.Initialized() {
 		return fmt.Errorf("physicalDevice cannot be uninitialized")
 	}
@@ -127,7 +126,7 @@ func (v *InstanceVulkanDriver) GetPhysicalDeviceFormatProperties2(physicalDevice
 	return common.PopulateOutData(out, outData)
 }
 
-func (v *InstanceVulkanDriver) GetPhysicalDeviceImageFormatProperties2(physicalDevice core.PhysicalDevice, o core1_1.PhysicalDeviceImageFormatInfo2, out *core1_1.ImageFormatProperties2) (common.VkResult, error) {
+func (v *InstanceVulkanDriver) GetPhysicalDeviceImageFormatProperties2(physicalDevice core1_0.PhysicalDevice, o core1_1.PhysicalDeviceImageFormatInfo2, out *core1_1.ImageFormatProperties2) (common.VkResult, error) {
 	if !physicalDevice.Initialized() {
 		return core1_0.VKErrorUnknown, fmt.Errorf("physicalDevice cannot be uninitialized")
 	}
@@ -160,7 +159,7 @@ func (v *InstanceVulkanDriver) GetPhysicalDeviceImageFormatProperties2(physicalD
 	return res, nil
 }
 
-func (v *InstanceVulkanDriver) GetPhysicalDeviceMemoryProperties2(physicalDevice core.PhysicalDevice, out *core1_1.PhysicalDeviceMemoryProperties2) error {
+func (v *InstanceVulkanDriver) GetPhysicalDeviceMemoryProperties2(physicalDevice core1_0.PhysicalDevice, out *core1_1.PhysicalDeviceMemoryProperties2) error {
 	if !physicalDevice.Initialized() {
 		return fmt.Errorf("physicalDevice cannot be uninitialized")
 	}
@@ -177,7 +176,7 @@ func (v *InstanceVulkanDriver) GetPhysicalDeviceMemoryProperties2(physicalDevice
 	return common.PopulateOutData(out, outData)
 }
 
-func (v *InstanceVulkanDriver) GetPhysicalDeviceProperties2(physicalDevice core.PhysicalDevice, out *core1_1.PhysicalDeviceProperties2) error {
+func (v *InstanceVulkanDriver) GetPhysicalDeviceProperties2(physicalDevice core1_0.PhysicalDevice, out *core1_1.PhysicalDeviceProperties2) error {
 	if !physicalDevice.Initialized() {
 		return fmt.Errorf("physicalDevice cannot be uninitialized")
 	}
@@ -195,7 +194,7 @@ func (v *InstanceVulkanDriver) GetPhysicalDeviceProperties2(physicalDevice core.
 	return common.PopulateOutData(out, outData)
 }
 
-func (v *InstanceVulkanDriver) GetPhysicalDeviceQueueFamilyProperties2(physicalDevice core.PhysicalDevice, outDataFactory func() *core1_1.QueueFamilyProperties2) ([]*core1_1.QueueFamilyProperties2, error) {
+func (v *InstanceVulkanDriver) GetPhysicalDeviceQueueFamilyProperties2(physicalDevice core1_0.PhysicalDevice, outDataFactory func() *core1_1.QueueFamilyProperties2) ([]*core1_1.QueueFamilyProperties2, error) {
 	if !physicalDevice.Initialized() {
 		return nil, fmt.Errorf("physicalDevice cannot be uninitialized")
 	}
@@ -231,7 +230,7 @@ func (v *InstanceVulkanDriver) GetPhysicalDeviceQueueFamilyProperties2(physicalD
 	return out, err
 }
 
-func (v *InstanceVulkanDriver) GetPhysicalDeviceSparseImageFormatProperties2(physicalDevice core.PhysicalDevice, o core1_1.PhysicalDeviceSparseImageFormatInfo2, outDataFactory func() *core1_1.SparseImageFormatProperties2) ([]*core1_1.SparseImageFormatProperties2, error) {
+func (v *InstanceVulkanDriver) GetPhysicalDeviceSparseImageFormatProperties2(physicalDevice core1_0.PhysicalDevice, o core1_1.PhysicalDeviceSparseImageFormatInfo2, outDataFactory func() *core1_1.SparseImageFormatProperties2) ([]*core1_1.SparseImageFormatProperties2, error) {
 	if !physicalDevice.Initialized() {
 		return nil, fmt.Errorf("physicalDevice cannot be uninitialized")
 	}

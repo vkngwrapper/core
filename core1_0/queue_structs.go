@@ -10,7 +10,6 @@ import (
 
 	"github.com/CannibalVox/cgoparam"
 	"github.com/pkg/errors"
-	"github.com/vkngwrapper/core/v3"
 	"github.com/vkngwrapper/core/v3/common"
 )
 
@@ -36,7 +35,7 @@ type SparseMemoryBind struct {
 	Size int
 
 	// Memory is the DeviceMemory object that the range of the resource is bound to
-	Memory core.DeviceMemory
+	Memory DeviceMemory
 	// MemoryOffset is the offset into the DeviceMemory object to bind the resource range to
 	MemoryOffset int
 
@@ -68,7 +67,7 @@ func (b SparseMemoryBind) PopulateCPointer(allocator *cgoparam.Allocator, preall
 // https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkSparseBufferMemoryBindInfo.html
 type SparseBufferMemoryBindInfo struct {
 	// Buffer is the Buffer object to be bound
-	Buffer core.Buffer
+	Buffer Buffer
 	// Binds is a slice of SparseMemoryBind structures
 	Binds []SparseMemoryBind
 }
@@ -78,7 +77,7 @@ type SparseBufferMemoryBindInfo struct {
 // https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkSparseImageOpaqueMemoryBindInfo.html
 type SparseImageOpaqueMemoryBindInfo struct {
 	// Image is the Image object to be bound
-	Image core.Image
+	Image Image
 	// Binds is a slice of SparseMemoryBind structures
 	Binds []SparseMemoryBind
 }
@@ -95,7 +94,7 @@ type SparseImageMemoryBind struct {
 	Extent Extent3D
 
 	// Memory is the DeviceMemory object that the sparse Image blocks of the Image are bound to
-	Memory core.DeviceMemory
+	Memory DeviceMemory
 	// MemoryOffset is an offset into the DeviceMemory object
 	MemoryOffset int
 
@@ -108,7 +107,7 @@ type SparseImageMemoryBind struct {
 // https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkSparseImageMemoryBindInfo.html
 type SparseImageMemoryBindInfo struct {
 	// Image is the Image object to be bound
-	Image core.Image
+	Image Image
 	// Binds is a slice of SparseImageMemoryBind structures
 	Binds []SparseImageMemoryBind
 }
@@ -119,10 +118,10 @@ type SparseImageMemoryBindInfo struct {
 type BindSparseInfo struct {
 	// WaitSemaphores is a slice of Semaphore objects upon which to wait before the sparse
 	// binding operations for this batch begin execution
-	WaitSemaphores []core.Semaphore
+	WaitSemaphores []Semaphore
 	// SignalSemaphores a slice of Semaphore objects which will be signaled when the sparse binding
 	// operations for this batch have completed execution
-	SignalSemaphores []core.Semaphore
+	SignalSemaphores []Semaphore
 
 	// BufferBinds is a slice of SparseBufferMemoryBindInfo structures
 	BufferBinds []SparseBufferMemoryBindInfo
@@ -168,7 +167,7 @@ func (b BindSparseInfo) PopulateCPointer(allocator *cgoparam.Allocator, prealloc
 
 		for i := 0; i < waitSemaphoreCount; i++ {
 			if b.WaitSemaphores[i].Handle() == 0 {
-				return nil, errors.Errorf("core1_0.BindSparseInfo.WaitSemaphores cannot contain unset elements, but element %d is unset", i)
+				return nil, errors.Errorf("BindSparseInfo.WaitSemaphores cannot contain unset elements, but element %d is unset", i)
 			}
 			waitSemaphoreSlice[i] = C.VkSemaphore(unsafe.Pointer(b.WaitSemaphores[i].Handle()))
 		}
@@ -182,8 +181,8 @@ func (b BindSparseInfo) PopulateCPointer(allocator *cgoparam.Allocator, prealloc
 
 		for i := 0; i < bufferBindCount; i++ {
 			if b.BufferBinds[i].Buffer.Handle() == 0 {
-				return nil, errors.Errorf("core1_0.SparseBufferMemoryBindInfo.Buffer cannot be unset, but "+
-					"core1_0.BindSparseInfo.BufferBinds element %d has an unset Buffer", i)
+				return nil, errors.Errorf("SparseBufferMemoryBindInfo.Buffer cannot be unset, but "+
+					"BindSparseInfo.BufferBinds element %d has an unset Buffer", i)
 			}
 			bufferBindSlice[i].buffer = C.VkBuffer(unsafe.Pointer(b.BufferBinds[i].Buffer.Handle()))
 			bindCount := len(b.BufferBinds[i].Binds)
@@ -207,8 +206,8 @@ func (b BindSparseInfo) PopulateCPointer(allocator *cgoparam.Allocator, prealloc
 
 		for i := 0; i < imageOpaqueBindCount; i++ {
 			if b.ImageOpaqueBinds[i].Image.Handle() == 0 {
-				return nil, errors.Errorf("core1_0.SparseImageOpaqueMemoryBindInfo.Image must not be unset, but "+
-					"core1_0.BindParseInfo.ImageOpaqueBinds element %d has an unset Image", i)
+				return nil, errors.Errorf("SparseImageOpaqueMemoryBindInfo.Image must not be unset, but "+
+					"BindParseInfo.ImageOpaqueBinds element %d has an unset Image", i)
 			}
 			imageOpaqueBindSlice[i].image = C.VkImage(unsafe.Pointer(b.ImageOpaqueBinds[i].Image.Handle()))
 			bindCount := len(b.ImageOpaqueBinds[i].Binds)
@@ -232,8 +231,8 @@ func (b BindSparseInfo) PopulateCPointer(allocator *cgoparam.Allocator, prealloc
 
 		for i := 0; i < imageBindCount; i++ {
 			if b.ImageBinds[i].Image.Handle() == 0 {
-				return nil, errors.Errorf("core1_0.SparseImageMemoryBindInfo.Image must not be unset, but "+
-					"core1_0.BindParseInfo.ImageBinds element %d has an unset Image", i)
+				return nil, errors.Errorf("SparseImageMemoryBindInfo.Image must not be unset, but "+
+					"BindParseInfo.ImageBinds element %d has an unset Image", i)
 			}
 
 			imageBindSlice[i].image = C.VkImage(unsafe.Pointer(b.ImageBinds[i].Image.Handle()))
@@ -277,7 +276,7 @@ func (b BindSparseInfo) PopulateCPointer(allocator *cgoparam.Allocator, prealloc
 
 		for i := 0; i < signalSemaphoreCount; i++ {
 			if b.SignalSemaphores[i].Handle() == 0 {
-				return nil, errors.Errorf("core1_0.BindSparseInfo.SignalSemaphores cannot contain unset elements, "+
+				return nil, errors.Errorf("BindSparseInfo.SignalSemaphores cannot contain unset elements, "+
 					"but element %d is unset", i)
 			}
 			signalSemaphoreSlice[i] = C.VkSemaphore(unsafe.Pointer(b.SignalSemaphores[i].Handle()))

@@ -10,13 +10,12 @@ import (
 
 	"github.com/CannibalVox/cgoparam"
 	"github.com/pkg/errors"
-	"github.com/vkngwrapper/core/v3"
 	"github.com/vkngwrapper/core/v3/common"
 	"github.com/vkngwrapper/core/v3/core1_0"
 	"github.com/vkngwrapper/core/v3/loader"
 )
 
-func (v *DeviceVulkanDriver) MapMemory(deviceMemory core.DeviceMemory, offset int, size int, flags core1_0.MemoryMapFlags) (unsafe.Pointer, common.VkResult, error) {
+func (v *DeviceVulkanDriver) MapMemory(deviceMemory core1_0.DeviceMemory, offset int, size int, flags core1_0.MemoryMapFlags) (unsafe.Pointer, common.VkResult, error) {
 	if !deviceMemory.Initialized() {
 		return nil, core1_0.VKErrorUnknown, errors.New("deviceMemory was uninitialized")
 	}
@@ -30,14 +29,14 @@ func (v *DeviceVulkanDriver) MapMemory(deviceMemory core.DeviceMemory, offset in
 	return data, res, nil
 }
 
-func (v *DeviceVulkanDriver) UnmapMemory(deviceMemory core.DeviceMemory) {
+func (v *DeviceVulkanDriver) UnmapMemory(deviceMemory core1_0.DeviceMemory) {
 	if !deviceMemory.Initialized() {
 		panic("deviceMemory was uninitialized")
 	}
 	v.LoaderObj.VkUnmapMemory(deviceMemory.DeviceHandle(), deviceMemory.Handle())
 }
 
-func (v *DeviceVulkanDriver) FreeMemory(deviceMemory core.DeviceMemory, allocationCallbacks *loader.AllocationCallbacks) {
+func (v *DeviceVulkanDriver) FreeMemory(deviceMemory core1_0.DeviceMemory, allocationCallbacks *loader.AllocationCallbacks) {
 	if !deviceMemory.Initialized() {
 		panic("deviceMemory was uninitialized")
 	}
@@ -45,7 +44,7 @@ func (v *DeviceVulkanDriver) FreeMemory(deviceMemory core.DeviceMemory, allocati
 	v.LoaderObj.VkFreeMemory(deviceMemory.DeviceHandle(), deviceMemory.Handle(), allocationCallbacks.Handle())
 }
 
-func (v *DeviceVulkanDriver) GetDeviceMemoryCommitment(deviceMemory core.DeviceMemory) int {
+func (v *DeviceVulkanDriver) GetDeviceMemoryCommitment(deviceMemory core1_0.DeviceMemory) int {
 	if !deviceMemory.Initialized() {
 		panic("deviceMemory was uninitialized")
 	}

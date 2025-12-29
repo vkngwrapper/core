@@ -7,7 +7,6 @@ import (
 	"unsafe"
 
 	"github.com/stretchr/testify/require"
-	"github.com/vkngwrapper/core/v3"
 	"github.com/vkngwrapper/core/v3/common"
 	"github.com/vkngwrapper/core/v3/core1_0"
 	"github.com/vkngwrapper/core/v3/core1_2"
@@ -402,7 +401,7 @@ func TestVulkanDevice_WaitSemaphores(t *testing.T) {
 		time.Minute,
 		core1_2.SemaphoreWaitInfo{
 			Flags: core1_2.SemaphoreWaitAny,
-			Semaphores: []core.Semaphore{
+			Semaphores: []core1_0.Semaphore{
 				semaphore1,
 				semaphore2,
 			},

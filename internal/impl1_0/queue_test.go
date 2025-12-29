@@ -6,7 +6,6 @@ import (
 	"unsafe"
 
 	"github.com/stretchr/testify/require"
-	"github.com/vkngwrapper/core/v3"
 	"github.com/vkngwrapper/core/v3/common"
 	"github.com/vkngwrapper/core/v3/core1_0"
 	"github.com/vkngwrapper/core/v3/loader"
@@ -155,8 +154,8 @@ func TestVulkanQueue_BindSparse(t *testing.T) {
 
 	_, err := driver.QueueBindSparse(queue, nil,
 		core1_0.BindSparseInfo{
-			WaitSemaphores:   []core.Semaphore{semaphore1},
-			SignalSemaphores: []core.Semaphore{semaphore2, semaphore3},
+			WaitSemaphores:   []core1_0.Semaphore{semaphore1},
+			SignalSemaphores: []core1_0.Semaphore{semaphore2, semaphore3},
 			BufferBinds: []core1_0.SparseBufferMemoryBindInfo{
 				{
 					Buffer: buffer,

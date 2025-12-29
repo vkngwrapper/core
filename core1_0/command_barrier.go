@@ -10,7 +10,6 @@ import (
 
 	"github.com/CannibalVox/cgoparam"
 	"github.com/pkg/errors"
-	"github.com/vkngwrapper/core/v3"
 	"github.com/vkngwrapper/core/v3/common"
 )
 
@@ -54,7 +53,7 @@ type BufferMemoryBarrier struct {
 	DstQueueFamilyIndex int
 
 	// Buffer is the buffer whose backing memory is affected by the barrier
-	Buffer core.Buffer
+	Buffer Buffer
 
 	// Offset is an offset in bytes into the backing memory for Buffer
 	Offset int
@@ -66,7 +65,7 @@ type BufferMemoryBarrier struct {
 
 func (o BufferMemoryBarrier) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if !o.Buffer.Initialized() {
-		return nil, errors.New("core1_0.BufferMemoryBarrier.Buffer cannot be left unset")
+		return nil, errors.New("BufferMemoryBarrier.Buffer cannot be left unset")
 	}
 	if preallocatedPointer == unsafe.Pointer(nil) {
 		preallocatedPointer = allocator.Malloc(C.sizeof_struct_VkBufferMemoryBarrier)
@@ -105,7 +104,7 @@ type ImageMemoryBarrier struct {
 	DstQueueFamilyIndex int
 
 	// Image is the Image object affected by this barrier
-	Image core.Image
+	Image Image
 	// SubresourceRange describes the image subresource range within Image that is affected by this barrier
 	SubresourceRange ImageSubresourceRange
 
@@ -114,7 +113,7 @@ type ImageMemoryBarrier struct {
 
 func (o ImageMemoryBarrier) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
 	if !o.Image.Initialized() {
-		return nil, errors.New("core1_0.ImageMemoryBarrier.Image cannot be left unset")
+		return nil, errors.New("ImageMemoryBarrier.Image cannot be left unset")
 	}
 	if preallocatedPointer == unsafe.Pointer(nil) {
 		preallocatedPointer = allocator.Malloc(C.sizeof_struct_VkImageMemoryBarrier)

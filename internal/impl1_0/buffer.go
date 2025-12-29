@@ -8,13 +8,12 @@ import "C"
 import (
 	"github.com/CannibalVox/cgoparam"
 	"github.com/pkg/errors"
-	"github.com/vkngwrapper/core/v3"
 	"github.com/vkngwrapper/core/v3/common"
 	"github.com/vkngwrapper/core/v3/core1_0"
 	"github.com/vkngwrapper/core/v3/loader"
 )
 
-func (v *DeviceVulkanDriver) DestroyBuffer(buffer core.Buffer, allocationCallbacks *loader.AllocationCallbacks) {
+func (v *DeviceVulkanDriver) DestroyBuffer(buffer core1_0.Buffer, allocationCallbacks *loader.AllocationCallbacks) {
 	if !buffer.Initialized() {
 		panic("buffer cannot be uninitialized")
 	}
@@ -25,7 +24,7 @@ func (v *DeviceVulkanDriver) DestroyBuffer(buffer core.Buffer, allocationCallbac
 	v.LoaderObj.VkDestroyBuffer(buffer.DeviceHandle(), buffer.Handle(), allocationCallbacks.Handle())
 }
 
-func (v *DeviceVulkanDriver) GetBufferMemoryRequirements(buffer core.Buffer) *core1_0.MemoryRequirements {
+func (v *DeviceVulkanDriver) GetBufferMemoryRequirements(buffer core1_0.Buffer) *core1_0.MemoryRequirements {
 	if !buffer.Initialized() {
 		panic("buffer cannot be uninitialized")
 	}
@@ -46,7 +45,7 @@ func (v *DeviceVulkanDriver) GetBufferMemoryRequirements(buffer core.Buffer) *co
 	}
 }
 
-func (v *DeviceVulkanDriver) BindBufferMemory(buffer core.Buffer, memory core.DeviceMemory, offset int) (common.VkResult, error) {
+func (v *DeviceVulkanDriver) BindBufferMemory(buffer core1_0.Buffer, memory core1_0.DeviceMemory, offset int) (common.VkResult, error) {
 	if !buffer.Initialized() {
 		return core1_0.VKErrorUnknown, errors.New("received uninitialized Buffer")
 	}

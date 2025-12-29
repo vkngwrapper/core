@@ -6,7 +6,6 @@ import (
 	"unsafe"
 
 	"github.com/stretchr/testify/require"
-	"github.com/vkngwrapper/core/v3"
 	"github.com/vkngwrapper/core/v3/common"
 	"github.com/vkngwrapper/core/v3/core1_0"
 	"github.com/vkngwrapper/core/v3/loader"
@@ -118,7 +117,7 @@ func TestDescriptorPool_AllocAndFree_Single(t *testing.T) {
 
 	sets, _, err := driver.AllocateDescriptorSets(core1_0.DescriptorSetAllocateInfo{
 		DescriptorPool: pool,
-		SetLayouts:     []core.DescriptorSetLayout{layout},
+		SetLayouts:     []core1_0.DescriptorSetLayout{layout},
 	})
 	require.NoError(t, err)
 
@@ -186,7 +185,7 @@ func TestDescriptorPool_AllocAndFree_Multi(t *testing.T) {
 
 	sets, _, err := driver.AllocateDescriptorSets(core1_0.DescriptorSetAllocateInfo{
 		DescriptorPool: pool,
-		SetLayouts:     []core.DescriptorSetLayout{layout1, layout2, layout3},
+		SetLayouts:     []core1_0.DescriptorSetLayout{layout1, layout2, layout3},
 	})
 	require.NoError(t, err)
 

@@ -3,7 +3,6 @@ package bootstrap
 import (
 	"unsafe"
 
-	"github.com/vkngwrapper/core/v3"
 	"github.com/vkngwrapper/core/v3/common"
 	"github.com/vkngwrapper/core/v3/core1_0"
 	"github.com/vkngwrapper/core/v3/internal/impl1_0"
@@ -11,7 +10,7 @@ import (
 	"github.com/vkngwrapper/core/v3/internal/impl1_2"
 	"github.com/vkngwrapper/core/v3/loader"
 )
-
+ 
 func CreateDriverFromProcAddr(procAddr unsafe.Pointer) (core1_0.GlobalDriver, error) {
 	loaderObj, err := loader.CreateLoaderFromProcAddr(procAddr)
 	if err != nil {
@@ -25,7 +24,7 @@ func CreateDriverFromProcAddr(procAddr unsafe.Pointer) (core1_0.GlobalDriver, er
 	}, nil
 }
 
-func buildInstanceDriver(driver *impl1_0.GlobalVulkanDriver, instance core.Instance) (core1_0.CoreInstanceDriver, error) {
+func buildInstanceDriver(driver *impl1_0.GlobalVulkanDriver, instance core1_0.Instance) (core1_0.CoreInstanceDriver, error) {
 	loaderObj, err := driver.LoaderObj.CreateInstanceLoader(instance.Handle())
 	if err != nil {
 		return nil, err
@@ -68,7 +67,7 @@ func buildInstanceDriver(driver *impl1_0.GlobalVulkanDriver, instance core.Insta
 	}
 }
 
-func buildDeviceDriver(driver core1_0.CoreInstanceDriver, device core.Device) (core1_0.CoreDeviceDriver, error) {
+func buildDeviceDriver(driver core1_0.CoreInstanceDriver, device core1_0.Device) (core1_0.CoreDeviceDriver, error) {
 	loaderObj, err := driver.Loader().CreateDeviceLoader(device.Handle())
 	if err != nil {
 		return nil, err

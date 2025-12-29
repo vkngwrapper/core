@@ -10,8 +10,8 @@ import (
 
 	"github.com/CannibalVox/cgoparam"
 	"github.com/pkg/errors"
-	"github.com/vkngwrapper/core/v3"
 	"github.com/vkngwrapper/core/v3/common"
+	"github.com/vkngwrapper/core/v3/core1_0"
 	"github.com/vkngwrapper/core/v3/loader"
 )
 
@@ -20,9 +20,9 @@ import (
 // https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkMemoryDedicatedAllocateInfo.html
 type MemoryDedicatedAllocateInfo struct {
 	// Image is nil or the Image object which this memory will be bound to
-	Image core.Image
+	Image core1_0.Image
 	// Buffer is nil or the Buffer object this memory will be bound to
-	Buffer core.Buffer
+	Buffer core1_0.Buffer
 
 	common.NextOptions
 }

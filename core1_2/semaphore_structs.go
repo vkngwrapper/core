@@ -10,8 +10,8 @@ import (
 
 	"github.com/CannibalVox/cgoparam"
 	"github.com/pkg/errors"
-	"github.com/vkngwrapper/core/v3"
 	"github.com/vkngwrapper/core/v3/common"
+	"github.com/vkngwrapper/core/v3/core1_0"
 )
 
 // SemaphoreType specifies the type of a Semaphore object
@@ -82,7 +82,7 @@ func init() {
 // https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkSemaphoreSignalInfo.html
 type SemaphoreSignalInfo struct {
 	// Semaphore is the Semaphore object to signal
-	Semaphore core.Semaphore
+	Semaphore core1_0.Semaphore
 	// Value is the value to signal
 	Value uint64
 
@@ -115,7 +115,7 @@ type SemaphoreWaitInfo struct {
 	// Flags specifies additional parameters for the Semaphore wait operation
 	Flags SemaphoreWaitFlags
 	// Semaphores is a slice of Semaphore objects to wait on
-	Semaphores []core.Semaphore
+	Semaphores []core1_0.Semaphore
 	// Values is a slice of timeline Semaphore values
 	Values []uint64
 

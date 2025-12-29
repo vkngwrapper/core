@@ -7,7 +7,6 @@ import (
 	"unsafe"
 
 	"github.com/stretchr/testify/require"
-	"github.com/vkngwrapper/core/v3"
 	"github.com/vkngwrapper/core/v3/common"
 	"github.com/vkngwrapper/core/v3/core1_0"
 	"github.com/vkngwrapper/core/v3/loader"
@@ -459,7 +458,7 @@ func TestVulkanDevice_UpdateDescriptorSets_TexelBufferView(t *testing.T) {
 			DstBinding:      1,
 			DstArrayElement: 3,
 			DescriptorType:  core1_0.DescriptorTypeUniformBuffer,
-			TexelBufferView: []core.BufferView{
+			TexelBufferView: []core1_0.BufferView{
 				bufferView1, bufferView2,
 			},
 		},
@@ -602,7 +601,7 @@ func TestVulkanDevice_UpdateDescriptorSets_FailureImageInfoAndBufferView(t *test
 					ImageLayout: core1_0.ImageLayoutPreInitialized,
 				},
 			},
-			TexelBufferView: []core.BufferView{
+			TexelBufferView: []core1_0.BufferView{
 				bufferView1, bufferView2,
 			},
 		},
@@ -645,7 +644,7 @@ func TestVulkanDevice_UpdateDescriptorSets_FailureBufferInfoAndBufferView(t *tes
 					Range:  17,
 				},
 			},
-			TexelBufferView: []core.BufferView{
+			TexelBufferView: []core1_0.BufferView{
 				bufferView1, bufferView2,
 			},
 		},
