@@ -1,6 +1,6 @@
 //go:build !windows
 
-package bootstrap
+package core
 
 /*
 #include <stdlib.h>

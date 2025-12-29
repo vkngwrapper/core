@@ -10,7 +10,6 @@ import (
 
 	"github.com/CannibalVox/cgoparam"
 	"github.com/pkg/errors"
-	"github.com/vkngwrapper/core/v3"
 	"github.com/vkngwrapper/core/v3/common"
 	"github.com/vkngwrapper/core/v3/core1_0"
 )
@@ -20,9 +19,9 @@ import (
 // https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkBindBufferMemoryInfo.html
 type BindBufferMemoryInfo struct {
 	// Buffer is the Buffer to be attached to memory
-	Buffer core.Buffer
+	Buffer core1_0.Buffer
 	// Memory describes the DeviceMemory object to attach
-	Memory core.DeviceMemory
+	Memory core1_0.DeviceMemory
 	// MemoryOffset is the start offset of the region of memory which is to be bound to the Buffer
 	MemoryOffset int
 
@@ -30,10 +29,10 @@ type BindBufferMemoryInfo struct {
 }
 
 func (o BindBufferMemoryInfo) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
-	if o.Buffer.Handle() == 0 {
+	if !o.Buffer.Initialized() {
 		return nil, errors.Errorf("core1_1.BindBufferMemoryInfo.Buffer cannot be left unset")
 	}
-	if o.Memory.Handle() == 0 {
+	if !o.Memory.Initialized() {
 		return nil, errors.Errorf("core1_1.BindBufferMemoryInfo.Memory cannot be left unset")
 	}
 	if preallocatedPointer == nil {
@@ -55,9 +54,9 @@ func (o BindBufferMemoryInfo) PopulateCPointer(allocator *cgoparam.Allocator, pr
 // BindImageMemoryInfo specifies how to bind an Image to DeviceMemory
 type BindImageMemoryInfo struct {
 	// Image is the image to be attached to DeviceMemory
-	Image core.Image
+	Image core1_0.Image
 	// Memory describes the DeviceMemory to attach
-	Memory core.DeviceMemory
+	Memory core1_0.DeviceMemory
 	// MemoryOffset is the start offset of the region of DeviceMemory to be bound to the Image
 	MemoryOffset uint64
 
@@ -65,10 +64,10 @@ type BindImageMemoryInfo struct {
 }
 
 func (o BindImageMemoryInfo) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
-	if o.Image.Handle() == 0 {
+	if !o.Image.Initialized() {
 		return nil, errors.Errorf("core1_1.BindImageMemoryInfo.Image cannot be left unset")
 	}
-	if o.Memory.Handle() == 0 {
+	if !o.Memory.Initialized() {
 		return nil, errors.Errorf("core1_1.BindImageMemoryInfo.Memory cannot be left unset")
 	}
 	if preallocatedPointer == nil {

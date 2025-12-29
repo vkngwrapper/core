@@ -6,7 +6,6 @@ import (
 	"unsafe"
 
 	"github.com/stretchr/testify/require"
-	"github.com/vkngwrapper/core/v3"
 	"github.com/vkngwrapper/core/v3/common"
 	"github.com/vkngwrapper/core/v3/core1_0"
 	"github.com/vkngwrapper/core/v3/loader"
@@ -68,7 +67,7 @@ func TestVulkanLoader1_0_CreatePipelineLayout(t *testing.T) {
 		})
 
 	layout, _, err := driver.CreatePipelineLayout(nil, core1_0.PipelineLayoutCreateInfo{
-		SetLayouts: []core.DescriptorSetLayout{descriptorSetLayout1, descriptorSetLayout2},
+		SetLayouts: []core1_0.DescriptorSetLayout{descriptorSetLayout1, descriptorSetLayout2},
 		PushConstantRanges: []core1_0.PushConstantRange{
 			{
 				StageFlags: core1_0.StageFragment,

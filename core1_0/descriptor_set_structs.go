@@ -10,25 +10,24 @@ import (
 
 	"github.com/CannibalVox/cgoparam"
 	"github.com/pkg/errors"
-	"github.com/vkngwrapper/core/v3"
 	"github.com/vkngwrapper/core/v3/common"
 )
 
 // DescriptorSetAllocateInfo specifies the allocation parameters for DescritporSet objects
 type DescriptorSetAllocateInfo struct {
 	// DescriptorPool is the pool which the sets will be allocated from
-	DescriptorPool core.DescriptorPool
+	DescriptorPool DescriptorPool
 
 	// SetLayouts is a slice of DescriptorSetLayout objects, which each member specifying how the
 	// corresponding DescriptorSet is allocated
-	SetLayouts []core.DescriptorSetLayout
+	SetLayouts []DescriptorSetLayout
 
 	common.NextOptions
 }
 
 func (o DescriptorSetAllocateInfo) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
-	if o.DescriptorPool.Handle() == 0 {
-		return nil, errors.New("core1_0.DescriptorSetAllocateInfo.DescriptorPool cannot be left unset")
+	if !o.DescriptorPool.Initialized() {
+		return nil, errors.New("DescriptorSetAllocateInfo.DescriptorPool cannot be left unset")
 	}
 	if preallocatedPointer == unsafe.Pointer(nil) {
 		preallocatedPointer = allocator.Malloc(C.sizeof_struct_VkDescriptorSetAllocateInfo)
@@ -49,7 +48,7 @@ func (o DescriptorSetAllocateInfo) PopulateCPointer(allocator *cgoparam.Allocato
 
 		for i := 0; i < setCount; i++ {
 			if o.SetLayouts[i].Handle() == 0 {
-				return nil, errors.New("core1_0.DescriptorSetAllocateInfo.SetLayouts cannot contain any unset elements")
+				return nil, errors.New("DescriptorSetAllocateInfo.SetLayouts cannot contain any unset elements")
 			}
 
 			layoutsSlice[i] = C.VkDescriptorSetLayout(unsafe.Pointer(o.SetLayouts[i].Handle()))
@@ -68,10 +67,10 @@ type DescriptorImageInfo struct {
 	// Sampler is a Sampler object, and is used in descriptor updates for DescriptorTypeSampler and
 	// DescriptorTypeCombinedImageSampler descriptors if the binding being update does not use
 	// immutable sampler
-	Sampler core.Sampler
+	Sampler Sampler
 	// ImageView is an ImageView object, and is used in descriptor updates for DescriptorTypeSampledImage,
 	// DescriptorTypeStorageImage, DescriptorTypeCombinedImageSampler, and DescriptorTypeInputAttachment
-	ImageView core.ImageView
+	ImageView ImageView
 	// ImageLayout is the layout that the Image subresources accessible form ImageView will be in
 	// at the time this descriptor is accessed
 	ImageLayout ImageLayout
@@ -82,7 +81,7 @@ type DescriptorImageInfo struct {
 // https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkDescriptorBufferInfo.html
 type DescriptorBufferInfo struct {
 	// Buffer is the Buffer resource
-	Buffer core.Buffer
+	Buffer Buffer
 	// Offset is the offset in bytes from the start of Buffer
 	Offset int
 	// Range is the size in bytes that is used for this descriptor update
@@ -94,7 +93,7 @@ type DescriptorBufferInfo struct {
 // https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkWriteDescriptorSet.html
 type WriteDescriptorSet struct {
 	// DstSet is the destination DescriptorSet to update
-	DstSet core.DescriptorSet
+	DstSet DescriptorSet
 	// DstBinding is the descriptor binding within that set
 	DstBinding int
 	// DstArrayElement is the starting element in that array
@@ -109,7 +108,7 @@ type WriteDescriptorSet struct {
 	// BufferInfo is a slice of DescriptorBufferInfo structures or is ignored
 	BufferInfo []DescriptorBufferInfo
 	// TexelBufferView is a slice of BufferView objects or is ignored
-	TexelBufferView []core.BufferView
+	TexelBufferView []BufferView
 
 	common.NextOptions
 }
@@ -160,8 +159,8 @@ func (o WriteDescriptorSet) PopulateCPointer(allocator *cgoparam.Allocator, prea
 		return nil, errors.New("an extension descriptor source for a WriteDescriptorSet has been included, but so has a traditional descriptor source: ImageInfo, BufferInfo, or TexelBufferView")
 	}
 
-	if o.DstSet.Handle() == 0 {
-		return nil, errors.New("core1_0.WriteDescriptorSet.DstSet cannot be left unset")
+	if !o.DstSet.Initialized() {
+		return nil, errors.New("WriteDescriptorSet.DstSet cannot be left unset")
 	}
 
 	createInfo.sType = C.VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET
@@ -239,14 +238,14 @@ func (o WriteDescriptorSet) PopulateCPointer(allocator *cgoparam.Allocator, prea
 // https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkCopyDescriptorSet.html
 type CopyDescriptorSet struct {
 	// SrcSet is the source descriptor set
-	SrcSet core.DescriptorSet
+	SrcSet DescriptorSet
 	// SrcBinding is the source descriptor binding
 	SrcBinding int
 	// SrcArrayElement is the source descriptor array element
 	SrcArrayElement int
 
 	// DstSet is the destination descriptor set
-	DstSet core.DescriptorSet
+	DstSet DescriptorSet
 	// DstBinding is the destination descriptor binding
 	DstBinding int
 	// DstArrayElement is the destination descriptor array element
@@ -262,11 +261,11 @@ func (o CopyDescriptorSet) PopulateCPointer(allocator *cgoparam.Allocator, preal
 	if preallocatedPointer == unsafe.Pointer(nil) {
 		preallocatedPointer = allocator.Malloc(C.sizeof_struct_VkCopyDescriptorSet)
 	}
-	if o.SrcSet.Handle() == 0 {
-		return nil, errors.New("core1_0.CopyDescriptorSet.SrcSet cannot be left unset")
+	if !o.SrcSet.Initialized() {
+		return nil, errors.New("CopyDescriptorSet.SrcSet cannot be left unset")
 	}
-	if o.DstSet.Handle() == 0 {
-		return nil, errors.New("core1_0.CopyDescriptorSet.DstSet cannot be left unset")
+	if !o.DstSet.Initialized() {
+		return nil, errors.New("CopyDescriptorSet.DstSet cannot be left unset")
 	}
 
 	createInfo := (*C.VkCopyDescriptorSet)(preallocatedPointer)

@@ -12,7 +12,6 @@ import (
 
 	"github.com/CannibalVox/cgoparam"
 	"github.com/pkg/errors"
-	"github.com/vkngwrapper/core/v3"
 	"github.com/vkngwrapper/core/v3/common"
 )
 
@@ -70,7 +69,7 @@ type PipelineShaderStageCreateInfo struct {
 	// Stage specifies a single Pipeline stage
 	Stage ShaderStageFlags
 	// Module contains the shader code for this stage
-	Module core.ShaderModule
+	Module ShaderModule
 	// SpecializationInfo is a map specifying specialization contents
 	SpecializationInfo map[uint32]any
 
@@ -78,8 +77,8 @@ type PipelineShaderStageCreateInfo struct {
 }
 
 func (s PipelineShaderStageCreateInfo) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
-	if s.Module.Handle() == 0 {
-		return nil, errors.New("core1_0.PipelineShaderStageCreateInfo.Module cannot be left unset")
+	if !s.Module.Initialized() {
+		return nil, errors.New("PipelineShaderStageCreateInfo.Module cannot be left unset")
 	}
 
 	if preallocatedPointer == unsafe.Pointer(nil) {

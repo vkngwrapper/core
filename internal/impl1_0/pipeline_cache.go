@@ -10,21 +10,20 @@ import (
 	"unsafe"
 
 	"github.com/CannibalVox/cgoparam"
-	"github.com/vkngwrapper/core/v3"
 	"github.com/vkngwrapper/core/v3/common"
 	"github.com/vkngwrapper/core/v3/core1_0"
 	"github.com/vkngwrapper/core/v3/loader"
 )
 
-func (v *DeviceVulkanDriver) DestroyPipelineCache(pipelineCache core.PipelineCache, callbacks *loader.AllocationCallbacks) {
-	if pipelineCache.Handle() == 0 {
+func (v *DeviceVulkanDriver) DestroyPipelineCache(pipelineCache core1_0.PipelineCache, callbacks *loader.AllocationCallbacks) {
+	if !pipelineCache.Initialized() {
 		panic("pipelineCache was uninitialized")
 	}
 	v.LoaderObj.VkDestroyPipelineCache(pipelineCache.DeviceHandle(), pipelineCache.Handle(), callbacks.Handle())
 }
 
-func (v *DeviceVulkanDriver) GetPipelineCacheData(pipelineCache core.PipelineCache) ([]byte, common.VkResult, error) {
-	if pipelineCache.Handle() == 0 {
+func (v *DeviceVulkanDriver) GetPipelineCacheData(pipelineCache core1_0.PipelineCache) ([]byte, common.VkResult, error) {
+	if !pipelineCache.Initialized() {
 		return nil, core1_0.VKErrorUnknown, fmt.Errorf("pipelineCache was uninitialized")
 	}
 
@@ -53,8 +52,8 @@ func (v *DeviceVulkanDriver) GetPipelineCacheData(pipelineCache core.PipelineCac
 	return outData, res, nil
 }
 
-func (v *DeviceVulkanDriver) MergePipelineCaches(dstCaches core.PipelineCache, srcCaches ...core.PipelineCache) (common.VkResult, error) {
-	if dstCaches.Handle() == 0 {
+func (v *DeviceVulkanDriver) MergePipelineCaches(dstCaches core1_0.PipelineCache, srcCaches ...core1_0.PipelineCache) (common.VkResult, error) {
+	if !dstCaches.Initialized() {
 		panic("dstCaches was uninitialized")
 	}
 

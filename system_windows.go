@@ -1,6 +1,6 @@
 //go:build windows
 
-package bootstrap
+package core
 
 import "C"
 import (
@@ -29,7 +29,7 @@ func loadProcAddr() error {
 	return nil
 }
 
-// CreateSystemLoader generates a Loader from a vulkan-1.dll/so located on the local file system
+// CreateSystemDriver generates a Loader from a vulkan-1.dll/so located on the local file system
 //
 // Allowing cgo to bring us the vkGetInstanceProcAddr method on windows, for whatever reason, causes heap corruption
 // when the garbage collector runs. For whatever reason, manually loading it from dll does not have this issue

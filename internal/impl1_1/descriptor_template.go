@@ -9,20 +9,20 @@ import (
 	"unsafe"
 
 	"github.com/CannibalVox/cgoparam"
-	"github.com/vkngwrapper/core/v3"
 	"github.com/vkngwrapper/core/v3/core1_0"
+	"github.com/vkngwrapper/core/v3/core1_1"
 	"github.com/vkngwrapper/core/v3/loader"
 )
 
-func (v *DeviceVulkanDriver) DestroyDescriptorUpdateTemplate(template core.DescriptorUpdateTemplate, allocator *loader.AllocationCallbacks) {
+func (v *DeviceVulkanDriver) DestroyDescriptorUpdateTemplate(template core1_1.DescriptorUpdateTemplate, allocator *loader.AllocationCallbacks) {
 	v.LoaderObj.VkDestroyDescriptorUpdateTemplate(template.DeviceHandle(), template.Handle(), allocator.Handle())
 }
 
-func (v *DeviceVulkanDriver) UpdateDescriptorSetWithTemplateFromImage(descriptorSet core.DescriptorSet, template core.DescriptorUpdateTemplate, data core1_0.DescriptorImageInfo) {
-	if descriptorSet.Handle() == 0 {
+func (v *DeviceVulkanDriver) UpdateDescriptorSetWithTemplateFromImage(descriptorSet core1_0.DescriptorSet, template core1_1.DescriptorUpdateTemplate, data core1_0.DescriptorImageInfo) {
+	if !descriptorSet.Initialized() {
 		panic("descriptorSet cannot be uninitialized")
 	}
-	if template.Handle() == 0 {
+	if !template.Initialized() {
 		panic("template cannot be uninitialized")
 	}
 	arena := cgoparam.GetAlloc()
@@ -34,11 +34,11 @@ func (v *DeviceVulkanDriver) UpdateDescriptorSetWithTemplateFromImage(descriptor
 	info.imageView = nil
 	info.imageLayout = C.VkImageLayout(data.ImageLayout)
 
-	if data.Sampler.Handle() != 0 {
+	if data.Sampler.Initialized() {
 		info.sampler = C.VkSampler(unsafe.Pointer(data.Sampler.Handle()))
 	}
 
-	if data.ImageView.Handle() != 0 {
+	if data.ImageView.Initialized() {
 		info.imageView = C.VkImageView(unsafe.Pointer(data.ImageView.Handle()))
 	}
 
@@ -50,11 +50,11 @@ func (v *DeviceVulkanDriver) UpdateDescriptorSetWithTemplateFromImage(descriptor
 	)
 }
 
-func (v *DeviceVulkanDriver) UpdateDescriptorSetWithTemplateFromBuffer(descriptorSet core.DescriptorSet, template core.DescriptorUpdateTemplate, data core1_0.DescriptorBufferInfo) {
-	if descriptorSet.Handle() == 0 {
+func (v *DeviceVulkanDriver) UpdateDescriptorSetWithTemplateFromBuffer(descriptorSet core1_0.DescriptorSet, template core1_1.DescriptorUpdateTemplate, data core1_0.DescriptorBufferInfo) {
+	if !descriptorSet.Initialized() {
 		panic("descriptorSet cannot be uninitialized")
 	}
-	if template.Handle() == 0 {
+	if !template.Initialized() {
 		panic("template cannot be uninitialized")
 	}
 	arena := cgoparam.GetAlloc()
@@ -66,7 +66,7 @@ func (v *DeviceVulkanDriver) UpdateDescriptorSetWithTemplateFromBuffer(descripto
 	info.offset = C.VkDeviceSize(data.Offset)
 	info._range = C.VkDeviceSize(data.Range)
 
-	if data.Buffer.Handle() != 0 {
+	if data.Buffer.Initialized() {
 		info.buffer = C.VkBuffer(unsafe.Pointer(data.Buffer.Handle()))
 	}
 
@@ -78,11 +78,11 @@ func (v *DeviceVulkanDriver) UpdateDescriptorSetWithTemplateFromBuffer(descripto
 	)
 }
 
-func (v *DeviceVulkanDriver) UpdateDescriptorSetWithTemplateFromObjectHandle(descriptorSet core.DescriptorSet, template core.DescriptorUpdateTemplate, data loader.VulkanHandle) {
-	if descriptorSet.Handle() == 0 {
+func (v *DeviceVulkanDriver) UpdateDescriptorSetWithTemplateFromObjectHandle(descriptorSet core1_0.DescriptorSet, template core1_1.DescriptorUpdateTemplate, data loader.VulkanHandle) {
+	if !descriptorSet.Initialized() {
 		panic("descriptorSet cannot be uninitialized")
 	}
-	if template.Handle() == 0 {
+	if !template.Initialized() {
 		panic("template cannot be uninitialized")
 	}
 

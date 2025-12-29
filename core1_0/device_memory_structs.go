@@ -10,7 +10,6 @@ import (
 
 	"github.com/CannibalVox/cgoparam"
 	"github.com/pkg/errors"
-	"github.com/vkngwrapper/core/v3"
 	"github.com/vkngwrapper/core/v3/common"
 )
 
@@ -55,7 +54,7 @@ func (o MemoryAllocateInfo) PopulateCPointer(allocator *cgoparam.Allocator, prea
 // https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkMappedMemoryRange.html
 type MappedMemoryRange struct {
 	// Memory is the DeviceMemory object to which this range belongs
-	Memory core.DeviceMemory
+	Memory DeviceMemory
 	// Offset is the zero-based byte offset from the beginning of the DeviceMemory objects
 	Offset int
 	// Size is either the size of the range or -1 to affect the range from offset to the end
@@ -66,8 +65,8 @@ type MappedMemoryRange struct {
 }
 
 func (r MappedMemoryRange) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
-	if r.Memory.Handle() == 0 {
-		return nil, errors.New("core1_0.MappedMemoryRange.Memory cannot be left unset")
+	if !r.Memory.Initialized() {
+		return nil, errors.New("MappedMemoryRange.Memory cannot be left unset")
 	}
 	if preallocatedPointer == unsafe.Pointer(nil) {
 		preallocatedPointer = allocator.Malloc(C.sizeof_struct_VkMappedMemoryRange)

@@ -9,13 +9,12 @@ import (
 	"unsafe"
 
 	"github.com/CannibalVox/cgoparam"
-	"github.com/vkngwrapper/core/v3"
 	"github.com/vkngwrapper/core/v3/core1_0"
 	"github.com/vkngwrapper/core/v3/loader"
 )
 
-func (v *DeviceVulkanDriver) GetImageSparseMemoryRequirements(image core.Image) []core1_0.SparseImageMemoryRequirements {
-	if image.Handle() == 0 {
+func (v *DeviceVulkanDriver) GetImageSparseMemoryRequirements(image core1_0.Image) []core1_0.SparseImageMemoryRequirements {
+	if !image.Initialized() {
 		panic("image was uninitialized")
 	}
 	arena := cgoparam.GetAlloc()

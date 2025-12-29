@@ -10,7 +10,6 @@ import (
 
 	"github.com/CannibalVox/cgoparam"
 	"github.com/pkg/errors"
-	"github.com/vkngwrapper/core/v3"
 	"github.com/vkngwrapper/core/v3/common"
 	"github.com/vkngwrapper/core/v3/core1_0"
 	"github.com/vkngwrapper/core/v3/core1_1"
@@ -67,13 +66,13 @@ func init() {
 // https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkBufferDeviceAddressInfo.html
 type BufferDeviceAddressInfo struct {
 	// Buffer specifies the Buffer whose address is being queried
-	Buffer core.Buffer
+	Buffer core1_0.Buffer
 
 	common.NextOptions
 }
 
 func (o BufferDeviceAddressInfo) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
-	if o.Buffer.Handle() == 0 {
+	if !o.Buffer.Initialized() {
 		return nil, errors.New("core1_2.DeviceMemoryAddressOptions.Buffer cannot be left unset")
 	}
 	if preallocatedPointer == nil {
@@ -100,13 +99,13 @@ func (o BufferDeviceAddressInfo) PopulateOutData(cDataPointer unsafe.Pointer, he
 // https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkDeviceMemoryOpaqueCaptureAddressInfo.html
 type DeviceMemoryOpaqueCaptureAddressInfo struct {
 	// Memory specifies the DeviceMemory whose address is being queried
-	Memory core.DeviceMemory
+	Memory core1_0.DeviceMemory
 
 	common.NextOptions
 }
 
 func (o DeviceMemoryOpaqueCaptureAddressInfo) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
-	if o.Memory.Handle() == 0 {
+	if !o.Memory.Initialized() {
 		return nil, errors.New("core1_2.DeviceMemoryOpaqueCaptureAddressInfo.Memory cannot be left unset")
 	}
 	if preallocatedPointer == nil {

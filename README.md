@@ -39,7 +39,7 @@ The first step to using vkngwrapper is to create a [Loader](https://pkg.go.dev/g
  the easiest way is to build a loader from the system's local Vulkan library:
 
 ```go 
-loader, err := core.CreateSystemLoader()
+loader, err := core1_0.CreateSystemLoader()
 if err != nil {
  return err 
 }

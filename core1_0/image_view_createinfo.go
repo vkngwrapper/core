@@ -10,7 +10,6 @@ import (
 
 	"github.com/CannibalVox/cgoparam"
 	"github.com/pkg/errors"
-	"github.com/vkngwrapper/core/v3"
 	"github.com/vkngwrapper/core/v3/common"
 )
 
@@ -114,7 +113,7 @@ type ComponentMapping struct {
 // ImageViewCreateInfo specifies parameters of a newly-created ImageView
 type ImageViewCreateInfo struct {
 	// Image is an Image on which the view will be created
-	Image core.Image
+	Image Image
 
 	// Flags describes additional parameters of the ImageView
 	Flags ImageViewCreateFlags
@@ -132,8 +131,8 @@ type ImageViewCreateInfo struct {
 }
 
 func (o ImageViewCreateInfo) PopulateCPointer(allocator *cgoparam.Allocator, preallocatedPointer unsafe.Pointer, next unsafe.Pointer) (unsafe.Pointer, error) {
-	if o.Image.Handle() == 0 {
-		return nil, errors.New("core1_0.ImageViewCreateInfo.Image cannot be left unset")
+	if !o.Image.Initialized() {
+		return nil, errors.New("ImageViewCreateInfo.Image cannot be left unset")
 	}
 	if preallocatedPointer == unsafe.Pointer(nil) {
 		preallocatedPointer = allocator.Malloc(int(unsafe.Sizeof([1]C.VkImageViewCreateInfo{})))

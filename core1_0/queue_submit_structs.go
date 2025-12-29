@@ -10,7 +10,6 @@ import (
 
 	"github.com/CannibalVox/cgoparam"
 	"github.com/pkg/errors"
-	"github.com/vkngwrapper/core/v3"
 	"github.com/vkngwrapper/core/v3/common"
 	"github.com/vkngwrapper/core/v3/loader"
 )
@@ -137,16 +136,16 @@ func init() {
 // https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkSubmitInfo.html
 type SubmitInfo struct {
 	// CommandBuffers is a slice of CommandBuffer objects to execute in the batch
-	CommandBuffers []core.CommandBuffer
+	CommandBuffers []CommandBuffer
 	// WaitSemaphores is a slice of Semaphore objects upon which to wait before the CommandBuffer
 	// objects for this batch begin execution
-	WaitSemaphores []core.Semaphore
+	WaitSemaphores []Semaphore
 	// WaitDstStageMask is a slice of PipelineStageFlags at which each corresponding semaphore
 	// wait will occur
 	WaitDstStageMask []PipelineStageFlags
 	// SignalSemaphores is a slice of Semaphore objects which will be signaled when the
 	// CommandBuffer objects for this batch have completed execution
-	SignalSemaphores []core.Semaphore
+	SignalSemaphores []Semaphore
 
 	common.NextOptions
 }
@@ -176,7 +175,7 @@ func (o SubmitInfo) PopulateCPointer(allocator *cgoparam.Allocator, preallocated
 
 		for i := 0; i < waitSemaphoreCount; i++ {
 			if o.WaitSemaphores[i].Handle() == 0 {
-				return nil, errors.Errorf("core1_0.SubmitInfo.WaitSemaphores cannot contain nil elements, but "+
+				return nil, errors.Errorf("SubmitInfo.WaitSemaphores cannot contain nil elements, but "+
 					"element %d is unset", i)
 			}
 			semaphoreSlice[i] = (C.VkSemaphore)(unsafe.Pointer(o.WaitSemaphores[i].Handle()))
@@ -196,7 +195,7 @@ func (o SubmitInfo) PopulateCPointer(allocator *cgoparam.Allocator, preallocated
 
 		for i := 0; i < signalSemaphoreCount; i++ {
 			if o.SignalSemaphores[i].Handle() == 0 {
-				return nil, errors.Errorf("core1_0.SubmitInfo.SignalSemaphores cannot contain nil elements, but "+
+				return nil, errors.Errorf("SubmitInfo.SignalSemaphores cannot contain nil elements, but "+
 					"element %d is unset", i)
 			}
 			semaphoreSlice[i] = (C.VkSemaphore)(unsafe.Pointer(o.SignalSemaphores[i].Handle()))
@@ -214,7 +213,7 @@ func (o SubmitInfo) PopulateCPointer(allocator *cgoparam.Allocator, preallocated
 
 		for i := 0; i < commandBufferCount; i++ {
 			if o.CommandBuffers[i].Handle() == 0 {
-				return nil, errors.Errorf("core1_0.SubmitInfo.CommandBuffers cannot contain nil elements, but "+
+				return nil, errors.Errorf("SubmitInfo.CommandBuffers cannot contain nil elements, but "+
 					"element %d is unset", i)
 			}
 			commandBufferSlice[i] = o.CommandBuffers[i].Handle()

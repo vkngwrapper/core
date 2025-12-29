@@ -6,7 +6,6 @@ import (
 	"unsafe"
 
 	"github.com/stretchr/testify/require"
-	"github.com/vkngwrapper/core/v3"
 	"github.com/vkngwrapper/core/v3/common"
 	"github.com/vkngwrapper/core/v3/core1_0"
 	"github.com/vkngwrapper/core/v3/core1_1"
@@ -78,9 +77,9 @@ func TestDeviceGroupSubmitOptions(t *testing.T) {
 
 	_, err := driver.QueueSubmit(queue, &fence,
 		core1_0.SubmitInfo{
-			CommandBuffers:   []core.CommandBuffer{commandBuffer},
-			WaitSemaphores:   []core.Semaphore{semaphore1},
-			SignalSemaphores: []core.Semaphore{semaphore2, semaphore3},
+			CommandBuffers:   []core1_0.CommandBuffer{commandBuffer},
+			WaitSemaphores:   []core1_0.Semaphore{semaphore1},
+			SignalSemaphores: []core1_0.Semaphore{semaphore2, semaphore3},
 			WaitDstStageMask: []core1_0.PipelineStageFlags{core1_0.PipelineStageBottomOfPipe},
 
 			NextOptions: common.NextOptions{
@@ -147,9 +146,9 @@ func TestProtectedMemorySubmitOptions(t *testing.T) {
 
 	_, err := driver.QueueSubmit(queue, &fence,
 		core1_0.SubmitInfo{
-			CommandBuffers:   []core.CommandBuffer{commandBuffer},
-			WaitSemaphores:   []core.Semaphore{semaphore1},
-			SignalSemaphores: []core.Semaphore{semaphore2, semaphore3},
+			CommandBuffers:   []core1_0.CommandBuffer{commandBuffer},
+			WaitSemaphores:   []core1_0.Semaphore{semaphore1},
+			SignalSemaphores: []core1_0.Semaphore{semaphore2, semaphore3},
 			WaitDstStageMask: []core1_0.PipelineStageFlags{core1_0.PipelineStageBottomOfPipe},
 
 			NextOptions: common.NextOptions{

@@ -10,14 +10,13 @@ import (
 	"unsafe"
 
 	"github.com/CannibalVox/cgoparam"
-	"github.com/vkngwrapper/core/v3"
 	"github.com/vkngwrapper/core/v3/common"
 	"github.com/vkngwrapper/core/v3/core1_0"
 	"github.com/vkngwrapper/core/v3/loader"
 )
 
-func (v *DeviceVulkanDriver) QueueSubmit(queue core.Queue, fence *core.Fence, o ...core1_0.SubmitInfo) (common.VkResult, error) {
-	if queue.Handle() == 0 {
+func (v *DeviceVulkanDriver) QueueSubmit(queue core1_0.Queue, fence *core1_0.Fence, o ...core1_0.SubmitInfo) (common.VkResult, error) {
+	if !queue.Initialized() {
 		return core1_0.VKErrorUnknown, fmt.Errorf("queue is uninitialized")
 	}
 	arena := cgoparam.GetAlloc()

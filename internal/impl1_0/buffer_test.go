@@ -6,7 +6,6 @@ import (
 	"unsafe"
 
 	"github.com/stretchr/testify/require"
-	"github.com/vkngwrapper/core/v3"
 	"github.com/vkngwrapper/core/v3/common"
 	"github.com/vkngwrapper/core/v3/core1_0"
 	"github.com/vkngwrapper/core/v3/loader"
@@ -149,6 +148,6 @@ func TestBuffer_BindBufferMemory_FailNilMemory(t *testing.T) {
 	mockLoader := mock_driver.LoaderForVersion(ctrl, common.Vulkan1_0)
 	driver := mocks1_0.InternalDeviceDriver(device, mockLoader)
 
-	_, err := driver.BindBufferMemory(buffer, core.DeviceMemory{}, 3)
+	_, err := driver.BindBufferMemory(buffer, core1_0.DeviceMemory{}, 3)
 	require.EqualError(t, err, "received uninitialized DeviceMemory")
 }

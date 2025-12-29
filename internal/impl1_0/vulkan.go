@@ -1,13 +1,12 @@
 package impl1_0
 
 import (
-	"github.com/vkngwrapper/core/v3"
 	"github.com/vkngwrapper/core/v3/core1_0"
 	"github.com/vkngwrapper/core/v3/loader"
 )
 
-type InstanceDriverFactory func(global *GlobalVulkanDriver, instance core.Instance) (core1_0.CoreInstanceDriver, error)
-type DeviceDriverFactory func(instance core1_0.CoreInstanceDriver, device core.Device) (core1_0.CoreDeviceDriver, error)
+type InstanceDriverFactory func(global *GlobalVulkanDriver, instance core1_0.Instance) (core1_0.CoreInstanceDriver, error)
+type DeviceDriverFactory func(instance core1_0.CoreInstanceDriver, device core1_0.Device) (core1_0.CoreDeviceDriver, error)
 
 type GlobalVulkanDriver struct {
 	LoaderObj             loader.Loader
@@ -19,33 +18,33 @@ func (l *GlobalVulkanDriver) Loader() loader.Loader {
 	return l.LoaderObj
 }
 
-func (l *GlobalVulkanDriver) BuildInstanceDriver(instance core.Instance) (core1_0.CoreInstanceDriver, error) {
+func (l *GlobalVulkanDriver) BuildInstanceDriver(instance core1_0.Instance) (core1_0.CoreInstanceDriver, error) {
 	return l.InstanceDriverFactory(l, instance)
 }
 
 type InstanceVulkanDriver struct {
 	GlobalVulkanDriver
-	InstanceObj core.Instance
+	InstanceObj core1_0.Instance
 }
 
-func (l *InstanceVulkanDriver) BuildDeviceDriver(device core.Device) (core1_0.CoreDeviceDriver, error) {
+func (l *InstanceVulkanDriver) BuildDeviceDriver(device core1_0.Device) (core1_0.CoreDeviceDriver, error) {
 	return l.DeviceDriverFactory(l, device)
 }
 
-func (l *InstanceVulkanDriver) Instance() core.Instance {
+func (l *InstanceVulkanDriver) Instance() core1_0.Instance {
 	return l.InstanceObj
 }
 
 type DeviceVulkanDriver struct {
 	LoaderObj loader.Loader
-	DeviceObj core.Device
+	DeviceObj core1_0.Device
 }
 
 func (v *DeviceVulkanDriver) Loader() loader.Loader {
 	return v.LoaderObj
 }
 
-func (v *DeviceVulkanDriver) Device() core.Device {
+func (v *DeviceVulkanDriver) Device() core1_0.Device {
 	return v.DeviceObj
 }
 
