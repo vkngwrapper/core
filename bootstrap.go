@@ -1,4 +1,4 @@
-package bootstrap
+package core
 
 import (
 	"unsafe"
@@ -10,7 +10,7 @@ import (
 	"github.com/vkngwrapper/core/v3/internal/impl1_2"
 	"github.com/vkngwrapper/core/v3/loader"
 )
- 
+
 func CreateDriverFromProcAddr(procAddr unsafe.Pointer) (core1_0.GlobalDriver, error) {
 	loaderObj, err := loader.CreateLoaderFromProcAddr(procAddr)
 	if err != nil {
