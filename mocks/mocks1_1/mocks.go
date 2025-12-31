@@ -93,41 +93,11 @@ func (mr *MockCoreInstanceDriverMockRecorder) AvailableLayers() *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AvailableLayers", reflect.TypeOf((*MockCoreInstanceDriver)(nil).AvailableLayers))
 }
 
-// BuildDeviceDriver mocks base method.
-func (m *MockCoreInstanceDriver) BuildDeviceDriver(device core1_0.Device) (core1_0.CoreDeviceDriver, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "BuildDeviceDriver", device)
-	ret0, _ := ret[0].(core1_0.CoreDeviceDriver)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// BuildDeviceDriver indicates an expected call of BuildDeviceDriver.
-func (mr *MockCoreInstanceDriverMockRecorder) BuildDeviceDriver(device any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "BuildDeviceDriver", reflect.TypeOf((*MockCoreInstanceDriver)(nil).BuildDeviceDriver), device)
-}
-
-// BuildInstanceDriver mocks base method.
-func (m *MockCoreInstanceDriver) BuildInstanceDriver(instance core1_0.Instance) (core1_0.CoreInstanceDriver, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "BuildInstanceDriver", instance)
-	ret0, _ := ret[0].(core1_0.CoreInstanceDriver)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// BuildInstanceDriver indicates an expected call of BuildInstanceDriver.
-func (mr *MockCoreInstanceDriverMockRecorder) BuildInstanceDriver(instance any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "BuildInstanceDriver", reflect.TypeOf((*MockCoreInstanceDriver)(nil).BuildInstanceDriver), instance)
-}
-
 // CreateDevice mocks base method.
-func (m *MockCoreInstanceDriver) CreateDevice(physicalDevice core1_0.PhysicalDevice, allocationCallbacks *loader.AllocationCallbacks, options core1_0.DeviceCreateInfo) (core1_0.Device, common.VkResult, error) {
+func (m *MockCoreInstanceDriver) CreateDevice(physicalDevice core1_0.PhysicalDevice, allocationCallbacks *loader.AllocationCallbacks, options core1_0.DeviceCreateInfo) (core1_0.CoreDeviceDriver, common.VkResult, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateDevice", physicalDevice, allocationCallbacks, options)
-	ret0, _ := ret[0].(core1_0.Device)
+	ret0, _ := ret[0].(core1_0.CoreDeviceDriver)
 	ret1, _ := ret[1].(common.VkResult)
 	ret2, _ := ret[2].(error)
 	return ret0, ret1, ret2
@@ -140,10 +110,10 @@ func (mr *MockCoreInstanceDriverMockRecorder) CreateDevice(physicalDevice, alloc
 }
 
 // CreateInstance mocks base method.
-func (m *MockCoreInstanceDriver) CreateInstance(allocationCallbacks *loader.AllocationCallbacks, options core1_0.InstanceCreateInfo) (core1_0.Instance, common.VkResult, error) {
+func (m *MockCoreInstanceDriver) CreateInstance(allocationCallbacks *loader.AllocationCallbacks, options core1_0.InstanceCreateInfo) (core1_0.CoreInstanceDriver, common.VkResult, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateInstance", allocationCallbacks, options)
-	ret0, _ := ret[0].(core1_0.Instance)
+	ret0, _ := ret[0].(core1_0.CoreInstanceDriver)
 	ret1, _ := ret[1].(common.VkResult)
 	ret2, _ := ret[2].(error)
 	return ret0, ret1, ret2
