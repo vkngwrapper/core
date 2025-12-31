@@ -72,7 +72,7 @@ func TestPhysicalDevice8BitStorageFeaturesOptions(t *testing.T) {
 			}},
 		})
 	require.NoError(t, err)
-	require.Equal(t, mockDevice.Handle(), device.Handle())
+	require.Equal(t, mockDevice.Handle(), device.Device().Handle())
 }
 
 func TestPhysicalDevice8BitStorageFeaturesOutData(t *testing.T) {
@@ -172,7 +172,7 @@ func TestPhysicalDeviceBufferAddressFeaturesOptions(t *testing.T) {
 			}},
 		})
 	require.NoError(t, err)
-	require.Equal(t, mockDevice.Handle(), device.Handle())
+	require.Equal(t, mockDevice.Handle(), device.Device().Handle())
 }
 
 func TestPhysicalDeviceBufferAddressFeaturesOutData(t *testing.T) {
@@ -305,7 +305,7 @@ func TestPhysicalDeviceDescriptorIndexingFeaturesOptions(t *testing.T) {
 			}},
 		})
 	require.NoError(t, err)
-	require.Equal(t, mockDevice.Handle(), device.Handle())
+	require.Equal(t, mockDevice.Handle(), device.Device().Handle())
 }
 
 func TestPhysicalDeviceDescriptorIndexingFeaturesOutData(t *testing.T) {
@@ -435,7 +435,7 @@ func TestPhysicalDeviceHostQueryResetFeaturesOptions(t *testing.T) {
 			},
 		})
 	require.NoError(t, err)
-	require.Equal(t, mockDevice.Handle(), device.Handle())
+	require.Equal(t, mockDevice.Handle(), device.Device().Handle())
 }
 
 func TestPhysicalDeviceHostQueryResetFeaturesOutData(t *testing.T) {
@@ -529,7 +529,7 @@ func TestPhysicalDeviceImagelessFramebufferFeaturesOptions(t *testing.T) {
 			},
 		})
 	require.NoError(t, err)
-	require.Equal(t, mockDevice.Handle(), device.Handle())
+	require.Equal(t, mockDevice.Handle(), device.Device().Handle())
 }
 
 func TestPhysicalDeviceImagelessFramebufferFeaturesOutData(t *testing.T) {
@@ -623,7 +623,7 @@ func TestPhysicalDeviceScalarBlockLayoutFeaturesOptions(t *testing.T) {
 			},
 		})
 	require.NoError(t, err)
-	require.Equal(t, mockDevice.Handle(), device.Handle())
+	require.Equal(t, mockDevice.Handle(), device.Device().Handle())
 }
 
 func TestPhysicalDeviceScalarBlockLayoutFeaturesOutData(t *testing.T) {
@@ -717,7 +717,7 @@ func TestPhysicalDeviceSeparateDepthStencilLayoutsFeaturesOptions(t *testing.T) 
 			},
 		})
 	require.NoError(t, err)
-	require.Equal(t, mockDevice.Handle(), device.Handle())
+	require.Equal(t, mockDevice.Handle(), device.Device().Handle())
 }
 
 func TestPhysicalDeviceSeparateDepthStencilLayoutsFeaturesOutData(t *testing.T) {
@@ -813,7 +813,7 @@ func TestPhysicalDeviceShaderAtomicInt64FeaturesOptions(t *testing.T) {
 			},
 		})
 	require.NoError(t, err)
-	require.Equal(t, mockDevice.Handle(), device.Handle())
+	require.Equal(t, mockDevice.Handle(), device.Device().Handle())
 }
 
 func TestPhysicalDeviceShaderAtomicInt64FeaturesOutData(t *testing.T) {
@@ -911,7 +911,7 @@ func TestPhysicalDeviceShaderFloat16Int8FeaturesOptions(t *testing.T) {
 			},
 		})
 	require.NoError(t, err)
-	require.Equal(t, mockDevice.Handle(), device.Handle())
+	require.Equal(t, mockDevice.Handle(), device.Device().Handle())
 }
 
 func TestPhysicalDeviceShaderFloat16Int8FeaturesOutData(t *testing.T) {
@@ -1007,7 +1007,7 @@ func TestPhysicalDeviceShaderSubgroupExtendedTypesFeaturesOptions(t *testing.T) 
 			},
 		})
 	require.NoError(t, err)
-	require.Equal(t, mockDevice.Handle(), device.Handle())
+	require.Equal(t, mockDevice.Handle(), device.Device().Handle())
 }
 
 func TestPhysicalDeviceShaderSubgroupExtendedTypesFeaturesOutData(t *testing.T) {
@@ -1101,7 +1101,7 @@ func TestPhysicalDeviceTimelineSemaphoreFeaturesOptions(t *testing.T) {
 			},
 		})
 	require.NoError(t, err)
-	require.Equal(t, mockDevice.Handle(), device.Handle())
+	require.Equal(t, mockDevice.Handle(), device.Device().Handle())
 }
 
 func TestPhysicalDeviceTimelineSemaphoreFeaturesOutData(t *testing.T) {
@@ -1195,7 +1195,7 @@ func TestPhysicalDeviceUniformBufferStandardLayoutFeaturesOptions(t *testing.T) 
 			},
 		})
 	require.NoError(t, err)
-	require.Equal(t, mockDevice.Handle(), device.Handle())
+	require.Equal(t, mockDevice.Handle(), device.Device().Handle())
 }
 
 func TestPhysicalDeviceUniformBufferStandardLayoutFeaturesOutData(t *testing.T) {
@@ -1292,7 +1292,7 @@ func TestPhysicalDeviceVulkanMemoryModelFeaturesOptions(t *testing.T) {
 	})
 	require.NoError(t, err)
 	require.NotNil(t, device)
-	require.Equal(t, mockDevice.Handle(), device.Handle())
+	require.Equal(t, mockDevice.Handle(), device.Device().Handle())
 }
 
 func TestPhysicalDeviceVulkanMemoryModelFeaturesOutData(t *testing.T) {
@@ -1406,7 +1406,7 @@ func TestPhysicalDeviceVulkan11FeaturesOptions(t *testing.T) {
 	})
 	require.NoError(t, err)
 	require.NotNil(t, device)
-	require.Equal(t, mockDevice.Handle(), device.Handle())
+	require.Equal(t, mockDevice.Handle(), device.Device().Handle())
 }
 
 func TestPhysicalDeviceVulkan11FeaturesOutData(t *testing.T) {
@@ -1591,7 +1591,7 @@ func TestPhysicalDeviceVulkan12FeaturesOptions(t *testing.T) {
 	})
 	require.NoError(t, err)
 	require.NotNil(t, device)
-	require.Equal(t, mockDevice.Handle(), device.Handle())
+	require.Equal(t, mockDevice.Handle(), device.Device().Handle())
 }
 
 func TestPhysicalDeviceVulkan12FeaturesOutData(t *testing.T) {

@@ -13,8 +13,6 @@ import (
 type GlobalDriver interface {
 	Loader() loader.Loader
 
-	BuildInstanceDriver(instance Instance) (CoreInstanceDriver, error)
-
 	// AvailableExtensions returns all of the instance extensions available on this Loader,
 	// in the form of a map of extension name to ExtensionProperties
 	//
@@ -39,13 +37,12 @@ type GlobalDriver interface {
 	// options - Controls creation of the Instance
 	//
 	// https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/vkCreateInstance.html
-	CreateInstance(allocationCallbacks *loader.AllocationCallbacks, options InstanceCreateInfo) (Instance, common.VkResult, error)
+	CreateInstance(allocationCallbacks *loader.AllocationCallbacks, options InstanceCreateInfo) (CoreInstanceDriver, common.VkResult, error)
 }
 
 type CoreInstanceDriver interface {
 	GlobalDriver
 	Instance() Instance
-	BuildDeviceDriver(device Device) (CoreDeviceDriver, error)
 
 	// DestroyInstance destroys the Instance object underlying this driver and the underlying
 	// structures. **Warning** after destruction, the object will continue to exist, but the
@@ -68,7 +65,7 @@ type CoreInstanceDriver interface {
 	// options - Parameters affecting the creation of the Device
 	//
 	// https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkCreateDevice.html
-	CreateDevice(physicalDevice PhysicalDevice, allocationCallbacks *loader.AllocationCallbacks, options DeviceCreateInfo) (Device, common.VkResult, error)
+	CreateDevice(physicalDevice PhysicalDevice, allocationCallbacks *loader.AllocationCallbacks, options DeviceCreateInfo) (CoreDeviceDriver, common.VkResult, error)
 
 	// EnumeratePhysicalDevices enumerates the physical devices accessible to an Instance
 	//

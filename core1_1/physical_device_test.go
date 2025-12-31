@@ -417,7 +417,7 @@ func TestMultiviewFeaturesOptions(t *testing.T) {
 		},
 	})
 	require.NoError(t, err)
-	require.Equal(t, mockDevice.Handle(), device.Handle())
+	require.Equal(t, mockDevice.Handle(), device.Device().Handle())
 }
 
 func TestMultiviewFeaturesOutData(t *testing.T) {
@@ -521,7 +521,7 @@ func TestPhysicalDeviceProtectedMemoryFeaturesOptions(t *testing.T) {
 		},
 	})
 	require.NoError(t, err)
-	require.Equal(t, mockDevice.Handle(), device.Handle())
+	require.Equal(t, mockDevice.Handle(), device.Device().Handle())
 }
 
 func TestPhysicalDeviceProtectedMemoryFeaturesOutData(t *testing.T) {
@@ -616,7 +616,7 @@ func TestSamplerYcbcrFeaturesOptions(t *testing.T) {
 			},
 		})
 	require.NoError(t, err)
-	require.Equal(t, mockDevice.Handle(), device.Handle())
+	require.Equal(t, mockDevice.Handle(), device.Device().Handle())
 }
 
 func TestSamplerYcbcrFeaturesOutData(t *testing.T) {
@@ -718,7 +718,7 @@ func TestPhysicalDeviceShaderDrawParametersFeaturesOptions(t *testing.T) {
 		},
 	})
 	require.NoError(t, err)
-	require.Equal(t, mockDevice.Handle(), device.Handle())
+	require.Equal(t, mockDevice.Handle(), device.Device().Handle())
 }
 
 func TestPhysicalDeviceShaderDrawParametersFeaturesOutData(t *testing.T) {
@@ -812,7 +812,7 @@ func TestVariablePointersFeaturesOptions(t *testing.T) {
 	})
 	require.NoError(t, err)
 	require.NotNil(t, device)
-	require.Equal(t, mockDevice.Handle(), device.Handle())
+	require.Equal(t, mockDevice.Handle(), device.Device().Handle())
 }
 
 func TestVariablePointersFeaturesOutData(t *testing.T) {
@@ -910,7 +910,7 @@ func TestDeviceGroupOptions(t *testing.T) {
 		}},
 	})
 	require.NoError(t, err)
-	require.Equal(t, handle, device.Handle())
+	require.Equal(t, handle, device.Device().Handle())
 }
 
 func TestMemoryAllocateFlagsOptions(t *testing.T) {
@@ -1015,5 +1015,5 @@ func TestDevice16BitStorageOptions(t *testing.T) {
 
 	require.NoError(t, err)
 	require.NotNil(t, device)
-	require.Equal(t, expectedDevice.Handle(), device.Handle())
+	require.Equal(t, expectedDevice.Handle(), device.Device().Handle())
 }

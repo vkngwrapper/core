@@ -18,17 +18,9 @@ func (l *GlobalVulkanDriver) Loader() loader.Loader {
 	return l.LoaderObj
 }
 
-func (l *GlobalVulkanDriver) BuildInstanceDriver(instance core1_0.Instance) (core1_0.CoreInstanceDriver, error) {
-	return l.InstanceDriverFactory(l, instance)
-}
-
 type InstanceVulkanDriver struct {
 	GlobalVulkanDriver
 	InstanceObj core1_0.Instance
-}
-
-func (l *InstanceVulkanDriver) BuildDeviceDriver(device core1_0.Device) (core1_0.CoreDeviceDriver, error) {
-	return l.DeviceDriverFactory(l, device)
 }
 
 func (l *InstanceVulkanDriver) Instance() core1_0.Instance {

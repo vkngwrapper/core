@@ -45,10 +45,8 @@ if err != nil {
 }
 ```
  
-Once you have a Loader, you can use that Loader to create an [Instance](https://pkg.go.dev/github.com/vkngwrapper/core/v3/core1_0#Instance)
- and [CoreInstanceDriver](https://pkg.go.dev/github.com/vkngwrapper/core/v3/core1_0#CoreInstanceDriver), the CoreInstanceDriver to
- create a [PhysicalDevice](https://pkg.go.dev/github.com/vkngwrapper/core/v3/core1_0#PhysicalDevice), a [Device](https://pkg.go.dev/github.com/vkngwrapper/core/v3/core1_0#Device),
- and a [CoreDeviceDriver](https://pkg.go.dev/github.com/vkngwrapper/core/v3/core1_0#CoreDeviceDriver).
+Once you have a Loader, you can use that Loader to create a [CoreInstanceDriver](https://pkg.go.dev/github.com/vkngwrapper/core/v3/core1_0#CoreInstanceDriver), and the CoreInstanceDriver to
+ create a [PhysicalDevice](https://pkg.go.dev/github.com/vkngwrapper/core/v3/core1_0#PhysicalDevice) and a [CoreDeviceDriver](https://pkg.go.dev/github.com/vkngwrapper/core/v3/core1_0#CoreDeviceDriver).
 
 ```go
 instanceOptions := core1_0.InstanceCreateInfo{
@@ -59,14 +57,9 @@ instanceOptions := core1_0.InstanceCreateInfo{
     APIVersion:         common.Vulkan1_0,
 }
 
-instance, _, err := globalDriver.CreateInstance(nil, instanceOptions)
+instanceDriver, _, err := globalDriver.CreateInstance(nil, instanceOptions)
 if err != nil {
 	return err 
-}
-
-instanceDriver, err := globalDriver.BuildInstanceDriver(instance)
-if err != nil {
-	return err
 }
 
 physicalDevices, _, err := instanceDriver.EnumeratePhysicalDevices()
@@ -93,12 +86,7 @@ deviceOptions := core1_0.DeviceCreateInfo{
     },
 }
 
-device, _, err := instanceDriver.CreateDevice(physicalDevices[0], nil, deviceOptions)
-if err != nil {
-	return err 
-}
-
-deviceDriver, err := instanceDriver.BuildDeviceDriver(device)
+deviceDriver, _, err := instanceDriver.CreateDevice(physicalDevices[0], nil, deviceOptions)
 if err != nil {
 	return err 
 }

@@ -97,7 +97,7 @@ func TestVulkanLoader1_0_CreateInstance(t *testing.T) {
 	})
 	require.NoError(t, err)
 	require.NotNil(t, instance)
-	require.Equal(t, instanceHandle, instance.Handle())
+	require.Equal(t, instanceHandle, instance.Instance().Handle())
 }
 
 func TestVulkanInstance_PhysicalDevices(t *testing.T) {

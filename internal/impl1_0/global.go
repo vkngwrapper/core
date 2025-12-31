@@ -137,23 +137,30 @@ func (l *GlobalVulkanDriver) AvailableLayers() (map[string]*core1_0.LayerPropert
 	return layers, result, err
 }
 
-func (l *GlobalVulkanDriver) CreateInstance(allocationCallbacks *loader.AllocationCallbacks, options core1_0.InstanceCreateInfo) (core1_0.Instance, common.VkResult, error) {
+func (l *GlobalVulkanDriver) CreateInstance(allocationCallbacks *loader.AllocationCallbacks, options core1_0.InstanceCreateInfo) (core1_0.CoreInstanceDriver, common.VkResult, error) {
 	arena := cgoparam.GetAlloc()
 	defer cgoparam.ReturnAlloc(arena)
 
 	createInfo, err := common.AllocOptions(arena, options)
 	if err != nil {
-		return core1_0.Instance{}, core1_0.VKErrorUnknown, err
+		return nil, core1_0.VKErrorUnknown, err
 	}
 
 	var instanceHandle loader.VkInstance
 
 	res, err := l.LoaderObj.VkCreateInstance((*loader.VkInstanceCreateInfo)(createInfo), allocationCallbacks.Handle(), &instanceHandle)
 	if err != nil {
-		return core1_0.Instance{}, res, err
+		return nil, res, err
 	}
 
 	version := l.LoaderObj.Version().Min(options.APIVersion)
 
-	return core1_0.InternalInstance(instanceHandle, version, options.EnabledExtensionNames), res, nil
+	instance := core1_0.InternalInstance(instanceHandle, version, options.EnabledExtensionNames)
+
+	instanceDriver, err := l.InstanceDriverFactory(l, instance)
+	if err != nil {
+		return nil, core1_0.VKErrorUnknown, err
+	}
+
+	return instanceDriver, res, nil
 }
