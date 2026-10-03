@@ -8,7 +8,7 @@ import (
 	"github.com/vkngwrapper/core/v3/loader"
 )
 
-//go:generate mockgen -source ./iface.go -destination ../mocks/mocks1_0/mocks.go -package mocks1_0
+//go:generate go run go.uber.org/mock/mockgen -source ./iface.go -destination ../mocks/mocks1_0/mocks.go -package mocks1_0
 
 type GlobalDriver interface {
 	Loader() loader.Loader
