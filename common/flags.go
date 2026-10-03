@@ -3,7 +3,7 @@ package common
 import "strings"
 
 type flags interface {
-	~int32 | ~uint32
+	~int32 | ~uint32 | ~int64 | ~uint64
 }
 
 // FlagStringMapping is used as a base type for many bitflag enums in vkngwrapper.
