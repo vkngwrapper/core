@@ -9,7 +9,7 @@ import (
 	"github.com/vkngwrapper/core/v3/loader"
 )
 
-//go:generate mockgen -source ./iface.go -destination ../mocks/mocks1_2/mocks.go -package mocks1_2
+//go:generate go run go.uber.org/mock/mockgen -source ./iface.go -destination ../mocks/mocks1_2/mocks.go -package mocks1_2
 
 type CoreInstanceDriver interface {
 	core1_1.CoreInstanceDriver

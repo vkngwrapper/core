@@ -6,7 +6,7 @@ import (
 	"github.com/vkngwrapper/core/v3/common"
 )
 
-//go:generate mockgen -source iface.go -destination ./mocks/loader.go
+//go:generate go run go.uber.org/mock/mockgen -source iface.go -destination ./mocks/loader.go
 
 type Loader interface {
 	Destroy()
