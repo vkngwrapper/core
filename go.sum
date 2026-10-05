@@ -1,5 +1,3 @@
-github.com/CannibalVox/cgoparam v1.1.0 h1:6UDDhOpT06csFE2vkcanXsIJmebMc9o+6Vzhvi4i0wY=
-github.com/CannibalVox/cgoparam v1.1.0/go.mod h1:9LDFLuHVgE+IIBDd1QFN3dPqmGQN9bS6H+NPizMv2fA=
 github.com/CannibalVox/cgoparam v1.1.1 h1:FgdJOJoBY5AUWfZ6UAeaqrtbeibHhxTu4uhwCjm8yhY=
 github.com/CannibalVox/cgoparam v1.1.1/go.mod h1:9dwagSqKdg0787GBv/FYA+K0KmSzUILnbJXp09K/3vE=
 github.com/google/uuid v1.6.0 h1:NIvaJDMOsjHA8n1jAhLSgzrAzy1Hgr+hNrb57e+94F0=
