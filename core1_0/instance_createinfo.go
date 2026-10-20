@@ -64,7 +64,7 @@ func (o InstanceCreateInfo) PopulateCPointer(allocator *cgoparam.Allocator, prea
 	appInfo := (*C.VkApplicationInfo)(allocator.Malloc(int(unsafe.Sizeof(C.VkApplicationInfo{}))))
 
 	appInfo.sType = C.VK_STRUCTURE_TYPE_APPLICATION_INFO
-	appInfo.pNext = next
+	appInfo.pNext = nil
 	appInfo.pApplicationName = nil
 	appInfo.pEngineName = nil
 
