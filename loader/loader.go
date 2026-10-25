@@ -1,7 +1,5 @@
 package loader
 
-import "C"
-
 /*
 #cgo noescape instance_proc_addr
 #cgo noescape device_proc_addr

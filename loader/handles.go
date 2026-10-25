@@ -242,11 +242,14 @@ type VkAttachmentReferenceStencilLayout C.VkAttachmentReferenceStencilLayout
 
 type VkCommandBufferResetFlags C.VkCommandBufferResetFlags
 type VkCommandPoolResetFlags C.VkCommandPoolResetFlags
+type VkCompareOp C.VkCompareOp
+type VkCullModeFlags C.VkCullModeFlags
 type VkDependencyFlags C.VkDependencyFlags
 type VkDescriptorPoolResetFlags C.VkDescriptorPoolResetFlags
 type VkDeviceSize C.VkDeviceSize
 type VkFilter C.VkFilter
 type VkFormat C.VkFormat
+type VkFrontFace C.VkFrontFace
 type VkImageCreateFlags C.VkImageCreateFlags
 type VkImageTiling C.VkImageTiling
 type VkImageType C.VkImageType
@@ -257,10 +260,12 @@ type VkQueryControlFlags C.VkQueryControlFlags
 type VkPipelineBindPoint C.VkPipelineBindPoint
 type VkPipelineStageFlags C.VkPipelineStageFlags
 type VkPiplineStageFlagBits C.VkPipelineStageFlagBits
+type VkPrimitiveTopology C.VkPrimitiveTopology
 type VkQueryResultFlags C.VkQueryResultFlags
 type VkSampleCountFlagBits C.VkSampleCountFlagBits
 type VkShaderStageFlags C.VkShaderStageFlags
 type VkStencilFaceFlags C.VkStencilFaceFlags
+type VkStencilOp C.VkStencilOp
 type VkSubpassContents C.VkSubpassContents
 type VkPeerMemoryFeatureFlags C.VkPeerMemoryFeatureFlags
 type VkCommandPoolTrimFlags C.VkCommandPoolTrimFlags
