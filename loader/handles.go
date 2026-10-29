@@ -255,6 +255,7 @@ type VkImageTiling C.VkImageTiling
 type VkImageType C.VkImageType
 type VkImageUsageFlags C.VkImageUsageFlags
 type VkIndexType C.VkIndexType
+type VkLogicOp C.VkLogicOp
 type VkMemoryMapFlags C.VkMemoryMapFlags
 type VkQueryControlFlags C.VkQueryControlFlags
 type VkPipelineBindPoint C.VkPipelineBindPoint
