@@ -257,6 +257,7 @@ type VkImageUsageFlags C.VkImageUsageFlags
 type VkIndexType C.VkIndexType
 type VkLogicOp C.VkLogicOp
 type VkMemoryMapFlags C.VkMemoryMapFlags
+type VkObjectType C.VkObjectType
 type VkQueryControlFlags C.VkQueryControlFlags
 type VkPipelineBindPoint C.VkPipelineBindPoint
 type VkPipelineStageFlags C.VkPipelineStageFlags
